@@ -46,7 +46,7 @@ public abstract class BaseAbsoluteOrientationSlamPairedViewsSparseReconstructor<
     /**
      * First sample of orientation received.
      */
-    private Rotation3D mFirstOrientation;
+    private Rotation3D firstOrientation;
 
     /**
      * Constructor.
@@ -56,8 +56,7 @@ public abstract class BaseAbsoluteOrientationSlamPairedViewsSparseReconstructor<
      * @throws NullPointerException if listener or configuration is not
      *                              provided.
      */
-    protected BaseAbsoluteOrientationSlamPairedViewsSparseReconstructor(
-            final C configuration, final L listener) {
+    protected BaseAbsoluteOrientationSlamPairedViewsSparseReconstructor(final C configuration, final L listener) {
         super(configuration, listener);
     }
 
@@ -69,14 +68,13 @@ public abstract class BaseAbsoluteOrientationSlamPairedViewsSparseReconstructor<
      *                    expressed in nanoseconds.
      * @param orientation new orientation.
      */
-    public void updateOrientationSample(final long timestamp,
-                                        final Rotation3D orientation) {
-        if (mSlamEstimator != null) {
-            mSlamEstimator.updateOrientationSample(timestamp, orientation);
+    public void updateOrientationSample(final long timestamp, final Rotation3D orientation) {
+        if (slamEstimator != null) {
+            slamEstimator.updateOrientationSample(timestamp, orientation);
         }
-        if (mFirstOrientation == null) {
+        if (firstOrientation == null) {
             // make a copy of orientation
-            mFirstOrientation = orientation.toQuaternion();
+            firstOrientation = orientation.toQuaternion();
         }
     }
 
@@ -102,8 +100,7 @@ public abstract class BaseAbsoluteOrientationSlamPairedViewsSparseReconstructor<
      */
     @Override
     protected boolean transformPairOfCamerasAndPoints(
-            final boolean isInitialPairOfViews,
-            final boolean hasAbsoluteOrientation) {
+            final boolean isInitialPairOfViews, final boolean hasAbsoluteOrientation) {
 
         // R1' = R1*Rdiff
         // Rdiff = R1^T*R1'
@@ -136,7 +133,7 @@ public abstract class BaseAbsoluteOrientationSlamPairedViewsSparseReconstructor<
 
         if (isInitialPairOfViews && hasAbsoluteOrientation) {
             // The first pair of views does not require setting translation and rotation
-            mLastEuclideanCameraRotation = mFirstOrientation;
+            lastEuclideanCameraRotation = firstOrientation;
         }
 
         return super.transformPairOfCamerasAndPoints(isInitialPairOfViews, hasAbsoluteOrientation);

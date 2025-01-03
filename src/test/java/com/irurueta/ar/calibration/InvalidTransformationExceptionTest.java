@@ -15,15 +15,15 @@
  */
 package com.irurueta.ar.calibration;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class InvalidTransformationExceptionTest {
+class InvalidTransformationExceptionTest {
 
     @Test
-    public void testConstructor() {
-        InvalidTransformationException ex = new InvalidTransformationException();
+    void testConstructor() {
+        var ex = new InvalidTransformationException();
         assertNotNull(ex);
 
         ex = new InvalidTransformationException("message");
@@ -32,8 +32,7 @@ public class InvalidTransformationExceptionTest {
         ex = new InvalidTransformationException(new Exception());
         assertNotNull(ex);
 
-        ex = new InvalidTransformationException("message",
-                new Exception());
+        ex = new InvalidTransformationException("message", new Exception());
         assertNotNull(ex);
     }
 }

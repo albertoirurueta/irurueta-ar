@@ -30,8 +30,7 @@ import java.io.Serializable;
  */
 public class ConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration extends
         BaseSlamPairedViewsSparseReconstructorConfiguration<ConstantVelocityModelSlamCalibrationData,
-                ConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration>
-        implements Serializable {
+                ConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration> implements Serializable {
 
     /**
      * Creates an instance of a paired view sparse re-constructor configuration with constant

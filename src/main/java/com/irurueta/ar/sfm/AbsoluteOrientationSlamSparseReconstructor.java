@@ -54,8 +54,7 @@ public class AbsoluteOrientationSlamSparseReconstructor extends
      */
     public AbsoluteOrientationSlamSparseReconstructor(
             final AbsoluteOrientationSlamSparseReconstructorListener listener) {
-        this(new AbsoluteOrientationSlamSparseReconstructorConfiguration(),
-                listener);
+        this(new AbsoluteOrientationSlamSparseReconstructorConfiguration(), listener);
     }
 
     /**
@@ -67,8 +66,8 @@ public class AbsoluteOrientationSlamSparseReconstructor extends
      */
     @Override
     public boolean processOneView() {
-        if (!mRunning) {
-            mSlamEstimator = new AbsoluteOrientationSlamEstimator();
+        if (!running) {
+            slamEstimator = new AbsoluteOrientationSlamEstimator();
             setUpSlamEstimatorListener();
             setUpCalibrationData();
         }

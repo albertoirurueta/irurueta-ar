@@ -34,8 +34,7 @@ import java.util.List;
  * Robustly triangulates 3D points from matched 2D points and their
  * corresponding cameras on several views using PROMedS algorithm.
  */
-public class PROMedSRobustSinglePoint3DTriangulator extends
-        RobustSinglePoint3DTriangulator {
+public class PROMedSRobustSinglePoint3DTriangulator extends RobustSinglePoint3DTriangulator {
 
     /**
      * Default value to be used for stop threshold. Stop threshold can be used
@@ -76,20 +75,20 @@ public class PROMedSRobustSinglePoint3DTriangulator extends
      * lower than the one typically used in RANSAC, and yet the algorithm could
      * still produce even smaller thresholds in estimated results.
      */
-    private double mStopThreshold;
+    private double stopThreshold;
 
     /**
      * Quality scores corresponding to each provided point.
      * The larger the score value the better the quality of the sample.
      */
-    private double[] mQualityScores;
+    private double[] qualityScores;
 
     /**
      * Constructor.
      */
     public PROMedSRobustSinglePoint3DTriangulator() {
         super();
-        mStopThreshold = DEFAULT_STOP_THRESHOLD;
+        stopThreshold = DEFAULT_STOP_THRESHOLD;
     }
 
     /**
@@ -98,10 +97,9 @@ public class PROMedSRobustSinglePoint3DTriangulator extends
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      */
-    public PROMedSRobustSinglePoint3DTriangulator(
-            final RobustSinglePoint3DTriangulatorListener listener) {
+    public PROMedSRobustSinglePoint3DTriangulator(final RobustSinglePoint3DTriangulatorListener listener) {
         super(listener);
-        mStopThreshold = DEFAULT_STOP_THRESHOLD;
+        stopThreshold = DEFAULT_STOP_THRESHOLD;
     }
 
     /**
@@ -115,10 +113,9 @@ public class PROMedSRobustSinglePoint3DTriangulator extends
      *                                  length or their length is less than 2 views, which is the minimum
      *                                  required to compute triangulation.
      */
-    public PROMedSRobustSinglePoint3DTriangulator(final List<Point2D> points,
-                                                  final List<PinholeCamera> cameras) {
+    public PROMedSRobustSinglePoint3DTriangulator(final List<Point2D> points, final List<PinholeCamera> cameras) {
         super(points, cameras);
-        mStopThreshold = DEFAULT_STOP_THRESHOLD;
+        stopThreshold = DEFAULT_STOP_THRESHOLD;
     }
 
     /**
@@ -134,11 +131,11 @@ public class PROMedSRobustSinglePoint3DTriangulator extends
      *                                  length or their length is less than 2 views, which is the minimum
      *                                  required to compute triangulation.
      */
-    public PROMedSRobustSinglePoint3DTriangulator(final List<Point2D> points,
-                                                  final List<PinholeCamera> cameras,
-                                                  final RobustSinglePoint3DTriangulatorListener listener) {
+    public PROMedSRobustSinglePoint3DTriangulator(
+            final List<Point2D> points, final List<PinholeCamera> cameras,
+            final RobustSinglePoint3DTriangulatorListener listener) {
         super(points, cameras, listener);
-        mStopThreshold = DEFAULT_STOP_THRESHOLD;
+        stopThreshold = DEFAULT_STOP_THRESHOLD;
     }
 
     /**
@@ -180,9 +177,8 @@ public class PROMedSRobustSinglePoint3DTriangulator extends
      *                                  don't have the same length or their length is less than 2 views,
      *                                  which is the minimum required to compute triangulation.
      */
-    public PROMedSRobustSinglePoint3DTriangulator(final List<Point2D> points,
-                                                  final List<PinholeCamera> cameras,
-                                                  final double[] qualityScores) {
+    public PROMedSRobustSinglePoint3DTriangulator(
+            final List<Point2D> points, final List<PinholeCamera> cameras, final double[] qualityScores) {
         this(points, cameras);
         internalSetQualityScores(qualityScores);
     }
@@ -229,7 +225,7 @@ public class PROMedSRobustSinglePoint3DTriangulator extends
      * accuracy has been reached.
      */
     public double getStopThreshold() {
-        return mStopThreshold;
+        return stopThreshold;
     }
 
     /**
@@ -262,7 +258,7 @@ public class PROMedSRobustSinglePoint3DTriangulator extends
             throw new IllegalArgumentException();
         }
 
-        mStopThreshold = stopThreshold;
+        this.stopThreshold = stopThreshold;
     }
 
     /**
@@ -273,7 +269,7 @@ public class PROMedSRobustSinglePoint3DTriangulator extends
      */
     @Override
     public double[] getQualityScores() {
-        return mQualityScores;
+        return qualityScores;
     }
 
     /**
@@ -303,8 +299,7 @@ public class PROMedSRobustSinglePoint3DTriangulator extends
      */
     @Override
     public boolean isReady() {
-        return super.isReady() && mQualityScores != null &&
-                mQualityScores.length == mPoints2D.size();
+        return super.isReady() && qualityScores != null && qualityScores.length == points2D.size();
     }
 
 
@@ -324,8 +319,7 @@ public class PROMedSRobustSinglePoint3DTriangulator extends
      */
     @SuppressWarnings("DuplicatedCode")
     @Override
-    public Point3D triangulate() throws LockedException, NotReadyException,
-            RobustEstimatorException {
+    public Point3D triangulate() throws LockedException, NotReadyException, RobustEstimatorException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -333,35 +327,31 @@ public class PROMedSRobustSinglePoint3DTriangulator extends
             throw new NotReadyException();
         }
 
-        final PROMedSRobustEstimator<Point3D> innerEstimator =
-                new PROMedSRobustEstimator<>(
-                        new PROMedSRobustEstimatorListener<Point3D>() {
+        final var innerEstimator = new PROMedSRobustEstimator<Point3D>(new PROMedSRobustEstimatorListener<>() {
 
                             // point to be reused when computing residuals
-                            private final Point2D mTestPoint = Point2D.create(
-                                    CoordinatesType.HOMOGENEOUS_COORDINATES);
+                            private final Point2D testPoint = Point2D.create(CoordinatesType.HOMOGENEOUS_COORDINATES);
 
                             // non-robust 3D point triangulator
-                            private final SinglePoint3DTriangulator mTriangulator =
-                                    SinglePoint3DTriangulator.create(mUseHomogeneousSolution ?
-                                            Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR :
-                                            Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR);
+                            private final SinglePoint3DTriangulator triangulator =
+                                    SinglePoint3DTriangulator.create(useHomogeneousSolution
+                                            ? Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR
+                                            : Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR);
 
                             // subset of 2D points
-                            private final List<Point2D> mSubsetPoints = new ArrayList<>();
+                            private final List<Point2D> subsetPoints = new ArrayList<>();
 
                             // subst of cameras
-                            private final List<PinholeCamera> mSubsetCameras =
-                                    new ArrayList<>();
+                            private final List<PinholeCamera> subsetCameras = new ArrayList<>();
 
                             @Override
                             public double getThreshold() {
-                                return mStopThreshold;
+                                return stopThreshold;
                             }
 
                             @Override
                             public int getTotalSamples() {
-                                return mPoints2D.size();
+                                return points2D.size();
                             }
 
                             @Override
@@ -370,20 +360,19 @@ public class PROMedSRobustSinglePoint3DTriangulator extends
                             }
 
                             @Override
-                            public void estimatePreliminarSolutions(final int[] samplesIndices,
-                                                                    final List<Point3D> solutions) {
-                                mSubsetPoints.clear();
-                                mSubsetPoints.add(mPoints2D.get(samplesIndices[0]));
-                                mSubsetPoints.add(mPoints2D.get(samplesIndices[1]));
+                            public void estimatePreliminarSolutions(
+                                    final int[] samplesIndices, final List<Point3D> solutions) {
+                                subsetPoints.clear();
+                                subsetPoints.add(points2D.get(samplesIndices[0]));
+                                subsetPoints.add(points2D.get(samplesIndices[1]));
 
-                                mSubsetCameras.clear();
-                                mSubsetCameras.add(mCameras.get(samplesIndices[0]));
-                                mSubsetCameras.add(mCameras.get(samplesIndices[1]));
+                                subsetCameras.clear();
+                                subsetCameras.add(cameras.get(samplesIndices[0]));
+                                subsetCameras.add(cameras.get(samplesIndices[1]));
 
                                 try {
-                                    mTriangulator.setPointsAndCameras(mSubsetPoints,
-                                            mSubsetCameras);
-                                    final Point3D triangulated = mTriangulator.triangulate();
+                                    triangulator.setPointsAndCameras(subsetPoints, subsetCameras);
+                                    final var triangulated = triangulator.triangulate();
                                     solutions.add(triangulated);
                                 } catch (final Exception e) {
                                     // if anything fails, no solution is added
@@ -392,15 +381,15 @@ public class PROMedSRobustSinglePoint3DTriangulator extends
 
                             @Override
                             public double computeResidual(final Point3D currentEstimation, final int i) {
-                                final Point2D point2D = mPoints2D.get(i);
-                                final PinholeCamera camera = mCameras.get(i);
+                                final var point2D = points2D.get(i);
+                                final var camera = cameras.get(i);
 
                                 // project estimated point with camera
-                                camera.project(currentEstimation, mTestPoint);
+                                camera.project(currentEstimation, testPoint);
 
                                 // return distance of projected point respect to the original one
                                 // as a residual
-                                return mTestPoint.distanceTo(point2D);
+                                return testPoint.distanceTo(point2D);
                             }
 
                             @Override
@@ -410,58 +399,54 @@ public class PROMedSRobustSinglePoint3DTriangulator extends
 
                             @Override
                             public void onEstimateStart(final RobustEstimator<Point3D> estimator) {
-                                if (mListener != null) {
-                                    mListener.onTriangulateStart(
-                                            PROMedSRobustSinglePoint3DTriangulator.this);
+                                if (listener != null) {
+                                    listener.onTriangulateStart(PROMedSRobustSinglePoint3DTriangulator.this);
                                 }
                             }
 
                             @Override
                             public void onEstimateEnd(final RobustEstimator<Point3D> estimator) {
-                                if (mListener != null) {
-                                    mListener.onTriangulateEnd(
-                                            PROMedSRobustSinglePoint3DTriangulator.this);
+                                if (listener != null) {
+                                    listener.onTriangulateEnd(PROMedSRobustSinglePoint3DTriangulator.this);
                                 }
                             }
 
                             @Override
                             public void onEstimateNextIteration(
                                     final RobustEstimator<Point3D> estimator, final int iteration) {
-                                if (mListener != null) {
-                                    mListener.onTriangulateNextIteration(
-                                            PROMedSRobustSinglePoint3DTriangulator.this,
-                                            iteration);
+                                if (listener != null) {
+                                    listener.onTriangulateNextIteration(
+                                            PROMedSRobustSinglePoint3DTriangulator.this, iteration);
                                 }
                             }
 
                             @Override
                             public void onEstimateProgressChange(
                                     final RobustEstimator<Point3D> estimator, final float progress) {
-                                if (mListener != null) {
-                                    mListener.onTriangulateProgressChange(
-                                            PROMedSRobustSinglePoint3DTriangulator.this,
-                                            progress);
+                                if (listener != null) {
+                                    listener.onTriangulateProgressChange(
+                                            PROMedSRobustSinglePoint3DTriangulator.this, progress);
                                 }
                             }
 
                             @Override
                             public double[] getQualityScores() {
-                                return mQualityScores;
+                                return qualityScores;
                             }
                         });
 
         try {
-            mLocked = true;
-            innerEstimator.setConfidence(mConfidence);
-            innerEstimator.setMaxIterations(mMaxIterations);
-            innerEstimator.setProgressDelta(mProgressDelta);
+            locked = true;
+            innerEstimator.setConfidence(confidence);
+            innerEstimator.setMaxIterations(maxIterations);
+            innerEstimator.setProgressDelta(progressDelta);
             return innerEstimator.estimate();
         } catch (final com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
         } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
         } finally {
-            mLocked = false;
+            locked = false;
         }
     }
 
@@ -489,6 +474,6 @@ public class PROMedSRobustSinglePoint3DTriangulator extends
             throw new IllegalArgumentException();
         }
 
-        mQualityScores = qualityScores;
+        this.qualityScores = qualityScores;
     }
 }

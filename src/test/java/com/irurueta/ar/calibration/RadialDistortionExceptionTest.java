@@ -15,15 +15,15 @@
  */
 package com.irurueta.ar.calibration;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class RadialDistortionExceptionTest {
+class RadialDistortionExceptionTest {
 
     @Test
-    public void testConstructor() {
-        RadialDistortionException ex = new RadialDistortionException();
+    void testConstructor() {
+        var ex = new RadialDistortionException();
         assertNotNull(ex);
 
         ex = new RadialDistortionException("message");
@@ -32,8 +32,7 @@ public class RadialDistortionExceptionTest {
         ex = new RadialDistortionException(new Exception());
         assertNotNull(ex);
 
-        ex = new RadialDistortionException("message",
-                new Exception());
+        ex = new RadialDistortionException("message", new Exception());
         assertNotNull(ex);
     }
 }

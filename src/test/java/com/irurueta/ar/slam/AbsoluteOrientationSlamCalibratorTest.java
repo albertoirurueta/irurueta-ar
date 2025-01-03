@@ -25,13 +25,11 @@ import com.irurueta.statistics.GaussianRandomizer;
 import com.irurueta.statistics.InvalidCovarianceMatrixException;
 import com.irurueta.statistics.MultivariateNormalDist;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import java.util.Random;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.Assert.*;
-
-public class AbsoluteOrientationSlamCalibratorTest implements
+class AbsoluteOrientationSlamCalibratorTest implements
         BaseSlamCalibratorListener<AbsoluteOrientationSlamCalibrationData> {
 
     private static final int TIMES = 50;
@@ -57,8 +55,8 @@ public class AbsoluteOrientationSlamCalibratorTest implements
     private int calibratorFinished;
 
     @Test
-    public void testConstructor() throws WrongSizeException {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testConstructor() throws WrongSizeException {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
 
         // check initial values
         assertEquals(AbsoluteOrientationSlamEstimator.CONTROL_LENGTH, calibrator.getSampleLength());
@@ -69,8 +67,7 @@ public class AbsoluteOrientationSlamCalibratorTest implements
         assertEquals(0, calibrator.getSampleCount());
         assertEquals(SlamCalibrator.DEFAULT_MIN_NUM_SAMPLES, calibrator.getMinNumSamples());
         assertEquals(SlamCalibrator.DEFAULT_MAX_NUM_SAMPLES, calibrator.getMaxNumSamples());
-        assertEquals(SlamCalibrator.DEFAULT_CONVERGENCE_THRESHOLD,
-                calibrator.getConvergenceThreshold(), 0.0);
+        assertEquals(SlamCalibrator.DEFAULT_CONVERGENCE_THRESHOLD, calibrator.getConvergenceThreshold(), 0.0);
         assertEquals(SlamCalibrator.DEFAULT_ENABLE_SAMPLE_ACCUMULATION, calibrator.isAccumulationEnabled());
         assertEquals(-1, calibrator.getAccelerometerTimestampNanos());
         assertEquals(-1, calibrator.getGyroscopeTimestampNanos());
@@ -83,91 +80,89 @@ public class AbsoluteOrientationSlamCalibratorTest implements
         assertEquals(0.0, calibrator.getAccumulatedAccelerationSampleY(), 0.0);
         assertEquals(0.0, calibrator.getAccumulatedAccelerationSampleZ(), 0.0);
         assertArrayEquals(new double[]{0.0, 0.0, 0.0}, calibrator.getAccumulatedAccelerationSample(), 0.0);
-        final double[] accumAcceleration = new double[3];
+        final var accumAcceleration = new double[3];
         calibrator.getAccumulatedAccelerationSample(accumAcceleration);
         assertArrayEquals(new double[]{0.0, 0.0, 0.0}, accumAcceleration, 0.0);
         assertEquals(0.0, calibrator.getAccumulatedAngularSpeedSampleX(), 0.0);
         assertEquals(0.0, calibrator.getAccumulatedAngularSpeedSampleY(), 0.0);
         assertEquals(0.0, calibrator.getAccumulatedAngularSpeedSampleZ(), 0.0);
         assertArrayEquals(new double[]{0.0, 0.0, 0.0}, calibrator.getAccumulatedAngularSpeedSample(), 0.0);
-        final double[] accumAngularSpeed = new double[3];
+        final var accumAngularSpeed = new double[3];
         calibrator.getAccumulatedAngularSpeedSample(accumAngularSpeed);
         assertArrayEquals(new double[]{0.0, 0.0, 0.0}, accumAngularSpeed, 0.0);
         assertNull(calibrator.getListener());
-        assertArrayEquals(new double[AbsoluteOrientationSlamEstimator.CONTROL_LENGTH],
-                calibrator.getControlMean(), 0.0);
-        final double[] controlMean = new double[AbsoluteOrientationSlamEstimator.CONTROL_LENGTH];
+        assertArrayEquals(new double[AbsoluteOrientationSlamEstimator.CONTROL_LENGTH], calibrator.getControlMean(),
+                0.0);
+        final var controlMean = new double[AbsoluteOrientationSlamEstimator.CONTROL_LENGTH];
         calibrator.getControlMean(controlMean);
-        assertArrayEquals(controlMean, new double[AbsoluteOrientationSlamEstimator.CONTROL_LENGTH], 0.0);
+        assertArrayEquals(new double[AbsoluteOrientationSlamEstimator.CONTROL_LENGTH], controlMean, 0.0);
         assertEquals(new Matrix(AbsoluteOrientationSlamEstimator.CONTROL_LENGTH,
-                        AbsoluteOrientationSlamEstimator.CONTROL_LENGTH),
-                calibrator.getControlCovariance());
-        final Matrix cov = new Matrix(1, 1);
+                        AbsoluteOrientationSlamEstimator.CONTROL_LENGTH), calibrator.getControlCovariance());
+        final var cov = new Matrix(1, 1);
         calibrator.getControlCovariance(cov);
-        assertEquals(new Matrix(
-                AbsoluteOrientationSlamEstimator.CONTROL_LENGTH,
+        assertEquals(new Matrix(AbsoluteOrientationSlamEstimator.CONTROL_LENGTH,
                 AbsoluteOrientationSlamEstimator.CONTROL_LENGTH), cov);
     }
 
     @Test
-    public void testIsConverged() {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testIsConverged() {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
 
         // initial value
         assertFalse(calibrator.isConverged());
 
         // set new value
-        calibrator.mConverged = true;
+        calibrator.converged = true;
 
         // check correctness
         assertTrue(calibrator.isConverged());
     }
 
     @Test
-    public void testIsFailed() {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testIsFailed() {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
 
         // initial value
         assertFalse(calibrator.isFailed());
 
         // set new value
-        calibrator.mFailed = true;
+        calibrator.failed = true;
 
         // check correctness
         assertTrue(calibrator.isFailed());
     }
 
     @Test
-    public void testIsFinished() {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testIsFinished() {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
 
         // initial value
         assertFalse(calibrator.isFinished());
 
         // set new value
-        calibrator.mFinished = true;
+        calibrator.finished = true;
 
         // check correctness
         assertTrue(calibrator.isFinished());
     }
 
     @Test
-    public void testGetSampleCount() {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testGetSampleCount() {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
 
         // initial value
         assertEquals(0, calibrator.getSampleCount());
 
         // set new value
-        calibrator.mSampleCount = 5;
+        calibrator.sampleCount = 5;
 
         // check correctness
         assertEquals(5, calibrator.getSampleCount());
     }
 
     @Test
-    public void testGetSetMinNumSamples() {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testGetSetMinNumSamples() {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
 
         // initial value
         assertEquals(SlamCalibrator.DEFAULT_MIN_NUM_SAMPLES, calibrator.getMinNumSamples());
@@ -179,16 +174,12 @@ public class AbsoluteOrientationSlamCalibratorTest implements
         assertEquals(50, calibrator.getMinNumSamples());
 
         // Force IllegalArgumentException
-        try {
-            calibrator.setMinNumSamples(-1);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> calibrator.setMinNumSamples(-1));
     }
 
     @Test
-    public void testGetSetMaxNumSamples() {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testGetSetMaxNumSamples() {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
 
         // initial value
         assertEquals(SlamCalibrator.DEFAULT_MAX_NUM_SAMPLES, calibrator.getMaxNumSamples());
@@ -200,20 +191,15 @@ public class AbsoluteOrientationSlamCalibratorTest implements
         assertEquals(1000, calibrator.getMaxNumSamples());
 
         // Force IllegalArgumentException
-        try {
-            calibrator.setMaxNumSamples(-1);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> calibrator.setMaxNumSamples(-1));
     }
 
     @Test
-    public void testGetSetConvergenceThreshold() {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testGetSetConvergenceThreshold() {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
 
         // initial value
-        assertEquals(SlamCalibrator.DEFAULT_CONVERGENCE_THRESHOLD,
-                calibrator.getConvergenceThreshold(), 0.0);
+        assertEquals(SlamCalibrator.DEFAULT_CONVERGENCE_THRESHOLD, calibrator.getConvergenceThreshold(), 0.0);
 
         // set new value
         calibrator.setConvergenceThreshold(1.0);
@@ -222,16 +208,12 @@ public class AbsoluteOrientationSlamCalibratorTest implements
         assertEquals(1.0, calibrator.getConvergenceThreshold(), 0.0);
 
         // Force IllegalArgumentException
-        try {
-            calibrator.setConvergenceThreshold(-0.1);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> calibrator.setConvergenceThreshold(-0.1));
     }
 
     @Test
-    public void testReset() throws WrongSizeException {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testReset() throws WrongSizeException {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
 
         calibrator.reset();
 
@@ -242,8 +224,7 @@ public class AbsoluteOrientationSlamCalibratorTest implements
         assertEquals(0, calibrator.getSampleCount());
         assertEquals(SlamCalibrator.DEFAULT_MIN_NUM_SAMPLES, calibrator.getMinNumSamples());
         assertEquals(SlamCalibrator.DEFAULT_MAX_NUM_SAMPLES, calibrator.getMaxNumSamples());
-        assertEquals(SlamCalibrator.DEFAULT_CONVERGENCE_THRESHOLD,
-                calibrator.getConvergenceThreshold(), 0.0);
+        assertEquals(SlamCalibrator.DEFAULT_CONVERGENCE_THRESHOLD, calibrator.getConvergenceThreshold(), 0.0);
         assertEquals(SlamCalibrator.DEFAULT_ENABLE_SAMPLE_ACCUMULATION, calibrator.isAccumulationEnabled());
         assertEquals(-1, calibrator.getAccelerometerTimestampNanos());
         assertEquals(-1, calibrator.getGyroscopeTimestampNanos());
@@ -256,33 +237,33 @@ public class AbsoluteOrientationSlamCalibratorTest implements
         assertEquals(0.0, calibrator.getAccumulatedAccelerationSampleY(), 0.0);
         assertEquals(0.0, calibrator.getAccumulatedAccelerationSampleZ(), 0.0);
         assertArrayEquals(new double[]{0.0, 0.0, 0.0}, calibrator.getAccumulatedAccelerationSample(), 0.0);
-        final double[] accumAcceleration = new double[3];
+        final var accumAcceleration = new double[3];
         calibrator.getAccumulatedAccelerationSample(accumAcceleration);
         assertArrayEquals(new double[]{0.0, 0.0, 0.0}, accumAcceleration, 0.0);
         assertEquals(0.0, calibrator.getAccumulatedAngularSpeedSampleX(), 0.0);
         assertEquals(0.0, calibrator.getAccumulatedAngularSpeedSampleY(), 0.0);
         assertEquals(0.0, calibrator.getAccumulatedAngularSpeedSampleZ(), 0.0);
         assertArrayEquals(new double[]{0.0, 0.0, 0.0}, calibrator.getAccumulatedAngularSpeedSample(), 0.0);
-        final double[] accumAngularSpeed = new double[3];
+        final var accumAngularSpeed = new double[3];
         calibrator.getAccumulatedAngularSpeedSample(accumAngularSpeed);
         assertArrayEquals(new double[]{0.0, 0.0, 0.0}, accumAngularSpeed, 0.0);
         assertNull(calibrator.getListener());
-        assertArrayEquals(new double[AbsoluteOrientationSlamEstimator.CONTROL_LENGTH],
-                calibrator.getControlMean(), 0.0);
-        final double[] controlMean = new double[AbsoluteOrientationSlamEstimator.CONTROL_LENGTH];
+        assertArrayEquals(new double[AbsoluteOrientationSlamEstimator.CONTROL_LENGTH], calibrator.getControlMean(),
+                0.0);
+        final var controlMean = new double[AbsoluteOrientationSlamEstimator.CONTROL_LENGTH];
         calibrator.getControlMean(controlMean);
-        assertArrayEquals(controlMean, new double[AbsoluteOrientationSlamEstimator.CONTROL_LENGTH], 0.0);
+        assertArrayEquals(new double[AbsoluteOrientationSlamEstimator.CONTROL_LENGTH], controlMean, 0.0);
         assertEquals(new Matrix(AbsoluteOrientationSlamEstimator.CONTROL_LENGTH,
                 AbsoluteOrientationSlamEstimator.CONTROL_LENGTH), calibrator.getControlCovariance());
-        final Matrix cov = new Matrix(1, 1);
+        final var cov = new Matrix(1, 1);
         calibrator.getControlCovariance(cov);
         assertEquals(new Matrix(AbsoluteOrientationSlamEstimator.CONTROL_LENGTH,
                 AbsoluteOrientationSlamEstimator.CONTROL_LENGTH), cov);
     }
 
     @Test
-    public void testIsSetAccumulationEnabled() {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testIsSetAccumulationEnabled() {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
 
         // initial value
         assertTrue(calibrator.isAccumulationEnabled());
@@ -295,43 +276,43 @@ public class AbsoluteOrientationSlamCalibratorTest implements
     }
 
     @Test
-    public void testGetAccelerometerTimestampNanos() {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testGetAccelerometerTimestampNanos() {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
 
         // initial value
         assertEquals(-1, calibrator.getAccelerometerTimestampNanos());
 
         // set new value
-        calibrator.mAccelerometerTimestampNanos = 1000;
+        calibrator.accelerometerTimestampNanos = 1000;
 
         // check correctness
         assertEquals(1000, calibrator.getAccelerometerTimestampNanos());
     }
 
     @Test
-    public void testGetGyroscopeTimestampNanos() {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testGetGyroscopeTimestampNanos() {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
 
         // initial value
         assertEquals(-1, calibrator.getGyroscopeTimestampNanos());
 
         // set new value
-        calibrator.mGyroscopeTimestampNanos = 2000;
+        calibrator.gyroscopeTimestampNanos = 2000;
 
         // check correctness
         assertEquals(2000, calibrator.getGyroscopeTimestampNanos());
     }
 
     @Test
-    public void testGetAccumulatedAccelerometerSamplesAndIsAccelerometerSampleReceived() {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testGetAccumulatedAccelerometerSamplesAndIsAccelerometerSampleReceived() {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
 
         // initial value
         assertEquals(0, calibrator.getAccumulatedAccelerometerSamples());
         assertFalse(calibrator.isAccelerometerSampleReceived());
 
         // set new value
-        calibrator.mAccumulatedAccelerometerSamples = 50;
+        calibrator.accumulatedAccelerometerSamples = 50;
 
         // check correctness
         assertEquals(50, calibrator.getAccumulatedAccelerometerSamples());
@@ -339,15 +320,15 @@ public class AbsoluteOrientationSlamCalibratorTest implements
     }
 
     @Test
-    public void testGetAccumulatedGyroscopeSamples() {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testGetAccumulatedGyroscopeSamples() {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
 
         // initial value
         assertEquals(0, calibrator.getAccumulatedGyroscopeSamples());
         assertFalse(calibrator.isGyroscopeSampleReceived());
 
         // set new value
-        calibrator.mAccumulatedGyroscopeSamples = 500;
+        calibrator.accumulatedGyroscopeSamples = 500;
 
         // check correctness
         assertEquals(500, calibrator.getAccumulatedGyroscopeSamples());
@@ -355,8 +336,8 @@ public class AbsoluteOrientationSlamCalibratorTest implements
     }
 
     @Test
-    public void testIsFullSampleAvailable() {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testIsFullSampleAvailable() {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
 
         // initial values
         assertEquals(0, calibrator.getAccumulatedAccelerometerSamples());
@@ -368,7 +349,7 @@ public class AbsoluteOrientationSlamCalibratorTest implements
         assertFalse(calibrator.isFullSampleAvailable());
 
         // set accelerometer sample
-        calibrator.mAccumulatedAccelerometerSamples = 1;
+        calibrator.accumulatedAccelerometerSamples = 1;
 
         // check correctness
         assertEquals(1, calibrator.getAccumulatedAccelerometerSamples());
@@ -380,7 +361,7 @@ public class AbsoluteOrientationSlamCalibratorTest implements
         assertFalse(calibrator.isFullSampleAvailable());
 
         // set gyroscope sample
-        calibrator.mAccumulatedGyroscopeSamples = 1;
+        calibrator.accumulatedGyroscopeSamples = 1;
 
         // check correctness
         assertEquals(1, calibrator.getAccumulatedAccelerometerSamples());
@@ -392,7 +373,7 @@ public class AbsoluteOrientationSlamCalibratorTest implements
         assertFalse(calibrator.isFullSampleAvailable());
 
         // set orientation sample
-        calibrator.mAccumulatedOrientationSamples = 1;
+        calibrator.accumulatedOrientationSamples = 1;
 
         // check correctness
         assertEquals(1, calibrator.getAccumulatedAccelerometerSamples());
@@ -405,170 +386,162 @@ public class AbsoluteOrientationSlamCalibratorTest implements
     }
 
     @Test
-    public void testGetAccumulatedAccelerationSampleX() {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testGetAccumulatedAccelerationSampleX() {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
 
         // initial value
         assertEquals(0.0, calibrator.getAccumulatedAccelerationSampleX(), 0.0);
 
         // set new value
-        calibrator.mAccumulatedAccelerationSampleX = 1.0;
+        calibrator.accumulatedAccelerationSampleX = 1.0;
 
         // check correctness
         assertEquals(1.0, calibrator.getAccumulatedAccelerationSampleX(), 0.0);
     }
 
     @Test
-    public void testGetAccumulatedAccelerationSampleY() {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testGetAccumulatedAccelerationSampleY() {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
 
         // initial value
         assertEquals(0.0, calibrator.getAccumulatedAccelerationSampleY(), 0.0);
 
         // set new value
-        calibrator.mAccumulatedAccelerationSampleY = 2.0;
+        calibrator.accumulatedAccelerationSampleY = 2.0;
 
         // check correctness
         assertEquals(2.0, calibrator.getAccumulatedAccelerationSampleY(), 0.0);
     }
 
     @Test
-    public void testGetAccumulatedAccelerationSampleZ() {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testGetAccumulatedAccelerationSampleZ() {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
 
         // initial value
         assertEquals(0.0, calibrator.getAccumulatedAccelerationSampleZ(), 0.0);
 
         // set new value
-        calibrator.mAccumulatedAccelerationSampleZ = 3.0;
+        calibrator.accumulatedAccelerationSampleZ = 3.0;
 
         // check correctness
         assertEquals(3.0, calibrator.getAccumulatedAccelerationSampleZ(), 0.0);
     }
 
     @Test
-    public void testGetAccumulatedAccelerationSample() {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testGetAccumulatedAccelerationSample() {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
 
         // initial value
         assertArrayEquals(new double[]{0.0, 0.0, 0.0}, calibrator.getAccumulatedAccelerationSample(), 0.0);
 
         // set new value
-        calibrator.mAccumulatedAccelerationSampleX = 1.0;
-        calibrator.mAccumulatedAccelerationSampleY = 2.0;
-        calibrator.mAccumulatedAccelerationSampleZ = 3.0;
+        calibrator.accumulatedAccelerationSampleX = 1.0;
+        calibrator.accumulatedAccelerationSampleY = 2.0;
+        calibrator.accumulatedAccelerationSampleZ = 3.0;
 
         // check correctness
         assertArrayEquals(new double[]{1.0, 2.0, 3.0}, calibrator.getAccumulatedAccelerationSample(), 0.0);
 
-        final double[] sample = new double[3];
+        final var sample = new double[3];
         calibrator.getAccumulatedAccelerationSample(sample);
 
         // check correctness
         assertArrayEquals(new double[]{1.0, 2.0, 3.0}, sample, 0.0);
 
         // Force IllegalArgumentException
-        try {
-            calibrator.getAccumulatedAccelerationSample(new double[1]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> calibrator.getAccumulatedAccelerationSample(new double[1]));
     }
 
     @Test
-    public void testGetAccumulatedAngularSpeedSampleX() {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testGetAccumulatedAngularSpeedSampleX() {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
 
         // initial value
         assertEquals(0.0, calibrator.getAccumulatedAngularSpeedSampleX(), 0.0);
 
         // set new value
-        calibrator.mAccumulatedAngularSpeedSampleX = 1.0;
+        calibrator.accumulatedAngularSpeedSampleX = 1.0;
 
         // check correctness
         assertEquals(1.0, calibrator.getAccumulatedAngularSpeedSampleX(), 0.0);
     }
 
     @Test
-    public void testGetAccumulatedAngularSpeedSampleY() {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testGetAccumulatedAngularSpeedSampleY() {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
 
         // initial value
         assertEquals(0.0, calibrator.getAccumulatedAngularSpeedSampleY(), 0.0);
 
         // set new value
-        calibrator.mAccumulatedAngularSpeedSampleY = 2.0;
+        calibrator.accumulatedAngularSpeedSampleY = 2.0;
 
         // check correctness
         assertEquals(2.0, calibrator.getAccumulatedAngularSpeedSampleY(), 0.0);
     }
 
     @Test
-    public void testGetAccumulatedAngularSpeedSampleZ() {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testGetAccumulatedAngularSpeedSampleZ() {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
 
         // initial value
         assertEquals(0.0, calibrator.getAccumulatedAngularSpeedSampleZ(), 0.0);
 
         // set new value
-        calibrator.mAccumulatedAngularSpeedSampleZ = 3.0;
+        calibrator.accumulatedAngularSpeedSampleZ = 3.0;
 
         // check correctness
         assertEquals(3.0, calibrator.getAccumulatedAngularSpeedSampleZ(), 0.0);
     }
 
     @Test
-    public void testGetAccumulatedAngularSpeedSample() {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testGetAccumulatedAngularSpeedSample() {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
 
         // initial value
         assertArrayEquals(new double[]{0.0, 0.0, 0.0}, calibrator.getAccumulatedAngularSpeedSample(), 0.0);
 
         // set new value
-        calibrator.mAccumulatedAngularSpeedSampleX = 1.0;
-        calibrator.mAccumulatedAngularSpeedSampleY = 2.0;
-        calibrator.mAccumulatedAngularSpeedSampleZ = 3.0;
+        calibrator.accumulatedAngularSpeedSampleX = 1.0;
+        calibrator.accumulatedAngularSpeedSampleY = 2.0;
+        calibrator.accumulatedAngularSpeedSampleZ = 3.0;
 
         // check correctness
         assertArrayEquals(new double[]{1.0, 2.0, 3.0}, calibrator.getAccumulatedAngularSpeedSample(), 0.0);
 
-        final double[] sample = new double[3];
+        final var sample = new double[3];
         calibrator.getAccumulatedAngularSpeedSample(sample);
 
         // check correctness
         assertArrayEquals(new double[]{1.0, 2.0, 3.0}, sample, 0.0);
 
         // Force IllegalArgumentException
-        try {
-            calibrator.getAccumulatedAngularSpeedSample(new double[1]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> calibrator.getAccumulatedAngularSpeedSample(new double[1]));
     }
 
     @Test
-    public void testGetMostRecentTimestampNanos() {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testGetMostRecentTimestampNanos() {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
 
         // check correctness
         assertEquals(-1, calibrator.getMostRecentTimestampNanos());
 
         // set new value
-        calibrator.mAccelerometerTimestampNanos = 1000;
+        calibrator.accelerometerTimestampNanos = 1000;
 
         // check correctness
         assertEquals(1000, calibrator.getMostRecentTimestampNanos());
 
         // set new value
-        calibrator.mGyroscopeTimestampNanos = 2000;
+        calibrator.gyroscopeTimestampNanos = 2000;
 
         // check correctness
         assertEquals(2000, calibrator.getMostRecentTimestampNanos());
     }
 
     @Test
-    public void testGetSetListener() {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testGetSetListener() {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
 
         // initial value
         assertNull(calibrator.getListener());
@@ -581,54 +554,49 @@ public class AbsoluteOrientationSlamCalibratorTest implements
     }
 
     @Test
-    public void testGetControlMean() {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testGetControlMean() {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
 
-        assertArrayEquals(new double[AbsoluteOrientationSlamEstimator.CONTROL_LENGTH],
-                calibrator.getControlMean(), 0.0);
-        assertArrayEquals(calibrator.mEstimator.getSampleAverage(), calibrator.getControlMean(), 0.0);
+        assertArrayEquals(new double[AbsoluteOrientationSlamEstimator.CONTROL_LENGTH], calibrator.getControlMean(),
+                0.0);
+        assertArrayEquals(calibrator.estimator.getSampleAverage(), calibrator.getControlMean(), 0.0);
 
-        final double[] controlMean = new double[AbsoluteOrientationSlamEstimator.CONTROL_LENGTH];
+        final var controlMean = new double[AbsoluteOrientationSlamEstimator.CONTROL_LENGTH];
         calibrator.getControlMean(controlMean);
         assertArrayEquals(controlMean, calibrator.getControlMean(), 0.0);
 
         // Force IllegalArgumentException
-        final double[] wrong = new double[1];
-        try {
-            calibrator.getControlMean(wrong);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        final var wrong = new double[1];
+        assertThrows(IllegalArgumentException.class, () -> calibrator.getControlMean(wrong));
     }
 
     @Test
-    public void testGetControlCovariance() throws WrongSizeException {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testGetControlCovariance() throws WrongSizeException {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
 
-        assertEquals(calibrator.getControlCovariance(),
-                new Matrix(AbsoluteOrientationSlamEstimator.CONTROL_LENGTH,
-                        AbsoluteOrientationSlamEstimator.CONTROL_LENGTH));
+        assertEquals(new Matrix(AbsoluteOrientationSlamEstimator.CONTROL_LENGTH,
+                        AbsoluteOrientationSlamEstimator.CONTROL_LENGTH), calibrator.getControlCovariance());
 
-        final Matrix cov = new Matrix(1, 1);
+        final var cov = new Matrix(1, 1);
         calibrator.getControlCovariance(cov);
 
         assertEquals(cov, calibrator.getControlCovariance());
     }
 
     @Test
-    public void testGetControlDistribution() throws InvalidCovarianceMatrixException {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testGetControlDistribution() throws InvalidCovarianceMatrixException {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
 
-        final double[] controlMean = calibrator.getControlMean();
-        final Matrix cov = calibrator.getControlCovariance();
+        final var controlMean = calibrator.getControlMean();
+        final var cov = calibrator.getControlCovariance();
 
-        final MultivariateNormalDist dist = calibrator.getControlDistribution();
+        final var dist = calibrator.getControlDistribution();
 
         // check correctness
         assertArrayEquals(controlMean, dist.getMean(), ABSOLUTE_ERROR);
         assertTrue(cov.equals(dist.getCovariance(), ABSOLUTE_ERROR));
 
-        final MultivariateNormalDist dist2 = new MultivariateNormalDist();
+        final var dist2 = new MultivariateNormalDist();
         calibrator.getControlDistribution(dist2);
 
         // check correctness
@@ -637,14 +605,14 @@ public class AbsoluteOrientationSlamCalibratorTest implements
     }
 
     @Test
-    public void testGetCalibrationData() {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testGetCalibrationData() {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
 
-        final double[] controlMean = calibrator.getControlMean();
-        final Matrix cov = calibrator.getControlCovariance();
+        final var controlMean = calibrator.getControlMean();
+        final var cov = calibrator.getControlCovariance();
 
-        final AbsoluteOrientationSlamCalibrationData data1 = calibrator.getCalibrationData();
-        final AbsoluteOrientationSlamCalibrationData data2 = new AbsoluteOrientationSlamCalibrationData();
+        final var data1 = calibrator.getCalibrationData();
+        final var data2 = new AbsoluteOrientationSlamCalibrationData();
         calibrator.getCalibrationData(data2);
 
         // check correctness
@@ -656,22 +624,21 @@ public class AbsoluteOrientationSlamCalibratorTest implements
     }
 
     @Test
-    public void testPropagateWithControlJacobian() throws WrongSizeException, InvalidCovarianceMatrixException {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testPropagateWithControlJacobian() throws WrongSizeException, InvalidCovarianceMatrixException {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
 
-        final UniformRandomizer offsetRandomizer = new UniformRandomizer(new Random());
-        final GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
-                new Random(), 0.0, NOISE_DEVIATION);
+        final var offsetRandomizer = new UniformRandomizer();
+        final var noiseRandomizer = new GaussianRandomizer(0.0, NOISE_DEVIATION);
 
-        final float accelerationOffsetX = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
-        final float accelerationOffsetY = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
-        final float accelerationOffsetZ = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final var accelerationOffsetX = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final var accelerationOffsetY = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final var accelerationOffsetZ = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
 
-        final float angularOffsetX = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
-        final float angularOffsetY = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
-        final float angularOffsetZ = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final var angularOffsetX = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final var angularOffsetY = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final var angularOffsetZ = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
 
-        long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
+        var timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
 
         float accelerationNoiseX;
         float accelerationNoiseY;
@@ -686,11 +653,11 @@ public class AbsoluteOrientationSlamCalibratorTest implements
         double angularX;
         double angularY;
         double angularZ;
-        final Quaternion orientation = new Quaternion();
+        final var orientation = new Quaternion();
 
         calibrator.reset();
 
-        for (int i = 0; i < N_SAMPLES; i++) {
+        for (var i = 0; i < N_SAMPLES; i++) {
             accelerationNoiseX = noiseRandomizer.nextFloat();
             accelerationNoiseY = noiseRandomizer.nextFloat();
             accelerationNoiseZ = noiseRandomizer.nextFloat();
@@ -707,8 +674,8 @@ public class AbsoluteOrientationSlamCalibratorTest implements
             angularY = angularOffsetY + angularNoiseY;
             angularZ = angularOffsetZ + angularNoiseZ;
 
-            calibrator.updateAccelerometerSample(timestamp,
-                    (float) accelerationX, (float) accelerationY, (float) accelerationZ);
+            calibrator.updateAccelerometerSample(timestamp, (float) accelerationX, (float) accelerationY,
+                    (float) accelerationZ);
             calibrator.updateGyroscopeSample(timestamp, (float) angularX, (float) angularY, (float) angularZ);
             calibrator.updateOrientationSample(timestamp, orientation);
 
@@ -723,34 +690,33 @@ public class AbsoluteOrientationSlamCalibratorTest implements
         assertTrue(calibrator.isFinished());
         assertFalse(calibrator.isFailed());
 
-        final Matrix cov = calibrator.getControlCovariance();
+        final var cov = calibrator.getControlCovariance();
 
-        final Matrix jacobian = Matrix.identity(calibrator.getEstimatorStateLength(),
-                calibrator.getSampleLength());
+        final var jacobian = Matrix.identity(calibrator.getEstimatorStateLength(), calibrator.getSampleLength());
         jacobian.multiplyByScalar(2.0);
-        final MultivariateNormalDist dist = calibrator.propagateWithControlJacobian(jacobian);
-        final MultivariateNormalDist dist2 = new MultivariateNormalDist();
+        final var dist = calibrator.propagateWithControlJacobian(jacobian);
+        final var dist2 = new MultivariateNormalDist();
         calibrator.propagateWithControlJacobian(jacobian, dist2);
 
         // check correctness
-        final Matrix propagatedCov = jacobian.multiplyAndReturnNew(cov).
-                multiplyAndReturnNew(jacobian.transposeAndReturnNew());
+        final var propagatedCov = jacobian.multiplyAndReturnNew(cov).multiplyAndReturnNew(
+                jacobian.transposeAndReturnNew());
 
         assertTrue(dist.getCovariance().equals(propagatedCov, ABSOLUTE_ERROR));
         assertTrue(dist2.getCovariance().equals(propagatedCov, ABSOLUTE_ERROR));
     }
 
     @Test
-    public void testUpdateAccelerometerSampleWithAccumulationDisabled() {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testUpdateAccelerometerSampleWithAccumulationDisabled() {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
         calibrator.setAccumulationEnabled(false);
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final var randomizer = new UniformRandomizer();
 
-        long timestamp = System.currentTimeMillis();
-        final float accelerationX = randomizer.nextFloat();
-        final float accelerationY = randomizer.nextFloat();
-        final float accelerationZ = randomizer.nextFloat();
+        var timestamp = System.currentTimeMillis();
+        final var accelerationX = randomizer.nextFloat();
+        final var accelerationY = randomizer.nextFloat();
+        final var accelerationZ = randomizer.nextFloat();
 
         // check initial values
         assertEquals(-1, calibrator.getAccelerometerTimestampNanos());
@@ -771,7 +737,7 @@ public class AbsoluteOrientationSlamCalibratorTest implements
         assertFalse(calibrator.isFullSampleAvailable());
 
         // test again but using an array
-        final float[] acceleration = new float[3];
+        final var acceleration = new float[3];
         randomizer.fill(acceleration);
         timestamp += 1000;
 
@@ -786,20 +752,17 @@ public class AbsoluteOrientationSlamCalibratorTest implements
         assertFalse(calibrator.isFullSampleAvailable());
 
         // Force IllegalArgumentException
-        final float[] wrong = new float[4];
-        try {
-            calibrator.updateAccelerometerSample(timestamp, wrong);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        final var wrong = new float[4];
+        final var finalTimestamp = timestamp;
+        assertThrows(IllegalArgumentException.class, () -> calibrator.updateAccelerometerSample(finalTimestamp, wrong));
     }
 
     @Test
-    public void testUpdateAccelerometerSampleWithAccumulationEnabled() {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testUpdateAccelerometerSampleWithAccumulationEnabled() {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
         calibrator.setAccumulationEnabled(true);
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final var randomizer = new UniformRandomizer();
 
         // check initial values
         assertEquals(-1, calibrator.getAccelerometerTimestampNanos());
@@ -810,14 +773,14 @@ public class AbsoluteOrientationSlamCalibratorTest implements
         assertFalse(calibrator.isFullSampleAvailable());
 
         // update with several samples
-        long timestamp = System.currentTimeMillis();
+        var timestamp = System.currentTimeMillis();
         float accelerationX;
         float accelerationY;
         float accelerationZ;
-        double avgAccelerationX = 0.0;
-        double avgAccelerationY = 0.0;
-        double avgAccelerationZ = 0.0;
-        for (int i = 0; i < TIMES; i++) {
+        var avgAccelerationX = 0.0;
+        var avgAccelerationY = 0.0;
+        var avgAccelerationZ = 0.0;
+        for (var i = 0; i < TIMES; i++) {
             timestamp += 1000;
             accelerationX = randomizer.nextFloat();
             accelerationY = randomizer.nextFloat();
@@ -840,16 +803,16 @@ public class AbsoluteOrientationSlamCalibratorTest implements
     }
 
     @Test
-    public void testUpdateGyroscopeSampleWithAccumulationDisabled() {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testUpdateGyroscopeSampleWithAccumulationDisabled() {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
         calibrator.setAccumulationEnabled(false);
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final var randomizer = new UniformRandomizer();
 
-        long timestamp = System.currentTimeMillis();
-        final float angularSpeedX = randomizer.nextFloat();
-        final float angularSpeedY = randomizer.nextFloat();
-        final float angularSpeedZ = randomizer.nextFloat();
+        var timestamp = System.currentTimeMillis();
+        final var angularSpeedX = randomizer.nextFloat();
+        final var angularSpeedY = randomizer.nextFloat();
+        final var angularSpeedZ = randomizer.nextFloat();
 
         // check initial values
         assertEquals(-1, calibrator.getGyroscopeTimestampNanos());
@@ -870,7 +833,7 @@ public class AbsoluteOrientationSlamCalibratorTest implements
         assertFalse(calibrator.isFullSampleAvailable());
 
         // test again but using an array
-        final float[] angularSpeed = new float[3];
+        final var angularSpeed = new float[3];
         randomizer.fill(angularSpeed);
         timestamp += 100;
 
@@ -885,20 +848,17 @@ public class AbsoluteOrientationSlamCalibratorTest implements
         assertFalse(calibrator.isFullSampleAvailable());
 
         // Force IllegalArgumentException
-        final float[] wrong = new float[4];
-        try {
-            calibrator.updateGyroscopeSample(timestamp, wrong);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        final var wrong = new float[4];
+        final var finalTimestamp = timestamp;
+        assertThrows(IllegalArgumentException.class, () -> calibrator.updateGyroscopeSample(finalTimestamp, wrong));
     }
 
     @Test
-    public void testUpdateGyroscopeSampleWithAccumulationEnabled() {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testUpdateGyroscopeSampleWithAccumulationEnabled() {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
         calibrator.setAccumulationEnabled(true);
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final var randomizer = new UniformRandomizer();
 
         // check initial values
         assertEquals(-1, calibrator.getGyroscopeTimestampNanos());
@@ -909,14 +869,14 @@ public class AbsoluteOrientationSlamCalibratorTest implements
         assertFalse(calibrator.isFullSampleAvailable());
 
         // update with several samples
-        long timestamp = System.currentTimeMillis();
+        var timestamp = System.currentTimeMillis();
         float angularSpeedX;
         float angularSpeedY;
         float angularSpeedZ;
-        double avgAngularSpeedX = 0.0;
-        double avgAngularSpeedY = 0.0;
-        double avgAngularSpeedZ = 0.0;
-        for (int i = 0; i < TIMES; i++) {
+        var avgAngularSpeedX = 0.0;
+        var avgAngularSpeedY = 0.0;
+        var avgAngularSpeedZ = 0.0;
+        for (var i = 0; i < TIMES; i++) {
             timestamp += 1000;
             angularSpeedX = randomizer.nextFloat();
             angularSpeedY = randomizer.nextFloat();
@@ -939,22 +899,22 @@ public class AbsoluteOrientationSlamCalibratorTest implements
     }
 
     @Test
-    public void testUpdateOrientationSampleWithAccumulationDisabled() {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testUpdateOrientationSampleWithAccumulationDisabled() {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
         calibrator.setAccumulationEnabled(false);
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final var randomizer = new UniformRandomizer();
 
-        final long timestamp = System.currentTimeMillis();
-        final double orientationA = randomizer.nextDouble();
-        final double orientationB = randomizer.nextDouble();
-        final double orientationC = randomizer.nextDouble();
-        final double orientationD = randomizer.nextDouble();
-        final Quaternion orientation = new Quaternion(orientationA, orientationB, orientationC, orientationD);
+        final var timestamp = System.currentTimeMillis();
+        final var orientationA = randomizer.nextDouble();
+        final var orientationB = randomizer.nextDouble();
+        final var orientationC = randomizer.nextDouble();
+        final var orientationD = randomizer.nextDouble();
+        final var orientation = new Quaternion(orientationA, orientationB, orientationC, orientationD);
 
         // check initial values
         assertEquals(-1, calibrator.getOrientationTimestampNanos());
-        Quaternion accumulatedOrientation = (Quaternion) calibrator.getAccumulatedOrientation();
+        var accumulatedOrientation = (Quaternion) calibrator.getAccumulatedOrientation();
         assertEquals(1.0, accumulatedOrientation.getA(), 0.0);
         assertEquals(0.0, accumulatedOrientation.getB(), 0.0);
         assertEquals(0.0, accumulatedOrientation.getC(), 0.0);
@@ -962,7 +922,7 @@ public class AbsoluteOrientationSlamCalibratorTest implements
         assertEquals(0, calibrator.getAccumulatedOrientationSamples());
         assertFalse(calibrator.isFullSampleAvailable());
 
-        final Quaternion accumulatedOrientation2 = new Quaternion();
+        final var accumulatedOrientation2 = new Quaternion();
         calibrator.getAccumulatedOrientation(accumulatedOrientation2);
         assertEquals(accumulatedOrientation, accumulatedOrientation2);
 
@@ -981,15 +941,15 @@ public class AbsoluteOrientationSlamCalibratorTest implements
     }
 
     @Test
-    public void testUpdateOrientationSampleWithAccumulationEnabled() {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testUpdateOrientationSampleWithAccumulationEnabled() {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
         calibrator.setAccumulationEnabled(true);
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final var randomizer = new UniformRandomizer();
 
         // check initial values
         assertEquals(-1, calibrator.getOrientationTimestampNanos());
-        Quaternion accumulatedOrientation = (Quaternion) calibrator.getAccumulatedOrientation();
+        var accumulatedOrientation = (Quaternion) calibrator.getAccumulatedOrientation();
         assertEquals(1.0, accumulatedOrientation.getA(), 0.0);
         assertEquals(0.0, accumulatedOrientation.getB(), 0.0);
         assertEquals(0.0, accumulatedOrientation.getC(), 0.0);
@@ -997,32 +957,30 @@ public class AbsoluteOrientationSlamCalibratorTest implements
         assertEquals(0, calibrator.getAccumulatedOrientationSamples());
         assertFalse(calibrator.isFullSampleAvailable());
 
-        final Quaternion accumulatedOrientation2 = new Quaternion();
+        final var accumulatedOrientation2 = new Quaternion();
         calibrator.getAccumulatedOrientation(accumulatedOrientation2);
         assertEquals(accumulatedOrientation, accumulatedOrientation2);
 
         // update with several samples
-        long timestamp = System.currentTimeMillis();
+        var timestamp = System.currentTimeMillis();
         double orientationA;
         double orientationB;
         double orientationC;
         double orientationD;
-        double avgOrientationA = 0.0;
-        double avgOrientationB = 0.0;
-        double avgOrientationC = 0.0;
-        double avgOrientationD = 0.0;
-        final Quaternion orientation = new Quaternion();
+        var avgOrientationA = 0.0;
+        var avgOrientationB = 0.0;
+        var avgOrientationC = 0.0;
+        var avgOrientationD = 0.0;
+        final var orientation = new Quaternion();
         double norm;
-        for (int i = 0; i < TIMES; i++) {
+        for (var i = 0; i < TIMES; i++) {
             timestamp += 1000;
             orientationA = randomizer.nextDouble();
             orientationB = randomizer.nextDouble();
             orientationC = randomizer.nextDouble();
             orientationD = randomizer.nextDouble();
-            norm = Math.sqrt(orientationA * orientationA +
-                    orientationB * orientationB +
-                    orientationC * orientationC +
-                    orientationD * orientationD);
+            norm = Math.sqrt(orientationA * orientationA + orientationB * orientationB + orientationC * orientationC
+                    + orientationD * orientationD);
             orientationA /= norm;
             orientationB /= norm;
             orientationC /= norm;
@@ -1054,27 +1012,26 @@ public class AbsoluteOrientationSlamCalibratorTest implements
     }
 
     @Test
-    public void testCalibrationWithOffset() throws SignalProcessingException {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testCalibrationWithOffset() throws SignalProcessingException {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
         calibrator.setListener(this);
 
         // setup so that calibrator doesn't reach convergence
         calibrator.setMaxNumSamples(N_SAMPLES);
         calibrator.setConvergenceThreshold(0.0);
 
-        final UniformRandomizer offsetRandomizer = new UniformRandomizer(new Random());
-        final GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
-                new Random(), 0.0, NOISE_DEVIATION);
+        final var offsetRandomizer = new UniformRandomizer();
+        final var noiseRandomizer = new GaussianRandomizer(0.0, NOISE_DEVIATION);
 
-        final float accelerationOffsetX = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
-        final float accelerationOffsetY = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
-        final float accelerationOffsetZ = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final var accelerationOffsetX = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final var accelerationOffsetY = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final var accelerationOffsetZ = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
 
-        final float angularOffsetX = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
-        final float angularOffsetY = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
-        final float angularOffsetZ = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final var angularOffsetX = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final var angularOffsetY = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final var angularOffsetZ = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
 
-        long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
+        var timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
 
         float accelerationNoiseX;
         float accelerationNoiseY;
@@ -1083,34 +1040,33 @@ public class AbsoluteOrientationSlamCalibratorTest implements
         float angularNoiseY;
         float angularNoiseZ;
 
-        double accelerationX = 0.0;
-        double accelerationY = 0.0;
-        double accelerationZ = 0.0;
-        double angularX = 0.0;
-        double angularY = 0.0;
-        double angularZ = 0.0;
+        var accelerationX = 0.0;
+        var accelerationY = 0.0;
+        var accelerationZ = 0.0;
+        var angularX = 0.0;
+        var angularY = 0.0;
+        var angularZ = 0.0;
         double deltaAccelerationX;
         double deltaAccelerationY;
         double deltaAccelerationZ;
         double deltaAngularX;
         double deltaAngularY;
         double deltaAngularZ;
-        double lastAccelerationX = 0.0;
-        double lastAccelerationY = 0.0;
-        double lastAccelerationZ = 0.0;
-        double lastAngularX = 0.0;
-        double lastAngularY = 0.0;
-        double lastAngularZ = 0.0;
-        final Quaternion orientation = new Quaternion();
+        var lastAccelerationX = 0.0;
+        var lastAccelerationY = 0.0;
+        var lastAccelerationZ = 0.0;
+        var lastAngularX = 0.0;
+        var lastAngularY = 0.0;
+        var lastAngularZ = 0.0;
+        final var orientation = new Quaternion();
 
         calibrator.reset();
         reset();
 
-        final MeasurementNoiseCovarianceEstimator estimator =
-                new MeasurementNoiseCovarianceEstimator(13);
-        final double[] sample = new double[13];
+        final var estimator = new MeasurementNoiseCovarianceEstimator(13);
+        final var sample = new double[13];
 
-        for (int i = 0; i < N_SAMPLES; i++) {
+        for (var i = 0; i < N_SAMPLES; i++) {
             accelerationNoiseX = noiseRandomizer.nextFloat();
             accelerationNoiseY = noiseRandomizer.nextFloat();
             accelerationNoiseZ = noiseRandomizer.nextFloat();
@@ -1127,8 +1083,8 @@ public class AbsoluteOrientationSlamCalibratorTest implements
             angularY += angularOffsetY + angularNoiseY;
             angularZ += angularOffsetZ + angularNoiseZ;
 
-            calibrator.updateAccelerometerSample(timestamp, (float) accelerationX,
-                    (float) accelerationY, (float) accelerationZ);
+            calibrator.updateAccelerometerSample(timestamp, (float) accelerationX, (float) accelerationY,
+                    (float) accelerationZ);
             calibrator.updateGyroscopeSample(timestamp, (float) angularX, (float) angularY, (float) angularZ);
             calibrator.updateOrientationSample(timestamp, orientation);
 
@@ -1166,8 +1122,8 @@ public class AbsoluteOrientationSlamCalibratorTest implements
             lastAngularZ = angularZ;
         }
 
-        final double[] mean = calibrator.getControlMean();
-        final double[] mean2 = estimator.getSampleAverage();
+        final var mean = calibrator.getControlMean();
+        final var mean2 = estimator.getSampleAverage();
 
         assertArrayEquals(mean, mean2, LARGE_ABSOLUTE_ERROR);
         assertEquals(1.0, mean[0], ABSOLUTE_ERROR);
@@ -1207,27 +1163,26 @@ public class AbsoluteOrientationSlamCalibratorTest implements
     }
 
     @Test
-    public void testCalibrationWithoutOffset() throws SignalProcessingException {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testCalibrationWithoutOffset() throws SignalProcessingException {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
         calibrator.setListener(this);
 
         // setup so that calibrator doesn't reach convergence
         calibrator.setMaxNumSamples(N_SAMPLES);
         calibrator.setConvergenceThreshold(0.0);
 
-        final UniformRandomizer offsetRandomizer = new UniformRandomizer(new Random());
-        final GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
-                new Random(), 0.0, NOISE_DEVIATION);
+        final var offsetRandomizer = new UniformRandomizer();
+        final var noiseRandomizer = new GaussianRandomizer(0.0, NOISE_DEVIATION);
 
-        final float accelerationOffsetX = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
-        final float accelerationOffsetY = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
-        final float accelerationOffsetZ = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final var accelerationOffsetX = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final var accelerationOffsetY = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final var accelerationOffsetZ = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
 
-        final float angularOffsetX = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
-        final float angularOffsetY = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
-        final float angularOffsetZ = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final var angularOffsetX = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final var angularOffsetY = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final var angularOffsetZ = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
 
-        long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
+        var timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
 
         float accelerationNoiseX;
         float accelerationNoiseY;
@@ -1248,22 +1203,21 @@ public class AbsoluteOrientationSlamCalibratorTest implements
         double deltaAngularX;
         double deltaAngularY;
         double deltaAngularZ;
-        double lastAccelerationX = 0.0;
-        double lastAccelerationY = 0.0;
-        double lastAccelerationZ = 0.0;
-        double lastAngularX = 0.0;
-        double lastAngularY = 0.0;
-        double lastAngularZ = 0.0;
-        final Quaternion orientation = new Quaternion();
+        var lastAccelerationX = 0.0;
+        var lastAccelerationY = 0.0;
+        var lastAccelerationZ = 0.0;
+        var lastAngularX = 0.0;
+        var lastAngularY = 0.0;
+        var lastAngularZ = 0.0;
+        final var orientation = new Quaternion();
 
         calibrator.reset();
         reset();
 
-        final MeasurementNoiseCovarianceEstimator estimator =
-                new MeasurementNoiseCovarianceEstimator(13);
-        final double[] sample = new double[13];
+        final var estimator = new MeasurementNoiseCovarianceEstimator(13);
+        final var sample = new double[13];
 
-        for (int i = 0; i < N_SAMPLES; i++) {
+        for (var i = 0; i < N_SAMPLES; i++) {
             accelerationNoiseX = noiseRandomizer.nextFloat();
             accelerationNoiseY = noiseRandomizer.nextFloat();
             accelerationNoiseZ = noiseRandomizer.nextFloat();
@@ -1319,11 +1273,11 @@ public class AbsoluteOrientationSlamCalibratorTest implements
             lastAngularZ = angularZ;
         }
 
-        final double[] mean = calibrator.getControlMean();
-        final double[] mean2 = estimator.getSampleAverage();
+        final var mean = calibrator.getControlMean();
+        final var mean2 = estimator.getSampleAverage();
 
-        final Matrix cov = calibrator.getControlCovariance();
-        final Matrix cov2 = estimator.getMeasurementNoiseCov();
+        final var cov = calibrator.getControlCovariance();
+        final var cov2 = estimator.getMeasurementNoiseCov();
 
         assertArrayEquals(mean, mean2, LARGE_ABSOLUTE_ERROR);
         assertEquals(1.0, mean[0], ABSOLUTE_ERROR);
@@ -1358,23 +1312,22 @@ public class AbsoluteOrientationSlamCalibratorTest implements
     }
 
     @Test
-    public void testCalibrationConvergence() {
-        final AbsoluteOrientationSlamCalibrator calibrator = new AbsoluteOrientationSlamCalibrator();
+    void testCalibrationConvergence() {
+        final var calibrator = new AbsoluteOrientationSlamCalibrator();
         calibrator.setListener(this);
 
-        final UniformRandomizer offsetRandomizer = new UniformRandomizer(new Random());
-        final GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
-                new Random(), 0.0, NOISE_DEVIATION);
+        final var offsetRandomizer = new UniformRandomizer();
+        final var noiseRandomizer = new GaussianRandomizer(0.0, NOISE_DEVIATION);
 
-        final float accelerationOffsetX = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
-        final float accelerationOffsetY = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
-        final float accelerationOffsetZ = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final var accelerationOffsetX = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final var accelerationOffsetY = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final var accelerationOffsetZ = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
 
-        final float angularOffsetX = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
-        final float angularOffsetY = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
-        final float angularOffsetZ = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final var angularOffsetX = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final var angularOffsetY = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
+        final var angularOffsetZ = offsetRandomizer.nextFloat(MIN_OFFSET, MAX_OFFSET);
 
-        long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
+        var timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
 
         float accelerationNoiseX;
         float accelerationNoiseY;
@@ -1389,12 +1342,12 @@ public class AbsoluteOrientationSlamCalibratorTest implements
         double angularX;
         double angularY;
         double angularZ;
-        final Quaternion orientation = new Quaternion();
+        final var orientation = new Quaternion();
 
         calibrator.reset();
         reset();
 
-        for (int i = 0; i < N_SAMPLES; i++) {
+        for (var i = 0; i < N_SAMPLES; i++) {
             accelerationNoiseX = noiseRandomizer.nextFloat();
             accelerationNoiseY = noiseRandomizer.nextFloat();
             accelerationNoiseZ = noiseRandomizer.nextFloat();
@@ -1434,21 +1387,19 @@ public class AbsoluteOrientationSlamCalibratorTest implements
     }
 
     @Override
-    public void onFullSampleReceived(
-            final BaseSlamCalibrator<AbsoluteOrientationSlamCalibrationData> calibrator) {
+    public void onFullSampleReceived(final BaseSlamCalibrator<AbsoluteOrientationSlamCalibrationData> calibrator) {
         fullSampleReceived++;
     }
 
     @Override
-    public void onFullSampleProcessed(
-            final BaseSlamCalibrator<AbsoluteOrientationSlamCalibrationData> calibrator) {
+    public void onFullSampleProcessed(final BaseSlamCalibrator<AbsoluteOrientationSlamCalibrationData> calibrator) {
         fullSampleProcessed++;
     }
 
     @Override
     public void onCalibratorFinished(
-            final BaseSlamCalibrator<AbsoluteOrientationSlamCalibrationData> calibrator,
-            final boolean converged, final boolean failed) {
+            final BaseSlamCalibrator<AbsoluteOrientationSlamCalibrationData> calibrator, final boolean converged,
+            final boolean failed) {
         calibratorFinished++;
     }
 

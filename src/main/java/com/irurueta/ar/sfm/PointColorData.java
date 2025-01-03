@@ -30,13 +30,13 @@ public abstract class PointColorData implements Serializable {
      * ID to identify this instance. This is useful in case that this data is
      * stored in some sort of database and must be set externally.
      */
-    private String mId;
+    private String id;
 
     /**
      * Quality score of color data. The larger the value the higher the
      * quality of color data.
      */
-    private double mQualityScore = DEFAULT_QUALITY_SCORE;
+    private double qualityScore = DEFAULT_QUALITY_SCORE;
 
     /**
      * Constructor.
@@ -51,7 +51,7 @@ public abstract class PointColorData implements Serializable {
      * @return id to identify this instance.
      */
     public String getId() {
-        return mId;
+        return id;
     }
 
     /**
@@ -61,7 +61,7 @@ public abstract class PointColorData implements Serializable {
      * @param id id to identify this instance.
      */
     public void setId(final String id) {
-        mId = id;
+        this.id = id;
     }
 
     /**
@@ -71,7 +71,7 @@ public abstract class PointColorData implements Serializable {
      * @return quality score.
      */
     public double getQualityScore() {
-        return mQualityScore;
+        return qualityScore;
     }
 
     /**
@@ -81,7 +81,7 @@ public abstract class PointColorData implements Serializable {
      * @param qualityScore quality score to be set.
      */
     public void setQualityScore(final double qualityScore) {
-        mQualityScore = qualityScore;
+        this.qualityScore = qualityScore;
     }
 
     /**

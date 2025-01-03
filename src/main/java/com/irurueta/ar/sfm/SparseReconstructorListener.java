@@ -19,6 +19,5 @@ package com.irurueta.ar.sfm;
  * Listener to retrieve and store required data to compute a 3D reconstruction
  * from sparse image point correspondences.
  */
-public interface SparseReconstructorListener extends
-        BaseSparseReconstructorListener<SparseReconstructor> {
+public interface SparseReconstructorListener extends BaseSparseReconstructorListener<SparseReconstructor> {
 }

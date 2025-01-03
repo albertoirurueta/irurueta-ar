@@ -21,7 +21,6 @@ import com.irurueta.algebra.SingularValueDecomposer;
 import com.irurueta.algebra.WrongSizeException;
 import com.irurueta.geometry.HomogeneousPoint2D;
 import com.irurueta.geometry.InhomogeneousPoint3D;
-import com.irurueta.geometry.Line2D;
 import com.irurueta.geometry.MatrixRotation3D;
 import com.irurueta.geometry.PinholeCamera;
 import com.irurueta.geometry.PinholeCameraIntrinsicParameters;
@@ -29,15 +28,13 @@ import com.irurueta.geometry.Point2D;
 import com.irurueta.geometry.Point3D;
 import com.irurueta.geometry.estimators.LockedException;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class GoldStandardCorrectorTest implements CorrectorListener {
+class GoldStandardCorrectorTest implements CorrectorListener {
 
     private static final double ABSOLUTE_ERROR = 1e-6;
 
@@ -67,15 +64,14 @@ public class GoldStandardCorrectorTest implements CorrectorListener {
     private int correctProgressChange;
 
     @Test
-    public void testConstructor() throws WrongSizeException, DecomposerException,
-            InvalidFundamentalMatrixException, com.irurueta.algebra.LockedException,
-            com.irurueta.algebra.NotReadyException, com.irurueta.algebra.NotAvailableException {
+    void testConstructor() throws WrongSizeException, DecomposerException, InvalidFundamentalMatrixException,
+            com.irurueta.algebra.LockedException, com.irurueta.algebra.NotReadyException,
+            com.irurueta.algebra.NotAvailableException {
         // test constructor without arguments
-        GoldStandardCorrector corrector = new GoldStandardCorrector();
+        var corrector = new GoldStandardCorrector();
 
         // check correctness
-        assertEquals(GoldStandardCorrector.DEFAULT_FALLBACK_TO_SAMPSON_ENABLED,
-                corrector.isFallbackToSampsonEnabled());
+        assertEquals(GoldStandardCorrector.DEFAULT_FALLBACK_TO_SAMPSON_ENABLED, corrector.isFallbackToSampsonEnabled());
         assertNull(corrector.getFundamentalMatrix());
         assertNull(corrector.getLeftPoints());
         assertNull(corrector.getRightPoints());
@@ -88,33 +84,30 @@ public class GoldStandardCorrectorTest implements CorrectorListener {
         assertEquals(CorrectorType.GOLD_STANDARD, corrector.getType());
 
         // test constructor with fundamental matrix
-        final FundamentalMatrix emptyFundamentalMatrix = new FundamentalMatrix();
+        final var emptyFundamentalMatrix = new FundamentalMatrix();
         corrector = new GoldStandardCorrector(emptyFundamentalMatrix);
 
         // check correctness
-        assertEquals(GoldStandardCorrector.DEFAULT_FALLBACK_TO_SAMPSON_ENABLED,
-                corrector.isFallbackToSampsonEnabled());
+        assertEquals(GoldStandardCorrector.DEFAULT_FALLBACK_TO_SAMPSON_ENABLED, corrector.isFallbackToSampsonEnabled());
         assertSame(emptyFundamentalMatrix, corrector.getFundamentalMatrix());
         assertNull(corrector.getLeftPoints());
         assertNull(corrector.getRightPoints());
         assertNull(corrector.getLeftCorrectedPoints());
         assertNull(corrector.getRightCorrectedPoints());
         assertFalse(corrector.isLocked());
-        assertEquals(Corrector.DEFAULT_PROGRESS_DELTA,
-                corrector.getProgressDelta(), 0.0);
+        assertEquals(Corrector.DEFAULT_PROGRESS_DELTA, corrector.getProgressDelta(), 0.0);
         assertNull(corrector.getListener());
         assertFalse(corrector.isReady());
         assertEquals(CorrectorType.GOLD_STANDARD, corrector.getType());
 
         // test constructor with left and right points
-        final List<Point2D> leftPoints = new ArrayList<>();
-        final List<Point2D> rightPoints = new ArrayList<>();
+        final var leftPoints = new ArrayList<Point2D>();
+        final var rightPoints = new ArrayList<Point2D>();
 
         corrector = new GoldStandardCorrector(leftPoints, rightPoints);
 
         // check correctness
-        assertEquals(GoldStandardCorrector.DEFAULT_FALLBACK_TO_SAMPSON_ENABLED,
-                corrector.isFallbackToSampsonEnabled());
+        assertEquals(GoldStandardCorrector.DEFAULT_FALLBACK_TO_SAMPSON_ENABLED, corrector.isFallbackToSampsonEnabled());
         assertNull(corrector.getFundamentalMatrix());
         assertSame(leftPoints, corrector.getLeftPoints());
         assertSame(rightPoints, corrector.getRightPoints());
@@ -127,28 +120,17 @@ public class GoldStandardCorrectorTest implements CorrectorListener {
         assertEquals(CorrectorType.GOLD_STANDARD, corrector.getType());
 
         // Force IllegalArgumentException
-        final List<Point2D> badPoints = new ArrayList<>();
+        final var badPoints = new ArrayList<Point2D>();
         badPoints.add(Point2D.create());
 
-        corrector = null;
-        try {
-            corrector = new GoldStandardCorrector(badPoints, rightPoints);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            corrector = new GoldStandardCorrector(leftPoints, badPoints);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(corrector);
+        assertThrows(IllegalArgumentException.class, () -> new GoldStandardCorrector(badPoints, rightPoints));
+        assertThrows(IllegalArgumentException.class, () -> new GoldStandardCorrector(leftPoints, badPoints));
 
         // test constructor with left and right points and fundamental matrix
         corrector = new GoldStandardCorrector(leftPoints, rightPoints, emptyFundamentalMatrix);
 
         // check correctness
-        assertEquals(GoldStandardCorrector.DEFAULT_FALLBACK_TO_SAMPSON_ENABLED,
-                corrector.isFallbackToSampsonEnabled());
+        assertEquals(GoldStandardCorrector.DEFAULT_FALLBACK_TO_SAMPSON_ENABLED, corrector.isFallbackToSampsonEnabled());
         assertSame(emptyFundamentalMatrix, corrector.getFundamentalMatrix());
         assertSame(leftPoints, corrector.getLeftPoints());
         assertSame(rightPoints, corrector.getRightPoints());
@@ -165,22 +147,21 @@ public class GoldStandardCorrectorTest implements CorrectorListener {
         FundamentalMatrix fundamentalMatrix;
         int rank;
         do {
-            Matrix internalMatrix = Matrix.createWithUniformRandomValues(
-                    FundamentalMatrix.FUNDAMENTAL_MATRIX_ROWS,
+            var internalMatrix = Matrix.createWithUniformRandomValues(FundamentalMatrix.FUNDAMENTAL_MATRIX_ROWS,
                     FundamentalMatrix.FUNDAMENTAL_MATRIX_COLS, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
             // ensure that internal matrix has rank 2
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(internalMatrix);
+            final var decomposer = new SingularValueDecomposer(internalMatrix);
             decomposer.decompose();
 
             // if rank is less than 2 we need to
             // pick another random matrix
             rank = decomposer.getRank();
 
-            final Matrix u = decomposer.getU();
-            final Matrix w = decomposer.getW();
-            final Matrix v = decomposer.getV();
-            final Matrix transV = v.transposeAndReturnNew();
+            final var u = decomposer.getU();
+            final var w = decomposer.getW();
+            final var v = decomposer.getV();
+            final var transV = v.transposeAndReturnNew();
 
             // set last element to 0 to force rank 2
             w.setElementAt(2, 2, 0.0);
@@ -193,8 +174,7 @@ public class GoldStandardCorrectorTest implements CorrectorListener {
         corrector = new GoldStandardCorrector(leftPoints, rightPoints, fundamentalMatrix);
 
         // check correctness
-        assertEquals(GoldStandardCorrector.DEFAULT_FALLBACK_TO_SAMPSON_ENABLED,
-                corrector.isFallbackToSampsonEnabled());
+        assertEquals(GoldStandardCorrector.DEFAULT_FALLBACK_TO_SAMPSON_ENABLED, corrector.isFallbackToSampsonEnabled());
         assertSame(fundamentalMatrix, corrector.getFundamentalMatrix());
         assertSame(leftPoints, corrector.getLeftPoints());
         assertSame(rightPoints, corrector.getRightPoints());
@@ -207,33 +187,24 @@ public class GoldStandardCorrectorTest implements CorrectorListener {
         assertTrue(corrector.isReady());
         assertEquals(CorrectorType.GOLD_STANDARD, corrector.getType());
 
-        corrector = null;
-        try {
-            corrector = new GoldStandardCorrector(badPoints, rightPoints, fundamentalMatrix);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            corrector = new GoldStandardCorrector(leftPoints, badPoints, fundamentalMatrix);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(corrector);
+        final var finalFundamentalMatrix = fundamentalMatrix;
+        assertThrows(IllegalArgumentException.class,
+                () -> new GoldStandardCorrector(badPoints, rightPoints, finalFundamentalMatrix));
+        assertThrows(IllegalArgumentException.class,
+                () -> new GoldStandardCorrector(leftPoints, badPoints, finalFundamentalMatrix));
 
         // test constructor with listener
         corrector = new GoldStandardCorrector(this);
 
         // check correctness
-        assertEquals(GoldStandardCorrector.DEFAULT_FALLBACK_TO_SAMPSON_ENABLED,
-                corrector.isFallbackToSampsonEnabled());
+        assertEquals(GoldStandardCorrector.DEFAULT_FALLBACK_TO_SAMPSON_ENABLED, corrector.isFallbackToSampsonEnabled());
         assertNull(corrector.getFundamentalMatrix());
         assertNull(corrector.getLeftPoints());
         assertNull(corrector.getRightPoints());
         assertNull(corrector.getLeftCorrectedPoints());
         assertNull(corrector.getRightCorrectedPoints());
         assertFalse(corrector.isLocked());
-        assertEquals(Corrector.DEFAULT_PROGRESS_DELTA,
-                corrector.getProgressDelta(), 0.0);
+        assertEquals(Corrector.DEFAULT_PROGRESS_DELTA, corrector.getProgressDelta(), 0.0);
         assertSame(this, corrector.getListener());
         assertFalse(corrector.isReady());
         assertEquals(CorrectorType.GOLD_STANDARD, corrector.getType());
@@ -242,8 +213,7 @@ public class GoldStandardCorrectorTest implements CorrectorListener {
         corrector = new GoldStandardCorrector(fundamentalMatrix, this);
 
         // check correctness
-        assertEquals(GoldStandardCorrector.DEFAULT_FALLBACK_TO_SAMPSON_ENABLED,
-                corrector.isFallbackToSampsonEnabled());
+        assertEquals(GoldStandardCorrector.DEFAULT_FALLBACK_TO_SAMPSON_ENABLED, corrector.isFallbackToSampsonEnabled());
         assertSame(fundamentalMatrix, corrector.getFundamentalMatrix());
         assertNull(corrector.getLeftPoints());
         assertNull(corrector.getRightPoints());
@@ -259,8 +229,7 @@ public class GoldStandardCorrectorTest implements CorrectorListener {
         corrector = new GoldStandardCorrector(leftPoints, rightPoints, this);
 
         // check correctness
-        assertEquals(GoldStandardCorrector.DEFAULT_FALLBACK_TO_SAMPSON_ENABLED,
-                corrector.isFallbackToSampsonEnabled());
+        assertEquals(GoldStandardCorrector.DEFAULT_FALLBACK_TO_SAMPSON_ENABLED, corrector.isFallbackToSampsonEnabled());
         assertNull(corrector.getFundamentalMatrix());
         assertSame(leftPoints, corrector.getLeftPoints());
         assertSame(rightPoints, corrector.getRightPoints());
@@ -272,35 +241,24 @@ public class GoldStandardCorrectorTest implements CorrectorListener {
         assertFalse(corrector.isReady());
         assertEquals(CorrectorType.GOLD_STANDARD, corrector.getType());
 
-        corrector = null;
-        try {
-            corrector = new GoldStandardCorrector(badPoints, rightPoints, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            corrector = new GoldStandardCorrector(leftPoints, badPoints, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(corrector);
+        assertThrows(IllegalArgumentException.class,
+                () -> new GoldStandardCorrector(badPoints, rightPoints, this));
+        assertThrows(IllegalArgumentException.class,
+                () -> new GoldStandardCorrector(leftPoints, badPoints, this));
 
         // test constructor with left and right points, fundamental matrix
         // and listener
-        corrector = new GoldStandardCorrector(leftPoints, rightPoints,
-                emptyFundamentalMatrix, this);
+        corrector = new GoldStandardCorrector(leftPoints, rightPoints, emptyFundamentalMatrix, this);
 
         // check correctness
-        assertEquals(GoldStandardCorrector.DEFAULT_FALLBACK_TO_SAMPSON_ENABLED,
-                corrector.isFallbackToSampsonEnabled());
+        assertEquals(GoldStandardCorrector.DEFAULT_FALLBACK_TO_SAMPSON_ENABLED, corrector.isFallbackToSampsonEnabled());
         assertSame(emptyFundamentalMatrix, corrector.getFundamentalMatrix());
         assertSame(leftPoints, corrector.getLeftPoints());
         assertSame(rightPoints, corrector.getRightPoints());
         assertNull(corrector.getLeftCorrectedPoints());
         assertNull(corrector.getRightCorrectedPoints());
         assertFalse(corrector.isLocked());
-        assertEquals(Corrector.DEFAULT_PROGRESS_DELTA,
-                corrector.getProgressDelta(), 0.0);
+        assertEquals(Corrector.DEFAULT_PROGRESS_DELTA, corrector.getProgressDelta(), 0.0);
         assertSame(this, corrector.getListener());
         // fundamental matrix not defined
         assertFalse(corrector.isReady());
@@ -311,8 +269,7 @@ public class GoldStandardCorrectorTest implements CorrectorListener {
         corrector = new GoldStandardCorrector(leftPoints, rightPoints, fundamentalMatrix, this);
 
         // check correctness
-        assertEquals(GoldStandardCorrector.DEFAULT_FALLBACK_TO_SAMPSON_ENABLED,
-                corrector.isFallbackToSampsonEnabled());
+        assertEquals(GoldStandardCorrector.DEFAULT_FALLBACK_TO_SAMPSON_ENABLED, corrector.isFallbackToSampsonEnabled());
         assertSame(fundamentalMatrix, corrector.getFundamentalMatrix());
         assertSame(leftPoints, corrector.getLeftPoints());
         assertSame(rightPoints, corrector.getRightPoints());
@@ -324,31 +281,21 @@ public class GoldStandardCorrectorTest implements CorrectorListener {
         assertTrue(corrector.isReady());
         assertEquals(CorrectorType.GOLD_STANDARD, corrector.getType());
 
-        corrector = null;
-        try {
-            corrector = new GoldStandardCorrector(badPoints, rightPoints, fundamentalMatrix, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            corrector = new GoldStandardCorrector(leftPoints, badPoints, fundamentalMatrix, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(corrector);
+        assertThrows(IllegalArgumentException.class,
+                () -> new GoldStandardCorrector(badPoints, rightPoints, finalFundamentalMatrix, this));
+        assertThrows(IllegalArgumentException.class,
+                () -> new GoldStandardCorrector(leftPoints, badPoints, finalFundamentalMatrix, this));
     }
 
     @Test
-    public void testIsFallbackToSampsonEnabled() throws LockedException {
-        final GoldStandardCorrector corrector = new GoldStandardCorrector();
+    void testIsFallbackToSampsonEnabled() throws LockedException {
+        final var corrector = new GoldStandardCorrector();
 
         // check default value
-        assertEquals(GoldStandardCorrector.DEFAULT_FALLBACK_TO_SAMPSON_ENABLED,
-                corrector.isFallbackToSampsonEnabled());
+        assertEquals(GoldStandardCorrector.DEFAULT_FALLBACK_TO_SAMPSON_ENABLED, corrector.isFallbackToSampsonEnabled());
 
         // set new value
-        corrector.setFallbackToSampsonEnabled(
-                !GoldStandardCorrector.DEFAULT_FALLBACK_TO_SAMPSON_ENABLED);
+        corrector.setFallbackToSampsonEnabled(!GoldStandardCorrector.DEFAULT_FALLBACK_TO_SAMPSON_ENABLED);
 
         // check correctness
         assertEquals(!GoldStandardCorrector.DEFAULT_FALLBACK_TO_SAMPSON_ENABLED,
@@ -356,14 +303,14 @@ public class GoldStandardCorrectorTest implements CorrectorListener {
     }
 
     @Test
-    public void testGetSetFundamentalMatrix() throws LockedException {
-        final GoldStandardCorrector corrector = new GoldStandardCorrector();
+    void testGetSetFundamentalMatrix() throws LockedException {
+        final var corrector = new GoldStandardCorrector();
 
         // check default value
         assertNull(corrector.getFundamentalMatrix());
 
         // set new value
-        final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix();
+        final var fundamentalMatrix = new FundamentalMatrix();
         corrector.setFundamentalMatrix(fundamentalMatrix);
 
         // check correctness
@@ -371,16 +318,16 @@ public class GoldStandardCorrectorTest implements CorrectorListener {
     }
 
     @Test
-    public void testGetSetLeftAndRightPoints() throws LockedException {
-        final GoldStandardCorrector corrector = new GoldStandardCorrector();
+    void testGetSetLeftAndRightPoints() throws LockedException {
+        final var corrector = new GoldStandardCorrector();
 
         // check default values
         assertNull(corrector.getLeftPoints());
         assertNull(corrector.getRightPoints());
 
         // set new values
-        final List<Point2D> leftPoints = new ArrayList<>();
-        final List<Point2D> rightPoints = new ArrayList<>();
+        final var leftPoints = new ArrayList<Point2D>();
+        final var rightPoints = new ArrayList<Point2D>();
 
         corrector.setLeftAndRightPoints(leftPoints, rightPoints);
 
@@ -389,24 +336,16 @@ public class GoldStandardCorrectorTest implements CorrectorListener {
         assertSame(rightPoints, corrector.getRightPoints());
 
         // Force IllegalArgumentException
-        final List<Point2D> badPoints = new ArrayList<>();
+        final var badPoints = new ArrayList<Point2D>();
         badPoints.add(Point2D.create());
 
-        try {
-            corrector.setLeftAndRightPoints(leftPoints, badPoints);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            corrector.setLeftAndRightPoints(badPoints, rightPoints);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> corrector.setLeftAndRightPoints(leftPoints, badPoints));
+        assertThrows(IllegalArgumentException.class, () -> corrector.setLeftAndRightPoints(badPoints, rightPoints));
     }
 
     @Test
-    public void testGetSetPointsAndFundamentalMatrix() throws LockedException {
-        final GoldStandardCorrector corrector = new GoldStandardCorrector();
+    void testGetSetPointsAndFundamentalMatrix() throws LockedException {
+        final var corrector = new GoldStandardCorrector();
 
         // check default values
         assertNull(corrector.getLeftPoints());
@@ -414,9 +353,9 @@ public class GoldStandardCorrectorTest implements CorrectorListener {
         assertNull(corrector.getFundamentalMatrix());
 
         // set new values
-        final List<Point2D> leftPoints = new ArrayList<>();
-        final List<Point2D> rightPoints = new ArrayList<>();
-        final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix();
+        final var leftPoints = new ArrayList<Point2D>();
+        final var rightPoints = new ArrayList<Point2D>();
+        final var fundamentalMatrix = new FundamentalMatrix();
 
         corrector.setPointsAndFundamentalMatrix(leftPoints, rightPoints, fundamentalMatrix);
 
@@ -426,24 +365,18 @@ public class GoldStandardCorrectorTest implements CorrectorListener {
         assertSame(fundamentalMatrix, corrector.getFundamentalMatrix());
 
         // Force IllegalArgumentException
-        final List<Point2D> badPoints = new ArrayList<>();
+        final var badPoints = new ArrayList<Point2D>();
         badPoints.add(Point2D.create());
 
-        try {
-            corrector.setPointsAndFundamentalMatrix(badPoints, rightPoints, fundamentalMatrix);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            corrector.setPointsAndFundamentalMatrix(leftPoints, badPoints, fundamentalMatrix);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class,
+                () -> corrector.setPointsAndFundamentalMatrix(badPoints, rightPoints, fundamentalMatrix));
+        assertThrows(IllegalArgumentException.class,
+                () -> corrector.setPointsAndFundamentalMatrix(leftPoints, badPoints, fundamentalMatrix));
     }
 
     @Test
-    public void testGetSetProgressDelta() throws LockedException {
-        final GoldStandardCorrector corrector = new GoldStandardCorrector();
+    void testGetSetProgressDelta() throws LockedException {
+        final var corrector = new GoldStandardCorrector();
 
         // check default values
         assertEquals(Corrector.DEFAULT_PROGRESS_DELTA, corrector.getProgressDelta(), 0.0);
@@ -456,8 +389,8 @@ public class GoldStandardCorrectorTest implements CorrectorListener {
     }
 
     @Test
-    public void testGetSetListener() throws LockedException {
-        final GoldStandardCorrector corrector = new GoldStandardCorrector();
+    void testGetSetListener() throws LockedException {
+        final var corrector = new GoldStandardCorrector();
 
         // check default values
         assertNull(corrector.getListener());
@@ -470,9 +403,9 @@ public class GoldStandardCorrectorTest implements CorrectorListener {
     }
 
     @Test
-    public void testAreValidPoints() {
-        final List<Point2D> leftPoints = new ArrayList<>();
-        final List<Point2D> rightPoints = new ArrayList<>();
+    void testAreValidPoints() {
+        final var leftPoints = new ArrayList<Point2D>();
+        final var rightPoints = new ArrayList<Point2D>();
 
         assertFalse(GoldStandardCorrector.areValidPoints(null, null));
         assertFalse(GoldStandardCorrector.areValidPoints(leftPoints, null));
@@ -481,105 +414,84 @@ public class GoldStandardCorrectorTest implements CorrectorListener {
     }
 
     @Test
-    public void testCorrect() throws InvalidPairOfCamerasException,
-            com.irurueta.geometry.estimators.NotReadyException, LockedException, CorrectionException {
+    void testCorrect() throws InvalidPairOfCamerasException, com.irurueta.geometry.estimators.NotReadyException,
+            LockedException, CorrectionException {
 
-        int improved = 0, total = 0;
-        for (int t = 0; t < TIMES; t++) {
+        var improved = 0;
+        var total = 0;
+        for (var t = 0; t < TIMES; t++) {
             // create intrinsic parameters
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double alphaEuler1 = 0.0;
-            final double betaEuler1 = 0.0;
-            final double gammaEuler1 = 0.0;
-            final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+            final var randomizer = new UniformRandomizer();
+            final var alphaEuler1 = 0.0;
+            final var betaEuler1 = 0.0;
+            final var gammaEuler1 = 0.0;
+            final var alphaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var betaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var gammaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-            final double horizontalFocalLength1 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength1 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double horizontalFocalLength2 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength2 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var horizontalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var verticalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var horizontalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var verticalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
-            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final var skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final var skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
 
-            final double horizontalPrincipalPoint1 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double verticalPrincipalPoint1 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double horizontalPrincipalPoint2 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double verticalPrincipalPoint2 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var horizontalPrincipalPoint1 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var verticalPrincipalPoint1 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var horizontalPrincipalPoint2 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var verticalPrincipalPoint2 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
-            final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
+            final var cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
-            final PinholeCameraIntrinsicParameters intrinsic1 =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
-                            verticalFocalLength1, horizontalPrincipalPoint1,
-                            verticalPrincipalPoint1, skewness1);
-            final PinholeCameraIntrinsicParameters intrinsic2 =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength2,
-                            verticalFocalLength2, horizontalPrincipalPoint2,
-                            verticalPrincipalPoint2, skewness2);
+            final var intrinsic1 = new PinholeCameraIntrinsicParameters(horizontalFocalLength1, verticalFocalLength1,
+                    horizontalPrincipalPoint1, verticalPrincipalPoint1, skewness1);
+            final var intrinsic2 = new PinholeCameraIntrinsicParameters(horizontalFocalLength2, verticalFocalLength2,
+                    horizontalPrincipalPoint2, verticalPrincipalPoint2, skewness2);
 
             // camera centers
-            final Point3D cameraCenter1 = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+            final var cameraCenter1 = new InhomogeneousPoint3D(randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            final Point3D cameraCenter2 = new InhomogeneousPoint3D(
-                    cameraCenter1.getInhomX() + cameraSeparation,
-                    cameraCenter1.getInhomY() + cameraSeparation,
-                    cameraCenter1.getInhomZ() + cameraSeparation);
+            final var cameraCenter2 = new InhomogeneousPoint3D(cameraCenter1.getInhomX() + cameraSeparation,
+                    cameraCenter1.getInhomY() + cameraSeparation, cameraCenter1.getInhomZ() + cameraSeparation);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+            final var rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final var rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
             // create random list of 3D points to project
-            final int nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
-            final List<Point3D> pointsToProject = new ArrayList<>(nPoints);
-            for (int i = 0; i < nPoints; i++) {
-                pointsToProject.add(new InhomogeneousPoint3D(
-                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+            final var nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
+            final var pointsToProject = new ArrayList<Point3D>(nPoints);
+            for (var i = 0; i < nPoints; i++) {
+                pointsToProject.add(new InhomogeneousPoint3D(randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE)));
             }
             total += nPoints;
 
             // create two cameras
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, cameraCenter1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, cameraCenter2);
+            final var camera1 = new PinholeCamera(intrinsic1, rotation1, cameraCenter1);
+            final var camera2 = new PinholeCamera(intrinsic2, rotation2, cameraCenter2);
 
             // project 3D points with both cameras
-            final List<Point2D> leftPoints = camera1.project(pointsToProject);
-            final List<Point2D> rightPoints = camera2.project(pointsToProject);
+            final var leftPoints = camera1.project(pointsToProject);
+            final var rightPoints = camera2.project(pointsToProject);
 
             // add error to projected points
-            final List<Point2D> wrongLeftPoints = new ArrayList<>(nPoints);
-            final List<Point2D> wrongRightPoints = new ArrayList<>(nPoints);
-            for (int i = 0; i < nPoints; i++) {
-                final double errorLeftX = randomizer.nextDouble(MIN_PROJECTED_ERROR, MAX_PROJECTED_ERROR);
-                final double errorLeftY = randomizer.nextDouble(MIN_PROJECTED_ERROR, MAX_PROJECTED_ERROR);
-                final double errorRightX = randomizer.nextDouble(MIN_PROJECTED_ERROR, MAX_PROJECTED_ERROR);
-                final double errorRightY = randomizer.nextDouble(MIN_PROJECTED_ERROR, MAX_PROJECTED_ERROR);
+            final var wrongLeftPoints = new ArrayList<Point2D>(nPoints);
+            final var wrongRightPoints = new ArrayList<Point2D>(nPoints);
+            for (var i = 0; i < nPoints; i++) {
+                final var errorLeftX = randomizer.nextDouble(MIN_PROJECTED_ERROR, MAX_PROJECTED_ERROR);
+                final var errorLeftY = randomizer.nextDouble(MIN_PROJECTED_ERROR, MAX_PROJECTED_ERROR);
+                final var errorRightX = randomizer.nextDouble(MIN_PROJECTED_ERROR, MAX_PROJECTED_ERROR);
+                final var errorRightY = randomizer.nextDouble(MIN_PROJECTED_ERROR, MAX_PROJECTED_ERROR);
 
-                final Point2D leftPoint = leftPoints.get(i);
-                final Point2D rightPoint = rightPoints.get(i);
+                final var leftPoint = leftPoints.get(i);
+                final var rightPoint = rightPoints.get(i);
 
-                final Point2D wrongLeftPoint = new HomogeneousPoint2D(
-                        leftPoint.getInhomX() + errorLeftX,
+                final var wrongLeftPoint = new HomogeneousPoint2D(leftPoint.getInhomX() + errorLeftX,
                         leftPoint.getInhomY() + errorLeftY, 1.0);
-                final Point2D wrongRightPoint = new HomogeneousPoint2D(
-                        rightPoint.getInhomX() + errorRightX,
+                final var wrongRightPoint = new HomogeneousPoint2D(rightPoint.getInhomX() + errorRightX,
                         rightPoint.getInhomY() + errorRightY, 1.0);
 
                 wrongLeftPoints.add(wrongLeftPoint);
@@ -588,23 +500,23 @@ public class GoldStandardCorrectorTest implements CorrectorListener {
 
             // create fundamental matrix for the same pair of cameras used to
             // project points
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
+            final var fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // check that points without error belong to epipolar lines
-            for (int i = 0; i < nPoints; i++) {
-                final Point2D leftPoint = leftPoints.get(i);
-                final Point2D rightPoint = rightPoints.get(i);
+            for (var i = 0; i < nPoints; i++) {
+                final var leftPoint = leftPoints.get(i);
+                final var rightPoint = rightPoints.get(i);
 
-                final Line2D rightEpipolarLine = fundamentalMatrix.getRightEpipolarLine(leftPoint);
-                final Line2D leftEpipolarLine = fundamentalMatrix.getLeftEpipolarLine(rightPoint);
+                final var rightEpipolarLine = fundamentalMatrix.getRightEpipolarLine(leftPoint);
+                final var leftEpipolarLine = fundamentalMatrix.getLeftEpipolarLine(rightPoint);
 
                 assertTrue(rightEpipolarLine.isLocus(rightPoint, ABSOLUTE_ERROR));
                 assertTrue(leftEpipolarLine.isLocus(leftPoint, 2.0 * ABSOLUTE_ERROR));
             }
 
             // use corrector to fix points with error
-            final GoldStandardCorrector corrector = new GoldStandardCorrector(
-                    wrongLeftPoints, wrongRightPoints, fundamentalMatrix, this);
+            final var corrector = new GoldStandardCorrector(wrongLeftPoints, wrongRightPoints, fundamentalMatrix,
+                    this);
 
             assertTrue(corrector.isReady());
             assertFalse(corrector.isLocked());
@@ -621,33 +533,33 @@ public class GoldStandardCorrectorTest implements CorrectorListener {
             assertTrue(correctProgressChange > 0);
             reset();
 
-            final List<Point2D> correctedLeftPoints = corrector.getLeftCorrectedPoints();
-            final List<Point2D> correctedRightPoints = corrector.getRightCorrectedPoints();
+            final var correctedLeftPoints = corrector.getLeftCorrectedPoints();
+            final var correctedRightPoints = corrector.getRightCorrectedPoints();
 
             // check correctness
-            for (int i = 0; i < nPoints; i++) {
-                final Point2D correctedLeftPoint = correctedLeftPoints.get(i);
-                final Point2D correctedRightPoint = correctedRightPoints.get(i);
+            for (var i = 0; i < nPoints; i++) {
+                final var correctedLeftPoint = correctedLeftPoints.get(i);
+                final var correctedRightPoint = correctedRightPoints.get(i);
 
-                final Point2D wrongLeftPoint = wrongLeftPoints.get(i);
-                final Point2D wrongRightPoint = wrongRightPoints.get(i);
+                final var wrongLeftPoint = wrongLeftPoints.get(i);
+                final var wrongRightPoint = wrongRightPoints.get(i);
 
-                Line2D rightEpipolarLine = fundamentalMatrix.getRightEpipolarLine(correctedLeftPoint);
-                Line2D leftEpipolarLine = fundamentalMatrix.getLeftEpipolarLine(correctedRightPoint);
+                var rightEpipolarLine = fundamentalMatrix.getRightEpipolarLine(correctedLeftPoint);
+                var leftEpipolarLine = fundamentalMatrix.getLeftEpipolarLine(correctedRightPoint);
 
-                final double correctedDistanceLeft = leftEpipolarLine.signedDistance(correctedLeftPoint);
-                final double correctedDistanceRight = rightEpipolarLine.signedDistance(correctedRightPoint);
+                final var correctedDistanceLeft = leftEpipolarLine.signedDistance(correctedLeftPoint);
+                final var correctedDistanceRight = rightEpipolarLine.signedDistance(correctedRightPoint);
 
                 rightEpipolarLine = fundamentalMatrix.getRightEpipolarLine(wrongLeftPoint);
                 leftEpipolarLine = fundamentalMatrix.getLeftEpipolarLine(wrongRightPoint);
 
-                final double wrongDistanceLeft = leftEpipolarLine.signedDistance(wrongLeftPoint);
-                final double wrongDistanceRight = rightEpipolarLine.signedDistance(wrongRightPoint);
+                final var wrongDistanceLeft = leftEpipolarLine.signedDistance(wrongLeftPoint);
+                final var wrongDistanceRight = rightEpipolarLine.signedDistance(wrongRightPoint);
 
                 // check that corrector has indeed reduced the amount of
                 // projection error
-                if ((Math.abs(correctedDistanceLeft) <= Math.abs(wrongDistanceLeft)) &&
-                        (Math.abs(correctedDistanceRight) <= Math.abs(wrongDistanceRight))) {
+                if ((Math.abs(correctedDistanceLeft) <= Math.abs(wrongDistanceLeft))
+                        && (Math.abs(correctedDistanceRight) <= Math.abs(wrongDistanceRight))) {
                     improved++;
                 }
             }
@@ -683,42 +595,14 @@ public class GoldStandardCorrectorTest implements CorrectorListener {
     }
 
     private void checkLocked(final GoldStandardCorrector corrector) {
-        try {
-            corrector.setFundamentalMatrix(null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            corrector.setLeftAndRightPoints(null, null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            corrector.setListener(this);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            corrector.setPointsAndFundamentalMatrix(null, null, null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            corrector.setProgressDelta(0.5f);
-        } catch (final LockedException ignore) {
-        }
-        try {
-            corrector.setFallbackToSampsonEnabled(true);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            corrector.correct();
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        } catch (final Exception ignore) {
-            fail("LockedException expected but not thrown");
-        }
+        assertThrows(LockedException.class, () -> corrector.setFundamentalMatrix(null));
+        assertThrows(LockedException.class, () -> corrector.setLeftAndRightPoints(null, null));
+        assertThrows(LockedException.class, () -> corrector.setListener(this));
+        assertThrows(LockedException.class,
+                () -> corrector.setPointsAndFundamentalMatrix(null, null, null));
+        assertThrows(LockedException.class, () -> corrector.setProgressDelta(0.5f));
+        assertThrows(LockedException.class, () -> corrector.setFallbackToSampsonEnabled(true));
+        assertThrows(LockedException.class, corrector::correct);
         assertTrue(corrector.isLocked());
     }
 }

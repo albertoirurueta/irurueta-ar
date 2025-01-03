@@ -35,8 +35,7 @@ import java.util.logging.Logger;
  * Finds the best radial distortion for provided collection of 2D points using
  * LMedS algorithm
  */
-public class LMedSRadialDistortionRobustEstimator extends
-        RadialDistortionRobustEstimator {
+public class LMedSRadialDistortionRobustEstimator extends RadialDistortionRobustEstimator {
 
     /**
      * Default value to be used for stop threshold. Stop threshold can be used
@@ -77,14 +76,14 @@ public class LMedSRadialDistortionRobustEstimator extends
      * lower than the one typically used in RANSAC, and yet the algorithm could
      * still produce even smaller thresholds in estimated results.
      */
-    private double mStopThreshold;
+    private double stopThreshold;
 
     /**
      * Constructor.
      */
     public LMedSRadialDistortionRobustEstimator() {
         super();
-        mStopThreshold = DEFAULT_STOP_THRESHOLD;
+        stopThreshold = DEFAULT_STOP_THRESHOLD;
     }
 
     /**
@@ -93,10 +92,9 @@ public class LMedSRadialDistortionRobustEstimator extends
      * @param listener listener to be notified of events such as when
      *                 estimation starts, ends or its progress significantly changes.
      */
-    public LMedSRadialDistortionRobustEstimator(
-            final RadialDistortionRobustEstimatorListener listener) {
+    public LMedSRadialDistortionRobustEstimator(final RadialDistortionRobustEstimatorListener listener) {
         super(listener);
-        mStopThreshold = DEFAULT_STOP_THRESHOLD;
+        stopThreshold = DEFAULT_STOP_THRESHOLD;
     }
 
     /**
@@ -108,10 +106,10 @@ public class LMedSRadialDistortionRobustEstimator extends
      * @throws IllegalArgumentException if provided lists of points don't have
      *                                  the same size or their size is smaller than MIN_NUMBER_OF_POINTS.
      */
-    public LMedSRadialDistortionRobustEstimator(final List<Point2D> distortedPoints,
-                                                final List<Point2D> undistortedPoints) {
+    public LMedSRadialDistortionRobustEstimator(
+            final List<Point2D> distortedPoints, final List<Point2D> undistortedPoints) {
         super(distortedPoints, undistortedPoints);
-        mStopThreshold = DEFAULT_STOP_THRESHOLD;
+        stopThreshold = DEFAULT_STOP_THRESHOLD;
     }
 
     /**
@@ -129,7 +127,7 @@ public class LMedSRadialDistortionRobustEstimator extends
                                                 final List<Point2D> undistortedPoints,
                                                 final RadialDistortionRobustEstimatorListener listener) {
         super(distortedPoints, undistortedPoints, listener);
-        mStopThreshold = DEFAULT_STOP_THRESHOLD;
+        stopThreshold = DEFAULT_STOP_THRESHOLD;
     }
 
     /**
@@ -148,7 +146,7 @@ public class LMedSRadialDistortionRobustEstimator extends
                                                 final List<Point2D> undistortedPoints,
                                                 final Point2D distortionCenter) {
         super(distortedPoints, undistortedPoints, distortionCenter);
-        mStopThreshold = DEFAULT_STOP_THRESHOLD;
+        stopThreshold = DEFAULT_STOP_THRESHOLD;
     }
 
     /**
@@ -170,7 +168,7 @@ public class LMedSRadialDistortionRobustEstimator extends
                                                 final Point2D distortionCenter,
                                                 final RadialDistortionRobustEstimatorListener listener) {
         super(distortedPoints, undistortedPoints, distortionCenter, listener);
-        mStopThreshold = DEFAULT_STOP_THRESHOLD;
+        stopThreshold = DEFAULT_STOP_THRESHOLD;
     }
 
     /**
@@ -193,7 +191,7 @@ public class LMedSRadialDistortionRobustEstimator extends
      * accuracy has been reached.
      */
     public double getStopThreshold() {
-        return mStopThreshold;
+        return stopThreshold;
     }
 
     /**
@@ -226,7 +224,7 @@ public class LMedSRadialDistortionRobustEstimator extends
             throw new IllegalArgumentException();
         }
 
-        mStopThreshold = stopThreshold;
+        this.stopThreshold = stopThreshold;
     }
 
     /**
@@ -243,8 +241,7 @@ public class LMedSRadialDistortionRobustEstimator extends
      */
     @SuppressWarnings("DuplicatedCode")
     @Override
-    public RadialDistortion estimate() throws LockedException,
-            NotReadyException, RobustEstimatorException {
+    public RadialDistortion estimate() throws LockedException, NotReadyException, RobustEstimatorException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -252,137 +249,119 @@ public class LMedSRadialDistortionRobustEstimator extends
             throw new NotReadyException();
         }
 
-        final LMedSRobustEstimator<RadialDistortion> innerEstimator =
-                new LMedSRobustEstimator<>(
-                        new LMedSRobustEstimatorListener<RadialDistortion>() {
+        final var innerEstimator = new LMedSRobustEstimator<RadialDistortion>(new LMedSRobustEstimatorListener<>() {
 
-                            // point to be reused when computing residuals
-                            private final Point2D mTestPoint = Point2D.create(
-                                    CoordinatesType.INHOMOGENEOUS_COORDINATES);
+            // point to be reused when computing residuals
+            private final Point2D testPoint = Point2D.create(CoordinatesType.INHOMOGENEOUS_COORDINATES);
 
-                            // non-robust radial distortion estimator
-                            private final LMSERadialDistortionEstimator mRadialDistortionEstimator =
-                                    new LMSERadialDistortionEstimator();
+            // non-robust radial distortion estimator
+            private final LMSERadialDistortionEstimator radialDistortionEstimator = new LMSERadialDistortionEstimator();
 
-                            // subset of distorted (i.e. measured) points
-                            private final List<Point2D> mSubsetDistorted = new ArrayList<>();
+            // subset of distorted (i.e. measured) points
+            private final List<Point2D> subsetDistorted = new ArrayList<>();
 
-                            // subset of undistorted (i.e. ideal) points
-                            private final List<Point2D> mSubsetUndistorted = new ArrayList<>();
+            // subset of undistorted (i.e. ideal) points
+            private final List<Point2D> subsetUndistorted = new ArrayList<>();
 
-                            @Override
-                            public int getTotalSamples() {
-                                return mDistortedPoints.size();
-                            }
+            @Override
+            public int getTotalSamples() {
+                return distortedPoints.size();
+            }
 
-                            @Override
-                            public int getSubsetSize() {
-                                return RadialDistortionRobustEstimator.MIN_NUMBER_OF_POINTS;
-                            }
+            @Override
+            public int getSubsetSize() {
+                return RadialDistortionRobustEstimator.MIN_NUMBER_OF_POINTS;
+            }
 
-                            @Override
-                            public void estimatePreliminarSolutions(
-                                    final int[] samplesIndices, final List<RadialDistortion> solutions) {
-                                mSubsetDistorted.clear();
-                                mSubsetDistorted.add(mDistortedPoints.get(samplesIndices[0]));
-                                mSubsetDistorted.add(mDistortedPoints.get(samplesIndices[1]));
+            @Override
+            public void estimatePreliminarSolutions(
+                    final int[] samplesIndices, final List<RadialDistortion> solutions) {
+                subsetDistorted.clear();
+                subsetDistorted.add(distortedPoints.get(samplesIndices[0]));
+                subsetDistorted.add(distortedPoints.get(samplesIndices[1]));
 
-                                mSubsetUndistorted.clear();
-                                mSubsetUndistorted.add(mUndistortedPoints.get(samplesIndices[0]));
-                                mSubsetUndistorted.add(mUndistortedPoints.get(samplesIndices[1]));
+                subsetUndistorted.clear();
+                subsetUndistorted.add(undistortedPoints.get(samplesIndices[0]));
+                subsetUndistorted.add(undistortedPoints.get(samplesIndices[1]));
 
-                                try {
-                                    mRadialDistortionEstimator.setPoints(mDistortedPoints,
-                                            mUndistortedPoints);
-                                    mRadialDistortionEstimator.setPoints(mSubsetDistorted,
-                                            mSubsetUndistorted);
+                try {
+                    radialDistortionEstimator.setPoints(distortedPoints, undistortedPoints);
+                    radialDistortionEstimator.setPoints(subsetDistorted, subsetUndistorted);
 
-                                    final RadialDistortion distortion = mRadialDistortionEstimator.
-                                            estimate();
-                                    solutions.add(distortion);
-                                } catch (final Exception e) {
-                                    // if anything fails, no solution is added
-                                }
-                            }
+                    final var distortion = radialDistortionEstimator.estimate();
+                    solutions.add(distortion);
+                } catch (final Exception e) {
+                    // if anything fails, no solution is added
+                }
+            }
 
-                            @Override
-                            public double computeResidual(final RadialDistortion currentEstimation,
-                                                          final int i) {
-                                final Point2D distortedPoint = mDistortedPoints.get(i);
-                                final Point2D undistortedPoint = mUndistortedPoints.get(i);
+            @Override
+            public double computeResidual(final RadialDistortion currentEstimation, final int i) {
+                final var distortedPoint = distortedPoints.get(i);
+                final var undistortedPoint = undistortedPoints.get(i);
 
-                                currentEstimation.distort(undistortedPoint, mTestPoint);
+                currentEstimation.distort(undistortedPoint, testPoint);
 
-                                return mTestPoint.distanceTo(distortedPoint);
-                            }
+                return testPoint.distanceTo(distortedPoint);
+            }
 
-                            @Override
-                            public boolean isReady() {
-                                return LMedSRadialDistortionRobustEstimator.this.isReady();
-                            }
+            @Override
+            public boolean isReady() {
+                return LMedSRadialDistortionRobustEstimator.this.isReady();
+            }
 
-                            @Override
-                            public void onEstimateStart(
-                                    final RobustEstimator<RadialDistortion> estimator) {
-                                try {
-                                    mRadialDistortionEstimator.setLMSESolutionAllowed(false);
-                                    mRadialDistortionEstimator.setIntrinsic(getIntrinsic());
-                                } catch (final Exception e) {
-                                    Logger.getLogger(
-                                            LMedSRadialDistortionRobustEstimator.class.getName()).
-                                            log(Level.WARNING,
-                                                    "Could not set intrinsic parameters on radial distortion estimator", e);
-                                }
+            @Override
+            public void onEstimateStart(final RobustEstimator<RadialDistortion> estimator) {
+                try {
+                    radialDistortionEstimator.setLMSESolutionAllowed(false);
+                    radialDistortionEstimator.setIntrinsic(getIntrinsic());
+                } catch (final Exception e) {
+                    Logger.getLogger(LMedSRadialDistortionRobustEstimator.class.getName()).log(Level.WARNING,
+                            "Could not set intrinsic parameters on radial distortion estimator", e);
+                }
 
-                                if (mListener != null) {
-                                    mListener.onEstimateStart(LMedSRadialDistortionRobustEstimator.this);
-                                }
-                            }
+                if (listener != null) {
+                    listener.onEstimateStart(LMedSRadialDistortionRobustEstimator.this);
+                }
+            }
 
-                            @Override
-                            public void onEstimateEnd(
-                                    final RobustEstimator<RadialDistortion> estimator) {
-                                if (mListener != null) {
-                                    mListener.onEstimateEnd(LMedSRadialDistortionRobustEstimator.this);
-                                }
-                            }
+            @Override
+            public void onEstimateEnd(final RobustEstimator<RadialDistortion> estimator) {
+                if (listener != null) {
+                    listener.onEstimateEnd(LMedSRadialDistortionRobustEstimator.this);
+                }
+            }
 
-                            @Override
-                            public void onEstimateNextIteration(
-                                    final RobustEstimator<RadialDistortion> estimator,
-                                    final int iteration) {
-                                if (mListener != null) {
-                                    mListener.onEstimateNextIteration(
-                                            LMedSRadialDistortionRobustEstimator.this,
-                                            iteration);
-                                }
-                            }
+            @Override
+            public void onEstimateNextIteration(
+                    final RobustEstimator<RadialDistortion> estimator, final int iteration) {
+                if (listener != null) {
+                    listener.onEstimateNextIteration(LMedSRadialDistortionRobustEstimator.this, iteration);
+                }
+            }
 
-                            @Override
-                            public void onEstimateProgressChange(
-                                    final RobustEstimator<RadialDistortion> estimator,
-                                    final float progress) {
-                                if (mListener != null) {
-                                    mListener.onEstimateProgressChange(
-                                            LMedSRadialDistortionRobustEstimator.this,
-                                            progress);
-                                }
-                            }
-                        });
+            @Override
+            public void onEstimateProgressChange(
+                    final RobustEstimator<RadialDistortion> estimator, final float progress) {
+                if (listener != null) {
+                    listener.onEstimateProgressChange(LMedSRadialDistortionRobustEstimator.this, progress);
+                }
+            }
+        });
 
         try {
-            mLocked = true;
-            innerEstimator.setConfidence(mConfidence);
-            innerEstimator.setMaxIterations(mMaxIterations);
-            innerEstimator.setProgressDelta(mProgressDelta);
-            innerEstimator.setStopThreshold(mStopThreshold);
+            locked = true;
+            innerEstimator.setConfidence(confidence);
+            innerEstimator.setMaxIterations(maxIterations);
+            innerEstimator.setProgressDelta(progressDelta);
+            innerEstimator.setStopThreshold(stopThreshold);
             return innerEstimator.estimate();
         } catch (final com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
         } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
         } finally {
-            mLocked = false;
+            locked = false;
         }
     }
 

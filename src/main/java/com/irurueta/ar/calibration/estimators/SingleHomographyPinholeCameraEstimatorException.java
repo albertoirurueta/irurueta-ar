@@ -18,8 +18,7 @@ package com.irurueta.ar.calibration.estimators;
 /**
  * Thrown when camera estimation fails.
  */
-public class SingleHomographyPinholeCameraEstimatorException extends
-        CalibrationEstimatorException {
+public class SingleHomographyPinholeCameraEstimatorException extends CalibrationEstimatorException {
 
     /**
      * Constructor.
@@ -43,8 +42,7 @@ public class SingleHomographyPinholeCameraEstimatorException extends
      * @param message message describing the cause of the exception.
      * @param cause   instance containing the cause of the exception.
      */
-    public SingleHomographyPinholeCameraEstimatorException(final String message,
-                                                           final Throwable cause) {
+    public SingleHomographyPinholeCameraEstimatorException(final String message, final Throwable cause) {
         super(message, cause);
     }
 

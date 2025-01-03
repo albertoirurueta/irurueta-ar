@@ -20,23 +20,19 @@ import com.irurueta.geometry.MatrixRotation3D;
 import com.irurueta.geometry.PinholeCamera;
 import com.irurueta.geometry.PinholeCameraIntrinsicParameters;
 import com.irurueta.geometry.Point2D;
-import com.irurueta.geometry.Point3D;
 import com.irurueta.geometry.estimators.LockedException;
 import com.irurueta.geometry.estimators.NotReadyException;
 import com.irurueta.numerical.robust.RobustEstimatorException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import com.irurueta.statistics.GaussianRandomizer;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class PROMedSRobustSinglePoint3DTriangulatorTest implements
-        RobustSinglePoint3DTriangulatorListener {
+class PROMedSRobustSinglePoint3DTriangulatorTest implements RobustSinglePoint3DTriangulatorListener {
 
     private static final int MIN_VIEWS = 100;
     private static final int MAX_VIEWS = 500;
@@ -75,25 +71,24 @@ public class PROMedSRobustSinglePoint3DTriangulatorTest implements
     private int triangulateProgressChange;
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         // test constructor without arguments
-        PROMedSRobustSinglePoint3DTriangulator triangulator = new PROMedSRobustSinglePoint3DTriangulator();
+        var triangulator = new PROMedSRobustSinglePoint3DTriangulator();
 
         // check correctness
-        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_STOP_THRESHOLD,
-                triangulator.getStopThreshold(), 0.0);
+        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_STOP_THRESHOLD, triangulator.getStopThreshold(),
+                0.0);
         assertEquals(RobustEstimatorMethod.PROMEDS, triangulator.getMethod());
         assertNull(triangulator.getListener());
         assertFalse(triangulator.isListenerAvailable());
         assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_USE_HOMOGENEOUS_SOLUTION,
                 triangulator.isUseHomogeneousSolution());
         assertFalse(triangulator.isLocked());
-        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA,
-                triangulator.getProgressDelta(), 0.0);
-        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE,
-                triangulator.getConfidence(), 0.0);
-        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS,
-                triangulator.getMaxIterations());
+        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA, triangulator.getProgressDelta(),
+                0.0);
+        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE, triangulator.getConfidence(),
+                0.0);
+        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS, triangulator.getMaxIterations());
         assertNull(triangulator.getPoints2D());
         assertNull(triangulator.getCameras());
         assertNull(triangulator.getQualityScores());
@@ -103,255 +98,198 @@ public class PROMedSRobustSinglePoint3DTriangulatorTest implements
         triangulator = new PROMedSRobustSinglePoint3DTriangulator(this);
 
         // check correctness
-        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_STOP_THRESHOLD,
-                triangulator.getStopThreshold(), 0.0);
+        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_STOP_THRESHOLD, triangulator.getStopThreshold(),
+                0.0);
         assertEquals(RobustEstimatorMethod.PROMEDS, triangulator.getMethod());
         assertSame(this, triangulator.getListener());
         assertTrue(triangulator.isListenerAvailable());
         assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_USE_HOMOGENEOUS_SOLUTION,
                 triangulator.isUseHomogeneousSolution());
         assertFalse(triangulator.isLocked());
-        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA,
-                triangulator.getProgressDelta(), 0.0);
-        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE,
-                triangulator.getConfidence(), 0.0);
-        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS,
-                triangulator.getMaxIterations());
+        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA, triangulator.getProgressDelta(),
+                0.0);
+        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE, triangulator.getConfidence(),
+                0.0);
+        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS, triangulator.getMaxIterations());
         assertNull(triangulator.getPoints2D());
         assertNull(triangulator.getCameras());
         assertNull(triangulator.getQualityScores());
         assertFalse(triangulator.isReady());
 
         // test constructor with points and cameras
-        final List<Point2D> points = new ArrayList<>();
+        final var points = new ArrayList<Point2D>();
         points.add(Point2D.create());
         points.add(Point2D.create());
 
-        final List<PinholeCamera> cameras = new ArrayList<>();
+        final var cameras = new ArrayList<PinholeCamera>();
         cameras.add(new PinholeCamera());
         cameras.add(new PinholeCamera());
 
         triangulator = new PROMedSRobustSinglePoint3DTriangulator(points, cameras);
 
         // check correctness
-        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_STOP_THRESHOLD,
-                triangulator.getStopThreshold(), 0.0);
+        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_STOP_THRESHOLD, triangulator.getStopThreshold(),
+                0.0);
         assertEquals(RobustEstimatorMethod.PROMEDS, triangulator.getMethod());
         assertNull(triangulator.getListener());
         assertFalse(triangulator.isListenerAvailable());
         assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_USE_HOMOGENEOUS_SOLUTION,
                 triangulator.isUseHomogeneousSolution());
         assertFalse(triangulator.isLocked());
-        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA,
-                triangulator.getProgressDelta(), 0.0);
-        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE,
-                triangulator.getConfidence(), 0.0);
-        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS,
-                triangulator.getMaxIterations());
+        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA, triangulator.getProgressDelta(),
+                0.0);
+        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE, triangulator.getConfidence(),
+                0.0);
+        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS, triangulator.getMaxIterations());
         assertSame(points, triangulator.getPoints2D());
         assertSame(cameras, triangulator.getCameras());
         assertNull(triangulator.getQualityScores());
         assertFalse(triangulator.isReady());
 
         // Force IllegalArgumentException
-        final List<Point2D> emptyPoints = new ArrayList<>();
-        final List<PinholeCamera> emptyCameras = new ArrayList<>();
+        final var emptyPoints = new ArrayList<Point2D>();
+        final var emptyCameras = new ArrayList<PinholeCamera>();
 
-        triangulator = null;
-        try {
-            triangulator = new PROMedSRobustSinglePoint3DTriangulator(emptyPoints, cameras);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            triangulator = new PROMedSRobustSinglePoint3DTriangulator(points, emptyCameras);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            triangulator = new PROMedSRobustSinglePoint3DTriangulator(
-                    emptyPoints, emptyCameras);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(triangulator);
+        assertThrows(IllegalArgumentException.class,
+                () -> new PROMedSRobustSinglePoint3DTriangulator(emptyPoints, cameras));
+        assertThrows(IllegalArgumentException.class,
+                () -> new PROMedSRobustSinglePoint3DTriangulator(points, emptyCameras));
+        assertThrows(IllegalArgumentException.class,
+                () -> new PROMedSRobustSinglePoint3DTriangulator(emptyPoints, emptyCameras));
 
         // test constructor with points, cameras and listener
         triangulator = new PROMedSRobustSinglePoint3DTriangulator(points, cameras, this);
 
         // check correctness
-        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_STOP_THRESHOLD,
-                triangulator.getStopThreshold(), 0.0);
+        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_STOP_THRESHOLD, triangulator.getStopThreshold(),
+                0.0);
         assertEquals(RobustEstimatorMethod.PROMEDS, triangulator.getMethod());
         assertSame(this, triangulator.getListener());
         assertTrue(triangulator.isListenerAvailable());
         assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_USE_HOMOGENEOUS_SOLUTION,
                 triangulator.isUseHomogeneousSolution());
         assertFalse(triangulator.isLocked());
-        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA,
-                triangulator.getProgressDelta(), 0.0);
-        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE,
-                triangulator.getConfidence(), 0.0);
-        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS,
-                triangulator.getMaxIterations());
+        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA, triangulator.getProgressDelta(),
+                0.0);
+        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE, triangulator.getConfidence(),
+                0.0);
+        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS, triangulator.getMaxIterations());
         assertSame(points, triangulator.getPoints2D());
         assertSame(cameras, triangulator.getCameras());
         assertNull(triangulator.getQualityScores());
         assertFalse(triangulator.isReady());
 
         // Force IllegalArgumentException
-        triangulator = null;
-        try {
-            triangulator = new PROMedSRobustSinglePoint3DTriangulator(emptyPoints, cameras, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            triangulator = new PROMedSRobustSinglePoint3DTriangulator(points, emptyCameras, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            triangulator = new PROMedSRobustSinglePoint3DTriangulator(emptyPoints, emptyCameras, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(triangulator);
+        assertThrows(IllegalArgumentException.class,
+                () -> new PROMedSRobustSinglePoint3DTriangulator(emptyPoints, cameras, this));
+        assertThrows(IllegalArgumentException.class,
+                () -> new PROMedSRobustSinglePoint3DTriangulator(points, emptyCameras, this));
+        assertThrows(IllegalArgumentException.class,
+                () -> new PROMedSRobustSinglePoint3DTriangulator(emptyPoints, emptyCameras, this));
 
         // test constructor with quality scores
-        final double[] qualityScores = new double[2];
+        final var qualityScores = new double[2];
         triangulator = new PROMedSRobustSinglePoint3DTriangulator(qualityScores);
 
         // check correctness
-        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_STOP_THRESHOLD,
-                triangulator.getStopThreshold(), 0.0);
+        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_STOP_THRESHOLD, triangulator.getStopThreshold(),
+                0.0);
         assertEquals(RobustEstimatorMethod.PROMEDS, triangulator.getMethod());
         assertNull(triangulator.getListener());
         assertFalse(triangulator.isListenerAvailable());
         assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_USE_HOMOGENEOUS_SOLUTION,
                 triangulator.isUseHomogeneousSolution());
         assertFalse(triangulator.isLocked());
-        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA,
-                triangulator.getProgressDelta(), 0.0);
-        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE,
-                triangulator.getConfidence(), 0.0);
-        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS,
-                triangulator.getMaxIterations());
+        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA, triangulator.getProgressDelta(),
+                0.0);
+        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE, triangulator.getConfidence(),
+                0.0);
+        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS, triangulator.getMaxIterations());
         assertNull(triangulator.getPoints2D());
         assertNull(triangulator.getCameras());
         assertSame(qualityScores, triangulator.getQualityScores());
         assertFalse(triangulator.isReady());
 
         // Force IllegalArgumentException
-        final double[] shortScores = new double[1];
-        triangulator = null;
-        try {
-            triangulator = new PROMedSRobustSinglePoint3DTriangulator(shortScores);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(triangulator);
+        final var shortScores = new double[1];
+        assertThrows(IllegalArgumentException.class, () -> new PROMedSRobustSinglePoint3DTriangulator(shortScores));
 
         // test constructor with quality scores and listener
         triangulator = new PROMedSRobustSinglePoint3DTriangulator(qualityScores, this);
 
         // check correctness
-        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_STOP_THRESHOLD,
-                triangulator.getStopThreshold(), 0.0);
+        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_STOP_THRESHOLD, triangulator.getStopThreshold(),
+                0.0);
         assertEquals(RobustEstimatorMethod.PROMEDS, triangulator.getMethod());
         assertSame(this, triangulator.getListener());
         assertTrue(triangulator.isListenerAvailable());
         assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_USE_HOMOGENEOUS_SOLUTION,
                 triangulator.isUseHomogeneousSolution());
         assertFalse(triangulator.isLocked());
-        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA,
-                triangulator.getProgressDelta(), 0.0);
-        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE,
-                triangulator.getConfidence(), 0.0);
-        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS,
-                triangulator.getMaxIterations());
+        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA, triangulator.getProgressDelta(),
+                0.0);
+        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE, triangulator.getConfidence(),
+                0.0);
+        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS, triangulator.getMaxIterations());
         assertNull(triangulator.getPoints2D());
         assertNull(triangulator.getCameras());
         assertSame(qualityScores, triangulator.getQualityScores());
         assertFalse(triangulator.isReady());
 
         // Force IllegalArgumentException
-        triangulator = null;
-        try {
-            triangulator = new PROMedSRobustSinglePoint3DTriangulator(shortScores, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(triangulator);
+        assertThrows(IllegalArgumentException.class,
+                () -> new PROMedSRobustSinglePoint3DTriangulator(shortScores, this));
 
         // test constructor with points, cameras and quality scores
         triangulator = new PROMedSRobustSinglePoint3DTriangulator(points, cameras, qualityScores);
 
         // check correctness
-        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_STOP_THRESHOLD,
-                triangulator.getStopThreshold(), 0.0);
+        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_STOP_THRESHOLD, triangulator.getStopThreshold(),
+                0.0);
         assertEquals(RobustEstimatorMethod.PROMEDS, triangulator.getMethod());
         assertNull(triangulator.getListener());
         assertFalse(triangulator.isListenerAvailable());
         assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_USE_HOMOGENEOUS_SOLUTION,
                 triangulator.isUseHomogeneousSolution());
         assertFalse(triangulator.isLocked());
-        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA,
-                triangulator.getProgressDelta(), 0.0);
-        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE,
-                triangulator.getConfidence(), 0.0);
-        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS,
-                triangulator.getMaxIterations());
+        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA, triangulator.getProgressDelta(),
+                0.0);
+        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE, triangulator.getConfidence(),
+                0.0);
+        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS, triangulator.getMaxIterations());
         assertSame(points, triangulator.getPoints2D());
         assertSame(cameras, triangulator.getCameras());
         assertSame(qualityScores, triangulator.getQualityScores());
         assertTrue(triangulator.isReady());
 
         // Force IllegalArgumentException
-        triangulator = null;
-        try {
-            triangulator = new PROMedSRobustSinglePoint3DTriangulator(emptyPoints, cameras, qualityScores);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            triangulator = new PROMedSRobustSinglePoint3DTriangulator(points, emptyCameras, qualityScores);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            triangulator = new PROMedSRobustSinglePoint3DTriangulator(emptyPoints, emptyCameras, qualityScores);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            triangulator = new PROMedSRobustSinglePoint3DTriangulator(emptyPoints, emptyCameras, shortScores);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            triangulator = new PROMedSRobustSinglePoint3DTriangulator(points, cameras, shortScores);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(triangulator);
+        assertThrows(IllegalArgumentException.class,
+                () -> new PROMedSRobustSinglePoint3DTriangulator(emptyPoints, cameras, qualityScores));
+        assertThrows(IllegalArgumentException.class,
+                () -> new PROMedSRobustSinglePoint3DTriangulator(points, emptyCameras, qualityScores));
+        assertThrows(IllegalArgumentException.class,
+                () -> new PROMedSRobustSinglePoint3DTriangulator(emptyPoints, emptyCameras, qualityScores));
+        assertThrows(IllegalArgumentException.class,
+                () -> new PROMedSRobustSinglePoint3DTriangulator(emptyPoints, emptyCameras, shortScores));
+        assertThrows(IllegalArgumentException.class,
+                () -> new PROMedSRobustSinglePoint3DTriangulator(points, cameras, shortScores));
 
         // test constructor with points, cameras, quality scores and listener
         triangulator = new PROMedSRobustSinglePoint3DTriangulator(points, cameras, qualityScores, this);
 
         // check correctness
-        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_STOP_THRESHOLD,
-                triangulator.getStopThreshold(), 0.0);
+        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_STOP_THRESHOLD, triangulator.getStopThreshold(),
+                0.0);
         assertEquals(RobustEstimatorMethod.PROMEDS, triangulator.getMethod());
         assertSame(this, triangulator.getListener());
         assertTrue(triangulator.isListenerAvailable());
         assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_USE_HOMOGENEOUS_SOLUTION,
                 triangulator.isUseHomogeneousSolution());
         assertFalse(triangulator.isLocked());
-        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA,
-                triangulator.getProgressDelta(), 0.0);
-        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE,
-                triangulator.getConfidence(), 0.0);
+        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA, triangulator.getProgressDelta(),
+                0.0);
+        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE, triangulator.getConfidence(),
+                0.0);
         assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS,
                 triangulator.getMaxIterations());
         assertSame(points, triangulator.getPoints2D());
@@ -360,48 +298,25 @@ public class PROMedSRobustSinglePoint3DTriangulatorTest implements
         assertTrue(triangulator.isReady());
 
         // Force IllegalArgumentException
-        triangulator = null;
-        try {
-            triangulator = new PROMedSRobustSinglePoint3DTriangulator(
-                    emptyPoints, cameras, qualityScores, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            triangulator = new PROMedSRobustSinglePoint3DTriangulator(
-                    points, emptyCameras, qualityScores, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            triangulator = new PROMedSRobustSinglePoint3DTriangulator(
-                    emptyPoints, emptyCameras, qualityScores, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            triangulator = new PROMedSRobustSinglePoint3DTriangulator(
-                    emptyPoints, emptyCameras, shortScores, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            triangulator = new PROMedSRobustSinglePoint3DTriangulator(
-                    points, cameras, shortScores, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(triangulator);
+        assertThrows(IllegalArgumentException.class, () -> new PROMedSRobustSinglePoint3DTriangulator(emptyPoints,
+                cameras, qualityScores, this));
+        assertThrows(IllegalArgumentException.class, () -> new PROMedSRobustSinglePoint3DTriangulator(points,
+                emptyCameras, qualityScores, this));
+        assertThrows(IllegalArgumentException.class, () -> new PROMedSRobustSinglePoint3DTriangulator(emptyPoints,
+                emptyCameras, qualityScores, this));
+        assertThrows(IllegalArgumentException.class, () -> new PROMedSRobustSinglePoint3DTriangulator(emptyPoints,
+                emptyCameras, shortScores, this));
+        assertThrows(IllegalArgumentException.class, () -> new PROMedSRobustSinglePoint3DTriangulator(points, cameras,
+                shortScores, this));
     }
 
     @Test
-    public void testGetSetThreshold() throws LockedException {
-        final PROMedSRobustSinglePoint3DTriangulator triangulator =
-                new PROMedSRobustSinglePoint3DTriangulator();
+    void testGetSetThreshold() throws LockedException {
+        final var triangulator = new PROMedSRobustSinglePoint3DTriangulator();
 
         // check default value
-        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_STOP_THRESHOLD,
-                triangulator.getStopThreshold(), 0.0);
+        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_STOP_THRESHOLD, triangulator.getStopThreshold(),
+                0.0);
 
         // set new value
         triangulator.setStopThreshold(0.5);
@@ -410,17 +325,12 @@ public class PROMedSRobustSinglePoint3DTriangulatorTest implements
         assertEquals(0.5, triangulator.getStopThreshold(), 0.0);
 
         // Force IllegalArgumentException
-        try {
-            triangulator.setStopThreshold(0.0);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> triangulator.setStopThreshold(0.0));
     }
 
     @Test
-    public void testGetSetListener() throws LockedException {
-        final PROMedSRobustSinglePoint3DTriangulator triangulator =
-                new PROMedSRobustSinglePoint3DTriangulator();
+    void testGetSetListener() throws LockedException {
+        final var triangulator = new PROMedSRobustSinglePoint3DTriangulator();
 
         // check default value
         assertNull(triangulator.getListener());
@@ -435,9 +345,8 @@ public class PROMedSRobustSinglePoint3DTriangulatorTest implements
     }
 
     @Test
-    public void testIsSetUseHomogeneousSolution() throws LockedException {
-        final PROMedSRobustSinglePoint3DTriangulator triangulator =
-                new PROMedSRobustSinglePoint3DTriangulator();
+    void testIsSetUseHomogeneousSolution() throws LockedException {
+        final var triangulator = new PROMedSRobustSinglePoint3DTriangulator();
 
         // check default value
         assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_USE_HOMOGENEOUS_SOLUTION,
@@ -453,13 +362,12 @@ public class PROMedSRobustSinglePoint3DTriangulatorTest implements
     }
 
     @Test
-    public void testGetSetProgressDelta() throws LockedException {
-        final PROMedSRobustSinglePoint3DTriangulator triangulator =
-                new PROMedSRobustSinglePoint3DTriangulator();
+    void testGetSetProgressDelta() throws LockedException {
+        final var triangulator = new PROMedSRobustSinglePoint3DTriangulator();
 
         // check default value
-        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA,
-                triangulator.getProgressDelta(), 0.0);
+        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA, triangulator.getProgressDelta(),
+                0.0);
 
         // set new value
         triangulator.setProgressDelta(0.5f);
@@ -468,26 +376,17 @@ public class PROMedSRobustSinglePoint3DTriangulatorTest implements
         assertEquals(0.5, triangulator.getProgressDelta(), 0.0);
 
         // Force IllegalArgumentException
-        try {
-            triangulator.setProgressDelta(-1.0f);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            triangulator.setProgressDelta(2.0f);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> triangulator.setProgressDelta(-1.0f));
+        assertThrows(IllegalArgumentException.class, () -> triangulator.setProgressDelta(2.0f));
     }
 
     @Test
-    public void testGetSetConfidence() throws LockedException {
-        final PROMedSRobustSinglePoint3DTriangulator triangulator =
-                new PROMedSRobustSinglePoint3DTriangulator();
+    void testGetSetConfidence() throws LockedException {
+        final var triangulator = new PROMedSRobustSinglePoint3DTriangulator();
 
         // check default value
-        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE,
-                triangulator.getConfidence(), 0.0);
+        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE, triangulator.getConfidence(),
+                0.0);
 
         // set new value
         triangulator.setConfidence(0.5);
@@ -496,26 +395,16 @@ public class PROMedSRobustSinglePoint3DTriangulatorTest implements
         assertEquals(0.5, triangulator.getConfidence(), 0.0);
 
         // Force IllegalArgumentException
-        try {
-            triangulator.setConfidence(-1.0);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            triangulator.setConfidence(2.0);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> triangulator.setConfidence(-1.0));
+        assertThrows(IllegalArgumentException.class, () -> triangulator.setConfidence(2.0));
     }
 
     @Test
-    public void testGetSetMaxIterations() throws LockedException {
-        final PROMedSRobustSinglePoint3DTriangulator triangulator =
-                new PROMedSRobustSinglePoint3DTriangulator();
+    void testGetSetMaxIterations() throws LockedException {
+        final var triangulator = new PROMedSRobustSinglePoint3DTriangulator();
 
         // check default value
-        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS,
-                triangulator.getMaxIterations());
+        assertEquals(PROMedSRobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS, triangulator.getMaxIterations());
 
         // set new value
         triangulator.setMaxIterations(1);
@@ -524,17 +413,12 @@ public class PROMedSRobustSinglePoint3DTriangulatorTest implements
         assertEquals(1, triangulator.getMaxIterations());
 
         // Force IllegalArgumentException
-        try {
-            triangulator.setMaxIterations(0);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> triangulator.setMaxIterations(0));
     }
 
     @Test
-    public void testGetSetPointsAndCamerasAndIsReady() throws LockedException {
-        final PROMedSRobustSinglePoint3DTriangulator triangulator =
-                new PROMedSRobustSinglePoint3DTriangulator();
+    void testGetSetPointsAndCamerasAndIsReady() throws LockedException {
+        final var triangulator = new PROMedSRobustSinglePoint3DTriangulator();
 
         // check default values
         assertNull(triangulator.getPoints2D());
@@ -542,11 +426,11 @@ public class PROMedSRobustSinglePoint3DTriangulatorTest implements
         assertFalse(triangulator.isReady());
 
         // set new values
-        final List<Point2D> points = new ArrayList<>();
+        final var points = new ArrayList<Point2D>();
         points.add(Point2D.create());
         points.add(Point2D.create());
 
-        final List<PinholeCamera> cameras = new ArrayList<>();
+        final var cameras = new ArrayList<PinholeCamera>();
         cameras.add(new PinholeCamera());
         cameras.add(new PinholeCamera());
 
@@ -558,126 +442,94 @@ public class PROMedSRobustSinglePoint3DTriangulatorTest implements
         assertFalse(triangulator.isReady());
 
         // if we set quality scores, instance becomes ready
-        final double[] qualityScores = new double[2];
+        final var qualityScores = new double[2];
         triangulator.setQualityScores(qualityScores);
 
         assertTrue(triangulator.isReady());
 
         // Force IllegalArgumentException
-        final List<Point2D> emptyPoints = new ArrayList<>();
-        final List<PinholeCamera> emptyCameras = new ArrayList<>();
-
-        try {
-            triangulator.setPointsAndCameras(emptyPoints, cameras);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            triangulator.setPointsAndCameras(points, emptyCameras);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            triangulator.setPointsAndCameras(emptyPoints, emptyCameras);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        final var emptyPoints = new ArrayList<Point2D>();
+        final var emptyCameras = new ArrayList<PinholeCamera>();
+        assertThrows(IllegalArgumentException.class, () -> triangulator.setPointsAndCameras(emptyPoints, cameras));
+        assertThrows(IllegalArgumentException.class, () -> triangulator.setPointsAndCameras(points, emptyCameras));
+        assertThrows(IllegalArgumentException.class, () -> triangulator.setPointsAndCameras(emptyPoints, emptyCameras));
     }
 
     @Test
-    public void testGetSetQualityScores() throws LockedException {
-        final PROMedSRobustSinglePoint3DTriangulator triangulator =
-                new PROMedSRobustSinglePoint3DTriangulator();
+    void testGetSetQualityScores() throws LockedException {
+        final var triangulator = new PROMedSRobustSinglePoint3DTriangulator();
 
         // check default value
         assertNull(triangulator.getQualityScores());
 
         // set new value
-        final double[] qualityScores = new double[2];
+        final var qualityScores = new double[2];
         triangulator.setQualityScores(qualityScores);
 
         // check correctness
         assertSame(qualityScores, triangulator.getQualityScores());
 
         // Force IllegalArgumentException
-        final double[] emptyScores = new double[0];
-        try {
-            triangulator.setQualityScores(emptyScores);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        final var emptyScores = new double[0];
+        assertThrows(IllegalArgumentException.class, () -> triangulator.setQualityScores(emptyScores));
     }
 
     @Test
-    public void testTriangulate() throws LockedException, NotReadyException,
-            RobustEstimatorException {
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testTriangulate() throws LockedException, NotReadyException, RobustEstimatorException {
+        for (var t = 0; t < TIMES; t++) {
+            final var randomizer = new UniformRandomizer();
 
             // obtain number of views
-            final int numViews = randomizer.nextInt(MIN_VIEWS, MAX_VIEWS);
+            final var numViews = randomizer.nextInt(MIN_VIEWS, MAX_VIEWS);
 
             // create a random 3D point
-            final Point3D point3D = new InhomogeneousPoint3D(
+            final var point3D = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
 
-            final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                    new Random(), 0.0, STD_ERROR);
-            final List<Point2D> points2D = new ArrayList<>();
-            final List<PinholeCamera> cameras = new ArrayList<>();
-            final double[] qualityScores = new double[numViews];
-            final Point3D previousCameraCenter = new InhomogeneousPoint3D();
-            for (int i = 0; i < numViews; i++) {
+            final var errorRandomizer = new GaussianRandomizer(0.0, STD_ERROR);
+            final var points2D = new ArrayList<Point2D>();
+            final var cameras = new ArrayList<PinholeCamera>();
+            final var qualityScores = new double[numViews];
+            final var previousCameraCenter = new InhomogeneousPoint3D();
+            for (var i = 0; i < numViews; i++) {
                 // create a random camera
-                final double horizontalFocalLength = randomizer.nextDouble(
-                        MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-                final double verticalFocalLength = randomizer.nextDouble(
-                        MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-                final double skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
-                final double horizontalPrincipalPoint = randomizer.nextDouble(
-                        MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-                final double verticalPrincipalPoint = randomizer.nextDouble(
-                        MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+                final var horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+                final var verticalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+                final var skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+                final var horizontalPrincipalPoint = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+                final var verticalPrincipalPoint = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
-                final double alphaEuler = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                        MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-                final double betaEuler = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                        MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-                final double gammaEuler = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                        MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+                final var alphaEuler = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final var betaEuler = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final var gammaEuler = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-                final double cameraSeparationX = randomizer.nextDouble(
-                        MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
-                final double cameraSeparationY = randomizer.nextDouble(
-                        MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
-                final double cameraSeparationZ = randomizer.nextDouble(
-                        MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
+                final var cameraSeparationX = randomizer.nextDouble(MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
+                final var cameraSeparationY = randomizer.nextDouble(MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
+                final var cameraSeparationZ = randomizer.nextDouble(MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
-                final PinholeCameraIntrinsicParameters intrinsic =
-                        new PinholeCameraIntrinsicParameters(
-                                horizontalFocalLength, verticalFocalLength,
-                                horizontalPrincipalPoint, verticalPrincipalPoint, skewness);
+                final var intrinsic = new PinholeCameraIntrinsicParameters(horizontalFocalLength, verticalFocalLength,
+                        horizontalPrincipalPoint, verticalPrincipalPoint, skewness);
 
-                final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
+                final var rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
 
-                final Point3D cameraCenter = new InhomogeneousPoint3D(
+                final var cameraCenter = new InhomogeneousPoint3D(
                         previousCameraCenter.getInhomX() + cameraSeparationX,
                         previousCameraCenter.getInhomY() + cameraSeparationY,
                         previousCameraCenter.getInhomZ() + cameraSeparationZ);
 
-                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
+                final var camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
 
                 // project 3D point using camera
-                final Point2D point2D = camera.project(point3D);
+                final var point2D = camera.project(point3D);
 
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    final double errorX = errorRandomizer.nextDouble();
-                    final double errorY = errorRandomizer.nextDouble();
-                    final double error = Math.sqrt(errorX * errorX + errorY * errorY);
-                    final double inhomX = point2D.getInhomX();
-                    final double inhomY = point2D.getInhomY();
+                    final var errorX = errorRandomizer.nextDouble();
+                    final var errorY = errorRandomizer.nextDouble();
+                    final var error = Math.sqrt(errorX * errorX + errorY * errorY);
+                    final var inhomX = point2D.getInhomX();
+                    final var inhomY = point2D.getInhomY();
 
                     point2D.setInhomogeneousCoordinates(inhomX + errorX, inhomY + errorY);
 
@@ -692,8 +544,8 @@ public class PROMedSRobustSinglePoint3DTriangulatorTest implements
             }
 
             // create triangulator
-            final PROMedSRobustSinglePoint3DTriangulator triangulator =
-                    new PROMedSRobustSinglePoint3DTriangulator(points2D, cameras, qualityScores, this);
+            final var triangulator = new PROMedSRobustSinglePoint3DTriangulator(points2D, cameras, qualityScores,
+                    this);
             triangulator.setStopThreshold(THRESHOLD);
 
             // check default values
@@ -704,7 +556,7 @@ public class PROMedSRobustSinglePoint3DTriangulatorTest implements
             assertEquals(0, triangulateNextIteration);
             assertEquals(0, triangulateProgressChange);
 
-            final Point3D triangulated = triangulator.triangulate();
+            final var triangulated = triangulator.triangulate();
 
             // check correctness
             assertTrue(triangulator.isReady());
@@ -724,72 +576,37 @@ public class PROMedSRobustSinglePoint3DTriangulatorTest implements
     }
 
     @Override
-    public void onTriangulateStart(
-            final RobustSinglePoint3DTriangulator triangulator) {
+    public void onTriangulateStart(final RobustSinglePoint3DTriangulator triangulator) {
         triangulateStart++;
         checkLocked((PROMedSRobustSinglePoint3DTriangulator) triangulator);
     }
 
     @Override
-    public void onTriangulateEnd(
-            final RobustSinglePoint3DTriangulator triangulator) {
+    public void onTriangulateEnd(final RobustSinglePoint3DTriangulator triangulator) {
         triangulateEnd++;
         checkLocked((PROMedSRobustSinglePoint3DTriangulator) triangulator);
     }
 
     @Override
-    public void onTriangulateNextIteration(
-            final RobustSinglePoint3DTriangulator triangulator, final int iteration) {
+    public void onTriangulateNextIteration(final RobustSinglePoint3DTriangulator triangulator, final int iteration) {
         triangulateNextIteration++;
         checkLocked((PROMedSRobustSinglePoint3DTriangulator) triangulator);
     }
 
     @Override
-    public void onTriangulateProgressChange(
-            final RobustSinglePoint3DTriangulator triangulator, final float progress) {
+    public void onTriangulateProgressChange(final RobustSinglePoint3DTriangulator triangulator, final float progress) {
         triangulateProgressChange++;
         checkLocked((PROMedSRobustSinglePoint3DTriangulator) triangulator);
     }
 
-    private void checkLocked(
-            final PROMedSRobustSinglePoint3DTriangulator triangulator) {
-        try {
-            triangulator.setStopThreshold(0.5);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            triangulator.setListener(this);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            triangulator.setProgressDelta(0.5f);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            triangulator.setConfidence(0.5);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            triangulator.setMaxIterations(1);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            triangulator.setPointsAndCameras(null, null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            triangulator.triangulate();
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        } catch (final Exception ignore) {
-            fail("LockedException expected but not thrown");
-        }
+    private void checkLocked(final PROMedSRobustSinglePoint3DTriangulator triangulator) {
+        assertThrows(LockedException.class, () -> triangulator.setStopThreshold(0.5));
+        assertThrows(LockedException.class, () -> triangulator.setListener(this));
+        assertThrows(LockedException.class, () -> triangulator.setProgressDelta(0.5f));
+        assertThrows(LockedException.class, () -> triangulator.setConfidence(0.5));
+        assertThrows(LockedException.class, () -> triangulator.setMaxIterations(1));
+        assertThrows(LockedException.class, () -> triangulator.setPointsAndCameras(null, null));
+        assertThrows(LockedException.class, triangulator::triangulate);
         assertTrue(triangulator.isLocked());
     }
 }

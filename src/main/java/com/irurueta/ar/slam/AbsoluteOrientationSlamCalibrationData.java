@@ -21,14 +21,12 @@ import java.io.Serializable;
  * Contains control calibration data for an absolute orientation SLAM estimator
  * during Kalman filtering prediction stage.
  */
-public class AbsoluteOrientationSlamCalibrationData extends BaseCalibrationData
-        implements Serializable {
+public class AbsoluteOrientationSlamCalibrationData extends BaseCalibrationData implements Serializable {
 
     /**
      * Constructor.
      */
     public AbsoluteOrientationSlamCalibrationData() {
-        super(AbsoluteOrientationSlamEstimator.CONTROL_LENGTH,
-                AbsoluteOrientationSlamEstimator.STATE_LENGTH);
+        super(AbsoluteOrientationSlamEstimator.CONTROL_LENGTH, AbsoluteOrientationSlamEstimator.STATE_LENGTH);
     }
 }

@@ -25,20 +25,16 @@ import com.irurueta.geometry.MatrixRotation3D;
 import com.irurueta.geometry.NotAvailableException;
 import com.irurueta.geometry.PinholeCamera;
 import com.irurueta.geometry.PinholeCameraIntrinsicParameters;
-import com.irurueta.geometry.Point3D;
-import com.irurueta.geometry.Rotation3D;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.BitSet;
-import java.util.List;
-import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class EstimatedFundamentalMatrixTest {
+class EstimatedFundamentalMatrixTest {
 
     private static final double MIN_ANGLE_DEGREES = -30.0;
     private static final double MAX_ANGLE_DEGREES = 30.0;
@@ -59,14 +55,13 @@ public class EstimatedFundamentalMatrixTest {
     private static final double MAX_RANDOM_VALUE = 100.0;
 
     @Test
-    public void testConstructor() {
-        final EstimatedFundamentalMatrix efm = new EstimatedFundamentalMatrix();
+    void testConstructor() {
+        final var efm = new EstimatedFundamentalMatrix();
 
         // check default values
         assertNull(efm.getId());
         assertNull(efm.getFundamentalMatrix());
-        assertEquals(EstimatedFundamentalMatrix.DEFAULT_QUALITY_SCORE,
-                efm.getQualityScore(), 0.0);
+        assertEquals(EstimatedFundamentalMatrix.DEFAULT_QUALITY_SCORE, efm.getQualityScore(), 0.0);
         assertNull(efm.getCovariance());
         assertEquals(0, efm.getViewId1());
         assertEquals(0, efm.getViewId2());
@@ -76,8 +71,8 @@ public class EstimatedFundamentalMatrixTest {
     }
 
     @Test
-    public void testGetSetId() {
-        final EstimatedFundamentalMatrix efm = new EstimatedFundamentalMatrix();
+    void testGetSetId() {
+        final var efm = new EstimatedFundamentalMatrix();
 
         // check default value
         assertNull(efm.getId());
@@ -90,14 +85,14 @@ public class EstimatedFundamentalMatrixTest {
     }
 
     @Test
-    public void testGetSetFundamentalMatrix() {
-        final EstimatedFundamentalMatrix efm = new EstimatedFundamentalMatrix();
+    void testGetSetFundamentalMatrix() {
+        final var efm = new EstimatedFundamentalMatrix();
 
         // check default value
         assertNull(efm.getFundamentalMatrix());
 
         // set new value
-        final FundamentalMatrix f = new FundamentalMatrix();
+        final var f = new FundamentalMatrix();
         efm.setFundamentalMatrix(f);
 
         // check correctness
@@ -105,12 +100,11 @@ public class EstimatedFundamentalMatrixTest {
     }
 
     @Test
-    public void testGetSetQualityScore() {
-        final EstimatedFundamentalMatrix efm = new EstimatedFundamentalMatrix();
+    void testGetSetQualityScore() {
+        final var efm = new EstimatedFundamentalMatrix();
 
         // check default value
-        assertEquals(EstimatedFundamentalMatrix.DEFAULT_QUALITY_SCORE,
-                efm.getQualityScore(), 0.0);
+        assertEquals(EstimatedFundamentalMatrix.DEFAULT_QUALITY_SCORE, efm.getQualityScore(), 0.0);
 
         // set new value
         efm.setQualityScore(5.0);
@@ -120,14 +114,14 @@ public class EstimatedFundamentalMatrixTest {
     }
 
     @Test
-    public void testGetSetCovariance() throws WrongSizeException {
-        final EstimatedFundamentalMatrix efm = new EstimatedFundamentalMatrix();
+    void testGetSetCovariance() throws WrongSizeException {
+        final var efm = new EstimatedFundamentalMatrix();
 
         // check default value
         assertNull(efm.getCovariance());
 
         // set new value
-        final Matrix cov = new Matrix(9, 9);
+        final var cov = new Matrix(9, 9);
         efm.setCovariance(cov);
 
         // check correctness
@@ -135,11 +129,11 @@ public class EstimatedFundamentalMatrixTest {
     }
 
     @Test
-    public void testGetSetViewId1() {
-        final EstimatedFundamentalMatrix efm = new EstimatedFundamentalMatrix();
+    void testGetSetViewId1() {
+        final var efm = new EstimatedFundamentalMatrix();
 
         // check default value
-        assertEquals(efm.getViewId1(), 0);
+        assertEquals(0, efm.getViewId1());
 
         // set new value
         efm.setViewId1(5);
@@ -149,8 +143,8 @@ public class EstimatedFundamentalMatrixTest {
     }
 
     @Test
-    public void testGetSetViewId2() {
-        final EstimatedFundamentalMatrix efm = new EstimatedFundamentalMatrix();
+    void testGetSetViewId2() {
+        final var efm = new EstimatedFundamentalMatrix();
 
         // check default value
         assertEquals(0, efm.getViewId2());
@@ -163,14 +157,14 @@ public class EstimatedFundamentalMatrixTest {
     }
 
     @Test
-    public void testGetSetInliers() {
-        final EstimatedFundamentalMatrix efm = new EstimatedFundamentalMatrix();
+    void testGetSetInliers() {
+        final var efm = new EstimatedFundamentalMatrix();
 
         // check default value
         assertNull(efm.getInliers());
 
         // set new value
-        final BitSet inliers = new BitSet();
+        final var inliers = new BitSet();
         efm.setInliers(inliers);
 
         // check correctness
@@ -178,14 +172,14 @@ public class EstimatedFundamentalMatrixTest {
     }
 
     @Test
-    public void testGetSetLeftSamples() {
-        final EstimatedFundamentalMatrix efm = new EstimatedFundamentalMatrix();
+    void testGetSetLeftSamples() {
+        final var efm = new EstimatedFundamentalMatrix();
 
         // check default value
         assertNull(efm.getLeftSamples());
 
         // set new value
-        final List<Sample2D> leftSamples = new ArrayList<>();
+        final var leftSamples = new ArrayList<Sample2D>();
         efm.setLeftSamples(leftSamples);
 
         // check correctness
@@ -193,14 +187,14 @@ public class EstimatedFundamentalMatrixTest {
     }
 
     @Test
-    public void testGetSetRightSamples() {
-        final EstimatedFundamentalMatrix efm = new EstimatedFundamentalMatrix();
+    void testGetSetRightSamples() {
+        final var efm = new EstimatedFundamentalMatrix();
 
         // check default value
         assertNull(efm.getRightSamples());
 
         // set new value
-        final List<Sample2D> rightSamples = new ArrayList<>();
+        final var rightSamples = new ArrayList<Sample2D>();
         efm.setRightSamples(rightSamples);
 
         // check correctness
@@ -208,84 +202,67 @@ public class EstimatedFundamentalMatrixTest {
     }
 
     @Test
-    public void testSerializeDeserialize() throws InvalidPairOfCamerasException,
-            WrongSizeException, IOException, ClassNotFoundException, NotAvailableException {
-        final EstimatedFundamentalMatrix efm1 = new EstimatedFundamentalMatrix();
+    void testSerializeDeserialize() throws InvalidPairOfCamerasException, WrongSizeException, IOException,
+            ClassNotFoundException, NotAvailableException {
+        final var efm1 = new EstimatedFundamentalMatrix();
 
         // set new values
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double alphaEuler1 = 0.0;
-        final double betaEuler1 = 0.0;
-        final double gammaEuler1 = 0.0;
-        final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-        final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-        final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+        final var randomizer = new UniformRandomizer();
+        final var alphaEuler1 = 0.0;
+        final var betaEuler1 = 0.0;
+        final var gammaEuler1 = 0.0;
+        final var alphaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var betaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var gammaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-        final double horizontalFocalLength1 = randomizer.nextDouble(
-                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-        final double verticalFocalLength1 = randomizer.nextDouble(
-                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-        final double horizontalFocalLength2 = randomizer.nextDouble(
-                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-        final double verticalFocalLength2 = randomizer.nextDouble(
-                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final var horizontalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final var verticalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final var horizontalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final var verticalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-        final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
-        final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+        final var skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+        final var skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
 
-        final double horizontalPrincipalPoint1 = randomizer.nextDouble(
-                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-        final double verticalPrincipalPoint1 = randomizer.nextDouble(
-                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-        final double horizontalPrincipalPoint2 = randomizer.nextDouble(
-                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-        final double verticalPrincipalPoint2 = randomizer.nextDouble(
-                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final var horizontalPrincipalPoint1 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final var verticalPrincipalPoint1 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final var horizontalPrincipalPoint2 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final var verticalPrincipalPoint2 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
-        final double cameraSeparation = randomizer.nextDouble(
-                MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
+        final var cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
-        final Point3D center1 = new InhomogeneousPoint3D(
-                randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+        final var center1 = new InhomogeneousPoint3D(randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                 randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                 randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-        final Point3D center2 = new InhomogeneousPoint3D(
+        final var center2 = new InhomogeneousPoint3D(
                 center1.getInhomX() + cameraSeparation,
                 center1.getInhomY() + cameraSeparation,
                 center1.getInhomZ() + cameraSeparation);
 
-        final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
-        final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+        final var rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+        final var rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-        final PinholeCameraIntrinsicParameters intrinsic1 =
-                new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
-                        verticalFocalLength1, horizontalPrincipalPoint1,
-                        verticalPrincipalPoint1, skewness1);
-        final PinholeCameraIntrinsicParameters intrinsic2 =
-                new PinholeCameraIntrinsicParameters(horizontalFocalLength2,
-                        verticalFocalLength2, horizontalPrincipalPoint2,
-                        verticalPrincipalPoint2, skewness2);
+        final var intrinsic1 = new PinholeCameraIntrinsicParameters(horizontalFocalLength1, verticalFocalLength1,
+                horizontalPrincipalPoint1, verticalPrincipalPoint1, skewness1);
+        final var intrinsic2 = new PinholeCameraIntrinsicParameters(horizontalFocalLength2, verticalFocalLength2,
+                horizontalPrincipalPoint2, verticalPrincipalPoint2, skewness2);
 
-        final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
-        final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
+        final var camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
+        final var camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
 
-        final FundamentalMatrix fundMatrix = new FundamentalMatrix(camera1, camera2);
+        final var fundMatrix = new FundamentalMatrix(camera1, camera2);
 
         efm1.setId("id");
         efm1.setFundamentalMatrix(fundMatrix);
         efm1.setQualityScore(0.2);
-        final Matrix cov = new Matrix(9, 9);
+        final var cov = new Matrix(9, 9);
         efm1.setCovariance(cov);
         efm1.setViewId1(1);
         efm1.setViewId2(2);
-        final BitSet inliers = new BitSet();
+        final var inliers = new BitSet();
         efm1.setInliers(inliers);
-        final List<Sample2D> leftSamples = new ArrayList<>();
+        final var leftSamples = new ArrayList<Sample2D>();
         efm1.setLeftSamples(leftSamples);
-        final List<Sample2D> rightSamples = new ArrayList<>();
+        final var rightSamples = new ArrayList<Sample2D>();
         efm1.setRightSamples(rightSamples);
 
         // check
@@ -300,13 +277,12 @@ public class EstimatedFundamentalMatrixTest {
         assertSame(rightSamples, efm1.getRightSamples());
 
         // serialize and deserialize
-        final byte[] bytes = SerializationHelper.serialize(efm1);
-        final EstimatedFundamentalMatrix efm2 = SerializationHelper.deserialize(bytes);
+        final var bytes = SerializationHelper.serialize(efm1);
+        final var efm2 = SerializationHelper.<EstimatedFundamentalMatrix>deserialize(bytes);
 
         // check
         assertEquals(efm1.getId(), efm2.getId());
-        assertEquals(efm1.getFundamentalMatrix().getInternalMatrix(),
-                efm2.getFundamentalMatrix().getInternalMatrix());
+        assertEquals(efm1.getFundamentalMatrix().getInternalMatrix(), efm2.getFundamentalMatrix().getInternalMatrix());
         assertEquals(efm1.getQualityScore(), efm2.getQualityScore(), 0.0);
         assertEquals(efm1.getCovariance(), efm2.getCovariance());
         assertEquals(efm1.getViewId1(), efm2.getViewId1());

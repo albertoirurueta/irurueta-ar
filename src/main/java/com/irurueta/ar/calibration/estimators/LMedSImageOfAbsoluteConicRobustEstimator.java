@@ -32,8 +32,7 @@ import java.util.List;
  * Finds the best Image of AbsoluteConic (IAC) for provided collection of
  * homographies (2D transformations) using LMedS algorithm.
  */
-public class LMedSImageOfAbsoluteConicRobustEstimator extends
-        ImageOfAbsoluteConicRobustEstimator {
+public class LMedSImageOfAbsoluteConicRobustEstimator extends ImageOfAbsoluteConicRobustEstimator {
     /**
      * Default value to be used for stop threshold. Stop threshold can be used
      * to keep the algorithm iterating in case that best estimated threshold
@@ -70,14 +69,14 @@ public class LMedSImageOfAbsoluteConicRobustEstimator extends
      * lower than the one typically used in RANSAC, and yet the algorithm could
      * still produce even smaller thresholds in estimated results.
      */
-    private double mStopThreshold;
+    private double stopThreshold;
 
     /**
      * Constructor.
      */
     public LMedSImageOfAbsoluteConicRobustEstimator() {
         super();
-        mStopThreshold = DEFAULT_STOP_THRESHOLD;
+        stopThreshold = DEFAULT_STOP_THRESHOLD;
     }
 
     /**
@@ -86,10 +85,9 @@ public class LMedSImageOfAbsoluteConicRobustEstimator extends
      * @param listener listener to be notified of events such as when
      *                 estimation starts, ends or its progress significantly changes.
      */
-    public LMedSImageOfAbsoluteConicRobustEstimator(
-            final ImageOfAbsoluteConicRobustEstimatorListener listener) {
+    public LMedSImageOfAbsoluteConicRobustEstimator(final ImageOfAbsoluteConicRobustEstimatorListener listener) {
         super(listener);
-        mStopThreshold = DEFAULT_STOP_THRESHOLD;
+        stopThreshold = DEFAULT_STOP_THRESHOLD;
     }
 
     /**
@@ -101,10 +99,9 @@ public class LMedSImageOfAbsoluteConicRobustEstimator extends
      * @throws IllegalArgumentException if not enough homographies are provided
      *                                  for default settings. Hence, at least 1 homography must be provided.
      */
-    public LMedSImageOfAbsoluteConicRobustEstimator(
-            final List<Transformation2D> homographies) {
+    public LMedSImageOfAbsoluteConicRobustEstimator(final List<Transformation2D> homographies) {
         super(homographies);
-        mStopThreshold = DEFAULT_STOP_THRESHOLD;
+        stopThreshold = DEFAULT_STOP_THRESHOLD;
     }
 
     /**
@@ -119,10 +116,9 @@ public class LMedSImageOfAbsoluteConicRobustEstimator extends
      *                                  for default settings. Hence, at least 1 homography must be provided.
      */
     public LMedSImageOfAbsoluteConicRobustEstimator(
-            final List<Transformation2D> homographies,
-            final ImageOfAbsoluteConicRobustEstimatorListener listener) {
+            final List<Transformation2D> homographies, final ImageOfAbsoluteConicRobustEstimatorListener listener) {
         super(homographies, listener);
-        mStopThreshold = DEFAULT_STOP_THRESHOLD;
+        stopThreshold = DEFAULT_STOP_THRESHOLD;
     }
 
     /**
@@ -145,7 +141,7 @@ public class LMedSImageOfAbsoluteConicRobustEstimator extends
      * accuracy has been reached.
      */
     public double getStopThreshold() {
-        return mStopThreshold;
+        return stopThreshold;
     }
 
     /**
@@ -177,7 +173,7 @@ public class LMedSImageOfAbsoluteConicRobustEstimator extends
         if (stopThreshold <= MIN_STOP_THRESHOLD) {
             throw new IllegalArgumentException();
         }
-        mStopThreshold = stopThreshold;
+        this.stopThreshold = stopThreshold;
     }
 
     /**
@@ -193,8 +189,7 @@ public class LMedSImageOfAbsoluteConicRobustEstimator extends
      */
     @SuppressWarnings("DuplicatedCode")
     @Override
-    public ImageOfAbsoluteConic estimate() throws LockedException,
-            NotReadyException, RobustEstimatorException {
+    public ImageOfAbsoluteConic estimate() throws LockedException, NotReadyException, RobustEstimatorException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -202,109 +197,96 @@ public class LMedSImageOfAbsoluteConicRobustEstimator extends
             throw new NotReadyException();
         }
 
-        final LMedSRobustEstimator<ImageOfAbsoluteConic> innerEstimator =
-                new LMedSRobustEstimator<>(
-                        new LMedSRobustEstimatorListener<ImageOfAbsoluteConic>() {
+        final var innerEstimator = new LMedSRobustEstimator<ImageOfAbsoluteConic>(new LMedSRobustEstimatorListener<>() {
 
-                            // subset of homographies picked on each iteration
-                            private final List<Transformation2D> mSubsetHomographies =
-                                    new ArrayList<>();
+            // subset of homographies picked on each iteration
+            private final List<Transformation2D> subsetHomographies = new ArrayList<>();
 
-                            @Override
-                            public int getTotalSamples() {
-                                return mHomographies.size();
-                            }
+            @Override
+            public int getTotalSamples() {
+                return homographies.size();
+            }
 
-                            @Override
-                            public int getSubsetSize() {
-                                return mIACEstimator.getMinNumberOfRequiredHomographies();
-                            }
+            @Override
+            public int getSubsetSize() {
+                return iacEstimator.getMinNumberOfRequiredHomographies();
+            }
 
-                            @Override
-                            public void estimatePreliminarSolutions(
-                                    final int[] samplesIndices,
-                                    final List<ImageOfAbsoluteConic> solutions) {
-                                mSubsetHomographies.clear();
-                                for (final int samplesIndex : samplesIndices) {
-                                    mSubsetHomographies.add(mHomographies.get(samplesIndex));
-                                }
+            @Override
+            public void estimatePreliminarSolutions(
+                    final int[] samplesIndices, final List<ImageOfAbsoluteConic> solutions) {
+                subsetHomographies.clear();
+                for (final var samplesIndex : samplesIndices) {
+                    subsetHomographies.add(homographies.get(samplesIndex));
+                }
 
-                                try {
-                                    mIACEstimator.setLMSESolutionAllowed(false);
-                                    mIACEstimator.setHomographies(mSubsetHomographies);
+                try {
+                    iacEstimator.setLMSESolutionAllowed(false);
+                    iacEstimator.setHomographies(subsetHomographies);
 
-                                    final ImageOfAbsoluteConic iac = mIACEstimator.estimate();
-                                    solutions.add(iac);
-                                } catch (final Exception e) {
-                                    // if anything fails, no solution is added
-                                }
-                            }
+                    final var iac = iacEstimator.estimate();
+                    solutions.add(iac);
+                } catch (final Exception e) {
+                    // if anything fails, no solution is added
+                }
+            }
 
-                            @Override
-                            public double computeResidual(
-                                    final ImageOfAbsoluteConic currentEstimation, final int i) {
-                                return residual(currentEstimation, mHomographies.get(i));
-                            }
+            @Override
+            public double computeResidual(final ImageOfAbsoluteConic currentEstimation, final int i) {
+                return residual(currentEstimation, homographies.get(i));
+            }
 
-                            @Override
-                            public boolean isReady() {
-                                return LMedSImageOfAbsoluteConicRobustEstimator.this.isReady();
-                            }
+            @Override
+            public boolean isReady() {
+                return LMedSImageOfAbsoluteConicRobustEstimator.this.isReady();
+            }
 
-                            @Override
-                            public void onEstimateStart(
-                                    final RobustEstimator<ImageOfAbsoluteConic> estimator) {
-                                if (mListener != null) {
-                                    mListener.onEstimateStart(
-                                            LMedSImageOfAbsoluteConicRobustEstimator.this);
-                                }
-                            }
+            @Override
+            public void onEstimateStart(final RobustEstimator<ImageOfAbsoluteConic> estimator) {
+                if (listener != null) {
+                    listener.onEstimateStart(LMedSImageOfAbsoluteConicRobustEstimator.this);
+                }
+            }
 
-                            @Override
-                            public void onEstimateEnd(
-                                    final RobustEstimator<ImageOfAbsoluteConic> estimator) {
-                                if (mListener != null) {
-                                    mListener.onEstimateEnd(
-                                            LMedSImageOfAbsoluteConicRobustEstimator.this);
-                                }
-                            }
+            @Override
+            public void onEstimateEnd(final RobustEstimator<ImageOfAbsoluteConic> estimator) {
+                if (listener != null) {
+                    listener.onEstimateEnd(LMedSImageOfAbsoluteConicRobustEstimator.this);
+                }
+            }
 
-                            @Override
-                            public void onEstimateNextIteration(
-                                    final RobustEstimator<ImageOfAbsoluteConic> estimator,
-                                    final int iteration) {
-                                if (mListener != null) {
-                                    mListener.onEstimateNextIteration(
-                                            LMedSImageOfAbsoluteConicRobustEstimator.this,
-                                            iteration);
-                                }
-                            }
+            @Override
+            public void onEstimateNextIteration(
+                    final RobustEstimator<ImageOfAbsoluteConic> estimator, final int iteration) {
+                if (listener != null) {
+                    listener.onEstimateNextIteration(
+                            LMedSImageOfAbsoluteConicRobustEstimator.this, iteration);
+                }
+            }
 
-                            @Override
-                            public void onEstimateProgressChange(
-                                    final RobustEstimator<ImageOfAbsoluteConic> estimator,
-                                    final float progress) {
-                                if (mListener != null) {
-                                    mListener.onEstimateProgressChange(
-                                            LMedSImageOfAbsoluteConicRobustEstimator.this,
-                                            progress);
-                                }
-                            }
-                        });
+            @Override
+            public void onEstimateProgressChange(
+                    final RobustEstimator<ImageOfAbsoluteConic> estimator, final float progress) {
+                if (listener != null) {
+                    listener.onEstimateProgressChange(
+                            LMedSImageOfAbsoluteConicRobustEstimator.this, progress);
+                }
+            }
+        });
 
         try {
-            mLocked = true;
-            innerEstimator.setConfidence(mConfidence);
-            innerEstimator.setMaxIterations(mMaxIterations);
-            innerEstimator.setProgressDelta(mProgressDelta);
-            innerEstimator.setStopThreshold(mStopThreshold);
+            locked = true;
+            innerEstimator.setConfidence(confidence);
+            innerEstimator.setMaxIterations(maxIterations);
+            innerEstimator.setProgressDelta(progressDelta);
+            innerEstimator.setStopThreshold(stopThreshold);
             return innerEstimator.estimate();
         } catch (final com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
         } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
         } finally {
-            mLocked = false;
+            locked = false;
         }
     }
 

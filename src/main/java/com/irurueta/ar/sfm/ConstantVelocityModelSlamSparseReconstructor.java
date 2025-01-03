@@ -54,8 +54,7 @@ public class ConstantVelocityModelSlamSparseReconstructor extends
      */
     public ConstantVelocityModelSlamSparseReconstructor(
             final ConstantVelocityModelSlamSparseReconstructorListener listener) {
-        this(new ConstantVelocityModelSlamSparseReconstructorConfiguration(),
-                listener);
+        this(new ConstantVelocityModelSlamSparseReconstructorConfiguration(), listener);
     }
 
     /**
@@ -67,8 +66,8 @@ public class ConstantVelocityModelSlamSparseReconstructor extends
      */
     @Override
     public boolean processOneView() {
-        if (!mRunning) {
-            mSlamEstimator = new ConstantVelocityModelSlamEstimator();
+        if (!running) {
+            slamEstimator = new ConstantVelocityModelSlamEstimator();
             setUpSlamEstimatorListener();
             setUpCalibrationData();
         }

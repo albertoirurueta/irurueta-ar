@@ -33,27 +33,27 @@ public class MatchedSamples implements Serializable {
      * Each of these points correspond to projections of the same 3D point into
      * different views.
      */
-    private Sample2D[] mSamples;
+    private Sample2D[] samples;
 
     /**
      * Cameras associated to the views of each of the matched points.
      */
-    private EstimatedCamera[] mCameras;
+    private EstimatedCamera[] cameras;
 
     /**
      * ID's of views where matched points belong to.
      */
-    private int[] mViewIds;
+    private int[] viewIds;
 
     /**
      * 3D reconstructed point. Initially, might not be available
      */
-    private ReconstructedPoint3D mReconstructedPoint;
+    private ReconstructedPoint3D reconstructedPoint;
 
     /**
      * Quality score of a match.
      */
-    private double mQualityScore = DEFAULT_QUALITY_SCORE;
+    private double qualityScore = DEFAULT_QUALITY_SCORE;
 
     /**
      * Indicates whether match between a pair of views has been considered an
@@ -62,7 +62,7 @@ public class MatchedSamples implements Serializable {
      * position 1 of bitset corresponds to viewIds in positions 1 and 2, and so
      * on.
      */
-    private BitSet mInliers;
+    private BitSet inliers;
 
     /**
      * Gets 2D matched samples on different views containing matched points.
@@ -72,7 +72,7 @@ public class MatchedSamples implements Serializable {
      * @return 2D matched samples on different views.
      */
     public Sample2D[] getSamples() {
-        return mSamples;
+        return samples;
     }
 
     /**
@@ -83,7 +83,7 @@ public class MatchedSamples implements Serializable {
      * @param samples 2D matched samples on different views.
      */
     public void setSamples(final Sample2D[] samples) {
-        mSamples = samples;
+        this.samples = samples;
     }
 
     /**
@@ -92,7 +92,7 @@ public class MatchedSamples implements Serializable {
      * @return cameras associated to the views of each of the matched points.
      */
     public EstimatedCamera[] getCameras() {
-        return mCameras;
+        return cameras;
     }
 
     /**
@@ -102,7 +102,7 @@ public class MatchedSamples implements Serializable {
      *                points.
      */
     public void setCameras(final EstimatedCamera[] cameras) {
-        mCameras = cameras;
+        this.cameras = cameras;
     }
 
     /**
@@ -111,7 +111,7 @@ public class MatchedSamples implements Serializable {
      * @return id's of view where matched points belong to.
      */
     public int[] getViewIds() {
-        return mViewIds;
+        return viewIds;
     }
 
     /**
@@ -120,7 +120,7 @@ public class MatchedSamples implements Serializable {
      * @param viewIds id's of views where matched points belong to.
      */
     public void setViewIds(final int[] viewIds) {
-        mViewIds = viewIds;
+        this.viewIds = viewIds;
     }
 
     /**
@@ -129,7 +129,7 @@ public class MatchedSamples implements Serializable {
      * @return 3D reconstructed point.
      */
     public ReconstructedPoint3D getReconstructedPoint() {
-        return mReconstructedPoint;
+        return reconstructedPoint;
     }
 
     /**
@@ -138,9 +138,9 @@ public class MatchedSamples implements Serializable {
      * @param reconstructedPoint 3D reconstructed point.
      */
     public void setReconstructedPoint(final ReconstructedPoint3D reconstructedPoint) {
-        mReconstructedPoint = reconstructedPoint;
-        if (mSamples != null) {
-            for (final Sample2D sample : mSamples) {
+        this.reconstructedPoint = reconstructedPoint;
+        if (samples != null) {
+            for (final var sample : samples) {
                 sample.setReconstructedPoint(reconstructedPoint);
             }
         }
@@ -155,7 +155,7 @@ public class MatchedSamples implements Serializable {
      * @return quality score of match.
      */
     public double getQualityScore() {
-        return mQualityScore;
+        return qualityScore;
     }
 
     /**
@@ -167,7 +167,7 @@ public class MatchedSamples implements Serializable {
      * @param qualityScore quality score of match.
      */
     public void setQualityScore(final double qualityScore) {
-        mQualityScore = qualityScore;
+        this.qualityScore = qualityScore;
     }
 
     /**
@@ -181,7 +181,7 @@ public class MatchedSamples implements Serializable {
      * considered an inlier or not.
      */
     public BitSet getInliers() {
-        return mInliers;
+        return inliers;
     }
 
     /**
@@ -195,6 +195,6 @@ public class MatchedSamples implements Serializable {
      *                been considered an inlier or not.
      */
     public void setInliers(final BitSet inliers) {
-        mInliers = inliers;
+        this.inliers = inliers;
     }
 }

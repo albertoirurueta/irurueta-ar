@@ -46,27 +46,27 @@ public abstract class InitialCamerasEstimator {
     /**
      * Fundamental matrix relating two views whose cameras need to be estimated.
      */
-    protected FundamentalMatrix mFundamentalMatrix;
+    protected FundamentalMatrix fundamentalMatrix;
 
     /**
      * Indicates if this estimator is locked or not.
      */
-    protected boolean mLocked;
+    protected boolean locked;
 
     /**
      * Estimated camera for left view.
      */
-    protected PinholeCamera mEstimatedLeftCamera;
+    protected PinholeCamera estimatedLeftCamera;
 
     /**
      * Estimated camera for right view.
      */
-    protected PinholeCamera mEstimatedRightCamera;
+    protected PinholeCamera estimatedRightCamera;
 
     /**
      * Listener to handle events raised by this instance.
      */
-    protected InitialCamerasEstimatorListener mListener;
+    protected InitialCamerasEstimatorListener listener;
 
     /**
      * Constructor.
@@ -80,7 +80,7 @@ public abstract class InitialCamerasEstimator {
      * @param fundamentalMatrix fundamental matrix relating two views.
      */
     protected InitialCamerasEstimator(final FundamentalMatrix fundamentalMatrix) {
-        mFundamentalMatrix = fundamentalMatrix;
+        this.fundamentalMatrix = fundamentalMatrix;
     }
 
     /**
@@ -89,7 +89,7 @@ public abstract class InitialCamerasEstimator {
      * @param listener listener to handle events raised by this instance.
      */
     protected InitialCamerasEstimator(final InitialCamerasEstimatorListener listener) {
-        mListener = listener;
+        this.listener = listener;
     }
 
     /**
@@ -100,8 +100,8 @@ public abstract class InitialCamerasEstimator {
      */
     protected InitialCamerasEstimator(final FundamentalMatrix fundamentalMatrix,
                                       final InitialCamerasEstimatorListener listener) {
-        mFundamentalMatrix = fundamentalMatrix;
-        mListener = listener;
+        this.fundamentalMatrix = fundamentalMatrix;
+        this.listener = listener;
     }
 
     /**
@@ -111,7 +111,7 @@ public abstract class InitialCamerasEstimator {
      * @return fundamental matrix relating two views.
      */
     public FundamentalMatrix getFundamentalMatrix() {
-        return mFundamentalMatrix;
+        return fundamentalMatrix;
     }
 
     /**
@@ -121,12 +121,11 @@ public abstract class InitialCamerasEstimator {
      * @param fundamentalMatrix fundamental matrix relating two views.
      * @throws LockedException if estimator is locked.
      */
-    public void setFundamentalMatrix(final FundamentalMatrix fundamentalMatrix)
-            throws LockedException {
+    public void setFundamentalMatrix(final FundamentalMatrix fundamentalMatrix) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mFundamentalMatrix = fundamentalMatrix;
+        this.fundamentalMatrix = fundamentalMatrix;
     }
 
     /**
@@ -135,7 +134,7 @@ public abstract class InitialCamerasEstimator {
      * @return listener to handle events raised by this instance.
      */
     public InitialCamerasEstimatorListener getListener() {
-        return mListener;
+        return listener;
     }
 
     /**
@@ -144,7 +143,7 @@ public abstract class InitialCamerasEstimator {
      * @param listener listener to handle events raised by this instance.
      */
     public void setListener(final InitialCamerasEstimatorListener listener) {
-        mListener = listener;
+        this.listener = listener;
     }
 
     /**
@@ -153,7 +152,7 @@ public abstract class InitialCamerasEstimator {
      * @return true if this estimator is locked, false otherwise.
      */
     public boolean isLocked() {
-        return mLocked;
+        return locked;
     }
 
     /**
@@ -162,7 +161,7 @@ public abstract class InitialCamerasEstimator {
      * @return estimated camera for left view.
      */
     public PinholeCamera getEstimatedLeftCamera() {
-        return mEstimatedLeftCamera;
+        return estimatedLeftCamera;
     }
 
     /**
@@ -171,7 +170,7 @@ public abstract class InitialCamerasEstimator {
      * @return estimated camera for right view.
      */
     public PinholeCamera getEstimatedRightCamera() {
-        return mEstimatedRightCamera;
+        return estimatedRightCamera;
     }
 
     /**
@@ -197,8 +196,7 @@ public abstract class InitialCamerasEstimator {
      *                                                 fails for some reason, typically due to numerical
      *                                                 instabilities.
      */
-    public abstract void estimate() throws LockedException, NotReadyException,
-            InitialCamerasEstimationFailedException;
+    public abstract void estimate() throws LockedException, NotReadyException, InitialCamerasEstimationFailedException;
 
     /**
      * Creates an instance of an initial cameras estimator using provided
@@ -207,17 +205,12 @@ public abstract class InitialCamerasEstimator {
      * @param method method to estimate initial cameras.
      * @return an estimator.
      */
-    public static InitialCamerasEstimator create(
-            final InitialCamerasEstimatorMethod method) {
-        switch (method) {
-            case ESSENTIAL_MATRIX:
-                return new EssentialMatrixInitialCamerasEstimator();
-            case DUAL_IMAGE_OF_ABSOLUTE_CONIC:
-                return new DualImageOfAbsoluteConicInitialCamerasEstimator();
-            case DUAL_ABSOLUTE_QUADRIC:
-            default:
-                return new DualAbsoluteQuadricInitialCamerasEstimator();
-        }
+    public static InitialCamerasEstimator create(final InitialCamerasEstimatorMethod method) {
+        return switch (method) {
+            case ESSENTIAL_MATRIX -> new EssentialMatrixInitialCamerasEstimator();
+            case DUAL_IMAGE_OF_ABSOLUTE_CONIC -> new DualImageOfAbsoluteConicInitialCamerasEstimator();
+            default -> new DualAbsoluteQuadricInitialCamerasEstimator();
+        };
     }
 
     /**
@@ -229,20 +222,12 @@ public abstract class InitialCamerasEstimator {
      * @return an estimator.
      */
     public static InitialCamerasEstimator create(
-            final FundamentalMatrix fundamentalMatrix,
-            final InitialCamerasEstimatorMethod method) {
-        switch (method) {
-            case ESSENTIAL_MATRIX:
-                return new EssentialMatrixInitialCamerasEstimator(
-                        fundamentalMatrix);
-            case DUAL_IMAGE_OF_ABSOLUTE_CONIC:
-                return new DualImageOfAbsoluteConicInitialCamerasEstimator(
-                        fundamentalMatrix);
-            case DUAL_ABSOLUTE_QUADRIC:
-            default:
-                return new DualAbsoluteQuadricInitialCamerasEstimator(
-                        fundamentalMatrix);
-        }
+            final FundamentalMatrix fundamentalMatrix, final InitialCamerasEstimatorMethod method) {
+        return switch (method) {
+            case ESSENTIAL_MATRIX -> new EssentialMatrixInitialCamerasEstimator(fundamentalMatrix);
+            case DUAL_IMAGE_OF_ABSOLUTE_CONIC -> new DualImageOfAbsoluteConicInitialCamerasEstimator(fundamentalMatrix);
+            default -> new DualAbsoluteQuadricInitialCamerasEstimator(fundamentalMatrix);
+        };
     }
 
     /**
@@ -254,18 +239,12 @@ public abstract class InitialCamerasEstimator {
      * @return an estimator.
      */
     public static InitialCamerasEstimator create(
-            final InitialCamerasEstimatorListener listener,
-            final InitialCamerasEstimatorMethod method) {
-        switch (method) {
-            case ESSENTIAL_MATRIX:
-                return new EssentialMatrixInitialCamerasEstimator(listener);
-            case DUAL_IMAGE_OF_ABSOLUTE_CONIC:
-                return new DualImageOfAbsoluteConicInitialCamerasEstimator(
-                        listener);
-            case DUAL_ABSOLUTE_QUADRIC:
-            default:
-                return new DualAbsoluteQuadricInitialCamerasEstimator(listener);
-        }
+            final InitialCamerasEstimatorListener listener, final InitialCamerasEstimatorMethod method) {
+        return switch (method) {
+            case ESSENTIAL_MATRIX -> new EssentialMatrixInitialCamerasEstimator(listener);
+            case DUAL_IMAGE_OF_ABSOLUTE_CONIC -> new DualImageOfAbsoluteConicInitialCamerasEstimator(listener);
+            default -> new DualAbsoluteQuadricInitialCamerasEstimator(listener);
+        };
     }
 
     /**
@@ -281,18 +260,12 @@ public abstract class InitialCamerasEstimator {
             final FundamentalMatrix fundamentalMatrix,
             final InitialCamerasEstimatorListener listener,
             final InitialCamerasEstimatorMethod method) {
-        switch (method) {
-            case ESSENTIAL_MATRIX:
-                return new EssentialMatrixInitialCamerasEstimator(
-                        fundamentalMatrix, listener);
-            case DUAL_IMAGE_OF_ABSOLUTE_CONIC:
-                return new DualImageOfAbsoluteConicInitialCamerasEstimator(
-                        fundamentalMatrix, listener);
-            case DUAL_ABSOLUTE_QUADRIC:
-            default:
-                return new DualAbsoluteQuadricInitialCamerasEstimator(
-                        fundamentalMatrix, listener);
-        }
+        return switch (method) {
+            case ESSENTIAL_MATRIX -> new EssentialMatrixInitialCamerasEstimator(fundamentalMatrix, listener);
+            case DUAL_IMAGE_OF_ABSOLUTE_CONIC -> new DualImageOfAbsoluteConicInitialCamerasEstimator(
+                    fundamentalMatrix, listener);
+            default -> new DualAbsoluteQuadricInitialCamerasEstimator(fundamentalMatrix, listener);
+        };
     }
 
     /**
@@ -312,8 +285,7 @@ public abstract class InitialCamerasEstimator {
      * @param fundamentalMatrix fundamental matrix relating two views.
      * @return an estimator.
      */
-    public static InitialCamerasEstimator create(
-            final FundamentalMatrix fundamentalMatrix) {
+    public static InitialCamerasEstimator create(final FundamentalMatrix fundamentalMatrix) {
         return create(fundamentalMatrix, DEFAULT_METHOD);
     }
 
@@ -324,8 +296,7 @@ public abstract class InitialCamerasEstimator {
      * @param listener listener to handle events.
      * @return an estimator.
      */
-    public static InitialCamerasEstimator create(
-            final InitialCamerasEstimatorListener listener) {
+    public static InitialCamerasEstimator create(final InitialCamerasEstimatorListener listener) {
         return create(listener, DEFAULT_METHOD);
     }
 
@@ -338,8 +309,7 @@ public abstract class InitialCamerasEstimator {
      * @return an estimator.
      */
     public static InitialCamerasEstimator create(
-            final FundamentalMatrix fundamentalMatrix,
-            final InitialCamerasEstimatorListener listener) {
+            final FundamentalMatrix fundamentalMatrix, final InitialCamerasEstimatorListener listener) {
         return create(fundamentalMatrix, listener, DEFAULT_METHOD);
     }
 }

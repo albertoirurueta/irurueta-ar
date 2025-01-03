@@ -18,8 +18,7 @@ package com.irurueta.ar.calibration.estimators;
 /**
  * Thrown when DIAC estimation fails.
  */
-public class KruppaDualImageOfAbsoluteConicEstimatorException extends
-        CalibrationEstimatorException {
+public class KruppaDualImageOfAbsoluteConicEstimatorException extends CalibrationEstimatorException {
 
     /**
      * Constructor.
@@ -43,8 +42,7 @@ public class KruppaDualImageOfAbsoluteConicEstimatorException extends
      * @param message message describing the cause of the exception.
      * @param cause   instance containing the cause of the exception.
      */
-    public KruppaDualImageOfAbsoluteConicEstimatorException(final String message,
-                                                            final Throwable cause) {
+    public KruppaDualImageOfAbsoluteConicEstimatorException(final String message, final Throwable cause) {
         super(message, cause);
     }
 

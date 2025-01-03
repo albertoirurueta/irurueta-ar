@@ -64,15 +64,12 @@ public class VelocityPredictor {
         if (result.length != SPEED_COMPONENTS) {
             throw new IllegalArgumentException("result must have length 3");
         }
-        if (jacobianV != null && (jacobianV.getRows() != SPEED_COMPONENTS ||
-                jacobianV.getColumns() != SPEED_COMPONENTS)) {
-            throw new IllegalArgumentException(
-                    "jacobian wrt velocity must be 3x3");
+        if (jacobianV != null && (jacobianV.getRows() != SPEED_COMPONENTS || jacobianV.getColumns() != SPEED_COMPONENTS)) {
+            throw new IllegalArgumentException("jacobian wrt velocity must be 3x3");
         }
-        if (jacobianA != null && (jacobianA.getRows() != SPEED_COMPONENTS ||
-                jacobianA.getColumns() != ACCELERATION_COMPONENTS)) {
-            throw new IllegalArgumentException(
-                    "jacobian wrt acceleration must be 3x3");
+        if (jacobianA != null && (jacobianA.getRows() != SPEED_COMPONENTS
+                || jacobianA.getColumns() != ACCELERATION_COMPONENTS)) {
+            throw new IllegalArgumentException("jacobian wrt acceleration must be 3x3");
         }
 
         if (jacobianV != null) {
@@ -111,8 +108,7 @@ public class VelocityPredictor {
      */
     public static void predict(
             final double vx, final double vy, final double vz,
-            final double ax, final double ay, final double az, final double dt,
-            final double[] result) {
+            final double ax, final double ay, final double az, final double dt, final double[] result) {
         predict(vx, vy, vz, ax, ay, az, dt, result, null, null);
     }
 
@@ -132,16 +128,15 @@ public class VelocityPredictor {
      * @see <a href="https://github.com/joansola/slamtb">vpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static void predict(
-            final double[] v, final double[] a, final double dt,
-            final double[] result, final Matrix jacobianV, final Matrix jacobianA) {
+            final double[] v, final double[] a, final double dt, final double[] result, final Matrix jacobianV,
+            final Matrix jacobianA) {
         if (v.length != SPEED_COMPONENTS) {
             throw new IllegalArgumentException("v must have length 3");
         }
         if (a.length != ACCELERATION_COMPONENTS) {
             throw new IllegalArgumentException("a must have length 3");
         }
-        predict(v[0], v[1], v[2], a[0], a[1], a[2], dt, result, jacobianV,
-                jacobianA);
+        predict(v[0], v[1], v[2], a[0], a[1], a[2], dt, result, jacobianV, jacobianA);
     }
 
     /**
@@ -156,8 +151,7 @@ public class VelocityPredictor {
      * @throws IllegalArgumentException if v, a or result do not have length 3.
      * @see <a href="https://github.com/joansola/slamtb">vpredict.m at https://github.com/joansola/slamtb</a>
      */
-    public static void predict(
-            final double[] v, final double[] a, final double dt, final double[] result) {
+    public static void predict(final double[] v, final double[] a, final double dt, final double[] result) {
         predict(v, a, dt, result, null, null);
     }
 
@@ -180,9 +174,9 @@ public class VelocityPredictor {
      */
     public static double[] predict(
             final double vx, final double vy, final double vz,
-            final double ax, final double ay, final double az, final double dt,
-            final Matrix jacobianV, final Matrix jacobianA) {
-        final double[] result = new double[SPEED_COMPONENTS];
+            final double ax, final double ay, final double az, final double dt, final Matrix jacobianV,
+            final Matrix jacobianA) {
+        final var result = new double[SPEED_COMPONENTS];
         predict(vx, vy, vz, ax, ay, az, dt, result, jacobianV, jacobianA);
         return result;
     }
@@ -203,7 +197,7 @@ public class VelocityPredictor {
     public static double[] predict(
             final double vx, final double vy, final double vz,
             final double ax, final double ay, final double az, final double dt) {
-        final double[] result = new double[SPEED_COMPONENTS];
+        final var result = new double[SPEED_COMPONENTS];
         predict(vx, vy, vz, ax, ay, az, dt, result);
         return result;
     }
@@ -224,9 +218,8 @@ public class VelocityPredictor {
      * @see <a href="https://github.com/joansola/slamtb">vpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static double[] predict(
-            final double[] v, final double[] a, final double dt,
-            final Matrix jacobianV, final Matrix jacobianA) {
-        final double[] result = new double[SPEED_COMPONENTS];
+            final double[] v, final double[] a, final double dt, final Matrix jacobianV, final Matrix jacobianA) {
+        final var result = new double[SPEED_COMPONENTS];
         predict(v, a, dt, result, jacobianV, jacobianA);
         return result;
     }
@@ -243,9 +236,8 @@ public class VelocityPredictor {
      * @throws IllegalArgumentException if a or v do not have length 3.
      * @see <a href="https://github.com/joansola/slamtb">vpredict.m at https://github.com/joansola/slamtb</a>
      */
-    public static double[] predict(
-            final double[] v, final double[] a, final double dt) {
-        final double[] result = new double[SPEED_COMPONENTS];
+    public static double[] predict(final double[] v, final double[] a, final double dt) {
+        final var result = new double[SPEED_COMPONENTS];
         predict(v, a, dt, result);
         return result;
     }
@@ -272,28 +264,23 @@ public class VelocityPredictor {
      *                                  have proper size or if result does not have length 3.
      */
     public static void predictWithVelocityAdjustment(
-            final double vx, final double vy, final double vz,
-            final double dvx, final double dvy, final double dvz,
-            final double ax, final double ay, final double az, final double dt,
-            final double[] result, final Matrix jacobianV, final Matrix jacobianDV,
-            final Matrix jacobianA) {
+            final double vx, final double vy, final double vz, final double dvx, final double dvy, final double dvz,
+            final double ax, final double ay, final double az, final double dt, final double[] result,
+            final Matrix jacobianV, final Matrix jacobianDV, final Matrix jacobianA) {
         if (result.length != SPEED_COMPONENTS) {
             throw new IllegalArgumentException("result must have length 3");
         }
-        if (jacobianV != null && (jacobianV.getRows() != SPEED_COMPONENTS ||
-                jacobianV.getColumns() != SPEED_COMPONENTS)) {
-            throw new IllegalArgumentException(
-                    "jacobian wrt velocity must be 3x3");
+        if (jacobianV != null && (jacobianV.getRows() != SPEED_COMPONENTS
+                || jacobianV.getColumns() != SPEED_COMPONENTS)) {
+            throw new IllegalArgumentException("jacobian wrt velocity must be 3x3");
         }
-        if (jacobianDV != null && (jacobianDV.getRows() != SPEED_COMPONENTS ||
-                jacobianDV.getColumns() != SPEED_COMPONENTS)) {
-            throw new IllegalArgumentException(
-                    "jacobian wrt velocity variation must be 3x3");
+        if (jacobianDV != null && (jacobianDV.getRows() != SPEED_COMPONENTS
+                || jacobianDV.getColumns() != SPEED_COMPONENTS)) {
+            throw new IllegalArgumentException("jacobian wrt velocity variation must be 3x3");
         }
-        if (jacobianA != null && (jacobianA.getRows() != SPEED_COMPONENTS ||
-                jacobianA.getColumns() != ACCELERATION_COMPONENTS)) {
-            throw new IllegalArgumentException(
-                    "jacobian wrt acceleration must be 3x3");
+        if (jacobianA != null && (jacobianA.getRows() != SPEED_COMPONENTS
+                || jacobianA.getColumns() != ACCELERATION_COMPONENTS)) {
+            throw new IllegalArgumentException("jacobian wrt acceleration must be 3x3");
         }
 
         if (jacobianV != null) {
@@ -340,12 +327,10 @@ public class VelocityPredictor {
      * @throws IllegalArgumentException if result does not have length 3.
      */
     public static void predictWithVelocityAdjustment(
-            final double vx, final double vy, final double vz,
-            final double dvx, final double dvy, final double dvz,
-            final double ax, final double ay, final double az,
-            final double dt, final double[] result) {
-        predictWithVelocityAdjustment(vx, vy, vz, dvx, dvy, dvz, ax, ay,
-                az, dt, result, null, null, null);
+            final double vx, final double vy, final double vz, final double dvx, final double dvy, final double dvz,
+            final double ax, final double ay, final double az, final double dt, final double[] result) {
+        predictWithVelocityAdjustment(vx, vy, vz, dvx, dvy, dvz, ax, ay, az, dt, result,
+                null, null, null);
     }
 
     /**
@@ -368,9 +353,8 @@ public class VelocityPredictor {
      *                                  length 3.
      */
     public static void predictWithVelocityAdjustment(
-            final double[] v, final double[] dv, final double[] a,
-            final double dt, final double[] result, final Matrix jacobianV,
-            final Matrix jacobianDV, final Matrix jacobianA) {
+            final double[] v, final double[] dv, final double[] a, final double dt, final double[] result,
+            final Matrix jacobianV, final Matrix jacobianDV, final Matrix jacobianA) {
         if (v.length != SPEED_COMPONENTS) {
             throw new IllegalArgumentException("v must have length 3");
         }
@@ -380,9 +364,8 @@ public class VelocityPredictor {
         if (a.length != ACCELERATION_COMPONENTS) {
             throw new IllegalArgumentException("a must have length 3");
         }
-        predictWithVelocityAdjustment(v[0], v[1], v[2], dv[0], dv[1],
-                dv[2], a[0], a[1], a[2], dt, result, jacobianV, jacobianDV,
-                jacobianA);
+        predictWithVelocityAdjustment(v[0], v[1], v[2], dv[0], dv[1], dv[2], a[0], a[1], a[2], dt, result, jacobianV,
+                jacobianDV, jacobianA);
     }
 
     /**
@@ -401,8 +384,7 @@ public class VelocityPredictor {
      *                                  3.
      */
     public static void predictWithVelocityAdjustment(
-            final double[] v, final double[] dv, final double[] a,
-            final double dt, final double[] result) {
+            final double[] v, final double[] dv, final double[] a, final double dt, final double[] result) {
         predictWithVelocityAdjustment(v, dv, a, dt, result, null, null, null);
     }
 
@@ -427,13 +409,12 @@ public class VelocityPredictor {
      *                                  have proper size.
      */
     public static double[] predictWithVelocityAdjustment(
-            final double vx, final double vy, final double vz,
-            final double dvx, final double dvy, final double dvz,
-            final double ax, final double ay, final double az, final double dt,
-            final Matrix jacobianV, final Matrix jacobianDV, final Matrix jacobianA) {
-        final double[] result = new double[SPEED_COMPONENTS];
-        predictWithVelocityAdjustment(vx, vy, vz, dvx, dvy, dvz, ax, ay,
-                az, dt, result, jacobianV, jacobianDV, jacobianA);
+            final double vx, final double vy, final double vz, final double dvx, final double dvy, final double dvz,
+            final double ax, final double ay, final double az, final double dt, final Matrix jacobianV,
+            final Matrix jacobianDV, final Matrix jacobianA) {
+        final var result = new double[SPEED_COMPONENTS];
+        predictWithVelocityAdjustment(vx, vy, vz, dvx, dvy, dvz, ax, ay, az, dt, result, jacobianV, jacobianDV,
+                jacobianA);
         return result;
     }
 
@@ -453,12 +434,10 @@ public class VelocityPredictor {
      * @return a new array containing updated velocity.
      */
     public static double[] predictWithVelocityAdjustment(
-            final double vx, final double vy, final double vz,
-            final double dvx, final double dvy, final double dvz,
+            final double vx, final double vy, final double vz, final double dvx, final double dvy, final double dvz,
             final double ax, final double ay, final double az, final double dt) {
-        final double[] result = new double[SPEED_COMPONENTS];
-        predictWithVelocityAdjustment(vx, vy, vz, dvx, dvy, dvz, ax, ay,
-                az, dt, result);
+        final var result = new double[SPEED_COMPONENTS];
+        predictWithVelocityAdjustment(vx, vy, vz, dvx, dvy, dvz, ax, ay, az, dt, result);
         return result;
     }
 
@@ -480,11 +459,10 @@ public class VelocityPredictor {
      *                                  have proper size, or if "v", "dv" or "a" do not have length 3.
      */
     public static double[] predictWithVelocityAdjustment(
-            final double[] v, final double[] dv, final double[] a, final double dt,
-            final Matrix jacobianV, final Matrix jacobianDV, final Matrix jacobianA) {
-        final double[] result = new double[SPEED_COMPONENTS];
-        predictWithVelocityAdjustment(v, dv, a, dt, result, jacobianV,
-                jacobianDV, jacobianA);
+            final double[] v, final double[] dv, final double[] a, final double dt, final Matrix jacobianV,
+            final Matrix jacobianDV, final Matrix jacobianA) {
+        final var result = new double[SPEED_COMPONENTS];
+        predictWithVelocityAdjustment(v, dv, a, dt, result, jacobianV, jacobianDV, jacobianA);
         return result;
     }
 
@@ -503,7 +481,7 @@ public class VelocityPredictor {
      */
     public static double[] predictWithVelocityAdjustment(
             final double[] v, final double[] dv, final double[] a, final double dt) {
-        final double[] result = new double[SPEED_COMPONENTS];
+        final var result = new double[SPEED_COMPONENTS];
         predictWithVelocityAdjustment(v, dv, a, dt, result);
         return result;
     }

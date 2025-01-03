@@ -18,8 +18,7 @@ package com.irurueta.ar.calibration.estimators;
 /**
  * Thrown when DAQ estimation fails.
  */
-public class DualAbsoluteQuadricEstimatorException extends
-        CalibrationEstimatorException {
+public class DualAbsoluteQuadricEstimatorException extends CalibrationEstimatorException {
     
     /**
      * Constructor.
@@ -41,8 +40,7 @@ public class DualAbsoluteQuadricEstimatorException extends
      * @param message message describing the cause of the exception.
      * @param cause instance containing the cause of the exception.
      */
-    public DualAbsoluteQuadricEstimatorException(final String message,
-            final Throwable cause) {
+    public DualAbsoluteQuadricEstimatorException(final String message, final Throwable cause) {
         super(message, cause);
     }
     

@@ -69,8 +69,7 @@ public class ImageOfAbsoluteConic extends Conic implements Serializable {
      * @param f Parameter F of the conic.
      */
     public ImageOfAbsoluteConic(
-            final double a, final double b, final double c, final double d,
-            final double e, final double f) {
+            final double a, final double b, final double c, final double d, final double e, final double f) {
         super(a, b, c, d, e, f);
     }
 
@@ -106,7 +105,7 @@ public class ImageOfAbsoluteConic extends Conic implements Serializable {
      */
     @Override
     public DualConic getDualConic() throws DualConicNotAvailableException {
-        final DualImageOfAbsoluteConic dualConic = new DualImageOfAbsoluteConic();
+        final var dualConic = new DualImageOfAbsoluteConic();
         dualConic(dualConic);
         return dualConic;
     }
@@ -123,13 +122,11 @@ public class ImageOfAbsoluteConic extends Conic implements Serializable {
      *                                                          be thrown.
      */
     public final void setFromPinholeCameraIntrinsicParameters(
-            final PinholeCameraIntrinsicParameters k)
-            throws InvalidPinholeCameraIntrinsicParametersException {
-        final Matrix kMatrix = k.getInternalMatrix();
+            final PinholeCameraIntrinsicParameters k) throws InvalidPinholeCameraIntrinsicParametersException {
+        final var kMatrix = k.getInternalMatrix();
         try {
-            final Matrix invKMatrix = Utils.inverse(kMatrix);
-            setParameters(invKMatrix.transposeAndReturnNew().
-                    multiplyAndReturnNew(invKMatrix));
+            final var invKMatrix = Utils.inverse(kMatrix);
+            setParameters(invKMatrix.transposeAndReturnNew().multiplyAndReturnNew(invKMatrix));
         } catch (final AlgebraException e) {
             throw new InvalidPinholeCameraIntrinsicParametersException(e);
         } catch (final NonSymmetricMatrixException ignore) {
@@ -155,12 +152,12 @@ public class ImageOfAbsoluteConic extends Conic implements Serializable {
             // A conic is defined as [A  B   D]
             //                       [B  C   E]
             //                       [D  E   F]
-            final double b11 = getA();
-            final double b12 = getB();
-            final double b22 = getC();
-            final double b13 = getD();
-            final double b23 = getE();
-            final double b33 = getF();
+            final var b11 = getA();
+            final var b12 = getB();
+            final var b22 = getC();
+            final var b13 = getD();
+            final var b23 = getE();
+            final var b33 = getF();
 
             // alpha = horizontal focal distance
             // beta = vertical focal distance
@@ -168,8 +165,7 @@ public class ImageOfAbsoluteConic extends Conic implements Serializable {
             // u0 = horizontal principal point
             // v0 = vertical principal point
             // lambda = scale
-            final double v0 = (b12 * b13 - b11 * b23) /
-                    (b11 * b22 - b12 * b12);
+            final var v0 = (b12 * b13 - b11 * b23) / (b11 * b22 - b12 * b12);
             if (Double.isNaN(v0) || Double.isInfinite(v0)) {
                 throw new InvalidPinholeCameraIntrinsicParametersException();
             }
@@ -177,8 +173,7 @@ public class ImageOfAbsoluteConic extends Conic implements Serializable {
             // lambda is an arbitrary scale, because conics are defined up to
             // scale, and we are obtaining intrinsic parameters from IAC (Image
             // of Absolute Conic)
-            double lambda = b33 - (b13 * b13 + v0 * (b12 * b13 - b11 * b23)) /
-                    b11;
+            var lambda = b33 - (b13 * b13 + v0 * (b12 * b13 - b11 * b23)) / b11;
             // fix sign of lambda so that squared roots are always positive
             lambda *= Math.signum(lambda) * Math.signum(b11);
 
@@ -186,28 +181,27 @@ public class ImageOfAbsoluteConic extends Conic implements Serializable {
                 throw new InvalidPinholeCameraIntrinsicParametersException();
             }
 
-            final double alpha = Math.sqrt(lambda / b11);
+            final var alpha = Math.sqrt(lambda / b11);
             if (Double.isNaN(alpha) || Double.isInfinite(alpha)) {
                 throw new InvalidPinholeCameraIntrinsicParametersException();
             }
 
-            final double beta = Math.sqrt(lambda * b11 / (b11 * b22 - b12 * b12));
+            final var beta = Math.sqrt(lambda * b11 / (b11 * b22 - b12 * b12));
             if (Double.isNaN(beta) || Double.isInfinite(beta)) {
                 throw new InvalidPinholeCameraIntrinsicParametersException();
             }
 
-            final double gamma = -b12 * alpha * alpha * beta / lambda;
+            final var gamma = -b12 * alpha * alpha * beta / lambda;
             if (Double.isNaN(gamma) || Double.isInfinite(gamma)) {
                 throw new InvalidPinholeCameraIntrinsicParametersException();
             }
 
-            final double u0 = gamma * v0 / beta - b13 * alpha * alpha / lambda;
+            final var u0 = gamma * v0 / beta - b13 * alpha * alpha / lambda;
             if (Double.isNaN(u0) || Double.isInfinite(u0)) {
                 throw new InvalidPinholeCameraIntrinsicParametersException();
             }
 
-            return new PinholeCameraIntrinsicParameters(alpha, beta, u0, v0,
-                    gamma);
+            return new PinholeCameraIntrinsicParameters(alpha, beta, u0, v0, gamma);
         } catch (final ArithmeticException e) {
             throw new InvalidPinholeCameraIntrinsicParametersException(e);
         }
@@ -228,12 +222,11 @@ public class ImageOfAbsoluteConic extends Conic implements Serializable {
         try {
             normalize();
 
-            final Matrix m = asMatrix();
-            final CholeskyDecomposer decomposer = new CholeskyDecomposer(m);
+            final var m = asMatrix();
+            final var decomposer = new CholeskyDecomposer(m);
             decomposer.decompose();
-            final Matrix inverseInternalParamsMatrix = decomposer.getR();
-            final Matrix internalParamsMatrix = com.irurueta.algebra.Utils.inverse(
-                    inverseInternalParamsMatrix);
+            final var inverseInternalParamsMatrix = decomposer.getR();
+            final var internalParamsMatrix = com.irurueta.algebra.Utils.inverse(inverseInternalParamsMatrix);
             return new PinholeCameraIntrinsicParameters(internalParamsMatrix);
         } catch (final AlgebraException e) {
             throw new InvalidPinholeCameraIntrinsicParametersException(e);

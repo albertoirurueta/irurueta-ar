@@ -20,9 +20,7 @@ package com.irurueta.ar.sfm;
  * image point correspondences in two views.
  */
 public class TwoViewsSparseReconstructor extends
-        BaseTwoViewsSparseReconstructor<
-                TwoViewsSparseReconstructorConfiguration,
-                TwoViewsSparseReconstructor,
+        BaseTwoViewsSparseReconstructor<TwoViewsSparseReconstructorConfiguration, TwoViewsSparseReconstructor,
                 TwoViewsSparseReconstructorListener> {
 
     /**
@@ -45,8 +43,7 @@ public class TwoViewsSparseReconstructor extends
      * @param listener listener in charge of handling events.
      * @throws NullPointerException if listener is not provided.
      */
-    public TwoViewsSparseReconstructor(
-            final TwoViewsSparseReconstructorListener listener) {
+    public TwoViewsSparseReconstructor(final TwoViewsSparseReconstructorListener listener) {
         this(new TwoViewsSparseReconstructorConfiguration(), listener);
     }
 

@@ -17,106 +17,90 @@ package com.irurueta.ar.sfm;
 
 import com.irurueta.ar.epipolar.FundamentalMatrix;
 import com.irurueta.geometry.PinholeCamera;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class InitialCamerasEstimatorTest implements InitialCamerasEstimatorListener {
+class InitialCamerasEstimatorTest implements InitialCamerasEstimatorListener {
 
     @Test
-    public void testCreate() {
+    void testCreate() {
         // test create with method
-        InitialCamerasEstimator estimator = InitialCamerasEstimator.create(
-                InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
+        var estimator = InitialCamerasEstimator.create(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
 
         assertEquals(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX, estimator.getMethod());
-        assertTrue(estimator instanceof EssentialMatrixInitialCamerasEstimator);
+        assertInstanceOf(EssentialMatrixInitialCamerasEstimator.class, estimator);
 
-        estimator = InitialCamerasEstimator.create(
-                InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC);
+        estimator = InitialCamerasEstimator.create(InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC);
 
-        assertEquals(InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC,
-                estimator.getMethod());
-        assertTrue(estimator instanceof DualImageOfAbsoluteConicInitialCamerasEstimator);
+        assertEquals(InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC, estimator.getMethod());
+        assertInstanceOf(DualImageOfAbsoluteConicInitialCamerasEstimator.class, estimator);
 
-        estimator = InitialCamerasEstimator.create(
-                InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC);
+        estimator = InitialCamerasEstimator.create(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC);
 
-        assertEquals(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC,
-                estimator.getMethod());
-        assertTrue(estimator instanceof DualAbsoluteQuadricInitialCamerasEstimator);
+        assertEquals(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC, estimator.getMethod());
+        assertInstanceOf(DualAbsoluteQuadricInitialCamerasEstimator.class, estimator);
 
-        estimator = InitialCamerasEstimator.create(
-                InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC_AND_ESSENTIAL_MATRIX);
+        estimator = InitialCamerasEstimator.create(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC_AND_ESSENTIAL_MATRIX);
 
-        assertEquals(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC,
-                estimator.getMethod());
-        assertTrue(estimator instanceof DualAbsoluteQuadricInitialCamerasEstimator);
+        assertEquals(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC, estimator.getMethod());
+        assertInstanceOf(DualAbsoluteQuadricInitialCamerasEstimator.class, estimator);
 
         // test create with fundamental matrix and method
-        final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix();
-        estimator = InitialCamerasEstimator.create(fundamentalMatrix,
-                InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
+        final var fundamentalMatrix = new FundamentalMatrix();
+        estimator = InitialCamerasEstimator.create(fundamentalMatrix, InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
 
         assertSame(fundamentalMatrix, estimator.getFundamentalMatrix());
         assertEquals(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX, estimator.getMethod());
-        assertTrue(estimator instanceof EssentialMatrixInitialCamerasEstimator);
+        assertInstanceOf(EssentialMatrixInitialCamerasEstimator.class, estimator);
 
         estimator = InitialCamerasEstimator.create(fundamentalMatrix,
                 InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC);
 
         assertSame(fundamentalMatrix, estimator.getFundamentalMatrix());
-        assertEquals(InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC,
-                estimator.getMethod());
-        assertTrue(estimator instanceof DualImageOfAbsoluteConicInitialCamerasEstimator);
+        assertEquals(InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC, estimator.getMethod());
+        assertInstanceOf(DualImageOfAbsoluteConicInitialCamerasEstimator.class, estimator);
 
         estimator = InitialCamerasEstimator.create(fundamentalMatrix,
                 InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC);
 
         assertSame(fundamentalMatrix, estimator.getFundamentalMatrix());
-        assertEquals(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC,
-                estimator.getMethod());
-        assertTrue(estimator instanceof DualAbsoluteQuadricInitialCamerasEstimator);
+        assertEquals(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC, estimator.getMethod());
+        assertInstanceOf(DualAbsoluteQuadricInitialCamerasEstimator.class, estimator);
 
         estimator = InitialCamerasEstimator.create(fundamentalMatrix,
                 InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC_AND_ESSENTIAL_MATRIX);
 
         assertSame(fundamentalMatrix, estimator.getFundamentalMatrix());
-        assertEquals(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC,
-                estimator.getMethod());
-        assertTrue(estimator instanceof DualAbsoluteQuadricInitialCamerasEstimator);
+        assertEquals(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC, estimator.getMethod());
+        assertInstanceOf(DualAbsoluteQuadricInitialCamerasEstimator.class, estimator);
 
         // test create with listener and method
-        estimator = InitialCamerasEstimator.create(this,
-                InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
+        estimator = InitialCamerasEstimator.create(this, InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
 
         assertSame(this, estimator.getListener());
         assertEquals(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX, estimator.getMethod());
-        assertTrue(estimator instanceof EssentialMatrixInitialCamerasEstimator);
+        assertInstanceOf(EssentialMatrixInitialCamerasEstimator.class, estimator);
 
         estimator = InitialCamerasEstimator.create(this,
                 InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC);
 
         assertSame(this, estimator.getListener());
-        assertEquals(InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC,
-                estimator.getMethod());
-        assertTrue(estimator instanceof DualImageOfAbsoluteConicInitialCamerasEstimator);
+        assertEquals(InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC, estimator.getMethod());
+        assertInstanceOf(DualImageOfAbsoluteConicInitialCamerasEstimator.class, estimator);
 
-        estimator = InitialCamerasEstimator.create(this,
-                InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC);
+        estimator = InitialCamerasEstimator.create(this, InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC);
 
         assertSame(this, estimator.getListener());
-        assertEquals(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC,
-                estimator.getMethod());
-        assertTrue(estimator instanceof DualAbsoluteQuadricInitialCamerasEstimator);
+        assertEquals(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC, estimator.getMethod());
+        assertInstanceOf(DualAbsoluteQuadricInitialCamerasEstimator.class, estimator);
 
         estimator = InitialCamerasEstimator.create(this,
                 InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC_AND_ESSENTIAL_MATRIX);
 
         assertSame(this, estimator.getListener());
-        assertEquals(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC,
-                estimator.getMethod());
-        assertTrue(estimator instanceof DualAbsoluteQuadricInitialCamerasEstimator);
+        assertEquals(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC, estimator.getMethod());
+        assertInstanceOf(DualAbsoluteQuadricInitialCamerasEstimator.class, estimator);
 
         // test create with fundamental matrix, listener and method
         estimator = InitialCamerasEstimator.create(fundamentalMatrix, this,
@@ -125,80 +109,74 @@ public class InitialCamerasEstimatorTest implements InitialCamerasEstimatorListe
         assertSame(fundamentalMatrix, estimator.getFundamentalMatrix());
         assertSame(this, estimator.getListener());
         assertEquals(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX, estimator.getMethod());
-        assertTrue(estimator instanceof EssentialMatrixInitialCamerasEstimator);
+        assertInstanceOf(EssentialMatrixInitialCamerasEstimator.class, estimator);
 
         estimator = InitialCamerasEstimator.create(fundamentalMatrix, this,
                 InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC);
 
         assertSame(fundamentalMatrix, estimator.getFundamentalMatrix());
         assertSame(this, estimator.getListener());
-        assertEquals(InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC,
-                estimator.getMethod());
-        assertTrue(estimator instanceof DualImageOfAbsoluteConicInitialCamerasEstimator);
+        assertEquals(InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC, estimator.getMethod());
+        assertInstanceOf(DualImageOfAbsoluteConicInitialCamerasEstimator.class, estimator);
 
         estimator = InitialCamerasEstimator.create(fundamentalMatrix, this,
                 InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC);
 
         assertSame(fundamentalMatrix, estimator.getFundamentalMatrix());
         assertSame(this, estimator.getListener());
-        assertEquals(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC,
-                estimator.getMethod());
-        assertTrue(estimator instanceof DualAbsoluteQuadricInitialCamerasEstimator);
+        assertEquals(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC, estimator.getMethod());
+        assertInstanceOf(DualAbsoluteQuadricInitialCamerasEstimator.class, estimator);
 
         estimator = InitialCamerasEstimator.create(fundamentalMatrix, this,
                 InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC_AND_ESSENTIAL_MATRIX);
 
         assertSame(fundamentalMatrix, estimator.getFundamentalMatrix());
         assertSame(this, estimator.getListener());
-        assertEquals(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC,
-                estimator.getMethod());
-        assertTrue(estimator instanceof DualAbsoluteQuadricInitialCamerasEstimator);
+        assertEquals(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC, estimator.getMethod());
+        assertInstanceOf(DualAbsoluteQuadricInitialCamerasEstimator.class, estimator);
 
         // test create with default method
         estimator = InitialCamerasEstimator.create();
 
-        assertEquals(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC,
-                estimator.getMethod());
-        assertTrue(estimator instanceof DualAbsoluteQuadricInitialCamerasEstimator);
+        assertEquals(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC, estimator.getMethod());
+        assertInstanceOf(DualAbsoluteQuadricInitialCamerasEstimator.class, estimator);
 
         // test create with fundamental matrix and default method
         estimator = InitialCamerasEstimator.create(fundamentalMatrix);
 
         assertSame(fundamentalMatrix, estimator.getFundamentalMatrix());
-        assertEquals(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC,
-                estimator.getMethod());
-        assertTrue(estimator instanceof DualAbsoluteQuadricInitialCamerasEstimator);
+        assertEquals(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC, estimator.getMethod());
+        assertInstanceOf(DualAbsoluteQuadricInitialCamerasEstimator.class, estimator);
 
         // test create with listener and default method
         estimator = InitialCamerasEstimator.create(this);
 
         assertSame(this, estimator.getListener());
-        assertEquals(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC,
-                estimator.getMethod());
-        assertTrue(estimator instanceof DualAbsoluteQuadricInitialCamerasEstimator);
+        assertEquals(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC, estimator.getMethod());
+        assertInstanceOf(DualAbsoluteQuadricInitialCamerasEstimator.class, estimator);
 
         // test create with fundamental matrix, listener and default method
         estimator = InitialCamerasEstimator.create(fundamentalMatrix, this);
 
         assertSame(fundamentalMatrix, estimator.getFundamentalMatrix());
         assertSame(this, estimator.getListener());
-        assertEquals(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC,
-                estimator.getMethod());
-        assertTrue(estimator instanceof DualAbsoluteQuadricInitialCamerasEstimator);
+        assertEquals(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC, estimator.getMethod());
+        assertInstanceOf(DualAbsoluteQuadricInitialCamerasEstimator.class, estimator);
     }
 
     @Override
     public void onStart(final InitialCamerasEstimator estimator) {
+        // no action needed
     }
 
     @Override
-    public void onFinish(final InitialCamerasEstimator estimator,
-                         final PinholeCamera estimatedLeftCamera,
+    public void onFinish(final InitialCamerasEstimator estimator, final PinholeCamera estimatedLeftCamera,
                          final PinholeCamera estimatedRightCamera) {
+        // no action needed
     }
 
     @Override
-    public void onFail(final InitialCamerasEstimator estimator,
-                       final InitialCamerasEstimationFailedException e) {
+    public void onFail(final InitialCamerasEstimator estimator, final InitialCamerasEstimationFailedException e) {
+        // no action needed
     }
 }

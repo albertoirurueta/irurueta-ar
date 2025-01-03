@@ -15,15 +15,15 @@
  */
 package com.irurueta.ar.epipolar;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class CorrectionExceptionTest {
+class CorrectionExceptionTest {
 
     @Test
-    public void testConstructor() {
-        CorrectionException ex = new CorrectionException();
+    void testConstructor() {
+        var ex = new CorrectionException();
         assertNotNull(ex);
 
         ex = new CorrectionException("message");

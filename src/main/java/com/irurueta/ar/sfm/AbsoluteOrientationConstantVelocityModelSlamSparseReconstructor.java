@@ -58,8 +58,7 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor ext
      */
     public AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor(
             final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorListener listener) {
-        this(new AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorConfiguration(),
-                listener);
+        this(new AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorConfiguration(), listener);
     }
 
     /**
@@ -71,8 +70,8 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor ext
      */
     @Override
     public boolean processOneView() {
-        if (!mRunning) {
-            mSlamEstimator = new AbsoluteOrientationConstantVelocityModelSlamEstimator();
+        if (!running) {
+            slamEstimator = new AbsoluteOrientationConstantVelocityModelSlamEstimator();
             setUpSlamEstimatorListener();
             setUpCalibrationData();
         }

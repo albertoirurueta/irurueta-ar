@@ -16,7 +16,6 @@
 package com.irurueta.ar.calibration.estimators;
 
 import com.irurueta.algebra.AlgebraException;
-import com.irurueta.algebra.Complex;
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.SingularValueDecomposer;
 import com.irurueta.algebra.Utils;
@@ -66,8 +65,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      * aspect ratio. Typically, LCD sensor cells are square and hence aspect
      * ratio of focal distances is known and equal to 1.
      */
-    public static final boolean DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN =
-            true;
+    public static final boolean DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN = true;
 
     /**
      * Constant defining default aspect ratio of focal distances. This constant
@@ -118,7 +116,7 @@ public abstract class DualAbsoluteQuadricEstimator {
     /**
      * Indicates whether camera skewness is assumed to be zero or not.
      */
-    protected boolean mZeroSkewness;
+    protected boolean zeroSkewness;
 
     /**
      * Indicates whether principal point is assumed to be at origin of
@@ -126,7 +124,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      * If false, the principal point will be estimated, otherwise it will be
      * assumed to be at image center (i.e. origin of coordinates).
      */
-    protected boolean mPrincipalPointAtOrigin;
+    protected boolean principalPointAtOrigin;
 
     /**
      * Indicates whether aspect ratio of focal distances (i.e. vertical focal
@@ -137,7 +135,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      * This value is only taken into account if skewness is assumed to be zero,
      * otherwise it is ignored.
      */
-    protected boolean mFocalDistanceAspectRatioKnown;
+    protected boolean focalDistanceAspectRatioKnown;
 
     /**
      * Contains aspect ratio of focal distances (i.e. vertical focal distance
@@ -151,7 +149,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      * Notice that focal distance aspect ratio is not related to image size
      * aspect ratio.
      */
-    protected double mFocalDistanceAspectRatio;
+    protected double focalDistanceAspectRatio;
 
     /**
      * Indicates whether a singular DAQ is enforced or not.
@@ -159,53 +157,52 @@ public abstract class DualAbsoluteQuadricEstimator {
      * however, due to noise in samples, estimated DAQ might not be fully
      * singular.
      */
-    protected boolean mSingularityEnforced;
+    protected boolean singularityEnforced;
 
     /**
      * Indicates whether enforced singularity will be validated by checking that
      * determinant of estimated Dual Absolute Quadric (DAQ) is below a certain
      * threshold.
      */
-    protected boolean mValidateEnforcedSingularity;
+    protected boolean validateEnforcedSingularity;
 
     /**
      * Threshold to determine whether estimated Dual Absolute Quadric (DAQ)
      * has rank 3 or not when validation is enabled.
      */
-    protected double mDeterminantThreshold;
+    protected double determinantThreshold;
 
     /**
      * True when an estimator is estimating the Dual Absolute Quadric (DAQ).
      */
-    protected boolean mLocked;
+    protected boolean locked;
 
     /**
      * Listener to be notified of events such as when estimation starts, ends or
      * estimation progress changes.
      */
-    protected DualAbsoluteQuadricEstimatorListener mListener;
+    protected DualAbsoluteQuadricEstimatorListener listener;
 
     /**
      * List of cameras used to estimate the Dual Absolute Quadric (DAQ).
      */
-    protected List<PinholeCamera> mCameras;
+    protected List<PinholeCamera> cameras;
 
     /**
      * Constructor.
      */
     protected DualAbsoluteQuadricEstimator() {
-        mZeroSkewness = DEFAULT_ZERO_SKEWNESS;
-        mPrincipalPointAtOrigin = DEFAULT_PRINCIPAL_POINT_AT_ORIGIN;
-        mFocalDistanceAspectRatioKnown =
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN;
-        mFocalDistanceAspectRatio = DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO;
-        mSingularityEnforced = DEFAULT_ENFORCE_SINGULARITY;
-        mValidateEnforcedSingularity = DEFAULT_VALIDATE_ENFORCED_SINGULARITY;
-        mDeterminantThreshold = DEFAULT_DETERMINANT_THRESHOLD;
+        zeroSkewness = DEFAULT_ZERO_SKEWNESS;
+        principalPointAtOrigin = DEFAULT_PRINCIPAL_POINT_AT_ORIGIN;
+        focalDistanceAspectRatioKnown = DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN;
+        focalDistanceAspectRatio = DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO;
+        singularityEnforced = DEFAULT_ENFORCE_SINGULARITY;
+        validateEnforcedSingularity = DEFAULT_VALIDATE_ENFORCED_SINGULARITY;
+        determinantThreshold = DEFAULT_DETERMINANT_THRESHOLD;
 
-        mLocked = false;
-        mListener = null;
-        mCameras = null;
+        locked = false;
+        listener = null;
+        cameras = null;
     }
 
     /**
@@ -214,10 +211,9 @@ public abstract class DualAbsoluteQuadricEstimator {
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or estimation progress changes.
      */
-    protected DualAbsoluteQuadricEstimator(
-            final DualAbsoluteQuadricEstimatorListener listener) {
+    protected DualAbsoluteQuadricEstimator(final DualAbsoluteQuadricEstimatorListener listener) {
         this();
-        mListener = listener;
+        this.listener = listener;
     }
 
     /**
@@ -250,7 +246,7 @@ public abstract class DualAbsoluteQuadricEstimator {
     protected DualAbsoluteQuadricEstimator(final List<PinholeCamera> cameras,
                                            final DualAbsoluteQuadricEstimatorListener listener) {
         this(cameras);
-        mListener = listener;
+        this.listener = listener;
     }
 
     /**
@@ -264,7 +260,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      * skewness is estimated
      */
     public boolean isZeroSkewness() {
-        return mZeroSkewness;
+        return zeroSkewness;
     }
 
     /**
@@ -283,7 +279,7 @@ public abstract class DualAbsoluteQuadricEstimator {
             throw new LockedException();
         }
 
-        mZeroSkewness = zeroSkewness;
+        this.zeroSkewness = zeroSkewness;
     }
 
     /**
@@ -297,7 +293,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      * coordinates, false if principal point must be estimated
      */
     public boolean isPrincipalPointAtOrigin() {
-        return mPrincipalPointAtOrigin;
+        return principalPointAtOrigin;
     }
 
     /**
@@ -311,13 +307,12 @@ public abstract class DualAbsoluteQuadricEstimator {
      *                               origin of coordinates, false if principal point must be estimated
      * @throws LockedException if estimator is locked
      */
-    public void setPrincipalPointAtOrigin(final boolean principalPointAtOrigin)
-            throws LockedException {
+    public void setPrincipalPointAtOrigin(final boolean principalPointAtOrigin) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
 
-        mPrincipalPointAtOrigin = principalPointAtOrigin;
+        this.principalPointAtOrigin = principalPointAtOrigin;
     }
 
     /**
@@ -333,7 +328,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      * @return true if focal distance aspect ratio is known, false otherwise
      */
     public boolean isFocalDistanceAspectRatioKnown() {
-        return mFocalDistanceAspectRatioKnown;
+        return focalDistanceAspectRatioKnown;
     }
 
     /**
@@ -350,13 +345,12 @@ public abstract class DualAbsoluteQuadricEstimator {
      *                                      is known, false otherwise.
      * @throws LockedException if estimator is locked.
      */
-    public void setFocalDistanceAspectRatioKnown(
-            final boolean focalDistanceAspectRatioKnown) throws LockedException {
+    public void setFocalDistanceAspectRatioKnown(final boolean focalDistanceAspectRatioKnown) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
 
-        mFocalDistanceAspectRatioKnown = focalDistanceAspectRatioKnown;
+        this.focalDistanceAspectRatioKnown = focalDistanceAspectRatioKnown;
     }
 
     /**
@@ -379,7 +373,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      * @return aspect ratio of focal distances.
      */
     public double getFocalDistanceAspectRatio() {
-        return mFocalDistanceAspectRatio;
+        return focalDistanceAspectRatio;
     }
 
     /**
@@ -404,17 +398,15 @@ public abstract class DualAbsoluteQuadricEstimator {
      * @throws IllegalArgumentException if focal distance aspect ratio is too
      *                                  close to zero, as it might produce numerical instabilities.
      */
-    public void setFocalDistanceAspectRatio(final double focalDistanceAspectRatio)
-            throws LockedException {
+    public void setFocalDistanceAspectRatio(final double focalDistanceAspectRatio) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        if (Math.abs(focalDistanceAspectRatio) <
-                MIN_ABS_FOCAL_DISTANCE_ASPECT_RATIO) {
+        if (Math.abs(focalDistanceAspectRatio) < MIN_ABS_FOCAL_DISTANCE_ASPECT_RATIO) {
             throw new IllegalArgumentException();
         }
 
-        mFocalDistanceAspectRatio = focalDistanceAspectRatio;
+        this.focalDistanceAspectRatio = focalDistanceAspectRatio;
     }
 
     /**
@@ -426,7 +418,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      * @return true when singular DAQ is enforced, false otherwise.
      */
     public boolean isSingularityEnforced() {
-        return mSingularityEnforced;
+        return singularityEnforced;
     }
 
     /**
@@ -439,12 +431,11 @@ public abstract class DualAbsoluteQuadricEstimator {
      *                            otherwise.
      * @throws LockedException if estimator is locked.
      */
-    public void setSingularityEnforced(final boolean singularityEnforced)
-            throws LockedException {
+    public void setSingularityEnforced(final boolean singularityEnforced) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mSingularityEnforced = singularityEnforced;
+        this.singularityEnforced = singularityEnforced;
     }
 
     /**
@@ -455,7 +446,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      * @return true if enforced singularity is validated, false otherwise.
      */
     public boolean isEnforcedSingularityValidated() {
-        return mValidateEnforcedSingularity;
+        return validateEnforcedSingularity;
     }
 
     /**
@@ -467,12 +458,11 @@ public abstract class DualAbsoluteQuadricEstimator {
      *                                    validated, false otherwise.
      * @throws LockedException if estimator is locked.
      */
-    public void setEnforcedSingularityValidated(
-            final boolean validateEnforcedSingularity) throws LockedException {
+    public void setEnforcedSingularityValidated(final boolean validateEnforcedSingularity) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mValidateEnforcedSingularity = validateEnforcedSingularity;
+        this.validateEnforcedSingularity = validateEnforcedSingularity;
     }
 
     /**
@@ -482,7 +472,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      * @return threshold to determine whether estimated DAQ has rank 3 or not.
      */
     public double getDeterminantThreshold() {
-        return mDeterminantThreshold;
+        return determinantThreshold;
     }
 
     /**
@@ -494,16 +484,14 @@ public abstract class DualAbsoluteQuadricEstimator {
      * @throws IllegalArgumentException if provided value is zero or negative.
      * @throws LockedException          if estimator is locked.
      */
-    public void setDeterminantThreshold(final double determinantThreshold)
-            throws LockedException {
+    public void setDeterminantThreshold(final double determinantThreshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
         if (determinantThreshold < 0.0) {
-            throw new IllegalArgumentException(
-                    "threshold must be positive and greater than zero");
+            throw new IllegalArgumentException("threshold must be positive and greater than zero");
         }
-        mDeterminantThreshold = determinantThreshold;
+        this.determinantThreshold = determinantThreshold;
     }
 
     /**
@@ -513,7 +501,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      * Quadric, false otherwise.
      */
     public boolean isLocked() {
-        return mLocked;
+        return locked;
     }
 
     /**
@@ -523,7 +511,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      * @return listener to be notified of events.
      */
     public DualAbsoluteQuadricEstimatorListener getListener() {
-        return mListener;
+        return listener;
     }
 
     /**
@@ -533,7 +521,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      * @param listener listener to be notified of events.
      */
     public void setListener(final DualAbsoluteQuadricEstimatorListener listener) {
-        mListener = listener;
+        this.listener = listener;
     }
 
     /**
@@ -543,7 +531,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      * @return list of cameras to estimate the DAQ.
      */
     public List<PinholeCamera> getCameras() {
-        return mCameras;
+        return cameras;
     }
 
     /**
@@ -558,11 +546,10 @@ public abstract class DualAbsoluteQuadricEstimator {
         if (isLocked()) {
             throw new LockedException();
         }
-        if (cameras == null ||
-                cameras.size() < getMinNumberOfRequiredCameras()) {
+        if (cameras == null || cameras.size() < getMinNumberOfRequiredCameras()) {
             throw new IllegalArgumentException();
         }
-        mCameras = cameras;
+        this.cameras = cameras;
     }
 
     /**
@@ -591,15 +578,15 @@ public abstract class DualAbsoluteQuadricEstimator {
      * Absolute Quadric (DAQ) or -1 if constraints configurations is not valid.
      */
     public int getMinNumberOfRequiredCameras() {
-        int numEquations = 0;
-        if (mPrincipalPointAtOrigin) {
+        var numEquations = 0;
+        if (principalPointAtOrigin) {
             numEquations += 2;
-            if (mZeroSkewness) {
+            if (zeroSkewness) {
                 numEquations++;
 
                 // only a linear solution exists for known aspect ratio if
                 // skewness is zero
-                if (mFocalDistanceAspectRatioKnown) {
+                if (focalDistanceAspectRatioKnown) {
                     numEquations++;
                 }
             }
@@ -609,12 +596,11 @@ public abstract class DualAbsoluteQuadricEstimator {
             return -1;
         }
 
-        int minRequiredEquations = MIN_REQUIRED_EQUATIONS;
-        if (mSingularityEnforced) {
+        var minRequiredEquations = MIN_REQUIRED_EQUATIONS;
+        if (singularityEnforced) {
             minRequiredEquations--;
         }
-        return (minRequiredEquations / numEquations) +
-                ((minRequiredEquations % numEquations != 0) ? 1 : 0);
+        return (minRequiredEquations / numEquations) + ((minRequiredEquations % numEquations != 0) ? 1 : 0);
     }
 
     /**
@@ -625,8 +611,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      * @return true if constraints are valid, false otherwise.
      */
     public boolean areValidConstraints() {
-        return mPrincipalPointAtOrigin &&
-                (mFocalDistanceAspectRatioKnown || !mSingularityEnforced);
+        return principalPointAtOrigin && (focalDistanceAspectRatioKnown || !singularityEnforced);
     }
 
 
@@ -636,8 +621,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      * @return true if estimator is ready, false otherwise.
      */
     public boolean isReady() {
-        return mCameras != null && mCameras.size() >= getMinNumberOfRequiredCameras()
-                && areValidConstraints();
+        return cameras != null && cameras.size() >= getMinNumberOfRequiredCameras() && areValidConstraints();
     }
 
 
@@ -652,9 +636,9 @@ public abstract class DualAbsoluteQuadricEstimator {
      *                                               estimation, usually because input data is not valid
      *                                               or numerically unstable.
      */
-    public DualAbsoluteQuadric estimate() throws LockedException,
-            NotReadyException, DualAbsoluteQuadricEstimatorException {
-        final DualAbsoluteQuadric result = new DualAbsoluteQuadric();
+    public DualAbsoluteQuadric estimate() throws LockedException, NotReadyException,
+            DualAbsoluteQuadricEstimatorException {
+        final var result = new DualAbsoluteQuadric();
         estimate(result);
         return result;
     }
@@ -671,8 +655,8 @@ public abstract class DualAbsoluteQuadricEstimator {
      *                                               estimation, usually because input data is not valid
      *                                               or numerically unstable.
      */
-    public abstract void estimate(final DualAbsoluteQuadric result)
-            throws LockedException, NotReadyException, DualAbsoluteQuadricEstimatorException;
+    public abstract void estimate(final DualAbsoluteQuadric result) throws LockedException, NotReadyException,
+        DualAbsoluteQuadricEstimatorException;
 
 
     /**
@@ -699,8 +683,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      *                 starts, ends or estimation progress changes.
      * @return an instance of a DAQ estimator.
      */
-    public static DualAbsoluteQuadricEstimator create(
-            final DualAbsoluteQuadricEstimatorListener listener) {
+    public static DualAbsoluteQuadricEstimator create(final DualAbsoluteQuadricEstimatorListener listener) {
         return create(listener, DEFAULT_ESTIMATOR_TYPE);
     }
 
@@ -714,8 +697,7 @@ public abstract class DualAbsoluteQuadricEstimator {
      * @throws IllegalArgumentException if list of cameras is null or invalid
      *                                  for default constraints.
      */
-    public static DualAbsoluteQuadricEstimator create(
-            final List<PinholeCamera> cameras) {
+    public static DualAbsoluteQuadricEstimator create(final List<PinholeCamera> cameras) {
         return create(cameras, DEFAULT_ESTIMATOR_TYPE);
     }
 
@@ -732,8 +714,8 @@ public abstract class DualAbsoluteQuadricEstimator {
      *                                  for default constraints.
      */
     public static DualAbsoluteQuadricEstimator create(
-            final List<PinholeCamera> cameras,
-            final DualAbsoluteQuadricEstimatorListener listener) {
+            final List<PinholeCamera> cameras, final DualAbsoluteQuadricEstimatorListener listener) {
+
         return create(cameras, listener, DEFAULT_ESTIMATOR_TYPE);
     }
 
@@ -743,15 +725,9 @@ public abstract class DualAbsoluteQuadricEstimator {
      * @param type type of DAQ estimator.
      * @return an instance of a DAQ estimator.
      */
-    public static DualAbsoluteQuadricEstimator create(
-            final DualAbsoluteQuadricEstimatorType type) {
-        switch (type) {
-            case WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR:
-                return new WeightedDualAbsoluteQuadricEstimator();
-            case LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR:
-            default:
-                return new LMSEDualAbsoluteQuadricEstimator();
-        }
+    public static DualAbsoluteQuadricEstimator create(final DualAbsoluteQuadricEstimatorType type) {
+        return type == DualAbsoluteQuadricEstimatorType.WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR
+                ? new WeightedDualAbsoluteQuadricEstimator() : new LMSEDualAbsoluteQuadricEstimator();
     }
 
     /**
@@ -763,15 +739,9 @@ public abstract class DualAbsoluteQuadricEstimator {
      * @return an instance of a DAQ estimator.
      */
     public static DualAbsoluteQuadricEstimator create(
-            final DualAbsoluteQuadricEstimatorListener listener,
-            final DualAbsoluteQuadricEstimatorType type) {
-        switch (type) {
-            case WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR:
-                return new WeightedDualAbsoluteQuadricEstimator(listener);
-            case LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR:
-            default:
-                return new LMSEDualAbsoluteQuadricEstimator(listener);
-        }
+            final DualAbsoluteQuadricEstimatorListener listener, final DualAbsoluteQuadricEstimatorType type) {
+        return type == DualAbsoluteQuadricEstimatorType.WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR
+                ? new WeightedDualAbsoluteQuadricEstimator(listener) : new LMSEDualAbsoluteQuadricEstimator(listener);
     }
 
     /**
@@ -786,13 +756,8 @@ public abstract class DualAbsoluteQuadricEstimator {
      */
     public static DualAbsoluteQuadricEstimator create(
             final List<PinholeCamera> cameras, final DualAbsoluteQuadricEstimatorType type) {
-        switch (type) {
-            case WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR:
-                return new WeightedDualAbsoluteQuadricEstimator(cameras);
-            case LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR:
-            default:
-                return new LMSEDualAbsoluteQuadricEstimator(cameras);
-        }
+        return type == DualAbsoluteQuadricEstimatorType.WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR
+                ? new WeightedDualAbsoluteQuadricEstimator(cameras) : new LMSEDualAbsoluteQuadricEstimator(cameras);
     }
 
     /**
@@ -809,17 +774,12 @@ public abstract class DualAbsoluteQuadricEstimator {
      *                                  for default constraints.
      */
     public static DualAbsoluteQuadricEstimator create(
-            final List<PinholeCamera> cameras,
-            final DualAbsoluteQuadricEstimatorListener listener,
+            final List<PinholeCamera> cameras, final DualAbsoluteQuadricEstimatorListener listener,
             final DualAbsoluteQuadricEstimatorType type) {
-        switch (type) {
-            case WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR:
-                return new WeightedDualAbsoluteQuadricEstimator(cameras,
-                        listener);
-            case LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR:
-            default:
-                return new LMSEDualAbsoluteQuadricEstimator(cameras, listener);
-        }
+
+        return type == DualAbsoluteQuadricEstimatorType.WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR
+                ? new WeightedDualAbsoluteQuadricEstimator(cameras, listener)
+                : new LMSEDualAbsoluteQuadricEstimator(cameras, listener);
     }
 
     /**
@@ -829,15 +789,15 @@ public abstract class DualAbsoluteQuadricEstimator {
      * @param i row to be normalized.
      */
     protected void normalizeRow(final Matrix a, final int i) {
-        double rowNorm = 0.0;
-        final int cols = a.getColumns();
-        for (int j = 0; j < cols; j++) {
+        var rowNorm = 0.0;
+        final var cols = a.getColumns();
+        for (var j = 0; j < cols; j++) {
             rowNorm += Math.pow(a.getElementAt(i, j), 2.0);
         }
 
         rowNorm = Math.sqrt(rowNorm);
 
-        for (int j = 0; j < cols; j++) {
+        for (var j = 0; j < cols; j++) {
             a.setElementAt(i, j, a.getElementAt(i, j) / rowNorm);
         }
     }
@@ -857,10 +817,8 @@ public abstract class DualAbsoluteQuadricEstimator {
      * @param row row of matrix a where data is stored.
      */
     protected void fill3rdRowAnd1stRowEquation(
-            final double p11, final double p31,
-            final double p12, final double p32,
-            final double p13, final double p33,
-            final double p14, final double p34, final Matrix a, final int row) {
+        final double p11, final double p31, final double p12, final double p32, final double p13, final double p33,
+        final double p14, final double p34, final Matrix a, final int row) {
 
         // a
         a.setElementAt(row, 0, p31 * p11);
@@ -901,10 +859,8 @@ public abstract class DualAbsoluteQuadricEstimator {
      * @param row row of matrix a where data is stored.
      */
     protected void fill3rdRowAnd2ndRowEquation(
-            final double p21, final double p31,
-            final double p22, final double p32,
-            final double p23, final double p33,
-            final double p24, final double p34, final Matrix a, final int row) {
+        final double p21, final double p31, final double p22, final double p32, final double p23, final double p33,
+        final double p24, final double p34, final Matrix a, final int row) {
 
         // a
         a.setElementAt(row, 0, p31 * p21);
@@ -945,10 +901,8 @@ public abstract class DualAbsoluteQuadricEstimator {
      * @param row row of matrix a where data is stored.
      */
     protected void fill2ndRowAnd1stRowEquation(
-            final double p11, final double p21,
-            final double p12, final double p22,
-            final double p13, final double p23,
-            final double p14, final double p24, final Matrix a, final int row) {
+        final double p11, final double p21, final double p12, final double p22, final double p13, final double p23,
+        final double p14, final double p24, final Matrix a, final int row) {
 
         // a
         a.setElementAt(row, 0, p21 * p11);
@@ -989,12 +943,10 @@ public abstract class DualAbsoluteQuadricEstimator {
      * @param row row of matrix a where data is stored.
      */
     protected void fill1stRowEqualTo2ndRowEquation(
-            final double p11, final double p21,
-            final double p12, final double p22,
-            final double p13, final double p23,
-            final double p14, final double p24, final Matrix a, final int row) {
+        final double p11, final double p21, final double p12, final double p22, final double p13, final double p23,
+        final double p14, final double p24, final Matrix a, final int row) {
 
-        final double r2 = mFocalDistanceAspectRatio * mFocalDistanceAspectRatio;
+        final var r2 = focalDistanceAspectRatio * focalDistanceAspectRatio;
 
         // a
         a.setElementAt(row, 0, p11 * p11 * r2 - p21 * p21);
@@ -1034,21 +986,19 @@ public abstract class DualAbsoluteQuadricEstimator {
      *                                               rank 3 cannot be found.
      * @throws DualAbsoluteQuadricEstimatorException if something else fails.
      */
-    protected void enforceRank3IfNeeded(
-            final SingularValueDecomposer decomposer,
-            final DualAbsoluteQuadric result) throws AlgebraException,
-            NumericalException, DualAbsoluteQuadricEstimatorException {
+    protected void enforceRank3IfNeeded(final SingularValueDecomposer decomposer, final DualAbsoluteQuadric result)
+        throws AlgebraException, NumericalException, DualAbsoluteQuadricEstimatorException {
 
         decomposer.decompose();
 
-        if (mSingularityEnforced) {
+        if (singularityEnforced) {
             if (decomposer.getNullity() > 2) {
                 // provided cameras are degenerate and there is not a single
                 // solution for the DAQ (up to scale)
                 throw new DualAbsoluteQuadricEstimatorException();
             }
 
-            final Matrix v = decomposer.getV();
+            final var v = decomposer.getV();
 
             // last 2 columns of v contains parameters a, b, c, d, e,
             // f, g, h, i  that can be obtained as a linear combination of
@@ -1057,53 +1007,52 @@ public abstract class DualAbsoluteQuadricEstimator {
             // polynomial to determine alpha to find the unique linear
             // combination of last 2 columns that solve both DAQ equation and
             // generates rank 3 DAQ.
-            final double a1 = v.getElementAt(0, 8);
-            final double b1 = v.getElementAt(1, 8);
-            final double c1 = v.getElementAt(2, 8);
-            final double d1 = v.getElementAt(3, 8);
-            final double e1 = v.getElementAt(4, 8);
-            final double f1 = v.getElementAt(5, 8);
-            final double g1 = v.getElementAt(6, 8);
-            final double h1 = v.getElementAt(7, 8);
-            final double i1 = v.getElementAt(8, 8);
-            final double j1 = v.getElementAt(9, 8);
+            final var a1 = v.getElementAt(0, 8);
+            final var b1 = v.getElementAt(1, 8);
+            final var c1 = v.getElementAt(2, 8);
+            final var d1 = v.getElementAt(3, 8);
+            final var e1 = v.getElementAt(4, 8);
+            final var f1 = v.getElementAt(5, 8);
+            final var g1 = v.getElementAt(6, 8);
+            final var h1 = v.getElementAt(7, 8);
+            final var i1 = v.getElementAt(8, 8);
+            final var j1 = v.getElementAt(9, 8);
 
-            final double a2 = v.getElementAt(0, 9);
-            final double b2 = v.getElementAt(1, 9);
-            final double c2 = v.getElementAt(2, 9);
-            final double d2 = v.getElementAt(3, 9);
-            final double e2 = v.getElementAt(4, 9);
-            final double f2 = v.getElementAt(5, 9);
-            final double g2 = v.getElementAt(6, 9);
-            final double h2 = v.getElementAt(7, 9);
-            final double i2 = v.getElementAt(8, 9);
-            final double j2 = v.getElementAt(9, 9);
+            final var a2 = v.getElementAt(0, 9);
+            final var b2 = v.getElementAt(1, 9);
+            final var c2 = v.getElementAt(2, 9);
+            final var d2 = v.getElementAt(3, 9);
+            final var e2 = v.getElementAt(4, 9);
+            final var f2 = v.getElementAt(5, 9);
+            final var g2 = v.getElementAt(6, 9);
+            final var h2 = v.getElementAt(7, 9);
+            final var i2 = v.getElementAt(8, 9);
+            final var j2 = v.getElementAt(9, 9);
 
-            final Polynomial poly = buildPolynomialToEnforceRank3(a1, b1, c1, d1, e1,
-                    f1, g1, h1, i1, j1, a2, b2, c2, d2, e2, f2, g2, h2, i2, j2);
+            final var poly = buildPolynomialToEnforceRank3(a1, b1, c1, d1, e1, f1, g1, h1, i1, j1, a2, b2, c2, d2, e2,
+                    f2, g2, h2, i2, j2);
 
-            final Complex[] roots = poly.getRoots();
+            final var roots = poly.getRoots();
 
             if (roots != null) {
                 // pick the best solution (closest real root) = evaluation closest to
                 // zero
-                double polyEval;
-                double bestPolyEval = Double.MAX_VALUE;
-                for (final Complex root : roots) {
-                    final double real = root.getReal();
-                    polyEval = Math.abs(poly.evaluate(real));
+                var bestPolyEval = Double.MAX_VALUE;
+                for (final var root : roots) {
+                    final var real = root.getReal();
+                    final var polyEval = Math.abs(poly.evaluate(real));
                     if (polyEval < bestPolyEval) {
                         bestPolyEval = polyEval;
-                        final double a = a1 + real * a2;
-                        final double b = b1 + real * b2;
-                        final double c = c1 + real * c2;
-                        final double d = d1 + real * d2;
-                        final double e = e1 + real * e2;
-                        final double f = f1 + real * f2;
-                        final double g = g1 + real * g2;
-                        final double h = h1 + real * h2;
-                        final double i = i1 + real * i2;
-                        final double j = j1 + real * j2;
+                        final var a = a1 + real * a2;
+                        final var b = b1 + real * b2;
+                        final var c = c1 + real * c2;
+                        final var d = d1 + real * d2;
+                        final var e = e1 + real * e2;
+                        final var f = f1 + real * f2;
+                        final var g = g1 + real * g2;
+                        final var h = h1 + real * h2;
+                        final var i = i1 + real * i2;
+                        final var j = j1 + real * j2;
                         result.setParameters(a, b, c, d, e, f, g, h, i, j);
                     }
                 }
@@ -1111,37 +1060,36 @@ public abstract class DualAbsoluteQuadricEstimator {
                 // if no roots could be found, it might be due to numerical
                 // inaccuracies, so we find minimum or maximum of polynomial
                 // which evaluates closest to zero
-                final double[] extrema = poly.getExtrema();
+                final var extrema = poly.getExtrema();
                 if (extrema == null) {
                     // polynomial has no extrema, which means it is degenerate
                     throw new DualAbsoluteQuadricEstimatorException();
                 }
 
-                double polyEval;
-                double bestPolyEval = Double.MAX_VALUE;
-                for (final double extremum : extrema) {
-                    polyEval = Math.abs(poly.evaluate(extremum));
+                var bestPolyEval = Double.MAX_VALUE;
+                for (final var extremum : extrema) {
+                    final var polyEval = Math.abs(poly.evaluate(extremum));
                     if (polyEval < bestPolyEval) {
                         bestPolyEval = polyEval;
-                        final double a = a1 + extremum * a2;
-                        final double b = b1 + extremum * b2;
-                        final double c = c1 + extremum * c2;
-                        final double d = d1 + extremum * d2;
-                        final double e = e1 + extremum * e2;
-                        final double f = f1 + extremum * f2;
-                        final double g = g1 + extremum * g2;
-                        final double h = h1 + extremum * h2;
-                        final double i = i1 + extremum * i2;
-                        final double j = j1 + extremum * j2;
+                        final var a = a1 + extremum * a2;
+                        final var b = b1 + extremum * b2;
+                        final var c = c1 + extremum * c2;
+                        final var d = d1 + extremum * d2;
+                        final var e = e1 + extremum * e2;
+                        final var f = f1 + extremum * f2;
+                        final var g = g1 + extremum * g2;
+                        final var h = h1 + extremum * h2;
+                        final var i = i1 + extremum * i2;
+                        final var j = j1 + extremum * j2;
                         result.setParameters(a, b, c, d, e, f, g, h, i, j);
                     }
                 }
 
-                if (mValidateEnforcedSingularity) {
+                if (validateEnforcedSingularity) {
                     // check that determinant of estimated DAQ is below allowed
                     // threshold
-                    final double absDet = Math.abs(Utils.det(result.asMatrix()));
-                    if (absDet > mDeterminantThreshold) {
+                    final var absDet = Math.abs(Utils.det(result.asMatrix()));
+                    if (absDet > determinantThreshold) {
                         // DAQ does not have rank 3
                         throw new DualAbsoluteQuadricEstimatorException();
                     }
@@ -1155,20 +1103,20 @@ public abstract class DualAbsoluteQuadricEstimator {
                 throw new DualAbsoluteQuadricEstimatorException();
             }
 
-            final Matrix v = decomposer.getV();
+            final var v = decomposer.getV();
 
             // last column of v contains parameters a, b, c, d, e, f, g, h, i
             // defining the Dual Absolute Quadric (DAQ) as:
-            final double a = v.getElementAt(0, 9);
-            final double b = v.getElementAt(1, 9);
-            final double c = v.getElementAt(2, 9);
-            final double d = v.getElementAt(3, 9);
-            final double e = v.getElementAt(4, 9);
-            final double f = v.getElementAt(5, 9);
-            final double g = v.getElementAt(6, 9);
-            final double h = v.getElementAt(7, 9);
-            final double i = v.getElementAt(8, 9);
-            final double j = v.getElementAt(9, 9);
+            final var a = v.getElementAt(0, 9);
+            final var b = v.getElementAt(1, 9);
+            final var c = v.getElementAt(2, 9);
+            final var d = v.getElementAt(3, 9);
+            final var e = v.getElementAt(4, 9);
+            final var f = v.getElementAt(5, 9);
+            final var g = v.getElementAt(6, 9);
+            final var h = v.getElementAt(7, 9);
+            final var i = v.getElementAt(8, 9);
+            final var j = v.getElementAt(9, 9);
 
             result.setParameters(a, b, c, d, e, f, g, h, i, j);
         }
@@ -1205,21 +1153,21 @@ public abstract class DualAbsoluteQuadricEstimator {
             final double a2, final double b2, final double c2, final double d2, final double e2,
             final double f2, final double g2, final double h2, final double i2, final double j2) {
 
-        final Polynomial polyA = new Polynomial(a1, a2);
-        final Polynomial polyB = new Polynomial(b1, b2);
-        final Polynomial polyC = new Polynomial(c1, c2);
-        final Polynomial polyD = new Polynomial(d1, d2);
-        final Polynomial polyE = new Polynomial(e1, e2);
-        final Polynomial polyF = new Polynomial(f1, f2);
-        final Polynomial polyG = new Polynomial(g1, g2);
-        final Polynomial polyH = new Polynomial(h1, h2);
-        final Polynomial polyI = new Polynomial(i1, i2);
-        final Polynomial polyJ = new Polynomial(j1, j2);
+        final var polyA = new Polynomial(a1, a2);
+        final var polyB = new Polynomial(b1, b2);
+        final var polyC = new Polynomial(c1, c2);
+        final var polyD = new Polynomial(d1, d2);
+        final var polyE = new Polynomial(e1, e2);
+        final var polyF = new Polynomial(f1, f2);
+        final var polyG = new Polynomial(g1, g2);
+        final var polyH = new Polynomial(h1, h2);
+        final var polyI = new Polynomial(i1, i2);
+        final var polyJ = new Polynomial(j1, j2);
 
-        final Polynomial result = new Polynomial(5);
+        final var result = new Polynomial(5);
 
         // (a1 + x*a2) * (b1 + x*b2) * (c1 + x*c2) * (j1 + x*j2)
-        Polynomial tmp = polyA.multiplyAndReturnNew(polyB);
+        var tmp = polyA.multiplyAndReturnNew(polyB);
         tmp.multiply(polyC);
         tmp.multiply(polyJ);
 

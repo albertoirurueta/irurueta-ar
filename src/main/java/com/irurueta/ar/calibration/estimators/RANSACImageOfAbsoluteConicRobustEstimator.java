@@ -31,8 +31,7 @@ import java.util.List;
 /**
  * Finds the best Image of Absolute Conic (IAC) using RANSAC algorithm.
  */
-public class RANSACImageOfAbsoluteConicRobustEstimator extends
-        ImageOfAbsoluteConicRobustEstimator {
+public class RANSACImageOfAbsoluteConicRobustEstimator extends ImageOfAbsoluteConicRobustEstimator {
 
     /**
      * Constant defining default threshold to determine whether homographies are
@@ -58,14 +57,14 @@ public class RANSACImageOfAbsoluteConicRobustEstimator extends
      * The threshold refers to the amount of error a possible solution has on
      * the ortho-normality assumption of rotation matrices.
      */
-    private double mThreshold;
+    private double threshold;
 
     /**
      * Constructor.
      */
     public RANSACImageOfAbsoluteConicRobustEstimator() {
         super();
-        mThreshold = DEFAULT_THRESHOLD;
+        threshold = DEFAULT_THRESHOLD;
     }
 
     /**
@@ -74,10 +73,9 @@ public class RANSACImageOfAbsoluteConicRobustEstimator extends
      * @param listener listener to be notified of events such as when
      *                 estimation starts, ends or its progress significantly changes.
      */
-    public RANSACImageOfAbsoluteConicRobustEstimator(
-            final ImageOfAbsoluteConicRobustEstimatorListener listener) {
+    public RANSACImageOfAbsoluteConicRobustEstimator(final ImageOfAbsoluteConicRobustEstimatorListener listener) {
         super(listener);
-        mThreshold = DEFAULT_THRESHOLD;
+        threshold = DEFAULT_THRESHOLD;
     }
 
     /**
@@ -89,10 +87,9 @@ public class RANSACImageOfAbsoluteConicRobustEstimator extends
      * @throws IllegalArgumentException if not enough homographies are provided
      *                                  for default settings. Hence, at least 1 homography must be provided.
      */
-    public RANSACImageOfAbsoluteConicRobustEstimator(
-            final List<Transformation2D> homographies) {
+    public RANSACImageOfAbsoluteConicRobustEstimator(final List<Transformation2D> homographies) {
         super(homographies);
-        mThreshold = DEFAULT_THRESHOLD;
+        threshold = DEFAULT_THRESHOLD;
     }
 
     /**
@@ -107,10 +104,9 @@ public class RANSACImageOfAbsoluteConicRobustEstimator extends
      *                                  for default settings. Hence, at least 1 homography must be provided.
      */
     public RANSACImageOfAbsoluteConicRobustEstimator(
-            final List<Transformation2D> homographies,
-            final ImageOfAbsoluteConicRobustEstimatorListener listener) {
+            final List<Transformation2D> homographies, final ImageOfAbsoluteConicRobustEstimatorListener listener) {
         super(homographies, listener);
-        mThreshold = DEFAULT_THRESHOLD;
+        threshold = DEFAULT_THRESHOLD;
     }
 
     /**
@@ -123,7 +119,7 @@ public class RANSACImageOfAbsoluteConicRobustEstimator extends
      * when testing possible estimation solutions.
      */
     public double getThreshold() {
-        return mThreshold;
+        return threshold;
     }
 
     /**
@@ -146,7 +142,7 @@ public class RANSACImageOfAbsoluteConicRobustEstimator extends
         if (threshold <= MIN_THRESHOLD) {
             throw new IllegalArgumentException();
         }
-        mThreshold = threshold;
+        this.threshold = threshold;
     }
 
     /**
@@ -162,8 +158,7 @@ public class RANSACImageOfAbsoluteConicRobustEstimator extends
      */
     @SuppressWarnings("DuplicatedCode")
     @Override
-    public ImageOfAbsoluteConic estimate() throws LockedException,
-            NotReadyException, RobustEstimatorException {
+    public ImageOfAbsoluteConic estimate() throws LockedException, NotReadyException, RobustEstimatorException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -171,114 +166,101 @@ public class RANSACImageOfAbsoluteConicRobustEstimator extends
             throw new NotReadyException();
         }
 
-        final RANSACRobustEstimator<ImageOfAbsoluteConic> innerEstimator =
-                new RANSACRobustEstimator<>(
-                        new RANSACRobustEstimatorListener<ImageOfAbsoluteConic>() {
+        final var innerEstimator = new RANSACRobustEstimator<ImageOfAbsoluteConic>(
+                new RANSACRobustEstimatorListener<>() {
 
-                            // subset of homographies picked on each iteration
-                            private final List<Transformation2D> mSubsetHomographies =
-                                    new ArrayList<>();
+                    // subset of homographies picked on each iteration
+                    private final List<Transformation2D> subsetHomographies = new ArrayList<>();
 
-                            @Override
-                            public double getThreshold() {
-                                return mThreshold;
-                            }
+                    @Override
+                    public double getThreshold() {
+                        return threshold;
+                    }
 
-                            @Override
-                            public int getTotalSamples() {
-                                return mHomographies.size();
-                            }
+                    @Override
+                    public int getTotalSamples() {
+                        return homographies.size();
+                    }
 
-                            @Override
-                            public int getSubsetSize() {
-                                return mIACEstimator.getMinNumberOfRequiredHomographies();
-                            }
+                    @Override
+                    public int getSubsetSize() {
+                        return iacEstimator.getMinNumberOfRequiredHomographies();
+                    }
 
-                            @Override
-                            public void estimatePreliminarSolutions(
-                                    final int[] samplesIndices,
-                                    final List<ImageOfAbsoluteConic> solutions) {
-                                mSubsetHomographies.clear();
-                                for (int samplesIndex : samplesIndices) {
-                                    mSubsetHomographies.add(mHomographies.get(
-                                            samplesIndex));
-                                }
+                    @Override
+                    public void estimatePreliminarSolutions(
+                            final int[] samplesIndices, final List<ImageOfAbsoluteConic> solutions) {
+                        subsetHomographies.clear();
+                        for (var samplesIndex : samplesIndices) {
+                            subsetHomographies.add(homographies.get(samplesIndex));
+                        }
 
-                                try {
-                                    mIACEstimator.setLMSESolutionAllowed(false);
-                                    mIACEstimator.setHomographies(mSubsetHomographies);
+                        try {
+                            iacEstimator.setLMSESolutionAllowed(false);
+                            iacEstimator.setHomographies(subsetHomographies);
 
-                                    final ImageOfAbsoluteConic iac = mIACEstimator.estimate();
-                                    solutions.add(iac);
-                                } catch (final Exception e) {
-                                    // if anything fails, no solution is added
-                                }
-                            }
+                            final var iac = iacEstimator.estimate();
+                            solutions.add(iac);
+                        } catch (final Exception e) {
+                            // if anything fails, no solution is added
+                        }
+                    }
 
-                            @Override
-                            public double computeResidual(
-                                    final ImageOfAbsoluteConic currentEstimation, final int i) {
-                                return residual(currentEstimation, mHomographies.get(i));
-                            }
+                    @Override
+                    public double computeResidual(final ImageOfAbsoluteConic currentEstimation, final int i) {
+                        return residual(currentEstimation, homographies.get(i));
+                    }
 
-                            @Override
-                            public boolean isReady() {
-                                return RANSACImageOfAbsoluteConicRobustEstimator.this.isReady();
-                            }
+                    @Override
+                    public boolean isReady() {
+                        return RANSACImageOfAbsoluteConicRobustEstimator.this.isReady();
+                    }
 
-                            @Override
-                            public void onEstimateStart(
-                                    final RobustEstimator<ImageOfAbsoluteConic> estimator) {
-                                if (mListener != null) {
-                                    mListener.onEstimateStart(
-                                            RANSACImageOfAbsoluteConicRobustEstimator.this);
-                                }
-                            }
+                    @Override
+                    public void onEstimateStart(final RobustEstimator<ImageOfAbsoluteConic> estimator) {
+                        if (listener != null) {
+                            listener.onEstimateStart(RANSACImageOfAbsoluteConicRobustEstimator.this);
+                        }
+                    }
 
-                            @Override
-                            public void onEstimateEnd(
-                                    final RobustEstimator<ImageOfAbsoluteConic> estimator) {
-                                if (mListener != null) {
-                                    mListener.onEstimateEnd(
-                                            RANSACImageOfAbsoluteConicRobustEstimator.this);
-                                }
-                            }
+                    @Override
+                    public void onEstimateEnd(final RobustEstimator<ImageOfAbsoluteConic> estimator) {
+                        if (listener != null) {
+                            listener.onEstimateEnd(RANSACImageOfAbsoluteConicRobustEstimator.this);
+                        }
+                    }
 
-                            @Override
-                            public void onEstimateNextIteration(
-                                    final RobustEstimator<ImageOfAbsoluteConic> estimator,
-                                    final int iteration) {
-                                if (mListener != null) {
-                                    mListener.onEstimateNextIteration(
-                                            RANSACImageOfAbsoluteConicRobustEstimator.this,
-                                            iteration);
-                                }
-                            }
+                    @Override
+                    public void onEstimateNextIteration(
+                            final RobustEstimator<ImageOfAbsoluteConic> estimator, final int iteration) {
+                        if (listener != null) {
+                            listener.onEstimateNextIteration(
+                                    RANSACImageOfAbsoluteConicRobustEstimator.this, iteration);
+                        }
+                    }
 
-                            @Override
-                            public void onEstimateProgressChange(
-                                    final RobustEstimator<ImageOfAbsoluteConic> estimator,
-                                    final float progress) {
-                                if (mListener != null) {
-                                    mListener.onEstimateProgressChange(
-                                            RANSACImageOfAbsoluteConicRobustEstimator.this,
-                                            progress);
-                                }
-                            }
-                        });
+                    @Override
+                    public void onEstimateProgressChange(
+                            final RobustEstimator<ImageOfAbsoluteConic> estimator, final float progress) {
+                        if (listener != null) {
+                            listener.onEstimateProgressChange(
+                                    RANSACImageOfAbsoluteConicRobustEstimator.this, progress);
+                        }
+                    }
+                });
 
         try {
-            mLocked = true;
-            innerEstimator.setConfidence(mConfidence);
-            innerEstimator.setMaxIterations(mMaxIterations);
-            innerEstimator.setProgressDelta(mProgressDelta);
+            locked = true;
+            innerEstimator.setConfidence(confidence);
+            innerEstimator.setMaxIterations(maxIterations);
+            innerEstimator.setProgressDelta(progressDelta);
             return innerEstimator.estimate();
         } catch (final com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
         } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
         } finally {
-            mLocked = false;
+            locked = false;
         }
     }
 

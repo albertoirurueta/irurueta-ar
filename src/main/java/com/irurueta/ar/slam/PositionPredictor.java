@@ -113,7 +113,7 @@ public class PositionPredictor {
 
             if (jacobianA != null) {
                 // identity multiplied by 0.5*dt^2
-                final double value = 0.5 * dt * dt;
+                final var value = 0.5 * dt * dt;
                 jacobianA.initialize(0.0);
                 jacobianA.setElementAt(0, 0, value);
                 jacobianA.setElementAt(1, 1, value);
@@ -172,8 +172,7 @@ public class PositionPredictor {
             // a must have length 3
             throw new IllegalArgumentException();
         }
-        predict(r, v[0], v[1], v[2], a[0], a[1], a[2], dt, result,
-                jacobianR, jacobianV, jacobianA);
+        predict(r, v[0], v[1], v[2], a[0], a[1], a[2], dt, result, jacobianR, jacobianV, jacobianA);
     }
 
     /**
@@ -189,8 +188,7 @@ public class PositionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">rpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static void predict(
-            final InhomogeneousPoint3D r, final double[] v,
-            final double[] a, final double dt,
+            final InhomogeneousPoint3D r, final double[] v, final double[] a, final double dt,
             final InhomogeneousPoint3D result) {
         predict(r, v, a, dt, result, null, null, null);
     }
@@ -212,12 +210,9 @@ public class PositionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">rpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static void predict(
-            final InhomogeneousPoint3D r,
-            final double vx, final double vy, final double vz, final double dt,
-            final InhomogeneousPoint3D result, final Matrix jacobianR,
-            final Matrix jacobianV, final Matrix jacobianA) {
-        predict(r, vx, vy, vz, 0.0, 0.0, 0.0, dt, result, jacobianR, jacobianV,
-                jacobianA);
+            final InhomogeneousPoint3D r, final double vx, final double vy, final double vz, final double dt,
+            final InhomogeneousPoint3D result, final Matrix jacobianR, final Matrix jacobianV, final Matrix jacobianA) {
+        predict(r, vx, vy, vz, 0.0, 0.0, 0.0, dt, result, jacobianR, jacobianV, jacobianA);
     }
 
     /**
@@ -232,8 +227,7 @@ public class PositionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">rpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static void predict(
-            final InhomogeneousPoint3D r,
-            final double vx, final double vy, final double vz, final double dt,
+            final InhomogeneousPoint3D r, final double vx, final double vy, final double vz, final double dt,
             final InhomogeneousPoint3D result) {
         predict(r, vx, vy, vz, dt, result, null, null, null);
     }
@@ -254,14 +248,12 @@ public class PositionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">rpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static void predict(
-            final InhomogeneousPoint3D r, final double[] v, final double dt,
-            final InhomogeneousPoint3D result, final Matrix jacobianR,
-            final Matrix jacobianV, final Matrix jacobianA) {
+            final InhomogeneousPoint3D r, final double[] v, final double dt, final InhomogeneousPoint3D result,
+            final Matrix jacobianR, final Matrix jacobianV, final Matrix jacobianA) {
         if (v.length != SPEED_COMPONENTS) {
             throw new IllegalArgumentException("v must have length 3");
         }
-        predict(r, v[0], v[1], v[2], dt, result, jacobianR, jacobianV,
-                jacobianA);
+        predict(r, v[0], v[1], v[2], dt, result, jacobianR, jacobianV, jacobianA);
     }
 
     /**
@@ -277,8 +269,7 @@ public class PositionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">rpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static void predict(
-            final InhomogeneousPoint3D r,
-            final double[] v, final double dt, final InhomogeneousPoint3D result) {
+            final InhomogeneousPoint3D r, final double[] v, final double dt, final InhomogeneousPoint3D result) {
         predict(r, v, dt, result, null, null, null);
     }
 
@@ -305,9 +296,8 @@ public class PositionPredictor {
             final InhomogeneousPoint3D r, final double vx, final double vy, final double vz,
             final double ax, final double ay, final double az, final double dt,
             final Matrix jacobianR, final Matrix jacobianV, final Matrix jacobianA) {
-        final InhomogeneousPoint3D result = new InhomogeneousPoint3D();
-        predict(r, vx, vy, vz, ax, ay, az, dt, result, jacobianR, jacobianV,
-                jacobianA);
+        final var result = new InhomogeneousPoint3D();
+        predict(r, vx, vy, vz, ax, ay, az, dt, result, jacobianR, jacobianV, jacobianA);
         return result;
     }
 
@@ -328,7 +318,7 @@ public class PositionPredictor {
     public static InhomogeneousPoint3D predict(
             final InhomogeneousPoint3D r, final double vx, final double vy, final double vz,
             final double ax, final double ay, final double az, final double dt) {
-        final InhomogeneousPoint3D result = new InhomogeneousPoint3D();
+        final var result = new InhomogeneousPoint3D();
         predict(r, vx, vy, vz, ax, ay, az, dt, result);
         return result;
     }
@@ -353,7 +343,7 @@ public class PositionPredictor {
     public static InhomogeneousPoint3D predict(
             final InhomogeneousPoint3D r, final double[] v, final double[] a, final double dt,
             final Matrix jacobianR, final Matrix jacobianV, final Matrix jacobianA) {
-        final InhomogeneousPoint3D result = new InhomogeneousPoint3D();
+        final var result = new InhomogeneousPoint3D();
         predict(r, v, a, dt, result, jacobianR, jacobianV, jacobianA);
         return result;
     }
@@ -372,7 +362,7 @@ public class PositionPredictor {
      */
     public static InhomogeneousPoint3D predict(
             final InhomogeneousPoint3D r, final double[] v, final double[] a, final double dt) {
-        final InhomogeneousPoint3D result = new InhomogeneousPoint3D();
+        final var result = new InhomogeneousPoint3D();
         predict(r, v, a, dt, result);
         return result;
     }
@@ -396,7 +386,7 @@ public class PositionPredictor {
     public static InhomogeneousPoint3D predict(
             final InhomogeneousPoint3D r, final double vx, final double vy, final double vz,
             final double dt, final Matrix jacobianR, final Matrix jacobianV, final Matrix jacobianA) {
-        final InhomogeneousPoint3D result = new InhomogeneousPoint3D();
+        final var result = new InhomogeneousPoint3D();
         predict(r, vx, vy, vz, dt, result, jacobianR, jacobianV, jacobianA);
         return result;
     }
@@ -413,9 +403,8 @@ public class PositionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">rpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static InhomogeneousPoint3D predict(
-            final InhomogeneousPoint3D r, final double vx, final double vy, final double vz,
-            final double dt) {
-        final InhomogeneousPoint3D result = new InhomogeneousPoint3D();
+            final InhomogeneousPoint3D r, final double vx, final double vy, final double vz, final double dt) {
+        final var result = new InhomogeneousPoint3D();
         predict(r, vx, vy, vz, dt, result);
         return result;
     }
@@ -438,7 +427,7 @@ public class PositionPredictor {
     public static InhomogeneousPoint3D predict(
             final InhomogeneousPoint3D r, final double[] v, final double dt,
             final Matrix jacobianR, final Matrix jacobianV, final Matrix jacobianA) {
-        final InhomogeneousPoint3D result = new InhomogeneousPoint3D();
+        final var result = new InhomogeneousPoint3D();
         predict(r, v, dt, result, jacobianR, jacobianV, jacobianA);
         return result;
     }
@@ -456,7 +445,7 @@ public class PositionPredictor {
      */
     public static InhomogeneousPoint3D predict(
             final InhomogeneousPoint3D r, final double[] v, final double dt) {
-        final InhomogeneousPoint3D result = new InhomogeneousPoint3D();
+        final var result = new InhomogeneousPoint3D();
         predict(r, v, dt, result);
         return result;
     }
@@ -547,7 +536,7 @@ public class PositionPredictor {
 
             if (jacobianA != null) {
                 // identity multiplied by 0.5*dt^2
-                final double value = 0.5 * dt * dt;
+                final var value = 0.5 * dt * dt;
                 jacobianA.initialize(0.0);
                 jacobianA.setElementAt(0, 0, value);
                 jacobianA.setElementAt(1, 1, value);
@@ -576,10 +565,9 @@ public class PositionPredictor {
     public static void predictWithPositionAdjustment(
             final InhomogeneousPoint3D r, final double drx, final double dry, final double drz,
             final double vx, final double vy, final double vz,
-            final double ax, final double ay, final double az, final double dt,
-            final InhomogeneousPoint3D result) {
-        predictWithPositionAdjustment(r, drx, dry, drz, vx, vy, vz, ax, ay, az,
-                dt, result, null, null, null, null);
+            final double ax, final double ay, final double az, final double dt, final InhomogeneousPoint3D result) {
+        predictWithPositionAdjustment(r, drx, dry, drz, vx, vy, vz, ax, ay, az, dt, result,
+                null, null, null, null);
     }
 
     /**
@@ -614,9 +602,8 @@ public class PositionPredictor {
         if (a.length != ACCELERATION_COMPONENTS) {
             throw new IllegalArgumentException("a must have length 3");
         }
-        predictWithPositionAdjustment(r, dr[0], dr[1], dr[2],
-                v[0], v[1], v[2], a[0], a[1], a[2], dt, result, jacobianR,
-                jacobianDR, jacobianV, jacobianA);
+        predictWithPositionAdjustment(r, dr[0], dr[1], dr[2], v[0], v[1], v[2], a[0], a[1], a[2], dt, result,
+                jacobianR, jacobianDR, jacobianV, jacobianA);
     }
 
     /**
@@ -633,8 +620,8 @@ public class PositionPredictor {
      * @throws IllegalArgumentException if dr, v or a do not have length 3.
      */
     public static void predictWithPositionAdjustment(
-            final InhomogeneousPoint3D r, final double[] dr, final double[] v, final double[] a,
-            final double dt, final InhomogeneousPoint3D result) {
+            final InhomogeneousPoint3D r, final double[] dr, final double[] v, final double[] a, final double dt,
+            final InhomogeneousPoint3D result) {
         predictWithPositionAdjustment(r, dr, v, a, dt, result, null, null, null,
                 null);
     }
@@ -668,10 +655,9 @@ public class PositionPredictor {
             final double ax, final double ay, final double az,
             final double dt, final Matrix jacobianR, final Matrix jacobianDR, final Matrix jacobianV,
             final Matrix jacobianA) {
-        final InhomogeneousPoint3D result = new InhomogeneousPoint3D();
-        predictWithPositionAdjustment(r, drx, dry, drz, vx, vy, vz, ax,
-                ay, az, dt, result, jacobianR, jacobianDR, jacobianV,
-                jacobianA);
+        final var result = new InhomogeneousPoint3D();
+        predictWithPositionAdjustment(r, drx, dry, drz, vx, vy, vz, ax, ay, az, dt, result,
+                jacobianR, jacobianDR, jacobianV, jacobianA);
         return result;
     }
 
@@ -694,12 +680,10 @@ public class PositionPredictor {
      */
     public static InhomogeneousPoint3D predictWithPositionAdjustment(
             final InhomogeneousPoint3D r, final double drx, final double dry, final double drz,
-            final double vx, final double vy, final double vz,
-            final double ax, final double ay, final double az,
+            final double vx, final double vy, final double vz, final double ax, final double ay, final double az,
             final double dt) {
-        final InhomogeneousPoint3D result = new InhomogeneousPoint3D();
-        predictWithPositionAdjustment(r, drx, dry, drz, vx, vy, vz,
-                ax, ay, az, dt, result);
+        final var result = new InhomogeneousPoint3D();
+        predictWithPositionAdjustment(r, drx, dry, drz, vx, vy, vz, ax, ay, az, dt, result);
         return result;
     }
 
@@ -726,9 +710,8 @@ public class PositionPredictor {
             final InhomogeneousPoint3D r, final double[] dr, final double[] v, final double[] a,
             final double dt, final Matrix jacobianR, final Matrix jacobianDR, final Matrix jacobianV,
             final Matrix jacobianA) {
-        final InhomogeneousPoint3D result = new InhomogeneousPoint3D();
-        predictWithPositionAdjustment(r, dr, v, a, dt, result,
-                jacobianR, jacobianDR, jacobianV, jacobianA);
+        final var result = new InhomogeneousPoint3D();
+        predictWithPositionAdjustment(r, dr, v, a, dt, result, jacobianR, jacobianDR, jacobianV, jacobianA);
         return result;
     }
 
@@ -745,9 +728,8 @@ public class PositionPredictor {
      * @return a new updated position.
      */
     public static InhomogeneousPoint3D predictWithPositionAdjustment(
-            final InhomogeneousPoint3D r, final double[] dr, final double[] v, final double[] a,
-            final double dt) {
-        final InhomogeneousPoint3D result = new InhomogeneousPoint3D();
+            final InhomogeneousPoint3D r, final double[] dr, final double[] v, final double[] a, final double dt) {
+        final var result = new InhomogeneousPoint3D();
         predictWithPositionAdjustment(r, dr, v, a, dt, result);
         return result;
     }

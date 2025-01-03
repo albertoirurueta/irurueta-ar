@@ -15,23 +15,22 @@
  */
 package com.irurueta.ar.calibration;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class Pattern2DTest {
+class Pattern2DTest {
 
     @Test
-    public void testCreate() {
-        Pattern2D pattern = Pattern2D.create(Pattern2DType.QR);
+    void testCreate() {
+        var pattern = Pattern2D.create(Pattern2DType.QR);
 
         assertEquals(Pattern2DType.QR, pattern.getType());
-        assertTrue(pattern instanceof QRPattern2D);
+        assertInstanceOf(QRPattern2D.class, pattern);
 
         pattern = Pattern2D.create(Pattern2DType.CIRCLES);
 
         assertEquals(Pattern2DType.CIRCLES, pattern.getType());
-        assertTrue(pattern instanceof CirclesPattern2D);
+        assertInstanceOf(CirclesPattern2D.class, pattern);
     }
 }

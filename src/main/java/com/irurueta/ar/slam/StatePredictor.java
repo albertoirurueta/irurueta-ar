@@ -121,8 +121,8 @@ public class StatePredictor {
      *                                  result or jacobians do not have proper size.
      */
     public static void predict(
-            final double[] x, final double[] u, final double dt,
-            final double[] result, final Matrix jacobianX, final Matrix jacobianU) {
+            final double[] x, final double[] u, final double dt, final double[] result, final Matrix jacobianX,
+            final Matrix jacobianU) {
         if (x.length != STATE_COMPONENTS) {
             // x must have length 16
             throw new IllegalArgumentException();
@@ -135,79 +135,70 @@ public class StatePredictor {
             // result must have length 16
             throw new IllegalArgumentException();
         }
-        if (jacobianX != null &&
-                (jacobianX.getRows() != STATE_COMPONENTS ||
-                        jacobianX.getColumns() != STATE_COMPONENTS)) {
+        if (jacobianX != null && (jacobianX.getRows() != STATE_COMPONENTS
+                || jacobianX.getColumns() != STATE_COMPONENTS)) {
             // jacobian wrt x must be 16x16
             throw new IllegalArgumentException();
         }
-        if (jacobianU != null &&
-                (jacobianU.getRows() != STATE_COMPONENTS ||
-                        jacobianU.getColumns() != CONTROL_COMPONENTS)) {
+        if (jacobianU != null && (jacobianU.getRows() != STATE_COMPONENTS
+                || jacobianU.getColumns() != CONTROL_COMPONENTS)) {
             // jacobian wrt u must be 16x9
             throw new IllegalArgumentException();
         }
 
         // position
-        final InhomogeneousPoint3D r = new InhomogeneousPoint3D(x[0], x[1], x[2]);
+        final var r = new InhomogeneousPoint3D(x[0], x[1], x[2]);
 
         // orientation
-        Quaternion q = new Quaternion(x[3], x[4], x[5], x[6]);
+        var q = new Quaternion(x[3], x[4], x[5], x[6]);
 
         // linear velocity
-        double vx = x[7];
-        double vy = x[8];
-        double vz = x[9];
+        var vx = x[7];
+        var vy = x[8];
+        var vz = x[9];
 
         // linear acceleration
-        double ax = x[10];
-        double ay = x[11];
-        double az = x[12];
+        var ax = x[10];
+        var ay = x[11];
+        var az = x[12];
 
         // angular velocity
-        double wx = x[13];
-        double wy = x[14];
-        double wz = x[15];
+        var wx = x[13];
+        var wy = x[14];
+        var wz = x[15];
 
         // linear velocity change (control)
-        final double uvx = u[0];
-        final double uvy = u[1];
-        final double uvz = u[2];
+        final var uvx = u[0];
+        final var uvy = u[1];
+        final var uvz = u[2];
 
         // linear acceleration change (control)
-        final double uax = u[3];
-        final double uay = u[4];
-        final double uaz = u[5];
+        final var uax = u[3];
+        final var uay = u[4];
+        final var uaz = u[5];
 
         // angular velocity change (control)
-        final double uwx = u[6];
-        final double uwy = u[7];
-        final double uwz = u[8];
+        final var uwx = u[6];
+        final var uwy = u[7];
+        final var uwz = u[8];
 
         try {
             // update velocity
-            final Matrix vv = new Matrix(SPEED_COMPONENTS, SPEED_COMPONENTS);
-            final Matrix va = new Matrix(SPEED_COMPONENTS, ACCELERATION_COMPONENTS);
-            final double[] v = VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt,
-                    vv, va);
+            final var vv = new Matrix(SPEED_COMPONENTS, SPEED_COMPONENTS);
+            final var va = new Matrix(SPEED_COMPONENTS, ACCELERATION_COMPONENTS);
+            final var v = VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt, vv, va);
 
             // update position
             Matrix rr = null;
             Matrix rv = null;
             Matrix ra = null;
             if (jacobianX != null) {
-                rr = new Matrix(
-                        Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
+                rr = new Matrix(Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
                         Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH);
-                rv = new Matrix(
-                        Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
-                        SPEED_COMPONENTS);
-                ra = new Matrix(
-                        Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
-                        ACCELERATION_COMPONENTS);
+                rv = new Matrix(Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH, SPEED_COMPONENTS);
+                ra = new Matrix(Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH, ACCELERATION_COMPONENTS);
             }
-            PositionPredictor.predict(r, vx, vy, vz, ax, ay, az, dt, r, rr, rv,
-                    ra);
+            PositionPredictor.predict(r, vx, vy, vz, ax, ay, az, dt, r, rr, rv, ra);
 
             // update orientation
             Matrix qq = null;
@@ -266,28 +257,21 @@ public class StatePredictor {
                 // [0    0   0   eye 0  ]
                 // [0    0   0   0   eye]
                 jacobianX.initialize(0.0);
-                jacobianX.setSubmatrix(0, 0, 2, 2,
-                        rr);
+                jacobianX.setSubmatrix(0, 0, 2, 2, rr);
 
-                jacobianX.setSubmatrix(3, 3, 6, 6,
-                        qq);
+                jacobianX.setSubmatrix(3, 3, 6, 6, qq);
 
-                jacobianX.setSubmatrix(0, 7, 2, 9,
-                        rv);
+                jacobianX.setSubmatrix(0, 7, 2, 9, rv);
 
-                jacobianX.setSubmatrix(7, 7, 9, 9,
-                        vv);
+                jacobianX.setSubmatrix(7, 7, 9, 9, vv);
 
-                jacobianX.setSubmatrix(0, 10, 2, 12,
-                        ra);
+                jacobianX.setSubmatrix(0, 10, 2, 12, ra);
 
-                jacobianX.setSubmatrix(7, 10, 9, 12,
-                        va);
+                jacobianX.setSubmatrix(7, 10, 9, 12, va);
 
-                jacobianX.setSubmatrix(3, 13, 6, 15,
-                        qw);
+                jacobianX.setSubmatrix(3, 13, 6, 15, qw);
 
-                for (int i = 10; i < STATE_COMPONENTS; i++) {
+                for (var i = 10; i < STATE_COMPONENTS; i++) {
                     jacobianX.setElementAt(i, i, 1.0);
                 }
             }
@@ -327,8 +311,7 @@ public class StatePredictor {
      * @throws IllegalArgumentException if system state array, control array
      *                                  or result do not have proper size.
      */
-    public static void predict(
-            final double[] x, final double[] u, final double dt, final double[] result) {
+    public static void predict(final double[] x, final double[] u, final double dt, final double[] result) {
         predict(x, u, dt, result, null, null);
     }
 
@@ -357,9 +340,8 @@ public class StatePredictor {
      *                                  jacobians do not have proper size.
      */
     public static double[] predict(
-            final double[] x, final double[] u, final double dt,
-            final Matrix jacobianX, final Matrix jacobianU) {
-        final double[] result = new double[STATE_COMPONENTS];
+            final double[] x, final double[] u, final double dt, final Matrix jacobianX, final Matrix jacobianU) {
+        final var result = new double[STATE_COMPONENTS];
         predict(x, u, dt, result, jacobianX, jacobianU);
         return result;
     }
@@ -386,9 +368,8 @@ public class StatePredictor {
      * @throws IllegalArgumentException if system state array or control array
      *                                  do not have proper size.
      */
-    public static double[] predict(
-            final double[] x, final double[] u, final double dt) {
-        final double[] result = new double[STATE_COMPONENTS];
+    public static double[] predict(final double[] x, final double[] u, final double dt) {
+        final var result = new double[STATE_COMPONENTS];
         predict(x, u, dt, result);
         return result;
     }
@@ -421,8 +402,8 @@ public class StatePredictor {
      *                                  result array or jacobians do not have proper size.
      */
     public static void predictWithPositionAdjustment(
-            final double[] x, final double[] u, final double dt,
-            final double[] result, final Matrix jacobianX, final Matrix jacobianU) {
+            final double[] x, final double[] u, final double dt, final double[] result, final Matrix jacobianX,
+            final Matrix jacobianU) {
         if (x.length != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS) {
             // x must have length 16
             throw new IllegalArgumentException();
@@ -435,84 +416,76 @@ public class StatePredictor {
             // result must have length 16
             throw new IllegalArgumentException();
         }
-        if (jacobianX != null &&
-                (jacobianX.getRows() != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS ||
-                        jacobianX.getColumns() != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS)) {
+        if (jacobianX != null && (jacobianX.getRows() != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS
+                || jacobianX.getColumns() != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS)) {
             // jacobian wrt x must be 16x16
             throw new IllegalArgumentException();
         }
-        if (jacobianU != null &&
-                (jacobianU.getRows() != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS ||
-                        jacobianU.getColumns() != CONTROL_WITH_POSITION_ADJUSTMENT_COMPONENTS)) {
+        if (jacobianU != null && (jacobianU.getRows() != STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS
+                || jacobianU.getColumns() != CONTROL_WITH_POSITION_ADJUSTMENT_COMPONENTS)) {
             // jacobian wrt u must be 16x12
             throw new IllegalArgumentException();
         }
 
         // position
-        final InhomogeneousPoint3D r = new InhomogeneousPoint3D(x[0], x[1], x[2]);
+        final var r = new InhomogeneousPoint3D(x[0], x[1], x[2]);
 
         // orientation
-        Quaternion q = new Quaternion(x[3], x[4], x[5], x[6]);
+        var q = new Quaternion(x[3], x[4], x[5], x[6]);
 
         // linear velocity
-        double vx = x[7];
-        double vy = x[8];
-        double vz = x[9];
+        var vx = x[7];
+        var vy = x[8];
+        var vz = x[9];
 
         // linear acceleration
-        double ax = x[10];
-        double ay = x[11];
-        double az = x[12];
+        var ax = x[10];
+        var ay = x[11];
+        var az = x[12];
 
         // angular velocity
-        double wx = x[13];
-        double wy = x[14];
-        double wz = x[15];
+        var wx = x[13];
+        var wy = x[14];
+        var wz = x[15];
 
         // position change (control)
-        final double drx = u[0];
-        final double dry = u[1];
-        final double drz = u[2];
+        final var drx = u[0];
+        final var dry = u[1];
+        final var drz = u[2];
 
         // linear velocity change (control)
-        final double uvx = u[3];
-        final double uvy = u[4];
-        final double uvz = u[5];
+        final var uvx = u[3];
+        final var uvy = u[4];
+        final var uvz = u[5];
 
         // linear acceleration change (control)
-        final double uax = u[6];
-        final double uay = u[7];
-        final double uaz = u[8];
+        final var uax = u[6];
+        final var uay = u[7];
+        final var uaz = u[8];
 
         // angular velocity change (control)
-        final double uwx = u[9];
-        final double uwy = u[10];
-        final double uwz = u[11];
+        final var uwx = u[9];
+        final var uwy = u[10];
+        final var uwz = u[11];
 
         try {
             // update velocity
-            final Matrix vv = new Matrix(SPEED_COMPONENTS, SPEED_COMPONENTS);
-            final Matrix va = new Matrix(SPEED_COMPONENTS, ACCELERATION_COMPONENTS);
-            final double[] v = VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt,
-                    vv, va);
+            final var vv = new Matrix(SPEED_COMPONENTS, SPEED_COMPONENTS);
+            final var va = new Matrix(SPEED_COMPONENTS, ACCELERATION_COMPONENTS);
+            final var v = VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt, vv, va);
 
             // update position
             Matrix rr = null;
             Matrix rv = null;
             Matrix ra = null;
             if (jacobianX != null) {
-                rr = new Matrix(
-                        Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
+                rr = new Matrix(Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
                         Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH);
-                rv = new Matrix(
-                        Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
-                        SPEED_COMPONENTS);
-                ra = new Matrix(
-                        Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
-                        ACCELERATION_COMPONENTS);
+                rv = new Matrix(Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH, SPEED_COMPONENTS);
+                ra = new Matrix(Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH, ACCELERATION_COMPONENTS);
             }
-            PositionPredictor.predictWithPositionAdjustment(r, drx, dry, drz,
-                    vx, vy, vz, ax, ay, az, dt, r, rr, null, rv, ra);
+            PositionPredictor.predictWithPositionAdjustment(r, drx, dry, drz, vx, vy, vz, ax, ay, az, dt, r, rr,
+                    null, rv, ra);
 
             // update orientation
             Matrix qq = null;
@@ -571,28 +544,21 @@ public class StatePredictor {
                 // [0    0   0   eye 0  ]
                 // [0    0   0   0   eye]
                 jacobianX.initialize(0.0);
-                jacobianX.setSubmatrix(0, 0, 2, 2,
-                        rr);
+                jacobianX.setSubmatrix(0, 0, 2, 2, rr);
 
-                jacobianX.setSubmatrix(3, 3, 6, 6,
-                        qq);
+                jacobianX.setSubmatrix(3, 3, 6, 6, qq);
 
-                jacobianX.setSubmatrix(0, 7, 2, 9,
-                        rv);
+                jacobianX.setSubmatrix(0, 7, 2, 9, rv);
 
-                jacobianX.setSubmatrix(7, 7, 9, 9,
-                        vv);
+                jacobianX.setSubmatrix(7, 7, 9, 9, vv);
 
-                jacobianX.setSubmatrix(0, 10, 2, 12,
-                        ra);
+                jacobianX.setSubmatrix(0, 10, 2, 12, ra);
 
-                jacobianX.setSubmatrix(7, 10, 9, 12,
-                        va);
+                jacobianX.setSubmatrix(7, 10, 9, 12, va);
 
-                jacobianX.setSubmatrix(3, 13, 6, 15,
-                        qw);
+                jacobianX.setSubmatrix(3, 13, 6, 15, qw);
 
-                for (int i = 10; i < STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS; i++) {
+                for (var i = 10; i < STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS; i++) {
                     jacobianX.setElementAt(i, i, 1.0);
                 }
             }
@@ -601,7 +567,7 @@ public class StatePredictor {
                 jacobianU.initialize(0.0);
 
                 // variation of position
-                for (int i = 0; i < Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH; i++) {
+                for (var i = 0; i < Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH; i++) {
                     jacobianU.setElementAt(i, i, 1.0);
                 }
                 // variation of linear speed and acceleration, and angular speed
@@ -672,9 +638,8 @@ public class StatePredictor {
      *                                  or jacobians do not have proper size.
      */
     public static double[] predictWithPositionAdjustment(
-            final double[] x, final double[] u, final double dt,
-            final Matrix jacobianX, final Matrix jacobianU) {
-        final double[] result = new double[STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS];
+            final double[] x, final double[] u, final double dt, final Matrix jacobianX, final Matrix jacobianU) {
+        final var result = new double[STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS];
         predictWithPositionAdjustment(x, u, dt, result, jacobianX, jacobianU);
         return result;
     }
@@ -703,9 +668,8 @@ public class StatePredictor {
      * @throws IllegalArgumentException if system state array or control array
      *                                  do not have proper size.
      */
-    public static double[] predictWithPositionAdjustment(
-            final double[] x, final double[] u, final double dt) {
-        final double[] result = new double[STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS];
+    public static double[] predictWithPositionAdjustment(final double[] x, final double[] u, final double dt) {
+        final var result = new double[STATE_WITH_POSITION_ADJUSTMENT_COMPONENTS];
         predictWithPositionAdjustment(x, u, dt, result);
         return result;
     }
@@ -738,8 +702,8 @@ public class StatePredictor {
      *                                  result array or jacobians do not have proper size.
      */
     public static void predictWithRotationAdjustment(
-            final double[] x, final double[] u, final double dt, final double[] result,
-            final Matrix jacobianX, final Matrix jacobianU) {
+            final double[] x, final double[] u, final double dt, final double[] result, final Matrix jacobianX,
+            final Matrix jacobianU) {
         if (x.length != STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS) {
             throw new IllegalArgumentException("x must have length 16");
         }
@@ -749,80 +713,71 @@ public class StatePredictor {
         if (result.length != STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS) {
             throw new IllegalArgumentException("result must have length 16");
         }
-        if (jacobianX != null &&
-                (jacobianX.getRows() != STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS ||
-                        jacobianX.getColumns() != STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS)) {
+        if (jacobianX != null && (jacobianX.getRows() != STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS
+                || jacobianX.getColumns() != STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS)) {
             throw new IllegalArgumentException("jacobian wrt x must be 16x16");
         }
-        if (jacobianU != null &&
-                (jacobianU.getRows() != STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS ||
-                        jacobianU.getColumns() != CONTROL_WITH_ROTATION_ADJUSTMENT_COMPONENTS)) {
+        if (jacobianU != null && (jacobianU.getRows() != STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS
+                || jacobianU.getColumns() != CONTROL_WITH_ROTATION_ADJUSTMENT_COMPONENTS)) {
             throw new IllegalArgumentException("jacobian wrt u must be 16x13");
         }
 
         // position
-        final InhomogeneousPoint3D r = new InhomogeneousPoint3D(x[0], x[1], x[2]);
+        final var r = new InhomogeneousPoint3D(x[0], x[1], x[2]);
 
         // orientation
-        Quaternion q = new Quaternion(x[3], x[4], x[5], x[6]);
+        var q = new Quaternion(x[3], x[4], x[5], x[6]);
 
         // linear velocity
-        double vx = x[7];
-        double vy = x[8];
-        double vz = x[9];
+        var vx = x[7];
+        var vy = x[8];
+        var vz = x[9];
 
         // linear acceleration
-        double ax = x[10];
-        double ay = x[11];
-        double az = x[12];
+        var ax = x[10];
+        var ay = x[11];
+        var az = x[12];
 
         // angular velocity
-        double wx = x[13];
-        double wy = x[14];
-        double wz = x[15];
+        var wx = x[13];
+        var wy = x[14];
+        var wz = x[15];
 
         // rotation change (control)
-        final Quaternion dq = new Quaternion(u[0], u[1], u[2], u[3]);
+        final var dq = new Quaternion(u[0], u[1], u[2], u[3]);
 
         // linear velocity change (control)
-        final double uvx = u[4];
-        final double uvy = u[5];
-        final double uvz = u[6];
+        final var uvx = u[4];
+        final var uvy = u[5];
+        final var uvz = u[6];
 
         // linear acceleration change (control)
-        final double uax = u[7];
-        final double uay = u[8];
-        final double uaz = u[9];
+        final var uax = u[7];
+        final var uay = u[8];
+        final var uaz = u[9];
 
         // angular velocity change (control)
-        final double uwx = u[10];
-        final double uwy = u[11];
-        final double uwz = u[12];
+        final var uwx = u[10];
+        final var uwy = u[11];
+        final var uwz = u[12];
 
         try {
             // update velocity
-            final Matrix vv = new Matrix(SPEED_COMPONENTS, SPEED_COMPONENTS);
-            final Matrix va = new Matrix(SPEED_COMPONENTS, ACCELERATION_COMPONENTS);
-            final double[] v = VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt,
-                    vv, va);
+            final var vv = new Matrix(SPEED_COMPONENTS, SPEED_COMPONENTS);
+            final var va = new Matrix(SPEED_COMPONENTS, ACCELERATION_COMPONENTS);
+            final var v = VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt, vv, va);
 
             // update position
             Matrix rr = null;
             Matrix rv = null;
             Matrix ra = null;
             if (jacobianX != null) {
-                rr = new Matrix(
-                        Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
+                rr = new Matrix(Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
                         Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH);
-                rv = new Matrix(
-                        Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
-                        SPEED_COMPONENTS);
-                ra = new Matrix(
-                        Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
-                        ACCELERATION_COMPONENTS);
+                rv = new Matrix(Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH, SPEED_COMPONENTS);
+                ra = new Matrix(Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH, ACCELERATION_COMPONENTS);
             }
-            PositionPredictor.predict(r, vx, vy, vz, ax, ay, az, dt, r, rr, rv,
-                    ra);
+            PositionPredictor.predict(r, vx, vy, vz, ax, ay, az, dt, r, rr, rv, ra);
 
             // update orientation
             Matrix qq = null;
@@ -835,8 +790,7 @@ public class StatePredictor {
             if (jacobianU != null) {
                 qdq = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);
             }
-            q = QuaternionPredictor.predictWithRotationAdjustment(q, dq,
-                    wx, wy, wz, dt, qq, qdq, qw);
+            q = QuaternionPredictor.predictWithRotationAdjustment(q, dq, wx, wy, wz, dt, qq, qdq, qw);
 
 
             // set updated linear velocity
@@ -887,28 +841,21 @@ public class StatePredictor {
                 // [0    0   0   eye 0  ]
                 // [0    0   0   0   eye]
                 jacobianX.initialize(0.0);
-                jacobianX.setSubmatrix(0, 0, 2, 2,
-                        rr);
+                jacobianX.setSubmatrix(0, 0, 2, 2, rr);
 
-                jacobianX.setSubmatrix(3, 3, 6, 6,
-                        qq);
+                jacobianX.setSubmatrix(3, 3, 6, 6, qq);
 
-                jacobianX.setSubmatrix(0, 7, 2, 9,
-                        rv);
+                jacobianX.setSubmatrix(0, 7, 2, 9, rv);
 
-                jacobianX.setSubmatrix(7, 7, 9, 9,
-                        vv);
+                jacobianX.setSubmatrix(7, 7, 9, 9, vv);
 
-                jacobianX.setSubmatrix(0, 10, 2, 12,
-                        ra);
+                jacobianX.setSubmatrix(0, 10, 2, 12, ra);
 
-                jacobianX.setSubmatrix(7, 10, 9, 12,
-                        va);
+                jacobianX.setSubmatrix(7, 10, 9, 12, va);
 
-                jacobianX.setSubmatrix(3, 13, 6, 15,
-                        qw);
+                jacobianX.setSubmatrix(3, 13, 6, 15, qw);
 
-                for (int i = 10; i < STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS; i++) {
+                for (var i = 10; i < STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS; i++) {
                     jacobianX.setElementAt(i, i, 1.0);
                 }
             }
@@ -917,12 +864,10 @@ public class StatePredictor {
                 jacobianU.initialize(0.0);
 
                 // variation of rotation
-                jacobianU.setSubmatrix(3, 0, 6, 3,
-                        qdq);
+                jacobianU.setSubmatrix(3, 0, 6, 3, qdq);
 
                 // variation of linear speed and acceleration, and angular speed
-                for (int i = 7, j = Quaternion.N_PARAMS;
-                     i < STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS; i++, j++) {
+                for (int i = 7, j = Quaternion.N_PARAMS; i < STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS; i++, j++) {
                     jacobianU.setElementAt(i, j, 1.0);
                 }
             }
@@ -988,9 +933,8 @@ public class StatePredictor {
      *                                  jacobians do not have proper size.
      */
     public static double[] predictWithRotationAdjustment(
-            final double[] x, final double[] u, final double dt,
-            final Matrix jacobianX, final Matrix jacobianU) {
-        final double[] result = new double[STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS];
+            final double[] x, final double[] u, final double dt, final Matrix jacobianX, final Matrix jacobianU) {
+        final var result = new double[STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS];
         predictWithRotationAdjustment(x, u, dt, result, jacobianX, jacobianU);
         return result;
     }
@@ -1019,9 +963,8 @@ public class StatePredictor {
      * @throws IllegalArgumentException if system state array or control array
      *                                  do not have proper size.
      */
-    public static double[] predictWithRotationAdjustment(
-            final double[] x, final double[] u, final double dt) {
-        final double[] result = new double[STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS];
+    public static double[] predictWithRotationAdjustment(final double[] x, final double[] u, final double dt) {
+        final var result = new double[STATE_WITH_ROTATION_ADJUSTMENT_COMPONENTS];
         predictWithRotationAdjustment(x, u, dt, result);
         return result;
     }
@@ -1055,8 +998,8 @@ public class StatePredictor {
      *                                  result array or jacobians do not have proper size.
      */
     public static void predictWithPositionAndRotationAdjustment(
-            final double[] x, final double[] u, final double dt, final double[] result,
-            final Matrix jacobianX, final Matrix jacobianU) {
+            final double[] x, final double[] u, final double dt, final double[] result, final Matrix jacobianX,
+            final Matrix jacobianU) {
         if (x.length != STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS) {
             throw new IllegalArgumentException("x must have length 16");
         }
@@ -1066,84 +1009,77 @@ public class StatePredictor {
         if (result.length != STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS) {
             throw new IllegalArgumentException("result must have length 16");
         }
-        if (jacobianX != null &&
-                (jacobianX.getRows() != STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS ||
-                        jacobianX.getColumns() != STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS)) {
+        if (jacobianX != null && (jacobianX.getRows() != STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS
+                || jacobianX.getColumns() != STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS)) {
             throw new IllegalArgumentException("jacobian wrt x must be 16x16");
         }
-        if (jacobianU != null &&
-                (jacobianU.getRows() != STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS ||
-                        jacobianU.getColumns() != CONTROL_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS)) {
+        if (jacobianU != null && (jacobianU.getRows() != STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS
+                || jacobianU.getColumns() != CONTROL_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS)) {
             throw new IllegalArgumentException("jacobian wrt u must be 16x13");
         }
 
         // position
-        final InhomogeneousPoint3D r = new InhomogeneousPoint3D(x[0], x[1], x[2]);
+        final var r = new InhomogeneousPoint3D(x[0], x[1], x[2]);
 
         // orientation
-        Quaternion q = new Quaternion(x[3], x[4], x[5], x[6]);
+        var q = new Quaternion(x[3], x[4], x[5], x[6]);
 
         // linear velocity
-        double vx = x[7];
-        double vy = x[8];
-        double vz = x[9];
+        var vx = x[7];
+        var vy = x[8];
+        var vz = x[9];
 
         // linear acceleration
-        double ax = x[10];
-        double ay = x[11];
-        double az = x[12];
+        var ax = x[10];
+        var ay = x[11];
+        var az = x[12];
 
         // angular velocity
-        double wx = x[13];
-        double wy = x[14];
-        double wz = x[15];
+        var wx = x[13];
+        var wy = x[14];
+        var wz = x[15];
 
         // position change (control)
-        final double drx = u[0];
-        final double dry = u[1];
-        final double drz = u[2];
+        final var drx = u[0];
+        final var dry = u[1];
+        final var drz = u[2];
 
         // rotation change (control)
-        final Quaternion dq = new Quaternion(u[3], u[4], u[5], u[6]);
+        final var dq = new Quaternion(u[3], u[4], u[5], u[6]);
 
         // linear velocity change (control)
-        final double uvx = u[7];
-        final double uvy = u[8];
-        final double uvz = u[9];
+        final var uvx = u[7];
+        final var uvy = u[8];
+        final var uvz = u[9];
 
         // linear acceleration change (control)
-        final double uax = u[10];
-        final double uay = u[11];
-        final double uaz = u[12];
+        final var uax = u[10];
+        final var uay = u[11];
+        final var uaz = u[12];
 
         // angular velocity change (control)
-        final double uwx = u[13];
-        final double uwy = u[14];
-        final double uwz = u[15];
+        final var uwx = u[13];
+        final var uwy = u[14];
+        final var uwz = u[15];
 
         try {
             // update velocity
-            final Matrix vv = new Matrix(SPEED_COMPONENTS, SPEED_COMPONENTS);
-            final Matrix va = new Matrix(SPEED_COMPONENTS, ACCELERATION_COMPONENTS);
-            final double[] v = VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt, vv, va);
+            final var vv = new Matrix(SPEED_COMPONENTS, SPEED_COMPONENTS);
+            final var va = new Matrix(SPEED_COMPONENTS, ACCELERATION_COMPONENTS);
+            final var v = VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt, vv, va);
 
             // update position
             Matrix rr = null;
             Matrix rv = null;
             Matrix ra = null;
             if (jacobianX != null) {
-                rr = new Matrix(
-                        Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
+                rr = new Matrix(Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
                         Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH);
-                rv = new Matrix(
-                        Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
-                        SPEED_COMPONENTS);
-                ra = new Matrix(
-                        Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
-                        ACCELERATION_COMPONENTS);
+                rv = new Matrix(Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH, SPEED_COMPONENTS);
+                ra = new Matrix(Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH, ACCELERATION_COMPONENTS);
             }
-            PositionPredictor.predictWithPositionAdjustment(r, drx, dry, drz,
-                    vx, vy, vz, ax, ay, az, dt, r, rr, null, rv, ra);
+            PositionPredictor.predictWithPositionAdjustment(r, drx, dry, drz, vx, vy, vz, ax, ay, az, dt, r, rr,
+                    null, rv, ra);
 
             // update orientation
             Matrix qq = null;
@@ -1156,8 +1092,7 @@ public class StatePredictor {
             if (jacobianU != null) {
                 qdq = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);
             }
-            q = QuaternionPredictor.predictWithRotationAdjustment(q, dq,
-                    wx, wy, wz, dt, qq, qdq, qw);
+            q = QuaternionPredictor.predictWithRotationAdjustment(q, dq, wx, wy, wz, dt, qq, qdq, qw);
 
             // set updated linear velocity
             vx = v[0];
@@ -1207,26 +1142,19 @@ public class StatePredictor {
                 // [0    0   0   eye 0  ]
                 // [0    0   0   0   eye]
                 jacobianX.initialize(0.0);
-                jacobianX.setSubmatrix(0, 0, 2, 2,
-                        rr);
+                jacobianX.setSubmatrix(0, 0, 2, 2, rr);
 
-                jacobianX.setSubmatrix(3, 3, 6, 6,
-                        qq);
+                jacobianX.setSubmatrix(3, 3, 6, 6, qq);
 
-                jacobianX.setSubmatrix(0, 7, 2, 9,
-                        rv);
+                jacobianX.setSubmatrix(0, 7, 2, 9, rv);
 
-                jacobianX.setSubmatrix(7, 7, 9, 9,
-                        vv);
+                jacobianX.setSubmatrix(7, 7, 9, 9, vv);
 
-                jacobianX.setSubmatrix(0, 10, 2, 12,
-                        ra);
+                jacobianX.setSubmatrix(0, 10, 2, 12, ra);
 
-                jacobianX.setSubmatrix(7, 10, 9, 12,
-                        va);
+                jacobianX.setSubmatrix(7, 10, 9, 12, va);
 
-                jacobianX.setSubmatrix(3, 13, 6, 15,
-                        qw);
+                jacobianX.setSubmatrix(3, 13, 6, 15, qw);
 
                 for (int i = 10; i < STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS; i++) {
                     jacobianX.setElementAt(i, i, 1.0);
@@ -1237,16 +1165,15 @@ public class StatePredictor {
                 jacobianU.initialize(0.0);
 
                 // variation of position
-                for (int i = 0; i < Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH; i++) {
+                for (var i = 0; i < Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH; i++) {
                     jacobianU.setElementAt(i, i, 1.0);
                 }
 
                 // variation of rotation
-                jacobianU.setSubmatrix(3, 3, 6, 6,
-                        qdq);
+                jacobianU.setSubmatrix(3, 3, 6, 6, qdq);
 
                 // variation of linear speed and acceleration, and angular speed
-                for (int i = 7; i < STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS; i++) {
+                for (var i = 7; i < STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS; i++) {
                     jacobianU.setElementAt(i, i, 1.0);
                 }
             }
@@ -1314,11 +1241,9 @@ public class StatePredictor {
      *                                  jacobians do not have proper size.
      */
     public static double[] predictWithPositionAndRotationAdjustment(
-            final double[] x, final double[] u, final double dt, final Matrix jacobianX,
-            final Matrix jacobianU) {
-        final double[] result = new double[STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS];
-        predictWithPositionAndRotationAdjustment(x, u, dt, result, jacobianX,
-                jacobianU);
+            final double[] x, final double[] u, final double dt, final Matrix jacobianX, final Matrix jacobianU) {
+        final var result = new double[STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS];
+        predictWithPositionAndRotationAdjustment(x, u, dt, result, jacobianX, jacobianU);
         return result;
     }
 
@@ -1349,7 +1274,7 @@ public class StatePredictor {
      */
     public static double[] predictWithPositionAndRotationAdjustment(
             final double[] x, final double[] u, final double dt) {
-        final double[] result = new double[STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS];
+        final var result = new double[STATE_WITH_POSITION_AND_ROTATION_ADJUSTMENT_COMPONENTS];
         predictWithPositionAndRotationAdjustment(x, u, dt, result);
         return result;
     }

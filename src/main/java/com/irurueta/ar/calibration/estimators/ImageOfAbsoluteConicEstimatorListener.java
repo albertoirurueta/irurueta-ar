@@ -41,6 +41,5 @@ public interface ImageOfAbsoluteConicEstimatorListener {
      * @param progress  current percentage of progress expressed as a value
      *                  between 0.0f and 1.0f
      */
-    void onEstimationProgressChange(final ImageOfAbsoluteConicEstimator estimator,
-                                    final float progress);
+    void onEstimationProgressChange(final ImageOfAbsoluteConicEstimator estimator, final float progress);
 }

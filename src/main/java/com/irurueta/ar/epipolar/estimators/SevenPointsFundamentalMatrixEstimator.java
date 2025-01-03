@@ -47,8 +47,7 @@ import java.util.List;
  * accuracy than the 8 points algorithm, because rank-2 is not approximated
  * using SVD, and rather it is accurately enforced.
  */
-public class SevenPointsFundamentalMatrixEstimator extends
-        FundamentalMatrixEstimator {
+public class SevenPointsFundamentalMatrixEstimator extends FundamentalMatrixEstimator {
 
     /**
      * Constant indicating that by default an LMSE solution is not allowed.
@@ -77,21 +76,21 @@ public class SevenPointsFundamentalMatrixEstimator extends
      * be used for fundamental matrix estimation. If LMSE solution is not
      * allowed then only the 7 former matched points will be taken into account.
      */
-    private boolean mAllowLMSESolution;
+    private boolean allowLMSESolution;
 
     /**
      * Indicates whether provided matched 2D points must be normalized to
      * increase the accuracy of the estimation.
      */
-    private boolean mNormalizePoints;
+    private boolean normalizePoints;
 
     /**
      * Constructor.
      */
     public SevenPointsFundamentalMatrixEstimator() {
         super();
-        mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
-        mNormalizePoints = DEFAULT_NORMALIZE_POINT_CORRESPONDENCES;
+        allowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
+        normalizePoints = DEFAULT_NORMALIZE_POINT_CORRESPONDENCES;
     }
 
     /**
@@ -102,11 +101,10 @@ public class SevenPointsFundamentalMatrixEstimator extends
      * @throws IllegalArgumentException if provided list of points do not
      *                                  have the same length.
      */
-    public SevenPointsFundamentalMatrixEstimator(final List<Point2D> leftPoints,
-                                                 final List<Point2D> rightPoints) {
+    public SevenPointsFundamentalMatrixEstimator(final List<Point2D> leftPoints, final List<Point2D> rightPoints) {
         super(leftPoints, rightPoints);
-        mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
-        mNormalizePoints = DEFAULT_NORMALIZE_POINT_CORRESPONDENCES;
+        allowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
+        normalizePoints = DEFAULT_NORMALIZE_POINT_CORRESPONDENCES;
     }
 
     /**
@@ -119,7 +117,7 @@ public class SevenPointsFundamentalMatrixEstimator extends
      * @return true if an LMSE solution is allowed, false otherwise.
      */
     public boolean isLMSESolutionAllowed() {
-        return mAllowLMSESolution;
+        return allowLMSESolution;
     }
 
     /**
@@ -138,7 +136,7 @@ public class SevenPointsFundamentalMatrixEstimator extends
             throw new LockedException();
         }
 
-        mAllowLMSESolution = allowed;
+        allowLMSESolution = allowed;
     }
 
     /**
@@ -148,7 +146,7 @@ public class SevenPointsFundamentalMatrixEstimator extends
      * @return true if points must be normalized, false otherwise.
      */
     public boolean arePointsNormalized() {
-        return mNormalizePoints;
+        return normalizePoints;
     }
 
     /**
@@ -160,13 +158,12 @@ public class SevenPointsFundamentalMatrixEstimator extends
      * @throws LockedException if this instance is locked because an estimation
      *                         is in progress.
      */
-    public void setPointsNormalized(final boolean normalizePoints)
-            throws LockedException {
+    public void setPointsNormalized(final boolean normalizePoints) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
 
-        mNormalizePoints = normalizePoints;
+        this.normalizePoints = normalizePoints;
     }
 
     /**
@@ -181,9 +178,8 @@ public class SevenPointsFundamentalMatrixEstimator extends
      */
     @Override
     public boolean isReady() {
-        return mLeftPoints != null && mRightPoints != null &&
-                mLeftPoints.size() == mRightPoints.size() &&
-                mLeftPoints.size() >= MIN_REQUIRED_POINTS;
+        return leftPoints != null && rightPoints != null && leftPoints.size() == rightPoints.size()
+                && leftPoints.size() >= MIN_REQUIRED_POINTS;
     }
 
     /**
@@ -201,9 +197,9 @@ public class SevenPointsFundamentalMatrixEstimator extends
      *                                             2D points is degenerate and fundamental matrix
      *                                             estimation fails.
      */
-    public List<FundamentalMatrix> estimateAll() throws LockedException,
-            NotReadyException, FundamentalMatrixEstimatorException {
-        final List<FundamentalMatrix> result = new ArrayList<>();
+    public List<FundamentalMatrix> estimateAll() throws LockedException, NotReadyException,
+            FundamentalMatrixEstimatorException {
+        final var result = new ArrayList<FundamentalMatrix>();
         estimateAll(result);
         return result;
     }
@@ -225,8 +221,7 @@ public class SevenPointsFundamentalMatrixEstimator extends
      *                                             estimation fails.
      */
     @SuppressWarnings("DuplicatedCode")
-    public void estimateAll(final List<FundamentalMatrix> result)
-            throws LockedException, NotReadyException,
+    public void estimateAll(final List<FundamentalMatrix> result) throws LockedException, NotReadyException,
             FundamentalMatrixEstimatorException {
 
         if (isLocked()) {
@@ -236,31 +231,30 @@ public class SevenPointsFundamentalMatrixEstimator extends
             throw new NotReadyException();
         }
 
-        mLocked = true;
+        locked = true;
 
         result.clear();
 
-        if (mListener != null) {
-            mListener.onEstimateStart(this);
+        if (listener != null) {
+            listener.onEstimateStart(this);
         }
 
-        final int nPoints = mLeftPoints.size();
+        final var nPoints = leftPoints.size();
 
         try {
             ProjectiveTransformation2D leftNormalization = null;
             ProjectiveTransformation2D rightNormalization = null;
             final List<Point2D> leftPoints;
             final List<Point2D> rightPoints;
-            if (mNormalizePoints) {
+            if (normalizePoints) {
                 // normalize points on left view
-                final Point2DNormalizer normalizer = new Point2DNormalizer(
-                        mLeftPoints);
+                final var normalizer = new Point2DNormalizer(this.leftPoints);
                 normalizer.compute();
 
                 leftNormalization = normalizer.getTransformation();
 
                 // normalize points on right view
-                normalizer.setPoints(mRightPoints);
+                normalizer.setPoints(this.rightPoints);
                 normalizer.compute();
 
                 rightNormalization = normalizer.getTransformation();
@@ -269,13 +263,11 @@ public class SevenPointsFundamentalMatrixEstimator extends
                 leftNormalization.normalize();
                 rightNormalization.normalize();
 
-                leftPoints = leftNormalization.transformPointsAndReturnNew(
-                        mLeftPoints);
-                rightPoints = rightNormalization.transformPointsAndReturnNew(
-                        mRightPoints);
+                leftPoints = leftNormalization.transformPointsAndReturnNew(this.leftPoints);
+                rightPoints = rightNormalization.transformPointsAndReturnNew(this.rightPoints);
             } else {
-                leftPoints = mLeftPoints;
-                rightPoints = mRightPoints;
+                leftPoints = this.leftPoints;
+                rightPoints = this.rightPoints;
             }
 
             final Matrix a;
@@ -303,7 +295,7 @@ public class SevenPointsFundamentalMatrixEstimator extends
             double value7;
             double value8;
             double rowNorm;
-            for (int i = 0; i < nPoints; i++) {
+            for (var i = 0; i < nPoints; i++) {
                 leftPoint = leftPoints.get(i);
                 rightPoint = rightPoints.get(i);
 
@@ -333,11 +325,11 @@ public class SevenPointsFundamentalMatrixEstimator extends
                 value8 = homLeftW * homRightW;
 
                 // normalize row to increase accuracy
-                rowNorm = Math.sqrt(Math.pow(value0, 2.0) +
-                        Math.pow(value1, 2.0) + Math.pow(value2, 2.0) +
-                        Math.pow(value3, 2.0) + Math.pow(value4, 2.0) +
-                        Math.pow(value5, 2.0) + Math.pow(value6, 2.0) +
-                        Math.pow(value7, 2.0) + Math.pow(value8, 2.0));
+                rowNorm = Math.sqrt(Math.pow(value0, 2.0)
+                        + Math.pow(value1, 2.0) + Math.pow(value2, 2.0)
+                        + Math.pow(value3, 2.0) + Math.pow(value4, 2.0)
+                        + Math.pow(value5, 2.0) + Math.pow(value6, 2.0)
+                        + Math.pow(value7, 2.0) + Math.pow(value8, 2.0));
 
                 a.setElementAt(i, 0, value0 / rowNorm);
                 a.setElementAt(i, 1, value1 / rowNorm);
@@ -354,7 +346,7 @@ public class SevenPointsFundamentalMatrixEstimator extends
                 }
             }
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(a);
+            final var decomposer = new SingularValueDecomposer(a);
 
             decomposer.decompose();
 
@@ -368,15 +360,14 @@ public class SevenPointsFundamentalMatrixEstimator extends
                 throw new FundamentalMatrixEstimatorException();
             }
 
-            final Matrix v = decomposer.getV();
+            final var v = decomposer.getV();
 
             // The last two column vectors of V contain the "base" matrices
             // to be used for the retrieval of the true fundamental matrix, since
             // the fundamental matrix we are looking for will be a linear
             // combination of such matrices after reshaping the vectors into 3x3
             // matrices
-            Matrix fundMatrix1 = new Matrix(
-                    FundamentalMatrix.FUNDAMENTAL_MATRIX_ROWS,
+            var fundMatrix1 = new Matrix(FundamentalMatrix.FUNDAMENTAL_MATRIX_ROWS,
                     FundamentalMatrix.FUNDAMENTAL_MATRIX_COLS);
             fundMatrix1.setElementAt(0, 0, v.getElementAt(0, 8));
             fundMatrix1.setElementAt(0, 1, v.getElementAt(1, 8));
@@ -388,8 +379,7 @@ public class SevenPointsFundamentalMatrixEstimator extends
             fundMatrix1.setElementAt(2, 1, v.getElementAt(7, 8));
             fundMatrix1.setElementAt(2, 2, v.getElementAt(8, 8));
 
-            Matrix fundMatrix2 = new Matrix(
-                    FundamentalMatrix.FUNDAMENTAL_MATRIX_ROWS,
+            var fundMatrix2 = new Matrix(FundamentalMatrix.FUNDAMENTAL_MATRIX_ROWS,
                     FundamentalMatrix.FUNDAMENTAL_MATRIX_COLS);
             fundMatrix2.setElementAt(0, 0, v.getElementAt(0, 7));
             fundMatrix2.setElementAt(0, 1, v.getElementAt(1, 7));
@@ -401,22 +391,20 @@ public class SevenPointsFundamentalMatrixEstimator extends
             fundMatrix2.setElementAt(2, 1, v.getElementAt(7, 7));
             fundMatrix2.setElementAt(2, 2, v.getElementAt(8, 7));
 
-            if (mNormalizePoints && leftNormalization != null) {
+            if (normalizePoints && leftNormalization != null) {
                 // denormalize linear combination of fundamental matrices
                 // fundMatrix1 and fundMatrix2
-                final Matrix transposedRightTransformationMatrix =
-                        rightNormalization.asMatrix().transposeAndReturnNew();
-                final Matrix leftTransformationMatrix = leftNormalization.asMatrix();
+                final var transposedRightTransformationMatrix = rightNormalization.asMatrix().transposeAndReturnNew();
+                final var leftTransformationMatrix = leftNormalization.asMatrix();
 
                 // compute fundMatrix1 = transposedRightTransformationMatrix *
                 // fundMatrix1 * leftTransformationMatrix
                 fundMatrix1.multiply(leftTransformationMatrix);
-                fundMatrix1 = transposedRightTransformationMatrix.
-                        multiplyAndReturnNew(fundMatrix1);
+                fundMatrix1 = transposedRightTransformationMatrix.multiplyAndReturnNew(fundMatrix1);
 
                 // normalize by Frobenius norm to increase accuracy after point
                 // de-normalization
-                double norm = Utils.normF(fundMatrix1);
+                var norm = Utils.normF(fundMatrix1);
                 fundMatrix1.multiplyByScalar(1.0 / norm);
 
                 // compute fundMatrix2 = transposedRightTransformationMatrix *
@@ -446,11 +434,11 @@ public class SevenPointsFundamentalMatrixEstimator extends
             // This produces a third degree polynomial as follows:
 
             // coefficients of polynomial: a*x^3 + b*x^2 + c*x + d
-            double aPoly = 0.0;
-            double bPoly = 0.0;
-            double cPoly = 0.0;
-            double dPoly = 0.0;
-            final double[] params = new double[4];
+            var aPoly = 0.0;
+            var bPoly = 0.0;
+            var cPoly = 0.0;
+            var dPoly = 0.0;
+            final var params = new double[4];
 
             computeParams(fundMatrix1.getElementAt(0, 0),
                     fundMatrix2.getElementAt(0, 0),
@@ -525,9 +513,9 @@ public class SevenPointsFundamentalMatrixEstimator extends
             dPoly -= params[3];
 
             // normalize polynomial coefficients to increase accuracy
-            final double coeffNorm = Math.sqrt(Math.pow(aPoly, 2.0) +
-                    Math.pow(bPoly, 2.0) + Math.pow(cPoly, 2.0) +
-                    Math.pow(dPoly, 2.0));
+            final var coeffNorm = Math.sqrt(Math.pow(aPoly, 2.0)
+                    + Math.pow(bPoly, 2.0) + Math.pow(cPoly, 2.0)
+                    + Math.pow(dPoly, 2.0));
             aPoly /= coeffNorm;
             bPoly /= coeffNorm;
             cPoly /= coeffNorm;
@@ -540,12 +528,12 @@ public class SevenPointsFundamentalMatrixEstimator extends
             params[2] = bPoly;
             params[3] = aPoly;
 
-            double beta1 = 0.0;
-            double beta2 = 0.0;
-            double beta3 = 0.0;
-            boolean beta1Available = false;
-            boolean beta2Available = false;
-            boolean beta3Available = false;
+            var beta1 = 0.0;
+            var beta2 = 0.0;
+            var beta3 = 0.0;
+            var beta1Available = false;
+            var beta2Available = false;
+            var beta3Available = false;
             final Complex[] roots;
             final Complex root1;
             final Complex root2;
@@ -553,8 +541,7 @@ public class SevenPointsFundamentalMatrixEstimator extends
 
             if (ThirdDegreePolynomialRootsEstimator.isThirdDegree(params)) {
                 // solve third degree polynomial
-                final ThirdDegreePolynomialRootsEstimator estimator =
-                        new ThirdDegreePolynomialRootsEstimator(params);
+                final var estimator = new ThirdDegreePolynomialRootsEstimator(params);
                 estimator.estimate();
                 roots = estimator.getRoots();
                 root1 = roots[0];
@@ -578,8 +565,7 @@ public class SevenPointsFundamentalMatrixEstimator extends
                 }
             } else if (SecondDegreePolynomialRootsEstimator.isSecondDegree(params)) {
                 // solve second degree polynomial
-                final SecondDegreePolynomialRootsEstimator estimator =
-                        new SecondDegreePolynomialRootsEstimator(params);
+                final var estimator = new SecondDegreePolynomialRootsEstimator(params);
                 estimator.estimate();
                 roots = estimator.getRoots();
                 root1 = roots[0];
@@ -594,11 +580,9 @@ public class SevenPointsFundamentalMatrixEstimator extends
                     beta2 = root2.getReal();
                     beta2Available = true;
                 }
-            } else if (FirstDegreePolynomialRootsEstimator.isFirstDegree(
-                    params)) {
+            } else if (FirstDegreePolynomialRootsEstimator.isFirstDegree(params)) {
                 // solve first degree polynomial
-                final FirstDegreePolynomialRootsEstimator estimator =
-                        new FirstDegreePolynomialRootsEstimator(params);
+                final var estimator = new FirstDegreePolynomialRootsEstimator(params);
                 estimator.estimate();
                 roots = estimator.getRoots();
                 // this is the only solution and is real
@@ -624,9 +608,8 @@ public class SevenPointsFundamentalMatrixEstimator extends
             // clear previous values
             result.clear();
             if (beta1Available) {
-                fundMatrix = fundMatrix1.multiplyByScalarAndReturnNew(beta1).
-                        addAndReturnNew(fundMatrix2.
-                                multiplyByScalarAndReturnNew(1.0 - beta1));
+                fundMatrix = fundMatrix1.multiplyByScalarAndReturnNew(beta1).addAndReturnNew(
+                        fundMatrix2.multiplyByScalarAndReturnNew(1.0 - beta1));
                 if (enforceRank2(fundMatrix, decomposer)) {
                     throw new FundamentalMatrixEstimatorException();
                 }
@@ -635,9 +618,8 @@ public class SevenPointsFundamentalMatrixEstimator extends
                 result.add(f);
             }
             if (beta2Available) {
-                fundMatrix = fundMatrix1.multiplyByScalarAndReturnNew(beta2).
-                        addAndReturnNew(fundMatrix2.multiplyByScalarAndReturnNew(
-                                1.0 - beta2));
+                fundMatrix = fundMatrix1.multiplyByScalarAndReturnNew(beta2).addAndReturnNew(
+                        fundMatrix2.multiplyByScalarAndReturnNew(1.0 - beta2));
                 if (enforceRank2(fundMatrix, decomposer)) {
                     throw new FundamentalMatrixEstimatorException();
                 }
@@ -646,9 +628,8 @@ public class SevenPointsFundamentalMatrixEstimator extends
                 result.add(f);
             }
             if (beta3Available) {
-                fundMatrix = fundMatrix1.multiplyByScalarAndReturnNew(beta3).
-                        addAndReturnNew(fundMatrix2.multiplyByScalarAndReturnNew(
-                                1.0 - beta3));
+                fundMatrix = fundMatrix1.multiplyByScalarAndReturnNew(beta3).addAndReturnNew(
+                        fundMatrix2.multiplyByScalarAndReturnNew(1.0 - beta3));
                 if (enforceRank2(fundMatrix, decomposer)) {
                     throw new FundamentalMatrixEstimatorException();
                 }
@@ -657,15 +638,15 @@ public class SevenPointsFundamentalMatrixEstimator extends
                 result.add(f);
             }
 
-            if (mListener != null) {
-                mListener.onEstimateEnd(this, result.get(0));
+            if (listener != null) {
+                listener.onEstimateEnd(this, result.get(0));
             }
 
-        } catch (final InvalidFundamentalMatrixException | AlgebraException |
-                NumericalException | NormalizerException e) {
+        } catch (final InvalidFundamentalMatrixException | AlgebraException | NumericalException
+                       | NormalizerException e) {
             throw new FundamentalMatrixEstimatorException(e);
         } finally {
-            mLocked = false;
+            locked = false;
         }
     }
 
@@ -686,9 +667,8 @@ public class SevenPointsFundamentalMatrixEstimator extends
      *                                             estimation fails or more than one solution exists.
      */
     @Override
-    public FundamentalMatrix estimate() throws LockedException,
-            NotReadyException, FundamentalMatrixEstimatorException {
-        final List<FundamentalMatrix> list = estimateAll();
+    public FundamentalMatrix estimate() throws LockedException, NotReadyException, FundamentalMatrixEstimatorException {
+        final var list = estimateAll();
         if (list.size() > 1) {
             throw new FundamentalMatrixEstimatorException();
         }
@@ -728,19 +708,18 @@ public class SevenPointsFundamentalMatrixEstimator extends
      * @throws AlgebraException if an error occurs during SVD decomposition
      *                          because of numerical instabilities.
      */
-    private boolean enforceRank2(
-            final Matrix matrix,
-            final SingularValueDecomposer decomposer) throws AlgebraException {
+    private boolean enforceRank2(final Matrix matrix, final SingularValueDecomposer decomposer)
+            throws AlgebraException {
 
         decomposer.setInputMatrix(matrix);
         decomposer.decompose();
 
-        final int rank = decomposer.getRank();
+        final var rank = decomposer.getRank();
         if (rank > FundamentalMatrix.FUNDAMENTAL_MATRIX_RANK) {
             // rank needs to be reduced
-            final Matrix u = decomposer.getU();
-            final Matrix w = decomposer.getW();
-            final Matrix v = decomposer.getV();
+            final var u = decomposer.getU();
+            final var w = decomposer.getW();
+            final var v = decomposer.getV();
 
             // transpose V
             v.transpose();
@@ -775,17 +754,17 @@ public class SevenPointsFundamentalMatrixEstimator extends
      *            polynomial are stored.
      */
     private void computeParams(
-            final double a, final double b, final double c, final double d,
-            final double e, final double f, final double[] out) {
+            final double a, final double b, final double c, final double d, final double e, final double f,
+            final double[] out) {
 
-        final double ace = a * c * e;
-        final double ade = a * d * e;
-        final double bce = b * c * e;
-        final double bde = b * d * e;
-        final double acf = a * c * f;
-        final double adf = a * d * f;
-        final double bcf = b * c * f;
-        final double bdf = b * d * f;
+        final var ace = a * c * e;
+        final var ade = a * d * e;
+        final var bce = b * c * e;
+        final var bde = b * d * e;
+        final var acf = a * c * f;
+        final var adf = a * d * f;
+        final var bcf = b * c * f;
+        final var bdf = b * d * f;
 
         out[0] = ace - ade - bce + bde - acf + adf + bcf - bdf;
         out[1] = ade + bce - 2.0 * bde + acf - 2.0 * adf - 2.0 * bcf + 3.0 * bdf;

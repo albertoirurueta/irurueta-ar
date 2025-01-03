@@ -21,8 +21,7 @@ package com.irurueta.ar.sfm;
  * sparse image point correspondences.
  */
 public class SparseReconstructor extends
-        BaseSparseReconstructor<SparseReconstructorConfiguration, SparseReconstructor,
-                SparseReconstructorListener> {
+        BaseSparseReconstructor<SparseReconstructorConfiguration, SparseReconstructor, SparseReconstructorListener> {
 
     /**
      * Constructor.
@@ -57,10 +56,10 @@ public class SparseReconstructor extends
     @Override
     protected boolean postProcessOne(final boolean isInitialPairOfViews) {
         // no need for post-processing when computing metric reconstruction
-        mPreviousEuclideanEstimatedCamera = mPreviousMetricEstimatedCamera;
-        mCurrentEuclideanEstimatedCamera = mCurrentMetricEstimatedCamera;
-        mActiveEuclideanReconstructedPoints = mActiveMetricReconstructedPoints;
-        mCurrentScale = DEFAULT_SCALE;
+        previousEuclideanEstimatedCamera = previousMetricEstimatedCamera;
+        currentEuclideanEstimatedCamera = currentMetricEstimatedCamera;
+        activeEuclideanReconstructedPoints = activeMetricReconstructedPoints;
+        currentScale = DEFAULT_SCALE;
         return true;
     }
 }

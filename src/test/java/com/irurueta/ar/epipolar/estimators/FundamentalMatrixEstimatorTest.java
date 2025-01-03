@@ -16,25 +16,23 @@
 package com.irurueta.ar.epipolar.estimators;
 
 import com.irurueta.geometry.Point2D;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class FundamentalMatrixEstimatorTest {
+class FundamentalMatrixEstimatorTest {
 
     @Test
-    public void testCreate() {
+    void testCreate() {
         // test create with method
 
         // 7 points
-        FundamentalMatrixEstimator estimator = FundamentalMatrixEstimator.create(
-                FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM);
+        var estimator = FundamentalMatrixEstimator.create(FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM);
 
         // check correctness
-        assertTrue(estimator instanceof SevenPointsFundamentalMatrixEstimator);
+        assertInstanceOf(SevenPointsFundamentalMatrixEstimator.class, estimator);
         assertNull(estimator.getLeftPoints());
         assertNull(estimator.getRightPoints());
         assertNull(estimator.getListener());
@@ -43,11 +41,10 @@ public class FundamentalMatrixEstimatorTest {
         assertEquals(FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM, estimator.getMethod());
 
         // 8 points
-        estimator = FundamentalMatrixEstimator.create(
-                FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM);
+        estimator = FundamentalMatrixEstimator.create(FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM);
 
         // check correctness
-        assertTrue(estimator instanceof EightPointsFundamentalMatrixEstimator);
+        assertInstanceOf(EightPointsFundamentalMatrixEstimator.class, estimator);
         assertNull(estimator.getLeftPoints());
         assertNull(estimator.getRightPoints());
         assertNull(estimator.getListener());
@@ -56,11 +53,10 @@ public class FundamentalMatrixEstimatorTest {
         assertEquals(FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM, estimator.getMethod());
 
         // affine
-        estimator = FundamentalMatrixEstimator.create(
-                FundamentalMatrixEstimatorMethod.AFFINE_ALGORITHM);
+        estimator = FundamentalMatrixEstimator.create(FundamentalMatrixEstimatorMethod.AFFINE_ALGORITHM);
 
         // check correctness
-        assertTrue(estimator instanceof AffineFundamentalMatrixEstimator);
+        assertInstanceOf(AffineFundamentalMatrixEstimator.class, estimator);
         assertNull(estimator.getLeftPoints());
         assertNull(estimator.getRightPoints());
         assertNull(estimator.getListener());
@@ -69,9 +65,9 @@ public class FundamentalMatrixEstimatorTest {
         assertEquals(FundamentalMatrixEstimatorMethod.AFFINE_ALGORITHM, estimator.getMethod());
 
         // test create with points and method
-        final List<Point2D> leftPoints = new ArrayList<>();
-        final List<Point2D> rightPoints = new ArrayList<>();
-        for (int i = 0; i < 8; i++) {
+        final var leftPoints = new ArrayList<Point2D>();
+        final var rightPoints = new ArrayList<Point2D>();
+        for (var i = 0; i < 8; i++) {
             leftPoints.add(Point2D.create());
             rightPoints.add(Point2D.create());
         }
@@ -81,7 +77,7 @@ public class FundamentalMatrixEstimatorTest {
                 FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM);
 
         // check correctness
-        assertTrue(estimator instanceof SevenPointsFundamentalMatrixEstimator);
+        assertInstanceOf(SevenPointsFundamentalMatrixEstimator.class, estimator);
         assertSame(leftPoints, estimator.getLeftPoints());
         assertSame(rightPoints, estimator.getRightPoints());
         assertNull(estimator.getListener());
@@ -94,7 +90,7 @@ public class FundamentalMatrixEstimatorTest {
                 FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM);
 
         // check correctness
-        assertTrue(estimator instanceof EightPointsFundamentalMatrixEstimator);
+        assertInstanceOf(EightPointsFundamentalMatrixEstimator.class, estimator);
         assertSame(leftPoints, estimator.getLeftPoints());
         assertSame(rightPoints, estimator.getRightPoints());
         assertNull(estimator.getListener());
@@ -107,7 +103,7 @@ public class FundamentalMatrixEstimatorTest {
                 FundamentalMatrixEstimatorMethod.AFFINE_ALGORITHM);
 
         // check correctness
-        assertTrue(estimator instanceof AffineFundamentalMatrixEstimator);
+        assertInstanceOf(AffineFundamentalMatrixEstimator.class, estimator);
         assertSame(leftPoints, estimator.getLeftPoints());
         assertSame(rightPoints, estimator.getRightPoints());
         assertNull(estimator.getListener());
@@ -115,11 +111,10 @@ public class FundamentalMatrixEstimatorTest {
         assertTrue(estimator.isReady());
         assertEquals(FundamentalMatrixEstimatorMethod.AFFINE_ALGORITHM, estimator.getMethod());
 
-
         // test create with default method
         estimator = FundamentalMatrixEstimator.create();
 
-        assertTrue(estimator instanceof SevenPointsFundamentalMatrixEstimator);
+        assertInstanceOf(SevenPointsFundamentalMatrixEstimator.class, estimator);
         assertNull(estimator.getLeftPoints());
         assertNull(estimator.getRightPoints());
         assertNull(estimator.getListener());
@@ -131,7 +126,7 @@ public class FundamentalMatrixEstimatorTest {
         estimator = FundamentalMatrixEstimator.create(leftPoints, rightPoints);
 
         // check correctness
-        assertTrue(estimator instanceof SevenPointsFundamentalMatrixEstimator);
+        assertInstanceOf(SevenPointsFundamentalMatrixEstimator.class, estimator);
         assertSame(leftPoints, estimator.getLeftPoints());
         assertSame(rightPoints, estimator.getRightPoints());
         assertNull(estimator.getListener());

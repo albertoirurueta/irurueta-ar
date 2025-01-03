@@ -15,27 +15,24 @@
  */
 package com.irurueta.ar.epipolar;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class InvalidPairOfIntrinsicParametersExceptionTest {
+class InvalidPairOfIntrinsicParametersExceptionTest {
 
     @Test
-    public void testConstructor() {
-        InvalidPairOfIntrinsicParametersException ex = new InvalidPairOfIntrinsicParametersException();
+    void testConstructor() {
+        var ex = new InvalidPairOfIntrinsicParametersException();
         assertNotNull(ex);
 
-        ex = new InvalidPairOfIntrinsicParametersException(
-                "message");
+        ex = new InvalidPairOfIntrinsicParametersException("message");
         assertNotNull(ex);
 
-        ex = new InvalidPairOfIntrinsicParametersException(
-                new Exception());
+        ex = new InvalidPairOfIntrinsicParametersException(new Exception());
         assertNotNull(ex);
 
-        ex = new InvalidPairOfIntrinsicParametersException(
-                "message", new Exception());
+        ex = new InvalidPairOfIntrinsicParametersException("message", new Exception());
         assertNotNull(ex);
     }
 }

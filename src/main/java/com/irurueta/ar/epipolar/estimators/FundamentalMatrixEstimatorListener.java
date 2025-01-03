@@ -36,6 +36,5 @@ public interface FundamentalMatrixEstimatorListener {
      * @param estimator         a non-robust fundamental matrix estimator.
      * @param fundamentalMatrix estimated fundamental matrix.
      */
-    void onEstimateEnd(final FundamentalMatrixEstimator estimator,
-                       final FundamentalMatrix fundamentalMatrix);
+    void onEstimateEnd(final FundamentalMatrixEstimator estimator, final FundamentalMatrix fundamentalMatrix);
 }

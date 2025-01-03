@@ -39,8 +39,7 @@ import java.util.List;
  * increase so do the rounding errors.
  */
 @SuppressWarnings("DuplicatedCode")
-public class WeightedImageOfAbsoluteConicEstimator extends
-        ImageOfAbsoluteConicEstimator {
+public class WeightedImageOfAbsoluteConicEstimator extends ImageOfAbsoluteConicEstimator {
 
     /**
      * Default number of homographies to be weighted and taken into account.
@@ -57,26 +56,26 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      * Maximum number of homographies (i.e. correspondences) to be weighted and
      * taken into account.
      */
-    private int mMaxHomographies;
+    private int maxHomographies;
 
     /**
      * Indicates if weights are sorted by default so that largest weighted
      * correspondences are used first.
      */
-    private boolean mSortWeights;
+    private boolean sortWeights;
 
     /**
      * Array containing weights for all homographies.
      */
-    private double[] mWeights;
+    private double[] weights;
 
     /**
      * Constructor.
      */
     public WeightedImageOfAbsoluteConicEstimator() {
         super();
-        mMaxHomographies = DEFAULT_MAX_HOMOGRAPHIES;
-        mSortWeights = DEFAULT_SORT_WEIGHTS;
+        maxHomographies = DEFAULT_MAX_HOMOGRAPHIES;
+        sortWeights = DEFAULT_SORT_WEIGHTS;
     }
 
     /**
@@ -85,11 +84,10 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or estimation progress changes.
      */
-    public WeightedImageOfAbsoluteConicEstimator(
-            final ImageOfAbsoluteConicEstimatorListener listener) {
+    public WeightedImageOfAbsoluteConicEstimator(final ImageOfAbsoluteConicEstimatorListener listener) {
         super(listener);
-        mMaxHomographies = DEFAULT_MAX_HOMOGRAPHIES;
-        mSortWeights = DEFAULT_SORT_WEIGHTS;
+        maxHomographies = DEFAULT_MAX_HOMOGRAPHIES;
+        sortWeights = DEFAULT_SORT_WEIGHTS;
     }
 
     /**
@@ -104,12 +102,11 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      * @throws IllegalArgumentException if not enough homographies are provided
      *                                  for default constraints during IAC estimation.
      */
-    public WeightedImageOfAbsoluteConicEstimator(
-            final List<Transformation2D> homographies, final double[] weights) {
+    public WeightedImageOfAbsoluteConicEstimator(final List<Transformation2D> homographies, final double[] weights) {
         super();
         internalSetHomographiesAndWeights(homographies, weights);
-        mMaxHomographies = DEFAULT_MAX_HOMOGRAPHIES;
-        mSortWeights = DEFAULT_SORT_WEIGHTS;
+        maxHomographies = DEFAULT_MAX_HOMOGRAPHIES;
+        sortWeights = DEFAULT_SORT_WEIGHTS;
     }
 
     /**
@@ -126,13 +123,12 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      * @throws IllegalArgumentException if not enough homographies are provided
      *                                  for default constraints during IAC estimation.
      */
-    public WeightedImageOfAbsoluteConicEstimator(
-            final List<Transformation2D> homographies, final double[] weights,
-            final ImageOfAbsoluteConicEstimatorListener listener) {
+    public WeightedImageOfAbsoluteConicEstimator(final List<Transformation2D> homographies, final double[] weights,
+                                                 final ImageOfAbsoluteConicEstimatorListener listener) {
         super(listener);
         internalSetHomographiesAndWeights(homographies, weights);
-        mMaxHomographies = DEFAULT_MAX_HOMOGRAPHIES;
-        mSortWeights = DEFAULT_SORT_WEIGHTS;
+        maxHomographies = DEFAULT_MAX_HOMOGRAPHIES;
+        sortWeights = DEFAULT_SORT_WEIGHTS;
     }
 
     /**
@@ -160,8 +156,8 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      * @throws IllegalArgumentException if not enough homographies are provided
      *                                  for default constraints during IAC estimation.
      */
-    public void setHomographiesAndWeights(final List<Transformation2D> homographies,
-                                          final double[] weights) throws LockedException {
+    public void setHomographiesAndWeights(
+            final List<Transformation2D> homographies, final double[] weights) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -176,7 +172,7 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      * @return array containing weights for each correspondence.
      */
     public double[] getWeights() {
-        return mWeights;
+        return weights;
     }
 
     /**
@@ -186,7 +182,7 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      * @return true if weights are available, false otherwise.
      */
     public boolean areWeightsAvailable() {
-        return mWeights != null;
+        return weights != null;
     }
 
     /**
@@ -196,7 +192,7 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      * @return maximum number of homographies to be weighted.
      */
     public int getMaxHomographies() {
-        return mMaxHomographies;
+        return maxHomographies;
     }
 
     /**
@@ -219,7 +215,7 @@ public class WeightedImageOfAbsoluteConicEstimator extends
             throw new IllegalArgumentException();
         }
 
-        mMaxHomographies = maxHomographies;
+        this.maxHomographies = maxHomographies;
     }
 
     /**
@@ -229,7 +225,7 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      * @return true if weights are sorted, false otherwise.
      */
     public boolean isSortWeightsEnabled() {
-        return mSortWeights;
+        return sortWeights;
     }
 
     /**
@@ -239,13 +235,12 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      * @param sortWeights true if weights are sorted, false otherwise.
      * @throws LockedException if this instance is locked.
      */
-    public void setSortWeightsEnabled(final boolean sortWeights)
-            throws LockedException {
+    public void setSortWeightsEnabled(final boolean sortWeights) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
 
-        mSortWeights = sortWeights;
+        this.sortWeights = sortWeights;
     }
 
     /**
@@ -257,8 +252,7 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      */
     @Override
     public boolean isReady() {
-        return super.isReady() && areWeightsAvailable() &&
-                mHomographies.size() == mWeights.length;
+        return super.isReady() && areWeightsAvailable() && homographies.size() == weights.length;
     }
 
     /**
@@ -280,8 +274,8 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      *                                                projective.
      */
     @Override
-    public ImageOfAbsoluteConic estimate() throws LockedException,
-            NotReadyException, ImageOfAbsoluteConicEstimatorException {
+    public ImageOfAbsoluteConic estimate() throws LockedException, NotReadyException,
+            ImageOfAbsoluteConicEstimatorException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -290,37 +284,37 @@ public class WeightedImageOfAbsoluteConicEstimator extends
         }
 
         try {
-            mLocked = true;
-            if (mListener != null) {
-                mListener.onEstimateStart(this);
+            locked = true;
+            if (listener != null) {
+                listener.onEstimateStart(this);
             }
 
             final ImageOfAbsoluteConic iac;
-            if (mZeroSkewness && mPrincipalPointAtOrigin) {
-                if (mFocalDistanceAspectRatioKnown) {
+            if (zeroSkewness && principalPointAtOrigin) {
+                if (focalDistanceAspectRatioKnown) {
                     iac = estimateZeroSkewnessPrincipalPointAtOriginAndKnownFocalDistanceAspectRatio();
                 } else {
                     iac = estimateZeroSkewnessAndPrincipalPointAtOrigin();
                 }
-            } else if (mZeroSkewness) { //&& !mPrincipalPointAtOrigin
-                if (mFocalDistanceAspectRatioKnown) {
+            } else if (zeroSkewness) { //&& !mPrincipalPointAtOrigin
+                if (focalDistanceAspectRatioKnown) {
                     iac = estimateZeroSkewnessAndKnownFocalDistanceAspectRatio();
                 } else {
                     iac = estimateZeroSkewness();
                 }
-            } else if (mPrincipalPointAtOrigin) { //&& !mZeroSkewness
+            } else if (principalPointAtOrigin) { //&& !mZeroSkewness
                 iac = estimatePrincipalPointAtOrigin();
             } else {
                 iac = estimateNoConstraints();
             }
 
-            if (mListener != null) {
-                mListener.onEstimateEnd(this);
+            if (listener != null) {
+                listener.onEstimateEnd(this);
             }
 
             return iac;
         } finally {
-            mLocked = false;
+            locked = false;
         }
     }
 
@@ -345,14 +339,12 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      * @throws IllegalArgumentException if provided list of homographies does not
      *                                  contain enough elements to estimate the IAC using current settings.
      */
-    private void internalSetHomographiesAndWeights(
-            final List<Transformation2D> homographies, double[] weights) {
-        if (weights == null || homographies == null ||
-                weights.length != homographies.size()) {
+    private void internalSetHomographiesAndWeights(final List<Transformation2D> homographies, double[] weights) {
+        if (weights == null || homographies == null || weights.length != homographies.size()) {
             throw new IllegalArgumentException();
         }
         internalSetHomographies(homographies);
-        mWeights = weights;
+        this.weights = weights;
     }
 
     /**
@@ -366,22 +358,19 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      *                                                translations where no additional data is really
      *                                                provided.
      */
-    private ImageOfAbsoluteConic estimateNoConstraints()
-            throws ImageOfAbsoluteConicEstimatorException {
+    private ImageOfAbsoluteConic estimateNoConstraints() throws ImageOfAbsoluteConicEstimatorException {
 
         try {
-            final WeightSelection selection = WeightSelection.selectWeights(mWeights,
-                    mSortWeights, mMaxHomographies);
-            final boolean[] selected = selection.getSelected();
-            final int nHomographies = selection.getNumSelected();
+            final var selection = WeightSelection.selectWeights(weights, sortWeights, maxHomographies);
+            final var selected = selection.getSelected();
+            final var nHomographies = selection.getNumSelected();
 
-            final Matrix a = new Matrix(2 * nHomographies, 6);
+            final var a = new Matrix(2 * nHomographies, 6);
 
-            int index = 0;
-            int counter = 0;
+            var index = 0;
+            var counter = 0;
             ProjectiveTransformation2D t = null;
-            final Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS,
-                    ProjectiveTransformation2D.HOM_COORDS);
+            final var h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, ProjectiveTransformation2D.HOM_COORDS);
             // elements ij of homography (last column is not required)
             double h11;
             double h12;
@@ -392,9 +381,9 @@ public class WeightedImageOfAbsoluteConicEstimator extends
             double rowNorm;
             double weight;
             double factor;
-            for (final Transformation2D homography : mHomographies) {
+            for (final var homography : homographies) {
                 if (selected[index]) {
-                    weight = mWeights[index];
+                    weight = weights[index];
 
                     // convert homography into projective so it can be normalized
                     homography.asMatrix(h);
@@ -428,27 +417,20 @@ public class WeightedImageOfAbsoluteConicEstimator extends
                     a.setElementAt(counter, 5, h31 * h32);
 
                     // normalize row
-                    rowNorm = Math.sqrt(
-                            Math.pow(a.getElementAt(counter, 0), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 1), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 2), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 3), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 4), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 5), 2.0));
+                    rowNorm = Math.sqrt(Math.pow(a.getElementAt(counter, 0), 2.0)
+                            + Math.pow(a.getElementAt(counter, 1), 2.0)
+                            + Math.pow(a.getElementAt(counter, 2), 2.0)
+                            + Math.pow(a.getElementAt(counter, 3), 2.0)
+                            + Math.pow(a.getElementAt(counter, 4), 2.0)
+                            + Math.pow(a.getElementAt(counter, 5), 2.0));
                     factor = weight / rowNorm;
 
-                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *
-                            factor);
-                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *
-                            factor);
-                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *
-                            factor);
-                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) *
-                            factor);
-                    a.setElementAt(counter, 4, a.getElementAt(counter, 4) *
-                            factor);
-                    a.setElementAt(counter, 5, a.getElementAt(counter, 5) *
-                            factor);
+                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) * factor);
+                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) * factor);
+                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) * factor);
+                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) * factor);
+                    a.setElementAt(counter, 4, a.getElementAt(counter, 4) * factor);
+                    a.setElementAt(counter, 5, a.getElementAt(counter, 5) * factor);
 
                     counter++;
 
@@ -461,27 +443,20 @@ public class WeightedImageOfAbsoluteConicEstimator extends
                     a.setElementAt(counter, 5, Math.pow(h31, 2.0) - Math.pow(h32, 2.0));
 
                     // normalize row
-                    rowNorm = Math.sqrt(
-                            Math.pow(a.getElementAt(counter, 0), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 1), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 2), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 3), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 4), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 5), 2.0));
+                    rowNorm = Math.sqrt(Math.pow(a.getElementAt(counter, 0), 2.0)
+                            + Math.pow(a.getElementAt(counter, 1), 2.0)
+                            + Math.pow(a.getElementAt(counter, 2), 2.0)
+                            + Math.pow(a.getElementAt(counter, 3), 2.0)
+                            + Math.pow(a.getElementAt(counter, 4), 2.0)
+                            + Math.pow(a.getElementAt(counter, 5), 2.0));
                     factor = weight / rowNorm;
 
-                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *
-                            factor);
-                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *
-                            factor);
-                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *
-                            factor);
-                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) *
-                            factor);
-                    a.setElementAt(counter, 4, a.getElementAt(counter, 4) *
-                            factor);
-                    a.setElementAt(counter, 5, a.getElementAt(counter, 5) *
-                            factor);
+                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) * factor);
+                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) * factor);
+                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) * factor);
+                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) * factor);
+                    a.setElementAt(counter, 4, a.getElementAt(counter, 4) * factor);
+                    a.setElementAt(counter, 5, a.getElementAt(counter, 5) * factor);
 
                     counter++;
                 }
@@ -489,7 +464,7 @@ public class WeightedImageOfAbsoluteConicEstimator extends
                 index++;
             }
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(a);
+            final var decomposer = new SingularValueDecomposer(a);
             decomposer.decompose();
 
             if (decomposer.getNullity() > 1) {
@@ -499,19 +474,19 @@ public class WeightedImageOfAbsoluteConicEstimator extends
                 throw new ImageOfAbsoluteConicEstimatorException();
             }
 
-            final Matrix v = decomposer.getV();
+            final var v = decomposer.getV();
 
             // use last column of V as IAC vector
 
             // the last column of V contains IAC matrix (B), which is symmetric
             // and positive definite, ordered as follows: B11, B12, B22, B13,
             // B23, B33
-            final double b11 = v.getElementAt(0, 5);
-            final double b12 = v.getElementAt(1, 5);
-            final double b22 = v.getElementAt(2, 5);
-            final double b13 = v.getElementAt(3, 5);
-            final double b23 = v.getElementAt(4, 5);
-            final double b33 = v.getElementAt(5, 5);
+            final var b11 = v.getElementAt(0, 5);
+            final var b12 = v.getElementAt(1, 5);
+            final var b22 = v.getElementAt(2, 5);
+            final var b13 = v.getElementAt(3, 5);
+            final var b23 = v.getElementAt(4, 5);
+            final var b33 = v.getElementAt(5, 5);
 
             // A conic is defined as [A  B   D]
             //                       [B  C   E]
@@ -533,22 +508,19 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      *                                                translations where no additional data is really
      *                                                provided.
      */
-    private ImageOfAbsoluteConic estimateZeroSkewness()
-            throws ImageOfAbsoluteConicEstimatorException {
+    private ImageOfAbsoluteConic estimateZeroSkewness() throws ImageOfAbsoluteConicEstimatorException {
         try {
-            final int nHomographies = mHomographies.size();
+            final var nHomographies = homographies.size();
 
-            final WeightSelection selection = WeightSelection.selectWeights(mWeights,
-                    mSortWeights, mMaxHomographies);
-            final boolean[] selected = selection.getSelected();
+            final var selection = WeightSelection.selectWeights(weights, sortWeights, maxHomographies);
+            final var selected = selection.getSelected();
 
-            final Matrix a = new Matrix(2 * nHomographies, 5);
+            final var a = new Matrix(2 * nHomographies, 5);
 
-            int index = 0;
-            int counter = 0;
+            var index = 0;
+            var counter = 0;
             ProjectiveTransformation2D t = null;
-            final Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS,
-                    ProjectiveTransformation2D.HOM_COORDS);
+            final var h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, ProjectiveTransformation2D.HOM_COORDS);
             // elements ij of homography (last column is not required)
             double h11;
             double h12;
@@ -559,9 +531,9 @@ public class WeightedImageOfAbsoluteConicEstimator extends
             double rowNorm;
             double weight;
             double factor;
-            for (final Transformation2D homography : mHomographies) {
+            for (final var homography : homographies) {
                 if (selected[index]) {
-                    weight = mWeights[index];
+                    weight = weights[index];
 
                     // convert homography into projective so it can be normalized
                     homography.asMatrix(h);
@@ -594,24 +566,18 @@ public class WeightedImageOfAbsoluteConicEstimator extends
                     a.setElementAt(counter, 4, h31 * h32);
 
                     // normalize row
-                    rowNorm = Math.sqrt(
-                            Math.pow(a.getElementAt(counter, 0), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 1), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 2), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 3), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 4), 2.0));
+                    rowNorm = Math.sqrt(Math.pow(a.getElementAt(counter, 0), 2.0)
+                            + Math.pow(a.getElementAt(counter, 1), 2.0)
+                            + Math.pow(a.getElementAt(counter, 2), 2.0)
+                            + Math.pow(a.getElementAt(counter, 3), 2.0)
+                            + Math.pow(a.getElementAt(counter, 4), 2.0));
                     factor = weight / rowNorm;
 
-                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *
-                            factor);
-                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *
-                            factor);
-                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *
-                            factor);
-                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) *
-                            factor);
-                    a.setElementAt(counter, 4, a.getElementAt(counter, 4) *
-                            factor);
+                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) * factor);
+                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) * factor);
+                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) * factor);
+                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) * factor);
+                    a.setElementAt(counter, 4, a.getElementAt(counter, 4) * factor);
 
                     counter++;
 
@@ -623,24 +589,18 @@ public class WeightedImageOfAbsoluteConicEstimator extends
                     a.setElementAt(counter, 4, Math.pow(h31, 2.0) - Math.pow(h32, 2.0));
 
                     // normalize row
-                    rowNorm = Math.sqrt(
-                            Math.pow(a.getElementAt(counter, 0), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 1), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 2), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 3), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 4), 2.0));
+                    rowNorm = Math.sqrt(Math.pow(a.getElementAt(counter, 0), 2.0)
+                            + Math.pow(a.getElementAt(counter, 1), 2.0)
+                            + Math.pow(a.getElementAt(counter, 2), 2.0)
+                            + Math.pow(a.getElementAt(counter, 3), 2.0)
+                            + Math.pow(a.getElementAt(counter, 4), 2.0));
                     factor = weight / rowNorm;
 
-                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *
-                            factor);
-                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *
-                            factor);
-                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *
-                            factor);
-                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) *
-                            factor);
-                    a.setElementAt(counter, 4, a.getElementAt(counter, 4) *
-                            factor);
+                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) * factor);
+                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) * factor);
+                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) * factor);
+                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) * factor);
+                    a.setElementAt(counter, 4, a.getElementAt(counter, 4) * factor);
 
                     counter++;
                 }
@@ -648,7 +608,7 @@ public class WeightedImageOfAbsoluteConicEstimator extends
                 index++;
             }
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(a);
+            final var decomposer = new SingularValueDecomposer(a);
             decomposer.decompose();
 
             if (decomposer.getNullity() > 1) {
@@ -658,18 +618,18 @@ public class WeightedImageOfAbsoluteConicEstimator extends
                 throw new ImageOfAbsoluteConicEstimatorException();
             }
 
-            final Matrix v = decomposer.getV();
+            final var v = decomposer.getV();
 
             // use last column of V as IAC vector
 
             // the last column of V contains IAC matrix (B), which is symmetric
             // and positive definite, ordered as follows: B11, B12, B22, B13,
             // B23, B33
-            final double b11 = v.getElementAt(0, 4);
-            final double b22 = v.getElementAt(1, 4);
-            final double b13 = v.getElementAt(2, 4);
-            final double b23 = v.getElementAt(3, 4);
-            final double b33 = v.getElementAt(4, 4);
+            final var b11 = v.getElementAt(0, 4);
+            final var b22 = v.getElementAt(1, 4);
+            final var b13 = v.getElementAt(2, 4);
+            final var b23 = v.getElementAt(3, 4);
+            final var b33 = v.getElementAt(4, 4);
 
             // A conic is defined as [A  B   D]
             //                       [B  C   E]
@@ -693,23 +653,20 @@ public class WeightedImageOfAbsoluteConicEstimator extends
      *                                                translations where no additional data is really
      *                                                provided.
      */
-    private ImageOfAbsoluteConic estimatePrincipalPointAtOrigin()
-            throws ImageOfAbsoluteConicEstimatorException {
+    private ImageOfAbsoluteConic estimatePrincipalPointAtOrigin() throws ImageOfAbsoluteConicEstimatorException {
 
         try {
-            final int nHomographies = mHomographies.size();
+            final var nHomographies = homographies.size();
 
-            final WeightSelection selection = WeightSelection.selectWeights(mWeights,
-                    mSortWeights, mMaxHomographies);
-            final boolean[] selected = selection.getSelected();
+            final var selection = WeightSelection.selectWeights(weights, sortWeights, maxHomographies);
+            final var selected = selection.getSelected();
 
-            final Matrix a = new Matrix(2 * nHomographies, 4);
+            final var a = new Matrix(2 * nHomographies, 4);
 
-            int index = 0;
-            int counter = 0;
+            var index = 0;
+            var counter = 0;
             ProjectiveTransformation2D t = null;
-            final Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS,
-                    ProjectiveTransformation2D.HOM_COORDS);
+            final var h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, ProjectiveTransformation2D.HOM_COORDS);
             // elements ij of homography (last column is not required)
             double h11;
             double h12;
@@ -720,9 +677,9 @@ public class WeightedImageOfAbsoluteConicEstimator extends
             double rowNorm;
             double weight;
             double factor;
-            for (final Transformation2D homography : mHomographies) {
+            for (final var homography : homographies) {
                 if (selected[index]) {
-                    weight = mWeights[index];
+                    weight = weights[index];
 
                     // convert homography into projective so it can be normalized
                     homography.asMatrix(h);
@@ -754,21 +711,16 @@ public class WeightedImageOfAbsoluteConicEstimator extends
                     a.setElementAt(counter, 3, h31 * h32);
 
                     // normalize row
-                    rowNorm = Math.sqrt(
-                            Math.pow(a.getElementAt(counter, 0), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 1), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 2), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 3), 2.0));
+                    rowNorm = Math.sqrt(Math.pow(a.getElementAt(counter, 0), 2.0)
+                            + Math.pow(a.getElementAt(counter, 1), 2.0)
+                            + Math.pow(a.getElementAt(counter, 2), 2.0)
+                            + Math.pow(a.getElementAt(counter, 3), 2.0));
                     factor = weight / rowNorm;
 
-                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *
-                            factor);
-                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *
-                            factor);
-                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *
-                            factor);
-                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) *
-                            factor);
+                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) * factor);
+                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) * factor);
+                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) * factor);
+                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) * factor);
 
                     counter++;
 
@@ -779,21 +731,16 @@ public class WeightedImageOfAbsoluteConicEstimator extends
                     a.setElementAt(counter, 3, Math.pow(h31, 2.0) - Math.pow(h32, 2.0));
 
                     // normalize row
-                    rowNorm = Math.sqrt(
-                            Math.pow(a.getElementAt(counter, 0), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 1), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 2), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 3), 2.0));
+                    rowNorm = Math.sqrt(Math.pow(a.getElementAt(counter, 0), 2.0)
+                            + Math.pow(a.getElementAt(counter, 1), 2.0)
+                            + Math.pow(a.getElementAt(counter, 2), 2.0)
+                            + Math.pow(a.getElementAt(counter, 3), 2.0));
                     factor = weight / rowNorm;
 
-                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *
-                            factor);
-                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *
-                            factor);
-                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *
-                            factor);
-                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) *
-                            factor);
+                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) * factor);
+                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) * factor);
+                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) * factor);
+                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) * factor);
 
                     counter++;
                 }
@@ -801,7 +748,7 @@ public class WeightedImageOfAbsoluteConicEstimator extends
                 index++;
             }
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(a);
+            final var decomposer = new SingularValueDecomposer(a);
             decomposer.decompose();
 
             if (decomposer.getNullity() > 1) {
@@ -811,17 +758,17 @@ public class WeightedImageOfAbsoluteConicEstimator extends
                 throw new ImageOfAbsoluteConicEstimatorException();
             }
 
-            Matrix v = decomposer.getV();
+            var v = decomposer.getV();
 
             // use last column of V as IAC vector
 
             // the last column of V contains IAC matrix (B), which is symmetric
             // and positive definite, ordered as follows: B11, B12, B22, B13,
             // B23, B33
-            final double b11 = v.getElementAt(0, 3);
-            final double b12 = v.getElementAt(1, 3);
-            final double b22 = v.getElementAt(2, 3);
-            final double b33 = v.getElementAt(3, 3);
+            final var b11 = v.getElementAt(0, 3);
+            final var b12 = v.getElementAt(1, 3);
+            final var b22 = v.getElementAt(2, 3);
+            final var b33 = v.getElementAt(3, 3);
 
             // A conic is defined as [A  B   D]
             //                       [B  C   E]
@@ -850,19 +797,17 @@ public class WeightedImageOfAbsoluteConicEstimator extends
             throws ImageOfAbsoluteConicEstimatorException {
 
         try {
-            final int nHomographies = mHomographies.size();
+            final var nHomographies = homographies.size();
 
-            final WeightSelection selection = WeightSelection.selectWeights(mWeights,
-                    mSortWeights, mMaxHomographies);
-            final boolean[] selected = selection.getSelected();
+            final var selection = WeightSelection.selectWeights(weights, sortWeights, maxHomographies);
+            final var selected = selection.getSelected();
 
-            final Matrix a = new Matrix(2 * nHomographies, 3);
+            final var a = new Matrix(2 * nHomographies, 3);
 
-            int index = 0;
-            int counter = 0;
+            var index = 0;
+            var counter = 0;
             ProjectiveTransformation2D t = null;
-            final Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS,
-                    ProjectiveTransformation2D.HOM_COORDS);
+            final var h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, ProjectiveTransformation2D.HOM_COORDS);
             // elements ij of homography (last column is not required)
             double h11;
             double h12;
@@ -873,9 +818,9 @@ public class WeightedImageOfAbsoluteConicEstimator extends
             double rowNorm;
             double weight;
             double factor;
-            for (final Transformation2D homography : mHomographies) {
+            for (final var homography : homographies) {
                 if (selected[index]) {
-                    weight = mWeights[index];
+                    weight = weights[index];
 
                     // convert homography into projective so it can be normalized
                     homography.asMatrix(h);
@@ -906,18 +851,14 @@ public class WeightedImageOfAbsoluteConicEstimator extends
                     a.setElementAt(counter, 2, h31 * h32);
 
                     // normalize row
-                    rowNorm = Math.sqrt(
-                            Math.pow(a.getElementAt(counter, 0), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 1), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 2), 2.0));
+                    rowNorm = Math.sqrt(Math.pow(a.getElementAt(counter, 0), 2.0)
+                            + Math.pow(a.getElementAt(counter, 1), 2.0)
+                            + Math.pow(a.getElementAt(counter, 2), 2.0));
                     factor = weight / rowNorm;
 
-                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *
-                            factor);
-                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *
-                            factor);
-                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *
-                            factor);
+                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) * factor);
+                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) * factor);
+                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) * factor);
 
                     counter++;
 
@@ -927,18 +868,14 @@ public class WeightedImageOfAbsoluteConicEstimator extends
                     a.setElementAt(counter, 2, Math.pow(h31, 2.0) - Math.pow(h32, 2.0));
 
                     // normalize row
-                    rowNorm = Math.sqrt(
-                            Math.pow(a.getElementAt(counter, 0), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 1), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 2), 2.0));
+                    rowNorm = Math.sqrt(Math.pow(a.getElementAt(counter, 0), 2.0)
+                            + Math.pow(a.getElementAt(counter, 1), 2.0)
+                            + Math.pow(a.getElementAt(counter, 2), 2.0));
                     factor = weight / rowNorm;
 
-                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *
-                            factor);
-                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *
-                            factor);
-                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *
-                            factor);
+                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) * factor);
+                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) * factor);
+                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) * factor);
 
                     counter++;
                 }
@@ -946,7 +883,7 @@ public class WeightedImageOfAbsoluteConicEstimator extends
                 index++;
             }
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(a);
+            final var decomposer = new SingularValueDecomposer(a);
             decomposer.decompose();
 
             if (decomposer.getNullity() > 1) {
@@ -956,16 +893,16 @@ public class WeightedImageOfAbsoluteConicEstimator extends
                 throw new ImageOfAbsoluteConicEstimatorException();
             }
 
-            final Matrix v = decomposer.getV();
+            final var v = decomposer.getV();
 
             // use last column of V as IAC vector
 
             // the last column of V contains IAC matrix (B), which is symmetric
             // and positive definite, ordered as follows: B11, B12, B22, B13,
             // B23, B33
-            final double b11 = v.getElementAt(0, 2);
-            final double b22 = v.getElementAt(1, 2);
-            final double b33 = v.getElementAt(2, 2);
+            final var b11 = v.getElementAt(0, 2);
+            final var b22 = v.getElementAt(1, 2);
+            final var b33 = v.getElementAt(2, 2);
 
             // A conic is defined as [A  B   D]
             //                       [B  C   E]
@@ -993,20 +930,18 @@ public class WeightedImageOfAbsoluteConicEstimator extends
     private ImageOfAbsoluteConic estimateZeroSkewnessAndKnownFocalDistanceAspectRatio()
             throws ImageOfAbsoluteConicEstimatorException {
         try {
-            final int nHomographies = mHomographies.size();
+            final var nHomographies = homographies.size();
 
-            final WeightSelection selection = WeightSelection.selectWeights(mWeights,
-                    mSortWeights, mMaxHomographies);
-            final boolean[] selected = selection.getSelected();
+            final var selection = WeightSelection.selectWeights(weights, sortWeights, maxHomographies);
+            final var selected = selection.getSelected();
 
-            final Matrix a = new Matrix(2 * nHomographies, 4);
-            final double sqrAspectRatio = Math.pow(mFocalDistanceAspectRatio, 2.0);
+            final var a = new Matrix(2 * nHomographies, 4);
+            final var sqrAspectRatio = Math.pow(focalDistanceAspectRatio, 2.0);
 
-            int index = 0;
-            int counter = 0;
+            var index = 0;
+            var counter = 0;
             ProjectiveTransformation2D t = null;
-            final Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS,
-                    ProjectiveTransformation2D.HOM_COORDS);
+            final var h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, ProjectiveTransformation2D.HOM_COORDS);
             // elements ij of homography (last column is not required)
             double h11;
             double h12;
@@ -1017,9 +952,9 @@ public class WeightedImageOfAbsoluteConicEstimator extends
             double rowNorm;
             double weight;
             double factor;
-            for (final Transformation2D homography : mHomographies) {
+            for (final var homography : homographies) {
                 if (selected[index]) {
-                    weight = mWeights[index];
+                    weight = weights[index];
 
                     // convert homography into projective so it can be normalized
                     homography.asMatrix(h);
@@ -1045,54 +980,43 @@ public class WeightedImageOfAbsoluteConicEstimator extends
                     h32 = h.getElementAt(2, 1);
 
                     // fill first equation
-                    a.setElementAt(counter, 0, h11 * h12 +
-                            h21 * h22 / sqrAspectRatio);
+                    a.setElementAt(counter, 0, h11 * h12 + h21 * h22 / sqrAspectRatio);
                     a.setElementAt(counter, 1, h11 * h32 + h31 * h12);
                     a.setElementAt(counter, 2, h21 * h32 + h31 * h22);
                     a.setElementAt(counter, 3, h31 * h32);
 
                     // normalize row
-                    rowNorm = Math.sqrt(
-                            Math.pow(a.getElementAt(counter, 0), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 1), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 2), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 3), 2.0));
+                    rowNorm = Math.sqrt(Math.pow(a.getElementAt(counter, 0), 2.0)
+                            + Math.pow(a.getElementAt(counter, 1), 2.0)
+                            + Math.pow(a.getElementAt(counter, 2), 2.0)
+                            + Math.pow(a.getElementAt(counter, 3), 2.0));
                     factor = weight / rowNorm;
 
-                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *
-                            factor);
-                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *
-                            factor);
-                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *
-                            factor);
-                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) *
-                            factor);
+                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) * factor);
+                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) * factor);
+                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) * factor);
+                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) * factor);
 
                     counter++;
 
                     // fill second equation
-                    a.setElementAt(counter, 0, Math.pow(h11, 2.0) - Math.pow(h12, 2.0) +
-                            (Math.pow(h21, 2.0) - Math.pow(h22, 2.0)) / sqrAspectRatio);
+                    a.setElementAt(counter, 0, Math.pow(h11, 2.0) - Math.pow(h12, 2.0)
+                            + (Math.pow(h21, 2.0) - Math.pow(h22, 2.0)) / sqrAspectRatio);
                     a.setElementAt(counter, 1, 2.0 * (h11 * h31 - h12 * h32));
                     a.setElementAt(counter, 2, 2.0 * (h21 * h31 - h22 * h32));
                     a.setElementAt(counter, 3, Math.pow(h31, 2.0) - Math.pow(h32, 2.0));
 
                     // normalize row
-                    rowNorm = Math.sqrt(
-                            Math.pow(a.getElementAt(counter, 0), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 1), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 2), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 3), 2.0));
+                    rowNorm = Math.sqrt(Math.pow(a.getElementAt(counter, 0), 2.0)
+                            + Math.pow(a.getElementAt(counter, 1), 2.0)
+                            + Math.pow(a.getElementAt(counter, 2), 2.0)
+                            + Math.pow(a.getElementAt(counter, 3), 2.0));
                     factor = weight / rowNorm;
 
-                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *
-                            factor);
-                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *
-                            factor);
-                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) *
-                            factor);
-                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) *
-                            factor);
+                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) * factor);
+                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) * factor);
+                    a.setElementAt(counter, 2, a.getElementAt(counter, 2) * factor);
+                    a.setElementAt(counter, 3, a.getElementAt(counter, 3) * factor);
 
                     counter++;
                 }
@@ -1100,7 +1024,7 @@ public class WeightedImageOfAbsoluteConicEstimator extends
                 index++;
             }
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(a);
+            final var decomposer = new SingularValueDecomposer(a);
             decomposer.decompose();
 
             if (decomposer.getNullity() > 1) {
@@ -1110,19 +1034,19 @@ public class WeightedImageOfAbsoluteConicEstimator extends
                 throw new ImageOfAbsoluteConicEstimatorException();
             }
 
-            final Matrix v = decomposer.getV();
+            final var v = decomposer.getV();
 
             // use last column of V as IAC vector
 
             // the last column of V contains IAC matrix (B), which is symmetric
             // and positive definite, ordered as follows: B11, B12, B22, B13,
             // B23, B33
-            final double b11 = v.getElementAt(0, 3);
-            final double b13 = v.getElementAt(1, 3);
-            final double b23 = v.getElementAt(2, 3);
-            final double b33 = v.getElementAt(3, 3);
+            final var b11 = v.getElementAt(0, 3);
+            final var b13 = v.getElementAt(1, 3);
+            final var b23 = v.getElementAt(2, 3);
+            final var b33 = v.getElementAt(3, 3);
 
-            final double b22 = b11 / sqrAspectRatio;
+            final var b22 = b11 / sqrAspectRatio;
 
             // A conic is defined as [A  B   D]
             //                       [B  C   E]
@@ -1151,21 +1075,19 @@ public class WeightedImageOfAbsoluteConicEstimator extends
             throws ImageOfAbsoluteConicEstimatorException {
 
         try {
-            final int nHomographies = mHomographies.size();
+            final var nHomographies = homographies.size();
 
-            final WeightSelection selection = WeightSelection.selectWeights(mWeights,
-                    mSortWeights, mMaxHomographies);
-            final boolean[] selected = selection.getSelected();
+            final var selection = WeightSelection.selectWeights(weights, sortWeights, maxHomographies);
+            final var selected = selection.getSelected();
 
-            final Matrix a = new Matrix(2 * nHomographies, 2);
+            final var a = new Matrix(2 * nHomographies, 2);
 
-            final double sqrAspectRatio = Math.pow(mFocalDistanceAspectRatio, 2.0);
+            final var sqrAspectRatio = Math.pow(focalDistanceAspectRatio, 2.0);
 
-            int index = 0;
-            int counter = 0;
+            var index = 0;
+            var counter = 0;
             ProjectiveTransformation2D t = null;
-            final Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS,
-                    ProjectiveTransformation2D.HOM_COORDS);
+            final var h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, ProjectiveTransformation2D.HOM_COORDS);
             // elements ij of homography (last column is not required)
             double h11;
             double h12;
@@ -1176,9 +1098,9 @@ public class WeightedImageOfAbsoluteConicEstimator extends
             double rowNorm;
             double weight;
             double factor;
-            for (final Transformation2D homography : mHomographies) {
+            for (final var homography : homographies) {
                 if (selected[index]) {
-                    weight = mWeights[index];
+                    weight = weights[index];
 
                     // convert homography into projective so it can be normalized
                     homography.asMatrix(h);
@@ -1204,38 +1126,31 @@ public class WeightedImageOfAbsoluteConicEstimator extends
                     h32 = h.getElementAt(2, 1);
 
                     // fill first equation
-                    a.setElementAt(counter, 0, h11 * h12 +
-                            h21 * h22 / sqrAspectRatio);
+                    a.setElementAt(counter, 0, h11 * h12 + h21 * h22 / sqrAspectRatio);
                     a.setElementAt(counter, 1, h31 * h32);
 
                     // normalize row
-                    rowNorm = Math.sqrt(
-                            Math.pow(a.getElementAt(counter, 0), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 1), 2.0));
+                    rowNorm = Math.sqrt(Math.pow(a.getElementAt(counter, 0), 2.0)
+                            + Math.pow(a.getElementAt(counter, 1), 2.0));
                     factor = weight / rowNorm;
 
-                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *
-                            factor);
-                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *
-                            factor);
+                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) * factor);
+                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) * factor);
 
                     counter++;
 
                     // fill second equation
-                    a.setElementAt(counter, 0, Math.pow(h11, 2.0) - Math.pow(h12, 2.0) +
-                            (Math.pow(h21, 2.0) - Math.pow(h22, 2.0)) / sqrAspectRatio);
+                    a.setElementAt(counter, 0, Math.pow(h11, 2.0) - Math.pow(h12, 2.0)
+                            + (Math.pow(h21, 2.0) - Math.pow(h22, 2.0)) / sqrAspectRatio);
                     a.setElementAt(counter, 1, Math.pow(h31, 2.0) - Math.pow(h32, 2.0));
 
                     // normalize row
-                    rowNorm = Math.sqrt(
-                            Math.pow(a.getElementAt(counter, 0), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 1), 2.0));
+                    rowNorm = Math.sqrt(Math.pow(a.getElementAt(counter, 0), 2.0)
+                            + Math.pow(a.getElementAt(counter, 1), 2.0));
                     factor = weight / rowNorm;
 
-                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) *
-                            factor);
-                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) *
-                            factor);
+                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) * factor);
+                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) * factor);
 
                     counter++;
                 }
@@ -1243,7 +1158,7 @@ public class WeightedImageOfAbsoluteConicEstimator extends
                 index++;
             }
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(a);
+            final var decomposer = new SingularValueDecomposer(a);
             decomposer.decompose();
 
             if (decomposer.getNullity() > 1) {
@@ -1253,17 +1168,17 @@ public class WeightedImageOfAbsoluteConicEstimator extends
                 throw new ImageOfAbsoluteConicEstimatorException();
             }
 
-            final Matrix v = decomposer.getV();
+            final var v = decomposer.getV();
 
             // use last column of V as IAC vector
 
             // the last column of V contains IAC matrix (B), which is symmetric
             // and positive definite, ordered as follows: B11, B12, B22, B13,
             // B23, B33
-            final double b11 = v.getElementAt(0, 1);
-            final double b33 = v.getElementAt(1, 1);
+            final var b11 = v.getElementAt(0, 1);
+            final var b33 = v.getElementAt(1, 1);
 
-            final double b22 = b11 / sqrAspectRatio;
+            final var b22 = b11 / sqrAspectRatio;
 
             // A conic is defined as [A  B   D]
             //                       [B  C   E]

@@ -64,8 +64,7 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * Default robust estimator method to be used for radial distortion
      * estimation.
      */
-    public static final RobustEstimatorMethod DEFAULT_RADIAL_DISTORTION_METHOD =
-            RobustEstimatorMethod.PROSAC;
+    public static final RobustEstimatorMethod DEFAULT_RADIAL_DISTORTION_METHOD = RobustEstimatorMethod.PROSAC;
 
     /**
      * Indicates whether an initial radial distortion guess is estimated based
@@ -90,56 +89,56 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * Maximum number of iterations to be used when adjusting parameters using
      * Levenberg-Marquardt algorithm.
      */
-    private int mLevenbergMarquardtMaxIters;
+    private int levenbergMarquardtMaxIters;
 
     /**
      * Tolerance to assume that Levenberg-Marquardt algorithm has reached
      * convergence when adjusting parameters.
      */
-    private double mLevenbergMarquardtTolerance;
+    private double levenbergMarquardtTolerance;
 
     /**
      * Robust estimator method to be used for radial distortion estimation.
      */
-    private RobustEstimatorMethod mDistortionMethod;
+    private RobustEstimatorMethod distortionMethod;
 
     /**
      * Indicates whether an initial radial distortion guess is estimated based
      * on sampled data and estimated camera poses before starting the actual
      * radial distortion optimization process.
      */
-    private final boolean mEstimateInitialRadialDistortion;
+    private final boolean estimateInitialRadialDistortion;
 
     /**
      * Robust estimator of radial distortion.
      */
-    private RadialDistortionRobustEstimator mDistortionEstimator;
+    private RadialDistortionRobustEstimator distortionEstimator;
 
     /**
      * Listener for robust estimator of radial distortion.
      */
-    private RadialDistortionRobustEstimatorListener mDistortionEstimatorListener;
+    private RadialDistortionRobustEstimatorListener distortionEstimatorListener;
 
     /**
      * Indicates progress of radial distortion estimation.
      */
-    private float mRadialDistortionProgress;
+    private float radialDistortionProgress;
 
     /**
      * Indicates progress of Levenberg-Marquardt fitting.
      */
-    private float mFittingProgress;
+    private float fittingProgress;
 
     /**
      * Previously notified progress.
      */
-    private float mPreviousNotifiedProgress;
+    private float previousNotifiedProgress;
 
     /**
      * Array to keep a relation between each point at index i-th and the sample
      * (i.e. view) where it belongs to.
      */
-    private int[] mIndexToView;
+    private int[] indexToView;
 
 
     /**
@@ -147,10 +146,10 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      */
     public ErrorOptimizationCameraCalibrator() {
         super();
-        mLevenbergMarquardtMaxIters = DEFAULT_LEVENBERG_MARQUARDT_MAX_ITERS;
-        mLevenbergMarquardtTolerance = DEFAULT_LEVENBERG_MARQUARDT_TOLERANCE;
+        levenbergMarquardtMaxIters = DEFAULT_LEVENBERG_MARQUARDT_MAX_ITERS;
+        levenbergMarquardtTolerance = DEFAULT_LEVENBERG_MARQUARDT_TOLERANCE;
         internalSetDistortionMethod(DEFAULT_RADIAL_DISTORTION_METHOD);
-        mEstimateInitialRadialDistortion = DEFAULT_ESTIMATE_INITIAL_RADIAL_DISTORTION;
+        estimateInitialRadialDistortion = DEFAULT_ESTIMATE_INITIAL_RADIAL_DISTORTION;
     }
 
     /**
@@ -160,13 +159,12 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * @param samples samples of the pattern taken with the camera to calibrate.
      * @throws IllegalArgumentException if not enough samples are provided.
      */
-    public ErrorOptimizationCameraCalibrator(final Pattern2D pattern,
-                                             final List<CameraCalibratorSample> samples) {
+    public ErrorOptimizationCameraCalibrator(final Pattern2D pattern, final List<CameraCalibratorSample> samples) {
         super(pattern, samples);
-        mLevenbergMarquardtMaxIters = DEFAULT_LEVENBERG_MARQUARDT_MAX_ITERS;
-        mLevenbergMarquardtTolerance = DEFAULT_LEVENBERG_MARQUARDT_TOLERANCE;
+        levenbergMarquardtMaxIters = DEFAULT_LEVENBERG_MARQUARDT_MAX_ITERS;
+        levenbergMarquardtTolerance = DEFAULT_LEVENBERG_MARQUARDT_TOLERANCE;
         internalSetDistortionMethod(DEFAULT_RADIAL_DISTORTION_METHOD);
-        mEstimateInitialRadialDistortion = DEFAULT_ESTIMATE_INITIAL_RADIAL_DISTORTION;
+        estimateInitialRadialDistortion = DEFAULT_ESTIMATE_INITIAL_RADIAL_DISTORTION;
     }
 
     /**
@@ -178,14 +176,13 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * @throws IllegalArgumentException if not enough samples are provided or
      *                                  both samples and quality scores do not have the same size.
      */
-    public ErrorOptimizationCameraCalibrator(final Pattern2D pattern,
-                                             final List<CameraCalibratorSample> samples,
-                                             final double[] samplesQualityScores) {
+    public ErrorOptimizationCameraCalibrator(
+            final Pattern2D pattern, final List<CameraCalibratorSample> samples, final double[] samplesQualityScores) {
         super(pattern, samples, samplesQualityScores);
-        mLevenbergMarquardtMaxIters = DEFAULT_LEVENBERG_MARQUARDT_MAX_ITERS;
-        mLevenbergMarquardtTolerance = DEFAULT_LEVENBERG_MARQUARDT_TOLERANCE;
+        levenbergMarquardtMaxIters = DEFAULT_LEVENBERG_MARQUARDT_MAX_ITERS;
+        levenbergMarquardtTolerance = DEFAULT_LEVENBERG_MARQUARDT_TOLERANCE;
         internalSetDistortionMethod(DEFAULT_RADIAL_DISTORTION_METHOD);
-        mEstimateInitialRadialDistortion = DEFAULT_ESTIMATE_INITIAL_RADIAL_DISTORTION;
+        estimateInitialRadialDistortion = DEFAULT_ESTIMATE_INITIAL_RADIAL_DISTORTION;
     }
 
     /**
@@ -196,7 +193,7 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * using Levenberg-Marquardt algorithm.
      */
     public int getLevenbergMarquardtMaxIters() {
-        return mLevenbergMarquardtMaxIters;
+        return levenbergMarquardtMaxIters;
     }
 
     /**
@@ -208,15 +205,14 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * @throws IllegalArgumentException if provided value is zero or negative.
      * @throws LockedException          if this instance is locked.
      */
-    public void setLevenbergMarquardtMaxIters(final int levenbergMarquardtMaxIters)
-            throws LockedException {
+    public void setLevenbergMarquardtMaxIters(final int levenbergMarquardtMaxIters) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
         if (levenbergMarquardtMaxIters <= 0) {
             throw new IllegalArgumentException();
         }
-        mLevenbergMarquardtMaxIters = levenbergMarquardtMaxIters;
+        this.levenbergMarquardtMaxIters = levenbergMarquardtMaxIters;
     }
 
     /**
@@ -227,7 +223,7 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * reached convergence when adjusting parameters.
      */
     public double getLevenbergMarquardtTolerance() {
-        return mLevenbergMarquardtTolerance;
+        return levenbergMarquardtTolerance;
     }
 
     /**
@@ -240,15 +236,14 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * @throws IllegalArgumentException if provided value is zero or negative.
      * @throws LockedException          if this instance is locked.
      */
-    public void setLevenbergMarquardtTolerance(
-            final double levenbergMarquardtTolerance) throws LockedException {
+    public void setLevenbergMarquardtTolerance(final double levenbergMarquardtTolerance) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
         if (levenbergMarquardtTolerance <= 0.0) {
             throw new IllegalArgumentException();
         }
-        mLevenbergMarquardtTolerance = levenbergMarquardtTolerance;
+        this.levenbergMarquardtTolerance = levenbergMarquardtTolerance;
     }
 
     /**
@@ -259,7 +254,7 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * estimation.
      */
     public RobustEstimatorMethod getDistortionMethod() {
-        return mDistortionMethod;
+        return distortionMethod;
     }
 
     /**
@@ -270,9 +265,7 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      *                         radial distortion estimation.
      * @throws LockedException if this instance is locked.
      */
-    public void setDistortionMethod(
-            final RobustEstimatorMethod distortionMethod)
-            throws LockedException {
+    public void setDistortionMethod(final RobustEstimatorMethod distortionMethod) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -288,7 +281,7 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * @return radial distortion estimator.
      */
     public RadialDistortionRobustEstimator getDistortionEstimator() {
-        return mDistortionEstimator;
+        return distortionEstimator;
     }
 
     /**
@@ -299,19 +292,13 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * @return threshold to robustly estimate radial distortion.
      */
     public double getDistortionEstimatorThreshold() {
-        switch (mDistortionEstimator.getMethod()) {
-            case LMEDS:
-                return ((LMedSRadialDistortionRobustEstimator) mDistortionEstimator).getStopThreshold();
-            case MSAC:
-                return ((MSACRadialDistortionRobustEstimator) mDistortionEstimator).getThreshold();
-            case PROSAC:
-                return ((PROSACRadialDistortionRobustEstimator) mDistortionEstimator).getThreshold();
-            case PROMEDS:
-                return ((PROMedSRadialDistortionRobustEstimator) mDistortionEstimator).getStopThreshold();
-            case RANSAC:
-            default:
-                return ((RANSACRadialDistortionRobustEstimator) mDistortionEstimator).getThreshold();
-        }
+        return switch (distortionEstimator.getMethod()) {
+            case LMEDS -> ((LMedSRadialDistortionRobustEstimator) distortionEstimator).getStopThreshold();
+            case MSAC -> ((MSACRadialDistortionRobustEstimator) distortionEstimator).getThreshold();
+            case PROSAC -> ((PROSACRadialDistortionRobustEstimator) distortionEstimator).getThreshold();
+            case PROMEDS -> ((PROMedSRadialDistortionRobustEstimator) distortionEstimator).getStopThreshold();
+            default -> ((RANSACRadialDistortionRobustEstimator) distortionEstimator).getThreshold();
+        };
     }
 
     /**
@@ -324,33 +311,31 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * @throws LockedException          if this instance is locked.
      * @throws IllegalArgumentException if provided value is zero or negative.
      */
-    public void setDistortionEstimatorThreshold(
-            final double distortionEstimatorThreshold) throws LockedException {
+    public void setDistortionEstimatorThreshold(final double distortionEstimatorThreshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
 
-        switch (mDistortionEstimator.getMethod()) {
+        switch (distortionEstimator.getMethod()) {
             case LMEDS:
-                ((LMedSRadialDistortionRobustEstimator) mDistortionEstimator).
-                        setStopThreshold(distortionEstimatorThreshold);
+                ((LMedSRadialDistortionRobustEstimator) distortionEstimator).setStopThreshold(
+                        distortionEstimatorThreshold);
                 break;
             case MSAC:
-                ((MSACRadialDistortionRobustEstimator) mDistortionEstimator).
-                        setThreshold(distortionEstimatorThreshold);
+                ((MSACRadialDistortionRobustEstimator) distortionEstimator).setThreshold(distortionEstimatorThreshold);
                 break;
             case PROSAC:
-                ((PROSACRadialDistortionRobustEstimator) mDistortionEstimator).
-                        setThreshold(distortionEstimatorThreshold);
+                ((PROSACRadialDistortionRobustEstimator) distortionEstimator).setThreshold(
+                        distortionEstimatorThreshold);
                 break;
             case PROMEDS:
-                ((PROMedSRadialDistortionRobustEstimator) mDistortionEstimator).
-                        setStopThreshold(distortionEstimatorThreshold);
+                ((PROMedSRadialDistortionRobustEstimator) distortionEstimator).setStopThreshold(
+                        distortionEstimatorThreshold);
                 break;
             case RANSAC:
             default:
-                ((RANSACRadialDistortionRobustEstimator) mDistortionEstimator).
-                        setThreshold(distortionEstimatorThreshold);
+                ((RANSACRadialDistortionRobustEstimator) distortionEstimator).setThreshold(
+                        distortionEstimatorThreshold);
                 break;
         }
     }
@@ -371,7 +356,7 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * @return confidence to robustly estimate homographies.
      */
     public double getDistortionEstimatorConfidence() {
-        return mDistortionEstimator.getConfidence();
+        return distortionEstimator.getConfidence();
     }
 
     /**
@@ -393,13 +378,12 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * @throws IllegalArgumentException if provided value is not between 0.0 and
      *                                  1.0.
      */
-    public void setDistortionEstimatorConfidence(
-            final double distortionEstimatorConfidence) throws LockedException {
+    public void setDistortionEstimatorConfidence(final double distortionEstimatorConfidence) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
 
-        mDistortionEstimator.setConfidence(distortionEstimatorConfidence);
+        distortionEstimator.setConfidence(distortionEstimatorConfidence);
     }
 
     /**
@@ -414,7 +398,7 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * homographies.
      */
     public int getDistortionEstimatorMaxIterations() {
-        return mDistortionEstimator.getMaxIterations();
+        return distortionEstimator.getMaxIterations();
     }
 
     /**
@@ -430,13 +414,12 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * @throws LockedException          if this instance is locked.
      * @throws IllegalArgumentException if provided value is negative or zero.
      */
-    public void setDistortionEstimatorMaxIterations(
-            final int distortionEstimatorMaxIterations) throws LockedException {
+    public void setDistortionEstimatorMaxIterations(final int distortionEstimatorMaxIterations) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
 
-        mDistortionEstimator.setMaxIterations(distortionEstimatorMaxIterations);
+        distortionEstimator.setMaxIterations(distortionEstimatorMaxIterations);
     }
 
     /**
@@ -454,8 +437,7 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      *                              start camera calibration.
      */
     @Override
-    public void calibrate() throws CalibrationException, LockedException,
-            NotReadyException {
+    public void calibrate() throws CalibrationException, LockedException, NotReadyException {
 
         if (isLocked()) {
             throw new LockedException();
@@ -464,35 +446,34 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
             throw new NotReadyException();
         }
 
-        mLocked = true;
+        locked = true;
 
-        mHomographyQualityScoresRequired =
-                (mDistortionEstimator.getMethod() == RobustEstimatorMethod.PROSAC ||
-                        mDistortionEstimator.getMethod() == RobustEstimatorMethod.PROMEDS);
+        homographyQualityScoresRequired = (distortionEstimator.getMethod() == RobustEstimatorMethod.PROSAC
+                || distortionEstimator.getMethod() == RobustEstimatorMethod.PROMEDS);
 
-        if (mListener != null) {
-            mListener.onCalibrateStart(this);
+        if (listener != null) {
+            listener.onCalibrateStart(this);
         }
 
         reset();
-        mRadialDistortionProgress = mFittingProgress = mPreviousNotifiedProgress = 0.0f;
+        radialDistortionProgress = fittingProgress = previousNotifiedProgress = 0.0f;
 
-        final List<Point2D> idealFallbackPatternMarkers = mPattern.getIdealPoints();
+        final var idealFallbackPatternMarkers = pattern.getIdealPoints();
 
         try {
             // estimate intrinsic parameters
             estimateIntrinsicParameters(idealFallbackPatternMarkers);
 
-            if (mEstimateRadialDistortion) {
+            if (estimateRadialDistortion) {
                 // estimate radial distortion
                 estimateRadialDistortion(idealFallbackPatternMarkers);
             }
 
-            if (mListener != null) {
-                mListener.onCalibrateEnd(this);
+            if (listener != null) {
+                listener.onCalibrateEnd(this);
             }
         } finally {
-            mLocked = false;
+            locked = false;
         }
     }
 
@@ -512,15 +493,15 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
     @Override
     protected void notifyProgress() {
         final float progress;
-        if (mEstimateInitialRadialDistortion) {
-            progress = (mRadialDistortionProgress + mIntrinsicProgress + mFittingProgress) / 3.0f;
+        if (estimateInitialRadialDistortion) {
+            progress = (radialDistortionProgress + intrinsicProgress + fittingProgress) / 3.0f;
         } else {
-            progress = 0.5f * mIntrinsicProgress + 0.5f * mFittingProgress;
+            progress = 0.5f * intrinsicProgress + 0.5f * fittingProgress;
         }
 
-        if (mListener != null && (progress - mPreviousNotifiedProgress) > mProgressDelta) {
-            mListener.onCalibrateProgressChange(this, progress);
-            mPreviousNotifiedProgress = progress;
+        if (listener != null && (progress - previousNotifiedProgress) > progressDelta) {
+            listener.onCalibrateProgressChange(this, progress);
+            previousNotifiedProgress = progress;
         }
     }
 
@@ -541,48 +522,46 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * their corresponding distortion.
      * @throws CalibrationException if anything fails.
      */
-    protected double estimateRadialDistortion(
-            final List<Point2D> idealFallbackPatternMarkers)
+    protected double estimateRadialDistortion(final List<Point2D> idealFallbackPatternMarkers)
             throws CalibrationException {
 
-        mRadialDistortionProgress = 0.0f;
+        radialDistortionProgress = 0.0f;
 
-        if (mListener != null) {
-            mListener.onRadialDistortionEstimationStarts(this);
+        if (listener != null) {
+            listener.onRadialDistortionEstimationStarts(this);
         }
 
         // compute total points for samples where homography could be estimated
-        int totalPoints = 0;
-        int totalHomographies = 0;
-        for (final CameraCalibratorSample sample : mSamples) {
+        var totalPoints = 0;
+        var totalHomographies = 0;
+        for (final var sample : samples) {
             if (sample.getHomography() != null) {
                 totalPoints += sample.getSampledMarkers().size();
                 totalHomographies++;
             }
         }
 
-        mIndexToView = new int[totalPoints];
+        indexToView = new int[totalPoints];
 
-        if (mEstimateInitialRadialDistortion) {
-            final List<Point2D> distortedPoints = new ArrayList<>();
-            final List<Point2D> undistortedPoints = new ArrayList<>();
+        if (estimateInitialRadialDistortion) {
+            final var distortedPoints = new ArrayList<Point2D>();
+            final var undistortedPoints = new ArrayList<Point2D>();
 
             double[] qualityScores = null;
-            if (mDistortionMethod == RobustEstimatorMethod.PROSAC ||
-                    mDistortionMethod == RobustEstimatorMethod.PROMEDS) {
+            if (distortionMethod == RobustEstimatorMethod.PROSAC || distortionMethod == RobustEstimatorMethod.PROMEDS) {
                 qualityScores = new double[totalPoints];
             }
 
             // estimate camera pose for each sample
-            int pointCounter = 0;
-            int sampleCounter = 0;
-            for (final CameraCalibratorSample sample : mSamples) {
+            var pointCounter = 0;
+            var sampleCounter = 0;
+            for (final var sample : samples) {
                 if (sample.getHomography() == null) {
                     // homography computation failed, so we cannot compute camera
                     // pose for this sample
                     continue;
                 }
-                sample.computeCameraPose(mIntrinsic);
+                sample.computeCameraPose(intrinsic);
 
                 // transform ideal pattern markers using estimated homography
                 final List<Point2D> idealPatternMarkers;
@@ -594,27 +573,27 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
                     idealPatternMarkers = idealFallbackPatternMarkers;
                 }
 
-                final List<Point2D> transformedIdealPatternMarkers =
-                        sample.getHomography().transformPointsAndReturnNew(idealPatternMarkers);
+                final var transformedIdealPatternMarkers = sample.getHomography().transformPointsAndReturnNew(
+                        idealPatternMarkers);
 
                 distortedPoints.addAll(sample.getSampledMarkers());
                 undistortedPoints.addAll(transformedIdealPatternMarkers);
 
-                final int markersSize = transformedIdealPatternMarkers.size();
+                final var markersSize = transformedIdealPatternMarkers.size();
 
                 // fills array indicating to which sample (i.e. view) each point
                 // belongs to
-                Arrays.fill(mIndexToView, pointCounter, pointCounter + markersSize, sampleCounter);
+                Arrays.fill(indexToView, pointCounter, pointCounter + markersSize, sampleCounter);
 
                 // if distortion estimator requires quality scores, set them
-                if (qualityScores != null && (mDistortionMethod == RobustEstimatorMethod.PROSAC ||
-                        mDistortionMethod == RobustEstimatorMethod.PROMEDS)) {
+                if (qualityScores != null && (distortionMethod == RobustEstimatorMethod.PROSAC
+                        || distortionMethod == RobustEstimatorMethod.PROMEDS)) {
 
-                    final double sampleQuality = mHomographyQualityScores[sampleCounter];
+                    final var sampleQuality = homographyQualityScores[sampleCounter];
 
                     // assign to all points (markers) in the sample the same sample
                     // quality
-                    for (int i = pointCounter; i < pointCounter + markersSize; i++) {
+                    for (var i = pointCounter; i < pointCounter + markersSize; i++) {
                         qualityScores[i] = sampleQuality;
                     }
 
@@ -625,28 +604,28 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
 
             // estimate radial distortion
             try {
-                mDistortionEstimator.setIntrinsic(mIntrinsic);
-                mDistortionEstimator.setPoints(distortedPoints, undistortedPoints);
-                mDistortionEstimator.setQualityScores(qualityScores);
+                distortionEstimator.setIntrinsic(intrinsic);
+                distortionEstimator.setPoints(distortedPoints, undistortedPoints);
+                distortionEstimator.setQualityScores(qualityScores);
 
-                mDistortion = mDistortionEstimator.estimate();
+                distortion = distortionEstimator.estimate();
             } catch (final Exception e) {
                 throw new CalibrationException(e);
             }
         } else {
 
             // estimate camera pose for each sample
-            for (final CameraCalibratorSample sample : mSamples) {
+            for (final var sample : samples) {
                 if (sample.getHomography() == null) {
                     // homography computation failed, so we cannot compute camera
                     // pose for this sample
                     continue;
                 }
-                sample.computeCameraPose(mIntrinsic);
+                sample.computeCameraPose(intrinsic);
             }
 
             // set initial radial distortion as if there was no distortion
-            mDistortion = new RadialDistortion(0.0, 0.0);
+            distortion = new RadialDistortion(0.0, 0.0);
         }
 
         // optimize cost function to refine camera poses and radial distortion
@@ -654,99 +633,96 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
         try {
             // compute initial parameters to fit a function using
             // Levenberg-Marquardt
-            final double[] initParams = new double[numParameters(totalHomographies)];
+            final var initParams = new double[numParameters(totalHomographies)];
             paramsFromData(initParams);
             // compute x data (input points)
-            final Matrix x = dataXToMatrix(idealFallbackPatternMarkers);
+            final var x = dataXToMatrix(idealFallbackPatternMarkers);
             // compute y data (output points)
-            final Matrix y = dataYToMatrix();
+            final var y = dataYToMatrix();
 
             // Evaluator for Levenberg-Marquardt fitter. This is in charge of
             // evaluating function to be fitted using current parameters and
             // also in charge of estimating function Jacobian for each point
             // where the function is evaluated
-            final LevenbergMarquardtMultiVariateFunctionEvaluator evaluator =
-                    new LevenbergMarquardtMultiVariateFunctionEvaluator() {
+            final var evaluator = new LevenbergMarquardtMultiVariateFunctionEvaluator() {
 
-                        // position of current point being evaluated
-                        private int mI;
+                // position of current point being evaluated
+                private int i;
 
-                        // current point being evaluated
-                        private double[] mPoint;
+                // current point being evaluated
+                private double[] point;
 
-                        // Instance in charge of estimating Jacobian of function being
-                        // fitted at current point and for provided parameters. Jacobian
-                        // is computed by keeping point constant and computing the
-                        // partial derivatives for each parameter
-                        private final JacobianEstimator mJacobianEstimator = new JacobianEstimator(
-                                new MultiVariateFunctionEvaluatorListener() {
+                // Instance in charge of estimating Jacobian of function being
+                // fitted at current point and for provided parameters. Jacobian
+                // is computed by keeping point constant and computing the
+                // partial derivatives for each parameter
+                private final JacobianEstimator jacobianEstimator = new JacobianEstimator(
+                        new MultiVariateFunctionEvaluatorListener() {
 
-                                    // We provide params so that jacobian is computed as the
-                                    // partial derivatives respect parameters
-                                    @Override
-                                    public void evaluate(final double[] params, final double[] result) {
-                                        evaluateFunction(mI, mPoint, params, result);
-                                    }
+                            // We provide params so that jacobian is computed as the
+                            // partial derivatives respect parameters
+                            @Override
+                            public void evaluate(final double[] params, final double[] result) {
+                                evaluateFunction(i, point, params, result);
+                            }
 
-                                    // Function being fitted is multi variate returning 2D points
-                                    // (having horizontal and vertical inhomogeneous coordinates)
-                                    @Override
-                                    public int getNumberOfVariables() {
-                                        return Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH;
-                                    }
-                                });
+                            // Function being fitted is multi variate returning 2D points
+                            // (having horizontal and vertical inhomogeneous coordinates)
+                            @Override
+                            public int getNumberOfVariables() {
+                                return Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH;
+                            }
+                        });
 
-                        // Function being fitted has as input data 2D points (having
-                        // horizontal and vertical inhomogeneous coordinates)
-                        @Override
-                        public int getNumberOfDimensions() {
-                            return Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH;
-                        }
+                // Function being fitted has as input data 2D points (having
+                // horizontal and vertical inhomogeneous coordinates)
+                @Override
+                public int getNumberOfDimensions() {
+                    return Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH;
+                }
 
-                        // Function being fitted is multi variate returning 2D points
-                        // (having horizontal and vertical inhomogeneous coordinates)
-                        @Override
-                        public int getNumberOfVariables() {
-                            return Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH;
-                        }
+                // Function being fitted is multi variate returning 2D points
+                // (having horizontal and vertical inhomogeneous coordinates)
+                @Override
+                public int getNumberOfVariables() {
+                    return Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH;
+                }
 
-                        // Creates array where parameters are stored. This array is
-                        // initialized with the parameter values initially used by the
-                        // Levenberg-Marquardt algorithm
-                        @Override
-                        public double[] createInitialParametersArray() {
-                            return initParams;
-                        }
+                // Creates array where parameters are stored. This array is
+                // initialized with the parameter values initially used by the
+                // Levenberg-Marquardt algorithm
+                @Override
+                public double[] createInitialParametersArray() {
+                    return initParams;
+                }
 
-                        // Evaluates function to be fitted and computes Jacobian
-                        @Override
-                        public void evaluate(final int i, final double[] point, final double[] result,
-                                             final double[] params, final Matrix jacobian)
-                                throws EvaluationException {
-                            mI = i;
-                            mPoint = point;
-                            evaluateFunction(mI, mPoint, params, result);
-                            mJacobianEstimator.jacobian(params, jacobian);
-                        }
-                    };
+                // Evaluates function to be fitted and computes Jacobian
+                @Override
+                public void evaluate(final int i, final double[] point, final double[] result, final double[] params,
+                                     final Matrix jacobian) throws EvaluationException {
+                    this.i = i;
+                    this.point = point;
+                    evaluateFunction(this.i, this.point, params, result);
+                    jacobianEstimator.jacobian(params, jacobian);
+                }
+            };
 
             // fits function
-            final double sigma = 1.0;
-            final LevenbergMarquardtMultiVariateFitter fitter =
-                    new LevenbergMarquardtMultiVariateFitter(evaluator, x, y, sigma);
-            fitter.setItmax(mLevenbergMarquardtMaxIters);
-            fitter.setTol(mLevenbergMarquardtTolerance);
+            final var sigma = 1.0;
+            final var fitter = new LevenbergMarquardtMultiVariateFitter(evaluator, x, y, sigma);
+            fitter.setItmax(levenbergMarquardtMaxIters);
+            fitter.setTol(levenbergMarquardtTolerance);
 
-            final double[] estimatedParams = fitter.getA();
+            final var estimatedParams = fitter.getA();
             // updates camera poses from estimated parameters
             dataFromParams(estimatedParams);
 
             // computes re-projection errors between sampled and ideal data using
             // fitted parameters
-            final double error = computeReprojectionError(idealFallbackPatternMarkers);
+            final var error = computeReprojectionError(idealFallbackPatternMarkers);
 
-            if (mListener != null) {
-                mListener.onRadialDistortionEstimationEnds(this, mDistortion);
+            if (listener != null) {
+                listener.onRadialDistortionEstimationEnds(this, distortion);
             }
 
             return error;
@@ -761,45 +737,41 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * is changed for the distortion estimator.
      */
     protected void refreshDistortionEstimatorListener() {
-        if (mDistortionEstimatorListener == null) {
-            mDistortionEstimatorListener = new RadialDistortionRobustEstimatorListener() {
+        if (distortionEstimatorListener == null) {
+            distortionEstimatorListener = new RadialDistortionRobustEstimatorListener() {
 
                 @Override
-                public void onEstimateStart(
-                        final RadialDistortionRobustEstimator estimator) {
-                    mRadialDistortionProgress = 0.0f;
+                public void onEstimateStart(final RadialDistortionRobustEstimator estimator) {
+                    radialDistortionProgress = 0.0f;
                     notifyProgress();
                 }
 
                 @Override
-                public void onEstimateEnd(
-                        final RadialDistortionRobustEstimator estimator) {
-                    mRadialDistortionProgress = 1.0f;
+                public void onEstimateEnd(final RadialDistortionRobustEstimator estimator) {
+                    radialDistortionProgress = 1.0f;
                     notifyProgress();
                 }
 
                 @Override
                 public void onEstimateNextIteration(
-                        final RadialDistortionRobustEstimator estimator,
-                        final int iteration) {
+                        final RadialDistortionRobustEstimator estimator, final int iteration) {
                     // not used
                 }
 
                 @Override
                 public void onEstimateProgressChange(
-                        final RadialDistortionRobustEstimator estimator,
-                        final float progress) {
-                    mRadialDistortionProgress = progress;
+                        final RadialDistortionRobustEstimator estimator, final float progress) {
+                    radialDistortionProgress = progress;
                     notifyProgress();
                 }
             };
         }
 
         try {
-            mDistortionEstimator.setListener(mDistortionEstimatorListener);
+            distortionEstimator.setListener(distortionEstimatorListener);
         } catch (final LockedException e) {
-            Logger.getLogger(AlternatingCameraCalibrator.class.getName()).log(
-                    Level.WARNING, "Could not set radial distortion estimator listener", e);
+            Logger.getLogger(AlternatingCameraCalibrator.class.getName()).log(Level.WARNING,
+                    "Could not set radial distortion estimator listener", e);
         }
     }
 
@@ -813,28 +785,27 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * @param params parameters to evaluate function.
      * @param result result of evaluation.
      */
-    private void evaluateFunction(final int i, final double[] point, final double[] params,
-                                  final double[] result) {
+    private void evaluateFunction(final int i, final double[] point, final double[] params, final double[] result) {
         // set data from current params (updates camera poses for each sample -
         // i.e. view)
         dataFromParams(params);
 
-        final int numView = mIndexToView[i];
+        final var numView = indexToView[i];
 
         // obtain camera pose for numView
-        final CameraCalibratorSample sample = mSamples.get(numView);
-        final PinholeCamera camera = sample.getCamera();
+        final var sample = samples.get(numView);
+        final var camera = sample.getCamera();
 
-        final Point3D idealPoint3D = new HomogeneousPoint3D();
+        final var idealPoint3D = new HomogeneousPoint3D();
         // ideal 3D point is the marker point assumed to be at plane z = 0
         idealPoint3D.setInhomogeneousCoordinates(point[0], point[1], 0.0);
 
         // project ideal point using estimated camera
-        final Point2D undistortedPoint = camera.project(idealPoint3D);
+        final var undistortedPoint = camera.project(idealPoint3D);
 
         // add distortion
-        final Point2D distortedPoint = new HomogeneousPoint2D();
-        mDistortion.distort(undistortedPoint, distortedPoint);
+        final var distortedPoint = new HomogeneousPoint2D();
+        distortion.distort(undistortedPoint, distortedPoint);
 
         result[0] = distortedPoint.getInhomX();
         result[1] = distortedPoint.getInhomY();
@@ -851,10 +822,9 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * @return a matrix.
      * @throws WrongSizeException if no undistorted points are available.
      */
-    private Matrix dataXToMatrix(final List<Point2D> idealFallbackPatternMarkers)
-            throws WrongSizeException {
-        final List<Point2D> idealPoints = new ArrayList<>();
-        for (final CameraCalibratorSample sample : mSamples) {
+    private Matrix dataXToMatrix(final List<Point2D> idealFallbackPatternMarkers) throws WrongSizeException {
+        final var idealPoints = new ArrayList<Point2D>();
+        for (final var sample : samples) {
             final List<Point2D> idealPatternMarkers;
             if (sample.getPattern() != null) {
                 // use points generated by pattern in sample
@@ -867,11 +837,11 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
             idealPoints.addAll(idealPatternMarkers);
         }
 
-        final int nPoints = idealPoints.size();
+        final var nPoints = idealPoints.size();
 
-        final Matrix m = new Matrix(nPoints, Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH);
-        int i = 0;
-        for (final CameraCalibratorSample sample : mSamples) {
+        final var m = new Matrix(nPoints, Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH);
+        var i = 0;
+        for (final var sample : samples) {
             final List<Point2D> idealPatternMarkers;
             if (sample.getPattern() != null) {
                 // use points generated by pattern in sample
@@ -881,7 +851,7 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
                 idealPatternMarkers = idealFallbackPatternMarkers;
             }
 
-            for (final Point2D point : idealPatternMarkers) {
+            for (final var point : idealPatternMarkers) {
                 m.setElementAt(i, 0, point.getInhomX());
                 m.setElementAt(i, 1, point.getInhomY());
                 i++;
@@ -898,17 +868,16 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * @return a matrix.
      * @throws WrongSizeException if no sampled points are available.
      */
-    private Matrix dataYToMatrix()
-            throws WrongSizeException {
-        int nPoints = 0;
-        for (final CameraCalibratorSample sample : mSamples) {
+    private Matrix dataYToMatrix() throws WrongSizeException {
+        var nPoints = 0;
+        for (final var sample : samples) {
             nPoints += sample.getSampledMarkers().size();
         }
 
-        final Matrix m = new Matrix(nPoints, Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH);
-        int i = 0;
-        for (final CameraCalibratorSample sample : mSamples) {
-            for (final Point2D point : sample.getSampledMarkers()) {
+        final var m = new Matrix(nPoints, Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH);
+        var i = 0;
+        for (final var sample : samples) {
+            for (final var point : sample.getSampledMarkers()) {
                 m.setElementAt(i, 0, point.getInhomX());
                 m.setElementAt(i, 1, point.getInhomY());
                 i++;
@@ -927,7 +896,7 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * @param params arrays where parameters will be set using current data.
      */
     private void paramsFromData(final double[] params) {
-        int pos = 0;
+        var pos = 0;
 
         // common parameters (intrinsic camera parameters and radial distortion
         // parameters)
@@ -936,43 +905,43 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
         if (!isZeroSkewness()) {
             // aspect ratio is not known (2 different focal distances) and
             // skewness is not zero
-            params[pos] = mIntrinsic.getHorizontalFocalLength();
+            params[pos] = intrinsic.getHorizontalFocalLength();
             pos++;
-            params[pos] = mIntrinsic.getVerticalFocalLength();
+            params[pos] = intrinsic.getVerticalFocalLength();
             pos++;
-            params[pos] = mIntrinsic.getSkewness();
+            params[pos] = intrinsic.getSkewness();
             pos++;
         } else {
             // skewness is always zero (so it is not stored in vector)
-            params[pos] = mIntrinsic.getHorizontalFocalLength();
+            params[pos] = intrinsic.getHorizontalFocalLength();
             pos++;
 
             if (!isFocalDistanceAspectRatioKnown()) {
                 // focal distances are different, so we also store vertical
                 // one
-                params[pos] = mIntrinsic.getVerticalFocalLength();
+                params[pos] = intrinsic.getVerticalFocalLength();
                 pos++;
             }
         }
 
         if (!isPrincipalPointAtOrigin()) {
             // principal point is not zero
-            params[pos] = mIntrinsic.getHorizontalPrincipalPoint();
+            params[pos] = intrinsic.getHorizontalPrincipalPoint();
             pos++;
-            params[pos] = mIntrinsic.getVerticalPrincipalPoint();
+            params[pos] = intrinsic.getVerticalPrincipalPoint();
             pos++;
         }
 
         // radial distortion parameters
-        final double[] kParams = mDistortion.getKParams();
-        for (final double kParam : kParams) {
+        final var kParams = distortion.getKParams();
+        for (final var kParam : kParams) {
             params[pos] = kParam;
             pos++;
         }
 
 
         // parameters for each sample (camera rotation and translation)
-        for (final CameraCalibratorSample sample : mSamples) {
+        for (final var sample : samples) {
             if (sample.getHomography() == null) {
                 continue;
             }
@@ -995,7 +964,7 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
             pos++;
 
             // 3 translation parameters (camera center)
-            final Point3D center = sample.getCameraCenter();
+            final var center = sample.getCameraCenter();
             params[pos] = center.getInhomX();
             pos++;
             params[pos] = center.getInhomY();
@@ -1012,7 +981,7 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * @param params vector containing estimated parameters .
      */
     private void dataFromParams(final double[] params) {
-        int pos = 0;
+        var pos = 0;
 
         // intrinsic parameters
         double horizontalFocalLength;
@@ -1058,29 +1027,28 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
         }
 
         // update intrinsic parameters
-        mIntrinsic.setHorizontalFocalLength(horizontalFocalLength);
-        mIntrinsic.setVerticalFocalLength(verticalFocalLength);
-        mIntrinsic.setSkewness(skewness);
-        mIntrinsic.setHorizontalPrincipalPoint(horizontalPrincipalPoint);
-        mIntrinsic.setVerticalPrincipalPoint(verticalPrincipalPoint);
+        intrinsic.setHorizontalFocalLength(horizontalFocalLength);
+        intrinsic.setVerticalFocalLength(verticalFocalLength);
+        intrinsic.setSkewness(skewness);
+        intrinsic.setHorizontalPrincipalPoint(horizontalPrincipalPoint);
+        intrinsic.setVerticalPrincipalPoint(verticalPrincipalPoint);
 
         // radial distortion parameters
-        final double[] kParams = mDistortion.getKParams();
-        for (int i = 0; i < kParams.length; i++) {
+        final var kParams = distortion.getKParams();
+        for (var i = 0; i < kParams.length; i++) {
             kParams[i] = params[pos];
             pos++;
         }
 
         // sample parameters
-        for (final CameraCalibratorSample sample : mSamples) {
+        for (final var sample : samples) {
             if (sample.getHomography() == null) {
                 continue;
             }
 
             // 4 rotation parameters
             final AxisRotation3D rot;
-            if (sample.getRotation().getType() ==
-                    Rotation3DType.AXIS_ROTATION3D) {
+            if (sample.getRotation().getType() == Rotation3DType.AXIS_ROTATION3D) {
                 rot = (AxisRotation3D) sample.getRotation();
             } else {
                 rot = new AxisRotation3D();
@@ -1088,30 +1056,30 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
                 sample.setRotation(rot);
             }
 
-            final double rotAngle = params[pos];
+            final var rotAngle = params[pos];
             pos++;
-            final double axisX = params[pos];
+            final var axisX = params[pos];
             pos++;
-            final double axisY = params[pos];
+            final var axisY = params[pos];
             pos++;
-            final double axisZ = params[pos];
+            final var axisZ = params[pos];
             pos++;
 
             rot.setAxisAndRotation(axisX, axisY, axisZ, rotAngle);
 
             // 3 translation parameters (camera center)
-            final double inhomX = params[pos];
+            final var inhomX = params[pos];
             pos++;
-            final double inhomY = params[pos];
+            final var inhomY = params[pos];
             pos++;
-            final double inhomZ = params[pos];
+            final var inhomZ = params[pos];
             pos++;
-            final Point3D center = sample.getCameraCenter();
+            final var center = sample.getCameraCenter();
             center.setInhomogeneousCoordinates(inhomX, inhomY, inhomZ);
 
             // update camera
-            final PinholeCamera camera = sample.getCamera();
-            camera.setIntrinsicAndExtrinsicParameters(mIntrinsic, rot, center);
+            final var camera = sample.getCamera();
+            camera.setIntrinsicAndExtrinsicParameters(intrinsic, rot, center);
         }
     }
 
@@ -1125,20 +1093,19 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      *                                    associated pattern.
      * @return average re-projection error.
      */
-    private double computeReprojectionError(
-            final List<Point2D> idealFallbackPatternMarkers) {
+    private double computeReprojectionError(final List<Point2D> idealFallbackPatternMarkers) {
         // distorted points are the sampled points
         // undistorted points are the ideal pattern marker points projected
         // using current camera pose
         PinholeCamera camera;
         Point2D marker2D;
-        final Point3D marker3D = Point3D.create();
-        final Point2D undistortedPoint = Point2D.create();
-        int totalPoints = 0;
-        final Point2D distortedPoint = Point2D.create();
+        final var marker3D = Point3D.create();
+        final var undistortedPoint = Point2D.create();
+        var totalPoints = 0;
+        final var distortedPoint = Point2D.create();
         Point2D sampledPoint;
-        double avgError = 0.0;
-        for (final CameraCalibratorSample sample : mSamples) {
+        var avgError = 0.0;
+        for (final var sample : samples) {
             camera = sample.getCamera();
             if (camera == null) {
                 continue;
@@ -1151,22 +1118,21 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
                 idealPatternMarkers = idealFallbackPatternMarkers;
             }
 
-            final int pointsPerSample = idealPatternMarkers.size();
-            for (int i = 0; i < pointsPerSample; i++) {
+            final var pointsPerSample = idealPatternMarkers.size();
+            for (var i = 0; i < pointsPerSample; i++) {
                 marker2D = idealPatternMarkers.get(i);
                 sampledPoint = sample.getSampledMarkers().get(i);
 
                 // convert ideal marker point into a 3D point placed in plane
                 // z = 0
-                marker3D.setInhomogeneousCoordinates(marker2D.getInhomX(),
-                        marker2D.getInhomY(), 0.0);
+                marker3D.setInhomogeneousCoordinates(marker2D.getInhomX(), marker2D.getInhomY(), 0.0);
 
                 // project 3D marker point using estimated camera on current
                 // sample (i.e. view)
                 camera.project(marker3D, undistortedPoint);
 
                 // add distortion to ideal projected point
-                mDistortion.distort(undistortedPoint, distortedPoint);
+                distortion.distort(undistortedPoint, distortedPoint);
 
                 // obtain distance between sampled point and ideal projected
                 // point with added distortion
@@ -1192,21 +1158,20 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
      * @param distortionMethod robust estimator method to be used for
      *                         radial distortion estimation.
      */
-    private void internalSetDistortionMethod(
-            RobustEstimatorMethod distortionMethod) {
+    private void internalSetDistortionMethod(RobustEstimatorMethod distortionMethod) {
         // if method changes, recreate estimator
-        if (distortionMethod != mDistortionMethod) {
-            final boolean previousAvailable = mDistortionMethod != null;
-            double threshold = 0.0;
-            double confidence = 0.0;
-            int maxIterations = 0;
+        if (distortionMethod != this.distortionMethod) {
+            final var previousAvailable = this.distortionMethod != null;
+            var threshold = 0.0;
+            var confidence = 0.0;
+            var maxIterations = 0;
             if (previousAvailable) {
                 threshold = getDistortionEstimatorThreshold();
                 confidence = getDistortionEstimatorConfidence();
                 maxIterations = getDistortionEstimatorMaxIterations();
             }
 
-            mDistortionEstimator = RadialDistortionRobustEstimator.create(distortionMethod);
+            distortionEstimator = RadialDistortionRobustEstimator.create(distortionMethod);
 
             // configure new estimator
             refreshDistortionEstimatorListener();
@@ -1216,15 +1181,13 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
                     setDistortionEstimatorConfidence(confidence);
                     setDistortionEstimatorMaxIterations(maxIterations);
                 } catch (final LockedException e) {
-                    Logger.getLogger(
-                            AlternatingCameraCalibrator.class.getName()).log(
-                            Level.WARNING, "Could not reconfigure distortion estimator",
-                            e);
+                    Logger.getLogger(AlternatingCameraCalibrator.class.getName()).log(Level.WARNING,
+                            "Could not reconfigure distortion estimator", e);
                 }
             }
         }
 
-        mDistortionMethod = distortionMethod;
+        this.distortionMethod = distortionMethod;
     }
 
     /**
@@ -1240,7 +1203,7 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
         // - x intrinsic parameters (depending on settings)
         // - x radial distortion parameters (K params length)
 
-        return 7 * numHomographies + numIntrinsicParameters() + mDistortion.getKParams().length;
+        return 7 * numHomographies + numIntrinsicParameters() + distortion.getKParams().length;
     }
 
     /**
@@ -1254,7 +1217,7 @@ public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
         // if no constraints, there are 5 intrinsic parameters (horizontal
         // focal length, vertical focal length, skewness, horizontal principal
         // point and vertical principal point
-        int num = 5;
+        var num = 5;
         if (isZeroSkewness()) {
             if (isFocalDistanceAspectRatioKnown()) {
                 num--;

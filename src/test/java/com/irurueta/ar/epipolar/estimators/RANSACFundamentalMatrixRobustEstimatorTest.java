@@ -15,7 +15,6 @@
  */
 package com.irurueta.ar.epipolar.estimators;
 
-import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
 import com.irurueta.ar.epipolar.FundamentalMatrix;
 import com.irurueta.ar.epipolar.InvalidFundamentalMatrixException;
@@ -27,16 +26,13 @@ import com.irurueta.numerical.robust.RobustEstimatorException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import com.irurueta.statistics.GaussianRandomizer;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class RANSACFundamentalMatrixRobustEstimatorTest implements
-        FundamentalMatrixRobustEstimatorListener {
+class RANSACFundamentalMatrixRobustEstimatorTest implements FundamentalMatrixRobustEstimatorListener {
 
     private static final int MIN_REQUIRED_POINTS_AFFINE = 4;
     private static final int MIN_REQUIRED_POINTS_7 = 7;
@@ -80,13 +76,12 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
     private int estimateProgressChange;
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         // test constructor without arguments
-        RANSACFundamentalMatrixRobustEstimator estimator = new RANSACFundamentalMatrixRobustEstimator();
+        var estimator = new RANSACFundamentalMatrixRobustEstimator();
 
         // check correctness
-        assertEquals(RANSACFundamentalMatrixRobustEstimator.DEFAULT_THRESHOLD,
-                estimator.getThreshold(), 0.0);
+        assertEquals(RANSACFundamentalMatrixRobustEstimator.DEFAULT_THRESHOLD, estimator.getThreshold(), 0.0);
         assertEquals(RobustEstimatorMethod.RANSAC, estimator.getMethod());
         assertEquals(FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM,
                 estimator.getNonRobustFundamentalMatrixEstimatorMethod());
@@ -95,16 +90,12 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                estimator.getProgressDelta(), 0.0);
-        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE,
-                estimator.getConfidence(), 0.0);
-        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS,
-                estimator.getMaxIterations());
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA, estimator.getProgressDelta(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE, estimator.getConfidence(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertNull(estimator.getInliersData());
         assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_REFINE_RESULT, estimator.isResultRefined());
-        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_KEEP_COVARIANCE,
-                estimator.isCovarianceKept());
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_KEEP_COVARIANCE, estimator.isCovarianceKept());
         assertNull(estimator.getCovariance());
         assertEquals(MIN_REQUIRED_POINTS_7, estimator.getMinRequiredPoints());
         assertFalse(estimator.isReady());
@@ -114,8 +105,7 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
         estimator = new RANSACFundamentalMatrixRobustEstimator(this);
 
         // check correctness
-        assertEquals(RANSACFundamentalMatrixRobustEstimator.DEFAULT_THRESHOLD,
-                estimator.getThreshold(), 0.0);
+        assertEquals(RANSACFundamentalMatrixRobustEstimator.DEFAULT_THRESHOLD, estimator.getThreshold(), 0.0);
         assertEquals(RobustEstimatorMethod.RANSAC, estimator.getMethod());
         assertEquals(FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM,
                 estimator.getNonRobustFundamentalMatrixEstimatorMethod());
@@ -124,24 +114,20 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
         assertSame(this, estimator.getListener());
         assertTrue(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                estimator.getProgressDelta(), 0.0);
-        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE,
-                estimator.getConfidence(), 0.0);
-        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS,
-                estimator.getMaxIterations());
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA, estimator.getProgressDelta(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE, estimator.getConfidence(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertNull(estimator.getInliersData());
         assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_REFINE_RESULT, estimator.isResultRefined());
-        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_KEEP_COVARIANCE,
-                estimator.isCovarianceKept());
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_KEEP_COVARIANCE, estimator.isCovarianceKept());
         assertNull(estimator.getCovariance());
         assertEquals(MIN_REQUIRED_POINTS_7, estimator.getMinRequiredPoints());
         assertFalse(estimator.isReady());
         assertNull(estimator.getQualityScores());
 
         // test constructor with left and right points
-        final List<Point2D> leftPoints = new ArrayList<>();
-        final List<Point2D> rightPoints = new ArrayList<>();
+        final var leftPoints = new ArrayList<Point2D>();
+        final var rightPoints = new ArrayList<Point2D>();
         for (int i = 0; i < MIN_REQUIRED_POINTS_7; i++) {
             leftPoints.add(Point2D.create());
             rightPoints.add(Point2D.create());
@@ -150,8 +136,7 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
         estimator = new RANSACFundamentalMatrixRobustEstimator(leftPoints, rightPoints);
 
         // check correctness
-        assertEquals(RANSACFundamentalMatrixRobustEstimator.DEFAULT_THRESHOLD,
-                estimator.getThreshold(), 0.0);
+        assertEquals(RANSACFundamentalMatrixRobustEstimator.DEFAULT_THRESHOLD, estimator.getThreshold(), 0.0);
         assertEquals(RobustEstimatorMethod.RANSAC, estimator.getMethod());
         assertEquals(FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM,
                 estimator.getNonRobustFundamentalMatrixEstimatorMethod());
@@ -160,47 +145,31 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                estimator.getProgressDelta(), 0.0);
-        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE,
-                estimator.getConfidence(), 0.0);
-        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS,
-                estimator.getMaxIterations());
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA, estimator.getProgressDelta(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE, estimator.getConfidence(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertNull(estimator.getInliersData());
         assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_REFINE_RESULT, estimator.isResultRefined());
-        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_KEEP_COVARIANCE,
-                estimator.isCovarianceKept());
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_KEEP_COVARIANCE, estimator.isCovarianceKept());
         assertNull(estimator.getCovariance());
         assertEquals(MIN_REQUIRED_POINTS_7, estimator.getMinRequiredPoints());
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
 
         // Force IllegalArgumentException
-        final List<Point2D> emptyPoints = new ArrayList<>();
-        estimator = null;
-        try {
-            estimator = new RANSACFundamentalMatrixRobustEstimator(emptyPoints, rightPoints);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new RANSACFundamentalMatrixRobustEstimator(leftPoints, emptyPoints);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new RANSACFundamentalMatrixRobustEstimator(emptyPoints, emptyPoints);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
+        final var emptyPoints = new ArrayList<Point2D>();
+        assertThrows(IllegalArgumentException.class,
+                () -> new RANSACFundamentalMatrixRobustEstimator(emptyPoints, rightPoints));
+        assertThrows(IllegalArgumentException.class,
+                () -> new RANSACFundamentalMatrixRobustEstimator(leftPoints, emptyPoints));
+        assertThrows(IllegalArgumentException.class,
+                () -> new RANSACFundamentalMatrixRobustEstimator(emptyPoints, emptyPoints));
 
         // test constructor with left and right points and listener
         estimator = new RANSACFundamentalMatrixRobustEstimator(leftPoints, rightPoints, this);
 
         // check correctness
-        assertEquals(RANSACFundamentalMatrixRobustEstimator.DEFAULT_THRESHOLD,
-                estimator.getThreshold(), 0.0);
+        assertEquals(RANSACFundamentalMatrixRobustEstimator.DEFAULT_THRESHOLD, estimator.getThreshold(), 0.0);
         assertEquals(RobustEstimatorMethod.RANSAC, estimator.getMethod());
         assertEquals(FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM,
                 estimator.getNonRobustFundamentalMatrixEstimatorMethod());
@@ -209,46 +178,29 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
         assertSame(this, estimator.getListener());
         assertTrue(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                estimator.getProgressDelta(), 0.0);
-        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE,
-                estimator.getConfidence(), 0.0);
-        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS,
-                estimator.getMaxIterations());
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA, estimator.getProgressDelta(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE, estimator.getConfidence(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertNull(estimator.getInliersData());
         assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_REFINE_RESULT, estimator.isResultRefined());
-        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_KEEP_COVARIANCE,
-                estimator.isCovarianceKept());
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_KEEP_COVARIANCE, estimator.isCovarianceKept());
         assertNull(estimator.getCovariance());
         assertEquals(MIN_REQUIRED_POINTS_7, estimator.getMinRequiredPoints());
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
 
         // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new RANSACFundamentalMatrixRobustEstimator(emptyPoints, rightPoints, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new RANSACFundamentalMatrixRobustEstimator(leftPoints, emptyPoints, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new RANSACFundamentalMatrixRobustEstimator(emptyPoints, emptyPoints, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
+        assertThrows(IllegalArgumentException.class,
+                () -> new RANSACFundamentalMatrixRobustEstimator(emptyPoints, rightPoints, this));
+        assertThrows(IllegalArgumentException.class,
+                () -> new RANSACFundamentalMatrixRobustEstimator(leftPoints, emptyPoints, this));
+        assertThrows(IllegalArgumentException.class,
+                () -> new RANSACFundamentalMatrixRobustEstimator(emptyPoints, emptyPoints, this));
     }
 
     @Test
-    public void testGetSetNonRobustFundamentalMatrixEstimatorMethod()
-            throws LockedException {
-        final RANSACFundamentalMatrixRobustEstimator estimator =
-                new RANSACFundamentalMatrixRobustEstimator();
+    void testGetSetNonRobustFundamentalMatrixEstimatorMethod() throws LockedException {
+        final var estimator = new RANSACFundamentalMatrixRobustEstimator();
 
         // check default value
         assertEquals(FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM,
@@ -256,8 +208,7 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
         assertEquals(MIN_REQUIRED_POINTS_7, estimator.getMinRequiredPoints());
 
         // set new value
-        estimator.setNonRobustFundamentalMatrixEstimatorMethod(
-                FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM);
+        estimator.setNonRobustFundamentalMatrixEstimatorMethod(FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM);
 
         // check correctness
         assertEquals(FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM,
@@ -266,13 +217,11 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
     }
 
     @Test
-    public void testGetSetThreshold() throws LockedException {
-        final RANSACFundamentalMatrixRobustEstimator estimator =
-                new RANSACFundamentalMatrixRobustEstimator();
+    void testGetSetThreshold() throws LockedException {
+        final var estimator = new RANSACFundamentalMatrixRobustEstimator();
 
         // check default value
-        assertEquals(RANSACFundamentalMatrixRobustEstimator.DEFAULT_THRESHOLD,
-                estimator.getThreshold(), 0.0);
+        assertEquals(RANSACFundamentalMatrixRobustEstimator.DEFAULT_THRESHOLD, estimator.getThreshold(), 0.0);
 
         // set new value
         estimator.setThreshold(0.5);
@@ -281,17 +230,12 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
         assertEquals(0.5, estimator.getThreshold(), 0.0);
 
         // Force IllegalArgumentException
-        try {
-            estimator.setThreshold(0.0);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> estimator.setThreshold(0.0));
     }
 
     @Test
-    public void testIsSetComputeAndKeepInliersEnabled() throws LockedException {
-        final RANSACFundamentalMatrixRobustEstimator estimator =
-                new RANSACFundamentalMatrixRobustEstimator();
+    void testIsSetComputeAndKeepInliersEnabled() throws LockedException {
+        final var estimator = new RANSACFundamentalMatrixRobustEstimator();
 
         // check default value
         assertFalse(estimator.isComputeAndKeepInliersEnabled());
@@ -304,10 +248,8 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
     }
 
     @Test
-    public void testIsSetComputeAndKeepResidualsEnabled()
-            throws LockedException {
-        final RANSACFundamentalMatrixRobustEstimator estimator =
-                new RANSACFundamentalMatrixRobustEstimator();
+    void testIsSetComputeAndKeepResidualsEnabled() throws LockedException {
+        final var estimator = new RANSACFundamentalMatrixRobustEstimator();
 
         // check default value
         assertFalse(estimator.isComputeAndKeepResidualsEnabled());
@@ -320,9 +262,8 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
     }
 
     @Test
-    public void testGetSetPointsAndIsReady() throws LockedException {
-        final RANSACFundamentalMatrixRobustEstimator estimator =
-                new RANSACFundamentalMatrixRobustEstimator();
+    void testGetSetPointsAndIsReady() throws LockedException {
+        final var estimator = new RANSACFundamentalMatrixRobustEstimator();
 
         // check default values
         assertNull(estimator.getLeftPoints());
@@ -330,9 +271,9 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
         assertFalse(estimator.isReady());
 
         // sets new values
-        final List<Point2D> leftPoints = new ArrayList<>();
-        final List<Point2D> rightPoints = new ArrayList<>();
-        for (int i = 0; i < MIN_REQUIRED_POINTS_7; i++) {
+        final var leftPoints = new ArrayList<Point2D>();
+        final var rightPoints = new ArrayList<Point2D>();
+        for (var i = 0; i < MIN_REQUIRED_POINTS_7; i++) {
             leftPoints.add(Point2D.create());
             rightPoints.add(Point2D.create());
         }
@@ -345,29 +286,15 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
         assertTrue(estimator.isReady());
 
         // Force IllegalArgumentException
-        final List<Point2D> emptyPoints = new ArrayList<>();
-        try {
-            estimator.setPoints(emptyPoints, rightPoints);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator.setPoints(leftPoints, emptyPoints);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator.setPoints(emptyPoints, emptyPoints);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        final var emptyPoints = new ArrayList<Point2D>();
+        assertThrows(IllegalArgumentException.class, () -> estimator.setPoints(emptyPoints, rightPoints));
+        assertThrows(IllegalArgumentException.class, () -> estimator.setPoints(leftPoints, emptyPoints));
+        assertThrows(IllegalArgumentException.class, () -> estimator.setPoints(emptyPoints, emptyPoints));
     }
 
     @Test
-    public void testGetSetListenerAndIsListenerAvailable()
-            throws LockedException {
-        final RANSACFundamentalMatrixRobustEstimator estimator =
-                new RANSACFundamentalMatrixRobustEstimator();
+    void testGetSetListenerAndIsListenerAvailable() throws LockedException {
+        final var estimator = new RANSACFundamentalMatrixRobustEstimator();
 
         // check default value
         assertNull(estimator.getListener());
@@ -382,13 +309,11 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
     }
 
     @Test
-    public void testGetSetProgressDelta() throws LockedException {
-        final RANSACFundamentalMatrixRobustEstimator estimator =
-                new RANSACFundamentalMatrixRobustEstimator();
+    void testGetSetProgressDelta() throws LockedException {
+        final var estimator = new RANSACFundamentalMatrixRobustEstimator();
 
         // check default value
-        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                estimator.getProgressDelta(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_PROGRESS_DELTA, estimator.getProgressDelta(), 0.0);
 
         // set new value
         estimator.setProgressDelta(0.5f);
@@ -397,26 +322,16 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
         assertEquals(0.5f, estimator.getProgressDelta(), 0.0);
 
         // Force IllegalArgumentException
-        try {
-            estimator.setProgressDelta(-1.0f);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator.setProgressDelta(2.0f);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> estimator.setProgressDelta(-1.0f));
+        assertThrows(IllegalArgumentException.class, () -> estimator.setProgressDelta(2.0f));
     }
 
     @Test
-    public void testGetSetConfidence() throws LockedException {
-        final RANSACFundamentalMatrixRobustEstimator estimator =
-                new RANSACFundamentalMatrixRobustEstimator();
+    void testGetSetConfidence() throws LockedException {
+        final var estimator = new RANSACFundamentalMatrixRobustEstimator();
 
         // check default value
-        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE,
-                estimator.getConfidence(), 0.0);
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_CONFIDENCE, estimator.getConfidence(), 0.0);
 
         // set new value
         estimator.setConfidence(0.5);
@@ -425,26 +340,16 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
         assertEquals(0.5, estimator.getConfidence(), 0.0);
 
         // Force IllegalArgumentException
-        try {
-            estimator.setConfidence(-1.0);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator.setConfidence(2.0);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> estimator.setConfidence(-1.0));
+        assertThrows(IllegalArgumentException.class, () -> estimator.setConfidence(2.0));
     }
 
     @Test
-    public void testGetSetMaxIterations() throws LockedException {
-        final RANSACFundamentalMatrixRobustEstimator estimator =
-                new RANSACFundamentalMatrixRobustEstimator();
+    void testGetSetMaxIterations() throws LockedException {
+        final var estimator = new RANSACFundamentalMatrixRobustEstimator();
 
         // check default value
-        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS,
-                estimator.getMaxIterations());
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
 
         // set new value
         estimator.setMaxIterations(10);
@@ -453,59 +358,46 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
         assertEquals(10, estimator.getMaxIterations());
 
         // Force IllegalArgumentException
-        try {
-            estimator.setMaxIterations(0);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> estimator.setMaxIterations(0));
     }
 
     @Test
-    public void testIsSetResultRefined() throws LockedException {
-        final RANSACFundamentalMatrixRobustEstimator estimator =
-                new RANSACFundamentalMatrixRobustEstimator();
+    void testIsSetResultRefined() throws LockedException {
+        final var estimator = new RANSACFundamentalMatrixRobustEstimator();
 
         // check default value
-        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_REFINE_RESULT,
-                estimator.isResultRefined());
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_REFINE_RESULT, estimator.isResultRefined());
 
         // set new value
-        estimator.setResultRefined(
-                !FundamentalMatrixRobustEstimator.DEFAULT_REFINE_RESULT);
+        estimator.setResultRefined(!FundamentalMatrixRobustEstimator.DEFAULT_REFINE_RESULT);
 
         // check correctness
-        assertEquals(!FundamentalMatrixRobustEstimator.DEFAULT_REFINE_RESULT,
-                estimator.isResultRefined());
+        assertEquals(!FundamentalMatrixRobustEstimator.DEFAULT_REFINE_RESULT, estimator.isResultRefined());
     }
 
     @Test
-    public void testIsSetCovarianceKept() throws LockedException {
-        final RANSACFundamentalMatrixRobustEstimator estimator =
-                new RANSACFundamentalMatrixRobustEstimator();
+    void testIsSetCovarianceKept() throws LockedException {
+        final var estimator = new RANSACFundamentalMatrixRobustEstimator();
 
         // check default value
-        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_KEEP_COVARIANCE,
-                estimator.isCovarianceKept());
+        assertEquals(FundamentalMatrixRobustEstimator.DEFAULT_KEEP_COVARIANCE, estimator.isCovarianceKept());
 
         // set new value
-        estimator.setCovarianceKept(
-                !FundamentalMatrixRobustEstimator.DEFAULT_KEEP_COVARIANCE);
+        estimator.setCovarianceKept(!FundamentalMatrixRobustEstimator.DEFAULT_KEEP_COVARIANCE);
 
         // check correctness
-        assertEquals(!FundamentalMatrixRobustEstimator.DEFAULT_KEEP_COVARIANCE,
-                estimator.isCovarianceKept());
+        assertEquals(!FundamentalMatrixRobustEstimator.DEFAULT_KEEP_COVARIANCE, estimator.isCovarianceKept());
     }
 
     @Test
-    public void testGetSetQualityScores() throws LockedException {
-        final RANSACFundamentalMatrixRobustEstimator estimator =
-                new RANSACFundamentalMatrixRobustEstimator();
+    void testGetSetQualityScores() throws LockedException {
+        final var estimator = new RANSACFundamentalMatrixRobustEstimator();
 
         // check default value
         assertNull(estimator.getQualityScores());
 
         // set new value
-        final double[] qualityScores = new double[0];
+        final var qualityScores = new double[0];
         estimator.setQualityScores(qualityScores);
 
         // check correctness
@@ -513,98 +405,76 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
     }
 
     @Test
-    public void testEstimateSevenPointsWithRefinement() throws LockedException, NotReadyException,
-            RobustEstimatorException, InvalidFundamentalMatrixException, NotAvailableException {
+    void testEstimateSevenPointsWithRefinement() throws LockedException, NotReadyException, RobustEstimatorException,
+            InvalidFundamentalMatrixException, NotAvailableException {
         double leftEpipoleError;
         double rightEpipoleError;
 
         // randomly create two pinhole cameras
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double alphaEuler1 = 0.0;
-        final double betaEuler1 = 0.0;
-        final double gammaEuler1 = 0.0;
-        final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-        final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-        final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+        final var randomizer = new UniformRandomizer();
+        final var alphaEuler1 = 0.0;
+        final var betaEuler1 = 0.0;
+        final var gammaEuler1 = 0.0;
+        final var alphaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var betaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var gammaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-        final double horizontalFocalLength1 = randomizer.nextDouble(
-                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-        final double verticalFocalLength1 = randomizer.nextDouble(
-                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-        final double horizontalFocalLength2 = randomizer.nextDouble(
-                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-        final double verticalFocalLength2 = randomizer.nextDouble(
-                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final var horizontalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final var verticalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final var horizontalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final var verticalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-        final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
-        final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+        final var skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+        final var skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
 
-        final double horizontalPrincipalPoint1 = randomizer.nextDouble(
-                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-        final double verticalPrincipalPoint1 = randomizer.nextDouble(
-                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-        final double horizontalPrincipalPoint2 = randomizer.nextDouble(
-                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-        final double verticalPrincipalPoint2 = randomizer.nextDouble(
-                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final var horizontalPrincipalPoint1 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final var verticalPrincipalPoint1 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final var horizontalPrincipalPoint2 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final var verticalPrincipalPoint2 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
-        final double cameraSeparation = randomizer.nextDouble(
-                MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
+        final var cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
-        final int nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
+        final var nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
 
-        final Point3D center1 = new InhomogeneousPoint3D(
-                randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+        final var center1 = new InhomogeneousPoint3D(randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                 randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                 randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-        final Point3D center2 = new InhomogeneousPoint3D(
-                center1.getInhomX() + cameraSeparation,
-                center1.getInhomY() + cameraSeparation,
-                center1.getInhomZ() + cameraSeparation);
+        final var center2 = new InhomogeneousPoint3D(center1.getInhomX() + cameraSeparation,
+                center1.getInhomY() + cameraSeparation, center1.getInhomZ() + cameraSeparation);
 
-        final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
-        final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+        final var rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+        final var rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-        final PinholeCameraIntrinsicParameters intrinsic1 =
-                new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
-                        verticalFocalLength1, horizontalPrincipalPoint1,
-                        verticalPrincipalPoint1, skewness1);
-        final PinholeCameraIntrinsicParameters intrinsic2 =
-                new PinholeCameraIntrinsicParameters(horizontalFocalLength2,
-                        verticalFocalLength2, horizontalPrincipalPoint2,
-                        verticalPrincipalPoint2, skewness2);
+        final var intrinsic1 = new PinholeCameraIntrinsicParameters(horizontalFocalLength1, verticalFocalLength1,
+                horizontalPrincipalPoint1, verticalPrincipalPoint1, skewness1);
+        final var intrinsic2 = new PinholeCameraIntrinsicParameters(horizontalFocalLength2, verticalFocalLength2,
+                horizontalPrincipalPoint2, verticalPrincipalPoint2, skewness2);
 
-        final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
-        final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
+        final var camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
+        final var camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
 
         // generate a random list of 3D points
-        final List<Point3D> points3D = new ArrayList<>();
-        for (int i = 0; i < nPoints; i++) {
-            points3D.add(new InhomogeneousPoint3D(
-                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+        final var points3D = new ArrayList<Point3D>();
+        for (var i = 0; i < nPoints; i++) {
+            points3D.add(new InhomogeneousPoint3D(randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE)));
         }
 
         // project 3D points with both cameras
-        final List<Point2D> leftPoints = camera1.project(points3D);
-        final List<Point2D> rightPoints = camera2.project(points3D);
+        final var leftPoints = camera1.project(points3D);
+        final var rightPoints = camera2.project(points3D);
 
         // add outliers
-        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                new Random(), 0.0, STD_ERROR);
+        final var errorRandomizer = new GaussianRandomizer(0.0, STD_ERROR);
 
-        final List<Point2D> leftPointsWithError = new ArrayList<>();
-        for (final Point2D leftPoint : leftPoints) {
+        final var leftPointsWithError = new ArrayList<Point2D>();
+        for (final var leftPoint : leftPoints) {
             if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                 // outlier
-                final double errorX = errorRandomizer.nextDouble();
-                final double errorY = errorRandomizer.nextDouble();
-                leftPointsWithError.add(new HomogeneousPoint2D(
-                        leftPoint.getInhomX() + errorX,
+                final var errorX = errorRandomizer.nextDouble();
+                final var errorY = errorRandomizer.nextDouble();
+                leftPointsWithError.add(new HomogeneousPoint2D(leftPoint.getInhomX() + errorX,
                         leftPoint.getInhomY() + errorY, 1.0));
             } else {
                 // inlier
@@ -612,14 +482,13 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
             }
         }
 
-        final List<Point2D> rightPointsWithError = new ArrayList<>();
-        for (final Point2D rightPoint : rightPoints) {
+        final var rightPointsWithError = new ArrayList<Point2D>();
+        for (final var rightPoint : rightPoints) {
             if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                 // outlier
-                final double errorX = errorRandomizer.nextDouble();
-                final double errorY = errorRandomizer.nextDouble();
-                rightPointsWithError.add(new HomogeneousPoint2D(
-                        rightPoint.getInhomX() + errorX,
+                final var errorX = errorRandomizer.nextDouble();
+                final var errorY = errorRandomizer.nextDouble();
+                rightPointsWithError.add(new HomogeneousPoint2D(rightPoint.getInhomX() + errorX,
                         rightPoint.getInhomY() + errorY, 1.0));
             } else {
                 // inlier
@@ -628,9 +497,8 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
         }
 
         // estimate fundamental matrix
-        RANSACFundamentalMatrixRobustEstimator estimator =
-                new RANSACFundamentalMatrixRobustEstimator(
-                        leftPointsWithError, rightPointsWithError, this);
+        var estimator = new RANSACFundamentalMatrixRobustEstimator(leftPointsWithError, rightPointsWithError,
+                this);
         estimator.setThreshold(THRESHOLD);
         estimator.setComputeAndKeepInliersEnabled(true);
         estimator.setComputeAndKeepResidualsEnabled(true);
@@ -646,7 +514,7 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
         assertEquals(0, estimateNextIteration);
         assertEquals(0, estimateProgressChange);
 
-        final FundamentalMatrix fundMatrix = estimator.estimate();
+        final var fundMatrix = estimator.estimate();
         assertEquals(MIN_REQUIRED_POINTS_7, estimator.getMinRequiredPoints());
         assertNotNull(estimator.getInliersData());
         assertNotNull(estimator.getInliersData().getInliers());
@@ -662,13 +530,13 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
         reset();
 
         // compute epipoles
-        final Point2D epipole1a = camera1.project(center2);
-        final Point2D epipole2a = camera2.project(center1);
+        final var epipole1a = camera1.project(center2);
+        final var epipole2a = camera2.project(center1);
 
         fundMatrix.computeEpipoles();
 
-        final Point2D epipole1b = fundMatrix.getLeftEpipole();
-        final Point2D epipole2b = fundMatrix.getRightEpipole();
+        final var epipole1b = fundMatrix.getLeftEpipole();
+        final var epipole2b = fundMatrix.getRightEpipole();
 
         // check correctness of epipoles
         leftEpipoleError = epipole1a.distanceTo(epipole1b);
@@ -678,15 +546,15 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
 
         // check that all points lie within their corresponding epipolar
         // lines
-        for (int i = 0; i < nPoints; i++) {
-            final Point2D leftPoint = leftPoints.get(i);
-            final Point2D rightPoint = rightPoints.get(i);
-            final Point3D point3D = points3D.get(i);
+        for (var i = 0; i < nPoints; i++) {
+            final var leftPoint = leftPoints.get(i);
+            final var rightPoint = rightPoints.get(i);
+            final var point3D = points3D.get(i);
 
             // obtain epipolar line on left view using 2D point on right view
-            final Line2D line1 = fundMatrix.getLeftEpipolarLine(rightPoint);
+            final var line1 = fundMatrix.getLeftEpipolarLine(rightPoint);
             // obtain epipolar line on right view using 2D point on left view
-            final Line2D line2 = fundMatrix.getRightEpipolarLine(leftPoint);
+            final var line2 = fundMatrix.getRightEpipolarLine(leftPoint);
 
             // check that 2D point on left view belongs to left epipolar line
             assertTrue(line1.isLocus(leftPoint, ABSOLUTE_ERROR));
@@ -695,8 +563,8 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
             assertTrue(line2.isLocus(rightPoint, ABSOLUTE_ERROR));
 
             // obtain epipolar planes
-            final Plane epipolarPlane1 = camera1.backProject(line1);
-            final Plane epipolarPlane2 = camera2.backProject(line2);
+            final var epipolarPlane1 = camera1.backProject(line1);
+            final var epipolarPlane2 = camera2.backProject(line2);
 
             // check that both planes are the same
             assertTrue(epipolarPlane1.equals(epipolarPlane2, ABSOLUTE_ERROR));
@@ -716,106 +584,80 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
 
         // Force NotReadyException
         estimator = new RANSACFundamentalMatrixRobustEstimator();
-        try {
-            estimator.estimate();
-            fail("NotReadyException expected but not thrown");
-        } catch (final NotReadyException ignore) {
-        }
+        assertThrows(NotReadyException.class, estimator::estimate);
     }
 
     @Test
-    public void testEstimateEightPointsWithRefinement() throws LockedException, NotReadyException,
-            RobustEstimatorException, InvalidFundamentalMatrixException, NotAvailableException {
+    void testEstimateEightPointsWithRefinement() throws LockedException, NotReadyException, RobustEstimatorException,
+            InvalidFundamentalMatrixException, NotAvailableException {
         double leftEpipoleError;
         double rightEpipoleError;
 
         // randomly create two pinhole cameras
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double alphaEuler1 = 0.0;
-        final double betaEuler1 = 0.0;
-        final double gammaEuler1 = 0.0;
-        final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-        final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-        final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+        final var randomizer = new UniformRandomizer();
+        final var alphaEuler1 = 0.0;
+        final var betaEuler1 = 0.0;
+        final var gammaEuler1 = 0.0;
+        final var alphaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var betaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var gammaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-        final double horizontalFocalLength1 = randomizer.nextDouble(
-                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-        final double verticalFocalLength1 = randomizer.nextDouble(
-                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-        final double horizontalFocalLength2 = randomizer.nextDouble(
-                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-        final double verticalFocalLength2 = randomizer.nextDouble(
-                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final var horizontalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final var verticalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final var horizontalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final var verticalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-        final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
-        final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+        final var skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+        final var skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
 
-        final double horizontalPrincipalPoint1 = randomizer.nextDouble(
-                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-        final double verticalPrincipalPoint1 = randomizer.nextDouble(
-                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-        final double horizontalPrincipalPoint2 = randomizer.nextDouble(
-                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-        final double verticalPrincipalPoint2 = randomizer.nextDouble(
-                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final var horizontalPrincipalPoint1 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final var verticalPrincipalPoint1 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final var horizontalPrincipalPoint2 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final var verticalPrincipalPoint2 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
-        final double cameraSeparation = randomizer.nextDouble(
-                MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
+        final var cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
-        final int nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
+        final var nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
 
-        final Point3D center1 = new InhomogeneousPoint3D(
-                randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+        final var center1 = new InhomogeneousPoint3D(randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                 randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                 randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-        final Point3D center2 = new InhomogeneousPoint3D(
-                center1.getInhomX() + cameraSeparation,
-                center1.getInhomY() + cameraSeparation,
-                center1.getInhomZ() + cameraSeparation);
+        final var center2 = new InhomogeneousPoint3D(center1.getInhomX() + cameraSeparation,
+                center1.getInhomY() + cameraSeparation, center1.getInhomZ() + cameraSeparation);
 
-        final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
-        final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+        final var rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+        final var rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-        final PinholeCameraIntrinsicParameters intrinsic1 =
-                new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
-                        verticalFocalLength1, horizontalPrincipalPoint1,
-                        verticalPrincipalPoint1, skewness1);
-        final PinholeCameraIntrinsicParameters intrinsic2 =
-                new PinholeCameraIntrinsicParameters(horizontalFocalLength2,
-                        verticalFocalLength2, horizontalPrincipalPoint2,
-                        verticalPrincipalPoint2, skewness2);
+        final var intrinsic1 = new PinholeCameraIntrinsicParameters(horizontalFocalLength1, verticalFocalLength1,
+                horizontalPrincipalPoint1, verticalPrincipalPoint1, skewness1);
+        final var intrinsic2 = new PinholeCameraIntrinsicParameters(horizontalFocalLength2, verticalFocalLength2,
+                horizontalPrincipalPoint2, verticalPrincipalPoint2, skewness2);
 
-        final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
-        final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
+        final var camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
+        final var camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
 
         // generate a random list of 3D points
-        final List<Point3D> points3D = new ArrayList<>();
-        for (int i = 0; i < nPoints; i++) {
-            points3D.add(new InhomogeneousPoint3D(
-                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+        final var points3D = new ArrayList<Point3D>();
+        for (var i = 0; i < nPoints; i++) {
+            points3D.add(new InhomogeneousPoint3D(randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE)));
         }
 
         // project 3D points with both cameras
-        final List<Point2D> leftPoints = camera1.project(points3D);
-        final List<Point2D> rightPoints = camera2.project(points3D);
+        final var leftPoints = camera1.project(points3D);
+        final var rightPoints = camera2.project(points3D);
 
         // add outliers
-        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                new Random(), 0.0, STD_ERROR);
+        final var errorRandomizer = new GaussianRandomizer(0.0, STD_ERROR);
 
-        final List<Point2D> leftPointsWithError = new ArrayList<>();
-        for (final Point2D leftPoint : leftPoints) {
+        final var leftPointsWithError = new ArrayList<Point2D>();
+        for (final var leftPoint : leftPoints) {
             if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                 // outlier
-                final double errorX = errorRandomizer.nextDouble();
-                final double errorY = errorRandomizer.nextDouble();
-                leftPointsWithError.add(new HomogeneousPoint2D(
-                        leftPoint.getInhomX() + errorX,
+                final var errorX = errorRandomizer.nextDouble();
+                final var errorY = errorRandomizer.nextDouble();
+                leftPointsWithError.add(new HomogeneousPoint2D(leftPoint.getInhomX() + errorX,
                         leftPoint.getInhomY() + errorY, 1.0));
             } else {
                 // inlier
@@ -823,14 +665,13 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
             }
         }
 
-        final List<Point2D> rightPointsWithError = new ArrayList<>();
-        for (final Point2D rightPoint : rightPoints) {
+        final var rightPointsWithError = new ArrayList<Point2D>();
+        for (final var rightPoint : rightPoints) {
             if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                 // outlier
-                final double errorX = errorRandomizer.nextDouble();
-                final double errorY = errorRandomizer.nextDouble();
-                rightPointsWithError.add(new HomogeneousPoint2D(
-                        rightPoint.getInhomX() + errorX,
+                final var errorX = errorRandomizer.nextDouble();
+                final var errorY = errorRandomizer.nextDouble();
+                rightPointsWithError.add(new HomogeneousPoint2D(rightPoint.getInhomX() + errorX,
                         rightPoint.getInhomY() + errorY, 1.0));
             } else {
                 // inlier
@@ -839,10 +680,9 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
         }
 
         // estimate fundamental matrix
-        RANSACFundamentalMatrixRobustEstimator estimator =
-                new RANSACFundamentalMatrixRobustEstimator(
-                        FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM,
-                        leftPointsWithError, rightPointsWithError, this);
+        var estimator = new RANSACFundamentalMatrixRobustEstimator(
+                FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM, leftPointsWithError, rightPointsWithError,
+                this);
         estimator.setThreshold(THRESHOLD);
         estimator.setComputeAndKeepInliersEnabled(true);
         estimator.setComputeAndKeepResidualsEnabled(true);
@@ -858,7 +698,7 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
         assertEquals(0, estimateNextIteration);
         assertEquals(0, estimateProgressChange);
 
-        final FundamentalMatrix fundMatrix = estimator.estimate();
+        final var fundMatrix = estimator.estimate();
         assertEquals(MIN_REQUIRED_POINTS_8, estimator.getMinRequiredPoints());
         assertNotNull(estimator.getInliersData());
         assertNotNull(estimator.getInliersData().getInliers());
@@ -874,13 +714,13 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
         reset();
 
         // compute epipoles
-        final Point2D epipole1a = camera1.project(center2);
-        final Point2D epipole2a = camera2.project(center1);
+        final var epipole1a = camera1.project(center2);
+        final var epipole2a = camera2.project(center1);
 
         fundMatrix.computeEpipoles();
 
-        final Point2D epipole1b = fundMatrix.getLeftEpipole();
-        final Point2D epipole2b = fundMatrix.getRightEpipole();
+        final var epipole1b = fundMatrix.getLeftEpipole();
+        final var epipole2b = fundMatrix.getRightEpipole();
 
         // check correctness of epipoles
         leftEpipoleError = epipole1a.distanceTo(epipole1b);
@@ -890,15 +730,15 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
 
         // check that all points lie within their corresponding epipolar
         // lines
-        for (int i = 0; i < nPoints; i++) {
-            final Point2D leftPoint = leftPoints.get(i);
-            final Point2D rightPoint = rightPoints.get(i);
-            final Point3D point3D = points3D.get(i);
+        for (var i = 0; i < nPoints; i++) {
+            final var leftPoint = leftPoints.get(i);
+            final var rightPoint = rightPoints.get(i);
+            final var point3D = points3D.get(i);
 
             // obtain epipolar line on left view using 2D point on right view
-            final Line2D line1 = fundMatrix.getLeftEpipolarLine(rightPoint);
+            final var line1 = fundMatrix.getLeftEpipolarLine(rightPoint);
             // obtain epipolar line on right view using 2D point on left view
-            final Line2D line2 = fundMatrix.getRightEpipolarLine(leftPoint);
+            final var line2 = fundMatrix.getRightEpipolarLine(leftPoint);
 
             // check that 2D point on left view belongs to left epipolar line
             assertTrue(line1.isLocus(leftPoint, ABSOLUTE_ERROR));
@@ -907,8 +747,8 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
             assertTrue(line2.isLocus(rightPoint, ABSOLUTE_ERROR));
 
             // obtain epipolar planes
-            final Plane epipolarPlane1 = camera1.backProject(line1);
-            final Plane epipolarPlane2 = camera2.backProject(line2);
+            final var epipolarPlane1 = camera1.backProject(line1);
+            final var epipolarPlane2 = camera2.backProject(line2);
 
             // check that both planes are the same
             assertTrue(epipolarPlane1.equals(epipolarPlane2, ABSOLUTE_ERROR));
@@ -928,91 +768,68 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
 
         // Force NotReadyException
         estimator = new RANSACFundamentalMatrixRobustEstimator();
-        try {
-            estimator.estimate();
-            fail("NotReadyException expected but not thrown");
-        } catch (final NotReadyException ignore) {
-        }
+        assertThrows(NotReadyException.class, estimator::estimate);
     }
 
     @Test
-    public void testEstimateAffineWithRefinement() throws LockedException, NotReadyException,
-            RobustEstimatorException, InvalidFundamentalMatrixException, NotAvailableException,
-            WrongSizeException, InvalidPairOfCamerasException {
+    void testEstimateAffineWithRefinement() throws LockedException, NotReadyException, RobustEstimatorException,
+            InvalidFundamentalMatrixException, NotAvailableException, WrongSizeException,
+            InvalidPairOfCamerasException {
 
-        int numValid = 0;
-        for (int j = 0; j < TIMES; j++) {
+        var numValid = 0;
+        for (var j = 0; j < TIMES; j++) {
             // randomly create two pinhole cameras
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double alphaEuler1 = 0.0;
-            final double betaEuler1 = 0.0;
-            final double gammaEuler1 = 0.0;
-            final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+            final var randomizer = new UniformRandomizer();
+            final var alphaEuler1 = 0.0;
+            final var betaEuler1 = 0.0;
+            final var gammaEuler1 = 0.0;
+            final var alphaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var betaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var gammaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-            final double horizontalFocalLength1 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength1 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double horizontalFocalLength2 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength2 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var horizontalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var verticalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var horizontalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var verticalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
-            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final var skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final var skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
 
-            final double horizontalPrincipalPoint1 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double verticalPrincipalPoint1 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double horizontalPrincipalPoint2 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double verticalPrincipalPoint2 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var horizontalPrincipalPoint1 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var verticalPrincipalPoint1 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var horizontalPrincipalPoint2 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var verticalPrincipalPoint2 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
-            final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
+            final var cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
-            final int nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
+            final var nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
 
-            final Point3D center1 = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+            final var center1 = new InhomogeneousPoint3D(randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            final Point3D center2 = new InhomogeneousPoint3D(
-                    center1.getInhomX() + cameraSeparation,
-                    center1.getInhomY() + cameraSeparation,
-                    center1.getInhomZ() + cameraSeparation);
+            final var center2 = new InhomogeneousPoint3D(center1.getInhomX() + cameraSeparation,
+                    center1.getInhomY() + cameraSeparation, center1.getInhomZ() + cameraSeparation);
 
-            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
-            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+            final var rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final var rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-            final PinholeCameraIntrinsicParameters intrinsic1 =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
-                            verticalFocalLength1, horizontalPrincipalPoint1,
-                            verticalPrincipalPoint1, skewness1);
-            final PinholeCameraIntrinsicParameters intrinsic2 =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength2,
-                            verticalFocalLength2, horizontalPrincipalPoint2,
-                            verticalPrincipalPoint2, skewness2);
+            final var intrinsic1 = new PinholeCameraIntrinsicParameters(horizontalFocalLength1, verticalFocalLength1,
+                    horizontalPrincipalPoint1, verticalPrincipalPoint1, skewness1);
+            final var intrinsic2 = new PinholeCameraIntrinsicParameters(horizontalFocalLength2, verticalFocalLength2,
+                    horizontalPrincipalPoint2, verticalPrincipalPoint2, skewness2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
+            final var camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
+            final var camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
 
             // convert cameras into affine cameras
-            final Matrix cameraMatrix1 = camera1.getInternalMatrix();
+            final var cameraMatrix1 = camera1.getInternalMatrix();
             cameraMatrix1.setElementAt(2, 0, 0.0);
             cameraMatrix1.setElementAt(2, 1, 0.0);
             cameraMatrix1.setElementAt(2, 2, 0.0);
             cameraMatrix1.setElementAt(2, 3, 1.0);
             camera1.setInternalMatrix(cameraMatrix1);
 
-            final Matrix cameraMatrix2 = camera2.getInternalMatrix();
+            final var cameraMatrix2 = camera2.getInternalMatrix();
             cameraMatrix2.setElementAt(2, 0, 0.0);
             cameraMatrix2.setElementAt(2, 1, 0.0);
             cameraMatrix2.setElementAt(2, 2, 0.0);
@@ -1020,30 +837,27 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
             camera2.setInternalMatrix(cameraMatrix2);
 
             // generate a random list of 3D points
-            final List<Point3D> points3D = new ArrayList<>();
-            for (int i = 0; i < nPoints; i++) {
-                points3D.add(new InhomogeneousPoint3D(
-                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+            final var points3D = new ArrayList<Point3D>();
+            for (var i = 0; i < nPoints; i++) {
+                points3D.add(new InhomogeneousPoint3D(randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE)));
             }
 
             // project 3D points with both cameras
-            final List<Point2D> leftPoints = camera1.project(points3D);
-            final List<Point2D> rightPoints = camera2.project(points3D);
+            final var leftPoints = camera1.project(points3D);
+            final var rightPoints = camera2.project(points3D);
 
             // add outliers
-            final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                    new Random(), 0.0, STD_ERROR);
+            final var errorRandomizer = new GaussianRandomizer(0.0, STD_ERROR);
 
-            final List<Point2D> leftPointsWithError = new ArrayList<>();
-            for (final Point2D leftPoint : leftPoints) {
+            final var leftPointsWithError = new ArrayList<Point2D>();
+            for (final var leftPoint : leftPoints) {
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
-                    final double errorX = errorRandomizer.nextDouble();
-                    final double errorY = errorRandomizer.nextDouble();
-                    leftPointsWithError.add(new HomogeneousPoint2D(
-                            leftPoint.getInhomX() + errorX,
+                    final var errorX = errorRandomizer.nextDouble();
+                    final var errorY = errorRandomizer.nextDouble();
+                    leftPointsWithError.add(new HomogeneousPoint2D(leftPoint.getInhomX() + errorX,
                             leftPoint.getInhomY() + errorY, 1.0));
                 } else {
                     // inlier
@@ -1051,14 +865,13 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
                 }
             }
 
-            final List<Point2D> rightPointsWithError = new ArrayList<>();
-            for (final Point2D rightPoint : rightPoints) {
+            final var rightPointsWithError = new ArrayList<Point2D>();
+            for (final var rightPoint : rightPoints) {
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
-                    final double errorX = errorRandomizer.nextDouble();
-                    final double errorY = errorRandomizer.nextDouble();
-                    rightPointsWithError.add(new HomogeneousPoint2D(
-                            rightPoint.getInhomX() + errorX,
+                    final var errorX = errorRandomizer.nextDouble();
+                    final var errorY = errorRandomizer.nextDouble();
+                    rightPointsWithError.add(new HomogeneousPoint2D(rightPoint.getInhomX() + errorX,
                             rightPoint.getInhomY() + errorY, 1.0));
                 } else {
                     // inlier
@@ -1067,10 +880,9 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
             }
 
             // estimate fundamental matrix
-            RANSACFundamentalMatrixRobustEstimator estimator =
-                    new RANSACFundamentalMatrixRobustEstimator(
-                            FundamentalMatrixEstimatorMethod.AFFINE_ALGORITHM,
-                            leftPointsWithError, rightPointsWithError, this);
+            var estimator = new RANSACFundamentalMatrixRobustEstimator(
+                    FundamentalMatrixEstimatorMethod.AFFINE_ALGORITHM, leftPointsWithError, rightPointsWithError,
+                    this);
             estimator.setThreshold(THRESHOLD);
             estimator.setComputeAndKeepInliersEnabled(true);
             estimator.setComputeAndKeepResidualsEnabled(true);
@@ -1086,7 +898,7 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
             assertEquals(0, estimateNextIteration);
             assertEquals(0, estimateProgressChange);
 
-            final FundamentalMatrix fundMatrix = estimator.estimate();
+            final var fundMatrix = estimator.estimate();
             assertEquals(MIN_REQUIRED_POINTS_AFFINE, estimator.getMinRequiredPoints());
             assertNotNull(estimator.getInliersData());
             assertNotNull(estimator.getInliersData().getInliers());
@@ -1101,16 +913,16 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
             reset();
 
             // compute epipoles
-            final FundamentalMatrix fundMatrix2 = new FundamentalMatrix(camera1, camera2);
+            final var fundMatrix2 = new FundamentalMatrix(camera1, camera2);
             fundMatrix2.computeEpipoles();
 
-            final Point2D epipole1a = fundMatrix2.getLeftEpipole();
-            final Point2D epipole2a = fundMatrix2.getRightEpipole();
+            final var epipole1a = fundMatrix2.getLeftEpipole();
+            final var epipole2a = fundMatrix2.getRightEpipole();
 
             fundMatrix.computeEpipoles();
 
-            final Point2D epipole1b = fundMatrix.getLeftEpipole();
-            final Point2D epipole2b = fundMatrix.getRightEpipole();
+            final var epipole1b = fundMatrix.getLeftEpipole();
+            final var epipole2b = fundMatrix.getRightEpipole();
 
             // check correctness of epipoles
             if (!epipole1a.equals(epipole1b, ABSOLUTE_ERROR)) {
@@ -1131,22 +943,21 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
                     .multiplyByScalarAndReturnNew(-1.0), ABSOLUTE_ERROR)) {
                 continue;
             }
-            assertTrue(fundMatrix.getInternalMatrix().equals(
-                    fundMatrix2.getInternalMatrix(), ABSOLUTE_ERROR)
+            assertTrue(fundMatrix.getInternalMatrix().equals(fundMatrix2.getInternalMatrix(), ABSOLUTE_ERROR)
                     || fundMatrix.getInternalMatrix().equals(fundMatrix2.getInternalMatrix()
                     .multiplyByScalarAndReturnNew(-1.0), ABSOLUTE_ERROR));
 
             // check that all points lie within their corresponding epipolar
             // lines
-            for (int i = 0; i < nPoints; i++) {
-                final Point2D leftPoint = leftPoints.get(i);
-                final Point2D rightPoint = rightPoints.get(i);
-                final Point3D point3D = points3D.get(i);
+            for (var i = 0; i < nPoints; i++) {
+                final var leftPoint = leftPoints.get(i);
+                final var rightPoint = rightPoints.get(i);
+                final var point3D = points3D.get(i);
 
                 // obtain epipolar line on left view using 2D point on right view
-                final Line2D line1 = fundMatrix.getLeftEpipolarLine(rightPoint);
+                final var line1 = fundMatrix.getLeftEpipolarLine(rightPoint);
                 // obtain epipolar line on right view using 2D point on left view
-                final Line2D line2 = fundMatrix.getRightEpipolarLine(leftPoint);
+                final var line2 = fundMatrix.getRightEpipolarLine(leftPoint);
 
                 // check that 2D point on left view belongs to left epipolar line
                 assertTrue(line1.isLocus(leftPoint, ABSOLUTE_ERROR));
@@ -1155,8 +966,8 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
                 assertTrue(line2.isLocus(rightPoint, ABSOLUTE_ERROR));
 
                 // obtain epipolar planes
-                final Plane epipolarPlane1 = camera1.backProject(line1);
-                final Plane epipolarPlane2 = camera2.backProject(line2);
+                final var epipolarPlane1 = camera1.backProject(line1);
+                final var epipolarPlane2 = camera2.backProject(line2);
 
                 // check that both planes are the same
                 assertTrue(epipolarPlane1.equals(epipolarPlane2, ABSOLUTE_ERROR));
@@ -1196,111 +1007,84 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
         assertTrue(numValid > 0);
 
         // Force NotReadyException
-        final LMedSFundamentalMatrixRobustEstimator estimator =
-                new LMedSFundamentalMatrixRobustEstimator();
-        try {
-            estimator.estimate();
-            fail("NotReadyException expected but not thrown");
-        } catch (final NotReadyException ignore) {
-        }
+        final var estimator = new LMedSFundamentalMatrixRobustEstimator();
+        assertThrows(NotReadyException.class, estimator::estimate);
     }
 
     @Test
-    public void testEstimateSevenPointsWithoutRefinement() throws LockedException, NotReadyException,
-            RobustEstimatorException, InvalidFundamentalMatrixException, NotAvailableException {
+    void testEstimateSevenPointsWithoutRefinement() throws LockedException, NotReadyException, RobustEstimatorException,
+            InvalidFundamentalMatrixException, NotAvailableException {
         double leftEpipoleError;
         double rightEpipoleError;
-        double avgLeftEpipoleError = 0.0;
-        double avgRightEpipoleError = 0.0;
-        int numValid = 0;
-        for (int j = 0; j < TIMES; j++) {
+        var avgLeftEpipoleError = 0.0;
+        var avgRightEpipoleError = 0.0;
+        var numValid = 0;
+        for (var j = 0; j < TIMES; j++) {
             // randomly create two pinhole cameras
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double alphaEuler1 = 0.0;
-            final double betaEuler1 = 0.0;
-            final double gammaEuler1 = 0.0;
-            final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+            final var randomizer = new UniformRandomizer();
+            final var alphaEuler1 = 0.0;
+            final var betaEuler1 = 0.0;
+            final var gammaEuler1 = 0.0;
+            final var alphaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var betaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var gammaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-            final double horizontalFocalLength1 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength1 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double horizontalFocalLength2 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength2 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var horizontalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var verticalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var horizontalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var verticalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
-            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final var skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final var skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
 
-            final double horizontalPrincipalPoint1 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double verticalPrincipalPoint1 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double horizontalPrincipalPoint2 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double verticalPrincipalPoint2 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var horizontalPrincipalPoint1 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var verticalPrincipalPoint1 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var horizontalPrincipalPoint2 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var verticalPrincipalPoint2 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
-            final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
+            final var cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
-            final int nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
+            final var nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
 
-            final Point3D center1 = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+            final var center1 = new InhomogeneousPoint3D(randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            final Point3D center2 = new InhomogeneousPoint3D(
-                    center1.getInhomX() + cameraSeparation,
-                    center1.getInhomY() + cameraSeparation,
-                    center1.getInhomZ() + cameraSeparation);
+            final var center2 = new InhomogeneousPoint3D(center1.getInhomX() + cameraSeparation,
+                    center1.getInhomY() + cameraSeparation, center1.getInhomZ() + cameraSeparation);
 
-            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
-            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+            final var rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final var rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-            final PinholeCameraIntrinsicParameters intrinsic1 =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
-                            verticalFocalLength1, horizontalPrincipalPoint1,
-                            verticalPrincipalPoint1, skewness1);
-            final PinholeCameraIntrinsicParameters intrinsic2 =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength2,
-                            verticalFocalLength2, horizontalPrincipalPoint2,
-                            verticalPrincipalPoint2, skewness2);
+            final var intrinsic1 = new PinholeCameraIntrinsicParameters(horizontalFocalLength1, verticalFocalLength1,
+                    horizontalPrincipalPoint1, verticalPrincipalPoint1, skewness1);
+            final var intrinsic2 = new PinholeCameraIntrinsicParameters(horizontalFocalLength2, verticalFocalLength2,
+                    horizontalPrincipalPoint2, verticalPrincipalPoint2, skewness2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
+            final var camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
+            final var camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
 
             // generate a random list of 3D points
-            final List<Point3D> points3D = new ArrayList<>();
-            for (int i = 0; i < nPoints; i++) {
-                points3D.add(new InhomogeneousPoint3D(
-                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+            final var points3D = new ArrayList<Point3D>();
+            for (var i = 0; i < nPoints; i++) {
+                points3D.add(new InhomogeneousPoint3D(randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE)));
             }
 
             // project 3D points with both cameras
-            final List<Point2D> leftPoints = camera1.project(points3D);
-            final List<Point2D> rightPoints = camera2.project(points3D);
+            final var leftPoints = camera1.project(points3D);
+            final var rightPoints = camera2.project(points3D);
 
             // add outliers
-            final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                    new Random(), 0.0, STD_ERROR);
+            final var errorRandomizer = new GaussianRandomizer(0.0, STD_ERROR);
 
-            final List<Point2D> leftPointsWithError = new ArrayList<>();
-            for (final Point2D leftPoint : leftPoints) {
+            final var leftPointsWithError = new ArrayList<Point2D>();
+            for (final var leftPoint : leftPoints) {
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
-                    final double errorX = errorRandomizer.nextDouble();
-                    final double errorY = errorRandomizer.nextDouble();
-                    leftPointsWithError.add(new HomogeneousPoint2D(
-                            leftPoint.getInhomX() + errorX,
+                    final var errorX = errorRandomizer.nextDouble();
+                    final var errorY = errorRandomizer.nextDouble();
+                    leftPointsWithError.add(new HomogeneousPoint2D(leftPoint.getInhomX() + errorX,
                             leftPoint.getInhomY() + errorY, 1.0));
                 } else {
                     // inlier
@@ -1308,14 +1092,13 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
                 }
             }
 
-            final List<Point2D> rightPointsWithError = new ArrayList<>();
-            for (final Point2D rightPoint : rightPoints) {
+            final var rightPointsWithError = new ArrayList<Point2D>();
+            for (final var rightPoint : rightPoints) {
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
-                    final double errorX = errorRandomizer.nextDouble();
-                    final double errorY = errorRandomizer.nextDouble();
-                    rightPointsWithError.add(new HomogeneousPoint2D(
-                            rightPoint.getInhomX() + errorX,
+                    final var errorX = errorRandomizer.nextDouble();
+                    final var errorY = errorRandomizer.nextDouble();
+                    rightPointsWithError.add(new HomogeneousPoint2D(rightPoint.getInhomX() + errorX,
                             rightPoint.getInhomY() + errorY, 1.0));
                 } else {
                     // inlier
@@ -1324,9 +1107,8 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
             }
 
             // estimate fundamental matrix
-            final RANSACFundamentalMatrixRobustEstimator estimator =
-                    new RANSACFundamentalMatrixRobustEstimator(
-                            leftPointsWithError, rightPointsWithError, this);
+            final var estimator = new RANSACFundamentalMatrixRobustEstimator(leftPointsWithError, rightPointsWithError,
+                    this);
             estimator.setThreshold(THRESHOLD);
             estimator.setComputeAndKeepInliersEnabled(true);
             estimator.setComputeAndKeepResidualsEnabled(true);
@@ -1342,7 +1124,7 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
             assertEquals(0, estimateNextIteration);
             assertEquals(0, estimateProgressChange);
 
-            final FundamentalMatrix fundMatrix = estimator.estimate();
+            final var fundMatrix = estimator.estimate();
             assertEquals(MIN_REQUIRED_POINTS_7, estimator.getMinRequiredPoints());
             assertNotNull(estimator.getInliersData());
             assertNotNull(estimator.getInliersData().getInliers());
@@ -1358,13 +1140,13 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
             reset();
 
             // compute epipoles
-            final Point2D epipole1a = camera1.project(center2);
-            final Point2D epipole2a = camera2.project(center1);
+            final var epipole1a = camera1.project(center2);
+            final var epipole2a = camera2.project(center1);
 
             fundMatrix.computeEpipoles();
 
-            final Point2D epipole1b = fundMatrix.getLeftEpipole();
-            final Point2D epipole2b = fundMatrix.getRightEpipole();
+            final var epipole1b = fundMatrix.getLeftEpipole();
+            final var epipole2b = fundMatrix.getRightEpipole();
 
             // check correctness of epipoles
             leftEpipoleError = epipole1a.distanceTo(epipole1b);
@@ -1383,15 +1165,15 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
 
             // check that all points lie within their corresponding epipolar
             // lines
-            for (int i = 0; i < nPoints; i++) {
-                final Point2D leftPoint = leftPoints.get(i);
-                final Point2D rightPoint = rightPoints.get(i);
-                final Point3D point3D = points3D.get(i);
+            for (var i = 0; i < nPoints; i++) {
+                final var leftPoint = leftPoints.get(i);
+                final var rightPoint = rightPoints.get(i);
+                final var point3D = points3D.get(i);
 
                 // obtain epipolar line on left view using 2D point on right view
-                final Line2D line1 = fundMatrix.getLeftEpipolarLine(rightPoint);
+                final var line1 = fundMatrix.getLeftEpipolarLine(rightPoint);
                 // obtain epipolar line on right view using 2D point on left view
-                final Line2D line2 = fundMatrix.getRightEpipolarLine(leftPoint);
+                final var line2 = fundMatrix.getRightEpipolarLine(leftPoint);
 
                 // check that 2D point on left view belongs to left epipolar line
                 assertTrue(line1.isLocus(leftPoint, ABSOLUTE_ERROR));
@@ -1400,8 +1182,8 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
                 assertTrue(line2.isLocus(rightPoint, ABSOLUTE_ERROR));
 
                 // obtain epipolar planes
-                final Plane epipolarPlane1 = camera1.backProject(line1);
-                final Plane epipolarPlane2 = camera2.backProject(line2);
+                final var epipolarPlane1 = camera1.backProject(line1);
+                final var epipolarPlane2 = camera2.backProject(line2);
 
                 // check that both planes are the same
                 assertTrue(epipolarPlane1.equals(epipolarPlane2, ABSOLUTE_ERROR));
@@ -1428,111 +1210,82 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
         assertEquals(0.0, avgRightEpipoleError, ABSOLUTE_ERROR);
 
         // Force NotReadyException
-        final RANSACFundamentalMatrixRobustEstimator estimator =
-                new RANSACFundamentalMatrixRobustEstimator();
-        try {
-            estimator.estimate();
-            fail("NotReadyException expected but not thrown");
-        } catch (final NotReadyException ignore) {
-        }
+        final var estimator = new RANSACFundamentalMatrixRobustEstimator();
+        assertThrows(NotReadyException.class, estimator::estimate);
     }
 
     @Test
-    public void testEstimateEightPointsWithoutRefinement() throws LockedException, NotReadyException,
-            RobustEstimatorException, InvalidFundamentalMatrixException, NotAvailableException {
+    void testEstimateEightPointsWithoutRefinement() throws LockedException, NotReadyException, RobustEstimatorException,
+            InvalidFundamentalMatrixException, NotAvailableException {
         double leftEpipoleError;
         double rightEpipoleError;
 
         // randomly create two pinhole cameras
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double alphaEuler1 = 0.0;
-        final double betaEuler1 = 0.0;
-        final double gammaEuler1 = 0.0;
-        final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-        final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-        final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+        final var randomizer = new UniformRandomizer();
+        final var alphaEuler1 = 0.0;
+        final var betaEuler1 = 0.0;
+        final var gammaEuler1 = 0.0;
+        final var alphaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var betaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var gammaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-        final double horizontalFocalLength1 = randomizer.nextDouble(
-                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-        final double verticalFocalLength1 = randomizer.nextDouble(
-                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-        final double horizontalFocalLength2 = randomizer.nextDouble(
-                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-        final double verticalFocalLength2 = randomizer.nextDouble(
-                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final var horizontalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final var verticalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final var horizontalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final var verticalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-        final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
-        final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+        final var skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+        final var skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
 
-        final double horizontalPrincipalPoint1 = randomizer.nextDouble(
-                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-        final double verticalPrincipalPoint1 = randomizer.nextDouble(
-                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-        final double horizontalPrincipalPoint2 = randomizer.nextDouble(
-                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-        final double verticalPrincipalPoint2 = randomizer.nextDouble(
-                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final var horizontalPrincipalPoint1 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final var verticalPrincipalPoint1 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final var horizontalPrincipalPoint2 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final var verticalPrincipalPoint2 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
-        final double cameraSeparation = randomizer.nextDouble(
-                MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
+        final var cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
-        final int nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
+        final var nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
 
-        final Point3D center1 = new InhomogeneousPoint3D(
-                randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+        final var center1 = new InhomogeneousPoint3D(randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                 randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                 randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-        final Point3D center2 = new InhomogeneousPoint3D(
-                center1.getInhomX() + cameraSeparation,
-                center1.getInhomY() + cameraSeparation,
-                center1.getInhomZ() + cameraSeparation);
+        final var center2 = new InhomogeneousPoint3D(center1.getInhomX() + cameraSeparation,
+                center1.getInhomY() + cameraSeparation, center1.getInhomZ() + cameraSeparation);
 
-        final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
-        final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+        final var rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+        final var rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-        final PinholeCameraIntrinsicParameters intrinsic1 =
-                new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
-                        verticalFocalLength1, horizontalPrincipalPoint1,
-                        verticalPrincipalPoint1, skewness1);
-        final PinholeCameraIntrinsicParameters intrinsic2 =
-                new PinholeCameraIntrinsicParameters(horizontalFocalLength2,
-                        verticalFocalLength2, horizontalPrincipalPoint2,
-                        verticalPrincipalPoint2, skewness2);
+        final var intrinsic1 = new PinholeCameraIntrinsicParameters(horizontalFocalLength1, verticalFocalLength1,
+                horizontalPrincipalPoint1, verticalPrincipalPoint1, skewness1);
+        final var intrinsic2 = new PinholeCameraIntrinsicParameters(horizontalFocalLength2, verticalFocalLength2,
+                horizontalPrincipalPoint2, verticalPrincipalPoint2, skewness2);
 
-        final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
-        final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
+        final var camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
+        final var camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
 
         // generate a random list of 3D points
-        final List<Point3D> points3D = new ArrayList<>();
-        for (int i = 0; i < nPoints; i++) {
-            points3D.add(new InhomogeneousPoint3D(
-                    randomizer.nextDouble(MIN_RANDOM_VALUE,
-                            MAX_RANDOM_VALUE), randomizer.nextDouble(
-                    MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
-                    randomizer.nextDouble(MIN_RANDOM_VALUE,
-                            MAX_RANDOM_VALUE)));
+        final var points3D = new ArrayList<Point3D>();
+        for (var i = 0; i < nPoints; i++) {
+            points3D.add(new InhomogeneousPoint3D(randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE)));
         }
 
         // project 3D points with both cameras
-        final List<Point2D> leftPoints = camera1.project(points3D);
-        final List<Point2D> rightPoints = camera2.project(points3D);
+        final var leftPoints = camera1.project(points3D);
+        final var rightPoints = camera2.project(points3D);
 
         // add outliers
-        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                new Random(), 0.0, STD_ERROR);
+        final var errorRandomizer = new GaussianRandomizer(0.0, STD_ERROR);
 
-        final List<Point2D> leftPointsWithError = new ArrayList<>();
-        for (final Point2D leftPoint : leftPoints) {
+        final var leftPointsWithError = new ArrayList<Point2D>();
+        for (final var leftPoint : leftPoints) {
             if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                 // outlier
-                final double errorX = errorRandomizer.nextDouble();
-                final double errorY = errorRandomizer.nextDouble();
-                leftPointsWithError.add(new HomogeneousPoint2D(
-                        leftPoint.getInhomX() + errorX,
+                final var errorX = errorRandomizer.nextDouble();
+                final var errorY = errorRandomizer.nextDouble();
+                leftPointsWithError.add(new HomogeneousPoint2D(leftPoint.getInhomX() + errorX,
                         leftPoint.getInhomY() + errorY, 1.0));
             } else {
                 // inlier
@@ -1540,14 +1293,13 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
             }
         }
 
-        final List<Point2D> rightPointsWithError = new ArrayList<>();
-        for (final Point2D rightPoint : rightPoints) {
+        final var rightPointsWithError = new ArrayList<Point2D>();
+        for (final var rightPoint : rightPoints) {
             if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                 // outlier
-                final double errorX = errorRandomizer.nextDouble();
-                final double errorY = errorRandomizer.nextDouble();
-                rightPointsWithError.add(new HomogeneousPoint2D(
-                        rightPoint.getInhomX() + errorX,
+                final var errorX = errorRandomizer.nextDouble();
+                final var errorY = errorRandomizer.nextDouble();
+                rightPointsWithError.add(new HomogeneousPoint2D(rightPoint.getInhomX() + errorX,
                         rightPoint.getInhomY() + errorY, 1.0));
             } else {
                 // inlier
@@ -1556,10 +1308,9 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
         }
 
         // estimate fundamental matrix
-        RANSACFundamentalMatrixRobustEstimator estimator =
-                new RANSACFundamentalMatrixRobustEstimator(
-                        FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM,
-                        leftPointsWithError, rightPointsWithError, this);
+        var estimator = new RANSACFundamentalMatrixRobustEstimator(
+                FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM, leftPointsWithError, rightPointsWithError,
+                this);
         estimator.setThreshold(THRESHOLD);
         estimator.setComputeAndKeepInliersEnabled(true);
         estimator.setComputeAndKeepResidualsEnabled(true);
@@ -1575,7 +1326,7 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
         assertEquals(0, estimateNextIteration);
         assertEquals(0, estimateProgressChange);
 
-        final FundamentalMatrix fundMatrix = estimator.estimate();
+        final var fundMatrix = estimator.estimate();
         assertEquals(MIN_REQUIRED_POINTS_8, estimator.getMinRequiredPoints());
         assertNotNull(estimator.getInliersData());
         assertNotNull(estimator.getInliersData().getInliers());
@@ -1591,13 +1342,13 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
         reset();
 
         // compute epipoles
-        final Point2D epipole1a = camera1.project(center2);
-        final Point2D epipole2a = camera2.project(center1);
+        final var epipole1a = camera1.project(center2);
+        final var epipole2a = camera2.project(center1);
 
         fundMatrix.computeEpipoles();
 
-        final Point2D epipole1b = fundMatrix.getLeftEpipole();
-        final Point2D epipole2b = fundMatrix.getRightEpipole();
+        final var epipole1b = fundMatrix.getLeftEpipole();
+        final var epipole2b = fundMatrix.getRightEpipole();
 
         // check correctness of epipoles
         leftEpipoleError = epipole1a.distanceTo(epipole1b);
@@ -1607,15 +1358,15 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
 
         // check that all points lie within their corresponding epipolar
         // lines
-        for (int i = 0; i < nPoints; i++) {
-            final Point2D leftPoint = leftPoints.get(i);
-            final Point2D rightPoint = rightPoints.get(i);
-            final Point3D point3D = points3D.get(i);
+        for (var i = 0; i < nPoints; i++) {
+            final var leftPoint = leftPoints.get(i);
+            final var rightPoint = rightPoints.get(i);
+            final var point3D = points3D.get(i);
 
             // obtain epipolar line on left view using 2D point on right view
-            final Line2D line1 = fundMatrix.getLeftEpipolarLine(rightPoint);
+            final var line1 = fundMatrix.getLeftEpipolarLine(rightPoint);
             // obtain epipolar line on right view using 2D point on left view
-            final Line2D line2 = fundMatrix.getRightEpipolarLine(leftPoint);
+            final var line2 = fundMatrix.getRightEpipolarLine(leftPoint);
 
             // check that 2D point on left view belongs to left epipolar line
             assertTrue(line1.isLocus(leftPoint, ABSOLUTE_ERROR));
@@ -1624,8 +1375,8 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
             assertTrue(line2.isLocus(rightPoint, ABSOLUTE_ERROR));
 
             // obtain epipolar planes
-            final Plane epipolarPlane1 = camera1.backProject(line1);
-            final Plane epipolarPlane2 = camera2.backProject(line2);
+            final var epipolarPlane1 = camera1.backProject(line1);
+            final var epipolarPlane2 = camera2.backProject(line2);
 
             // check that both planes are the same
             assertTrue(epipolarPlane1.equals(epipolarPlane2, ABSOLUTE_ERROR));
@@ -1645,91 +1396,68 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
 
         // Force NotReadyException
         estimator = new RANSACFundamentalMatrixRobustEstimator();
-        try {
-            estimator.estimate();
-            fail("NotReadyException expected but not thrown");
-        } catch (final NotReadyException ignore) {
-        }
+        assertThrows(NotReadyException.class, estimator::estimate);
     }
 
     @Test
-    public void testEstimateAffineWithoutRefinement() throws LockedException, NotReadyException,
-            RobustEstimatorException, InvalidFundamentalMatrixException, NotAvailableException,
-            WrongSizeException, InvalidPairOfCamerasException {
+    void testEstimateAffineWithoutRefinement() throws LockedException, NotReadyException, RobustEstimatorException,
+            InvalidFundamentalMatrixException, NotAvailableException, WrongSizeException,
+            InvalidPairOfCamerasException {
 
-        int numValid = 0;
-        for (int j = 0; j < TIMES; j++) {
+        var numValid = 0;
+        for (var j = 0; j < TIMES; j++) {
             // randomly create two pinhole cameras
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double alphaEuler1 = 0.0;
-            final double betaEuler1 = 0.0;
-            final double gammaEuler1 = 0.0;
-            final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+            final var randomizer = new UniformRandomizer();
+            final var alphaEuler1 = 0.0;
+            final var betaEuler1 = 0.0;
+            final var gammaEuler1 = 0.0;
+            final var alphaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var betaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var gammaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-            final double horizontalFocalLength1 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength1 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double horizontalFocalLength2 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength2 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var horizontalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var verticalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var horizontalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var verticalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
-            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final var skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final var skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
 
-            final double horizontalPrincipalPoint1 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double verticalPrincipalPoint1 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double horizontalPrincipalPoint2 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double verticalPrincipalPoint2 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var horizontalPrincipalPoint1 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var verticalPrincipalPoint1 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var horizontalPrincipalPoint2 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var verticalPrincipalPoint2 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
-            final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
+            final var cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
-            final int nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
+            final var nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
 
-            final Point3D center1 = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+            final var center1 = new InhomogeneousPoint3D(randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            final Point3D center2 = new InhomogeneousPoint3D(
-                    center1.getInhomX() + cameraSeparation,
-                    center1.getInhomY() + cameraSeparation,
-                    center1.getInhomZ() + cameraSeparation);
+            final var center2 = new InhomogeneousPoint3D(center1.getInhomX() + cameraSeparation,
+                    center1.getInhomY() + cameraSeparation, center1.getInhomZ() + cameraSeparation);
 
-            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
-            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+            final var rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final var rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-            final PinholeCameraIntrinsicParameters intrinsic1 =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
-                            verticalFocalLength1, horizontalPrincipalPoint1,
-                            verticalPrincipalPoint1, skewness1);
-            final PinholeCameraIntrinsicParameters intrinsic2 =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength2,
-                            verticalFocalLength2, horizontalPrincipalPoint2,
-                            verticalPrincipalPoint2, skewness2);
+            final var intrinsic1 = new PinholeCameraIntrinsicParameters(horizontalFocalLength1, verticalFocalLength1,
+                    horizontalPrincipalPoint1, verticalPrincipalPoint1, skewness1);
+            final var intrinsic2 = new PinholeCameraIntrinsicParameters(horizontalFocalLength2, verticalFocalLength2,
+                    horizontalPrincipalPoint2, verticalPrincipalPoint2, skewness2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
+            final var camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
+            final var camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
 
             // convert cameras into affine cameras
-            final Matrix cameraMatrix1 = camera1.getInternalMatrix();
+            final var cameraMatrix1 = camera1.getInternalMatrix();
             cameraMatrix1.setElementAt(2, 0, 0.0);
             cameraMatrix1.setElementAt(2, 1, 0.0);
             cameraMatrix1.setElementAt(2, 2, 0.0);
             cameraMatrix1.setElementAt(2, 3, 1.0);
             camera1.setInternalMatrix(cameraMatrix1);
 
-            final Matrix cameraMatrix2 = camera2.getInternalMatrix();
+            final var cameraMatrix2 = camera2.getInternalMatrix();
             cameraMatrix2.setElementAt(2, 0, 0.0);
             cameraMatrix2.setElementAt(2, 1, 0.0);
             cameraMatrix2.setElementAt(2, 2, 0.0);
@@ -1737,30 +1465,27 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
             camera2.setInternalMatrix(cameraMatrix2);
 
             // generate a random list of 3D points
-            final List<Point3D> points3D = new ArrayList<>();
-            for (int i = 0; i < nPoints; i++) {
-                points3D.add(new InhomogeneousPoint3D(
-                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+            final var points3D = new ArrayList<Point3D>();
+            for (var i = 0; i < nPoints; i++) {
+                points3D.add(new InhomogeneousPoint3D(randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE)));
             }
 
             // project 3D points with both cameras
-            final List<Point2D> leftPoints = camera1.project(points3D);
-            final List<Point2D> rightPoints = camera2.project(points3D);
+            final var leftPoints = camera1.project(points3D);
+            final var rightPoints = camera2.project(points3D);
 
             // add outliers
-            final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                    new Random(), 0.0, STD_ERROR);
+            final var errorRandomizer = new GaussianRandomizer(0.0, STD_ERROR);
 
-            final List<Point2D> leftPointsWithError = new ArrayList<>();
-            for (final Point2D leftPoint : leftPoints) {
+            final var leftPointsWithError = new ArrayList<Point2D>();
+            for (final var leftPoint : leftPoints) {
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
-                    final double errorX = errorRandomizer.nextDouble();
-                    final double errorY = errorRandomizer.nextDouble();
-                    leftPointsWithError.add(new HomogeneousPoint2D(
-                            leftPoint.getInhomX() + errorX,
+                    final var errorX = errorRandomizer.nextDouble();
+                    final var errorY = errorRandomizer.nextDouble();
+                    leftPointsWithError.add(new HomogeneousPoint2D(leftPoint.getInhomX() + errorX,
                             leftPoint.getInhomY() + errorY, 1.0));
                 } else {
                     // inlier
@@ -1768,14 +1493,13 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
                 }
             }
 
-            final List<Point2D> rightPointsWithError = new ArrayList<>();
-            for (final Point2D rightPoint : rightPoints) {
+            final var rightPointsWithError = new ArrayList<Point2D>();
+            for (final var rightPoint : rightPoints) {
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
-                    final double errorX = errorRandomizer.nextDouble();
-                    final double errorY = errorRandomizer.nextDouble();
-                    rightPointsWithError.add(new HomogeneousPoint2D(
-                            rightPoint.getInhomX() + errorX,
+                    final var errorX = errorRandomizer.nextDouble();
+                    final var errorY = errorRandomizer.nextDouble();
+                    rightPointsWithError.add(new HomogeneousPoint2D(rightPoint.getInhomX() + errorX,
                             rightPoint.getInhomY() + errorY, 1.0));
                 } else {
                     // inlier
@@ -1784,10 +1508,9 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
             }
 
             // estimate fundamental matrix
-            final RANSACFundamentalMatrixRobustEstimator estimator =
-                    new RANSACFundamentalMatrixRobustEstimator(
-                            FundamentalMatrixEstimatorMethod.AFFINE_ALGORITHM,
-                            leftPointsWithError, rightPointsWithError, this);
+            final var estimator = new RANSACFundamentalMatrixRobustEstimator(
+                    FundamentalMatrixEstimatorMethod.AFFINE_ALGORITHM, leftPointsWithError, rightPointsWithError,
+                    this);
             estimator.setThreshold(THRESHOLD);
             estimator.setComputeAndKeepInliersEnabled(true);
             estimator.setComputeAndKeepResidualsEnabled(true);
@@ -1803,7 +1526,7 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
             assertEquals(0, estimateNextIteration);
             assertEquals(0, estimateProgressChange);
 
-            final FundamentalMatrix fundMatrix = estimator.estimate();
+            final var fundMatrix = estimator.estimate();
             assertEquals(MIN_REQUIRED_POINTS_AFFINE, estimator.getMinRequiredPoints());
             assertNotNull(estimator.getInliersData());
             assertNotNull(estimator.getInliersData().getInliers());
@@ -1819,16 +1542,16 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
             reset();
 
             // compute epipoles
-            final FundamentalMatrix fundMatrix2 = new FundamentalMatrix(camera1, camera2);
+            final var fundMatrix2 = new FundamentalMatrix(camera1, camera2);
             fundMatrix2.computeEpipoles();
 
-            final Point2D epipole1a = fundMatrix2.getLeftEpipole();
-            final Point2D epipole2a = fundMatrix2.getRightEpipole();
+            final var epipole1a = fundMatrix2.getLeftEpipole();
+            final var epipole2a = fundMatrix2.getRightEpipole();
 
             fundMatrix.computeEpipoles();
 
-            final Point2D epipole1b = fundMatrix.getLeftEpipole();
-            final Point2D epipole2b = fundMatrix.getRightEpipole();
+            final var epipole1b = fundMatrix.getLeftEpipole();
+            final var epipole2b = fundMatrix.getRightEpipole();
 
             // check correctness of epipoles
             if (!epipole1a.equals(epipole1b, ABSOLUTE_ERROR)) {
@@ -1844,28 +1567,26 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
             fundMatrix2.normalize();
 
             // check that both matrices are equal up to scale (i.e. sign)
-            if (!fundMatrix.getInternalMatrix().equals(
-                    fundMatrix2.getInternalMatrix(), ABSOLUTE_ERROR)
+            if (!fundMatrix.getInternalMatrix().equals(fundMatrix2.getInternalMatrix(), ABSOLUTE_ERROR)
                     && !fundMatrix.getInternalMatrix().equals(fundMatrix2.getInternalMatrix()
                     .multiplyByScalarAndReturnNew(-1.0), ABSOLUTE_ERROR)) {
                 continue;
             }
-            assertTrue(fundMatrix.getInternalMatrix().equals(
-                    fundMatrix2.getInternalMatrix(), ABSOLUTE_ERROR)
+            assertTrue(fundMatrix.getInternalMatrix().equals(fundMatrix2.getInternalMatrix(), ABSOLUTE_ERROR)
                     || fundMatrix.getInternalMatrix().equals(fundMatrix2.getInternalMatrix()
                     .multiplyByScalarAndReturnNew(-1.0), ABSOLUTE_ERROR));
 
             // check that all points lie within their corresponding epipolar
             // lines
-            for (int i = 0; i < nPoints; i++) {
-                final Point2D leftPoint = leftPoints.get(i);
-                final Point2D rightPoint = rightPoints.get(i);
-                final Point3D point3D = points3D.get(i);
+            for (var i = 0; i < nPoints; i++) {
+                final var leftPoint = leftPoints.get(i);
+                final var rightPoint = rightPoints.get(i);
+                final var point3D = points3D.get(i);
 
                 // obtain epipolar line on left view using 2D point on right view
-                final Line2D line1 = fundMatrix.getLeftEpipolarLine(rightPoint);
+                final var line1 = fundMatrix.getLeftEpipolarLine(rightPoint);
                 // obtain epipolar line on right view using 2D point on left view
-                final Line2D line2 = fundMatrix.getRightEpipolarLine(leftPoint);
+                final var line2 = fundMatrix.getRightEpipolarLine(leftPoint);
 
                 // check that 2D point on left view belongs to left epipolar line
                 assertTrue(line1.isLocus(leftPoint, ABSOLUTE_ERROR));
@@ -1874,8 +1595,8 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
                 assertTrue(line2.isLocus(rightPoint, ABSOLUTE_ERROR));
 
                 // obtain epipolar planes
-                final Plane epipolarPlane1 = camera1.backProject(line1);
-                final Plane epipolarPlane2 = camera2.backProject(line2);
+                final var epipolarPlane1 = camera1.backProject(line1);
+                final var epipolarPlane2 = camera2.backProject(line2);
 
                 // check that both planes are the same
                 assertTrue(epipolarPlane1.equals(epipolarPlane2, ABSOLUTE_ERROR));
@@ -1915,13 +1636,8 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
         assertTrue(numValid > 0);
 
         // Force NotReadyException
-        final LMedSFundamentalMatrixRobustEstimator estimator =
-                new LMedSFundamentalMatrixRobustEstimator();
-        try {
-            estimator.estimate();
-            fail("NotReadyException expected but not thrown");
-        } catch (final NotReadyException ignore) {
-        }
+        final var estimator = new LMedSFundamentalMatrixRobustEstimator();
+        assertThrows(NotReadyException.class, estimator::estimate);
     }
 
     @Override
@@ -1937,68 +1653,31 @@ public class RANSACFundamentalMatrixRobustEstimatorTest implements
     }
 
     @Override
-    public void onEstimateNextIteration(
-            final FundamentalMatrixRobustEstimator estimator, final int iteration) {
+    public void onEstimateNextIteration(final FundamentalMatrixRobustEstimator estimator, final int iteration) {
         estimateNextIteration++;
         checkLocked((RANSACFundamentalMatrixRobustEstimator) estimator);
     }
 
     @Override
-    public void onEstimateProgressChange(
-            final FundamentalMatrixRobustEstimator estimator, final float progress) {
+    public void onEstimateProgressChange(final FundamentalMatrixRobustEstimator estimator, final float progress) {
         estimateProgressChange++;
         checkLocked((RANSACFundamentalMatrixRobustEstimator) estimator);
     }
 
     private void reset() {
-        estimateStart = estimateEnd = estimateNextIteration =
-                estimateProgressChange = 0;
+        estimateStart = estimateEnd = estimateNextIteration = estimateProgressChange = 0;
     }
 
-    private void checkLocked(final RANSACFundamentalMatrixRobustEstimator estimator) {
-        try {
-            estimator.setConfidence(0.5);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            estimator.setListener(null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            estimator.setMaxIterations(10);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            estimator.setPoints(null, null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            estimator.setProgressDelta(0.5f);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            estimator.setThreshold(0.5);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            estimator.setNonRobustFundamentalMatrixEstimatorMethod(
-                    FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            estimator.estimate();
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        } catch (final NotReadyException | RobustEstimatorException e) {
-            fail("LockedException expected but not thrown");
-        }
+    private static void checkLocked(final RANSACFundamentalMatrixRobustEstimator estimator) {
+        assertThrows(LockedException.class, () -> estimator.setConfidence(0.5));
+        assertThrows(LockedException.class, () -> estimator.setListener(null));
+        assertThrows(LockedException.class, () -> estimator.setMaxIterations(10));
+        assertThrows(LockedException.class, () -> estimator.setPoints(null, null));
+        assertThrows(LockedException.class, () -> estimator.setProgressDelta(0.5f));
+        assertThrows(LockedException.class, () -> estimator.setThreshold(0.5));
+        assertThrows(LockedException.class, () -> estimator.setNonRobustFundamentalMatrixEstimatorMethod(
+                FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM));
+        assertThrows(LockedException.class, estimator::estimate);
         assertTrue(estimator.isLocked());
     }
 }

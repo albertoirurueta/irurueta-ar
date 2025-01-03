@@ -39,8 +39,7 @@ import java.util.List;
  * obtain the most accurate and stable solution possible.
  */
 @SuppressWarnings("DuplicatedCode")
-public class LMSEImageOfAbsoluteConicEstimator extends
-        ImageOfAbsoluteConicEstimator {
+public class LMSEImageOfAbsoluteConicEstimator extends ImageOfAbsoluteConicEstimator {
 
     /**
      * Indicates if by default an LMSE (the Least Mean Square Error) solution is
@@ -54,14 +53,14 @@ public class LMSEImageOfAbsoluteConicEstimator extends
      * exceeding homographies will be ignored and only the first required
      * homographies will be used.
      */
-    private boolean mAllowLMSESolution;
+    private boolean allowLMSESolution;
 
     /**
      * Constructor.
      */
     public LMSEImageOfAbsoluteConicEstimator() {
         super();
-        mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
+        allowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
     }
 
     /**
@@ -70,10 +69,9 @@ public class LMSEImageOfAbsoluteConicEstimator extends
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or estimation progress changes.
      */
-    public LMSEImageOfAbsoluteConicEstimator(
-            final ImageOfAbsoluteConicEstimatorListener listener) {
+    public LMSEImageOfAbsoluteConicEstimator(final ImageOfAbsoluteConicEstimatorListener listener) {
         super(listener);
-        mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
+        allowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
     }
 
     /**
@@ -85,10 +83,9 @@ public class LMSEImageOfAbsoluteConicEstimator extends
      * @throws IllegalArgumentException if not enough homographies are provided
      *                                  for default IAC estimation constraints.
      */
-    public LMSEImageOfAbsoluteConicEstimator(
-            final List<Transformation2D> homographies) {
+    public LMSEImageOfAbsoluteConicEstimator(final List<Transformation2D> homographies) {
         super(homographies);
-        mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
+        allowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
     }
 
     /**
@@ -103,10 +100,9 @@ public class LMSEImageOfAbsoluteConicEstimator extends
      *                                  for default IAC estimation constraints.
      */
     public LMSEImageOfAbsoluteConicEstimator(
-            final List<Transformation2D> homographies,
-            final ImageOfAbsoluteConicEstimatorListener listener) {
+            final List<Transformation2D> homographies, final ImageOfAbsoluteConicEstimatorListener listener) {
         super(homographies, listener);
-        mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
+        allowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
     }
 
     /**
@@ -118,7 +114,7 @@ public class LMSEImageOfAbsoluteConicEstimator extends
      * @return true if LMSE solution is allowed, false otherwise.
      */
     public boolean isLMSESolutionAllowed() {
-        return mAllowLMSESolution;
+        return allowLMSESolution;
     }
 
     /**
@@ -134,7 +130,7 @@ public class LMSEImageOfAbsoluteConicEstimator extends
         if (isLocked()) {
             throw new LockedException();
         }
-        mAllowLMSESolution = allowed;
+        allowLMSESolution = allowed;
     }
 
     /**
@@ -156,8 +152,8 @@ public class LMSEImageOfAbsoluteConicEstimator extends
      *                                                projective.
      */
     @Override
-    public ImageOfAbsoluteConic estimate() throws LockedException,
-            NotReadyException, ImageOfAbsoluteConicEstimatorException {
+    public ImageOfAbsoluteConic estimate() throws LockedException, NotReadyException,
+            ImageOfAbsoluteConicEstimatorException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -166,37 +162,37 @@ public class LMSEImageOfAbsoluteConicEstimator extends
         }
 
         try {
-            mLocked = true;
-            if (mListener != null) {
-                mListener.onEstimateStart(this);
+            locked = true;
+            if (listener != null) {
+                listener.onEstimateStart(this);
             }
 
             final ImageOfAbsoluteConic iac;
-            if (mZeroSkewness && mPrincipalPointAtOrigin) {
-                if (mFocalDistanceAspectRatioKnown) {
+            if (zeroSkewness && principalPointAtOrigin) {
+                if (focalDistanceAspectRatioKnown) {
                     iac = estimateZeroSkewnessPrincipalPointAtOriginAndKnownFocalDistanceAspectRatio();
                 } else {
                     iac = estimateZeroSkewnessAndPrincipalPointAtOrigin();
                 }
-            } else if (mZeroSkewness) { // && !mPrincipalPointAtOrigin
-                if (mFocalDistanceAspectRatioKnown) {
+            } else if (zeroSkewness) { // && !mPrincipalPointAtOrigin
+                if (focalDistanceAspectRatioKnown) {
                     iac = estimateZeroSkewnessAndKnownFocalDistanceAspectRatio();
                 } else {
                     iac = estimateZeroSkewness();
                 }
-            } else if (mPrincipalPointAtOrigin) { // && !mZeroSkewness
+            } else if (principalPointAtOrigin) { // && !mZeroSkewness
                 iac = estimatePrincipalPointAtOrigin();
             } else {
                 iac = estimateNoConstraints();
             }
 
-            if (mListener != null) {
-                mListener.onEstimateEnd(this);
+            if (listener != null) {
+                listener.onEstimateEnd(this);
             }
 
             return iac;
         } finally {
-            mLocked = false;
+            locked = false;
         }
     }
 
@@ -220,11 +216,10 @@ public class LMSEImageOfAbsoluteConicEstimator extends
      *                                                camera movements such as pure parallel translations
      *                                                where no additional data is really provided.
      */
-    private ImageOfAbsoluteConic estimateNoConstraints()
-            throws ImageOfAbsoluteConicEstimatorException {
+    private ImageOfAbsoluteConic estimateNoConstraints() throws ImageOfAbsoluteConicEstimatorException {
 
         try {
-            final int nHomographies = mHomographies.size();
+            final var nHomographies = homographies.size();
 
             final Matrix a;
             if (isLMSESolutionAllowed()) {
@@ -236,10 +231,9 @@ public class LMSEImageOfAbsoluteConicEstimator extends
                 a = new Matrix(MIN_REQUIRED_EQUATIONS, 6);
             }
 
-            int counter = 0;
+            var counter = 0;
             ProjectiveTransformation2D t = null;
-            final Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS,
-                    ProjectiveTransformation2D.HOM_COORDS);
+            final var h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, ProjectiveTransformation2D.HOM_COORDS);
             // elements ij of homography (last column is not required)
             double h11;
             double h12;
@@ -248,7 +242,7 @@ public class LMSEImageOfAbsoluteConicEstimator extends
             double h31;
             double h32;
             double rowNorm;
-            for (final Transformation2D homography : mHomographies) {
+            for (final var homography : homographies) {
                 // convert homography into projective so it can be normalized
                 homography.asMatrix(h);
                 if (t == null) {
@@ -281,26 +275,19 @@ public class LMSEImageOfAbsoluteConicEstimator extends
                 a.setElementAt(counter, 5, h31 * h32);
 
                 // normalize row
-                rowNorm = Math.sqrt(
-                        Math.pow(a.getElementAt(counter, 0), 2.0) +
-                                Math.pow(a.getElementAt(counter, 1), 2.0) +
-                                Math.pow(a.getElementAt(counter, 2), 2.0) +
-                                Math.pow(a.getElementAt(counter, 3), 2.0) +
-                                Math.pow(a.getElementAt(counter, 4), 2.0) +
-                                Math.pow(a.getElementAt(counter, 5), 2.0));
+                rowNorm = Math.sqrt(Math.pow(a.getElementAt(counter, 0), 2.0)
+                        + Math.pow(a.getElementAt(counter, 1), 2.0)
+                        + Math.pow(a.getElementAt(counter, 2), 2.0)
+                        + Math.pow(a.getElementAt(counter, 3), 2.0)
+                        + Math.pow(a.getElementAt(counter, 4), 2.0)
+                        + Math.pow(a.getElementAt(counter, 5), 2.0));
 
-                a.setElementAt(counter, 0, a.getElementAt(counter, 0) /
-                        rowNorm);
-                a.setElementAt(counter, 1, a.getElementAt(counter, 1) /
-                        rowNorm);
-                a.setElementAt(counter, 2, a.getElementAt(counter, 2) /
-                        rowNorm);
-                a.setElementAt(counter, 3, a.getElementAt(counter, 3) /
-                        rowNorm);
-                a.setElementAt(counter, 4, a.getElementAt(counter, 4) /
-                        rowNorm);
-                a.setElementAt(counter, 5, a.getElementAt(counter, 5) /
-                        rowNorm);
+                a.setElementAt(counter, 0, a.getElementAt(counter, 0) / rowNorm);
+                a.setElementAt(counter, 1, a.getElementAt(counter, 1) / rowNorm);
+                a.setElementAt(counter, 2, a.getElementAt(counter, 2) / rowNorm);
+                a.setElementAt(counter, 3, a.getElementAt(counter, 3) / rowNorm);
+                a.setElementAt(counter, 4, a.getElementAt(counter, 4) / rowNorm);
+                a.setElementAt(counter, 5, a.getElementAt(counter, 5) / rowNorm);
 
                 counter++;
 
@@ -319,31 +306,24 @@ public class LMSEImageOfAbsoluteConicEstimator extends
                 a.setElementAt(counter, 5, Math.pow(h31, 2.0) - Math.pow(h32, 2.0));
 
                 // normalize row
-                rowNorm = Math.sqrt(
-                        Math.pow(a.getElementAt(counter, 0), 2.0) +
-                                Math.pow(a.getElementAt(counter, 1), 2.0) +
-                                Math.pow(a.getElementAt(counter, 2), 2.0) +
-                                Math.pow(a.getElementAt(counter, 3), 2.0) +
-                                Math.pow(a.getElementAt(counter, 4), 2.0) +
-                                Math.pow(a.getElementAt(counter, 5), 2.0));
+                rowNorm = Math.sqrt(Math.pow(a.getElementAt(counter, 0), 2.0)
+                        + Math.pow(a.getElementAt(counter, 1), 2.0)
+                        + Math.pow(a.getElementAt(counter, 2), 2.0)
+                        + Math.pow(a.getElementAt(counter, 3), 2.0)
+                        + Math.pow(a.getElementAt(counter, 4), 2.0)
+                        + Math.pow(a.getElementAt(counter, 5), 2.0));
 
-                a.setElementAt(counter, 0, a.getElementAt(counter, 0) /
-                        rowNorm);
-                a.setElementAt(counter, 1, a.getElementAt(counter, 1) /
-                        rowNorm);
-                a.setElementAt(counter, 2, a.getElementAt(counter, 2) /
-                        rowNorm);
-                a.setElementAt(counter, 3, a.getElementAt(counter, 3) /
-                        rowNorm);
-                a.setElementAt(counter, 4, a.getElementAt(counter, 4) /
-                        rowNorm);
-                a.setElementAt(counter, 5, a.getElementAt(counter, 5) /
-                        rowNorm);
+                a.setElementAt(counter, 0, a.getElementAt(counter, 0) / rowNorm);
+                a.setElementAt(counter, 1, a.getElementAt(counter, 1) / rowNorm);
+                a.setElementAt(counter, 2, a.getElementAt(counter, 2) / rowNorm);
+                a.setElementAt(counter, 3, a.getElementAt(counter, 3) / rowNorm);
+                a.setElementAt(counter, 4, a.getElementAt(counter, 4) / rowNorm);
+                a.setElementAt(counter, 5, a.getElementAt(counter, 5) / rowNorm);
 
                 counter++;
             }
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(a);
+            final var decomposer = new SingularValueDecomposer(a);
             decomposer.decompose();
 
             if (decomposer.getNullity() > 1) {
@@ -353,19 +333,19 @@ public class LMSEImageOfAbsoluteConicEstimator extends
                 throw new ImageOfAbsoluteConicEstimatorException();
             }
 
-            final Matrix v = decomposer.getV();
+            final var v = decomposer.getV();
 
             // use last column of V as IAC vector
 
             // the last column of V contains IAC matrix (B), which is symmetric
             // and positive definite, ordered as follows: B11, B12, B22, B13,
             // B23, B33
-            final double b11 = v.getElementAt(0, 5);
-            final double b12 = v.getElementAt(1, 5);
-            final double b22 = v.getElementAt(2, 5);
-            final double b13 = v.getElementAt(3, 5);
-            final double b23 = v.getElementAt(4, 5);
-            final double b33 = v.getElementAt(5, 5);
+            final var b11 = v.getElementAt(0, 5);
+            final var b12 = v.getElementAt(1, 5);
+            final var b22 = v.getElementAt(2, 5);
+            final var b13 = v.getElementAt(3, 5);
+            final var b23 = v.getElementAt(4, 5);
+            final var b33 = v.getElementAt(5, 5);
 
             // A conic is defined as [A  B   D]
             //                       [B  C   E]
@@ -386,10 +366,9 @@ public class LMSEImageOfAbsoluteConicEstimator extends
      *                                                camera movements such as pure parallel translations
      *                                                where no additional data is really provided
      */
-    private ImageOfAbsoluteConic estimateZeroSkewness()
-            throws ImageOfAbsoluteConicEstimatorException {
+    private ImageOfAbsoluteConic estimateZeroSkewness() throws ImageOfAbsoluteConicEstimatorException {
         try {
-            final int nHomographies = mHomographies.size();
+            final var nHomographies = homographies.size();
 
             final Matrix a;
             if (isLMSESolutionAllowed()) {
@@ -401,10 +380,9 @@ public class LMSEImageOfAbsoluteConicEstimator extends
                 a = new Matrix(MIN_REQUIRED_EQUATIONS - 1, 5);
             }
 
-            int counter = 0;
+            var counter = 0;
             ProjectiveTransformation2D t = null;
-            final Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS,
-                    ProjectiveTransformation2D.HOM_COORDS);
+            final var h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, ProjectiveTransformation2D.HOM_COORDS);
             // elements ij of homography (last column is not required)
             double h11;
             double h12;
@@ -413,7 +391,7 @@ public class LMSEImageOfAbsoluteConicEstimator extends
             double h31;
             double h32;
             double rowNorm;
-            for (final Transformation2D homography : mHomographies) {
+            for (final var homography : homographies) {
                 // convert homography into projective so it can be normalized
                 homography.asMatrix(h);
                 if (t == null) {
@@ -445,23 +423,17 @@ public class LMSEImageOfAbsoluteConicEstimator extends
                 a.setElementAt(counter, 4, h31 * h32);
 
                 // normalize row
-                rowNorm = Math.sqrt(
-                        Math.pow(a.getElementAt(counter, 0), 2.0) +
-                                Math.pow(a.getElementAt(counter, 1), 2.0) +
-                                Math.pow(a.getElementAt(counter, 2), 2.0) +
-                                Math.pow(a.getElementAt(counter, 3), 2.0) +
-                                Math.pow(a.getElementAt(counter, 4), 2.0));
+                rowNorm = Math.sqrt(Math.pow(a.getElementAt(counter, 0), 2.0)
+                        + Math.pow(a.getElementAt(counter, 1), 2.0)
+                        + Math.pow(a.getElementAt(counter, 2), 2.0)
+                        + Math.pow(a.getElementAt(counter, 3), 2.0)
+                        + Math.pow(a.getElementAt(counter, 4), 2.0));
 
-                a.setElementAt(counter, 0, a.getElementAt(counter, 0) /
-                        rowNorm);
-                a.setElementAt(counter, 1, a.getElementAt(counter, 1) /
-                        rowNorm);
-                a.setElementAt(counter, 2, a.getElementAt(counter, 2) /
-                        rowNorm);
-                a.setElementAt(counter, 3, a.getElementAt(counter, 3) /
-                        rowNorm);
-                a.setElementAt(counter, 4, a.getElementAt(counter, 4) /
-                        rowNorm);
+                a.setElementAt(counter, 0, a.getElementAt(counter, 0) / rowNorm);
+                a.setElementAt(counter, 1, a.getElementAt(counter, 1) / rowNorm);
+                a.setElementAt(counter, 2, a.getElementAt(counter, 2) / rowNorm);
+                a.setElementAt(counter, 3, a.getElementAt(counter, 3) / rowNorm);
+                a.setElementAt(counter, 4, a.getElementAt(counter, 4) / rowNorm);
 
                 counter++;
 
@@ -473,23 +445,17 @@ public class LMSEImageOfAbsoluteConicEstimator extends
                 a.setElementAt(counter, 4, Math.pow(h31, 2.0) - Math.pow(h32, 2.0));
 
                 // normalize row
-                rowNorm = Math.sqrt(
-                        Math.pow(a.getElementAt(counter, 0), 2.0) +
-                                Math.pow(a.getElementAt(counter, 1), 2.0) +
-                                Math.pow(a.getElementAt(counter, 2), 2.0) +
-                                Math.pow(a.getElementAt(counter, 3), 2.0) +
-                                Math.pow(a.getElementAt(counter, 4), 2.0));
+                rowNorm = Math.sqrt(Math.pow(a.getElementAt(counter, 0), 2.0)
+                        + Math.pow(a.getElementAt(counter, 1), 2.0)
+                        + Math.pow(a.getElementAt(counter, 2), 2.0)
+                        + Math.pow(a.getElementAt(counter, 3), 2.0)
+                        + Math.pow(a.getElementAt(counter, 4), 2.0));
 
-                a.setElementAt(counter, 0, a.getElementAt(counter, 0) /
-                        rowNorm);
-                a.setElementAt(counter, 1, a.getElementAt(counter, 1) /
-                        rowNorm);
-                a.setElementAt(counter, 2, a.getElementAt(counter, 2) /
-                        rowNorm);
-                a.setElementAt(counter, 3, a.getElementAt(counter, 3) /
-                        rowNorm);
-                a.setElementAt(counter, 4, a.getElementAt(counter, 4) /
-                        rowNorm);
+                a.setElementAt(counter, 0, a.getElementAt(counter, 0) / rowNorm);
+                a.setElementAt(counter, 1, a.getElementAt(counter, 1) / rowNorm);
+                a.setElementAt(counter, 2, a.getElementAt(counter, 2) / rowNorm);
+                a.setElementAt(counter, 3, a.getElementAt(counter, 3) / rowNorm);
+                a.setElementAt(counter, 4, a.getElementAt(counter, 4) / rowNorm);
 
                 counter++;
 
@@ -500,7 +466,7 @@ public class LMSEImageOfAbsoluteConicEstimator extends
                 }
             }
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(a);
+            final var decomposer = new SingularValueDecomposer(a);
             decomposer.decompose();
 
             if (decomposer.getNullity() > 1) {
@@ -510,18 +476,18 @@ public class LMSEImageOfAbsoluteConicEstimator extends
                 throw new ImageOfAbsoluteConicEstimatorException();
             }
 
-            final Matrix v = decomposer.getV();
+            final var v = decomposer.getV();
 
             // use last column of V as IAC vector
 
             // the last column of V contains IAC matrix (B), which is symmetric
             // and positive definite, ordered as follows: B11, B12, B22, B13,
             // B23, B33
-            final double b11 = v.getElementAt(0, 4);
-            final double b22 = v.getElementAt(1, 4);
-            final double b13 = v.getElementAt(2, 4);
-            final double b23 = v.getElementAt(3, 4);
-            final double b33 = v.getElementAt(4, 4);
+            final var b11 = v.getElementAt(0, 4);
+            final var b22 = v.getElementAt(1, 4);
+            final var b13 = v.getElementAt(2, 4);
+            final var b23 = v.getElementAt(3, 4);
+            final var b33 = v.getElementAt(4, 4);
 
             // A conic is defined as [A  B   D]
             //                       [B  C   E]
@@ -544,11 +510,10 @@ public class LMSEImageOfAbsoluteConicEstimator extends
      *                                                camera movements such as pure parallel translations
      *                                                where no additional data is really provided
      */
-    private ImageOfAbsoluteConic estimatePrincipalPointAtOrigin()
-            throws ImageOfAbsoluteConicEstimatorException {
+    private ImageOfAbsoluteConic estimatePrincipalPointAtOrigin() throws ImageOfAbsoluteConicEstimatorException {
 
         try {
-            final int nHomographies = mHomographies.size();
+            final var nHomographies = homographies.size();
 
             final Matrix a;
             if (isLMSESolutionAllowed()) {
@@ -560,10 +525,9 @@ public class LMSEImageOfAbsoluteConicEstimator extends
                 a = new Matrix(MIN_REQUIRED_EQUATIONS - 2, 4);
             }
 
-            int counter = 0;
+            var counter = 0;
             ProjectiveTransformation2D t = null;
-            final Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS,
-                    ProjectiveTransformation2D.HOM_COORDS);
+            final var h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, ProjectiveTransformation2D.HOM_COORDS);
             // elements ij of homography (last column is not required)
             double h11;
             double h12;
@@ -572,7 +536,7 @@ public class LMSEImageOfAbsoluteConicEstimator extends
             double h31;
             double h32;
             double rowNorm;
-            for (final Transformation2D homography : mHomographies) {
+            for (final var homography : homographies) {
                 // convert homography into projective so it can be normalized
                 homography.asMatrix(h);
                 if (t == null) {
@@ -603,20 +567,15 @@ public class LMSEImageOfAbsoluteConicEstimator extends
                 a.setElementAt(counter, 3, h31 * h32);
 
                 // normalize row
-                rowNorm = Math.sqrt(
-                        Math.pow(a.getElementAt(counter, 0), 2.0) +
-                                Math.pow(a.getElementAt(counter, 1), 2.0) +
-                                Math.pow(a.getElementAt(counter, 2), 2.0) +
-                                Math.pow(a.getElementAt(counter, 3), 2.0));
+                rowNorm = Math.sqrt(Math.pow(a.getElementAt(counter, 0), 2.0)
+                        + Math.pow(a.getElementAt(counter, 1), 2.0)
+                        + Math.pow(a.getElementAt(counter, 2), 2.0)
+                        + Math.pow(a.getElementAt(counter, 3), 2.0));
 
-                a.setElementAt(counter, 0, a.getElementAt(counter, 0) /
-                        rowNorm);
-                a.setElementAt(counter, 1, a.getElementAt(counter, 1) /
-                        rowNorm);
-                a.setElementAt(counter, 2, a.getElementAt(counter, 2) /
-                        rowNorm);
-                a.setElementAt(counter, 3, a.getElementAt(counter, 3) /
-                        rowNorm);
+                a.setElementAt(counter, 0, a.getElementAt(counter, 0) / rowNorm);
+                a.setElementAt(counter, 1, a.getElementAt(counter, 1) / rowNorm);
+                a.setElementAt(counter, 2, a.getElementAt(counter, 2) / rowNorm);
+                a.setElementAt(counter, 3, a.getElementAt(counter, 3) / rowNorm);
 
                 counter++;
 
@@ -633,25 +592,20 @@ public class LMSEImageOfAbsoluteConicEstimator extends
                 a.setElementAt(counter, 3, Math.pow(h31, 2.0) - Math.pow(h32, 2.0));
 
                 // normalize row
-                rowNorm = Math.sqrt(
-                        Math.pow(a.getElementAt(counter, 0), 2.0) +
-                                Math.pow(a.getElementAt(counter, 1), 2.0) +
-                                Math.pow(a.getElementAt(counter, 2), 2.0) +
-                                Math.pow(a.getElementAt(counter, 3), 2.0));
+                rowNorm = Math.sqrt(Math.pow(a.getElementAt(counter, 0), 2.0)
+                        + Math.pow(a.getElementAt(counter, 1), 2.0)
+                        + Math.pow(a.getElementAt(counter, 2), 2.0)
+                        + Math.pow(a.getElementAt(counter, 3), 2.0));
 
-                a.setElementAt(counter, 0, a.getElementAt(counter, 0) /
-                        rowNorm);
-                a.setElementAt(counter, 1, a.getElementAt(counter, 1) /
-                        rowNorm);
-                a.setElementAt(counter, 2, a.getElementAt(counter, 2) /
-                        rowNorm);
-                a.setElementAt(counter, 3, a.getElementAt(counter, 3) /
-                        rowNorm);
+                a.setElementAt(counter, 0, a.getElementAt(counter, 0) / rowNorm);
+                a.setElementAt(counter, 1, a.getElementAt(counter, 1) / rowNorm);
+                a.setElementAt(counter, 2, a.getElementAt(counter, 2) / rowNorm);
+                a.setElementAt(counter, 3, a.getElementAt(counter, 3) / rowNorm);
 
                 counter++;
             }
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(a);
+            final var decomposer = new SingularValueDecomposer(a);
             decomposer.decompose();
 
             if (decomposer.getNullity() > 1) {
@@ -661,17 +615,17 @@ public class LMSEImageOfAbsoluteConicEstimator extends
                 throw new ImageOfAbsoluteConicEstimatorException();
             }
 
-            final Matrix v = decomposer.getV();
+            final var v = decomposer.getV();
 
             // use last column of V as IAC vector
 
             // the last column of V contains IAC matrix (B), which is symmetric
             // and positive definite, ordered as follows: B11, B12, B22, B13,
             // B23, B33
-            final double b11 = v.getElementAt(0, 3);
-            final double b12 = v.getElementAt(1, 3);
-            final double b22 = v.getElementAt(2, 3);
-            final double b33 = v.getElementAt(3, 3);
+            final var b11 = v.getElementAt(0, 3);
+            final var b12 = v.getElementAt(1, 3);
+            final var b22 = v.getElementAt(2, 3);
+            final var b33 = v.getElementAt(3, 3);
 
             // A conic is defined as [A  B   D]
             //                       [B  C   E]
@@ -699,7 +653,7 @@ public class LMSEImageOfAbsoluteConicEstimator extends
             throws ImageOfAbsoluteConicEstimatorException {
 
         try {
-            final int nHomographies = mHomographies.size();
+            final var nHomographies = homographies.size();
 
             final Matrix a;
             if (isLMSESolutionAllowed()) {
@@ -711,10 +665,9 @@ public class LMSEImageOfAbsoluteConicEstimator extends
                 a = new Matrix(MIN_REQUIRED_EQUATIONS - 3, 3);
             }
 
-            int counter = 0;
+            var counter = 0;
             ProjectiveTransformation2D t = null;
-            final Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS,
-                    ProjectiveTransformation2D.HOM_COORDS);
+            final var h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, ProjectiveTransformation2D.HOM_COORDS);
             // elements ij of homography (last column is not required)
             double h11;
             double h12;
@@ -723,7 +676,7 @@ public class LMSEImageOfAbsoluteConicEstimator extends
             double h31;
             double h32;
             double rowNorm;
-            for (final Transformation2D homography : mHomographies) {
+            for (final var homography : homographies) {
                 // convert homography into projective so it can be normalized
                 homography.asMatrix(h);
                 if (t == null) {
@@ -753,17 +706,13 @@ public class LMSEImageOfAbsoluteConicEstimator extends
                 a.setElementAt(counter, 2, h31 * h32);
 
                 // normalize row
-                rowNorm = Math.sqrt(
-                        Math.pow(a.getElementAt(counter, 0), 2.0) +
-                                Math.pow(a.getElementAt(counter, 1), 2.0) +
-                                Math.pow(a.getElementAt(counter, 2), 2.0));
+                rowNorm = Math.sqrt(Math.pow(a.getElementAt(counter, 0), 2.0)
+                        + Math.pow(a.getElementAt(counter, 1), 2.0)
+                        + Math.pow(a.getElementAt(counter, 2), 2.0));
 
-                a.setElementAt(counter, 0, a.getElementAt(counter, 0) /
-                        rowNorm);
-                a.setElementAt(counter, 1, a.getElementAt(counter, 1) /
-                        rowNorm);
-                a.setElementAt(counter, 2, a.getElementAt(counter, 2) /
-                        rowNorm);
+                a.setElementAt(counter, 0, a.getElementAt(counter, 0) / rowNorm);
+                a.setElementAt(counter, 1, a.getElementAt(counter, 1) / rowNorm);
+                a.setElementAt(counter, 2, a.getElementAt(counter, 2) / rowNorm);
 
                 counter++;
 
@@ -773,17 +722,13 @@ public class LMSEImageOfAbsoluteConicEstimator extends
                 a.setElementAt(counter, 2, Math.pow(h31, 2.0) - Math.pow(h32, 2.0));
 
                 // normalize row
-                rowNorm = Math.sqrt(
-                        Math.pow(a.getElementAt(counter, 0), 2.0) +
-                                Math.pow(a.getElementAt(counter, 1), 2.0) +
-                                Math.pow(a.getElementAt(counter, 2), 2.0));
+                rowNorm = Math.sqrt(Math.pow(a.getElementAt(counter, 0), 2.0)
+                        + Math.pow(a.getElementAt(counter, 1), 2.0)
+                        + Math.pow(a.getElementAt(counter, 2), 2.0));
 
-                a.setElementAt(counter, 0, a.getElementAt(counter, 0) /
-                        rowNorm);
-                a.setElementAt(counter, 1, a.getElementAt(counter, 1) /
-                        rowNorm);
-                a.setElementAt(counter, 2, a.getElementAt(counter, 2) /
-                        rowNorm);
+                a.setElementAt(counter, 0, a.getElementAt(counter, 0) / rowNorm);
+                a.setElementAt(counter, 1, a.getElementAt(counter, 1) / rowNorm);
+                a.setElementAt(counter, 2, a.getElementAt(counter, 2) / rowNorm);
 
                 counter++;
 
@@ -794,7 +739,7 @@ public class LMSEImageOfAbsoluteConicEstimator extends
                 }
             }
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(a);
+            final var decomposer = new SingularValueDecomposer(a);
             decomposer.decompose();
 
             if (decomposer.getNullity() > 1) {
@@ -804,16 +749,16 @@ public class LMSEImageOfAbsoluteConicEstimator extends
                 throw new ImageOfAbsoluteConicEstimatorException();
             }
 
-            final Matrix v = decomposer.getV();
+            final var v = decomposer.getV();
 
             // use last column of V as IAC vector
 
             // the last column of V contains IAC matrix (B), which is symmetric
             // and positive definite, ordered as follows: B11, B12, B22, B13,
             // B23, B33
-            final double b11 = v.getElementAt(0, 2);
-            final double b22 = v.getElementAt(1, 2);
-            final double b33 = v.getElementAt(2, 2);
+            final var b11 = v.getElementAt(0, 2);
+            final var b22 = v.getElementAt(1, 2);
+            final var b33 = v.getElementAt(2, 2);
 
             // A conic is defined as [A  B   D]
             //                       [B  C   E]
@@ -837,11 +782,10 @@ public class LMSEImageOfAbsoluteConicEstimator extends
      *                                                camera movements such as pure parallel translations
      *                                                where no additional data is really provided
      */
-    private ImageOfAbsoluteConic
-    estimateZeroSkewnessAndKnownFocalDistanceAspectRatio()
+    private ImageOfAbsoluteConic estimateZeroSkewnessAndKnownFocalDistanceAspectRatio()
             throws ImageOfAbsoluteConicEstimatorException {
         try {
-            final int nHomographies = mHomographies.size();
+            final var nHomographies = homographies.size();
 
             final Matrix a;
             if (isLMSESolutionAllowed()) {
@@ -853,12 +797,11 @@ public class LMSEImageOfAbsoluteConicEstimator extends
                 a = new Matrix(MIN_REQUIRED_EQUATIONS - 2, 4);
             }
 
-            final double sqrAspectRatio = Math.pow(mFocalDistanceAspectRatio, 2.0);
+            final var sqrAspectRatio = Math.pow(focalDistanceAspectRatio, 2.0);
 
-            int counter = 0;
+            var counter = 0;
             ProjectiveTransformation2D t = null;
-            final Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS,
-                    ProjectiveTransformation2D.HOM_COORDS);
+            final var h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, ProjectiveTransformation2D.HOM_COORDS);
             // elements ij of homography (last column is not required)
             double h11;
             double h12;
@@ -867,7 +810,7 @@ public class LMSEImageOfAbsoluteConicEstimator extends
             double h31;
             double h32;
             double rowNorm;
-            for (final Transformation2D homography : mHomographies) {
+            for (final var homography : homographies) {
                 // convert homography into projective so it can be normalized
                 homography.asMatrix(h);
                 if (t == null) {
@@ -892,27 +835,21 @@ public class LMSEImageOfAbsoluteConicEstimator extends
                 h32 = h.getElementAt(2, 1);
 
                 // fill first equation
-                a.setElementAt(counter, 0, h11 * h12 +
-                        h21 * h22 / sqrAspectRatio);
+                a.setElementAt(counter, 0, h11 * h12 + h21 * h22 / sqrAspectRatio);
                 a.setElementAt(counter, 1, h11 * h32 + h31 * h12);
                 a.setElementAt(counter, 2, h21 * h32 + h31 * h22);
                 a.setElementAt(counter, 3, h31 * h32);
 
                 // normalize row
-                rowNorm = Math.sqrt(
-                        Math.pow(a.getElementAt(counter, 0), 2.0) +
-                                Math.pow(a.getElementAt(counter, 1), 2.0) +
-                                Math.pow(a.getElementAt(counter, 2), 2.0) +
-                                Math.pow(a.getElementAt(counter, 3), 2.0));
+                rowNorm = Math.sqrt(Math.pow(a.getElementAt(counter, 0), 2.0)
+                        + Math.pow(a.getElementAt(counter, 1), 2.0)
+                        + Math.pow(a.getElementAt(counter, 2), 2.0)
+                        + Math.pow(a.getElementAt(counter, 3), 2.0));
 
-                a.setElementAt(counter, 0, a.getElementAt(counter, 0) /
-                        rowNorm);
-                a.setElementAt(counter, 1, a.getElementAt(counter, 1) /
-                        rowNorm);
-                a.setElementAt(counter, 2, a.getElementAt(counter, 2) /
-                        rowNorm);
-                a.setElementAt(counter, 3, a.getElementAt(counter, 3) /
-                        rowNorm);
+                a.setElementAt(counter, 0, a.getElementAt(counter, 0) / rowNorm);
+                a.setElementAt(counter, 1, a.getElementAt(counter, 1) / rowNorm);
+                a.setElementAt(counter, 2, a.getElementAt(counter, 2) / rowNorm);
+                a.setElementAt(counter, 3, a.getElementAt(counter, 3) / rowNorm);
 
                 counter++;
 
@@ -923,32 +860,27 @@ public class LMSEImageOfAbsoluteConicEstimator extends
                 }
 
                 // fill second equation
-                a.setElementAt(counter, 0, Math.pow(h11, 2.0) - Math.pow(h12, 2.0) +
-                        (Math.pow(h21, 2.0) - Math.pow(h22, 2.0)) / sqrAspectRatio);
+                a.setElementAt(counter, 0, Math.pow(h11, 2.0) - Math.pow(h12, 2.0)
+                        + (Math.pow(h21, 2.0) - Math.pow(h22, 2.0)) / sqrAspectRatio);
                 a.setElementAt(counter, 1, 2.0 * (h11 * h31 - h12 * h32));
                 a.setElementAt(counter, 2, 2.0 * (h21 * h31 - h22 * h32));
                 a.setElementAt(counter, 3, Math.pow(h31, 2.0) - Math.pow(h32, 2.0));
 
                 // normalize row
-                rowNorm = Math.sqrt(
-                        Math.pow(a.getElementAt(counter, 0), 2.0) +
-                                Math.pow(a.getElementAt(counter, 1), 2.0) +
-                                Math.pow(a.getElementAt(counter, 2), 2.0) +
-                                Math.pow(a.getElementAt(counter, 3), 2.0));
+                rowNorm = Math.sqrt(Math.pow(a.getElementAt(counter, 0), 2.0)
+                        + Math.pow(a.getElementAt(counter, 1), 2.0)
+                        + Math.pow(a.getElementAt(counter, 2), 2.0)
+                        + Math.pow(a.getElementAt(counter, 3), 2.0));
 
-                a.setElementAt(counter, 0, a.getElementAt(counter, 0) /
-                        rowNorm);
-                a.setElementAt(counter, 1, a.getElementAt(counter, 1) /
-                        rowNorm);
-                a.setElementAt(counter, 2, a.getElementAt(counter, 2) /
-                        rowNorm);
-                a.setElementAt(counter, 3, a.getElementAt(counter, 3) /
-                        rowNorm);
+                a.setElementAt(counter, 0, a.getElementAt(counter, 0) / rowNorm);
+                a.setElementAt(counter, 1, a.getElementAt(counter, 1) / rowNorm);
+                a.setElementAt(counter, 2, a.getElementAt(counter, 2) / rowNorm);
+                a.setElementAt(counter, 3, a.getElementAt(counter, 3) / rowNorm);
 
                 counter++;
             }
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(a);
+            final var decomposer = new SingularValueDecomposer(a);
             decomposer.decompose();
 
             if (decomposer.getNullity() > 1) {
@@ -958,19 +890,19 @@ public class LMSEImageOfAbsoluteConicEstimator extends
                 throw new ImageOfAbsoluteConicEstimatorException();
             }
 
-            final Matrix v = decomposer.getV();
+            final var v = decomposer.getV();
 
             // use last column of V as IAC vector
 
             // the last column of V contains IAC matrix (B), which is symmetric
             // and positive definite, ordered as follows: B11, B12, B22, B13,
             // B23, B33
-            final double b11 = v.getElementAt(0, 3);
-            final double b13 = v.getElementAt(1, 3);
-            final double b23 = v.getElementAt(2, 3);
-            final double b33 = v.getElementAt(3, 3);
+            final var b11 = v.getElementAt(0, 3);
+            final var b13 = v.getElementAt(1, 3);
+            final var b23 = v.getElementAt(2, 3);
+            final var b33 = v.getElementAt(3, 3);
 
-            final double b22 = b11 / sqrAspectRatio;
+            final var b22 = b11 / sqrAspectRatio;
 
             // A conic is defined as [A  B   D]
             //                       [B  C   E]
@@ -998,14 +930,13 @@ public class LMSEImageOfAbsoluteConicEstimator extends
             throws ImageOfAbsoluteConicEstimatorException {
 
         try {
-            final double sqrAspectRatio = Math.pow(mFocalDistanceAspectRatio, 2.0);
+            final double sqrAspectRatio = Math.pow(focalDistanceAspectRatio, 2.0);
 
             double b11;
             double b33;
 
             ProjectiveTransformation2D t = null;
-            final Matrix h = new Matrix(ProjectiveTransformation2D.HOM_COORDS,
-                    ProjectiveTransformation2D.HOM_COORDS);
+            final var h = new Matrix(ProjectiveTransformation2D.HOM_COORDS, ProjectiveTransformation2D.HOM_COORDS);
             double h11;
             double h12;
             double h21;
@@ -1024,7 +955,7 @@ public class LMSEImageOfAbsoluteConicEstimator extends
                 // b11 * (h11 * h12 + h21 * h22 / sqrAspectRatio) + b33 * h31 * h32 = 0
                 // b11 = -b33 * h31 * h32 / (h11 * h12 + h21 * h22 / sqrAspectRatio)
 
-                final Transformation2D homography = mHomographies.get(0);
+                final var homography = homographies.get(0);
 
                 // convert homography into projective so it can be normalized
                 homography.asMatrix(h);
@@ -1048,14 +979,14 @@ public class LMSEImageOfAbsoluteConicEstimator extends
                 b33 = 1.0;
                 b11 = -h31 * h32 / (h11 * h12 + h21 * h22 / sqrAspectRatio);
             } else {
-                final int nHomographies = mHomographies.size();
+                final var nHomographies = homographies.size();
 
-                final Matrix a = new Matrix(2 * nHomographies, 2);
+                final var a = new Matrix(2 * nHomographies, 2);
 
-                int counter = 0;
+                var counter = 0;
                 // elements ij of homography (last column is not required)
                 double rowNorm;
-                for (final Transformation2D homography : mHomographies) {
+                for (final var homography : homographies) {
                     // convert homography into projective so it can be normalized
                     homography.asMatrix(h);
                     if (t == null) {
@@ -1080,42 +1011,34 @@ public class LMSEImageOfAbsoluteConicEstimator extends
                     h32 = h.getElementAt(2, 1);
 
                     // fill first equation
-                    a.setElementAt(counter, 0, h11 * h12 +
-                            h21 * h22 / sqrAspectRatio);
+                    a.setElementAt(counter, 0, h11 * h12 + h21 * h22 / sqrAspectRatio);
                     a.setElementAt(counter, 1, h31 * h32);
 
                     // normalize row
-                    rowNorm = Math.sqrt(
-                            Math.pow(a.getElementAt(counter, 0), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 1), 2.0));
+                    rowNorm = Math.sqrt(Math.pow(a.getElementAt(counter, 0), 2.0)
+                            + Math.pow(a.getElementAt(counter, 1), 2.0));
 
-                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) /
-                            rowNorm);
-                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) /
-                            rowNorm);
+                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) / rowNorm);
+                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) / rowNorm);
 
                     counter++;
 
                     // fill second equation
-                    a.setElementAt(counter, 0, Math.pow(h11, 2.0) - Math.pow(h12, 2.0) +
-                            (Math.pow(h21, 2.0) - Math.pow(h22, 2.0)) / sqrAspectRatio);
+                    a.setElementAt(counter, 0, Math.pow(h11, 2.0) - Math.pow(h12, 2.0)
+                            + (Math.pow(h21, 2.0) - Math.pow(h22, 2.0)) / sqrAspectRatio);
                     a.setElementAt(counter, 1, Math.pow(h31, 2.0) - Math.pow(h32, 2.0));
 
                     // normalize row
-                    rowNorm = Math.sqrt(
-                            Math.pow(a.getElementAt(counter, 0), 2.0) +
-                                    Math.pow(a.getElementAt(counter, 1), 2.0));
+                    rowNorm = Math.sqrt(Math.pow(a.getElementAt(counter, 0), 2.0)
+                            + Math.pow(a.getElementAt(counter, 1), 2.0));
 
-                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) /
-                            rowNorm);
-                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) /
-                            rowNorm);
+                    a.setElementAt(counter, 0, a.getElementAt(counter, 0) / rowNorm);
+                    a.setElementAt(counter, 1, a.getElementAt(counter, 1) / rowNorm);
 
                     counter++;
                 }
 
-                final SingularValueDecomposer decomposer =
-                        new SingularValueDecomposer(a);
+                final var decomposer = new SingularValueDecomposer(a);
                 decomposer.decompose();
 
                 if (decomposer.getNullity() > 1) {
@@ -1125,7 +1048,7 @@ public class LMSEImageOfAbsoluteConicEstimator extends
                     throw new ImageOfAbsoluteConicEstimatorException();
                 }
 
-                final Matrix v = decomposer.getV();
+                final var v = decomposer.getV();
 
                 // use last column of V as IAC vector
 
@@ -1136,7 +1059,7 @@ public class LMSEImageOfAbsoluteConicEstimator extends
                 b33 = v.getElementAt(1, 1);
             }
 
-            final double b22 = b11 / sqrAspectRatio;
+            final var b22 = b11 / sqrAspectRatio;
 
             // A conic is defined as [A  B   D]
             //                       [B  C   E]

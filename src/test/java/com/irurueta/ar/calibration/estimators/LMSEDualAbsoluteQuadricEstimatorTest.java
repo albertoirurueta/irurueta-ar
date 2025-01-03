@@ -25,15 +25,13 @@ import com.irurueta.geometry.*;
 import com.irurueta.geometry.estimators.LockedException;
 import com.irurueta.geometry.estimators.NotReadyException;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadricEstimatorListener {
+class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadricEstimatorListener {
 
     private static final double MIN_ASPECT_RATIO = 0.5;
     private static final double MAX_ASPECT_RATIO = 2.0;
@@ -56,17 +54,16 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
     private static final int TIMES = 1000;
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         // empty constructor
-        LMSEDualAbsoluteQuadricEstimator estimator = new LMSEDualAbsoluteQuadricEstimator();
+        var estimator = new LMSEDualAbsoluteQuadricEstimator();
 
         // check default values
         assertNull(estimator.getCameras());
         assertFalse(estimator.isLocked());
         assertFalse(estimator.isReady());
         assertNull(estimator.getListener());
-        assertEquals(DualAbsoluteQuadricEstimatorType.LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR,
-                estimator.getType());
+        assertEquals(DualAbsoluteQuadricEstimatorType.LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR, estimator.getType());
         assertFalse(estimator.isLMSESolutionAllowed());
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
@@ -74,8 +71,8 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
         assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                estimator.getDeterminantThreshold(), 0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD, estimator.getDeterminantThreshold(),
+                0.0);
         assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
 
@@ -87,8 +84,7 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
         assertFalse(estimator.isLocked());
         assertFalse(estimator.isReady());
         assertSame(this, estimator.getListener());
-        assertEquals(DualAbsoluteQuadricEstimatorType.LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR,
-                estimator.getType());
+        assertEquals(DualAbsoluteQuadricEstimatorType.LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR, estimator.getType());
         assertFalse(estimator.isLMSESolutionAllowed());
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
@@ -96,13 +92,13 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
         assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                estimator.getDeterminantThreshold(), 0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD, estimator.getDeterminantThreshold(),
+                0.0);
         assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
 
         // constructor with cameras
-        final List<PinholeCamera> cameras = new ArrayList<>();
+        final var cameras = new ArrayList<PinholeCamera>();
         cameras.add(new PinholeCamera());
         cameras.add(new PinholeCamera());
         estimator = new LMSEDualAbsoluteQuadricEstimator(cameras);
@@ -112,8 +108,7 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
         assertFalse(estimator.isLocked());
         assertTrue(estimator.isReady());
         assertNull(estimator.getListener());
-        assertEquals(DualAbsoluteQuadricEstimatorType.LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR,
-                estimator.getType());
+        assertEquals(DualAbsoluteQuadricEstimatorType.LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR, estimator.getType());
         assertFalse(estimator.isLMSESolutionAllowed());
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
@@ -121,8 +116,8 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
         assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                estimator.getDeterminantThreshold(), 0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD, estimator.getDeterminantThreshold(),
+                0.0);
         assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
 
@@ -134,8 +129,7 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
         assertFalse(estimator.isLocked());
         assertTrue(estimator.isReady());
         assertSame(this, estimator.getListener());
-        assertEquals(DualAbsoluteQuadricEstimatorType.LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR,
-                estimator.getType());
+        assertEquals(DualAbsoluteQuadricEstimatorType.LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR, estimator.getType());
         assertFalse(estimator.isLMSESolutionAllowed());
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
@@ -143,15 +137,15 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
         assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                estimator.getDeterminantThreshold(), 0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD, estimator.getDeterminantThreshold(),
+                0.0);
         assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
     }
 
     @Test
-    public void testIsSetZeroSkewness() throws LockedException {
-        final LMSEDualAbsoluteQuadricEstimator estimator = new LMSEDualAbsoluteQuadricEstimator();
+    void testIsSetZeroSkewness() throws LockedException {
+        final var estimator = new LMSEDualAbsoluteQuadricEstimator();
 
         // check default value
         assertTrue(estimator.isZeroSkewness());
@@ -164,8 +158,8 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
     }
 
     @Test
-    public void testIsSetPrincipalPointAtOrigin() throws LockedException {
-        final LMSEDualAbsoluteQuadricEstimator estimator = new LMSEDualAbsoluteQuadricEstimator();
+    void testIsSetPrincipalPointAtOrigin() throws LockedException {
+        final var estimator = new LMSEDualAbsoluteQuadricEstimator();
 
         // check default value
         assertTrue(estimator.isPrincipalPointAtOrigin());
@@ -178,9 +172,8 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
     }
 
     @Test
-    public void testIsSetFocalDistanceAspectRatioKnown()
-            throws LockedException {
-        final LMSEDualAbsoluteQuadricEstimator estimator = new LMSEDualAbsoluteQuadricEstimator();
+    void testIsSetFocalDistanceAspectRatioKnown() throws LockedException {
+        final var estimator = new LMSEDualAbsoluteQuadricEstimator();
 
         // check default value
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
@@ -193,31 +186,27 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
     }
 
     @Test
-    public void testGetSetFocalDistanceAspectRatio() throws LockedException {
-        final LMSEDualAbsoluteQuadricEstimator estimator = new LMSEDualAbsoluteQuadricEstimator();
+    void testGetSetFocalDistanceAspectRatio() throws LockedException {
+        final var estimator = new LMSEDualAbsoluteQuadricEstimator();
 
         // check default value
         assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO,
                 estimator.getFocalDistanceAspectRatio(), 0.0);
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double aspectRatio = randomizer.nextDouble(MIN_ASPECT_RATIO, MAX_ASPECT_RATIO);
+        final var randomizer = new UniformRandomizer();
+        final var aspectRatio = randomizer.nextDouble(MIN_ASPECT_RATIO, MAX_ASPECT_RATIO);
         estimator.setFocalDistanceAspectRatio(aspectRatio);
 
         // check correctness
         assertEquals(aspectRatio, estimator.getFocalDistanceAspectRatio(), 0.0);
 
         // Force IllegalArgumentException
-        try {
-            estimator.setFocalDistanceAspectRatio(0.0);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> estimator.setFocalDistanceAspectRatio(0.0));
     }
 
     @Test
-    public void testIsSetSingularityEnforced() throws LockedException {
-        final LMSEDualAbsoluteQuadricEstimator estimator = new LMSEDualAbsoluteQuadricEstimator();
+    void testIsSetSingularityEnforced() throws LockedException {
+        final var estimator = new LMSEDualAbsoluteQuadricEstimator();
 
         // check default value
         assertTrue(estimator.isSingularityEnforced());
@@ -230,8 +219,8 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
     }
 
     @Test
-    public void testIsSetEnforcedSingularityValidated() throws LockedException {
-        final LMSEDualAbsoluteQuadricEstimator estimator = new LMSEDualAbsoluteQuadricEstimator();
+    void testIsSetEnforcedSingularityValidated() throws LockedException {
+        final var estimator = new LMSEDualAbsoluteQuadricEstimator();
 
         // check default value
         assertTrue(estimator.isEnforcedSingularityValidated());
@@ -244,12 +233,12 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
     }
 
     @Test
-    public void testGetSetDeterminantThreshold() throws LockedException {
-        final LMSEDualAbsoluteQuadricEstimator estimator = new LMSEDualAbsoluteQuadricEstimator();
+    void testGetSetDeterminantThreshold() throws LockedException {
+        final var estimator = new LMSEDualAbsoluteQuadricEstimator();
 
         // check default value
-        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                estimator.getDeterminantThreshold(), 0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD, estimator.getDeterminantThreshold(),
+                0.0);
 
         // set new value
         estimator.setDeterminantThreshold(1e-3);
@@ -258,16 +247,12 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
         assertEquals(1e-3, estimator.getDeterminantThreshold(), 0.0);
 
         // Force IllegalArgumentException
-        try {
-            estimator.setDeterminantThreshold(-1.0);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> estimator.setDeterminantThreshold(-1.0));
     }
 
     @Test
-    public void testGetSetListener() {
-        final LMSEDualAbsoluteQuadricEstimator estimator = new LMSEDualAbsoluteQuadricEstimator();
+    void testGetSetListener() {
+        final var estimator = new LMSEDualAbsoluteQuadricEstimator();
 
         // check default value
         assertNull(estimator.getListener());
@@ -280,13 +265,13 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
     }
 
     @Test
-    public void testGetSetCameras() throws LockedException {
-        final LMSEDualAbsoluteQuadricEstimator estimator = new LMSEDualAbsoluteQuadricEstimator();
+    void testGetSetCameras() throws LockedException {
+        final var estimator = new LMSEDualAbsoluteQuadricEstimator();
 
         // check default value
         assertNull(estimator.getCameras());
 
-        final List<PinholeCamera> cameras = new ArrayList<>();
+        final var cameras = new ArrayList<PinholeCamera>();
         cameras.add(new PinholeCamera());
         cameras.add(new PinholeCamera());
 
@@ -297,17 +282,12 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
 
         // Force IllegalArgumentException
         cameras.clear();
-
-        try {
-            estimator.setCameras(cameras);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> estimator.setCameras(cameras));
     }
 
     @Test
-    public void testGetMinNumberOfRequiredCameras() throws LockedException {
-        final LMSEDualAbsoluteQuadricEstimator estimator = new LMSEDualAbsoluteQuadricEstimator();
+    void testGetMinNumberOfRequiredCameras() throws LockedException {
+        final var estimator = new LMSEDualAbsoluteQuadricEstimator();
 
         // check default value
         assertEquals(2, estimator.getMinNumberOfRequiredCameras());
@@ -347,8 +327,8 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
     }
 
     @Test
-    public void testAreValidConstraints() throws LockedException {
-        final LMSEDualAbsoluteQuadricEstimator estimator = new LMSEDualAbsoluteQuadricEstimator();
+    void testAreValidConstraints() throws LockedException {
+        final var estimator = new LMSEDualAbsoluteQuadricEstimator();
 
         // check default value
         assertTrue(estimator.areValidConstraints());
@@ -381,15 +361,15 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
     }
 
     @Test
-    public void testIsReady() throws LockedException {
-        final LMSEDualAbsoluteQuadricEstimator estimator = new LMSEDualAbsoluteQuadricEstimator();
+    void testIsReady() throws LockedException {
+        final var estimator = new LMSEDualAbsoluteQuadricEstimator();
 
         // check default value
         assertNull(estimator.getCameras());
         assertTrue(estimator.areValidConstraints());
         assertFalse(estimator.isReady());
 
-        final List<PinholeCamera> cameras = new ArrayList<>();
+        final var cameras = new ArrayList<PinholeCamera>();
         cameras.add(new PinholeCamera());
         cameras.add(new PinholeCamera());
 
@@ -419,8 +399,8 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
     }
 
     @Test
-    public void testIsSetLMSESolutionAllowed() throws LockedException {
-        final LMSEDualAbsoluteQuadricEstimator estimator = new LMSEDualAbsoluteQuadricEstimator();
+    void testIsSetLMSESolutionAllowed() throws LockedException {
+        final var estimator = new LMSEDualAbsoluteQuadricEstimator();
 
         // check default value
         assertFalse(estimator.isLMSESolutionAllowed());
@@ -433,37 +413,31 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
     }
 
     @Test
-    public void testProject() throws InvalidPinholeCameraIntrinsicParametersException,
-            AlgebraException, NonSymmetricMatrixException, InvalidTransformationException {
-        int numSucceeded = 0;
-        for (int times = 0; times < TIMES; times++) {
+    void testProject() throws InvalidPinholeCameraIntrinsicParametersException, AlgebraException,
+            NonSymmetricMatrixException, InvalidTransformationException {
+        var numSucceeded = 0;
+        for (var times = 0; times < TIMES; times++) {
             // projecting DAQ with cameras results in the same DIAC for all
             // cameras
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final var randomizer = new UniformRandomizer();
 
-            final double horizontalFocalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
-            final double horizontalPrincipalPoint = randomizer.nextDouble(
-                    MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-            final double verticalPrincipalPoint = randomizer.nextDouble(
-                    MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+            final var horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var verticalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final var horizontalPrincipalPoint = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+            final var verticalPrincipalPoint = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
-            final PinholeCameraIntrinsicParameters metricIntrinsic =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength,
-                            verticalFocalLength, horizontalPrincipalPoint,
-                            verticalPrincipalPoint, skewness);
+            final var metricIntrinsic = new PinholeCameraIntrinsicParameters(horizontalFocalLength, verticalFocalLength,
+                    horizontalPrincipalPoint, verticalPrincipalPoint, skewness);
 
-            final DualAbsoluteQuadric metricDaq = new DualAbsoluteQuadric();
-            final DualImageOfAbsoluteConic metricDiac = new DualImageOfAbsoluteConic(
-                    metricIntrinsic);
+            final var metricDaq = new DualAbsoluteQuadric();
+            final var metricDiac = new DualImageOfAbsoluteConic(metricIntrinsic);
             metricDiac.normalize();
 
-            final Matrix metricDiacMatrix = metricDiac.asMatrix();
+            final var metricDiacMatrix = metricDiac.asMatrix();
 
             PinholeCamera metricCamera;
-            final List<PinholeCamera> metricCameras = new ArrayList<>();
+            final var metricCameras = new ArrayList<PinholeCamera>();
 
             double roll;
             double pitch;
@@ -473,13 +447,10 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
             double z;
             Quaternion q;
             InhomogeneousPoint3D cameraCenter;
-            for (int i = 0; i < 12; i++) {
-                roll = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                        2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-                pitch = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                        MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-                yaw = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                        2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+            for (var i = 0; i < 12; i++) {
+                roll = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
+                pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                yaw = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
 
                 q = new Quaternion(roll, pitch, yaw);
 
@@ -491,11 +462,10 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                 metricCamera = new PinholeCamera(metricIntrinsic, q, cameraCenter);
                 metricCamera.normalize();
 
-                final DualImageOfAbsoluteConic projectedMetricDiac =
-                        new DualImageOfAbsoluteConic(metricCamera, metricDaq);
+                final var projectedMetricDiac = new DualImageOfAbsoluteConic(metricCamera, metricDaq);
                 projectedMetricDiac.normalize();
 
-                final Matrix projectedMetricDiacMatrix = projectedMetricDiac.asMatrix();
+                final var projectedMetricDiacMatrix = projectedMetricDiac.asMatrix();
 
                 if (!metricDiacMatrix.equals(projectedMetricDiacMatrix, ABSOLUTE_ERROR)) {
                     continue;
@@ -504,18 +474,16 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
 
                 metricCameras.add(metricCamera);
 
-                final PinholeCameraIntrinsicParameters projectedMetricIntrinsic =
-                        projectedMetricDiac.getIntrinsicParameters();
+                final var projectedMetricIntrinsic = projectedMetricDiac.getIntrinsicParameters();
 
-                assertEquals(horizontalFocalLength,
-                        projectedMetricIntrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
-                assertEquals(verticalFocalLength,
-                        projectedMetricIntrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
+                assertEquals(horizontalFocalLength, projectedMetricIntrinsic.getHorizontalFocalLength(),
+                        ABSOLUTE_ERROR);
+                assertEquals(verticalFocalLength, projectedMetricIntrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
                 assertEquals(skewness, projectedMetricIntrinsic.getSkewness(), ABSOLUTE_ERROR);
-                assertEquals(horizontalPrincipalPoint,
-                        projectedMetricIntrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
-                assertEquals(verticalPrincipalPoint,
-                        projectedMetricIntrinsic.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
+                assertEquals(horizontalPrincipalPoint, projectedMetricIntrinsic.getHorizontalPrincipalPoint(),
+                        ABSOLUTE_ERROR);
+                assertEquals(verticalPrincipalPoint, projectedMetricIntrinsic.getVerticalPrincipalPoint(),
+                        ABSOLUTE_ERROR);
             }
 
             // test in a projective stratum, and check that in any arbitrary
@@ -523,40 +491,36 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
 
             // generate random projective transformation to transform ground
             // truth cameras
-            final Matrix t = Matrix.createWithUniformRandomValues(
-                    ProjectiveTransformation3D.HOM_COORDS,
+            final var t = Matrix.createWithUniformRandomValues(ProjectiveTransformation3D.HOM_COORDS,
                     ProjectiveTransformation3D.HOM_COORDS, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
             // ensure last element is not zero
             t.setElementAt(ProjectiveTransformation3D.HOM_COORDS - 1,
                     ProjectiveTransformation3D.HOM_COORDS - 1, 1.0);
-            final ProjectiveTransformation3D transformation = new ProjectiveTransformation3D(t);
+            final var transformation = new ProjectiveTransformation3D(t);
 
             transformation.normalize();
 
-            final Matrix invTransT = Utils.inverse(t).transposeAndReturnNew();
-            final ProjectiveTransformation3D invTransTransformation =
-                    new ProjectiveTransformation3D(invTransT);
+            final var invTransT = Utils.inverse(t).transposeAndReturnNew();
+            final var invTransTransformation = new ProjectiveTransformation3D(invTransT);
 
-            final DualAbsoluteQuadric projectiveDaq = new DualAbsoluteQuadric();
+            final var projectiveDaq = new DualAbsoluteQuadric();
             invTransTransformation.transform(metricDaq, projectiveDaq);
 
-            final DualAbsoluteQuadric projectiveDaq2 = new DualAbsoluteQuadric(transformation);
+            final var projectiveDaq2 = new DualAbsoluteQuadric(transformation);
 
             PinholeCamera projectiveCamera;
-            for (final PinholeCamera c : metricCameras) {
+            for (final var c : metricCameras) {
                 projectiveCamera = transformation.transformAndReturnNew(c);
                 projectiveCamera.normalize();
 
-                final DualImageOfAbsoluteConic projectedProjectiveDiac =
-                        new DualImageOfAbsoluteConic(projectiveCamera, projectiveDaq);
+                final var projectedProjectiveDiac = new DualImageOfAbsoluteConic(projectiveCamera, projectiveDaq);
                 projectedProjectiveDiac.normalize();
 
-                final DualImageOfAbsoluteConic projectedProjectiveDiac2 =
-                        new DualImageOfAbsoluteConic(projectiveCamera, projectiveDaq2);
+                final var projectedProjectiveDiac2 = new DualImageOfAbsoluteConic(projectiveCamera, projectiveDaq2);
                 projectedProjectiveDiac2.normalize();
 
-                final Matrix projectedProjectiveDiacMatrix = projectedProjectiveDiac.asMatrix();
-                final Matrix projectedProjectiveDiacMatrix2 = projectedProjectiveDiac2.asMatrix();
+                final var projectedProjectiveDiacMatrix = projectedProjectiveDiac.asMatrix();
+                final var projectedProjectiveDiacMatrix2 = projectedProjectiveDiac2.asMatrix();
 
                 if (!metricDiacMatrix.equals(projectedProjectiveDiacMatrix, ABSOLUTE_ERROR)) {
                     continue;
@@ -567,22 +531,16 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                 assertTrue(metricDiacMatrix.equals(projectedProjectiveDiacMatrix, ABSOLUTE_ERROR));
                 assertTrue(metricDiacMatrix.equals(projectedProjectiveDiacMatrix2, ABSOLUTE_ERROR));
 
-                final PinholeCameraIntrinsicParameters projectedProjectiveIntrinsic =
-                        projectedProjectiveDiac.getIntrinsicParameters();
+                final var projectedProjectiveIntrinsic = projectedProjectiveDiac.getIntrinsicParameters();
 
-                assertEquals(horizontalFocalLength,
-                        projectedProjectiveIntrinsic.getHorizontalFocalLength(),
+                assertEquals(horizontalFocalLength, projectedProjectiveIntrinsic.getHorizontalFocalLength(),
                         5 * LARGE_ABSOLUTE_ERROR);
-                assertEquals(verticalFocalLength,
-                        projectedProjectiveIntrinsic.getVerticalFocalLength(),
+                assertEquals(verticalFocalLength, projectedProjectiveIntrinsic.getVerticalFocalLength(),
                         5 * LARGE_ABSOLUTE_ERROR);
-                assertEquals(skewness, projectedProjectiveIntrinsic.getSkewness(),
+                assertEquals(skewness, projectedProjectiveIntrinsic.getSkewness(), 5 * LARGE_ABSOLUTE_ERROR);
+                assertEquals(horizontalPrincipalPoint, projectedProjectiveIntrinsic.getHorizontalPrincipalPoint(),
                         5 * LARGE_ABSOLUTE_ERROR);
-                assertEquals(horizontalPrincipalPoint,
-                        projectedProjectiveIntrinsic.getHorizontalPrincipalPoint(),
-                        5 * LARGE_ABSOLUTE_ERROR);
-                assertEquals(verticalPrincipalPoint,
-                        projectedProjectiveIntrinsic.getVerticalPrincipalPoint(),
+                assertEquals(verticalPrincipalPoint, projectedProjectiveIntrinsic.getVerticalPrincipalPoint(),
                         5 * LARGE_ABSOLUTE_ERROR);
             }
 
@@ -601,48 +559,44 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
     // focal distance aspect ratio known (1.0)
     // singularity not enforced
     @Test
-    public void testEstimate1() throws LockedException, AlgebraException, NotReadyException,
-            InvalidTransformationException, NotAvailableException, CameraException {
+    void testEstimate1() throws LockedException, AlgebraException, NotReadyException, InvalidTransformationException,
+            NotAvailableException, CameraException {
 
-        int numSucceeded = 0;
-        for (int times = 0; times < TIMES; times++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        var numSucceeded = 0;
+        for (var times = 0; times < TIMES; times++) {
+            final var randomizer = new UniformRandomizer();
 
             // create ground truth intrinsic parameters
-            final double aspectRatio = 1.0;
-            final double horizontalFocalLength =
-                    randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength = aspectRatio * horizontalFocalLength;
-            final double skewness = 0.0;
-            final double horizontalPrincipalPoint = 0.0;
-            final double verticalPrincipalPoint = 0.0;
+            final var aspectRatio = 1.0;
+            final var horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var verticalFocalLength = aspectRatio * horizontalFocalLength;
+            final var skewness = 0.0;
+            final var horizontalPrincipalPoint = 0.0;
+            final var verticalPrincipalPoint = 0.0;
 
-            final PinholeCameraIntrinsicParameters metricIntrinsic =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength,
-                            verticalFocalLength, horizontalPrincipalPoint,
-                            verticalPrincipalPoint, skewness);
+            final var metricIntrinsic = new PinholeCameraIntrinsicParameters(horizontalFocalLength, verticalFocalLength,
+                    horizontalPrincipalPoint, verticalPrincipalPoint, skewness);
 
-            final DualImageOfAbsoluteConic metricDiac = new DualImageOfAbsoluteConic(metricIntrinsic);
+            final var metricDiac = new DualImageOfAbsoluteConic(metricIntrinsic);
             metricDiac.normalize();
-            final Matrix metricDiacMatrix = metricDiac.asMatrix();
+            final var metricDiacMatrix = metricDiac.asMatrix();
 
             // generate random projective transformation to transform ground
             // truth cameras
-            final Matrix t = Matrix.createWithUniformRandomValues(
-                    ProjectiveTransformation3D.HOM_COORDS,
+            final var t = Matrix.createWithUniformRandomValues(ProjectiveTransformation3D.HOM_COORDS,
                     ProjectiveTransformation3D.HOM_COORDS, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
             // ensure last element is not zero
             t.setElementAt(ProjectiveTransformation3D.HOM_COORDS - 1,
                     ProjectiveTransformation3D.HOM_COORDS - 1, 1.0);
 
-            final ProjectiveTransformation3D transformation = new ProjectiveTransformation3D(t);
+            final var transformation = new ProjectiveTransformation3D(t);
 
             transformation.normalize();
 
-            final DualAbsoluteQuadric projectiveDaq = new DualAbsoluteQuadric(transformation);
+            final var projectiveDaq = new DualAbsoluteQuadric(transformation);
             projectiveDaq.normalize();
 
-            final Matrix projectiveDaqMatrix = projectiveDaq.asMatrix();
+            final var projectiveDaqMatrix = projectiveDaq.asMatrix();
 
             double roll;
             double pitch;
@@ -654,10 +608,10 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
             InhomogeneousPoint3D cameraCenter;
             PinholeCamera metricCamera;
             PinholeCamera projectiveCamera;
-            final List<PinholeCamera> metricCameras = new ArrayList<>();
-            final List<PinholeCamera> projectiveCameras = new ArrayList<>();
+            final var metricCameras = new ArrayList<PinholeCamera>();
+            final var projectiveCameras = new ArrayList<PinholeCamera>();
 
-            final LMSEDualAbsoluteQuadricEstimator estimator = new LMSEDualAbsoluteQuadricEstimator();
+            final var estimator = new LMSEDualAbsoluteQuadricEstimator();
             estimator.setListener(this);
             estimator.setLMSESolutionAllowed(false);
             estimator.setZeroSkewness(true);
@@ -666,14 +620,11 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
             estimator.setFocalDistanceAspectRatio(1.0);
             estimator.setSingularityEnforced(false);
 
-            final int numCams = estimator.getMinNumberOfRequiredCameras();
-            for (int i = 0; i < numCams; i++) {
-                roll = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                        2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-                pitch = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                        MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-                yaw = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                        2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+            final var numCams = estimator.getMinNumberOfRequiredCameras();
+            for (var i = 0; i < numCams; i++) {
+                roll = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
+                pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                yaw = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
 
                 q = new Quaternion(roll, pitch, yaw);
 
@@ -695,16 +646,15 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
             estimator.setCameras(projectiveCameras);
 
             try {
-                final DualAbsoluteQuadric estimatedDaq = estimator.estimate();
+                final var estimatedDaq = estimator.estimate();
                 estimatedDaq.normalize();
-                final Matrix estimatedDaqMatrix = estimatedDaq.asMatrix();
+                final var estimatedDaqMatrix = estimatedDaq.asMatrix();
 
-                final DualAbsoluteQuadric estimatedDaq2 = new DualAbsoluteQuadric();
+                final var estimatedDaq2 = new DualAbsoluteQuadric();
                 estimator.estimate(estimatedDaq2);
                 estimatedDaq2.normalize();
 
-                assertTrue(estimatedDaqMatrix.equals(estimatedDaq2.asMatrix(),
-                        5 * ABSOLUTE_ERROR));
+                assertTrue(estimatedDaqMatrix.equals(estimatedDaq2.asMatrix(), 5 * ABSOLUTE_ERROR));
 
                 // check that DAQ has rank 3 (zero determinant)
                 if (Math.abs(Utils.det(estimatedDaqMatrix)) > ABSOLUTE_ERROR) {
@@ -717,10 +667,9 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                 }
                 assertTrue(projectiveDaqMatrix.equals(estimatedDaqMatrix, ABSOLUTE_ERROR));
 
-                final ProjectiveTransformation3D estimatedTransformation =
-                        estimatedDaq.getMetricToProjectiveTransformation();
+                final var estimatedTransformation = estimatedDaq.getMetricToProjectiveTransformation();
                 estimatedTransformation.normalize();
-                final ProjectiveTransformation3D invEstimatedTransformation =
+                final var invEstimatedTransformation =
                         (ProjectiveTransformation3D) estimatedTransformation.inverseAndReturnNew();
 
                 // project estimated DAQ using projective cameras to obtain DIAC
@@ -734,18 +683,17 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                 Rotation3D estimatedMetricRotation, metricRotation;
                 double distanceEstimatedCenter;
                 double distanceCenter;
-                double previousScale = 1.0;
-                double scale = 1.0;
+                var previousScale = 1.0;
+                var scale = 1.0;
                 PinholeCamera estimatedMetricCamera;
-                boolean anyFailed = false;
-                for (int i = 0; i < numCams; i++) {
+                var anyFailed = false;
+                for (var i = 0; i < numCams; i++) {
                     projectiveCamera = projectiveCameras.get(i);
 
-                    final DualImageOfAbsoluteConic projectedProjectiveDiac =
-                            new DualImageOfAbsoluteConic(projectiveCamera, estimatedDaq);
+                    final var projectedProjectiveDiac = new DualImageOfAbsoluteConic(projectiveCamera, estimatedDaq);
                     projectedProjectiveDiac.normalize();
 
-                    final Matrix projectedProjectiveDiacMatrix = projectedProjectiveDiac.asMatrix();
+                    final var projectedProjectiveDiacMatrix = projectedProjectiveDiac.asMatrix();
 
                     if (!metricDiacMatrix.equals(projectedProjectiveDiacMatrix, ABSOLUTE_ERROR)) {
                         anyFailed = true;
@@ -753,24 +701,19 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                     }
                     assertTrue(metricDiacMatrix.equals(projectedProjectiveDiacMatrix, ABSOLUTE_ERROR));
 
-                    estimatedMetricCamera = invEstimatedTransformation
-                            .transformAndReturnNew(projectiveCamera);
+                    estimatedMetricCamera = invEstimatedTransformation.transformAndReturnNew(projectiveCamera);
 
                     estimatedMetricCamera.decompose();
-                    final PinholeCameraIntrinsicParameters estimatedIntrinsic =
-                            estimatedMetricCamera.getIntrinsicParameters();
+                    final var estimatedIntrinsic = estimatedMetricCamera.getIntrinsicParameters();
 
                     assertEquals(horizontalFocalLength, estimatedIntrinsic.getHorizontalFocalLength(),
                             5 * LARGE_ABSOLUTE_ERROR);
                     assertEquals(verticalFocalLength, estimatedIntrinsic.getVerticalFocalLength(),
                             5 * LARGE_ABSOLUTE_ERROR);
-                    assertEquals(skewness, estimatedIntrinsic.getSkewness(),
-                            5 * LARGE_ABSOLUTE_ERROR);
-                    assertEquals(horizontalPrincipalPoint,
-                            estimatedIntrinsic.getHorizontalPrincipalPoint(),
+                    assertEquals(skewness, estimatedIntrinsic.getSkewness(), 5 * LARGE_ABSOLUTE_ERROR);
+                    assertEquals(horizontalPrincipalPoint, estimatedIntrinsic.getHorizontalPrincipalPoint(),
                             7 * LARGE_ABSOLUTE_ERROR);
-                    assertEquals(verticalPrincipalPoint,
-                            estimatedIntrinsic.getVerticalPrincipalPoint(),
+                    assertEquals(verticalPrincipalPoint, estimatedIntrinsic.getVerticalPrincipalPoint(),
                             7 * LARGE_ABSOLUTE_ERROR);
 
                     if (anyFailed) {
@@ -790,8 +733,7 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                     metricRotation = metricCamera.getCameraRotation();
 
                     if (i > 0) {
-                        distanceEstimatedCenter = previousEstimatedMetricCenter
-                                .distanceTo(estimatedMetricCenter);
+                        distanceEstimatedCenter = previousEstimatedMetricCenter.distanceTo(estimatedMetricCenter);
                         distanceCenter = previousMetricCenter.distanceTo(metricCenter);
                         scale = distanceEstimatedCenter / distanceCenter;
 
@@ -800,8 +742,8 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                         Rotation3D diffRotation = metricRotation.combineAndReturnNew(
                                 previousMetricRotation.inverseRotationAndReturnNew());
 
-                        Matrix rot1 = diffEstimatedRotation.asInhomogeneousMatrix();
-                        Matrix rot2 = diffRotation.asInhomogeneousMatrix();
+                        var rot1 = diffEstimatedRotation.asInhomogeneousMatrix();
+                        var rot2 = diffRotation.asInhomogeneousMatrix();
                         assertTrue(rot1.equals(rot2, LARGE_ABSOLUTE_ERROR));
                     }
 
@@ -823,6 +765,7 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                 numSucceeded++;
                 break;
             } catch (final DualAbsoluteQuadricEstimatorException ignore) {
+                // no action needed
             }
         }
 
@@ -838,48 +781,44 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
     // focal distance aspect ratio known (1.0)
     // singularity enforced
     @Test
-    public void testEstimate2() throws LockedException, AlgebraException, NotReadyException,
-            InvalidTransformationException, NotAvailableException, CameraException {
+    void testEstimate2() throws LockedException, AlgebraException, NotReadyException, InvalidTransformationException,
+            NotAvailableException, CameraException {
 
-        int numSucceeded = 0;
-        for (int times = 0; times < TIMES; times++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        var numSucceeded = 0;
+        for (var times = 0; times < TIMES; times++) {
+            final var randomizer = new UniformRandomizer();
 
             // create ground truth intrinsic parameters
-            final double aspectRatio = 1.0;
-            final double horizontalFocalLength =
-                    randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength = aspectRatio * horizontalFocalLength;
-            final double skewness = 0.0;
-            double horizontalPrincipalPoint = 0.0;
-            double verticalPrincipalPoint = 0.0;
+            final var aspectRatio = 1.0;
+            final var horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var verticalFocalLength = aspectRatio * horizontalFocalLength;
+            final var skewness = 0.0;
+            var horizontalPrincipalPoint = 0.0;
+            var verticalPrincipalPoint = 0.0;
 
-            final PinholeCameraIntrinsicParameters metricIntrinsic =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength,
-                            verticalFocalLength, horizontalPrincipalPoint,
-                            verticalPrincipalPoint, skewness);
+            final var metricIntrinsic = new PinholeCameraIntrinsicParameters(horizontalFocalLength, verticalFocalLength,
+                    horizontalPrincipalPoint, verticalPrincipalPoint, skewness);
 
-            final DualImageOfAbsoluteConic metricDiac = new DualImageOfAbsoluteConic(metricIntrinsic);
+            final var metricDiac = new DualImageOfAbsoluteConic(metricIntrinsic);
             metricDiac.normalize();
-            final Matrix metricDiacMatrix = metricDiac.asMatrix();
+            final var metricDiacMatrix = metricDiac.asMatrix();
 
             // generate random projective transformation to transform ground
             // truth cameras
-            Matrix t = Matrix.createWithUniformRandomValues(
-                    ProjectiveTransformation3D.HOM_COORDS,
+            var t = Matrix.createWithUniformRandomValues(ProjectiveTransformation3D.HOM_COORDS,
                     ProjectiveTransformation3D.HOM_COORDS, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
             // ensure last element is not zero
             t.setElementAt(ProjectiveTransformation3D.HOM_COORDS - 1,
                     ProjectiveTransformation3D.HOM_COORDS - 1, 1.0);
 
-            final ProjectiveTransformation3D transformation = new ProjectiveTransformation3D(t);
+            final var transformation = new ProjectiveTransformation3D(t);
 
             transformation.normalize();
 
-            final DualAbsoluteQuadric projectiveDaq = new DualAbsoluteQuadric(transformation);
+            final var projectiveDaq = new DualAbsoluteQuadric(transformation);
             projectiveDaq.normalize();
 
-            final Matrix projectiveDaqMatrix = projectiveDaq.asMatrix();
+            final var projectiveDaqMatrix = projectiveDaq.asMatrix();
 
             double roll;
             double pitch;
@@ -891,10 +830,10 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
             InhomogeneousPoint3D cameraCenter;
             PinholeCamera metricCamera;
             PinholeCamera projectiveCamera;
-            final List<PinholeCamera> metricCameras = new ArrayList<>();
-            final List<PinholeCamera> projectiveCameras = new ArrayList<>();
+            final var metricCameras = new ArrayList<PinholeCamera>();
+            final var projectiveCameras = new ArrayList<PinholeCamera>();
 
-            final LMSEDualAbsoluteQuadricEstimator estimator = new LMSEDualAbsoluteQuadricEstimator();
+            final var estimator = new LMSEDualAbsoluteQuadricEstimator();
             estimator.setListener(this);
             estimator.setLMSESolutionAllowed(false);
             estimator.setZeroSkewness(true);
@@ -903,14 +842,11 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
             estimator.setFocalDistanceAspectRatio(1.0);
             estimator.setSingularityEnforced(true);
 
-            final int numCams = estimator.getMinNumberOfRequiredCameras();
-            for (int i = 0; i < numCams; i++) {
-                roll = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                        2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-                pitch = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                        MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-                yaw = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                        2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+            final var numCams = estimator.getMinNumberOfRequiredCameras();
+            for (var i = 0; i < numCams; i++) {
+                roll = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
+                pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                yaw = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
 
                 q = new Quaternion(roll, pitch, yaw);
 
@@ -932,11 +868,11 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
             estimator.setCameras(projectiveCameras);
 
             try {
-                final DualAbsoluteQuadric estimatedDaq = estimator.estimate();
+                final var estimatedDaq = estimator.estimate();
                 estimatedDaq.normalize();
-                final Matrix estimatedDaqMatrix = estimatedDaq.asMatrix();
+                final var estimatedDaqMatrix = estimatedDaq.asMatrix();
 
-                final DualAbsoluteQuadric estimatedDaq2 = new DualAbsoluteQuadric();
+                final var estimatedDaq2 = new DualAbsoluteQuadric();
                 estimator.estimate(estimatedDaq2);
                 estimatedDaq2.normalize();
 
@@ -954,10 +890,9 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                 }
                 assertTrue(projectiveDaqMatrix.equals(estimatedDaqMatrix, ABSOLUTE_ERROR));
 
-                final ProjectiveTransformation3D estimatedTransformation =
-                        estimatedDaq.getMetricToProjectiveTransformation();
+                final var estimatedTransformation = estimatedDaq.getMetricToProjectiveTransformation();
                 estimatedTransformation.normalize();
-                final ProjectiveTransformation3D invEstimatedTransformation =
+                final var invEstimatedTransformation =
                         (ProjectiveTransformation3D) estimatedTransformation.inverseAndReturnNew();
 
                 // project estimated DAQ using projective cameras to obtain DIAC
@@ -973,18 +908,17 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                 Rotation3D metricRotation;
                 double distanceEstimatedCenter;
                 double distanceCenter;
-                double previousScale = 1.0;
-                double scale = 1.0;
+                var previousScale = 1.0;
+                var scale = 1.0;
                 PinholeCamera estimatedMetricCamera;
-                boolean anyFailed = false;
-                for (int i = 0; i < numCams; i++) {
+                var anyFailed = false;
+                for (var i = 0; i < numCams; i++) {
                     projectiveCamera = projectiveCameras.get(i);
 
-                    final DualImageOfAbsoluteConic projectedProjectiveDiac =
-                            new DualImageOfAbsoluteConic(projectiveCamera, estimatedDaq);
+                    final var projectedProjectiveDiac = new DualImageOfAbsoluteConic(projectiveCamera, estimatedDaq);
                     projectedProjectiveDiac.normalize();
 
-                    final Matrix projectedProjectiveDiacMatrix = projectedProjectiveDiac.asMatrix();
+                    final var projectedProjectiveDiacMatrix = projectedProjectiveDiac.asMatrix();
 
                     if (!metricDiacMatrix.equals(projectedProjectiveDiacMatrix, ABSOLUTE_ERROR)) {
                         anyFailed = true;
@@ -992,24 +926,19 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                     }
                     assertTrue(metricDiacMatrix.equals(projectedProjectiveDiacMatrix, ABSOLUTE_ERROR));
 
-                    estimatedMetricCamera = invEstimatedTransformation.transformAndReturnNew(
-                            projectiveCamera);
+                    estimatedMetricCamera = invEstimatedTransformation.transformAndReturnNew(projectiveCamera);
 
                     estimatedMetricCamera.decompose();
-                    final PinholeCameraIntrinsicParameters estimatedIntrinsic =
-                            estimatedMetricCamera.getIntrinsicParameters();
+                    final var estimatedIntrinsic = estimatedMetricCamera.getIntrinsicParameters();
 
                     assertEquals(horizontalFocalLength, estimatedIntrinsic.getHorizontalFocalLength(),
                             5 * LARGE_ABSOLUTE_ERROR);
                     assertEquals(verticalFocalLength, estimatedIntrinsic.getVerticalFocalLength(),
                             5 * LARGE_ABSOLUTE_ERROR);
-                    assertEquals(skewness, estimatedIntrinsic.getSkewness(),
+                    assertEquals(skewness, estimatedIntrinsic.getSkewness(), 5 * LARGE_ABSOLUTE_ERROR);
+                    assertEquals(horizontalPrincipalPoint, estimatedIntrinsic.getHorizontalPrincipalPoint(),
                             5 * LARGE_ABSOLUTE_ERROR);
-                    assertEquals(horizontalPrincipalPoint,
-                            estimatedIntrinsic.getHorizontalPrincipalPoint(),
-                            5 * LARGE_ABSOLUTE_ERROR);
-                    assertEquals(verticalPrincipalPoint,
-                            estimatedIntrinsic.getVerticalPrincipalPoint(),
+                    assertEquals(verticalPrincipalPoint, estimatedIntrinsic.getVerticalPrincipalPoint(),
                             5 * LARGE_ABSOLUTE_ERROR);
 
                     if (anyFailed) {
@@ -1029,19 +958,17 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                     metricRotation = metricCamera.getCameraRotation();
 
                     if (i > 0) {
-                        distanceEstimatedCenter = previousEstimatedMetricCenter.distanceTo(
-                                estimatedMetricCenter);
+                        distanceEstimatedCenter = previousEstimatedMetricCenter.distanceTo(estimatedMetricCenter);
                         distanceCenter = previousMetricCenter.distanceTo(metricCenter);
                         scale = distanceEstimatedCenter / distanceCenter;
 
-                        final Rotation3D diffEstimatedRotation =
-                                estimatedMetricRotation.combineAndReturnNew(
-                                        previousEstimatedMetricRotation.inverseRotationAndReturnNew());
-                        final Rotation3D diffRotation = metricRotation.combineAndReturnNew(
+                        final var diffEstimatedRotation = estimatedMetricRotation.combineAndReturnNew(
+                                previousEstimatedMetricRotation.inverseRotationAndReturnNew());
+                        final var diffRotation = metricRotation.combineAndReturnNew(
                                 previousMetricRotation.inverseRotationAndReturnNew());
 
-                        final Matrix rot1 = diffEstimatedRotation.asInhomogeneousMatrix();
-                        final Matrix rot2 = diffRotation.asInhomogeneousMatrix();
+                        final var rot1 = diffEstimatedRotation.asInhomogeneousMatrix();
+                        final var rot2 = diffRotation.asInhomogeneousMatrix();
                         assertTrue(rot1.equals(rot2, LARGE_ABSOLUTE_ERROR));
                     }
 
@@ -1060,6 +987,7 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                 numSucceeded++;
                 break;
             } catch (final DualAbsoluteQuadricEstimatorException ignore) {
+                // no action needed
             }
         }
 
@@ -1075,48 +1003,44 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
     // focal distance aspect ratio known (1.0)
     // singularity not enforced
     @Test
-    public void testEstimate3() throws LockedException, AlgebraException, NotReadyException,
-            InvalidTransformationException, NotAvailableException, CameraException {
+    void testEstimate3() throws LockedException, AlgebraException, NotReadyException, InvalidTransformationException,
+            NotAvailableException, CameraException {
 
-        int numSucceeded = 0;
-        for (int times = 0; times < TIMES; times++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        var numSucceeded = 0;
+        for (var times = 0; times < TIMES; times++) {
+            final var randomizer = new UniformRandomizer();
 
             // create ground truth intrinsic parameters
-            final double aspectRatio = 1.0;
-            final double horizontalFocalLength =
-                    randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength = aspectRatio * horizontalFocalLength;
-            final double skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
-            final double horizontalPrincipalPoint = 0.0;
-            final double verticalPrincipalPoint = 0.0;
+            final var aspectRatio = 1.0;
+            final var horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var verticalFocalLength = aspectRatio * horizontalFocalLength;
+            final var skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final var horizontalPrincipalPoint = 0.0;
+            final var verticalPrincipalPoint = 0.0;
 
-            final PinholeCameraIntrinsicParameters metricIntrinsic =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength,
-                            verticalFocalLength, horizontalPrincipalPoint,
-                            verticalPrincipalPoint, skewness);
+            final var metricIntrinsic = new PinholeCameraIntrinsicParameters(horizontalFocalLength, verticalFocalLength,
+                    horizontalPrincipalPoint, verticalPrincipalPoint, skewness);
 
-            final DualImageOfAbsoluteConic metricDiac = new DualImageOfAbsoluteConic(metricIntrinsic);
+            final var metricDiac = new DualImageOfAbsoluteConic(metricIntrinsic);
             metricDiac.normalize();
-            final Matrix metricDiacMatrix = metricDiac.asMatrix();
+            final var metricDiacMatrix = metricDiac.asMatrix();
 
             // generate random projective transformation to transform ground
             // truth cameras
-            final Matrix t = Matrix.createWithUniformRandomValues(
-                    ProjectiveTransformation3D.HOM_COORDS,
+            final var t = Matrix.createWithUniformRandomValues(ProjectiveTransformation3D.HOM_COORDS,
                     ProjectiveTransformation3D.HOM_COORDS, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
             // ensure last element is not zero
             t.setElementAt(ProjectiveTransformation3D.HOM_COORDS - 1,
                     ProjectiveTransformation3D.HOM_COORDS - 1, 1.0);
 
-            final ProjectiveTransformation3D transformation = new ProjectiveTransformation3D(t);
+            final var transformation = new ProjectiveTransformation3D(t);
 
             transformation.normalize();
 
-            final DualAbsoluteQuadric projectiveDaq = new DualAbsoluteQuadric(transformation);
+            final var projectiveDaq = new DualAbsoluteQuadric(transformation);
             projectiveDaq.normalize();
 
-            final Matrix projectiveDaqMatrix = projectiveDaq.asMatrix();
+            final var projectiveDaqMatrix = projectiveDaq.asMatrix();
 
             double roll;
             double pitch;
@@ -1128,10 +1052,10 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
             InhomogeneousPoint3D cameraCenter;
             PinholeCamera metricCamera;
             PinholeCamera projectiveCamera;
-            final List<PinholeCamera> metricCameras = new ArrayList<>();
-            final List<PinholeCamera> projectiveCameras = new ArrayList<>();
+            final var metricCameras = new ArrayList<PinholeCamera>();
+            final var projectiveCameras = new ArrayList<PinholeCamera>();
 
-            final LMSEDualAbsoluteQuadricEstimator estimator = new LMSEDualAbsoluteQuadricEstimator();
+            final var estimator = new LMSEDualAbsoluteQuadricEstimator();
             estimator.setListener(this);
             estimator.setLMSESolutionAllowed(false);
             estimator.setZeroSkewness(false);
@@ -1140,14 +1064,11 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
             estimator.setFocalDistanceAspectRatio(1.0);
             estimator.setSingularityEnforced(false);
 
-            final int numCams = estimator.getMinNumberOfRequiredCameras();
-            for (int i = 0; i < numCams; i++) {
-                roll = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                        2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-                pitch = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                        MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-                yaw = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                        2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+            final var numCams = estimator.getMinNumberOfRequiredCameras();
+            for (var i = 0; i < numCams; i++) {
+                roll = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
+                pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                yaw = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
 
                 q = new Quaternion(roll, pitch, yaw);
 
@@ -1169,11 +1090,11 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
             estimator.setCameras(projectiveCameras);
 
             try {
-                final DualAbsoluteQuadric estimatedDaq = estimator.estimate();
+                final var estimatedDaq = estimator.estimate();
                 estimatedDaq.normalize();
-                final Matrix estimatedDaqMatrix = estimatedDaq.asMatrix();
+                final var estimatedDaqMatrix = estimatedDaq.asMatrix();
 
-                final DualAbsoluteQuadric estimatedDaq2 = new DualAbsoluteQuadric();
+                final var estimatedDaq2 = new DualAbsoluteQuadric();
                 estimator.estimate(estimatedDaq2);
                 estimatedDaq2.normalize();
 
@@ -1190,10 +1111,9 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                 }
                 assertTrue(projectiveDaqMatrix.equals(estimatedDaqMatrix, ABSOLUTE_ERROR));
 
-                final ProjectiveTransformation3D estimatedTransformation =
-                        estimatedDaq.getMetricToProjectiveTransformation();
+                final var estimatedTransformation = estimatedDaq.getMetricToProjectiveTransformation();
                 estimatedTransformation.normalize();
-                final ProjectiveTransformation3D invEstimatedTransformation =
+                final var invEstimatedTransformation =
                         (ProjectiveTransformation3D) estimatedTransformation.inverseAndReturnNew();
 
                 // project estimated DAQ using projective cameras to obtain DIAC
@@ -1208,18 +1128,17 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                 Rotation3D metricRotation;
                 double distanceEstimatedCenter;
                 double distanceCenter;
-                double previousScale = 1.0;
-                double scale = 1.0;
+                var previousScale = 1.0;
+                var scale = 1.0;
                 PinholeCamera estimatedMetricCamera;
-                boolean anyFailed = false;
-                for (int i = 0; i < numCams; i++) {
+                var anyFailed = false;
+                for (var i = 0; i < numCams; i++) {
                     projectiveCamera = projectiveCameras.get(i);
 
-                    final DualImageOfAbsoluteConic projectedProjectiveDiac =
-                            new DualImageOfAbsoluteConic(projectiveCamera, estimatedDaq);
+                    final var projectedProjectiveDiac = new DualImageOfAbsoluteConic(projectiveCamera, estimatedDaq);
                     projectedProjectiveDiac.normalize();
 
-                    final Matrix projectedProjectiveDiacMatrix = projectedProjectiveDiac.asMatrix();
+                    final var projectedProjectiveDiacMatrix = projectedProjectiveDiac.asMatrix();
 
                     if (!metricDiacMatrix.equals(projectedProjectiveDiacMatrix, ABSOLUTE_ERROR)) {
                         anyFailed = true;
@@ -1227,40 +1146,35 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                     }
                     assertTrue(metricDiacMatrix.equals(projectedProjectiveDiacMatrix, ABSOLUTE_ERROR));
 
-                    estimatedMetricCamera = invEstimatedTransformation.transformAndReturnNew(
-                            projectiveCamera);
+                    estimatedMetricCamera = invEstimatedTransformation.transformAndReturnNew(projectiveCamera);
 
                     estimatedMetricCamera.decompose();
-                    final PinholeCameraIntrinsicParameters estimatedIntrinsic =
-                            estimatedMetricCamera.getIntrinsicParameters();
+                    final var estimatedIntrinsic = estimatedMetricCamera.getIntrinsicParameters();
 
-                    if (Math.abs(horizontalFocalLength - estimatedIntrinsic.getHorizontalFocalLength()) >
-                            10 * LARGE_ABSOLUTE_ERROR) {
+                    if (Math.abs(horizontalFocalLength - estimatedIntrinsic.getHorizontalFocalLength())
+                            > 10 * LARGE_ABSOLUTE_ERROR) {
                         continue;
                     }
                     assertEquals(horizontalFocalLength, estimatedIntrinsic.getHorizontalFocalLength(),
                             10 * LARGE_ABSOLUTE_ERROR);
-                    if (Math.abs(verticalFocalLength - estimatedIntrinsic.getVerticalFocalLength()) >
-                            10 * LARGE_ABSOLUTE_ERROR) {
+                    if (Math.abs(verticalFocalLength - estimatedIntrinsic.getVerticalFocalLength())
+                            > 10 * LARGE_ABSOLUTE_ERROR) {
                         continue;
                     }
                     assertEquals(verticalFocalLength, estimatedIntrinsic.getVerticalFocalLength(),
                             10 * LARGE_ABSOLUTE_ERROR);
-                    if (Math.abs(skewness - estimatedIntrinsic.getSkewness()) >
-                            10 * LARGE_ABSOLUTE_ERROR) {
+                    if (Math.abs(skewness - estimatedIntrinsic.getSkewness()) > 10 * LARGE_ABSOLUTE_ERROR) {
                         continue;
                     }
-                    assertEquals(skewness, estimatedIntrinsic.getSkewness(),
-                            10 * LARGE_ABSOLUTE_ERROR);
-                    if (Math.abs(horizontalPrincipalPoint - estimatedIntrinsic.getHorizontalPrincipalPoint()) >
-                            10 * LARGE_ABSOLUTE_ERROR) {
+                    assertEquals(skewness, estimatedIntrinsic.getSkewness(), 10 * LARGE_ABSOLUTE_ERROR);
+                    if (Math.abs(horizontalPrincipalPoint - estimatedIntrinsic.getHorizontalPrincipalPoint())
+                            > 10 * LARGE_ABSOLUTE_ERROR) {
                         continue;
                     }
-                    assertEquals(horizontalPrincipalPoint,
-                            estimatedIntrinsic.getHorizontalPrincipalPoint(),
+                    assertEquals(horizontalPrincipalPoint, estimatedIntrinsic.getHorizontalPrincipalPoint(),
                             10 * LARGE_ABSOLUTE_ERROR);
-                    if (Math.abs(verticalPrincipalPoint - estimatedIntrinsic.getVerticalPrincipalPoint()) >
-                            10 * LARGE_ABSOLUTE_ERROR) {
+                    if (Math.abs(verticalPrincipalPoint - estimatedIntrinsic.getVerticalPrincipalPoint())
+                            > 10 * LARGE_ABSOLUTE_ERROR) {
                         continue;
                     }
                     assertEquals(verticalPrincipalPoint, estimatedIntrinsic.getVerticalPrincipalPoint(),
@@ -1283,19 +1197,17 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                     metricRotation = metricCamera.getCameraRotation();
 
                     if (i > 0 && previousEstimatedMetricCenter != null) {
-                        distanceEstimatedCenter = previousEstimatedMetricCenter.distanceTo(
-                                estimatedMetricCenter);
+                        distanceEstimatedCenter = previousEstimatedMetricCenter.distanceTo(estimatedMetricCenter);
                         distanceCenter = previousMetricCenter.distanceTo(metricCenter);
                         scale = distanceEstimatedCenter / distanceCenter;
 
-                        final Rotation3D diffEstimatedRotation =
-                                estimatedMetricRotation.combineAndReturnNew(
-                                        previousEstimatedMetricRotation.inverseRotationAndReturnNew());
-                        final Rotation3D diffRotation = metricRotation.combineAndReturnNew(
+                        final var diffEstimatedRotation = estimatedMetricRotation.combineAndReturnNew(
+                                previousEstimatedMetricRotation.inverseRotationAndReturnNew());
+                        final var diffRotation = metricRotation.combineAndReturnNew(
                                 previousMetricRotation.inverseRotationAndReturnNew());
 
-                        final Matrix rot1 = diffEstimatedRotation.asInhomogeneousMatrix();
-                        final Matrix rot2 = diffRotation.asInhomogeneousMatrix();
+                        final var rot1 = diffEstimatedRotation.asInhomogeneousMatrix();
+                        final var rot2 = diffRotation.asInhomogeneousMatrix();
                         assertTrue(rot1.equals(rot2, LARGE_ABSOLUTE_ERROR));
                     }
 
@@ -1322,6 +1234,7 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                 numSucceeded++;
 
             } catch (DualAbsoluteQuadricEstimatorException ignore) {
+                // no action needed
             }
 
             if (numSucceeded > 0) {
@@ -1341,48 +1254,44 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
     // focal distance aspect ratio known (1.0)
     // singularity enforced
     @Test
-    public void testEstimate4() throws LockedException, AlgebraException, NotReadyException,
-            InvalidTransformationException, NotAvailableException, CameraException {
+    void testEstimate4() throws LockedException, AlgebraException, NotReadyException, InvalidTransformationException,
+            NotAvailableException, CameraException {
 
-        int numSucceeded = 0;
-        for (int times = 0; times < TIMES; times++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        var numSucceeded = 0;
+        for (var times = 0; times < TIMES; times++) {
+            final var randomizer = new UniformRandomizer();
 
             // create ground truth intrinsic parameters
-            final double aspectRatio = 1.0;
-            final double horizontalFocalLength =
-                    randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength = aspectRatio * horizontalFocalLength;
-            final double skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
-            final double horizontalPrincipalPoint = 0.0;
-            final double verticalPrincipalPoint = 0.0;
+            final var aspectRatio = 1.0;
+            final var horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var verticalFocalLength = aspectRatio * horizontalFocalLength;
+            final var skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final var horizontalPrincipalPoint = 0.0;
+            final var verticalPrincipalPoint = 0.0;
 
-            final PinholeCameraIntrinsicParameters metricIntrinsic =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength,
-                            verticalFocalLength, horizontalPrincipalPoint,
-                            verticalPrincipalPoint, skewness);
+            final var metricIntrinsic = new PinholeCameraIntrinsicParameters(horizontalFocalLength, verticalFocalLength,
+                    horizontalPrincipalPoint, verticalPrincipalPoint, skewness);
 
-            final DualImageOfAbsoluteConic metricDiac = new DualImageOfAbsoluteConic(metricIntrinsic);
+            final var metricDiac = new DualImageOfAbsoluteConic(metricIntrinsic);
             metricDiac.normalize();
-            final Matrix metricDiacMatrix = metricDiac.asMatrix();
+            final var metricDiacMatrix = metricDiac.asMatrix();
 
             // generate random projective transformation to transform ground
             // truth cameras
-            final Matrix t = Matrix.createWithUniformRandomValues(
-                    ProjectiveTransformation3D.HOM_COORDS,
+            final var t = Matrix.createWithUniformRandomValues(ProjectiveTransformation3D.HOM_COORDS,
                     ProjectiveTransformation3D.HOM_COORDS, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
             // ensure last element is not zero
             t.setElementAt(ProjectiveTransformation3D.HOM_COORDS - 1,
                     ProjectiveTransformation3D.HOM_COORDS - 1, 1.0);
 
-            final ProjectiveTransformation3D transformation = new ProjectiveTransformation3D(t);
+            final var transformation = new ProjectiveTransformation3D(t);
 
             transformation.normalize();
 
-            final DualAbsoluteQuadric projectiveDaq = new DualAbsoluteQuadric(transformation);
+            final var projectiveDaq = new DualAbsoluteQuadric(transformation);
             projectiveDaq.normalize();
 
-            final Matrix projectiveDaqMatrix = projectiveDaq.asMatrix();
+            final var projectiveDaqMatrix = projectiveDaq.asMatrix();
 
             double roll;
             double pitch;
@@ -1394,10 +1303,10 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
             InhomogeneousPoint3D cameraCenter;
             PinholeCamera metricCamera;
             PinholeCamera projectiveCamera;
-            final List<PinholeCamera> metricCameras = new ArrayList<>();
-            final List<PinholeCamera> projectiveCameras = new ArrayList<>();
+            final var metricCameras = new ArrayList<PinholeCamera>();
+            final var projectiveCameras = new ArrayList<PinholeCamera>();
 
-            final LMSEDualAbsoluteQuadricEstimator estimator = new LMSEDualAbsoluteQuadricEstimator();
+            final var estimator = new LMSEDualAbsoluteQuadricEstimator();
             estimator.setListener(this);
             estimator.setLMSESolutionAllowed(false);
             estimator.setZeroSkewness(false);
@@ -1406,14 +1315,11 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
             estimator.setFocalDistanceAspectRatio(1.0);
             estimator.setSingularityEnforced(true);
 
-            final int numCams = estimator.getMinNumberOfRequiredCameras();
-            for (int i = 0; i < numCams; i++) {
-                roll = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                        2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-                pitch = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                        MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-                yaw = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                        2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+            final var numCams = estimator.getMinNumberOfRequiredCameras();
+            for (var i = 0; i < numCams; i++) {
+                roll = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
+                pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                yaw = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
 
                 q = new Quaternion(roll, pitch, yaw);
 
@@ -1435,11 +1341,11 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
             estimator.setCameras(projectiveCameras);
 
             try {
-                final DualAbsoluteQuadric estimatedDaq = estimator.estimate();
+                final var estimatedDaq = estimator.estimate();
                 estimatedDaq.normalize();
-                final Matrix estimatedDaqMatrix = estimatedDaq.asMatrix();
+                final var estimatedDaqMatrix = estimatedDaq.asMatrix();
 
-                final DualAbsoluteQuadric estimatedDaq2 = new DualAbsoluteQuadric();
+                final var estimatedDaq2 = new DualAbsoluteQuadric();
                 estimator.estimate(estimatedDaq2);
                 estimatedDaq2.normalize();
 
@@ -1457,10 +1363,9 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                 }
                 assertTrue(projectiveDaqMatrix.equals(estimatedDaqMatrix, ABSOLUTE_ERROR));
 
-                final ProjectiveTransformation3D estimatedTransformation =
-                        estimatedDaq.getMetricToProjectiveTransformation();
+                final var estimatedTransformation = estimatedDaq.getMetricToProjectiveTransformation();
                 estimatedTransformation.normalize();
-                final ProjectiveTransformation3D invEstimatedTransformation =
+                final var invEstimatedTransformation =
                         (ProjectiveTransformation3D) estimatedTransformation.inverseAndReturnNew();
 
                 // project estimated DAQ using projective cameras to obtain DIAC
@@ -1476,18 +1381,17 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                 Rotation3D metricRotation;
                 double distanceEstimatedCenter;
                 double distanceCenter;
-                double previousScale = 1.0;
-                double scale = 1.0;
+                var previousScale = 1.0;
+                var scale = 1.0;
                 PinholeCamera estimatedMetricCamera;
-                boolean anyFailed = false;
-                for (int i = 0; i < numCams; i++) {
+                var anyFailed = false;
+                for (var i = 0; i < numCams; i++) {
                     projectiveCamera = projectiveCameras.get(i);
 
-                    final DualImageOfAbsoluteConic projectedProjectiveDiac =
-                            new DualImageOfAbsoluteConic(projectiveCamera, estimatedDaq);
+                    final var projectedProjectiveDiac = new DualImageOfAbsoluteConic(projectiveCamera, estimatedDaq);
                     projectedProjectiveDiac.normalize();
 
-                    final Matrix projectedProjectiveDiacMatrix = projectedProjectiveDiac.asMatrix();
+                    final var projectedProjectiveDiacMatrix = projectedProjectiveDiac.asMatrix();
 
                     if (!metricDiacMatrix.equals(projectedProjectiveDiacMatrix, ABSOLUTE_ERROR)) {
                         anyFailed = true;
@@ -1495,21 +1399,17 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                     }
                     assertTrue(metricDiacMatrix.equals(projectedProjectiveDiacMatrix, ABSOLUTE_ERROR));
 
-                    estimatedMetricCamera = invEstimatedTransformation.transformAndReturnNew(
-                            projectiveCamera);
+                    estimatedMetricCamera = invEstimatedTransformation.transformAndReturnNew(projectiveCamera);
 
                     estimatedMetricCamera.decompose();
-                    final PinholeCameraIntrinsicParameters estimatedIntrinsic =
-                            estimatedMetricCamera.getIntrinsicParameters();
+                    final var estimatedIntrinsic = estimatedMetricCamera.getIntrinsicParameters();
 
                     assertEquals(horizontalFocalLength, estimatedIntrinsic.getHorizontalFocalLength(),
                             5 * LARGE_ABSOLUTE_ERROR);
                     assertEquals(verticalFocalLength, estimatedIntrinsic.getVerticalFocalLength(),
                             5 * LARGE_ABSOLUTE_ERROR);
-                    assertEquals(skewness, estimatedIntrinsic.getSkewness(),
-                            5 * LARGE_ABSOLUTE_ERROR);
-                    assertEquals(horizontalPrincipalPoint,
-                            estimatedIntrinsic.getHorizontalPrincipalPoint(),
+                    assertEquals(skewness, estimatedIntrinsic.getSkewness(), 5 * LARGE_ABSOLUTE_ERROR);
+                    assertEquals(horizontalPrincipalPoint, estimatedIntrinsic.getHorizontalPrincipalPoint(),
                             5 * LARGE_ABSOLUTE_ERROR);
                     assertEquals(verticalPrincipalPoint, estimatedIntrinsic.getVerticalPrincipalPoint(),
                             5 * LARGE_ABSOLUTE_ERROR);
@@ -1531,21 +1431,17 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                     metricRotation = metricCamera.getCameraRotation();
 
                     if (i > 0) {
-                        distanceEstimatedCenter = previousEstimatedMetricCenter.
-                                distanceTo(estimatedMetricCenter);
-                        distanceCenter = previousMetricCenter.distanceTo(
-                                metricCenter);
+                        distanceEstimatedCenter = previousEstimatedMetricCenter.distanceTo(estimatedMetricCenter);
+                        distanceCenter = previousMetricCenter.distanceTo(metricCenter);
                         scale = distanceEstimatedCenter / distanceCenter;
 
-                        final Rotation3D diffEstimatedRotation =
-                                estimatedMetricRotation.combineAndReturnNew(
-                                        previousEstimatedMetricRotation.inverseRotationAndReturnNew());
-                        final Rotation3D diffRotation = metricRotation.combineAndReturnNew(
+                        final var diffEstimatedRotation = estimatedMetricRotation.combineAndReturnNew(
+                                previousEstimatedMetricRotation.inverseRotationAndReturnNew());
+                        final var diffRotation = metricRotation.combineAndReturnNew(
                                 previousMetricRotation.inverseRotationAndReturnNew());
 
-                        final Matrix rot1 = diffEstimatedRotation.
-                                asInhomogeneousMatrix();
-                        final Matrix rot2 = diffRotation.asInhomogeneousMatrix();
+                        final var rot1 = diffEstimatedRotation.asInhomogeneousMatrix();
+                        final var rot2 = diffRotation.asInhomogeneousMatrix();
                         assertTrue(rot1.equals(rot2, LARGE_ABSOLUTE_ERROR));
                     }
 
@@ -1567,6 +1463,7 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                 numSucceeded++;
                 break;
             } catch (final DualAbsoluteQuadricEstimatorException ignore) {
+                // no action needed
             }
         }
 
@@ -1582,48 +1479,44 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
     // arbitrary focal distance aspect ratio
     // singularity not enforced
     @Test
-    public void testEstimate5() throws LockedException, AlgebraException, NotReadyException,
-            InvalidTransformationException, NotAvailableException, CameraException {
+    void testEstimate5() throws LockedException, AlgebraException, NotReadyException, InvalidTransformationException,
+            NotAvailableException, CameraException {
 
-        int numSucceeded = 0;
-        for (int times = 0; times < TIMES; times++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        var numSucceeded = 0;
+        for (var times = 0; times < TIMES; times++) {
+            final var randomizer = new UniformRandomizer();
 
             // create ground truth intrinsic parameters
-            final double aspectRatio = randomizer.nextDouble(MIN_ASPECT_RATIO, MAX_ASPECT_RATIO);
-            double horizontalFocalLength =
-                    randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            double verticalFocalLength = aspectRatio * horizontalFocalLength;
-            final double skewness = 0.0;
-            final double horizontalPrincipalPoint = 0.0;
-            final double verticalPrincipalPoint = 0.0;
+            final var aspectRatio = randomizer.nextDouble(MIN_ASPECT_RATIO, MAX_ASPECT_RATIO);
+            var horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            var verticalFocalLength = aspectRatio * horizontalFocalLength;
+            final var skewness = 0.0;
+            final var horizontalPrincipalPoint = 0.0;
+            final var verticalPrincipalPoint = 0.0;
 
-            final PinholeCameraIntrinsicParameters metricIntrinsic =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength,
-                            verticalFocalLength, horizontalPrincipalPoint,
-                            verticalPrincipalPoint, skewness);
+            final var metricIntrinsic = new PinholeCameraIntrinsicParameters(horizontalFocalLength, verticalFocalLength,
+                    horizontalPrincipalPoint, verticalPrincipalPoint, skewness);
 
-            final DualImageOfAbsoluteConic metricDiac = new DualImageOfAbsoluteConic(metricIntrinsic);
+            final var metricDiac = new DualImageOfAbsoluteConic(metricIntrinsic);
             metricDiac.normalize();
-            final Matrix metricDiacMatrix = metricDiac.asMatrix();
+            final var metricDiacMatrix = metricDiac.asMatrix();
 
             // generate random projective transformation to transform ground
             // truth cameras
-            Matrix t = Matrix.createWithUniformRandomValues(
-                    ProjectiveTransformation3D.HOM_COORDS,
+            var t = Matrix.createWithUniformRandomValues(ProjectiveTransformation3D.HOM_COORDS,
                     ProjectiveTransformation3D.HOM_COORDS, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
             // ensure last element is not zero
             t.setElementAt(ProjectiveTransformation3D.HOM_COORDS - 1,
                     ProjectiveTransformation3D.HOM_COORDS - 1, 1.0);
 
-            final ProjectiveTransformation3D transformation = new ProjectiveTransformation3D(t);
+            final var transformation = new ProjectiveTransformation3D(t);
 
             transformation.normalize();
 
-            final DualAbsoluteQuadric projectiveDaq = new DualAbsoluteQuadric(transformation);
+            final var projectiveDaq = new DualAbsoluteQuadric(transformation);
             projectiveDaq.normalize();
 
-            final Matrix projectiveDaqMatrix = projectiveDaq.asMatrix();
+            final var projectiveDaqMatrix = projectiveDaq.asMatrix();
 
             double roll;
             double pitch;
@@ -1635,10 +1528,10 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
             InhomogeneousPoint3D cameraCenter;
             PinholeCamera metricCamera;
             PinholeCamera projectiveCamera;
-            final List<PinholeCamera> metricCameras = new ArrayList<>();
-            final List<PinholeCamera> projectiveCameras = new ArrayList<>();
+            final var metricCameras = new ArrayList<PinholeCamera>();
+            final var projectiveCameras = new ArrayList<PinholeCamera>();
 
-            final LMSEDualAbsoluteQuadricEstimator estimator = new LMSEDualAbsoluteQuadricEstimator();
+            final var estimator = new LMSEDualAbsoluteQuadricEstimator();
             estimator.setListener(this);
             estimator.setLMSESolutionAllowed(false);
             estimator.setZeroSkewness(true);
@@ -1647,14 +1540,11 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
             estimator.setFocalDistanceAspectRatio(aspectRatio);
             estimator.setSingularityEnforced(false);
 
-            final int numCams = estimator.getMinNumberOfRequiredCameras();
-            for (int i = 0; i < numCams; i++) {
-                roll = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                        2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-                pitch = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                        MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-                yaw = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                        2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+            final var numCams = estimator.getMinNumberOfRequiredCameras();
+            for (var i = 0; i < numCams; i++) {
+                roll = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
+                pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                yaw = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
 
                 q = new Quaternion(roll, pitch, yaw);
 
@@ -1676,11 +1566,11 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
             estimator.setCameras(projectiveCameras);
 
             try {
-                final DualAbsoluteQuadric estimatedDaq = estimator.estimate();
+                final var estimatedDaq = estimator.estimate();
                 estimatedDaq.normalize();
-                final Matrix estimatedDaqMatrix = estimatedDaq.asMatrix();
+                final var estimatedDaqMatrix = estimatedDaq.asMatrix();
 
-                final DualAbsoluteQuadric estimatedDaq2 = new DualAbsoluteQuadric();
+                final var estimatedDaq2 = new DualAbsoluteQuadric();
                 estimator.estimate(estimatedDaq2);
                 estimatedDaq2.normalize();
 
@@ -1697,10 +1587,9 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                 }
                 assertTrue(projectiveDaqMatrix.equals(estimatedDaqMatrix, ABSOLUTE_ERROR));
 
-                final ProjectiveTransformation3D estimatedTransformation =
-                        estimatedDaq.getMetricToProjectiveTransformation();
+                final var estimatedTransformation = estimatedDaq.getMetricToProjectiveTransformation();
                 estimatedTransformation.normalize();
-                final ProjectiveTransformation3D invEstimatedTransformation =
+                final var invEstimatedTransformation =
                         (ProjectiveTransformation3D) estimatedTransformation.inverseAndReturnNew();
 
                 // project estimated DAQ using projective cameras to obtain DIAC
@@ -1716,18 +1605,17 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                 Rotation3D metricRotation;
                 double distanceEstimatedCenter;
                 double distanceCenter;
-                double previousScale = 1.0;
-                double scale = 1.0;
+                var previousScale = 1.0;
+                var scale = 1.0;
                 PinholeCamera estimatedMetricCamera;
-                boolean anyFailed = false;
-                for (int i = 0; i < numCams; i++) {
+                var anyFailed = false;
+                for (var i = 0; i < numCams; i++) {
                     projectiveCamera = projectiveCameras.get(i);
 
-                    final DualImageOfAbsoluteConic projectedProjectiveDiac =
-                            new DualImageOfAbsoluteConic(projectiveCamera, estimatedDaq);
+                    final var projectedProjectiveDiac = new DualImageOfAbsoluteConic(projectiveCamera, estimatedDaq);
                     projectedProjectiveDiac.normalize();
 
-                    final Matrix projectedProjectiveDiacMatrix = projectedProjectiveDiac.asMatrix();
+                    final var projectedProjectiveDiacMatrix = projectedProjectiveDiac.asMatrix();
 
                     if (!metricDiacMatrix.equals(projectedProjectiveDiacMatrix, ABSOLUTE_ERROR)) {
                         anyFailed = true;
@@ -1735,21 +1623,19 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                     }
                     assertTrue(metricDiacMatrix.equals(projectedProjectiveDiacMatrix, ABSOLUTE_ERROR));
 
-                    estimatedMetricCamera = invEstimatedTransformation.transformAndReturnNew(
-                            projectiveCamera);
+                    estimatedMetricCamera = invEstimatedTransformation.transformAndReturnNew(projectiveCamera);
 
                     estimatedMetricCamera.decompose();
-                    final PinholeCameraIntrinsicParameters estimatedIntrinsic =
-                            estimatedMetricCamera.getIntrinsicParameters();
+                    final var estimatedIntrinsic = estimatedMetricCamera.getIntrinsicParameters();
 
-                    if (Math.abs(horizontalFocalLength -
-                            estimatedIntrinsic.getHorizontalFocalLength()) > 5 * LARGE_ABSOLUTE_ERROR) {
+                    if (Math.abs(horizontalFocalLength - estimatedIntrinsic.getHorizontalFocalLength())
+                            > 5 * LARGE_ABSOLUTE_ERROR) {
                         continue;
                     }
                     assertEquals(horizontalFocalLength, estimatedIntrinsic.getHorizontalFocalLength(),
                             5 * LARGE_ABSOLUTE_ERROR);
-                    if (Math.abs(verticalFocalLength -
-                            estimatedIntrinsic.getVerticalFocalLength()) > 5 * LARGE_ABSOLUTE_ERROR) {
+                    if (Math.abs(verticalFocalLength - estimatedIntrinsic.getVerticalFocalLength())
+                            > 5 * LARGE_ABSOLUTE_ERROR) {
                         continue;
                     }
                     assertEquals(verticalFocalLength, estimatedIntrinsic.getVerticalFocalLength(),
@@ -1757,20 +1643,18 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                     if (Math.abs(skewness - estimatedIntrinsic.getSkewness()) > 5 * LARGE_ABSOLUTE_ERROR) {
                         continue;
                     }
-                    assertEquals(skewness, estimatedIntrinsic.getSkewness(),
-                            5 * LARGE_ABSOLUTE_ERROR);
-                    if (Math.abs(horizontalPrincipalPoint -
-                            estimatedIntrinsic.getHorizontalPrincipalPoint()) > 5 * LARGE_ABSOLUTE_ERROR) {
+                    assertEquals(skewness, estimatedIntrinsic.getSkewness(), 5 * LARGE_ABSOLUTE_ERROR);
+                    if (Math.abs(horizontalPrincipalPoint - estimatedIntrinsic.getHorizontalPrincipalPoint())
+                            > 5 * LARGE_ABSOLUTE_ERROR) {
                         continue;
                     }
-                    assertEquals(horizontalPrincipalPoint,
-                            estimatedIntrinsic.getHorizontalPrincipalPoint(),
+                    assertEquals(horizontalPrincipalPoint, estimatedIntrinsic.getHorizontalPrincipalPoint(),
                             5 * LARGE_ABSOLUTE_ERROR);
-                    if (Math.abs(verticalPrincipalPoint - estimatedIntrinsic.getVerticalPrincipalPoint()) > 5 * LARGE_ABSOLUTE_ERROR) {
+                    if (Math.abs(verticalPrincipalPoint - estimatedIntrinsic.getVerticalPrincipalPoint())
+                            > 5 * LARGE_ABSOLUTE_ERROR) {
                         continue;
                     }
-                    assertEquals(verticalPrincipalPoint,
-                            estimatedIntrinsic.getVerticalPrincipalPoint(),
+                    assertEquals(verticalPrincipalPoint, estimatedIntrinsic.getVerticalPrincipalPoint(),
                             5 * LARGE_ABSOLUTE_ERROR);
 
                     if (anyFailed) {
@@ -1790,20 +1674,17 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                     metricRotation = metricCamera.getCameraRotation();
 
                     if (i > 0 && previousEstimatedMetricCenter != null) {
-                        distanceEstimatedCenter = previousEstimatedMetricCenter.distanceTo(
-                                estimatedMetricCenter);
-                        distanceCenter = previousMetricCenter.distanceTo(
-                                metricCenter);
+                        distanceEstimatedCenter = previousEstimatedMetricCenter.distanceTo(estimatedMetricCenter);
+                        distanceCenter = previousMetricCenter.distanceTo(metricCenter);
                         scale = distanceEstimatedCenter / distanceCenter;
 
-                        final Rotation3D diffEstimatedRotation =
-                                estimatedMetricRotation.combineAndReturnNew(
-                                        previousEstimatedMetricRotation.inverseRotationAndReturnNew());
-                        final Rotation3D diffRotation = metricRotation.combineAndReturnNew(
+                        final var diffEstimatedRotation = estimatedMetricRotation.combineAndReturnNew(
+                                previousEstimatedMetricRotation.inverseRotationAndReturnNew());
+                        final var diffRotation = metricRotation.combineAndReturnNew(
                                 previousMetricRotation.inverseRotationAndReturnNew());
 
-                        final Matrix rot1 = diffEstimatedRotation.asInhomogeneousMatrix();
-                        final Matrix rot2 = diffRotation.asInhomogeneousMatrix();
+                        final var rot1 = diffEstimatedRotation.asInhomogeneousMatrix();
+                        final var rot2 = diffRotation.asInhomogeneousMatrix();
                         assertTrue(rot1.equals(rot2, LARGE_ABSOLUTE_ERROR));
                     }
 
@@ -1824,6 +1705,7 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
 
                 numSucceeded++;
             } catch (final DualAbsoluteQuadricEstimatorException ignore) {
+                // no action needed
             }
         }
 
@@ -1839,39 +1721,34 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
     // arbitrary focal distance aspect ratio
     // singularity enforced
     @Test
-    public void testEstimate6() throws LockedException, AlgebraException,
-            InvalidTransformationException {
+    void testEstimate6() throws LockedException, AlgebraException, InvalidTransformationException {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final var randomizer = new UniformRandomizer();
 
         // create ground truth intrinsic parameters
-        final double aspectRatio = randomizer.nextDouble(MIN_ASPECT_RATIO, MAX_ASPECT_RATIO);
-        final double horizontalFocalLength =
-                randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-        final double verticalFocalLength = aspectRatio * horizontalFocalLength;
-        final double skewness = 0.0;
-        final double horizontalPrincipalPoint = 0.0;
-        final double verticalPrincipalPoint = 0.0;
+        final var aspectRatio = randomizer.nextDouble(MIN_ASPECT_RATIO, MAX_ASPECT_RATIO);
+        final var horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final var verticalFocalLength = aspectRatio * horizontalFocalLength;
+        final var skewness = 0.0;
+        final var horizontalPrincipalPoint = 0.0;
+        final var verticalPrincipalPoint = 0.0;
 
-        final PinholeCameraIntrinsicParameters metricIntrinsic =
-                new PinholeCameraIntrinsicParameters(horizontalFocalLength,
-                        verticalFocalLength, horizontalPrincipalPoint,
-                        verticalPrincipalPoint, skewness);
+        final var metricIntrinsic = new PinholeCameraIntrinsicParameters(horizontalFocalLength, verticalFocalLength,
+                horizontalPrincipalPoint, verticalPrincipalPoint, skewness);
 
         // generate random projective transformation to transform ground
         // truth cameras
-        final Matrix t = Matrix.createWithUniformRandomValues(
-                ProjectiveTransformation3D.HOM_COORDS,
+        final var t = Matrix.createWithUniformRandomValues(ProjectiveTransformation3D.HOM_COORDS,
                 ProjectiveTransformation3D.HOM_COORDS, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
         // ensure last element is not zero
-        t.setElementAt(ProjectiveTransformation3D.HOM_COORDS - 1,
-                ProjectiveTransformation3D.HOM_COORDS - 1, 1.0);
+        t.setElementAt(ProjectiveTransformation3D.HOM_COORDS - 1, ProjectiveTransformation3D.HOM_COORDS - 1,
+                1.0);
 
-        final ProjectiveTransformation3D transformation = new ProjectiveTransformation3D(t);
+        final var transformation = new ProjectiveTransformation3D(t);
 
         transformation.normalize();
 
-        final DualAbsoluteQuadric projectiveDaq = new DualAbsoluteQuadric(transformation);
+        final var projectiveDaq = new DualAbsoluteQuadric(transformation);
         projectiveDaq.normalize();
 
         double roll;
@@ -1884,9 +1761,9 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
         InhomogeneousPoint3D cameraCenter;
         PinholeCamera metricCamera;
         PinholeCamera projectiveCamera;
-        final List<PinholeCamera> projectiveCameras = new ArrayList<>();
+        final var projectiveCameras = new ArrayList<PinholeCamera>();
 
-        final LMSEDualAbsoluteQuadricEstimator estimator = new LMSEDualAbsoluteQuadricEstimator();
+        final var estimator = new LMSEDualAbsoluteQuadricEstimator();
         estimator.setListener(this);
         estimator.setLMSESolutionAllowed(false);
         estimator.setZeroSkewness(true);
@@ -1895,14 +1772,11 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
         estimator.setFocalDistanceAspectRatio(aspectRatio);
         estimator.setSingularityEnforced(true);
 
-        final int numCams = estimator.getMinNumberOfRequiredCameras();
-        for (int i = 0; i < numCams; i++) {
-            roll = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                    2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            pitch = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            yaw = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                    2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+        final var numCams = estimator.getMinNumberOfRequiredCameras();
+        for (var i = 0; i < numCams; i++) {
+            roll = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
+            pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            yaw = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
 
             q = new Quaternion(roll, pitch, yaw);
 
@@ -1922,13 +1796,7 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
 
         estimator.setCameras(projectiveCameras);
 
-        try {
-            estimator.estimate();
-            fail("NotReadyException expected but not thrown");
-        } catch (final NotReadyException ignore) {
-        } catch (final DualAbsoluteQuadricEstimatorException ex) {
-            fail("NotReadyException expected but not thrown");
-        }
+        assertThrows(NotReadyException.class, estimator::estimate);
     }
 
     // LMSE: enabled
@@ -1937,49 +1805,44 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
     // focal distance aspect ratio known (1.0)
     // singularity not enforced
     @Test
-    public void testEstimate7() throws LockedException, AlgebraException, NotReadyException,
-            InvalidTransformationException, NotAvailableException, CameraException {
+    void testEstimate7() throws LockedException, AlgebraException, NotReadyException, InvalidTransformationException,
+            NotAvailableException, CameraException {
 
-        int numSucceeded = 0;
-        for (int times = 0; times < TIMES; times++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        var numSucceeded = 0;
+        for (var times = 0; times < TIMES; times++) {
+            final var randomizer = new UniformRandomizer();
 
             // create ground truth intrinsic parameters
-            final double aspectRatio = 1.0;
-            final double horizontalFocalLength =
-                    randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength = aspectRatio * horizontalFocalLength;
-            double skewness = 0.0;
-            double horizontalPrincipalPoint = 0.0;
-            double verticalPrincipalPoint = 0.0;
+            final var aspectRatio = 1.0;
+            final var horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var verticalFocalLength = aspectRatio * horizontalFocalLength;
+            var skewness = 0.0;
+            var horizontalPrincipalPoint = 0.0;
+            var verticalPrincipalPoint = 0.0;
 
-            final PinholeCameraIntrinsicParameters metricIntrinsic =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength,
-                            verticalFocalLength, horizontalPrincipalPoint,
-                            verticalPrincipalPoint, skewness);
+            final var metricIntrinsic = new PinholeCameraIntrinsicParameters(horizontalFocalLength, verticalFocalLength,
+                    horizontalPrincipalPoint, verticalPrincipalPoint, skewness);
 
-            final DualImageOfAbsoluteConic metricDiac = new DualImageOfAbsoluteConic(metricIntrinsic);
+            final var metricDiac = new DualImageOfAbsoluteConic(metricIntrinsic);
             metricDiac.normalize();
-            final Matrix metricDiacMatrix = metricDiac.asMatrix();
+            final var metricDiacMatrix = metricDiac.asMatrix();
 
             // generate random projective transformation to transform ground
             // truth cameras
-            final Matrix t = Matrix.createWithUniformRandomValues(
-                    ProjectiveTransformation3D.HOM_COORDS,
-                    ProjectiveTransformation3D.HOM_COORDS, MIN_RANDOM_VALUE,
-                    MAX_RANDOM_VALUE);
+            final var t = Matrix.createWithUniformRandomValues(ProjectiveTransformation3D.HOM_COORDS,
+                    ProjectiveTransformation3D.HOM_COORDS, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
             // ensure last element is not zero
             t.setElementAt(ProjectiveTransformation3D.HOM_COORDS - 1,
                     ProjectiveTransformation3D.HOM_COORDS - 1, 1.0);
 
-            final ProjectiveTransformation3D transformation = new ProjectiveTransformation3D(t);
+            final var transformation = new ProjectiveTransformation3D(t);
 
             transformation.normalize();
 
-            final DualAbsoluteQuadric projectiveDaq = new DualAbsoluteQuadric(transformation);
+            final var projectiveDaq = new DualAbsoluteQuadric(transformation);
             projectiveDaq.normalize();
 
-            final Matrix projectiveDaqMatrix = projectiveDaq.asMatrix();
+            final var projectiveDaqMatrix = projectiveDaq.asMatrix();
 
             double roll;
             double pitch;
@@ -1991,10 +1854,10 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
             InhomogeneousPoint3D cameraCenter;
             PinholeCamera metricCamera;
             PinholeCamera projectiveCamera;
-            final List<PinholeCamera> metricCameras = new ArrayList<>();
-            final List<PinholeCamera> projectiveCameras = new ArrayList<>();
+            final var metricCameras = new ArrayList<PinholeCamera>();
+            final var projectiveCameras = new ArrayList<PinholeCamera>();
 
-            final LMSEDualAbsoluteQuadricEstimator estimator = new LMSEDualAbsoluteQuadricEstimator();
+            final var estimator = new LMSEDualAbsoluteQuadricEstimator();
             estimator.setListener(this);
             estimator.setLMSESolutionAllowed(true);
             estimator.setZeroSkewness(true);
@@ -2003,14 +1866,11 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
             estimator.setFocalDistanceAspectRatio(1.0);
             estimator.setSingularityEnforced(false);
 
-            final int numCams = estimator.getMinNumberOfRequiredCameras() + 1;
-            for (int i = 0; i < numCams; i++) {
-                roll = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                        2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-                pitch = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                        MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-                yaw = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                        2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+            final var numCams = estimator.getMinNumberOfRequiredCameras() + 1;
+            for (var i = 0; i < numCams; i++) {
+                roll = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
+                pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                yaw = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
 
                 q = new Quaternion(roll, pitch, yaw);
 
@@ -2032,11 +1892,11 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
             estimator.setCameras(projectiveCameras);
 
             try {
-                final DualAbsoluteQuadric estimatedDaq = estimator.estimate();
+                final var estimatedDaq = estimator.estimate();
                 estimatedDaq.normalize();
-                final Matrix estimatedDaqMatrix = estimatedDaq.asMatrix();
+                final var estimatedDaqMatrix = estimatedDaq.asMatrix();
 
-                final DualAbsoluteQuadric estimatedDaq2 = new DualAbsoluteQuadric();
+                final var estimatedDaq2 = new DualAbsoluteQuadric();
                 estimator.estimate(estimatedDaq2);
                 estimatedDaq2.normalize();
 
@@ -2056,10 +1916,9 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                 }
                 assertTrue(projectiveDaqMatrix.equals(estimatedDaqMatrix, ABSOLUTE_ERROR));
 
-                final ProjectiveTransformation3D estimatedTransformation =
-                        estimatedDaq.getMetricToProjectiveTransformation();
+                final var estimatedTransformation = estimatedDaq.getMetricToProjectiveTransformation();
                 estimatedTransformation.normalize();
-                final ProjectiveTransformation3D invEstimatedTransformation =
+                final var invEstimatedTransformation =
                         (ProjectiveTransformation3D) estimatedTransformation.inverseAndReturnNew();
 
                 // project estimated DAQ using projective cameras to obtain DIAC
@@ -2075,18 +1934,17 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                 Rotation3D metricRotation;
                 double distanceEstimatedCenter;
                 double distanceCenter;
-                double previousScale = 1.0;
-                double scale = 1.0;
+                var previousScale = 1.0;
+                var scale = 1.0;
                 PinholeCamera estimatedMetricCamera;
-                boolean anyFailed = false;
-                for (int i = 0; i < numCams; i++) {
+                var anyFailed = false;
+                for (var i = 0; i < numCams; i++) {
                     projectiveCamera = projectiveCameras.get(i);
 
-                    final DualImageOfAbsoluteConic projectedProjectiveDiac =
-                            new DualImageOfAbsoluteConic(projectiveCamera, estimatedDaq);
+                    final var projectedProjectiveDiac = new DualImageOfAbsoluteConic(projectiveCamera, estimatedDaq);
                     projectedProjectiveDiac.normalize();
 
-                    final Matrix projectedProjectiveDiacMatrix = projectedProjectiveDiac.asMatrix();
+                    final var projectedProjectiveDiacMatrix = projectedProjectiveDiac.asMatrix();
 
                     if (!metricDiacMatrix.equals(projectedProjectiveDiacMatrix, ABSOLUTE_ERROR)) {
                         anyFailed = true;
@@ -2094,21 +1952,17 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                     }
                     assertTrue(metricDiacMatrix.equals(projectedProjectiveDiacMatrix, ABSOLUTE_ERROR));
 
-                    estimatedMetricCamera = invEstimatedTransformation.transformAndReturnNew(
-                            projectiveCamera);
+                    estimatedMetricCamera = invEstimatedTransformation.transformAndReturnNew(projectiveCamera);
 
                     estimatedMetricCamera.decompose();
-                    final PinholeCameraIntrinsicParameters estimatedIntrinsic =
-                            estimatedMetricCamera.getIntrinsicParameters();
+                    final var estimatedIntrinsic = estimatedMetricCamera.getIntrinsicParameters();
 
                     assertEquals(horizontalFocalLength, estimatedIntrinsic.getHorizontalFocalLength(),
                             5 * LARGE_ABSOLUTE_ERROR);
                     assertEquals(verticalFocalLength, estimatedIntrinsic.getVerticalFocalLength(),
                             5 * LARGE_ABSOLUTE_ERROR);
-                    assertEquals(skewness, estimatedIntrinsic.getSkewness(),
-                            5 * LARGE_ABSOLUTE_ERROR);
-                    assertEquals(horizontalPrincipalPoint,
-                            estimatedIntrinsic.getHorizontalPrincipalPoint(),
+                    assertEquals(skewness, estimatedIntrinsic.getSkewness(), 5 * LARGE_ABSOLUTE_ERROR);
+                    assertEquals(horizontalPrincipalPoint, estimatedIntrinsic.getHorizontalPrincipalPoint(),
                             5 * LARGE_ABSOLUTE_ERROR);
                     assertEquals(verticalPrincipalPoint, estimatedIntrinsic.getVerticalPrincipalPoint(),
                             5 * LARGE_ABSOLUTE_ERROR);
@@ -2130,19 +1984,17 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                     metricRotation = metricCamera.getCameraRotation();
 
                     if (i > 0) {
-                        distanceEstimatedCenter = previousEstimatedMetricCenter.distanceTo(
-                                estimatedMetricCenter);
+                        distanceEstimatedCenter = previousEstimatedMetricCenter.distanceTo(estimatedMetricCenter);
                         distanceCenter = previousMetricCenter.distanceTo(metricCenter);
                         scale = distanceEstimatedCenter / distanceCenter;
 
-                        final Rotation3D diffEstimatedRotation =
-                                estimatedMetricRotation.combineAndReturnNew(
-                                        previousEstimatedMetricRotation.inverseRotationAndReturnNew());
-                        final Rotation3D diffRotation = metricRotation.combineAndReturnNew(
+                        final var diffEstimatedRotation = estimatedMetricRotation.combineAndReturnNew(
+                                previousEstimatedMetricRotation.inverseRotationAndReturnNew());
+                        final var diffRotation = metricRotation.combineAndReturnNew(
                                 previousMetricRotation.inverseRotationAndReturnNew());
 
-                        final Matrix rot1 = diffEstimatedRotation.asInhomogeneousMatrix();
-                        final Matrix rot2 = diffRotation.asInhomogeneousMatrix();
+                        final var rot1 = diffEstimatedRotation.asInhomogeneousMatrix();
+                        final var rot2 = diffRotation.asInhomogeneousMatrix();
                         assertTrue(rot1.equals(rot2, LARGE_ABSOLUTE_ERROR));
                     }
 
@@ -2164,6 +2016,7 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                 numSucceeded++;
                 break;
             } catch (final DualAbsoluteQuadricEstimatorException ignore) {
+                // no action needed
             }
         }
 
@@ -2179,38 +2032,34 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
     // focal distance aspect ratio known (1.0)
     // singularity enforced
     @Test
-    public void testEstimate8() throws LockedException, AlgebraException,
-            InvalidTransformationException {
+    void testEstimate8() throws LockedException, AlgebraException, InvalidTransformationException {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final var randomizer = new UniformRandomizer();
 
         // create ground truth intrinsic parameters
-        final double aspectRatio = 1.0;
-        final double horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-        final double verticalFocalLength = aspectRatio * horizontalFocalLength;
-        double skewness = 0.0;
-        double horizontalPrincipalPoint = 0.0;
-        double verticalPrincipalPoint = 0.0;
+        final var aspectRatio = 1.0;
+        final var horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final var verticalFocalLength = aspectRatio * horizontalFocalLength;
+        var skewness = 0.0;
+        var horizontalPrincipalPoint = 0.0;
+        var verticalPrincipalPoint = 0.0;
 
-        final PinholeCameraIntrinsicParameters metricIntrinsic =
-                new PinholeCameraIntrinsicParameters(horizontalFocalLength,
-                        verticalFocalLength, horizontalPrincipalPoint,
-                        verticalPrincipalPoint, skewness);
+        final var metricIntrinsic = new PinholeCameraIntrinsicParameters(horizontalFocalLength, verticalFocalLength,
+                horizontalPrincipalPoint, verticalPrincipalPoint, skewness);
 
         // generate random projective transformation to transform ground
         // truth cameras
-        Matrix t = Matrix.createWithUniformRandomValues(
-                ProjectiveTransformation3D.HOM_COORDS,
+        var t = Matrix.createWithUniformRandomValues(ProjectiveTransformation3D.HOM_COORDS,
                 ProjectiveTransformation3D.HOM_COORDS, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
         // ensure last element is not zero
         t.setElementAt(ProjectiveTransformation3D.HOM_COORDS - 1,
                 ProjectiveTransformation3D.HOM_COORDS - 1, 1.0);
 
-        final ProjectiveTransformation3D transformation = new ProjectiveTransformation3D(t);
+        final var transformation = new ProjectiveTransformation3D(t);
 
         transformation.normalize();
 
-        final DualAbsoluteQuadric projectiveDaq = new DualAbsoluteQuadric(transformation);
+        final var projectiveDaq = new DualAbsoluteQuadric(transformation);
         projectiveDaq.normalize();
 
         double roll;
@@ -2223,9 +2072,9 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
         InhomogeneousPoint3D cameraCenter;
         PinholeCamera metricCamera;
         PinholeCamera projectiveCamera;
-        final List<PinholeCamera> projectiveCameras = new ArrayList<>();
+        final var projectiveCameras = new ArrayList<PinholeCamera>();
 
-        final LMSEDualAbsoluteQuadricEstimator estimator = new LMSEDualAbsoluteQuadricEstimator();
+        final var estimator = new LMSEDualAbsoluteQuadricEstimator();
         estimator.setListener(this);
         estimator.setLMSESolutionAllowed(true);
         estimator.setZeroSkewness(true);
@@ -2234,14 +2083,11 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
         estimator.setFocalDistanceAspectRatio(1.0);
         estimator.setSingularityEnforced(true);
 
-        final int numCams = estimator.getMinNumberOfRequiredCameras() + 1;
-        for (int i = 0; i < numCams; i++) {
-            roll = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                    2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            pitch = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            yaw = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                    2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+        final var numCams = estimator.getMinNumberOfRequiredCameras() + 1;
+        for (var i = 0; i < numCams; i++) {
+            roll = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
+            pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            yaw = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
 
             q = new Quaternion(roll, pitch, yaw);
 
@@ -2261,13 +2107,7 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
 
         estimator.setCameras(projectiveCameras);
 
-        try {
-            estimator.estimate();
-            fail("NotReadyException expected but not thrown");
-        } catch (final NotReadyException ignore) {
-        } catch (final DualAbsoluteQuadricEstimatorException ex) {
-            fail("NotReadyException expected but not thrown");
-        }
+        assertThrows(NotReadyException.class, estimator::estimate);
     }
 
     // LMSE: enabled
@@ -2276,48 +2116,44 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
     // focal distance aspect ratio known (1.0)
     // singularity not enforced
     @Test
-    public void testEstimate9() throws LockedException, AlgebraException, NotReadyException,
-            InvalidTransformationException, NotAvailableException, CameraException {
+    void testEstimate9() throws LockedException, AlgebraException, NotReadyException, InvalidTransformationException,
+            NotAvailableException, CameraException {
 
-        int numSucceeded = 0;
-        for (int times = 0; times < TIMES; times++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        var numSucceeded = 0;
+        for (var times = 0; times < TIMES; times++) {
+            final var randomizer = new UniformRandomizer();
 
             // create ground truth intrinsic parameters
-            final double aspectRatio = 1.0;
-            final double horizontalFocalLength =
-                    randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength = aspectRatio * horizontalFocalLength;
-            final double skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
-            final double horizontalPrincipalPoint = 0.0;
-            final double verticalPrincipalPoint = 0.0;
+            final var aspectRatio = 1.0;
+            final var horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var verticalFocalLength = aspectRatio * horizontalFocalLength;
+            final var skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final var horizontalPrincipalPoint = 0.0;
+            final var verticalPrincipalPoint = 0.0;
 
-            final PinholeCameraIntrinsicParameters metricIntrinsic =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength,
-                            verticalFocalLength, horizontalPrincipalPoint,
-                            verticalPrincipalPoint, skewness);
+            final var metricIntrinsic = new PinholeCameraIntrinsicParameters(horizontalFocalLength, verticalFocalLength,
+                    horizontalPrincipalPoint, verticalPrincipalPoint, skewness);
 
-            final DualImageOfAbsoluteConic metricDiac = new DualImageOfAbsoluteConic(metricIntrinsic);
+            final var metricDiac = new DualImageOfAbsoluteConic(metricIntrinsic);
             metricDiac.normalize();
-            final Matrix metricDiacMatrix = metricDiac.asMatrix();
+            final var metricDiacMatrix = metricDiac.asMatrix();
 
             // generate random projective transformation to transform ground
             // truth cameras
-            final Matrix t = Matrix.createWithUniformRandomValues(
-                    ProjectiveTransformation3D.HOM_COORDS,
+            final var t = Matrix.createWithUniformRandomValues(ProjectiveTransformation3D.HOM_COORDS,
                     ProjectiveTransformation3D.HOM_COORDS, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
             // ensure last element is not zero
             t.setElementAt(ProjectiveTransformation3D.HOM_COORDS - 1,
                     ProjectiveTransformation3D.HOM_COORDS - 1, 1.0);
 
-            final ProjectiveTransformation3D transformation = new ProjectiveTransformation3D(t);
+            final var transformation = new ProjectiveTransformation3D(t);
 
             transformation.normalize();
 
-            final DualAbsoluteQuadric projectiveDaq = new DualAbsoluteQuadric(transformation);
+            final var projectiveDaq = new DualAbsoluteQuadric(transformation);
             projectiveDaq.normalize();
 
-            final Matrix projectiveDaqMatrix = projectiveDaq.asMatrix();
+            final var projectiveDaqMatrix = projectiveDaq.asMatrix();
 
             double roll;
             double pitch;
@@ -2329,10 +2165,10 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
             InhomogeneousPoint3D cameraCenter;
             PinholeCamera metricCamera;
             PinholeCamera projectiveCamera;
-            final List<PinholeCamera> metricCameras = new ArrayList<>();
-            final List<PinholeCamera> projectiveCameras = new ArrayList<>();
+            final var metricCameras = new ArrayList<PinholeCamera>();
+            final var projectiveCameras = new ArrayList<PinholeCamera>();
 
-            final LMSEDualAbsoluteQuadricEstimator estimator = new LMSEDualAbsoluteQuadricEstimator();
+            final var estimator = new LMSEDualAbsoluteQuadricEstimator();
             estimator.setListener(this);
             estimator.setLMSESolutionAllowed(true);
             estimator.setZeroSkewness(false);
@@ -2341,14 +2177,11 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
             estimator.setFocalDistanceAspectRatio(1.0);
             estimator.setSingularityEnforced(false);
 
-            final int numCams = estimator.getMinNumberOfRequiredCameras() + 1;
-            for (int i = 0; i < numCams; i++) {
-                roll = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                        2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-                pitch = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                        MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-                yaw = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                        2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+            final var numCams = estimator.getMinNumberOfRequiredCameras() + 1;
+            for (var i = 0; i < numCams; i++) {
+                roll = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
+                pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                yaw = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
 
                 q = new Quaternion(roll, pitch, yaw);
 
@@ -2370,11 +2203,11 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
             estimator.setCameras(projectiveCameras);
 
             try {
-                final DualAbsoluteQuadric estimatedDaq = estimator.estimate();
+                final var estimatedDaq = estimator.estimate();
                 estimatedDaq.normalize();
-                final Matrix estimatedDaqMatrix = estimatedDaq.asMatrix();
+                final var estimatedDaqMatrix = estimatedDaq.asMatrix();
 
-                final DualAbsoluteQuadric estimatedDaq2 = new DualAbsoluteQuadric();
+                final var estimatedDaq2 = new DualAbsoluteQuadric();
                 estimator.estimate(estimatedDaq2);
                 estimatedDaq2.normalize();
 
@@ -2391,12 +2224,10 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                 }
                 assertTrue(projectiveDaqMatrix.equals(estimatedDaqMatrix, ABSOLUTE_ERROR));
 
-                final ProjectiveTransformation3D estimatedTransformation =
-                        estimatedDaq.getMetricToProjectiveTransformation();
+                final var estimatedTransformation = estimatedDaq.getMetricToProjectiveTransformation();
                 estimatedTransformation.normalize();
-                final ProjectiveTransformation3D invEstimatedTransformation =
-                        (ProjectiveTransformation3D) estimatedTransformation.
-                                inverseAndReturnNew();
+                final var invEstimatedTransformation = (ProjectiveTransformation3D) estimatedTransformation
+                        .inverseAndReturnNew();
 
                 // project estimated DAQ using projective cameras to obtain DIAC
                 // and check that DIAC in projective stratum is equal to DIAC in
@@ -2411,42 +2242,38 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                 Rotation3D metricRotation;
                 double distanceEstimatedCenter;
                 double distanceCenter;
-                double previousScale = 1.0;
-                double scale = 1.0;
+                var previousScale = 1.0;
+                var scale = 1.0;
                 PinholeCamera estimatedMetricCamera;
-                boolean anyFailed = false;
-                for (int i = 0; i < numCams; i++) {
+                var anyFailed = false;
+                for (var i = 0; i < numCams; i++) {
                     projectiveCamera = projectiveCameras.get(i);
 
-                    final DualImageOfAbsoluteConic projectedProjectiveDiac =
-                            new DualImageOfAbsoluteConic(projectiveCamera, estimatedDaq);
+                    final var projectedProjectiveDiac = new DualImageOfAbsoluteConic(projectiveCamera, estimatedDaq);
                     projectedProjectiveDiac.normalize();
 
-                    final Matrix projectedProjectiveDiacMatrix = projectedProjectiveDiac.asMatrix();
+                    final var projectedProjectiveDiacMatrix = projectedProjectiveDiac.asMatrix();
 
                     if (!metricDiacMatrix.equals(projectedProjectiveDiacMatrix, ABSOLUTE_ERROR)) {
                         anyFailed = true;
                         continue;
                     }
-                    assertTrue(metricDiacMatrix.equals(
-                            projectedProjectiveDiacMatrix, ABSOLUTE_ERROR));
+                    assertTrue(metricDiacMatrix.equals(projectedProjectiveDiacMatrix, ABSOLUTE_ERROR));
 
-                    estimatedMetricCamera = invEstimatedTransformation.transformAndReturnNew(
-                            projectiveCamera);
+                    estimatedMetricCamera = invEstimatedTransformation.transformAndReturnNew(projectiveCamera);
 
                     estimatedMetricCamera.decompose();
-                    final PinholeCameraIntrinsicParameters estimatedIntrinsic =
-                            estimatedMetricCamera.getIntrinsicParameters();
+                    final var estimatedIntrinsic = estimatedMetricCamera.getIntrinsicParameters();
 
-                    if (Math.abs(horizontalFocalLength - estimatedIntrinsic.getHorizontalFocalLength()) >
-                            5 * LARGE_ABSOLUTE_ERROR) {
+                    if (Math.abs(horizontalFocalLength - estimatedIntrinsic.getHorizontalFocalLength())
+                            > 5 * LARGE_ABSOLUTE_ERROR) {
                         anyFailed = true;
                         continue;
                     }
                     assertEquals(horizontalFocalLength, estimatedIntrinsic.getHorizontalFocalLength(),
                             5 * LARGE_ABSOLUTE_ERROR);
-                    if (Math.abs(verticalFocalLength - estimatedIntrinsic.getVerticalFocalLength()) >
-                            5 * LARGE_ABSOLUTE_ERROR) {
+                    if (Math.abs(verticalFocalLength - estimatedIntrinsic.getVerticalFocalLength())
+                            > 5 * LARGE_ABSOLUTE_ERROR) {
                         anyFailed = true;
                         continue;
                     }
@@ -2456,19 +2283,16 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                         anyFailed = true;
                         continue;
                     }
-                    assertEquals(skewness, estimatedIntrinsic.getSkewness(),
-                            5 * LARGE_ABSOLUTE_ERROR);
-                    if (Math.abs(horizontalPrincipalPoint -
-                            estimatedIntrinsic.getHorizontalPrincipalPoint()) >
-                            5 * LARGE_ABSOLUTE_ERROR) {
+                    assertEquals(skewness, estimatedIntrinsic.getSkewness(), 5 * LARGE_ABSOLUTE_ERROR);
+                    if (Math.abs(horizontalPrincipalPoint - estimatedIntrinsic.getHorizontalPrincipalPoint())
+                            > 5 * LARGE_ABSOLUTE_ERROR) {
                         anyFailed = true;
                         continue;
                     }
-                    assertEquals(horizontalPrincipalPoint,
-                            estimatedIntrinsic.getHorizontalPrincipalPoint(),
+                    assertEquals(horizontalPrincipalPoint, estimatedIntrinsic.getHorizontalPrincipalPoint(),
                             5 * LARGE_ABSOLUTE_ERROR);
-                    if (Math.abs(verticalPrincipalPoint -
-                            estimatedIntrinsic.getVerticalPrincipalPoint()) > 5 * LARGE_ABSOLUTE_ERROR) {
+                    if (Math.abs(verticalPrincipalPoint - estimatedIntrinsic.getVerticalPrincipalPoint())
+                            > 5 * LARGE_ABSOLUTE_ERROR) {
                         anyFailed = true;
                         continue;
                     }
@@ -2492,19 +2316,17 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                     metricRotation = metricCamera.getCameraRotation();
 
                     if (i > 0) {
-                        distanceEstimatedCenter = previousEstimatedMetricCenter.distanceTo(
-                                estimatedMetricCenter);
+                        distanceEstimatedCenter = previousEstimatedMetricCenter.distanceTo(estimatedMetricCenter);
                         distanceCenter = previousMetricCenter.distanceTo(metricCenter);
                         scale = distanceEstimatedCenter / distanceCenter;
 
-                        final Rotation3D diffEstimatedRotation =
-                                estimatedMetricRotation.combineAndReturnNew(
-                                        previousEstimatedMetricRotation.inverseRotationAndReturnNew());
-                        final Rotation3D diffRotation = metricRotation.combineAndReturnNew(
+                        final var diffEstimatedRotation = estimatedMetricRotation.combineAndReturnNew(
+                                previousEstimatedMetricRotation.inverseRotationAndReturnNew());
+                        final var diffRotation = metricRotation.combineAndReturnNew(
                                 previousMetricRotation.inverseRotationAndReturnNew());
 
-                        final Matrix rot1 = diffEstimatedRotation.asInhomogeneousMatrix();
-                        final Matrix rot2 = diffRotation.asInhomogeneousMatrix();
+                        final var rot1 = diffEstimatedRotation.asInhomogeneousMatrix();
+                        final var rot2 = diffRotation.asInhomogeneousMatrix();
                         assertTrue(rot1.equals(rot2, LARGE_ABSOLUTE_ERROR));
                     }
 
@@ -2526,6 +2348,7 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                 numSucceeded++;
                 break;
             } catch (final DualAbsoluteQuadricEstimatorException ignore) {
+                // no action needed
             }
         }
 
@@ -2541,39 +2364,34 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
     // focal distance aspect ratio known (1.0)
     // singularity enforced
     @Test
-    public void testEstimate10() throws LockedException, AlgebraException,
-            InvalidTransformationException {
+    void testEstimate10() throws LockedException, AlgebraException, InvalidTransformationException {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final var randomizer = new UniformRandomizer();
 
         // create ground truth intrinsic parameters
-        final double aspectRatio = 1.0;
-        final double horizontalFocalLength =
-                randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-        final double verticalFocalLength = aspectRatio * horizontalFocalLength;
-        final double skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
-        final double horizontalPrincipalPoint = 0.0;
-        final double verticalPrincipalPoint = 0.0;
+        final var aspectRatio = 1.0;
+        final var horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final var verticalFocalLength = aspectRatio * horizontalFocalLength;
+        final var skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+        final var horizontalPrincipalPoint = 0.0;
+        final var verticalPrincipalPoint = 0.0;
 
-        final PinholeCameraIntrinsicParameters metricIntrinsic =
-                new PinholeCameraIntrinsicParameters(horizontalFocalLength,
-                        verticalFocalLength, horizontalPrincipalPoint,
-                        verticalPrincipalPoint, skewness);
+        final var metricIntrinsic = new PinholeCameraIntrinsicParameters(horizontalFocalLength, verticalFocalLength,
+                horizontalPrincipalPoint, verticalPrincipalPoint, skewness);
 
         // generate random projective transformation to transform ground
         // truth cameras
-        Matrix t = Matrix.createWithUniformRandomValues(
-                ProjectiveTransformation3D.HOM_COORDS,
+        var t = Matrix.createWithUniformRandomValues(ProjectiveTransformation3D.HOM_COORDS,
                 ProjectiveTransformation3D.HOM_COORDS, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
         // ensure last element is not zero
-        t.setElementAt(ProjectiveTransformation3D.HOM_COORDS - 1,
-                ProjectiveTransformation3D.HOM_COORDS - 1, 1.0);
+        t.setElementAt(ProjectiveTransformation3D.HOM_COORDS - 1, ProjectiveTransformation3D.HOM_COORDS - 1,
+                1.0);
 
-        final ProjectiveTransformation3D transformation = new ProjectiveTransformation3D(t);
+        final var transformation = new ProjectiveTransformation3D(t);
 
         transformation.normalize();
 
-        final DualAbsoluteQuadric projectiveDaq = new DualAbsoluteQuadric(transformation);
+        final var projectiveDaq = new DualAbsoluteQuadric(transformation);
         projectiveDaq.normalize();
 
         double roll;
@@ -2586,9 +2404,9 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
         InhomogeneousPoint3D cameraCenter;
         PinholeCamera metricCamera;
         PinholeCamera projectiveCamera;
-        final List<PinholeCamera> projectiveCameras = new ArrayList<>();
+        final var projectiveCameras = new ArrayList<PinholeCamera>();
 
-        final LMSEDualAbsoluteQuadricEstimator estimator = new LMSEDualAbsoluteQuadricEstimator();
+        final var estimator = new LMSEDualAbsoluteQuadricEstimator();
         estimator.setListener(this);
         estimator.setLMSESolutionAllowed(true);
         estimator.setZeroSkewness(false);
@@ -2597,14 +2415,11 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
         estimator.setFocalDistanceAspectRatio(1.0);
         estimator.setSingularityEnforced(true);
 
-        final int numCams = estimator.getMinNumberOfRequiredCameras() + 1;
-        for (int i = 0; i < numCams; i++) {
-            roll = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                    2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            pitch = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            yaw = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                    2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+        final var numCams = estimator.getMinNumberOfRequiredCameras() + 1;
+        for (var i = 0; i < numCams; i++) {
+            roll = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
+            pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            yaw = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
 
             q = new Quaternion(roll, pitch, yaw);
 
@@ -2624,13 +2439,7 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
 
         estimator.setCameras(projectiveCameras);
 
-        try {
-            estimator.estimate();
-            fail("NotReadyException expected but not thrown");
-        } catch (final NotReadyException ignore) {
-        } catch (final DualAbsoluteQuadricEstimatorException ex) {
-            fail("NotReadyException expected but not thrown");
-        }
+        assertThrows(NotReadyException.class, estimator::estimate);
     }
 
     // LMSE: enabled
@@ -2639,48 +2448,44 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
     // arbitrary focal distance aspect ratio
     // singularity not enforced
     @Test
-    public void testEstimate11() throws LockedException, AlgebraException, NotReadyException,
-            InvalidTransformationException, NotAvailableException, CameraException {
+    void testEstimate11() throws LockedException, AlgebraException, NotReadyException, InvalidTransformationException,
+            NotAvailableException, CameraException {
 
-        int numSucceeded = 0;
-        for (int times = 0; times < TIMES; times++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        var numSucceeded = 0;
+        for (var times = 0; times < TIMES; times++) {
+            final var randomizer = new UniformRandomizer();
 
             // create ground truth intrinsic parameters
-            final double aspectRatio = randomizer.nextDouble(MIN_ASPECT_RATIO, MAX_ASPECT_RATIO);
-            final double horizontalFocalLength =
-                    randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength = aspectRatio * horizontalFocalLength;
-            final double skewness = 0.0;
-            final double horizontalPrincipalPoint = 0.0;
-            final double verticalPrincipalPoint = 0.0;
+            final var aspectRatio = randomizer.nextDouble(MIN_ASPECT_RATIO, MAX_ASPECT_RATIO);
+            final var horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var verticalFocalLength = aspectRatio * horizontalFocalLength;
+            final var skewness = 0.0;
+            final var horizontalPrincipalPoint = 0.0;
+            final var verticalPrincipalPoint = 0.0;
 
-            final PinholeCameraIntrinsicParameters metricIntrinsic =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength,
-                            verticalFocalLength, horizontalPrincipalPoint,
-                            verticalPrincipalPoint, skewness);
+            final var metricIntrinsic = new PinholeCameraIntrinsicParameters(horizontalFocalLength,
+                    verticalFocalLength, horizontalPrincipalPoint, verticalPrincipalPoint, skewness);
 
-            final DualImageOfAbsoluteConic metricDiac = new DualImageOfAbsoluteConic(metricIntrinsic);
+            final var metricDiac = new DualImageOfAbsoluteConic(metricIntrinsic);
             metricDiac.normalize();
-            final Matrix metricDiacMatrix = metricDiac.asMatrix();
+            final var metricDiacMatrix = metricDiac.asMatrix();
 
             // generate random projective transformation to transform ground
             // truth cameras
-            final Matrix t = Matrix.createWithUniformRandomValues(
-                    ProjectiveTransformation3D.HOM_COORDS,
+            final var t = Matrix.createWithUniformRandomValues(ProjectiveTransformation3D.HOM_COORDS,
                     ProjectiveTransformation3D.HOM_COORDS, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
             // ensure last element is not zero
             t.setElementAt(ProjectiveTransformation3D.HOM_COORDS - 1,
                     ProjectiveTransformation3D.HOM_COORDS - 1, 1.0);
 
-            final ProjectiveTransformation3D transformation = new ProjectiveTransformation3D(t);
+            final var transformation = new ProjectiveTransformation3D(t);
 
             transformation.normalize();
 
-            final DualAbsoluteQuadric projectiveDaq = new DualAbsoluteQuadric(transformation);
+            final var projectiveDaq = new DualAbsoluteQuadric(transformation);
             projectiveDaq.normalize();
 
-            final Matrix projectiveDaqMatrix = projectiveDaq.asMatrix();
+            final var projectiveDaqMatrix = projectiveDaq.asMatrix();
 
             double roll;
             double pitch;
@@ -2692,10 +2497,10 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
             InhomogeneousPoint3D cameraCenter;
             PinholeCamera metricCamera;
             PinholeCamera projectiveCamera;
-            final List<PinholeCamera> metricCameras = new ArrayList<>();
-            final List<PinholeCamera> projectiveCameras = new ArrayList<>();
+            final var metricCameras = new ArrayList<PinholeCamera>();
+            final var projectiveCameras = new ArrayList<PinholeCamera>();
 
-            final LMSEDualAbsoluteQuadricEstimator estimator = new LMSEDualAbsoluteQuadricEstimator();
+            final var estimator = new LMSEDualAbsoluteQuadricEstimator();
             estimator.setListener(this);
             estimator.setLMSESolutionAllowed(true);
             estimator.setZeroSkewness(true);
@@ -2704,14 +2509,11 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
             estimator.setFocalDistanceAspectRatio(aspectRatio);
             estimator.setSingularityEnforced(false);
 
-            final int numCams = estimator.getMinNumberOfRequiredCameras() + 1;
-            for (int i = 0; i < numCams; i++) {
-                roll = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                        2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-                pitch = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                        MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-                yaw = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                        2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+            final var numCams = estimator.getMinNumberOfRequiredCameras() + 1;
+            for (var i = 0; i < numCams; i++) {
+                roll = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
+                pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                yaw = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
 
                 q = new Quaternion(roll, pitch, yaw);
 
@@ -2733,11 +2535,11 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
             estimator.setCameras(projectiveCameras);
 
             try {
-                final DualAbsoluteQuadric estimatedDaq = estimator.estimate();
+                final var estimatedDaq = estimator.estimate();
                 estimatedDaq.normalize();
-                final Matrix estimatedDaqMatrix = estimatedDaq.asMatrix();
+                final var estimatedDaqMatrix = estimatedDaq.asMatrix();
 
-                final DualAbsoluteQuadric estimatedDaq2 = new DualAbsoluteQuadric();
+                final var estimatedDaq2 = new DualAbsoluteQuadric();
                 estimator.estimate(estimatedDaq2);
                 estimatedDaq2.normalize();
 
@@ -2754,10 +2556,9 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                 }
                 assertTrue(projectiveDaqMatrix.equals(estimatedDaqMatrix, ABSOLUTE_ERROR));
 
-                final ProjectiveTransformation3D estimatedTransformation =
-                        estimatedDaq.getMetricToProjectiveTransformation();
+                final var estimatedTransformation = estimatedDaq.getMetricToProjectiveTransformation();
                 estimatedTransformation.normalize();
-                final ProjectiveTransformation3D invEstimatedTransformation =
+                final var invEstimatedTransformation =
                         (ProjectiveTransformation3D) estimatedTransformation.inverseAndReturnNew();
 
                 // project estimated DAQ using projective cameras to obtain DIAC
@@ -2773,18 +2574,17 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                 Rotation3D metricRotation;
                 double distanceEstimatedCenter;
                 double distanceCenter;
-                double previousScale = 1.0;
-                double scale = 1.0;
+                var previousScale = 1.0;
+                var scale = 1.0;
                 PinholeCamera estimatedMetricCamera;
-                boolean anyFailed = false;
-                for (int i = 0; i < numCams; i++) {
+                var anyFailed = false;
+                for (var i = 0; i < numCams; i++) {
                     projectiveCamera = projectiveCameras.get(i);
 
-                    final DualImageOfAbsoluteConic projectedProjectiveDiac =
-                            new DualImageOfAbsoluteConic(projectiveCamera, estimatedDaq);
+                    final var projectedProjectiveDiac = new DualImageOfAbsoluteConic(projectiveCamera, estimatedDaq);
                     projectedProjectiveDiac.normalize();
 
-                    final Matrix projectedProjectiveDiacMatrix = projectedProjectiveDiac.asMatrix();
+                    final var projectedProjectiveDiacMatrix = projectedProjectiveDiac.asMatrix();
 
                     if (!metricDiacMatrix.equals(projectedProjectiveDiacMatrix, ABSOLUTE_ERROR)) {
                         anyFailed = true;
@@ -2792,21 +2592,17 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                     }
                     assertTrue(metricDiacMatrix.equals(projectedProjectiveDiacMatrix, ABSOLUTE_ERROR));
 
-                    estimatedMetricCamera = invEstimatedTransformation.transformAndReturnNew(
-                            projectiveCamera);
+                    estimatedMetricCamera = invEstimatedTransformation.transformAndReturnNew(projectiveCamera);
 
                     estimatedMetricCamera.decompose();
-                    final PinholeCameraIntrinsicParameters estimatedIntrinsic =
-                            estimatedMetricCamera.getIntrinsicParameters();
+                    final var estimatedIntrinsic = estimatedMetricCamera.getIntrinsicParameters();
 
                     assertEquals(horizontalFocalLength, estimatedIntrinsic.getHorizontalFocalLength(),
                             10 * LARGE_ABSOLUTE_ERROR);
                     assertEquals(verticalFocalLength, estimatedIntrinsic.getVerticalFocalLength(),
                             10 * LARGE_ABSOLUTE_ERROR);
-                    assertEquals(skewness, estimatedIntrinsic.getSkewness(),
-                            5 * LARGE_ABSOLUTE_ERROR);
-                    assertEquals(horizontalPrincipalPoint,
-                            estimatedIntrinsic.getHorizontalPrincipalPoint(),
+                    assertEquals(skewness, estimatedIntrinsic.getSkewness(), 5 * LARGE_ABSOLUTE_ERROR);
+                    assertEquals(horizontalPrincipalPoint, estimatedIntrinsic.getHorizontalPrincipalPoint(),
                             5 * LARGE_ABSOLUTE_ERROR);
                     assertEquals(verticalPrincipalPoint, estimatedIntrinsic.getVerticalPrincipalPoint(),
                             5 * LARGE_ABSOLUTE_ERROR);
@@ -2828,19 +2624,17 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                     metricRotation = metricCamera.getCameraRotation();
 
                     if (i > 0) {
-                        distanceEstimatedCenter = previousEstimatedMetricCenter.distanceTo(
-                                estimatedMetricCenter);
+                        distanceEstimatedCenter = previousEstimatedMetricCenter.distanceTo(estimatedMetricCenter);
                         distanceCenter = previousMetricCenter.distanceTo(metricCenter);
                         scale = distanceEstimatedCenter / distanceCenter;
 
-                        final Rotation3D diffEstimatedRotation =
-                                estimatedMetricRotation.combineAndReturnNew(
-                                        previousEstimatedMetricRotation.inverseRotationAndReturnNew());
-                        final Rotation3D diffRotation = metricRotation.combineAndReturnNew(
+                        final var diffEstimatedRotation = estimatedMetricRotation.combineAndReturnNew(
+                                previousEstimatedMetricRotation.inverseRotationAndReturnNew());
+                        final var diffRotation = metricRotation.combineAndReturnNew(
                                 previousMetricRotation.inverseRotationAndReturnNew());
 
-                        final Matrix rot1 = diffEstimatedRotation.asInhomogeneousMatrix();
-                        final Matrix rot2 = diffRotation.asInhomogeneousMatrix();
+                        final var rot1 = diffEstimatedRotation.asInhomogeneousMatrix();
+                        final var rot2 = diffRotation.asInhomogeneousMatrix();
                         assertTrue(rot1.equals(rot2, LARGE_ABSOLUTE_ERROR));
                     }
 
@@ -2862,6 +2656,7 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
                 numSucceeded++;
                 break;
             } catch (final DualAbsoluteQuadricEstimatorException ignore) {
+                // no action needed
             }
         }
 
@@ -2877,39 +2672,34 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
     // arbitrary focal distance aspect ratio
     // singularity enforced
     @Test
-    public void testEstimate12() throws LockedException, AlgebraException,
-            InvalidTransformationException {
+    void testEstimate12() throws LockedException, AlgebraException, InvalidTransformationException {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final var randomizer = new UniformRandomizer();
 
         // create ground truth intrinsic parameters
-        final double aspectRatio = randomizer.nextDouble(MIN_ASPECT_RATIO, MAX_ASPECT_RATIO);
-        final double horizontalFocalLength =
-                randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-        final double verticalFocalLength = aspectRatio * horizontalFocalLength;
-        final double skewness = 0.0;
-        final double horizontalPrincipalPoint = 0.0;
-        final double verticalPrincipalPoint = 0.0;
+        final var aspectRatio = randomizer.nextDouble(MIN_ASPECT_RATIO, MAX_ASPECT_RATIO);
+        final var horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final var verticalFocalLength = aspectRatio * horizontalFocalLength;
+        final var skewness = 0.0;
+        final var horizontalPrincipalPoint = 0.0;
+        final var verticalPrincipalPoint = 0.0;
 
-        final PinholeCameraIntrinsicParameters metricIntrinsic =
-                new PinholeCameraIntrinsicParameters(horizontalFocalLength,
-                        verticalFocalLength, horizontalPrincipalPoint,
-                        verticalPrincipalPoint, skewness);
+        final var metricIntrinsic = new PinholeCameraIntrinsicParameters(horizontalFocalLength, verticalFocalLength,
+                horizontalPrincipalPoint, verticalPrincipalPoint, skewness);
 
         // generate random projective transformation to transform ground
         // truth cameras
-        final Matrix t = Matrix.createWithUniformRandomValues(
-                ProjectiveTransformation3D.HOM_COORDS,
+        final var t = Matrix.createWithUniformRandomValues(ProjectiveTransformation3D.HOM_COORDS,
                 ProjectiveTransformation3D.HOM_COORDS, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
         // ensure last element is not zero
         t.setElementAt(ProjectiveTransformation3D.HOM_COORDS - 1,
                 ProjectiveTransformation3D.HOM_COORDS - 1, 1.0);
 
-        final ProjectiveTransformation3D transformation = new ProjectiveTransformation3D(t);
+        final var transformation = new ProjectiveTransformation3D(t);
 
         transformation.normalize();
 
-        final DualAbsoluteQuadric projectiveDaq = new DualAbsoluteQuadric(transformation);
+        final var projectiveDaq = new DualAbsoluteQuadric(transformation);
         projectiveDaq.normalize();
 
         double roll;
@@ -2922,9 +2712,9 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
         InhomogeneousPoint3D cameraCenter;
         PinholeCamera metricCamera;
         PinholeCamera projectiveCamera;
-        final List<PinholeCamera> projectiveCameras = new ArrayList<>();
+        final var projectiveCameras = new ArrayList<PinholeCamera>();
 
-        final LMSEDualAbsoluteQuadricEstimator estimator = new LMSEDualAbsoluteQuadricEstimator();
+        final var estimator = new LMSEDualAbsoluteQuadricEstimator();
         estimator.setListener(this);
         estimator.setLMSESolutionAllowed(true);
         estimator.setZeroSkewness(true);
@@ -2933,14 +2723,11 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
         estimator.setFocalDistanceAspectRatio(aspectRatio);
         estimator.setSingularityEnforced(true);
 
-        final int numCams = estimator.getMinNumberOfRequiredCameras() + 1;
-        for (int i = 0; i < numCams; i++) {
-            roll = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                    2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            pitch = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            yaw = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                    2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+        final var numCams = estimator.getMinNumberOfRequiredCameras() + 1;
+        for (var i = 0; i < numCams; i++) {
+            roll = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
+            pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            yaw = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
 
             q = new Quaternion(roll, pitch, yaw);
 
@@ -2960,87 +2747,37 @@ public class LMSEDualAbsoluteQuadricEstimatorTest implements DualAbsoluteQuadric
 
         estimator.setCameras(projectiveCameras);
 
-        try {
-            estimator.estimate();
-            fail("NotReadyException expected but not thrown");
-        } catch (final NotReadyException ignore) {
-        } catch (final DualAbsoluteQuadricEstimatorException ex) {
-            fail("NotReadyException expected but not thrown");
-        }
+        assertThrows(NotReadyException.class, estimator::estimate);
     }
 
     @Override
     public void onEstimateStart(final DualAbsoluteQuadricEstimator estimator) {
-        assertTrue(estimator.isLocked());
         checkLocked(estimator);
     }
 
     @Override
     public void onEstimateEnd(final DualAbsoluteQuadricEstimator estimator) {
-        assertTrue(estimator.isLocked());
         checkLocked(estimator);
     }
 
     @Override
-    public void onEstimationProgressChange(
-            final DualAbsoluteQuadricEstimator estimator, final float progress) {
+    public void onEstimationProgressChange(final DualAbsoluteQuadricEstimator estimator, final float progress) {
         checkLocked(estimator);
     }
 
-    private void checkLocked(final DualAbsoluteQuadricEstimator estimator) {
-        final LMSEDualAbsoluteQuadricEstimator lmseEstimator =
-                (LMSEDualAbsoluteQuadricEstimator) estimator;
-        try {
-            lmseEstimator.setLMSESolutionAllowed(true);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            lmseEstimator.estimate();
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        } catch (final Exception e) {
-            fail("LockedException expected but not thrown");
-        }
-        try {
-            lmseEstimator.setZeroSkewness(true);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            lmseEstimator.setPrincipalPointAtOrigin(true);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            lmseEstimator.setFocalDistanceAspectRatioKnown(true);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            lmseEstimator.setFocalDistanceAspectRatio(1.0);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            lmseEstimator.setSingularityEnforced(true);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            lmseEstimator.setEnforcedSingularityValidated(false);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            lmseEstimator.setDeterminantThreshold(1.0);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            lmseEstimator.setCameras(null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
+    private static void checkLocked(final DualAbsoluteQuadricEstimator estimator) {
+        assertTrue(estimator.isLocked());
+
+        final var lmseEstimator = (LMSEDualAbsoluteQuadricEstimator) estimator;
+        assertThrows(LockedException.class, () -> lmseEstimator.setLMSESolutionAllowed(true));
+        assertThrows(LockedException.class, lmseEstimator::estimate);
+        assertThrows(LockedException.class, () -> lmseEstimator.setZeroSkewness(true));
+        assertThrows(LockedException.class, () -> lmseEstimator.setPrincipalPointAtOrigin(true));
+        assertThrows(LockedException.class, () -> lmseEstimator.setFocalDistanceAspectRatioKnown(true));
+        assertThrows(LockedException.class, () -> lmseEstimator.setFocalDistanceAspectRatio(1.0));
+        assertThrows(LockedException.class, () -> lmseEstimator.setSingularityEnforced(true));
+        assertThrows(LockedException.class, () -> lmseEstimator.setEnforcedSingularityValidated(false));
+        assertThrows(LockedException.class, () -> lmseEstimator.setDeterminantThreshold(1.0));
+        assertThrows(LockedException.class, () -> lmseEstimator.setCameras(null));
     }
 }

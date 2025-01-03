@@ -19,13 +19,11 @@ import com.irurueta.algebra.ArrayUtils;
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import java.util.Random;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.Assert.*;
-
-public class VelocityPredictorTest {
+class VelocityPredictorTest {
 
     private static final double MIN_RANDOM_VALUE = -100.0;
     private static final double MAX_RANDOM_VALUE = 100.0;
@@ -35,536 +33,343 @@ public class VelocityPredictorTest {
     private static final double JACOBIAN_ERROR = 1e-6;
 
     @Test
-    public void testPredict() throws WrongSizeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testPredict() throws WrongSizeException {
+        final var randomizer = new UniformRandomizer();
 
-        final double vx = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double vy = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double vz = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double ax = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double ay = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double az = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double dt = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var vx = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var vy = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var vz = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var ax = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var ay = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var az = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var dt = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
-        final double[] v = new double[]{vx, vy, vz};
-        final double[] a = new double[]{ax, ay, az};
+        final var v = new double[]{vx, vy, vz};
+        final var a = new double[]{ax, ay, az};
 
         // test with parameters and jacobians
-        double[] result = new double[3];
-        Matrix jacobianV = new Matrix(3, 3);
-        Matrix jacobianA = new Matrix(3, 3);
-        VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt, result, jacobianV, jacobianA);
+        final var result1 = new double[3];
+        final var jacobianV1 = new Matrix(3, 3);
+        final var jacobianA1 = new Matrix(3, 3);
+        VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt, result1, jacobianV1, jacobianA1);
 
         // check correctness
-        double[] result2 = new double[]{
+        var result2 = new double[]{
                 vx + ax * dt, vy + ay * dt, vz + az * dt
         };
 
-        final Matrix jacobianV2 = Matrix.identity(3, 3);
-        final Matrix jacobianA2 = Matrix.identity(3, 3).multiplyByScalarAndReturnNew(dt);
+        final var jacobianV2 = Matrix.identity(3, 3);
+        final var jacobianA2 = Matrix.identity(3, 3).multiplyByScalarAndReturnNew(dt);
 
-        assertArrayEquals(result, result2, ABSOLUTE_ERROR);
-        assertTrue(jacobianV.equals(jacobianV2, ABSOLUTE_ERROR));
-        assertTrue(jacobianA.equals(jacobianA2, ABSOLUTE_ERROR));
+        assertArrayEquals(result1, result2, ABSOLUTE_ERROR);
+        assertTrue(jacobianV1.equals(jacobianV2, ABSOLUTE_ERROR));
+        assertTrue(jacobianA1.equals(jacobianA2, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
-        try {
-            VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt, new double[1], jacobianV, jacobianA);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt, result,
-                    new Matrix(1, 1), jacobianA);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt, result,
-                    jacobianV, new Matrix(1, 1));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt,
+                new double[1], jacobianV1, jacobianA1));
+        final var m = new Matrix(1, 1);
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt,
+                result1, m, jacobianA1));
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt,
+                result1, jacobianV1, m));
 
         // test with parameters, without jacobians
-        result = new double[3];
-        VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt, result);
+        final var result3 = new double[3];
+        VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt, result3);
 
         // check correctness
-        assertArrayEquals(result, result2, ABSOLUTE_ERROR);
+        assertArrayEquals(result3, result2, ABSOLUTE_ERROR);
 
         // Force IllegalArgumentException
-        try {
-            VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt, new double[1]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt,
+                new double[1]));
 
         // test with arrays, with jacobians
-        result = new double[3];
-        jacobianV = new Matrix(3, 3);
-        jacobianA = new Matrix(3, 3);
-        VelocityPredictor.predict(v, a, dt, result, jacobianV, jacobianA);
+        final var result4 = new double[3];
+        final var jacobianV3 = new Matrix(3, 3);
+        final var jacobianA3 = new Matrix(3, 3);
+        VelocityPredictor.predict(v, a, dt, result4, jacobianV3, jacobianA3);
 
         // check correctness
-        assertArrayEquals(result, result2, ABSOLUTE_ERROR);
-        assertTrue(jacobianV.equals(jacobianV2, ABSOLUTE_ERROR));
-        assertTrue(jacobianA.equals(jacobianA2, ABSOLUTE_ERROR));
+        assertArrayEquals(result4, result2, ABSOLUTE_ERROR);
+        assertTrue(jacobianV3.equals(jacobianV2, ABSOLUTE_ERROR));
+        assertTrue(jacobianA3.equals(jacobianA2, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
-        try {
-            VelocityPredictor.predict(new double[1], a, dt, result, jacobianV, jacobianA);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            VelocityPredictor.predict(v, new double[1], dt, result, jacobianV, jacobianA);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            VelocityPredictor.predict(v, a, dt, new double[1], jacobianV, jacobianA);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            VelocityPredictor.predict(v, a, dt, result, new Matrix(1, 1), jacobianA);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            VelocityPredictor.predict(v, a, dt, result, jacobianV, new Matrix(1, 1));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predict(new double[1], a, dt, result4,
+                jacobianV3, jacobianA3));
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predict(v, new double[1], dt, result4,
+                jacobianV3, jacobianA3));
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predict(v, a, dt, new double[1],
+                jacobianV3, jacobianA3));
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predict(v, a, dt, result4,
+                m, jacobianA3));
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predict(v, a, dt, result4, jacobianV3,
+                m));
 
         // test with arrays, without jacobians
-        result = new double[3];
-        VelocityPredictor.predict(v, a, dt, result);
+        final var result5 = new double[3];
+        VelocityPredictor.predict(v, a, dt, result5);
 
         // check correctness
-        assertArrayEquals(result, result2, ABSOLUTE_ERROR);
+        assertArrayEquals(result5, result2, ABSOLUTE_ERROR);
 
         // Force IllegalArgumentException
-        try {
-            VelocityPredictor.predict(new double[1], a, dt, result);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            VelocityPredictor.predict(v, new double[1], dt, result);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            VelocityPredictor.predict(v, a, dt, new double[1]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predict(new double[1], a, dt, result5));
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predict(v, new double[1], dt, result5));
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predict(v, a, dt, new double[1]));
 
         // test with new instance, with parameters and jacobians
-        jacobianV = new Matrix(3, 3);
-        jacobianA = new Matrix(3, 3);
-        result = VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt, jacobianV, jacobianA);
+        final var jacobianV4 = new Matrix(3, 3);
+        final var jacobianA4 = new Matrix(3, 3);
+        final var result6 = VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt, jacobianV4, jacobianA4);
 
         // check correctness
-        assertArrayEquals(result, result2, ABSOLUTE_ERROR);
-        assertTrue(jacobianV.equals(jacobianV2, ABSOLUTE_ERROR));
-        assertTrue(jacobianA.equals(jacobianA2, ABSOLUTE_ERROR));
+        assertArrayEquals(result6, result2, ABSOLUTE_ERROR);
+        assertTrue(jacobianV4.equals(jacobianV2, ABSOLUTE_ERROR));
+        assertTrue(jacobianA4.equals(jacobianA2, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
-        result = null;
-        try {
-            result = VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt,
-                    new Matrix(1, 1), jacobianA);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            result = VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt,
-                    jacobianV, new Matrix(1, 1));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(result);
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt,
+                m, jacobianA4));
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt,
+                jacobianV4, m));
 
         // test with new instance, with parameters, without jacobians
-        result = VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt);
+        final var result7 = VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt);
 
         // check correctness
-        assertArrayEquals(result, result2, ABSOLUTE_ERROR);
+        assertArrayEquals(result7, result2, ABSOLUTE_ERROR);
 
         // test with new instance, with arrays, with jacobians
-        jacobianV = new Matrix(3, 3);
-        jacobianA = new Matrix(3, 3);
-        result = VelocityPredictor.predict(v, a, dt, jacobianV, jacobianA);
+        final var jacobianV5 = new Matrix(3, 3);
+        final var jacobianA5 = new Matrix(3, 3);
+        final var result8 = VelocityPredictor.predict(v, a, dt, jacobianV5, jacobianA5);
 
         // check correctness
-        assertArrayEquals(result, result2, ABSOLUTE_ERROR);
-        assertTrue(jacobianV.equals(jacobianV2, ABSOLUTE_ERROR));
-        assertTrue(jacobianA.equals(jacobianA2, ABSOLUTE_ERROR));
+        assertArrayEquals(result8, result2, ABSOLUTE_ERROR);
+        assertTrue(jacobianV5.equals(jacobianV2, ABSOLUTE_ERROR));
+        assertTrue(jacobianA5.equals(jacobianA2, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
-        result = null;
-        try {
-            result = VelocityPredictor.predict(new double[1], a, dt, jacobianV, jacobianA);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            result = VelocityPredictor.predict(v, new double[1], dt, jacobianV, jacobianA);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            result = VelocityPredictor.predict(v, a, dt, new Matrix(1, 1), jacobianA);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            result = VelocityPredictor.predict(v, a, dt, jacobianV, new Matrix(1, 1));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(result);
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predict(new double[1], a, dt, jacobianV5,
+                jacobianA5));
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predict(v, new double[1], dt, jacobianV5,
+                jacobianA5));
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predict(v, a, dt, m, jacobianA5));
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predict(v, a, dt, jacobianV5, m));
 
         // test with new instance, with arrays, without jacobians
-        result = VelocityPredictor.predict(v, a, dt);
+        final var result9 = VelocityPredictor.predict(v, a, dt);
 
         // check correctness
-        assertArrayEquals(result, result2, ABSOLUTE_ERROR);
+        assertArrayEquals(result9, result2, ABSOLUTE_ERROR);
 
         // Force IllegalArgumentException
-        result = null;
-        try {
-            result = VelocityPredictor.predict(new double[1], a, dt);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            result = VelocityPredictor.predict(v, new double[1], dt);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(result);
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predict(new double[1], a, dt));
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predict(v, new double[1], dt));
 
         // check correctness of jacobians
 
         // check velocity variation
-        result = VelocityPredictor.predict(v, a, dt);
+        final var result10 = VelocityPredictor.predict(v, a, dt);
 
-        double[] diff = new double[3];
+        var diff = new double[3];
         randomizer.fill(diff, -JACOBIAN_ERROR, JACOBIAN_ERROR);
-        final double[] v2 = ArrayUtils.sumAndReturnNew(v, diff);
+        final var v2 = ArrayUtils.sumAndReturnNew(v, diff);
         result2 = VelocityPredictor.predict(v2, a, dt);
 
-        double[] diffResult = ArrayUtils.subtractAndReturnNew(result2, result);
-        double[] diffResult2 = jacobianV.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
+        var diffResult = ArrayUtils.subtractAndReturnNew(result2, result10);
+        var diffResult2 = jacobianV5.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
         assertArrayEquals(diffResult, diffResult2, ABSOLUTE_ERROR);
 
         // check acceleration variation
         diff = new double[3];
         randomizer.fill(diff, -JACOBIAN_ERROR, JACOBIAN_ERROR);
-        final double[] a2 = ArrayUtils.sumAndReturnNew(a, diff);
+        final var a2 = ArrayUtils.sumAndReturnNew(a, diff);
         result2 = VelocityPredictor.predict(v, a2, dt);
 
-        diffResult = ArrayUtils.subtractAndReturnNew(result2, result);
-        diffResult2 = jacobianA.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
+        diffResult = ArrayUtils.subtractAndReturnNew(result2, result10);
+        diffResult2 = jacobianA5.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
         assertArrayEquals(diffResult, diffResult2, ABSOLUTE_ERROR);
     }
 
     @Test
-    public void testPredictWithVelocityAdjustment()
-            throws WrongSizeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testPredictWithVelocityAdjustment() throws WrongSizeException {
+        final var randomizer = new UniformRandomizer();
 
-        final double vx = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double vy = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double vz = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double dvx = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double dvy = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double dvz = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double ax = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double ay = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double az = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double dt = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var vx = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var vy = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var vz = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var dvx = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var dvy = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var dvz = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var ax = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var ay = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var az = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var dt = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
-        final double[] v = new double[]{vx, vy, vz};
-        final double[] dv = new double[]{dvx, dvy, dvz};
-        final double[] a = new double[]{ax, ay, az};
+        final var v = new double[]{vx, vy, vz};
+        final var dv = new double[]{dvx, dvy, dvz};
+        final var a = new double[]{ax, ay, az};
 
         // test with parameters and jacobians
-        double[] result = new double[3];
-        Matrix jacobianV = new Matrix(3, 3);
-        Matrix jacobianDV = new Matrix(3, 3);
-        Matrix jacobianA = new Matrix(3, 3);
-        VelocityPredictor.predictWithVelocityAdjustment(vx, vy, vz, dvx, dvy, dvz, ax, ay, az, dt, result,
-                jacobianV, jacobianDV, jacobianA);
+        final var result1 = new double[3];
+        final var jacobianV1 = new Matrix(3, 3);
+        final var jacobianDV1 = new Matrix(3, 3);
+        final var jacobianA1 = new Matrix(3, 3);
+        VelocityPredictor.predictWithVelocityAdjustment(vx, vy, vz, dvx, dvy, dvz, ax, ay, az, dt, result1,
+                jacobianV1, jacobianDV1, jacobianA1);
 
         // check correctness
-        final double[] result2 = new double[]{
+        final var result2 = new double[]{
                 vx + dvx + ax * dt, vy + dvy + ay * dt, vz + dvz + az * dt
         };
 
-        final Matrix jacobianV2 = Matrix.identity(3, 3);
-        final Matrix jacobianDV2 = Matrix.identity(3, 3);
-        final Matrix jacobianA2 = Matrix.identity(3, 3).multiplyByScalarAndReturnNew(dt);
+        final var jacobianV2 = Matrix.identity(3, 3);
+        final var jacobianDV2 = Matrix.identity(3, 3);
+        final var jacobianA2 = Matrix.identity(3, 3).multiplyByScalarAndReturnNew(dt);
 
-        assertArrayEquals(result, result2, ABSOLUTE_ERROR);
-        assertTrue(jacobianV.equals(jacobianV2, ABSOLUTE_ERROR));
-        assertTrue(jacobianDV.equals(jacobianDV2, ABSOLUTE_ERROR));
-        assertTrue(jacobianA.equals(jacobianA2, ABSOLUTE_ERROR));
+        assertArrayEquals(result1, result2, ABSOLUTE_ERROR);
+        assertTrue(jacobianV1.equals(jacobianV2, ABSOLUTE_ERROR));
+        assertTrue(jacobianDV1.equals(jacobianDV2, ABSOLUTE_ERROR));
+        assertTrue(jacobianA1.equals(jacobianA2, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
-        try {
-            VelocityPredictor.predictWithVelocityAdjustment(vx, vy, vz,
-                    dvx, dvy, dvz, ax, ay, az, dt, new double[1], jacobianV, jacobianDV, jacobianA);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            VelocityPredictor.predictWithVelocityAdjustment(vx, vy, vz,
-                    dvx, dvy, dvz, ax, ay, az, dt, result, new Matrix(1, 1),
-                    jacobianDV, jacobianA);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            VelocityPredictor.predictWithVelocityAdjustment(vx, vy, vz,
-                    dvx, dvy, dvz, ax, ay, az, dt, result, jacobianV,
-                    new Matrix(1, 1), jacobianA);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            VelocityPredictor.predictWithVelocityAdjustment(vx, vy, vz,
-                    dvx, dvy, dvz, ax, ay, az, dt, result, jacobianV,
-                    jacobianDV, new Matrix(1, 1));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predictWithVelocityAdjustment(vx, vy, vz,
+                dvx, dvy, dvz, ax, ay, az, dt, new double[1], jacobianV1, jacobianDV1, jacobianA1));
+        final var m = new Matrix(1, 1);
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predictWithVelocityAdjustment(vx, vy, vz,
+                dvx, dvy, dvz, ax, ay, az, dt, result1, m, jacobianDV1, jacobianA1));
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predictWithVelocityAdjustment(vx, vy, vz,
+                dvx, dvy, dvz, ax, ay, az, dt, result1, jacobianV1, m, jacobianA1));
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predictWithVelocityAdjustment(vx, vy, vz,
+                dvx, dvy, dvz, ax, ay, az, dt, result1, jacobianV1, jacobianDV1, m));
 
         // test with parameters, without jacobians
-        result = new double[3];
-        VelocityPredictor.predictWithVelocityAdjustment(vx, vy, vz, dvx, dvy, dvz, ax, ay, az, dt, result);
+        final var result3 = new double[3];
+        VelocityPredictor.predictWithVelocityAdjustment(vx, vy, vz, dvx, dvy, dvz, ax, ay, az, dt, result3);
 
         // check correctness
-        assertArrayEquals(result, result2, ABSOLUTE_ERROR);
+        assertArrayEquals(result3, result2, ABSOLUTE_ERROR);
 
         // Force IllegalArgumentException
-        try {
-            VelocityPredictor.predictWithVelocityAdjustment(vx, vy, vz,
-                    dvx, dvy, dvz, ax, ay, az, dt, new double[1]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predictWithVelocityAdjustment(vx, vy, vz,
+                dvx, dvy, dvz, ax, ay, az, dt, new double[1]));
 
         // test with arrays, with jacobians
-        result = new double[3];
-        jacobianV = new Matrix(3, 3);
-        jacobianDV = new Matrix(3, 3);
-        jacobianA = new Matrix(3, 3);
-        VelocityPredictor.predictWithVelocityAdjustment(v, dv, a, dt, result, jacobianV, jacobianDV, jacobianA);
+        final var result4 = new double[3];
+        final var jacobianV3 = new Matrix(3, 3);
+        final var jacobianDV3 = new Matrix(3, 3);
+        final var jacobianA3 = new Matrix(3, 3);
+        VelocityPredictor.predictWithVelocityAdjustment(v, dv, a, dt, result4, jacobianV3, jacobianDV3, jacobianA3);
 
         // check correctness
-        assertArrayEquals(result, result2, ABSOLUTE_ERROR);
-        assertTrue(jacobianV.equals(jacobianV2, ABSOLUTE_ERROR));
-        assertTrue(jacobianDV.equals(jacobianDV2, ABSOLUTE_ERROR));
-        assertTrue(jacobianA.equals(jacobianA2, ABSOLUTE_ERROR));
+        assertArrayEquals(result4, result2, ABSOLUTE_ERROR);
+        assertTrue(jacobianV3.equals(jacobianV2, ABSOLUTE_ERROR));
+        assertTrue(jacobianDV3.equals(jacobianDV2, ABSOLUTE_ERROR));
+        assertTrue(jacobianA3.equals(jacobianA2, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
-        try {
-            VelocityPredictor.predictWithVelocityAdjustment(new double[1],
-                    dv, a, dt, result, jacobianV, jacobianDV, jacobianA);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            VelocityPredictor.predictWithVelocityAdjustment(v,
-                    new double[1], a, dt, result, jacobianV, jacobianDV, jacobianA);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            VelocityPredictor.predictWithVelocityAdjustment(v, dv,
-                    new double[1], dt, result, jacobianV, jacobianDV, jacobianA);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            VelocityPredictor.predictWithVelocityAdjustment(v, dv, a, dt,
-                    new double[1], jacobianV, jacobianDV, jacobianA);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            VelocityPredictor.predictWithVelocityAdjustment(v, dv, a, dt,
-                    result, new Matrix(1, 1), jacobianDV, jacobianA);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            VelocityPredictor.predictWithVelocityAdjustment(v, dv, a, dt,
-                    result, jacobianV, new Matrix(1, 1), jacobianA);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            VelocityPredictor.predictWithVelocityAdjustment(v, dv, a, dt,
-                    result, jacobianV, jacobianDV, new Matrix(1, 1));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predictWithVelocityAdjustment(
+                new double[1], dv, a, dt, result4, jacobianV3, jacobianDV3, jacobianA3));
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predictWithVelocityAdjustment(v,
+                new double[1], a, dt, result4, jacobianV3, jacobianDV3, jacobianA3));
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predictWithVelocityAdjustment(v, dv,
+                new double[1], dt, result4, jacobianV3, jacobianDV3, jacobianA3));
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predictWithVelocityAdjustment(v, dv, a, dt,
+                new double[1], jacobianV3, jacobianDV3, jacobianA3));
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predictWithVelocityAdjustment(v, dv, a, dt,
+                result4, m, jacobianDV3, jacobianA3));
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predictWithVelocityAdjustment(v, dv, a, dt,
+                result4, jacobianV3, m, jacobianA3));
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predictWithVelocityAdjustment(v, dv, a, dt,
+                result4, jacobianV3, jacobianDV3, m));
 
         // test with arrays, without jacobians
-        result = new double[3];
-        VelocityPredictor.predictWithVelocityAdjustment(v, dv, a, dt, result);
+        final var result5 = new double[3];
+        VelocityPredictor.predictWithVelocityAdjustment(v, dv, a, dt, result5);
 
         // check correctness
-        assertArrayEquals(result, result2, ABSOLUTE_ERROR);
+        assertArrayEquals(result5, result2, ABSOLUTE_ERROR);
 
         // Force IllegalArgumentException
-        try {
-            VelocityPredictor.predictWithVelocityAdjustment(new double[1], dv, a, dt, result);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            VelocityPredictor.predictWithVelocityAdjustment(v, new double[1], a, dt, result);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            VelocityPredictor.predictWithVelocityAdjustment(v, dv, new double[1], dt, result);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            VelocityPredictor.predictWithVelocityAdjustment(v, dv, a, dt, new double[1]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predictWithVelocityAdjustment(
+                new double[1], dv, a, dt, result5));
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predictWithVelocityAdjustment(v,
+                new double[1], a, dt, result5));
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predictWithVelocityAdjustment(v, dv,
+                new double[1], dt, result5));
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predictWithVelocityAdjustment(v, dv, a, dt,
+                new double[1]));
 
         // test with new instance, with parameters and jacobians
-        jacobianV = new Matrix(3, 3);
-        jacobianDV = new Matrix(3, 3);
-        jacobianA = new Matrix(3, 3);
-        result = VelocityPredictor.predictWithVelocityAdjustment(
-                vx, vy, vz, dvx, dvy, dvz, ax, ay, az, dt, jacobianV, jacobianDV, jacobianA);
+        final var jacobianV4 = new Matrix(3, 3);
+        final var jacobianDV4 = new Matrix(3, 3);
+        final var jacobianA4 = new Matrix(3, 3);
+        final var result6 = VelocityPredictor.predictWithVelocityAdjustment(vx, vy, vz, dvx, dvy, dvz, ax, ay, az, dt,
+                jacobianV4, jacobianDV4, jacobianA4);
 
         // check correctness
-        assertArrayEquals(result, result2, ABSOLUTE_ERROR);
-        assertTrue(jacobianV.equals(jacobianV2, ABSOLUTE_ERROR));
-        assertTrue(jacobianDV.equals(jacobianDV2, ABSOLUTE_ERROR));
-        assertTrue(jacobianA.equals(jacobianA2, ABSOLUTE_ERROR));
+        assertArrayEquals(result6, result2, ABSOLUTE_ERROR);
+        assertTrue(jacobianV4.equals(jacobianV2, ABSOLUTE_ERROR));
+        assertTrue(jacobianDV4.equals(jacobianDV2, ABSOLUTE_ERROR));
+        assertTrue(jacobianA4.equals(jacobianA2, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
-        result = null;
-        try {
-            result = VelocityPredictor.predictWithVelocityAdjustment(
-                    vx, vy, vz, dvx, dvy, dvz, ax, ay, az, dt, new Matrix(1, 1),
-                    jacobianDV, jacobianA);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            result = VelocityPredictor.predictWithVelocityAdjustment(
-                    vx, vy, vz, dvx, dvy, dvz, ax, ay, az, dt, jacobianV,
-                    new Matrix(1, 1), jacobianA);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            result = VelocityPredictor.predictWithVelocityAdjustment(
-                    vx, vy, vz, dvx, dvy, dvz, ax, ay, az, dt, jacobianV,
-                    jacobianDV, new Matrix(1, 1));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(result);
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predictWithVelocityAdjustment(
+                vx, vy, vz, dvx, dvy, dvz, ax, ay, az, dt, m, jacobianDV4, jacobianA4));
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predictWithVelocityAdjustment(
+                vx, vy, vz, dvx, dvy, dvz, ax, ay, az, dt, jacobianV4, m, jacobianA4));
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predictWithVelocityAdjustment(
+                vx, vy, vz, dvx, dvy, dvz, ax, ay, az, dt, jacobianV4, jacobianDV4, m));
 
         // test with new instance, with parameters, without jacobians
-        result = VelocityPredictor.predictWithVelocityAdjustment(vx, vy, vz, dvx, dvy, dvz, ax, ay, az, dt);
+        final var result7 = VelocityPredictor.predictWithVelocityAdjustment(vx, vy, vz, dvx, dvy, dvz, ax, ay, az, dt);
 
         // check correctness
-        assertArrayEquals(result, result2, ABSOLUTE_ERROR);
+        assertArrayEquals(result7, result2, ABSOLUTE_ERROR);
 
         // test with new instance, with arrays, with jacobians
-        jacobianV = new Matrix(3, 3);
-        jacobianDV = new Matrix(3, 3);
-        jacobianA = new Matrix(3, 3);
-        result = VelocityPredictor.predictWithVelocityAdjustment(v, dv, a, dt, jacobianV, jacobianDV, jacobianA);
+        final var jacobianV5 = new Matrix(3, 3);
+        final var jacobianDV5 = new Matrix(3, 3);
+        final var jacobianA5 = new Matrix(3, 3);
+        final var result8 = VelocityPredictor.predictWithVelocityAdjustment(v, dv, a, dt, jacobianV5, jacobianDV5,
+                jacobianA5);
 
         // check correctness
-        assertArrayEquals(result, result2, ABSOLUTE_ERROR);
-        assertTrue(jacobianV.equals(jacobianV2, ABSOLUTE_ERROR));
-        assertTrue(jacobianDV.equals(jacobianDV2, ABSOLUTE_ERROR));
-        assertTrue(jacobianA.equals(jacobianA2, ABSOLUTE_ERROR));
+        assertArrayEquals(result8, result2, ABSOLUTE_ERROR);
+        assertTrue(jacobianV5.equals(jacobianV2, ABSOLUTE_ERROR));
+        assertTrue(jacobianDV5.equals(jacobianDV2, ABSOLUTE_ERROR));
+        assertTrue(jacobianA5.equals(jacobianA2, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
-        result = null;
-        try {
-            result = VelocityPredictor.predictWithVelocityAdjustment(
-                    new double[1], dv, a, dt, jacobianV, jacobianDV, jacobianA);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            result = VelocityPredictor.predictWithVelocityAdjustment(
-                    v, new double[1], a, dt, jacobianV, jacobianDV, jacobianA);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            result = VelocityPredictor.predictWithVelocityAdjustment(
-                    v, dv, new double[1], dt, jacobianV, jacobianDV, jacobianA);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            result = VelocityPredictor.predictWithVelocityAdjustment(
-                    v, dv, a, dt, new Matrix(1, 1), jacobianDV, jacobianA);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            result = VelocityPredictor.predictWithVelocityAdjustment(
-                    v, dv, a, dt, jacobianV, new Matrix(1, 1), jacobianA);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            result = VelocityPredictor.predictWithVelocityAdjustment(
-                    v, dv, a, dt, jacobianV, jacobianDV, new Matrix(1, 1));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(result);
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predictWithVelocityAdjustment(
+                new double[1], dv, a, dt, jacobianV5, jacobianDV5, jacobianA5));
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predictWithVelocityAdjustment(
+                v, new double[1], a, dt, jacobianV5, jacobianDV5, jacobianA5));
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predictWithVelocityAdjustment(
+                v, dv, new double[1], dt, jacobianV5, jacobianDV5, jacobianA5));
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predictWithVelocityAdjustment(
+                v, dv, a, dt, m, jacobianDV5, jacobianA5));
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predictWithVelocityAdjustment(
+                v, dv, a, dt, jacobianV5, m, jacobianA5));
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predictWithVelocityAdjustment(
+                v, dv, a, dt, jacobianV5, jacobianDV5, m));
 
         // test with new instance, with arrays, without jacobians
-        result = VelocityPredictor.predictWithVelocityAdjustment(v, dv, a, dt);
+        final var result9 = VelocityPredictor.predictWithVelocityAdjustment(v, dv, a, dt);
 
         // check correctness
-        assertArrayEquals(result, result2, ABSOLUTE_ERROR);
+        assertArrayEquals(result9, result2, ABSOLUTE_ERROR);
 
         // Force IllegalArgumentException
-        result = null;
-        try {
-            result = VelocityPredictor.predictWithVelocityAdjustment(new double[1], dv, a, dt);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            result = VelocityPredictor.predictWithVelocityAdjustment(v, new double[1], a, dt);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            result = VelocityPredictor.predictWithVelocityAdjustment(v, dv, new double[1], dt);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(result);
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predictWithVelocityAdjustment(
+                new double[1], dv, a, dt));
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predictWithVelocityAdjustment(v,
+                new double[1], a, dt));
+        assertThrows(IllegalArgumentException.class, () -> VelocityPredictor.predictWithVelocityAdjustment(v, dv,
+                new double[1], dt));
     }
 }

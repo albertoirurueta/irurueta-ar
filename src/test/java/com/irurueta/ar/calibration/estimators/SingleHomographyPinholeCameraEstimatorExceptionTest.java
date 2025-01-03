@@ -15,27 +15,24 @@
  */
 package com.irurueta.ar.calibration.estimators;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class SingleHomographyPinholeCameraEstimatorExceptionTest {
+class SingleHomographyPinholeCameraEstimatorExceptionTest {
 
     @Test
-    public void testConstructor() {
-        SingleHomographyPinholeCameraEstimatorException ex =
-                new SingleHomographyPinholeCameraEstimatorException();
+    void testConstructor() {
+        var ex = new SingleHomographyPinholeCameraEstimatorException();
         assertNotNull(ex);
 
         ex = new SingleHomographyPinholeCameraEstimatorException("message");
         assertNotNull(ex);
 
-        ex = new SingleHomographyPinholeCameraEstimatorException(
-                new Exception());
+        ex = new SingleHomographyPinholeCameraEstimatorException(new Exception());
         assertNotNull(ex);
 
-        ex = new SingleHomographyPinholeCameraEstimatorException(
-                "message", new Exception());
+        ex = new SingleHomographyPinholeCameraEstimatorException("message", new Exception());
         assertNotNull(ex);
     }
 }

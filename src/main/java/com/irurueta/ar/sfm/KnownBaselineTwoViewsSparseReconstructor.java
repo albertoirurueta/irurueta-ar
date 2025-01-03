@@ -16,11 +16,9 @@
 package com.irurueta.ar.sfm;
 
 import com.irurueta.geometry.MetricTransformation3D;
-import com.irurueta.geometry.PinholeCamera;
 import com.irurueta.geometry.Point3D;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Class in charge of estimating cameras and 3D reconstructed points from sparse
@@ -29,10 +27,8 @@ import java.util.List;
  * exact scale.
  */
 public class KnownBaselineTwoViewsSparseReconstructor extends
-        BaseTwoViewsSparseReconstructor<
-                KnownBaselineTwoViewsSparseReconstructorConfiguration,
-                KnownBaselineTwoViewsSparseReconstructor,
-                KnownBaselineTwoViewsSparseReconstructorListener> {
+        BaseTwoViewsSparseReconstructor<KnownBaselineTwoViewsSparseReconstructorConfiguration,
+                KnownBaselineTwoViewsSparseReconstructor, KnownBaselineTwoViewsSparseReconstructorListener> {
 
     /**
      * Constructor.
@@ -54,10 +50,8 @@ public class KnownBaselineTwoViewsSparseReconstructor extends
      * @param listener listener in charge of handling events.
      * @throws NullPointerException if listener is not provided.
      */
-    public KnownBaselineTwoViewsSparseReconstructor(
-            final KnownBaselineTwoViewsSparseReconstructorListener listener) {
-        this(new KnownBaselineTwoViewsSparseReconstructorConfiguration(),
-                listener);
+    public KnownBaselineTwoViewsSparseReconstructor(final KnownBaselineTwoViewsSparseReconstructorListener listener) {
+        this(new KnownBaselineTwoViewsSparseReconstructorConfiguration(), listener);
     }
 
     /**
@@ -72,52 +66,48 @@ public class KnownBaselineTwoViewsSparseReconstructor extends
         try {
             // reconstruction succeeded, so we update scale of cameras and
             // reconstructed points
-            final double baseline = mConfiguration.getBaseline();
+            final var baseline = configuration.getBaseline();
 
-            final PinholeCamera camera1 = mEstimatedCamera1.getCamera();
-            final PinholeCamera camera2 = mEstimatedCamera2.getCamera();
+            final var camera1 = estimatedCamera1.getCamera();
+            final var camera2 = estimatedCamera2.getCamera();
 
             camera1.decompose();
             camera2.decompose();
 
-            final Point3D center1 = camera1.getCameraCenter();
-            final Point3D center2 = camera2.getCameraCenter();
+            final var center1 = camera1.getCameraCenter();
+            final var center2 = camera2.getCameraCenter();
 
-            final double estimatedBaseline = center1.distanceTo(center2);
+            final var estimatedBaseline = center1.distanceTo(center2);
 
-            final double scale = baseline / estimatedBaseline;
+            final var scale = baseline / estimatedBaseline;
 
-            final MetricTransformation3D scaleTransformation =
-                    new MetricTransformation3D(scale);
+            final var scaleTransformation = new MetricTransformation3D(scale);
 
             // update scale of cameras
             scaleTransformation.transform(camera1);
             scaleTransformation.transform(camera2);
 
-            mEstimatedCamera1.setCamera(camera1);
-            mEstimatedCamera2.setCamera(camera2);
+            estimatedCamera1.setCamera(camera1);
+            estimatedCamera2.setCamera(camera2);
 
             // update scale of reconstructed points
-            final int numPoints = mReconstructedPoints.size();
-            final List<Point3D> reconstructedPoints3D = new ArrayList<>();
-            for (final ReconstructedPoint3D reconstructedPoint : mReconstructedPoints) {
-                reconstructedPoints3D.add(reconstructedPoint.
-                        getPoint());
+            final var numPoints = reconstructedPoints.size();
+            final var reconstructedPoints3D = new ArrayList<Point3D>();
+            for (final var reconstructedPoint : reconstructedPoints) {
+                reconstructedPoints3D.add(reconstructedPoint.getPoint());
             }
 
-            scaleTransformation.transformAndOverwritePoints(
-                    reconstructedPoints3D);
+            scaleTransformation.transformAndOverwritePoints(reconstructedPoints3D);
 
             // set scaled points into result
-            for (int i = 0; i < numPoints; i++) {
-                mReconstructedPoints.get(i).setPoint(
-                        reconstructedPoints3D.get(i));
+            for (var i = 0; i < numPoints; i++) {
+                reconstructedPoints.get(i).setPoint(reconstructedPoints3D.get(i));
             }
 
             return true;
         } catch (final Exception e) {
-            mFailed = true;
-            mListener.onFail(this);
+            failed = true;
+            listener.onFail(this);
 
             return false;
         }

@@ -35,6 +35,5 @@ public interface HomographyDecomposerListener {
      * @param decomposer an homography decomposer.
      * @param result     estimated possible homography decompositions.
      */
-    void onDecomposeEnd(final HomographyDecomposer decomposer,
-                        final List<HomographyDecomposition> result);
+    void onDecomposeEnd(final HomographyDecomposer decomposer, final List<HomographyDecomposition> result);
 }

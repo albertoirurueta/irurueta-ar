@@ -34,30 +34,30 @@ public class EstimatedCamera implements Serializable {
      * ID to identify this instance. This is useful in case that this data is
      * stored in some sort of database and must be set externally.
      */
-    private String mId;
+    private String id;
 
     /**
      * ID of view for which camera has been estimated.
      */
-    private int mViewId;
+    private int viewId;
 
     /**
      * Estimated camera.
      */
-    private PinholeCamera mCamera;
+    private PinholeCamera camera;
 
     /**
      * Quality score of estimated camera. The larger the value, the better the
      * quality. This is used for robust estimators such as PROSAC or PROMedS.
      * This value is typically obtained during camera estimation.
      */
-    private double mQualityScore = DEFAULT_QUALITY_SCORE;
+    private double qualityScore = DEFAULT_QUALITY_SCORE;
 
     /**
      * Covariance of estimated camera. This can be computed during camera
      * estimation.
      */
-    private Matrix mCovariance;
+    private Matrix covariance;
 
     /**
      * Gets id to identify this instance. This is useful in case that this data
@@ -66,7 +66,7 @@ public class EstimatedCamera implements Serializable {
      * @return id to identify this instance.
      */
     public String getId() {
-        return mId;
+        return id;
     }
 
     /**
@@ -76,7 +76,7 @@ public class EstimatedCamera implements Serializable {
      * @param id id to identify this instance.
      */
     public void setId(final String id) {
-        mId = id;
+        this.id = id;
     }
 
     /**
@@ -85,7 +85,7 @@ public class EstimatedCamera implements Serializable {
      * @return id of view for which camera has been estimated.
      */
     public int getViewId() {
-        return mViewId;
+        return viewId;
     }
 
     /**
@@ -94,7 +94,7 @@ public class EstimatedCamera implements Serializable {
      * @param viewId id of view for which camera has been estimated.
      */
     public void setViewId(final int viewId) {
-        mViewId = viewId;
+        this.viewId = viewId;
     }
 
     /**
@@ -103,7 +103,7 @@ public class EstimatedCamera implements Serializable {
      * @return estimated camera.
      */
     public PinholeCamera getCamera() {
-        return mCamera;
+        return camera;
     }
 
     /**
@@ -112,7 +112,7 @@ public class EstimatedCamera implements Serializable {
      * @param camera estimated camera.
      */
     public void setCamera(final PinholeCamera camera) {
-        mCamera = camera;
+        this.camera = camera;
     }
 
     /**
@@ -125,7 +125,7 @@ public class EstimatedCamera implements Serializable {
      * @return quality score of estimated camera.
      */
     public double getQualityScore() {
-        return mQualityScore;
+        return qualityScore;
     }
 
     /**
@@ -138,7 +138,7 @@ public class EstimatedCamera implements Serializable {
      * @param qualityScore quality score of estimated camera.
      */
     public void setQualityScore(final double qualityScore) {
-        mQualityScore = qualityScore;
+        this.qualityScore = qualityScore;
     }
 
     /**
@@ -148,7 +148,7 @@ public class EstimatedCamera implements Serializable {
      * @return covariance of estimated camera.
      */
     public Matrix getCovariance() {
-        return mCovariance;
+        return covariance;
     }
 
     /**
@@ -158,6 +158,6 @@ public class EstimatedCamera implements Serializable {
      * @param covariance covariance of estimated camera.
      */
     public void setCovariance(final Matrix covariance) {
-        mCovariance = covariance;
+        this.covariance = covariance;
     }
 }

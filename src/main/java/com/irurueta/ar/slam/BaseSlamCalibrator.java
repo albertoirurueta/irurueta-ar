@@ -74,142 +74,142 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      * Sample length of control values used during prediction stage in SLAM
      * estimator.
      */
-    private final int mSampleLength;
+    private final int sampleLength;
 
     /**
      * Array containing a control sample used during SLAM prediction stage.
      */
-    protected double[] mSample;
+    protected double[] sample;
 
     /**
      * Mean and covariance estimator.
      */
-    protected MeasurementNoiseCovarianceEstimator mEstimator;
+    protected MeasurementNoiseCovarianceEstimator estimator;
 
     /**
      * Contains previous mean value.
      */
-    protected double[] mPreviousMean;
+    protected double[] previousMean;
 
     /**
      * Contains mean value of covariance.
      */
-    protected Matrix mPreviousCovariance;
+    protected Matrix previousCovariance;
 
     /**
      * Indicates whether this calibrator converged.
      */
-    protected boolean mConverged;
+    protected boolean converged;
 
     /**
      * Indicates whether this calibrator failed.
      */
-    protected boolean mFailed;
+    protected boolean failed;
 
     /**
      * Indicates whether calibrator has finished taking samples.
      */
-    protected boolean mFinished;
+    protected boolean finished;
 
     /**
      * Number of obtained samples.
      */
-    protected int mSampleCount;
+    protected int sampleCount;
 
     /**
      * Array to store the difference between average values to determine whether
      * the result has converged or not.
      */
-    protected double[] mMeanDiff;
+    protected double[] meanDiff;
 
     /**
      * Matrix to store the difference between covariance matrices to determine
      * whether the result has converged or not.
      */
-    protected Matrix mCovDiff;
+    protected Matrix covDiff;
 
     /**
      * Minimum number of samples to take into account.
      */
-    protected int mMinNumSamples = DEFAULT_MIN_NUM_SAMPLES;
+    protected int minNumSamples = DEFAULT_MIN_NUM_SAMPLES;
 
     /**
      * Maximum number of samples to take into account.
      */
-    protected int mMaxNumSamples = DEFAULT_MAX_NUM_SAMPLES;
+    protected int maxNumSamples = DEFAULT_MAX_NUM_SAMPLES;
 
     /**
      * Threshold to consider whether calibration has converged or not.
      */
-    protected double mConvergenceThreshold = DEFAULT_CONVERGENCE_THRESHOLD;
+    protected double convergenceThreshold = DEFAULT_CONVERGENCE_THRESHOLD;
 
     /**
      * Indicates whether accumulation of samples is enabled or not.
      */
-    protected boolean mAccumulationEnabled = DEFAULT_ENABLE_SAMPLE_ACCUMULATION;
+    protected boolean accumulationEnabled = DEFAULT_ENABLE_SAMPLE_ACCUMULATION;
 
     /**
      * Timestamp expressed in nanoseconds since the epoch time of the last
      * accelerometer sample.
      */
-    protected long mAccelerometerTimestampNanos = -1;
+    protected long accelerometerTimestampNanos = -1;
 
     /**
      * Timestamp expressed in nanoseconds since the epoch time of the last
      * gyroscope sample.
      */
-    protected long mGyroscopeTimestampNanos = -1;
+    protected long gyroscopeTimestampNanos = -1;
 
     /**
      * Number of accelerometer samples accumulated since last full sample.
      */
-    protected int mAccumulatedAccelerometerSamples = 0;
+    protected int accumulatedAccelerometerSamples = 0;
 
     /**
      * Number of gyroscope samples accumulated since last full sample.
      */
-    protected int mAccumulatedGyroscopeSamples = 0;
+    protected int accumulatedGyroscopeSamples = 0;
 
     /**
      * Average of acceleration along x-axis accumulated since last full sample.
      * Expressed in meters per squared second (m/s^2).
      */
-    protected double mAccumulatedAccelerationSampleX;
+    protected double accumulatedAccelerationSampleX;
 
     /**
      * Average of acceleration along y-axis accumulated since last full sample.
      * Expressed in meters per squared second (m/s^2).
      */
-    protected double mAccumulatedAccelerationSampleY;
+    protected double accumulatedAccelerationSampleY;
 
     /**
      * Average of acceleration along z-axis accumulated since last full sample.
      * Expressed in meters per squared second (m/s^2).
      */
-    protected double mAccumulatedAccelerationSampleZ;
+    protected double accumulatedAccelerationSampleZ;
 
     /**
      * Average of angular speed along x-axis accumulated since last full sample.
      * Expressed in meters per squared second (m/s^2).
      */
-    protected double mAccumulatedAngularSpeedSampleX;
+    protected double accumulatedAngularSpeedSampleX;
 
     /**
      * Average of angular speed along y-axis accumulated since last full sample.
      * Expressed in meters per squared second (m/s^2).
      */
-    protected double mAccumulatedAngularSpeedSampleY;
+    protected double accumulatedAngularSpeedSampleY;
 
     /**
      * Average of angular speed along z-axis accumulated since last full sample.
      * Expressed in meters per squared second (m/s^2).
      */
-    protected double mAccumulatedAngularSpeedSampleZ;
+    protected double accumulatedAngularSpeedSampleZ;
 
     /**
      * Listener in charge of handling events raised by instances of this class.
      */
-    protected BaseSlamCalibratorListener<D> mListener;
+    protected BaseSlamCalibratorListener<D> listener;
 
     /**
      * Constructor.
@@ -223,15 +223,14 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
             throw new IllegalArgumentException("length must be greater than 0");
         }
 
-        mSampleLength = sampleLength;
-        mSample = new double[sampleLength];
-        mPreviousMean = new double[sampleLength];
-        mMeanDiff = new double[sampleLength];
+        this.sampleLength = sampleLength;
+        sample = new double[sampleLength];
+        previousMean = new double[sampleLength];
+        meanDiff = new double[sampleLength];
         try {
-            mPreviousCovariance = new Matrix(sampleLength, sampleLength);
-            mCovDiff = new Matrix(sampleLength, sampleLength);
-            mEstimator = new MeasurementNoiseCovarianceEstimator(
-                    sampleLength);
+            previousCovariance = new Matrix(sampleLength, sampleLength);
+            covDiff = new Matrix(sampleLength, sampleLength);
+            estimator = new MeasurementNoiseCovarianceEstimator(sampleLength);
         } catch (final Exception ignore) {
             // never thrown
         }
@@ -245,7 +244,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      * SLAM estimator.
      */
     public int getSampleLength() {
-        return mSampleLength;
+        return sampleLength;
     }
 
     /**
@@ -254,7 +253,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      * @return true if calibrator converged, false otherwise.
      */
     public boolean isConverged() {
-        return mConverged;
+        return converged;
     }
 
     /**
@@ -263,7 +262,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      * @return true if calibrator failed, false otherwise.
      */
     public boolean isFailed() {
-        return mFailed;
+        return failed;
     }
 
     /**
@@ -272,7 +271,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      * @return true if calibrator has finished taking samples, false otherwise.
      */
     public boolean isFinished() {
-        return mFinished;
+        return finished;
     }
 
     /**
@@ -281,7 +280,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      * @return number of obtained samples.
      */
     public int getSampleCount() {
-        return mSampleCount;
+        return sampleCount;
     }
 
     /**
@@ -292,7 +291,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      * account.
      */
     public int getMinNumSamples() {
-        return mMinNumSamples;
+        return minNumSamples;
     }
 
     /**
@@ -305,10 +304,9 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      */
     public void setMinNumSamples(final int minNumSamples) {
         if (minNumSamples < 0) {
-            throw new IllegalArgumentException(
-                    "minNumSamples must be positive");
+            throw new IllegalArgumentException("minNumSamples must be positive");
         }
-        mMinNumSamples = minNumSamples;
+        this.minNumSamples = minNumSamples;
     }
 
     /**
@@ -317,7 +315,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      * @return maximum number of samples to take into account.
      */
     public int getMaxNumSamples() {
-        return mMaxNumSamples;
+        return maxNumSamples;
     }
 
     /**
@@ -328,10 +326,9 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      */
     public void setMaxNumSamples(final int maxNumSamples) {
         if (maxNumSamples <= 0) {
-            throw new IllegalArgumentException(
-                    "maxNumSamples must be positive");
+            throw new IllegalArgumentException("maxNumSamples must be positive");
         }
-        mMaxNumSamples = maxNumSamples;
+        this.maxNumSamples = maxNumSamples;
     }
 
     /**
@@ -340,7 +337,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      * @return threshold to consider that calibration has converged.
      */
     public double getConvergenceThreshold() {
-        return mConvergenceThreshold;
+        return convergenceThreshold;
     }
 
     /**
@@ -352,37 +349,33 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      */
     public void setConvergenceThreshold(final double convergenceThreshold) {
         if (convergenceThreshold < 0.0) {
-            throw new IllegalArgumentException(
-                    "convergenceThreshold must be positive");
+            throw new IllegalArgumentException("convergenceThreshold must be positive");
         }
-        mConvergenceThreshold = convergenceThreshold;
+        this.convergenceThreshold = convergenceThreshold;
     }
 
     /**
      * Resets calibrator.
      */
     public void reset() {
-        mConverged = mFailed = false;
-        mSampleCount = 0;
-        mFinished = false;
-        Arrays.fill(mSample, 0.0);
-        Arrays.fill(mPreviousMean, 0.0);
-        mPreviousCovariance.initialize(0.0);
+        converged = failed = false;
+        sampleCount = 0;
+        finished = false;
+        Arrays.fill(sample, 0.0);
+        Arrays.fill(previousMean, 0.0);
+        previousCovariance.initialize(0.0);
         try {
-            mEstimator = new MeasurementNoiseCovarianceEstimator(
-                    mSample.length);
+            estimator = new MeasurementNoiseCovarianceEstimator(sample.length);
         } catch (final SignalProcessingException e) {
             // never thrown
         }
-        mSampleCount = 0;
-        Arrays.fill(mMeanDiff, 0.0);
-        mCovDiff.initialize(0.0);
-        mAccelerometerTimestampNanos = mGyroscopeTimestampNanos = -1;
-        mAccumulatedAccelerometerSamples = mAccumulatedGyroscopeSamples = 0;
-        mAccumulatedAccelerationSampleX = mAccumulatedAccelerationSampleY =
-                mAccumulatedAccelerationSampleZ = 0.0;
-        mAccumulatedAngularSpeedSampleX = mAccumulatedAngularSpeedSampleY =
-                mAccumulatedAngularSpeedSampleZ = 0.0;
+        sampleCount = 0;
+        Arrays.fill(meanDiff, 0.0);
+        covDiff.initialize(0.0);
+        accelerometerTimestampNanos = gyroscopeTimestampNanos = -1;
+        accumulatedAccelerometerSamples = accumulatedGyroscopeSamples = 0;
+        accumulatedAccelerationSampleX = accumulatedAccelerationSampleY = accumulatedAccelerationSampleZ = 0.0;
+        accumulatedAngularSpeedSampleX = accumulatedAngularSpeedSampleY = accumulatedAngularSpeedSampleZ = 0.0;
     }
 
     /**
@@ -391,7 +384,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      * @return true if accumulation of samples is enabled, false otherwise.
      */
     public boolean isAccumulationEnabled() {
-        return mAccumulationEnabled;
+        return accumulationEnabled;
     }
 
     /**
@@ -401,7 +394,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      *                            false otherwise.
      */
     public void setAccumulationEnabled(final boolean accumulationEnabled) {
-        mAccumulationEnabled = accumulationEnabled;
+        this.accumulationEnabled = accumulationEnabled;
     }
 
     /**
@@ -412,7 +405,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      * last accelerometer sample, or -1.
      */
     public long getAccelerometerTimestampNanos() {
-        return mAccelerometerTimestampNanos;
+        return accelerometerTimestampNanos;
     }
 
     /**
@@ -423,7 +416,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      * last gyroscope sample, or -1.
      */
     public long getGyroscopeTimestampNanos() {
-        return mGyroscopeTimestampNanos;
+        return gyroscopeTimestampNanos;
     }
 
     /**
@@ -433,7 +426,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      * sample.
      */
     public int getAccumulatedAccelerometerSamples() {
-        return mAccumulatedAccelerometerSamples;
+        return accumulatedAccelerometerSamples;
     }
 
     /**
@@ -442,7 +435,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      * @return number of gyroscope samples accumulated since last full sample.
      */
     public int getAccumulatedGyroscopeSamples() {
-        return mAccumulatedGyroscopeSamples;
+        return accumulatedGyroscopeSamples;
     }
 
     /**
@@ -452,7 +445,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      * @return true if accelerometer sample has been received, false otherwise.
      */
     public boolean isAccelerometerSampleReceived() {
-        return mAccumulatedAccelerometerSamples > 0;
+        return accumulatedAccelerometerSamples > 0;
     }
 
     /**
@@ -462,7 +455,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      * @return true if gyroscope sample has been received, false otherwise.
      */
     public boolean isGyroscopeSampleReceived() {
-        return mAccumulatedGyroscopeSamples > 0;
+        return accumulatedGyroscopeSamples > 0;
     }
 
     /**
@@ -483,7 +476,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      * sample.
      */
     public double getAccumulatedAccelerationSampleX() {
-        return mAccumulatedAccelerationSampleX;
+        return accumulatedAccelerationSampleX;
     }
 
     /**
@@ -494,7 +487,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      * sample.
      */
     public double getAccumulatedAccelerationSampleY() {
-        return mAccumulatedAccelerationSampleY;
+        return accumulatedAccelerationSampleY;
     }
 
     /**
@@ -505,7 +498,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      * sample.
      */
     public double getAccumulatedAccelerationSampleZ() {
-        return mAccumulatedAccelerationSampleZ;
+        return accumulatedAccelerationSampleZ;
     }
 
     /**
@@ -517,9 +510,9 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      */
     public double[] getAccumulatedAccelerationSample() {
         return new double[]{
-                mAccumulatedAccelerationSampleX,
-                mAccumulatedAccelerationSampleY,
-                mAccumulatedAccelerationSampleZ
+                accumulatedAccelerationSampleX,
+                accumulatedAccelerationSampleY,
+                accumulatedAccelerationSampleZ
         };
     }
 
@@ -536,9 +529,9 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
         if (result.length != N_COMPONENTS_3D) {
             throw new IllegalArgumentException("result must have length 3");
         }
-        result[0] = mAccumulatedAccelerationSampleX;
-        result[1] = mAccumulatedAccelerationSampleY;
-        result[2] = mAccumulatedAccelerationSampleZ;
+        result[0] = accumulatedAccelerationSampleX;
+        result[1] = accumulatedAccelerationSampleY;
+        result[2] = accumulatedAccelerationSampleZ;
     }
 
     /**
@@ -549,7 +542,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      * second (rad/s).
      */
     public double getAccumulatedAngularSpeedSampleX() {
-        return mAccumulatedAngularSpeedSampleX;
+        return accumulatedAngularSpeedSampleX;
     }
 
     /**
@@ -560,7 +553,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      * second (rad/s).
      */
     public double getAccumulatedAngularSpeedSampleY() {
-        return mAccumulatedAngularSpeedSampleY;
+        return accumulatedAngularSpeedSampleY;
     }
 
     /**
@@ -571,7 +564,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      * second (rad/s).
      */
     public double getAccumulatedAngularSpeedSampleZ() {
-        return mAccumulatedAngularSpeedSampleZ;
+        return accumulatedAngularSpeedSampleZ;
     }
 
     /**
@@ -583,9 +576,9 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      */
     public double[] getAccumulatedAngularSpeedSample() {
         return new double[]{
-                mAccumulatedAngularSpeedSampleX,
-                mAccumulatedAngularSpeedSampleY,
-                mAccumulatedAngularSpeedSampleZ
+                accumulatedAngularSpeedSampleX,
+                accumulatedAngularSpeedSampleY,
+                accumulatedAngularSpeedSampleZ
         };
     }
 
@@ -602,9 +595,9 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
         if (result.length != N_COMPONENTS_3D) {
             throw new IllegalArgumentException("result must have length 3");
         }
-        result[0] = mAccumulatedAngularSpeedSampleX;
-        result[1] = mAccumulatedAngularSpeedSampleY;
-        result[2] = mAccumulatedAngularSpeedSampleZ;
+        result[0] = accumulatedAngularSpeedSampleX;
+        result[1] = accumulatedAngularSpeedSampleY;
+        result[2] = accumulatedAngularSpeedSampleZ;
     }
 
     /**
@@ -622,29 +615,26 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      * @param accelerationZ linear acceleration along z-axis expressed in meters
      *                      per squared second (m/s^2).
      */
-    public void updateAccelerometerSample(final long timestamp, final float accelerationX,
-                                          final float accelerationY, final float accelerationZ) {
+    public void updateAccelerometerSample(
+            final long timestamp, final float accelerationX, final float accelerationY, final float accelerationZ) {
         if (!isFullSampleAvailable()) {
-            mAccelerometerTimestampNanos = timestamp;
+            accelerometerTimestampNanos = timestamp;
             if (isAccumulationEnabled() && isAccelerometerSampleReceived()) {
                 // accumulation enabled
-                final int nextSamples = mAccumulatedAccelerometerSamples + 1;
-                mAccumulatedAccelerationSampleX =
-                        (mAccumulatedAccelerationSampleX * mAccumulatedAccelerometerSamples +
-                                accelerationX) / nextSamples;
-                mAccumulatedAccelerationSampleY =
-                        (mAccumulatedAccelerationSampleY * mAccumulatedAccelerometerSamples +
-                                accelerationY) / nextSamples;
-                mAccumulatedAccelerationSampleZ =
-                        (mAccumulatedAccelerationSampleZ * mAccumulatedAccelerometerSamples +
-                                accelerationZ) / nextSamples;
-                mAccumulatedAccelerometerSamples = nextSamples;
+                final var nextSamples = accumulatedAccelerometerSamples + 1;
+                accumulatedAccelerationSampleX = (accumulatedAccelerationSampleX * accumulatedAccelerometerSamples
+                        + accelerationX) / nextSamples;
+                accumulatedAccelerationSampleY = (accumulatedAccelerationSampleY * accumulatedAccelerometerSamples
+                        + accelerationY) / nextSamples;
+                accumulatedAccelerationSampleZ = (accumulatedAccelerationSampleZ * accumulatedAccelerometerSamples
+                        + accelerationZ) / nextSamples;
+                accumulatedAccelerometerSamples = nextSamples;
             } else {
                 // accumulation disabled
-                mAccumulatedAccelerationSampleX = accelerationX;
-                mAccumulatedAccelerationSampleY = accelerationY;
-                mAccumulatedAccelerationSampleZ = accelerationZ;
-                mAccumulatedAccelerometerSamples++;
+                accumulatedAccelerationSampleX = accelerationX;
+                accumulatedAccelerationSampleY = accelerationY;
+                accumulatedAccelerationSampleZ = accelerationZ;
+                accumulatedAccelerometerSamples++;
             }
             notifyFullSampleAndResetSampleReceive();
         }
@@ -666,11 +656,9 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      */
     public void updateAccelerometerSample(final long timestamp, final float[] data) {
         if (data.length != N_COMPONENTS_3D) {
-            throw new IllegalArgumentException(
-                    "acceleration must have length 3");
+            throw new IllegalArgumentException("acceleration must have length 3");
         }
-        updateAccelerometerSample(timestamp, data[0], data[1],
-                data[2]);
+        updateAccelerometerSample(timestamp, data[0], data[1], data[2]);
     }
 
     /**
@@ -689,29 +677,26 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      * @param angularSpeedZ angular speed of rotation along z-axis expressed in
      *                      radians per second (rad/s).
      */
-    public void updateGyroscopeSample(final long timestamp, final float angularSpeedX,
-                                      final float angularSpeedY, final float angularSpeedZ) {
+    public void updateGyroscopeSample(
+            final long timestamp, final float angularSpeedX, final float angularSpeedY, final float angularSpeedZ) {
         if (!isFullSampleAvailable()) {
-            mGyroscopeTimestampNanos = timestamp;
+            gyroscopeTimestampNanos = timestamp;
             if (isAccumulationEnabled() && isGyroscopeSampleReceived()) {
                 // accumulation enabled
-                final int nextSamples = mAccumulatedGyroscopeSamples + 1;
-                mAccumulatedAngularSpeedSampleX =
-                        (mAccumulatedAngularSpeedSampleX * mAccumulatedGyroscopeSamples +
-                                angularSpeedX) / nextSamples;
-                mAccumulatedAngularSpeedSampleY =
-                        (mAccumulatedAngularSpeedSampleY * mAccumulatedGyroscopeSamples +
-                                angularSpeedY) / nextSamples;
-                mAccumulatedAngularSpeedSampleZ =
-                        (mAccumulatedAngularSpeedSampleZ * mAccumulatedGyroscopeSamples +
-                                angularSpeedZ) / nextSamples;
-                mAccumulatedGyroscopeSamples = nextSamples;
+                final var nextSamples = accumulatedGyroscopeSamples + 1;
+                accumulatedAngularSpeedSampleX = (accumulatedAngularSpeedSampleX * accumulatedGyroscopeSamples
+                        + angularSpeedX) / nextSamples;
+                accumulatedAngularSpeedSampleY = (accumulatedAngularSpeedSampleY * accumulatedGyroscopeSamples
+                        + angularSpeedY) / nextSamples;
+                accumulatedAngularSpeedSampleZ = (accumulatedAngularSpeedSampleZ * accumulatedGyroscopeSamples
+                        + angularSpeedZ) / nextSamples;
+                accumulatedGyroscopeSamples = nextSamples;
             } else {
                 // accumulation disabled
-                mAccumulatedAngularSpeedSampleX = angularSpeedX;
-                mAccumulatedAngularSpeedSampleY = angularSpeedY;
-                mAccumulatedAngularSpeedSampleZ = angularSpeedZ;
-                mAccumulatedGyroscopeSamples++;
+                accumulatedAngularSpeedSampleX = angularSpeedX;
+                accumulatedAngularSpeedSampleY = angularSpeedY;
+                accumulatedAngularSpeedSampleZ = angularSpeedZ;
+                accumulatedGyroscopeSamples++;
             }
             notifyFullSampleAndResetSampleReceive();
         }
@@ -733,8 +718,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      */
     public void updateGyroscopeSample(final long timestamp, final float[] data) {
         if (data.length != N_COMPONENTS_3D) {
-            throw new IllegalArgumentException(
-                    "angular speed must have length 3");
+            throw new IllegalArgumentException("angular speed must have length 3");
         }
         updateGyroscopeSample(timestamp, data[0], data[1], data[2]);
     }
@@ -746,7 +730,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      * @return most recent timestamp of received partial sample.
      */
     public long getMostRecentTimestampNanos() {
-        return Math.max(mAccelerometerTimestampNanos, mGyroscopeTimestampNanos);
+        return Math.max(accelerometerTimestampNanos, gyroscopeTimestampNanos);
     }
 
     /**
@@ -757,7 +741,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      * class.
      */
     public BaseSlamCalibratorListener<D> getListener() {
-        return mListener;
+        return listener;
     }
 
     /**
@@ -768,7 +752,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      *                 of this class.
      */
     public void setListener(final BaseSlamCalibratorListener<D> listener) {
-        mListener = listener;
+        this.listener = listener;
     }
 
     /**
@@ -779,7 +763,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      * @return mean values of control signal.
      */
     public double[] getControlMean() {
-        return mEstimator.getSampleAverage();
+        return estimator.getSampleAverage();
     }
 
     /**
@@ -792,7 +776,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      * @throws IllegalArgumentException if provided length is invalid.
      */
     public void getControlMean(final double[] result) {
-        final double[] src = getControlMean();
+        final var src = getControlMean();
         if (result.length != src.length) {
             throw new IllegalArgumentException("wrong length");
         }
@@ -808,7 +792,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      * @return covariance matrix of control signal.
      */
     public Matrix getControlCovariance() {
-        return mEstimator.getMeasurementNoiseCov();
+        return estimator.getMeasurementNoiseCov();
     }
 
     /**
@@ -819,7 +803,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      * @param result matrix where covariance will be stored.
      */
     public void getControlCovariance(final Matrix result) {
-        final Matrix src = getControlCovariance();
+        final var src = getControlCovariance();
         src.copyTo(result);
     }
 
@@ -832,9 +816,8 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      * @throws InvalidCovarianceMatrixException if estimated covariance is not
      *                                          valid.
      */
-    public MultivariateNormalDist getControlDistribution()
-            throws InvalidCovarianceMatrixException {
-        final Matrix cov = getControlCovariance();
+    public MultivariateNormalDist getControlDistribution() throws InvalidCovarianceMatrixException {
+        final var cov = getControlCovariance();
         try {
             cov.symmetrize();
         } catch (final WrongSizeException ignore) {
@@ -852,9 +835,8 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      * @throws InvalidCovarianceMatrixException if estimated covariance is not
      *                                          valid.
      */
-    public void getControlDistribution(final MultivariateNormalDist dist)
-            throws InvalidCovarianceMatrixException {
-        final Matrix cov = getControlCovariance();
+    public void getControlDistribution(final MultivariateNormalDist dist) throws InvalidCovarianceMatrixException {
+        final var cov = getControlCovariance();
         try {
             cov.symmetrize();
         } catch (final WrongSizeException ignore) {
@@ -877,8 +859,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      * @param result instance where calibration data will be stored.
      */
     public void getCalibrationData(final D result) {
-        result.setControlMeanAndCovariance(getControlMean(),
-                getControlCovariance());
+        result.setControlMeanAndCovariance(getControlMean(), getControlCovariance());
     }
 
     /**
@@ -892,10 +873,9 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      * @throws InvalidCovarianceMatrixException if estimated covariance is not
      *                                          valid.
      */
-    public MultivariateNormalDist propagateWithControlJacobian(
-            final Matrix controlJacobian) throws InvalidCovarianceMatrixException {
-        return getCalibrationData().propagateWithControlJacobian(
-                controlJacobian);
+    public MultivariateNormalDist propagateWithControlJacobian(final Matrix controlJacobian)
+            throws InvalidCovarianceMatrixException {
+        return getCalibrationData().propagateWithControlJacobian(controlJacobian);
     }
 
     /**
@@ -909,11 +889,9 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      * @throws InvalidCovarianceMatrixException if estimated covariance is not
      *                                          valid.
      */
-    public void propagateWithControlJacobian(final Matrix controlJacobian,
-                                             final MultivariateNormalDist result)
+    public void propagateWithControlJacobian(final Matrix controlJacobian, final MultivariateNormalDist result)
             throws InvalidCovarianceMatrixException {
-        getCalibrationData().propagateWithControlJacobian(controlJacobian,
-                result);
+        getCalibrationData().propagateWithControlJacobian(controlJacobian, result);
     }
 
     /**
@@ -923,7 +901,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
     protected void notifyFullSampleAndResetSampleReceive() {
         if (isFullSampleAvailable()) {
             processFullSample();
-            mAccumulatedAccelerometerSamples = mAccumulatedGyroscopeSamples = 0;
+            accumulatedAccelerometerSamples = accumulatedGyroscopeSamples = 0;
         }
     }
 
@@ -944,62 +922,61 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
      * convergence has been reached and calibrator has finished or failed.
      */
     protected void updateSample() {
-        if (mFinished) {
+        if (finished) {
             return;
         }
 
         try {
-            mEstimator.update(mSample);
+            estimator.update(sample);
         } catch (final SignalProcessingException e) {
-            mFailed = mFinished = true;
+            failed = finished = true;
 
-            if (mListener != null) {
-                mListener.onCalibratorFinished(this, mConverged, true);
+            if (listener != null) {
+                listener.onCalibratorFinished(this, converged, true);
             }
             return;
         }
 
-        mSampleCount++;
+        sampleCount++;
 
-        final double[] mean = mEstimator.getSampleAverage();
-        final Matrix cov = mEstimator.getMeasurementNoiseCov();
+        final var mean = estimator.getSampleAverage();
+        final var cov = estimator.getMeasurementNoiseCov();
 
         // check if minimum number of samples has been reached
-        if (mSampleCount >= mMaxNumSamples) {
-            mFinished = true;
+        if (sampleCount >= maxNumSamples) {
+            finished = true;
 
-            if (mListener != null) {
-                mListener.onCalibratorFinished(this, mConverged, mFailed);
+            if (listener != null) {
+                listener.onCalibratorFinished(this, converged, failed);
             }
             return;
         }
 
         // check if estimator has converged
-        if (mSampleCount >= mMinNumSamples) {
-            ArrayUtils.subtract(mean, mPreviousMean, mMeanDiff);
+        if (sampleCount >= minNumSamples) {
+            ArrayUtils.subtract(mean, previousMean, meanDiff);
             try {
-                cov.subtract(mPreviousCovariance, mCovDiff);
+                cov.subtract(previousCovariance, covDiff);
             } catch (final WrongSizeException ignore) {
                 // never thrown
             }
-            final double meanDiffNorm = com.irurueta.algebra.Utils.normF(mMeanDiff);
-            final double covDiffNorm = com.irurueta.algebra.Utils.normF(mCovDiff);
-            if (meanDiffNorm <= mConvergenceThreshold &&
-                    covDiffNorm <= mConvergenceThreshold) {
-                mConverged = mFinished = true;
+            final var meanDiffNorm = com.irurueta.algebra.Utils.normF(meanDiff);
+            final var covDiffNorm = com.irurueta.algebra.Utils.normF(covDiff);
+            if (meanDiffNorm <= convergenceThreshold && covDiffNorm <= convergenceThreshold) {
+                converged = finished = true;
 
-                if (mListener != null) {
-                    mListener.onCalibratorFinished(this, true, mFailed);
+                if (listener != null) {
+                    listener.onCalibratorFinished(this, true, failed);
                 }
                 return;
             }
         }
 
         // copy current value for next iteration
-        System.arraycopy(mean, 0, mPreviousMean, 0, mean.length);
-        cov.copyTo(mPreviousCovariance);
+        System.arraycopy(mean, 0, previousMean, 0, mean.length);
+        cov.copyTo(previousCovariance);
 
-        mFinished = false;
+        finished = false;
     }
 
     /**
@@ -1029,7 +1006,7 @@ public abstract class BaseSlamCalibrator<D extends BaseCalibrationData> {
          * @param converged  true if calibration converged, false otherwise.
          * @param failed     true if calibration failed, false otherwise.
          */
-        void onCalibratorFinished(final BaseSlamCalibrator<D> calibrator,
-                                  final boolean converged, final boolean failed);
+        void onCalibratorFinished(
+                final BaseSlamCalibrator<D> calibrator, final boolean converged, final boolean failed);
     }
 }

@@ -16,18 +16,18 @@
 package com.irurueta.ar.sfm;
 
 import com.irurueta.ar.SerializationHelper;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.BitSet;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class MatchedSamplesTest {
+class MatchedSamplesTest {
 
     @Test
-    public void testConstructor() {
-        final MatchedSamples samples = new MatchedSamples();
+    void testConstructor() {
+        final var samples = new MatchedSamples();
 
         // check default values
         assertNull(samples.getSamples());
@@ -39,14 +39,14 @@ public class MatchedSamplesTest {
     }
 
     @Test
-    public void testGetSetSamples() {
-        final MatchedSamples samples = new MatchedSamples();
+    void testGetSetSamples() {
+        final var samples = new MatchedSamples();
 
         // check default value
         assertNull(samples.getSamples());
 
         // set new value
-        final Sample2D[] s = new Sample2D[1];
+        final var s = new Sample2D[1];
         samples.setSamples(s);
 
         // check correctness
@@ -54,14 +54,14 @@ public class MatchedSamplesTest {
     }
 
     @Test
-    public void testGetSetCameras() {
-        final MatchedSamples samples = new MatchedSamples();
+    void testGetSetCameras() {
+        final var samples = new MatchedSamples();
 
         // check default value
         assertNull(samples.getCameras());
 
         // set new value
-        final EstimatedCamera[] cams = new EstimatedCamera[1];
+        final var cams = new EstimatedCamera[1];
         samples.setCameras(cams);
 
         // check correctness
@@ -69,14 +69,14 @@ public class MatchedSamplesTest {
     }
 
     @Test
-    public void testGetSetViewIds() {
-        final MatchedSamples samples = new MatchedSamples();
+    void testGetSetViewIds() {
+        final var samples = new MatchedSamples();
 
         // check default value
         assertNull(samples.getViewIds());
 
         // set new value
-        final int[] ids = new int[1];
+        final var ids = new int[1];
         samples.setViewIds(ids);
 
         // check correctness
@@ -84,21 +84,21 @@ public class MatchedSamplesTest {
     }
 
     @Test
-    public void testGetSetReconstructedPoint() {
-        final MatchedSamples samples = new MatchedSamples();
+    void testGetSetReconstructedPoint() {
+        final var samples = new MatchedSamples();
 
         // check default value
         assertNull(samples.getReconstructedPoint());
 
         // set new value
-        ReconstructedPoint3D rp = new ReconstructedPoint3D();
+        var rp = new ReconstructedPoint3D();
         samples.setReconstructedPoint(rp);
 
         // check correctness
         assertSame(rp, samples.getReconstructedPoint());
 
         // set samples
-        final Sample2D[] s = new Sample2D[1];
+        final var s = new Sample2D[1];
         s[0] = new Sample2D();
         samples.setSamples(s);
 
@@ -112,8 +112,8 @@ public class MatchedSamplesTest {
     }
 
     @Test
-    public void testGetSetQualityScore() {
-        final MatchedSamples samples = new MatchedSamples();
+    void testGetSetQualityScore() {
+        final var samples = new MatchedSamples();
 
         // check default value
         assertEquals(MatchedSamples.DEFAULT_QUALITY_SCORE, samples.getQualityScore(), 0.0);
@@ -126,14 +126,14 @@ public class MatchedSamplesTest {
     }
 
     @Test
-    public void testGetSetInliers() {
-        final MatchedSamples samples = new MatchedSamples();
+    void testGetSetInliers() {
+        final var samples = new MatchedSamples();
 
         // check default value
         assertNull(samples.getInliers());
 
         // set new value
-        final BitSet inliers = new BitSet();
+        final var inliers = new BitSet();
         samples.setInliers(inliers);
 
         // check correctness
@@ -141,21 +141,21 @@ public class MatchedSamplesTest {
     }
 
     @Test
-    public void testSerializeDeserialize() throws IOException, ClassNotFoundException {
-        final MatchedSamples samples1 = new MatchedSamples();
+    void testSerializeDeserialize() throws IOException, ClassNotFoundException {
+        final var samples1 = new MatchedSamples();
 
         // set new values
-        final Sample2D[] s = new Sample2D[1];
+        final var s = new Sample2D[1];
         s[0] = new Sample2D();
         samples1.setSamples(s);
-        final EstimatedCamera[] cams = new EstimatedCamera[1];
+        final var cams = new EstimatedCamera[1];
         samples1.setCameras(cams);
-        final int[] ids = new int[1];
+        final var ids = new int[1];
         samples1.setViewIds(ids);
-        ReconstructedPoint3D rp = new ReconstructedPoint3D();
+        final var rp = new ReconstructedPoint3D();
         samples1.setReconstructedPoint(rp);
         samples1.setQualityScore(20.0);
-        final BitSet inliers = new BitSet();
+        final var inliers = new BitSet();
         samples1.setInliers(inliers);
 
         // check
@@ -167,8 +167,8 @@ public class MatchedSamplesTest {
         assertSame(samples1.getInliers(), inliers);
 
         // serialize and deserialize
-        final byte[] bytes = SerializationHelper.serialize(samples1);
-        final MatchedSamples samples2 = SerializationHelper.deserialize(bytes);
+        final var bytes = SerializationHelper.serialize(samples1);
+        final var samples2 = SerializationHelper.<MatchedSamples>deserialize(bytes);
 
         // check
         assertNotSame(samples1.getSamples(), samples2.getSamples());

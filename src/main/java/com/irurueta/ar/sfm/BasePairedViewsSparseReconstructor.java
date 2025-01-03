@@ -17,8 +17,6 @@
 package com.irurueta.ar.sfm;
 
 import com.irurueta.algebra.AlgebraException;
-import com.irurueta.ar.calibration.ImageOfAbsoluteConic;
-import com.irurueta.ar.calibration.estimators.ImageOfAbsoluteConicEstimator;
 import com.irurueta.ar.calibration.estimators.LMSEImageOfAbsoluteConicEstimator;
 import com.irurueta.ar.epipolar.Corrector;
 import com.irurueta.ar.epipolar.EpipolarException;
@@ -42,10 +40,8 @@ import com.irurueta.geometry.estimators.PROSACPointCorrespondenceProjectiveTrans
 import com.irurueta.geometry.estimators.PointCorrespondenceProjectiveTransformation2DRobustEstimator;
 import com.irurueta.geometry.estimators.ProjectiveTransformation2DRobustEstimator;
 import com.irurueta.geometry.estimators.RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator;
-import com.irurueta.numerical.robust.InliersData;
 
 import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.List;
 
 /**
@@ -79,17 +75,17 @@ public abstract class BasePairedViewsSparseReconstructor<
     /**
      * Current estimated camera in a metric stratum (i.e. up to scale).
      */
-    protected EstimatedCamera mCurrentMetricEstimatedCamera;
+    protected EstimatedCamera currentMetricEstimatedCamera;
 
     /**
      * Previous estimated camera in a metric stratum (i.e. up to scale).
      */
-    protected EstimatedCamera mPreviousMetricEstimatedCamera;
+    protected EstimatedCamera previousMetricEstimatedCamera;
 
     /**
      * Reconstructed 3D points for current pair of views in a metric stratum (i.e. up to scale).
      */
-    protected List<ReconstructedPoint3D> mMetricReconstructedPoints;
+    protected List<ReconstructedPoint3D> metricReconstructedPoints;
 
     /**
      * Transformation to set reference frame on estimated pair of Euclidean cameras.
@@ -97,77 +93,77 @@ public abstract class BasePairedViewsSparseReconstructor<
      * the location and rotation of the last estimated Euclidean camera so that the first camera
      * of the pair is not referred to the world origin.
      */
-    protected MetricTransformation3D mReferenceEuclideanTransformation;
+    protected MetricTransformation3D referenceEuclideanTransformation;
 
     /**
      * Current estimated scale. This will typically converge to a constant value as more views are
      * processed.
      * The smaller the variance of estimated scale, the more accurate the scale will be.
      */
-    protected double mCurrentScale = DEFAULT_SCALE;
+    protected double currentScale = DEFAULT_SCALE;
 
     /**
      * Current estimated camera in euclidean stratum (i.e. with actual scale).
      */
-    protected EstimatedCamera mCurrentEuclideanEstimatedCamera;
+    protected EstimatedCamera currentEuclideanEstimatedCamera;
 
     /**
      * Previous estimated camera in Euclidean stratum (i.e. with actual scale).
      */
-    protected EstimatedCamera mPreviousEuclideanEstimatedCamera;
+    protected EstimatedCamera previousEuclideanEstimatedCamera;
 
     /**
      * Reconstructed 3D points for current pair of views in Euclidean stratum (i.e. with actual
      * scale).
      */
-    protected List<ReconstructedPoint3D> mEuclideanReconstructedPoints;
+    protected List<ReconstructedPoint3D> euclideanReconstructedPoints;
 
     /**
      * Configuration for this re-constructor.
      */
-    protected C mConfiguration;
+    protected C configuration;
 
     /**
      * Listener in charge of handling events such as when reconstruction starts,
      * ends, when certain data is needed or when estimation of data has been
      * computed.
      */
-    protected L mListener;
+    protected L listener;
 
     /**
      * Indicates whether reconstruction has failed or not.
      */
-    protected volatile boolean mFailed;
+    protected volatile boolean failed;
 
     /**
      * Indicates whether reconstruction is running or not.
      */
-    protected volatile boolean mRunning;
+    protected volatile boolean running;
 
     /**
      * ID of previous view.
      */
-    protected int mPreviousViewId = 0;
+    protected int previousViewId = 0;
 
     /**
      * ID of current view.
      */
-    protected int mCurrentViewId;
+    protected int currentViewId;
 
     /**
      * Center of current Euclidean camera on last view pair.
      */
-    protected Point3D mLastEuclideanCameraCenter = new InhomogeneousPoint3D();
+    protected Point3D lastEuclideanCameraCenter = new InhomogeneousPoint3D();
 
     /**
      * Rotation of current Euclidean camera on last view pair.
      */
-    protected Rotation3D mLastEuclideanCameraRotation;
+    protected Rotation3D lastEuclideanCameraRotation;
 
     /**
      * Center of current metric camera on last view pair.
      */
-    private Point3D mLastMetricCameraCenter;
+    private Point3D lastMetricCameraCenter;
 
     /**
      * Rotation of current metric camera on last view pair.
@@ -177,43 +173,43 @@ public abstract class BasePairedViewsSparseReconstructor<
     /**
      * Inverse metric camera rotation. This is reused for memory efficiency.
      */
-    private Rotation3D mInvMetricCameraRotation;
+    private Rotation3D invMetricCameraRotation;
 
     /**
      * Current estimated fundamental matrix.
      */
-    private EstimatedFundamentalMatrix mCurrentEstimatedFundamentalMatrix;
+    private EstimatedFundamentalMatrix currentEstimatedFundamentalMatrix;
 
     /**
      * Indicates whether reconstruction has been cancelled or not.
      */
-    private volatile boolean mCancelled;
+    private volatile boolean cancelled;
 
     /**
      * Counter of number of processed views.
      */
-    private int mViewCount;
+    private int viewCount;
 
     /**
      * Indicates whether reconstruction has finished or not.
      */
-    private boolean mFinished = false;
+    private boolean finished = false;
 
     /**
      * Samples on previous view.
      */
-    private List<Sample2D> mPreviousViewSamples;
+    private List<Sample2D> previousViewSamples;
 
     /**
      * Samples on last processed view (i.e. current view).
      */
-    private List<Sample2D> mCurrentViewSamples;
+    private List<Sample2D> currentViewSamples;
 
     /**
      * Matches between first and current view.
      * Views are always processed in pairs.
      */
-    private final List<MatchedSamples> mMatches = new ArrayList<>();
+    private final List<MatchedSamples> matches = new ArrayList<>();
 
     /**
      * Transformation to set reference frame on estimated pair of metric cameras.
@@ -221,7 +217,7 @@ public abstract class BasePairedViewsSparseReconstructor<
      * the location and rotation of last estimated metric camera so that the first camera of
      * the pair is not referred to the world origin.
      */
-    private EuclideanTransformation3D mReferenceMetricTransformation;
+    private EuclideanTransformation3D referenceMetricTransformation;
 
     /**
      * Constructor.
@@ -235,8 +231,8 @@ public abstract class BasePairedViewsSparseReconstructor<
         if (configuration == null || listener == null) {
             throw new NullPointerException();
         }
-        mConfiguration = configuration;
-        mListener = listener;
+        this.configuration = configuration;
+        this.listener = listener;
     }
 
     /**
@@ -245,7 +241,7 @@ public abstract class BasePairedViewsSparseReconstructor<
      * @return configuration for this reconstructor.
      */
     public C getConfiguration() {
-        return mConfiguration;
+        return configuration;
     }
 
     /**
@@ -256,7 +252,7 @@ public abstract class BasePairedViewsSparseReconstructor<
      * @return listener in charge of handling events.
      */
     public L getListener() {
-        return mListener;
+        return listener;
     }
 
     /**
@@ -266,7 +262,7 @@ public abstract class BasePairedViewsSparseReconstructor<
      * stopped for any reason.
      */
     public boolean isRunning() {
-        return mRunning;
+        return running;
     }
 
     /**
@@ -275,7 +271,7 @@ public abstract class BasePairedViewsSparseReconstructor<
      * @return true if reconstruction has been cancelled, false otherwise.
      */
     public boolean isCancelled() {
-        return mCancelled;
+        return cancelled;
     }
 
     /**
@@ -284,7 +280,7 @@ public abstract class BasePairedViewsSparseReconstructor<
      * @return true if reconstruction has failed, false otherwise.
      */
     public boolean hasFailed() {
-        return mFailed;
+        return failed;
     }
 
     /**
@@ -293,7 +289,7 @@ public abstract class BasePairedViewsSparseReconstructor<
      * @return true if reconstruction has finished, false otherwise.
      */
     public boolean isFinished() {
-        return mFinished;
+        return finished;
     }
 
     /**
@@ -302,7 +298,7 @@ public abstract class BasePairedViewsSparseReconstructor<
      * @return counter of number of processed views.
      */
     public int getViewCount() {
-        return mViewCount;
+        return viewCount;
     }
 
     /**
@@ -312,7 +308,7 @@ public abstract class BasePairedViewsSparseReconstructor<
      * @return current estimated fundamental matrix.
      */
     public EstimatedFundamentalMatrix getCurrentEstimatedFundamentalMatrix() {
-        return mCurrentEstimatedFundamentalMatrix;
+        return currentEstimatedFundamentalMatrix;
     }
 
     /**
@@ -321,7 +317,7 @@ public abstract class BasePairedViewsSparseReconstructor<
      * @return current estimated euclidean camera.
      */
     public EstimatedCamera getCurrentEuclideanEstimatedCamera() {
-        return mCurrentEuclideanEstimatedCamera;
+        return currentEuclideanEstimatedCamera;
     }
 
     /**
@@ -330,7 +326,7 @@ public abstract class BasePairedViewsSparseReconstructor<
      * @return previous estimated euclidean camera.
      */
     public EstimatedCamera getPreviousEuclideanEstimatedCamera() {
-        return mPreviousEuclideanEstimatedCamera;
+        return previousEuclideanEstimatedCamera;
     }
 
     /**
@@ -340,7 +336,7 @@ public abstract class BasePairedViewsSparseReconstructor<
      * @return active euclidean reconstructed 3D points.
      */
     public List<ReconstructedPoint3D> getEuclideanReconstructedPoints() {
-        return mEuclideanReconstructedPoints;
+        return euclideanReconstructedPoints;
     }
 
     /**
@@ -351,7 +347,7 @@ public abstract class BasePairedViewsSparseReconstructor<
      * @return current estimated scale.
      */
     public double getCurrentScale() {
-        return mCurrentScale;
+        return currentScale;
     }
 
     /**
@@ -360,7 +356,7 @@ public abstract class BasePairedViewsSparseReconstructor<
      * @return samples on previous view.
      */
     public List<Sample2D> getPreviousViewSamples() {
-        return mPreviousViewSamples;
+        return previousViewSamples;
     }
 
     /**
@@ -369,7 +365,7 @@ public abstract class BasePairedViewsSparseReconstructor<
      * @return samples on current view.
      */
     public List<Sample2D> getCurrentViewSamples() {
-        return mCurrentViewSamples;
+        return currentViewSamples;
     }
 
     /**
@@ -382,33 +378,32 @@ public abstract class BasePairedViewsSparseReconstructor<
      * @return true if more views can be processed, false when reconstruction has finished.
      */
     public boolean processOneViewPair() {
-        if (mViewCount == 0 && !mRunning) {
+        if (viewCount == 0 && !running) {
 
             reset();
-            mRunning = true;
+            running = true;
 
             //noinspection unchecked
-            mListener.onStart((R) this);
+            listener.onStart((R) this);
         }
 
         //noinspection unchecked
-        if (!mListener.hasMoreViewsAvailable((R) this)) {
+        if (!listener.hasMoreViewsAvailable((R) this)) {
             //noinspection unchecked
-            mListener.onFinish((R) this);
-            mRunning = false;
-            mFinished = true;
+            listener.onFinish((R) this);
+            running = false;
+            finished = true;
             return false;
         }
 
-        mPreviousViewSamples = new ArrayList<>();
-        mCurrentViewSamples = new ArrayList<>();
+        previousViewSamples = new ArrayList<>();
+        currentViewSamples = new ArrayList<>();
         //noinspection unchecked
-        mListener.onRequestSamplesForCurrentViewPair((R) this,
-                mViewCount, mViewCount + 1,
-                mPreviousViewSamples, mCurrentViewSamples);
+        listener.onRequestSamplesForCurrentViewPair((R) this, viewCount, viewCount + 1,
+                previousViewSamples, currentViewSamples);
 
         final boolean processed;
-        mCurrentEstimatedFundamentalMatrix = null;
+        currentEstimatedFundamentalMatrix = null;
         if (isFirstViewPair()) {
             // for first view we simply keep samples (if enough are provided)
             processed = processFirstViewPair();
@@ -417,15 +412,15 @@ public abstract class BasePairedViewsSparseReconstructor<
         }
 
         if (processed) {
-            mViewCount += 2;
+            viewCount += 2;
         }
 
-        if (mCancelled) {
+        if (cancelled) {
             //noinspection unchecked
-            mListener.onCancel((R) this);
+            listener.onCancel((R) this);
         }
 
-        return !mFinished;
+        return !finished;
     }
 
     /**
@@ -434,7 +429,7 @@ public abstract class BasePairedViewsSparseReconstructor<
      * @return true if current view pair is the first one, false otherwise.
      */
     public boolean isFirstViewPair() {
-        return mViewCount == 0;
+        return viewCount == 0;
     }
 
     /**
@@ -453,13 +448,13 @@ public abstract class BasePairedViewsSparseReconstructor<
      * This method is useful when all data is available before starting the reconstruction.
      */
     public void start() {
-        if (mRunning) {
+        if (running) {
             // already started
             return;
         }
 
         while (processOneViewPair()) {
-            if (mCancelled) {
+            if (cancelled) {
                 break;
             }
         }
@@ -470,12 +465,12 @@ public abstract class BasePairedViewsSparseReconstructor<
      * If reconstruction has already been cancelled, calling this method has no effect.
      */
     public void cancel() {
-        if (mCancelled) {
+        if (cancelled) {
             // already cancelled
             return;
         }
 
-        mCancelled = true;
+        cancelled = true;
     }
 
     /**
@@ -483,30 +478,30 @@ public abstract class BasePairedViewsSparseReconstructor<
      * current one.
      */
     public void reset() {
-        if (mPreviousViewSamples != null) {
-            mPreviousViewSamples.clear();
+        if (previousViewSamples != null) {
+            previousViewSamples.clear();
         }
-        if (mCurrentViewSamples != null) {
-            mCurrentViewSamples.clear();
+        if (currentViewSamples != null) {
+            currentViewSamples.clear();
         }
 
-        mMatches.clear();
+        matches.clear();
 
-        mCancelled = mFailed = false;
-        mViewCount = 0;
-        mRunning = false;
+        cancelled = failed = false;
+        viewCount = 0;
+        running = false;
 
-        mCurrentEstimatedFundamentalMatrix = null;
-        mCurrentMetricEstimatedCamera = mPreviousMetricEstimatedCamera = null;
-        mMetricReconstructedPoints = null;
-        mCurrentScale = DEFAULT_SCALE;
-        mCurrentEuclideanEstimatedCamera = mPreviousEuclideanEstimatedCamera = null;
-        mEuclideanReconstructedPoints = null;
+        currentEstimatedFundamentalMatrix = null;
+        currentMetricEstimatedCamera = previousMetricEstimatedCamera = null;
+        metricReconstructedPoints = null;
+        currentScale = DEFAULT_SCALE;
+        currentEuclideanEstimatedCamera = previousEuclideanEstimatedCamera = null;
+        euclideanReconstructedPoints = null;
 
-        mPreviousViewId = 0;
-        mCurrentViewId = 0;
+        previousViewId = 0;
+        currentViewId = 0;
 
-        mFinished = false;
+        finished = false;
     }
 
     /**
@@ -515,7 +510,7 @@ public abstract class BasePairedViewsSparseReconstructor<
      * @return current estimated metric camera.
      */
     protected EstimatedCamera getCurrentMetricEstimatedCamera() {
-        return mCurrentMetricEstimatedCamera;
+        return currentMetricEstimatedCamera;
     }
 
     /**
@@ -524,7 +519,7 @@ public abstract class BasePairedViewsSparseReconstructor<
      * @return previous estimated metric camera.
      */
     protected EstimatedCamera getPreviousMetricEstimatedCamera() {
-        return mPreviousMetricEstimatedCamera;
+        return previousMetricEstimatedCamera;
     }
 
     /**
@@ -533,7 +528,7 @@ public abstract class BasePairedViewsSparseReconstructor<
      * @return active metric reconstructed 3D points.
      */
     protected List<ReconstructedPoint3D> getMetricReconstructedPoints() {
-        return mMetricReconstructedPoints;
+        return metricReconstructedPoints;
     }
 
     /**
@@ -545,44 +540,44 @@ public abstract class BasePairedViewsSparseReconstructor<
      * @param hasAbsoluteOrientation true if absolute orientation is required, false otherwise.
      * @return true if cameras were successfully transformed.
      */
-    protected boolean transformPairOfCamerasAndPoints(final boolean isInitialPairOfViews,
-                                                      final boolean hasAbsoluteOrientation) {
+    protected boolean transformPairOfCamerasAndPoints(
+            final boolean isInitialPairOfViews, final boolean hasAbsoluteOrientation) {
         if (isInitialPairOfViews) {
             // initial pair does not need transformation
             return true;
         }
 
-        if (mPreviousMetricEstimatedCamera == null || mCurrentMetricEstimatedCamera == null) {
+        if (previousMetricEstimatedCamera == null || currentMetricEstimatedCamera == null) {
             return false;
         }
 
-        final PinholeCamera previousMetricCamera = mPreviousMetricEstimatedCamera.getCamera();
-        final PinholeCamera currentMetricCamera = mCurrentMetricEstimatedCamera.getCamera();
+        final var previousMetricCamera = previousMetricEstimatedCamera.getCamera();
+        final var currentMetricCamera = currentMetricEstimatedCamera.getCamera();
         if (previousMetricCamera == null || currentMetricCamera == null) {
             return false;
         }
 
-        if (mInvMetricCameraRotation == null) {
-            mInvMetricCameraRotation = mLastMetricCameraRotation.inverseRotationAndReturnNew();
+        if (invMetricCameraRotation == null) {
+            invMetricCameraRotation = mLastMetricCameraRotation.inverseRotationAndReturnNew();
         } else {
-            mLastMetricCameraRotation.inverseRotation(mInvMetricCameraRotation);
+            mLastMetricCameraRotation.inverseRotation(invMetricCameraRotation);
         }
 
-        if (mReferenceMetricTransformation == null) {
-            mReferenceMetricTransformation = new EuclideanTransformation3D(mInvMetricCameraRotation);
+        if (referenceMetricTransformation == null) {
+            referenceMetricTransformation = new EuclideanTransformation3D(invMetricCameraRotation);
         } else {
-            mReferenceMetricTransformation.setRotation(mInvMetricCameraRotation);
+            referenceMetricTransformation.setRotation(invMetricCameraRotation);
         }
-        mReferenceMetricTransformation.setTranslation(mLastMetricCameraCenter);
+        referenceMetricTransformation.setTranslation(lastMetricCameraCenter);
 
         try {
-            mReferenceMetricTransformation.transform(previousMetricCamera);
-            mReferenceMetricTransformation.transform(currentMetricCamera);
+            referenceMetricTransformation.transform(previousMetricCamera);
+            referenceMetricTransformation.transform(currentMetricCamera);
 
             Point3D p;
-            for (final ReconstructedPoint3D metricReconstructedPoint : mMetricReconstructedPoints) {
+            for (final var metricReconstructedPoint : metricReconstructedPoints) {
                 p = metricReconstructedPoint.getPoint();
-                mReferenceMetricTransformation.transform(p, p);
+                referenceMetricTransformation.transform(p, p);
             }
             return true;
         } catch (final AlgebraException e) {
@@ -617,67 +612,58 @@ public abstract class BasePairedViewsSparseReconstructor<
      */
     private boolean processViewPair(final boolean isInitialPairOfViews) {
         // for second view, check that we have enough samples
-        if (hasEnoughSamples(mCurrentViewSamples)) {
+        if (hasEnoughSamples(currentViewSamples)) {
 
             // find matches
-            mMatches.clear();
-            int viewId1 = mViewCount;
-            int viewId2 = mViewCount + 1;
+            matches.clear();
+            var viewId1 = viewCount;
+            var viewId2 = viewCount + 1;
             //noinspection unchecked
-            mListener.onRequestMatches((R) this, viewId1, viewId2,
-                    mPreviousViewSamples, mCurrentViewSamples, mMatches);
+            listener.onRequestMatches((R) this, viewId1, viewId2, previousViewSamples, currentViewSamples, matches);
 
-            if (hasEnoughMatches(mMatches)) {
+            if (hasEnoughMatches(matches)) {
                 // if enough matches are retrieved, attempt to compute
                 // fundamental matrix
-                if ((mConfiguration.isGeneralSceneAllowed() &&
-                        estimateFundamentalMatrix(mMatches, viewId1, viewId2)) ||
-                        (mConfiguration.isPlanarSceneAllowed() &&
-                                estimatePlanarFundamentalMatrix(mMatches, viewId1, viewId2))) {
+                if ((configuration.isGeneralSceneAllowed() && estimateFundamentalMatrix(matches, viewId1, viewId2))
+                        || (configuration.isPlanarSceneAllowed()
+                        && estimatePlanarFundamentalMatrix(matches, viewId1, viewId2))) {
                     // fundamental matrix could be estimated
                     // noinspection unchecked
-                    mListener.onSamplesAccepted((R) this, viewId1, viewId2,
-                            mPreviousViewSamples, mCurrentViewSamples);
-                    mPreviousViewId = viewId1;
-                    mCurrentViewId = viewId2;
+                    listener.onSamplesAccepted((R) this, viewId1, viewId2, previousViewSamples, currentViewSamples);
+                    previousViewId = viewId1;
+                    currentViewId = viewId2;
 
                     //noinspection unchecked
-                    mListener.onFundamentalMatrixEstimated((R) this, viewId1, viewId2,
-                            mCurrentEstimatedFundamentalMatrix);
+                    listener.onFundamentalMatrixEstimated((R) this, viewId1, viewId2,
+                            currentEstimatedFundamentalMatrix);
 
                     if (estimatePairOfCamerasAndPoints(isInitialPairOfViews)) {
                         //noinspection unchecked
-                        mListener.onEuclideanCameraPairEstimated((R) this,
-                                mPreviousViewId, mCurrentViewId, mCurrentScale,
-                                mPreviousEuclideanEstimatedCamera,
-                                mCurrentEuclideanEstimatedCamera);
+                        listener.onEuclideanCameraPairEstimated((R) this, previousViewId, currentViewId, currentScale,
+                                previousEuclideanEstimatedCamera, currentEuclideanEstimatedCamera);
                         //noinspection unchecked
-                        mListener.onEuclideanReconstructedPointsEstimated((R) this,
-                                mPreviousViewId, mCurrentViewId, mCurrentScale,
-                                mEuclideanReconstructedPoints);
+                        listener.onEuclideanReconstructedPointsEstimated((R) this, previousViewId, currentViewId,
+                                currentScale, euclideanReconstructedPoints);
                         return true;
                     } else {
                         // pair of cameras estimation failed
-                        mFailed = true;
+                        failed = true;
                         //noinspection unchecked
-                        mListener.onFail((R) this);
+                        listener.onFail((R) this);
                         return false;
                     }
                 } else {
                     // estimation of fundamental matrix failed
                     //noinspection unchecked
-                    mListener.onSamplesRejected((R) this,
-                            mPreviousViewId, mCurrentViewId,
-                            mPreviousViewSamples, mCurrentViewSamples);
+                    listener.onSamplesRejected((R) this, previousViewId, currentViewId, previousViewSamples,
+                            currentViewSamples);
                     return false;
                 }
             }
         }
 
         //noinspection unchecked
-        mListener.onSamplesRejected((R) this,
-                mPreviousViewId, mCurrentViewId,
-                mPreviousViewSamples, mCurrentViewSamples);
+        listener.onSamplesRejected((R) this, previousViewId, currentViewId, previousViewSamples, currentViewSamples);
         return false;
     }
 
@@ -719,19 +705,16 @@ public abstract class BasePairedViewsSparseReconstructor<
      * @return true if there are enough matches or samples, false otherwise.
      */
     private boolean hasEnoughSamplesOrMatches(final int count) {
-        if (mConfiguration.isGeneralSceneAllowed()) {
-            if (mConfiguration.getNonRobustFundamentalMatrixEstimatorMethod() ==
-                    FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM) {
-                return count >= EightPointsFundamentalMatrixEstimator.
-                        MIN_REQUIRED_POINTS;
-            } else if (mConfiguration.getNonRobustFundamentalMatrixEstimatorMethod() ==
-                    FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM) {
-                return count >= SevenPointsFundamentalMatrixEstimator.
-                        MIN_REQUIRED_POINTS;
+        if (configuration.isGeneralSceneAllowed()) {
+            if (configuration.getNonRobustFundamentalMatrixEstimatorMethod()
+                    == FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM) {
+                return count >= EightPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS;
+            } else if (configuration.getNonRobustFundamentalMatrixEstimatorMethod()
+                    == FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM) {
+                return count >= SevenPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS;
             }
-        } else if (mConfiguration.isPlanarSceneAllowed()) {
-            return count >= ProjectiveTransformation2DRobustEstimator.
-                    MINIMUM_SIZE;
+        } else if (configuration.isPlanarSceneAllowed()) {
+            return count >= ProjectiveTransformation2DRobustEstimator.MINIMUM_SIZE;
         }
         return false;
     }
@@ -745,33 +728,32 @@ public abstract class BasePairedViewsSparseReconstructor<
      * @param viewId2 id of second view.
      * @return true if estimation succeeded, false otherwise.
      */
-    private boolean estimateFundamentalMatrix(final List<MatchedSamples> matches,
-                                              final int viewId1, final int viewId2) {
+    private boolean estimateFundamentalMatrix(final List<MatchedSamples> matches, final int viewId1,
+                                              final int viewId2) {
         if (matches == null) {
             return false;
         }
 
-        final int count = matches.size();
-        final List<Sample2D> leftSamples = new ArrayList<>(count);
-        final List<Sample2D> rightSamples = new ArrayList<>(count);
-        final List<Point2D> leftPoints = new ArrayList<>(count);
-        final List<Point2D> rightPoints = new ArrayList<>(count);
-        final double[] qualityScores = new double[count];
+        final var count = matches.size();
+        final var leftSamples = new ArrayList<Sample2D>(count);
+        final var rightSamples = new ArrayList<Sample2D>(count);
+        final var leftPoints = new ArrayList<Point2D>(count);
+        final var rightPoints = new ArrayList<Point2D>(count);
+        final var qualityScores = new double[count];
         double principalPointX;
         double principalPointY;
-        if (mConfiguration.getPairedCamerasEstimatorMethod() ==
-                InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC ||
-                mConfiguration.getPairedCamerasEstimatorMethod() ==
-                        InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC_AND_ESSENTIAL_MATRIX) {
-            principalPointX = mConfiguration.getPrincipalPointX();
-            principalPointY = mConfiguration.getPrincipalPointY();
+        if (configuration.getPairedCamerasEstimatorMethod() == InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC
+                || configuration.getPairedCamerasEstimatorMethod()
+                == InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC_AND_ESSENTIAL_MATRIX) {
+            principalPointX = configuration.getPrincipalPointX();
+            principalPointY = configuration.getPrincipalPointY();
         } else {
             principalPointX = principalPointY = 0.0;
         }
 
-        int i = 0;
-        for (final MatchedSamples match : matches) {
-            final Sample2D[] samples = match.getSamples();
+        var i = 0;
+        for (final var match : matches) {
+            final var samples = match.getSamples();
             if (samples.length != MIN_NUMBER_OF_VIEWS) {
                 return false;
             }
@@ -779,13 +761,13 @@ public abstract class BasePairedViewsSparseReconstructor<
             leftSamples.add(samples[0]);
             rightSamples.add(samples[1]);
 
-            final Point2D leftPoint = Point2D.create();
+            final var leftPoint = Point2D.create();
             leftPoint.setInhomogeneousCoordinates(
                     samples[0].getPoint().getInhomX() - principalPointX,
                     samples[0].getPoint().getInhomY() - principalPointY);
             leftPoints.add(leftPoint);
 
-            final Point2D rightPoint = Point2D.create();
+            final var rightPoint = Point2D.create();
             rightPoint.setInhomogeneousCoordinates(
                     samples[1].getPoint().getInhomX() - principalPointX,
                     samples[1].getPoint().getInhomY() - principalPointY);
@@ -796,98 +778,79 @@ public abstract class BasePairedViewsSparseReconstructor<
         }
 
         try {
-            final FundamentalMatrixRobustEstimator estimator =
-                    FundamentalMatrixRobustEstimator.create(leftPoints,
-                            rightPoints, qualityScores, mConfiguration.
-                                    getRobustFundamentalMatrixEstimatorMethod());
+            final var estimator = FundamentalMatrixRobustEstimator.create(leftPoints, rightPoints, qualityScores,
+                    configuration.getRobustFundamentalMatrixEstimatorMethod());
             estimator.setNonRobustFundamentalMatrixEstimatorMethod(
-                    mConfiguration.
-                            getNonRobustFundamentalMatrixEstimatorMethod());
-            estimator.setResultRefined(
-                    mConfiguration.isFundamentalMatrixRefined());
-            estimator.setCovarianceKept(
-                    mConfiguration.isFundamentalMatrixCovarianceKept());
-            estimator.setConfidence(
-                    mConfiguration.getFundamentalMatrixConfidence());
-            estimator.setMaxIterations(
-                    mConfiguration.getFundamentalMatrixMaxIterations());
+                    configuration.getNonRobustFundamentalMatrixEstimatorMethod());
+            estimator.setResultRefined(configuration.isFundamentalMatrixRefined());
+            estimator.setCovarianceKept(configuration.isFundamentalMatrixCovarianceKept());
+            estimator.setConfidence(configuration.getFundamentalMatrixConfidence());
+            estimator.setMaxIterations(configuration.getFundamentalMatrixMaxIterations());
 
-            switch (mConfiguration.getRobustFundamentalMatrixEstimatorMethod()) {
+            switch (configuration.getRobustFundamentalMatrixEstimatorMethod()) {
                 case LMEDS:
-                    ((LMedSFundamentalMatrixRobustEstimator) estimator).
-                            setStopThreshold(mConfiguration.
-                                    getFundamentalMatrixThreshold());
+                    ((LMedSFundamentalMatrixRobustEstimator) estimator).setStopThreshold(
+                            configuration.getFundamentalMatrixThreshold());
                     break;
                 case MSAC:
-                    ((MSACFundamentalMatrixRobustEstimator) estimator).
-                            setThreshold(mConfiguration.
-                                    getFundamentalMatrixThreshold());
+                    ((MSACFundamentalMatrixRobustEstimator) estimator).setThreshold(
+                            configuration.getFundamentalMatrixThreshold());
                     break;
                 case PROMEDS:
-                    ((PROMedSFundamentalMatrixRobustEstimator) estimator).
-                            setStopThreshold(mConfiguration.
-                                    getFundamentalMatrixThreshold());
+                    ((PROMedSFundamentalMatrixRobustEstimator) estimator).setStopThreshold(
+                            configuration.getFundamentalMatrixThreshold());
                     break;
                 case PROSAC:
                     final PROSACFundamentalMatrixRobustEstimator prosacEstimator =
                             (PROSACFundamentalMatrixRobustEstimator) estimator;
-                    prosacEstimator.setThreshold(
-                            mConfiguration.getFundamentalMatrixThreshold());
+                    prosacEstimator.setThreshold(configuration.getFundamentalMatrixThreshold());
                     prosacEstimator.setComputeAndKeepInliersEnabled(
-                            mConfiguration.
-                                    getFundamentalMatrixComputeAndKeepInliers());
+                            configuration.getFundamentalMatrixComputeAndKeepInliers());
                     prosacEstimator.setComputeAndKeepResidualsEnabled(
-                            mConfiguration.
-                                    getFundamentalMatrixComputeAndKeepResiduals());
+                            configuration.getFundamentalMatrixComputeAndKeepResiduals());
                     break;
                 case RANSAC:
                     final RANSACFundamentalMatrixRobustEstimator ransacEstimator =
                             (RANSACFundamentalMatrixRobustEstimator) estimator;
-                    ransacEstimator.setThreshold(
-                            mConfiguration.getFundamentalMatrixThreshold());
+                    ransacEstimator.setThreshold(configuration.getFundamentalMatrixThreshold());
                     ransacEstimator.setComputeAndKeepInliersEnabled(
-                            mConfiguration.
-                                    getFundamentalMatrixComputeAndKeepInliers());
+                            configuration.getFundamentalMatrixComputeAndKeepInliers());
                     ransacEstimator.setComputeAndKeepResidualsEnabled(
-                            mConfiguration.
-                                    getFundamentalMatrixComputeAndKeepResiduals());
+                            configuration.getFundamentalMatrixComputeAndKeepResiduals());
                     break;
                 default:
                     break;
             }
 
 
-            final FundamentalMatrix fundamentalMatrix = estimator.estimate();
+            final var fundamentalMatrix = estimator.estimate();
 
-            mCurrentEstimatedFundamentalMatrix = new EstimatedFundamentalMatrix();
-            mCurrentEstimatedFundamentalMatrix.setFundamentalMatrix(fundamentalMatrix);
-            mCurrentEstimatedFundamentalMatrix.setViewId1(viewId1);
-            mCurrentEstimatedFundamentalMatrix.setViewId2(viewId2);
-            mCurrentEstimatedFundamentalMatrix.setCovariance(
-                    estimator.getCovariance());
+            currentEstimatedFundamentalMatrix = new EstimatedFundamentalMatrix();
+            currentEstimatedFundamentalMatrix.setFundamentalMatrix(fundamentalMatrix);
+            currentEstimatedFundamentalMatrix.setViewId1(viewId1);
+            currentEstimatedFundamentalMatrix.setViewId2(viewId2);
+            currentEstimatedFundamentalMatrix.setCovariance(estimator.getCovariance());
 
             // determine quality score and inliers
-            final InliersData inliersData = estimator.getInliersData();
+            final var inliersData = estimator.getInliersData();
             if (inliersData != null) {
-                final int numInliers = inliersData.getNumInliers();
-                final BitSet inliers = inliersData.getInliers();
-                final int length = inliers.length();
-                double fundamentalMatrixQualityScore = 0.0;
+                final var numInliers = inliersData.getNumInliers();
+                final var inliers = inliersData.getInliers();
+                final var length = inliers.length();
+                var fundamentalMatrixQualityScore = 0.0;
                 for (i = 0; i < length; i++) {
                     if (inliers.get(i)) {
                         // inlier
-                        fundamentalMatrixQualityScore +=
-                                qualityScores[i] / numInliers;
+                        fundamentalMatrixQualityScore += qualityScores[i] / numInliers;
                     }
                 }
-                mCurrentEstimatedFundamentalMatrix.setQualityScore(
-                        fundamentalMatrixQualityScore);
-                mCurrentEstimatedFundamentalMatrix.setInliers(inliers);
+                currentEstimatedFundamentalMatrix.setQualityScore(fundamentalMatrixQualityScore);
+                currentEstimatedFundamentalMatrix.setInliers(inliers);
             }
 
             // store left/right samples
-            mCurrentEstimatedFundamentalMatrix.setLeftSamples(leftSamples);
-            mCurrentEstimatedFundamentalMatrix.setRightSamples(rightSamples);
+            currentEstimatedFundamentalMatrix.setLeftSamples(leftSamples);
+            currentEstimatedFundamentalMatrix.setRightSamples(rightSamples);
 
             return true;
         } catch (final Exception e) {
@@ -904,33 +867,32 @@ public abstract class BasePairedViewsSparseReconstructor<
      * @param viewId2 id of second view.
      * @return true if estimation succeeded, false otherwise.
      */
-    private boolean estimatePlanarFundamentalMatrix(
-            final List<MatchedSamples> matches, final int viewId1, final int viewId2) {
+    private boolean estimatePlanarFundamentalMatrix(final List<MatchedSamples> matches, final int viewId1,
+                                                    final int viewId2) {
         if (matches == null) {
             return false;
         }
 
-        final int count = matches.size();
-        final List<Sample2D> leftSamples = new ArrayList<>();
-        final List<Sample2D> rightSamples = new ArrayList<>();
-        final List<Point2D> leftPoints = new ArrayList<>();
-        final List<Point2D> rightPoints = new ArrayList<>();
-        final double[] qualityScores = new double[count];
+        final var count = matches.size();
+        final var leftSamples = new ArrayList<Sample2D>();
+        final var rightSamples = new ArrayList<Sample2D>();
+        final var leftPoints = new ArrayList<Point2D>();
+        final var rightPoints = new ArrayList<Point2D>();
+        final var qualityScores = new double[count];
         final double principalPointX;
         final double principalPointY;
-        if (mConfiguration.getPairedCamerasEstimatorMethod() ==
-                InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC ||
-                mConfiguration.getPairedCamerasEstimatorMethod() ==
-                        InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC_AND_ESSENTIAL_MATRIX) {
-            principalPointX = mConfiguration.getPrincipalPointX();
-            principalPointY = mConfiguration.getPrincipalPointY();
+        if (configuration.getPairedCamerasEstimatorMethod() == InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC
+                || configuration.getPairedCamerasEstimatorMethod()
+                == InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC_AND_ESSENTIAL_MATRIX) {
+            principalPointX = configuration.getPrincipalPointX();
+            principalPointY = configuration.getPrincipalPointY();
         } else {
             principalPointX = principalPointY = 0.0;
         }
 
-        int i = 0;
-        for (final MatchedSamples match : matches) {
-            final Sample2D[] samples = match.getSamples();
+        var i = 0;
+        for (final var match : matches) {
+            final var samples = match.getSamples();
             if (samples.length != MIN_NUMBER_OF_VIEWS) {
                 return false;
             }
@@ -938,13 +900,13 @@ public abstract class BasePairedViewsSparseReconstructor<
             leftSamples.add(samples[0]);
             rightSamples.add(samples[1]);
 
-            final Point2D leftPoint = Point2D.create();
+            final var leftPoint = Point2D.create();
             leftPoint.setInhomogeneousCoordinates(
                     samples[0].getPoint().getInhomX() - principalPointX,
                     samples[0].getPoint().getInhomY() - principalPointY);
             leftPoints.add(leftPoint);
 
-            final Point2D rightPoint = Point2D.create();
+            final var rightPoint = Point2D.create();
             rightPoint.setInhomogeneousCoordinates(
                     samples[1].getPoint().getInhomX() - principalPointX,
                     samples[1].getPoint().getInhomY() - principalPointY);
@@ -955,92 +917,75 @@ public abstract class BasePairedViewsSparseReconstructor<
         }
 
         try {
-            final PointCorrespondenceProjectiveTransformation2DRobustEstimator
-                    homographyEstimator =
-                    PointCorrespondenceProjectiveTransformation2DRobustEstimator.
-                            create(mConfiguration.
-                                    getRobustPlanarHomographyEstimatorMethod());
-            homographyEstimator.setResultRefined(
-                    mConfiguration.isPlanarHomographyRefined());
-            homographyEstimator.setCovarianceKept(
-                    mConfiguration.isPlanarHomographyCovarianceKept());
-            homographyEstimator.setConfidence(
-                    mConfiguration.getPlanarHomographyConfidence());
-            homographyEstimator.setMaxIterations(
-                    mConfiguration.getPlanarHomographyMaxIterations());
+            final var homographyEstimator = PointCorrespondenceProjectiveTransformation2DRobustEstimator.create(
+                    configuration.getRobustPlanarHomographyEstimatorMethod());
+            homographyEstimator.setResultRefined(configuration.isPlanarHomographyRefined());
+            homographyEstimator.setCovarianceKept(configuration.isPlanarHomographyCovarianceKept());
+            homographyEstimator.setConfidence(configuration.getPlanarHomographyConfidence());
+            homographyEstimator.setMaxIterations(configuration.getPlanarHomographyMaxIterations());
 
-            switch (mConfiguration.getRobustPlanarHomographyEstimatorMethod()) {
+            switch (configuration.getRobustPlanarHomographyEstimatorMethod()) {
                 case LMEDS:
-                    ((LMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator)
-                            homographyEstimator).setStopThreshold(
-                            mConfiguration.getPlanarHomographyThreshold());
+                    ((LMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator) homographyEstimator)
+                            .setStopThreshold(configuration.getPlanarHomographyThreshold());
                     break;
                 case MSAC:
-                    ((MSACPointCorrespondenceProjectiveTransformation2DRobustEstimator)
-                            homographyEstimator).setThreshold(
-                            mConfiguration.getPlanarHomographyThreshold());
+                    ((MSACPointCorrespondenceProjectiveTransformation2DRobustEstimator) homographyEstimator)
+                            .setThreshold(configuration.getPlanarHomographyThreshold());
                     break;
                 case PROMEDS:
-                    ((PROMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator)
-                            homographyEstimator).setStopThreshold(
-                            mConfiguration.getPlanarHomographyThreshold());
+                    ((PROMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator) homographyEstimator)
+                            .setStopThreshold(configuration.getPlanarHomographyThreshold());
                     break;
                 case PROSAC:
                     PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator prosacHomographyEstimator =
                             (PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator) homographyEstimator;
 
-                    prosacHomographyEstimator.setThreshold(
-                            mConfiguration.getPlanarHomographyThreshold());
+                    prosacHomographyEstimator.setThreshold(configuration.getPlanarHomographyThreshold());
                     prosacHomographyEstimator.setComputeAndKeepInliersEnabled(
-                            mConfiguration.getPlanarHomographyComputeAndKeepInliers());
+                            configuration.getPlanarHomographyComputeAndKeepInliers());
                     prosacHomographyEstimator.setComputeAndKeepResidualsEnabled(
-                            mConfiguration.getPlanarHomographyComputeAndKeepResiduals());
+                            configuration.getPlanarHomographyComputeAndKeepResiduals());
                     break;
                 case RANSAC:
                     RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator ransacHomographyEstimator =
                             (RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator) homographyEstimator;
 
-                    ransacHomographyEstimator.setThreshold(
-                            mConfiguration.getPlanarHomographyThreshold());
+                    ransacHomographyEstimator.setThreshold(configuration.getPlanarHomographyThreshold());
                     ransacHomographyEstimator.setComputeAndKeepInliersEnabled(
-                            mConfiguration.getPlanarHomographyComputeAndKeepInliers());
+                            configuration.getPlanarHomographyComputeAndKeepInliers());
                     ransacHomographyEstimator.setComputeAndKeepResidualsEnabled(
-                            mConfiguration.getPlanarHomographyComputeAndKeepResiduals());
+                            configuration.getPlanarHomographyComputeAndKeepResiduals());
                     break;
                 default:
                     break;
             }
 
-            final PlanarBestFundamentalMatrixEstimatorAndReconstructor
-                    fundamentalMatrixEstimator =
+            final PlanarBestFundamentalMatrixEstimatorAndReconstructor fundamentalMatrixEstimator =
                     new PlanarBestFundamentalMatrixEstimatorAndReconstructor();
-            fundamentalMatrixEstimator.setHomographyEstimator(
-                    homographyEstimator);
-            fundamentalMatrixEstimator.setLeftAndRightPoints(leftPoints,
-                    rightPoints);
+            fundamentalMatrixEstimator.setHomographyEstimator(homographyEstimator);
+            fundamentalMatrixEstimator.setLeftAndRightPoints(leftPoints, rightPoints);
             fundamentalMatrixEstimator.setQualityScores(qualityScores);
 
             PinholeCameraIntrinsicParameters intrinsic1 = null;
             PinholeCameraIntrinsicParameters intrinsic2 = null;
-            if (mConfiguration.areIntrinsicParametersKnown()) {
+            if (configuration.areIntrinsicParametersKnown()) {
                 //noinspection unchecked
-                intrinsic1 = mListener.onIntrinsicParametersRequested((R) this, viewId1);
+                intrinsic1 = listener.onIntrinsicParametersRequested((R) this, viewId1);
                 //noinspection unchecked
-                intrinsic2 = mListener.onIntrinsicParametersRequested((R) this, viewId2);
+                intrinsic2 = listener.onIntrinsicParametersRequested((R) this, viewId2);
             }
             if (intrinsic1 == null && intrinsic2 == null) {
                 // estimate homography
-                final ProjectiveTransformation2D homography = homographyEstimator.
-                        estimate();
+                final var homography = homographyEstimator.estimate();
 
                 // estimate intrinsic parameters using the Image of Absolute
                 // Conic (IAC)
-                final List<Transformation2D> homographies = new ArrayList<>();
+                final var homographies = new ArrayList<Transformation2D>();
                 homographies.add(homography);
 
-                final ImageOfAbsoluteConicEstimator iacEstimator =
-                        new LMSEImageOfAbsoluteConicEstimator(homographies);
-                final ImageOfAbsoluteConic iac = iacEstimator.estimate();
+                final var iacEstimator = new LMSEImageOfAbsoluteConicEstimator(homographies);
+                final var iac = iacEstimator.estimate();
 
                 intrinsic1 = intrinsic2 = iac.getIntrinsicParameters();
 
@@ -1054,36 +999,34 @@ public abstract class BasePairedViewsSparseReconstructor<
 
             fundamentalMatrixEstimator.estimateAndReconstruct();
 
-            final FundamentalMatrix fundamentalMatrix =
-                    fundamentalMatrixEstimator.getFundamentalMatrix();
+            final var fundamentalMatrix = fundamentalMatrixEstimator.getFundamentalMatrix();
 
-            mCurrentEstimatedFundamentalMatrix = new EstimatedFundamentalMatrix();
-            mCurrentEstimatedFundamentalMatrix.setFundamentalMatrix(fundamentalMatrix);
-            mCurrentEstimatedFundamentalMatrix.setViewId1(viewId1);
-            mCurrentEstimatedFundamentalMatrix.setViewId2(viewId2);
+            currentEstimatedFundamentalMatrix = new EstimatedFundamentalMatrix();
+            currentEstimatedFundamentalMatrix.setFundamentalMatrix(fundamentalMatrix);
+            currentEstimatedFundamentalMatrix.setViewId1(viewId1);
+            currentEstimatedFundamentalMatrix.setViewId2(viewId2);
 
             // determine quality score and inliers
-            final InliersData inliersData = homographyEstimator.getInliersData();
+            final var inliersData = homographyEstimator.getInliersData();
             if (inliersData != null) {
-                final int numInliers = inliersData.getNumInliers();
-                final BitSet inliers = inliersData.getInliers();
-                final int length = inliers.length();
-                double fundamentalMatrixQualityScore = 0.0;
+                final var numInliers = inliersData.getNumInliers();
+                final var inliers = inliersData.getInliers();
+                final var length = inliers.length();
+                var fundamentalMatrixQualityScore = 0.0;
                 for (i = 0; i < length; i++) {
                     if (inliers.get(i)) {
                         // inlier
-                        fundamentalMatrixQualityScore +=
-                                qualityScores[i] / numInliers;
+                        fundamentalMatrixQualityScore += qualityScores[i] / numInliers;
                     }
                 }
-                mCurrentEstimatedFundamentalMatrix.setQualityScore(
+                currentEstimatedFundamentalMatrix.setQualityScore(
                         fundamentalMatrixQualityScore);
-                mCurrentEstimatedFundamentalMatrix.setInliers(inliers);
+                currentEstimatedFundamentalMatrix.setInliers(inliers);
             }
 
             // store left/right samples
-            mCurrentEstimatedFundamentalMatrix.setLeftSamples(leftSamples);
-            mCurrentEstimatedFundamentalMatrix.setRightSamples(rightSamples);
+            currentEstimatedFundamentalMatrix.setLeftSamples(leftSamples);
+            currentEstimatedFundamentalMatrix.setRightSamples(rightSamples);
 
             return true;
         } catch (final Exception e) {
@@ -1100,17 +1043,12 @@ public abstract class BasePairedViewsSparseReconstructor<
      * failed.
      */
     private boolean estimatePairOfCamerasAndPoints(final boolean isInitialPairOfViews) {
-        switch (mConfiguration.getPairedCamerasEstimatorMethod()) {
-            case ESSENTIAL_MATRIX:
-                return estimateInitialCamerasAndPointsEssential(isInitialPairOfViews);
-            case DUAL_IMAGE_OF_ABSOLUTE_CONIC:
-                return estimateInitialCamerasAndPointsDIAC(isInitialPairOfViews);
-            case DUAL_ABSOLUTE_QUADRIC:
-                return estimateInitialCamerasAndPointsDAQ(isInitialPairOfViews);
-            case DUAL_ABSOLUTE_QUADRIC_AND_ESSENTIAL_MATRIX:
-            default:
-                return estimateInitialCamerasAndPointsDAQAndEssential(isInitialPairOfViews);
-        }
+        return switch (configuration.getPairedCamerasEstimatorMethod()) {
+            case ESSENTIAL_MATRIX -> estimateInitialCamerasAndPointsEssential(isInitialPairOfViews);
+            case DUAL_IMAGE_OF_ABSOLUTE_CONIC -> estimateInitialCamerasAndPointsDIAC(isInitialPairOfViews);
+            case DUAL_ABSOLUTE_QUADRIC -> estimateInitialCamerasAndPointsDAQ(isInitialPairOfViews);
+            default -> estimateInitialCamerasAndPointsDAQAndEssential(isInitialPairOfViews);
+        };
     }
 
     /**
@@ -1123,63 +1061,46 @@ public abstract class BasePairedViewsSparseReconstructor<
      * @return true if cameras and points could be estimated, false if something
      * failed.
      */
-    private boolean estimateInitialCamerasAndPointsDAQAndEssential(
-            final boolean isInitialPairOfViews) {
+    private boolean estimateInitialCamerasAndPointsDAQAndEssential(final boolean isInitialPairOfViews) {
         // for non-initial view, keep last center and rotation
         if (!isInitialPairOfViews && keepLastCenterAndRotation()) {
             return false;
         }
 
         try {
-            final FundamentalMatrix fundamentalMatrix =
-                    mCurrentEstimatedFundamentalMatrix.getFundamentalMatrix();
+            final var fundamentalMatrix = currentEstimatedFundamentalMatrix.getFundamentalMatrix();
 
-            final DualAbsoluteQuadricInitialCamerasEstimator estimator =
-                    new DualAbsoluteQuadricInitialCamerasEstimator(
-                            fundamentalMatrix);
-            estimator.setAspectRatio(
-                    mConfiguration.getPairedCamerasAspectRatio());
+            final var estimator = new DualAbsoluteQuadricInitialCamerasEstimator(fundamentalMatrix);
+            estimator.setAspectRatio(configuration.getPairedCamerasAspectRatio());
             estimator.estimate();
 
-            final PinholeCamera camera1 = estimator.getEstimatedLeftCamera();
-            final PinholeCamera camera2 = estimator.getEstimatedRightCamera();
+            final var camera1 = estimator.getEstimatedLeftCamera();
+            final var camera2 = estimator.getEstimatedRightCamera();
 
             camera1.decompose();
             camera2.decompose();
 
-            final PinholeCameraIntrinsicParameters intrinsicZeroPrincipalPoint1 =
-                    camera1.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters intrinsicZeroPrincipalPoint2 =
-                    camera2.getIntrinsicParameters();
+            final var intrinsicZeroPrincipalPoint1 = camera1.getIntrinsicParameters();
+            final var intrinsicZeroPrincipalPoint2 = camera2.getIntrinsicParameters();
 
-            final double principalPointX = mConfiguration.getPrincipalPointX();
-            final double principalPointY = mConfiguration.getPrincipalPointY();
+            final var principalPointX = configuration.getPrincipalPointX();
+            final var principalPointY = configuration.getPrincipalPointY();
 
-            final PinholeCameraIntrinsicParameters intrinsic1 =
-                    new PinholeCameraIntrinsicParameters(
-                            intrinsicZeroPrincipalPoint1);
-            intrinsic1.setHorizontalPrincipalPoint(
-                    intrinsic1.getHorizontalPrincipalPoint() + principalPointX);
-            intrinsic1.setVerticalPrincipalPoint(
-                    intrinsic1.getVerticalPrincipalPoint() + principalPointY);
+            final var intrinsic1 = new PinholeCameraIntrinsicParameters(intrinsicZeroPrincipalPoint1);
+            intrinsic1.setHorizontalPrincipalPoint(intrinsic1.getHorizontalPrincipalPoint() + principalPointX);
+            intrinsic1.setVerticalPrincipalPoint(intrinsic1.getVerticalPrincipalPoint() + principalPointY);
 
-            final PinholeCameraIntrinsicParameters intrinsic2 =
-                    new PinholeCameraIntrinsicParameters(
-                            intrinsicZeroPrincipalPoint2);
-            intrinsic2.setHorizontalPrincipalPoint(
-                    intrinsic2.getHorizontalPrincipalPoint() + principalPointX);
-            intrinsic2.setVerticalPrincipalPoint(
-                    intrinsic2.getVerticalPrincipalPoint() + principalPointY);
+            final var intrinsic2 = new PinholeCameraIntrinsicParameters(intrinsicZeroPrincipalPoint2);
+            intrinsic2.setHorizontalPrincipalPoint(intrinsic2.getHorizontalPrincipalPoint() + principalPointX);
+            intrinsic2.setVerticalPrincipalPoint(intrinsic2.getVerticalPrincipalPoint() + principalPointY);
 
             // fix fundamental matrix to account for principal point different
             // from zero
-            fixFundamentalMatrix(fundamentalMatrix,
-                    intrinsicZeroPrincipalPoint1, intrinsicZeroPrincipalPoint2,
+            fixFundamentalMatrix(fundamentalMatrix, intrinsicZeroPrincipalPoint1, intrinsicZeroPrincipalPoint2,
                     intrinsic1, intrinsic2);
 
-            return estimateInitialCamerasAndPointsEssential(intrinsic1, intrinsic2) &&
-                    transformPairOfCamerasAndPoints(isInitialPairOfViews,
-                            hasAbsoluteOrientation());
+            return estimateInitialCamerasAndPointsEssential(intrinsic1, intrinsic2)
+                    && transformPairOfCamerasAndPoints(isInitialPairOfViews, hasAbsoluteOrientation());
         } catch (final Exception e) {
             return false;
         }
@@ -1201,81 +1122,65 @@ public abstract class BasePairedViewsSparseReconstructor<
         }
 
         try {
-            final FundamentalMatrix fundamentalMatrix =
-                    mCurrentEstimatedFundamentalMatrix.getFundamentalMatrix();
+            final var fundamentalMatrix = currentEstimatedFundamentalMatrix.getFundamentalMatrix();
             fundamentalMatrix.normalize();
 
-            final DualAbsoluteQuadricInitialCamerasEstimator estimator =
-                    new DualAbsoluteQuadricInitialCamerasEstimator(
-                            fundamentalMatrix);
-            estimator.setAspectRatio(
-                    mConfiguration.getPairedCamerasAspectRatio());
+            final var estimator = new DualAbsoluteQuadricInitialCamerasEstimator(fundamentalMatrix);
+            estimator.setAspectRatio(configuration.getPairedCamerasAspectRatio());
             estimator.estimate();
 
-            final PinholeCamera camera1 = estimator.getEstimatedLeftCamera();
-            final PinholeCamera camera2 = estimator.getEstimatedRightCamera();
+            final var camera1 = estimator.getEstimatedLeftCamera();
+            final var camera2 = estimator.getEstimatedRightCamera();
 
             camera1.decompose();
             camera2.decompose();
 
-            final PinholeCameraIntrinsicParameters intrinsicZeroPrincipalPoint1 =
-                    camera1.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters intrinsicZeroPrincipalPoint2 =
-                    camera2.getIntrinsicParameters();
+            final var intrinsicZeroPrincipalPoint1 = camera1.getIntrinsicParameters();
+            final var intrinsicZeroPrincipalPoint2 = camera2.getIntrinsicParameters();
 
-            final double principalPointX = mConfiguration.getPrincipalPointX();
-            final double principalPointY = mConfiguration.getPrincipalPointY();
+            final var principalPointX = configuration.getPrincipalPointX();
+            final var principalPointY = configuration.getPrincipalPointY();
 
-            final PinholeCameraIntrinsicParameters intrinsic1 =
-                    new PinholeCameraIntrinsicParameters(
-                            intrinsicZeroPrincipalPoint1);
-            intrinsic1.setHorizontalPrincipalPoint(
-                    intrinsic1.getHorizontalPrincipalPoint() + principalPointX);
-            intrinsic1.setVerticalPrincipalPoint(
-                    intrinsic1.getVerticalPrincipalPoint() + principalPointY);
+            final var intrinsic1 = new PinholeCameraIntrinsicParameters(intrinsicZeroPrincipalPoint1);
+            intrinsic1.setHorizontalPrincipalPoint(intrinsic1.getHorizontalPrincipalPoint() + principalPointX);
+            intrinsic1.setVerticalPrincipalPoint(intrinsic1.getVerticalPrincipalPoint() + principalPointY);
             camera1.setIntrinsicParameters(intrinsic1);
 
-            final PinholeCameraIntrinsicParameters intrinsic2 =
-                    new PinholeCameraIntrinsicParameters(
-                            intrinsicZeroPrincipalPoint2);
-            intrinsic2.setHorizontalPrincipalPoint(
-                    intrinsic2.getHorizontalPrincipalPoint() + principalPointX);
-            intrinsic2.setVerticalPrincipalPoint(
-                    intrinsic2.getVerticalPrincipalPoint() + principalPointY);
+            final var intrinsic2 = new PinholeCameraIntrinsicParameters(intrinsicZeroPrincipalPoint2);
+            intrinsic2.setHorizontalPrincipalPoint(intrinsic2.getHorizontalPrincipalPoint() + principalPointX);
+            intrinsic2.setVerticalPrincipalPoint(intrinsic2.getVerticalPrincipalPoint() + principalPointY);
             camera2.setIntrinsicParameters(intrinsic2);
 
-            mPreviousMetricEstimatedCamera = new EstimatedCamera();
-            mPreviousMetricEstimatedCamera.setCamera(camera1);
+            previousMetricEstimatedCamera = new EstimatedCamera();
+            previousMetricEstimatedCamera.setCamera(camera1);
 
-            mCurrentMetricEstimatedCamera = new EstimatedCamera();
-            mCurrentMetricEstimatedCamera.setCamera(camera2);
+            currentMetricEstimatedCamera = new EstimatedCamera();
+            currentMetricEstimatedCamera.setCamera(camera2);
 
             // fix fundamental matrix to account for principal point different
             // from zero
-            fixFundamentalMatrix(fundamentalMatrix,
-                    intrinsicZeroPrincipalPoint1, intrinsicZeroPrincipalPoint2,
+            fixFundamentalMatrix(fundamentalMatrix, intrinsicZeroPrincipalPoint1, intrinsicZeroPrincipalPoint2,
                     intrinsic1, intrinsic2);
 
             // triangulate points
             Corrector corrector = null;
-            if (mConfiguration.getPairedCamerasCorrectorType() != null) {
-                corrector = Corrector.create(fundamentalMatrix,
-                        mConfiguration.getPairedCamerasCorrectorType());
+            if (configuration.getPairedCamerasCorrectorType() != null) {
+                corrector = Corrector.create(fundamentalMatrix, configuration.getPairedCamerasCorrectorType());
             }
 
             // use all points used for fundamental matrix estimation
-            final List<Sample2D> samples1 = mCurrentEstimatedFundamentalMatrix.getLeftSamples();
-            final List<Sample2D> samples2 = mCurrentEstimatedFundamentalMatrix.getRightSamples();
+            final var samples1 = currentEstimatedFundamentalMatrix.getLeftSamples();
+            final var samples2 = currentEstimatedFundamentalMatrix.getRightSamples();
 
-            final List<Point2D> points1 = new ArrayList<>();
-            final List<Point2D> points2 = new ArrayList<>();
-            final int length = samples1.size();
-            for (int i = 0; i < length; i++) {
-                final Sample2D sample1 = samples1.get(i);
-                final Sample2D sample2 = samples2.get(i);
+            final var points1 = new ArrayList<Point2D>();
+            final var points2 = new ArrayList<Point2D>();
+            final var length = samples1.size();
+            for (var i = 0; i < length; i++) {
+                final var sample1 = samples1.get(i);
+                final var sample2 = samples2.get(i);
 
-                final Point2D point1 = sample1.getPoint();
-                final Point2D point2 = sample2.getPoint();
+                final var point1 = sample1.getPoint();
+                final var point2 = sample2.getPoint();
 
                 points1.add(point1);
                 points2.add(point2);
@@ -1295,28 +1200,25 @@ public abstract class BasePairedViewsSparseReconstructor<
                 correctedPoints2 = points2;
             }
 
-
             // triangulate points
             final SinglePoint3DTriangulator triangulator;
-            if (mConfiguration.getDaqUseHomogeneousPointTriangulator()) {
-                triangulator = SinglePoint3DTriangulator.create(
-                        Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR);
+            if (configuration.getDaqUseHomogeneousPointTriangulator()) {
+                triangulator = SinglePoint3DTriangulator.create(Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR);
             } else {
                 triangulator = SinglePoint3DTriangulator.create(
-                        Point3DTriangulatorType.
-                                LMSE_INHOMOGENEOUS_TRIANGULATOR);
+                        Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR);
             }
 
-            final List<PinholeCamera> cameras = new ArrayList<>();
+            final var cameras = new ArrayList<PinholeCamera>();
             cameras.add(camera1);
             cameras.add(camera2);
 
-            mMetricReconstructedPoints = new ArrayList<>();
-            final List<Point2D> points = new ArrayList<>();
-            final int numPoints = correctedPoints1.size();
+            metricReconstructedPoints = new ArrayList<>();
+            final var points = new ArrayList<Point2D>();
+            final var numPoints = correctedPoints1.size();
             Point3D triangulatedPoint;
             ReconstructedPoint3D reconstructedPoint;
-            for (int i = 0; i < numPoints; i++) {
+            for (var i = 0; i < numPoints; i++) {
                 points.clear();
                 points.add(correctedPoints1.get(i));
                 points.add(correctedPoints2.get(i));
@@ -1329,17 +1231,14 @@ public abstract class BasePairedViewsSparseReconstructor<
 
                 // only points reconstructed in front of both cameras are
                 // considered valid
-                final boolean front1 = camera1.isPointInFrontOfCamera(
-                        triangulatedPoint);
-                final boolean front2 = camera2.isPointInFrontOfCamera(
-                        triangulatedPoint);
+                final var front1 = camera1.isPointInFrontOfCamera(triangulatedPoint);
+                final var front2 = camera2.isPointInFrontOfCamera(triangulatedPoint);
                 reconstructedPoint.setInlier(front1 && front2);
 
-                mMetricReconstructedPoints.add(reconstructedPoint);
+                metricReconstructedPoints.add(reconstructedPoint);
             }
 
-            return transformPairOfCamerasAndPoints(isInitialPairOfViews,
-                    hasAbsoluteOrientation());
+            return transformPairOfCamerasAndPoints(isInitialPairOfViews, hasAbsoluteOrientation());
         } catch (final Exception e) {
             return false;
         }
@@ -1360,71 +1259,61 @@ public abstract class BasePairedViewsSparseReconstructor<
             return false;
         }
 
-        final FundamentalMatrix fundamentalMatrix =
-                mCurrentEstimatedFundamentalMatrix.getFundamentalMatrix();
+        final var fundamentalMatrix = currentEstimatedFundamentalMatrix.getFundamentalMatrix();
 
         // use inlier points used for fundamental matrix estimation
-        final List<Sample2D> samples1 = mCurrentEstimatedFundamentalMatrix.getLeftSamples();
-        final List<Sample2D> samples2 = mCurrentEstimatedFundamentalMatrix.getRightSamples();
+        final var samples1 = currentEstimatedFundamentalMatrix.getLeftSamples();
+        final var samples2 = currentEstimatedFundamentalMatrix.getRightSamples();
 
-        final List<Point2D> points1 = new ArrayList<>();
-        final List<Point2D> points2 = new ArrayList<>();
-        final int length = samples1.size();
-        for (int i = 0; i < length; i++) {
-            final Sample2D sample1 = samples1.get(i);
-            final Sample2D sample2 = samples2.get(i);
+        final var points1 = new ArrayList<Point2D>();
+        final var points2 = new ArrayList<Point2D>();
+        final var length = samples1.size();
+        for (var i = 0; i < length; i++) {
+            final var sample1 = samples1.get(i);
+            final var sample2 = samples2.get(i);
 
-            final Point2D point1 = sample1.getPoint();
-            final Point2D point2 = sample2.getPoint();
+            final var point1 = sample1.getPoint();
+            final var point2 = sample2.getPoint();
 
             points1.add(point1);
             points2.add(point2);
         }
 
         try {
-            final DualImageOfAbsoluteConicInitialCamerasEstimator estimator =
-                    new DualImageOfAbsoluteConicInitialCamerasEstimator(
-                            fundamentalMatrix, points1, points2);
-            estimator.setPrincipalPoint(mConfiguration.getPrincipalPointX(),
-                    mConfiguration.getPrincipalPointY());
-            estimator.setAspectRatio(
-                    mConfiguration.getPairedCamerasAspectRatio());
-            estimator.setCorrectorType(
-                    mConfiguration.getPairedCamerasCorrectorType());
+            final var estimator = new DualImageOfAbsoluteConicInitialCamerasEstimator(fundamentalMatrix, points1,
+                    points2);
+            estimator.setPrincipalPoint(configuration.getPrincipalPointX(), configuration.getPrincipalPointY());
+            estimator.setAspectRatio(configuration.getPairedCamerasAspectRatio());
+            estimator.setCorrectorType(configuration.getPairedCamerasCorrectorType());
             estimator.setPointsTriangulated(true);
-            estimator.setValidTriangulatedPointsMarked(
-                    mConfiguration.getPairedCamerasMarkValidTriangulatedPoints());
+            estimator.setValidTriangulatedPointsMarked(configuration.getPairedCamerasMarkValidTriangulatedPoints());
 
             estimator.estimate();
 
             // store cameras
-            final PinholeCamera camera1 = estimator.getEstimatedLeftCamera();
-            final PinholeCamera camera2 = estimator.getEstimatedRightCamera();
+            final var camera1 = estimator.getEstimatedLeftCamera();
+            final var camera2 = estimator.getEstimatedRightCamera();
 
-            mPreviousMetricEstimatedCamera = new EstimatedCamera();
-            mPreviousMetricEstimatedCamera.setCamera(camera1);
+            previousMetricEstimatedCamera = new EstimatedCamera();
+            previousMetricEstimatedCamera.setCamera(camera1);
 
-            mCurrentMetricEstimatedCamera = new EstimatedCamera();
-            mCurrentMetricEstimatedCamera.setCamera(camera2);
+            currentMetricEstimatedCamera = new EstimatedCamera();
+            currentMetricEstimatedCamera.setCamera(camera2);
 
             // store points
-            final List<Point3D> triangulatedPoints =
-                    estimator.getTriangulatedPoints();
-            final BitSet validTriangulatedPoints =
-                    estimator.getValidTriangulatedPoints();
+            final var triangulatedPoints = estimator.getTriangulatedPoints();
+            final var validTriangulatedPoints = estimator.getValidTriangulatedPoints();
 
-            mMetricReconstructedPoints = new ArrayList<>();
-            final int size = triangulatedPoints.size();
-            for (int i = 0; i < size; i++) {
-                final ReconstructedPoint3D reconstructedPoint =
-                        new ReconstructedPoint3D();
+            metricReconstructedPoints = new ArrayList<>();
+            final var size = triangulatedPoints.size();
+            for (var i = 0; i < size; i++) {
+                final var reconstructedPoint = new ReconstructedPoint3D();
                 reconstructedPoint.setPoint(triangulatedPoints.get(i));
                 reconstructedPoint.setInlier(validTriangulatedPoints.get(i));
-                mMetricReconstructedPoints.add(reconstructedPoint);
+                metricReconstructedPoints.add(reconstructedPoint);
             }
 
-            return transformPairOfCamerasAndPoints(isInitialPairOfViews,
-                    hasAbsoluteOrientation());
+            return transformPairOfCamerasAndPoints(isInitialPairOfViews, hasAbsoluteOrientation());
         } catch (final Exception e) {
             return false;
         }
@@ -1448,23 +1337,22 @@ public abstract class BasePairedViewsSparseReconstructor<
 
         PinholeCameraIntrinsicParameters intrinsic1 = null;
         PinholeCameraIntrinsicParameters intrinsic2 = null;
-        if (mConfiguration.areIntrinsicParametersKnown()) {
+        if (configuration.areIntrinsicParametersKnown()) {
             //noinspection unchecked
-            intrinsic1 = mListener.onIntrinsicParametersRequested((R) this, mPreviousViewId);
+            intrinsic1 = listener.onIntrinsicParametersRequested((R) this, previousViewId);
             //noinspection unchecked
-            intrinsic2 = mListener.onIntrinsicParametersRequested((R) this, mCurrentViewId);
+            intrinsic2 = listener.onIntrinsicParametersRequested((R) this, currentViewId);
         }
 
         if (intrinsic1 != null && intrinsic2 != null) {
-            return estimateInitialCamerasAndPointsEssential(intrinsic1, intrinsic2) &&
-                    transformPairOfCamerasAndPoints(isInitialPairOfViews,
-                            hasAbsoluteOrientation());
+            return estimateInitialCamerasAndPointsEssential(intrinsic1, intrinsic2)
+                    && transformPairOfCamerasAndPoints(isInitialPairOfViews, hasAbsoluteOrientation());
         } else {
             // missing intrinsic parameters
 
-            mFailed = true;
+            failed = true;
             //noinspection unchecked
-            mListener.onFail((R) this);
+            listener.onFail((R) this);
             return false;
         }
     }
@@ -1480,67 +1368,58 @@ public abstract class BasePairedViewsSparseReconstructor<
      * failed.
      */
     private boolean estimateInitialCamerasAndPointsEssential(
-            final PinholeCameraIntrinsicParameters intrinsic1,
-            final PinholeCameraIntrinsicParameters intrinsic2) {
-        final FundamentalMatrix fundamentalMatrix =
-                mCurrentEstimatedFundamentalMatrix.getFundamentalMatrix();
+            final PinholeCameraIntrinsicParameters intrinsic1, final PinholeCameraIntrinsicParameters intrinsic2) {
+        final var fundamentalMatrix = currentEstimatedFundamentalMatrix.getFundamentalMatrix();
 
         // use all points used for fundamental matrix estimation
-        final List<Sample2D> samples1 = mCurrentEstimatedFundamentalMatrix.getLeftSamples();
-        final List<Sample2D> samples2 = mCurrentEstimatedFundamentalMatrix.getRightSamples();
+        final var samples1 = currentEstimatedFundamentalMatrix.getLeftSamples();
+        final var samples2 = currentEstimatedFundamentalMatrix.getRightSamples();
 
-        final List<Point2D> points1 = new ArrayList<>();
-        final List<Point2D> points2 = new ArrayList<>();
-        final int length = samples1.size();
-        for (int i = 0; i < length; i++) {
-            final Sample2D sample1 = samples1.get(i);
-            final Sample2D sample2 = samples2.get(i);
+        final var points1 = new ArrayList<Point2D>();
+        final var points2 = new ArrayList<Point2D>();
+        final var length = samples1.size();
+        for (var i = 0; i < length; i++) {
+            final var sample1 = samples1.get(i);
+            final var sample2 = samples2.get(i);
 
-            final Point2D point1 = sample1.getPoint();
-            final Point2D point2 = sample2.getPoint();
+            final var point1 = sample1.getPoint();
+            final var point2 = sample2.getPoint();
 
             points1.add(point1);
             points2.add(point2);
         }
 
         try {
-            final EssentialMatrixInitialCamerasEstimator estimator =
-                    new EssentialMatrixInitialCamerasEstimator(
-                            fundamentalMatrix, intrinsic1, intrinsic2,
-                            points1, points2);
+            final var estimator = new EssentialMatrixInitialCamerasEstimator(fundamentalMatrix, intrinsic1, intrinsic2,
+                    points1, points2);
 
-            estimator.setCorrectorType(
-                    mConfiguration.getPairedCamerasCorrectorType());
+            estimator.setCorrectorType(configuration.getPairedCamerasCorrectorType());
             estimator.setPointsTriangulated(true);
-            estimator.setValidTriangulatedPointsMarked(
-                    mConfiguration.getPairedCamerasMarkValidTriangulatedPoints());
+            estimator.setValidTriangulatedPointsMarked(configuration.getPairedCamerasMarkValidTriangulatedPoints());
 
             estimator.estimate();
 
             // store cameras
-            final PinholeCamera camera1 = estimator.getEstimatedLeftCamera();
-            final PinholeCamera camera2 = estimator.getEstimatedRightCamera();
+            final var camera1 = estimator.getEstimatedLeftCamera();
+            final var camera2 = estimator.getEstimatedRightCamera();
 
-            mPreviousMetricEstimatedCamera = new EstimatedCamera();
-            mPreviousMetricEstimatedCamera.setCamera(camera1);
+            previousMetricEstimatedCamera = new EstimatedCamera();
+            previousMetricEstimatedCamera.setCamera(camera1);
 
-            mCurrentMetricEstimatedCamera = new EstimatedCamera();
-            mCurrentMetricEstimatedCamera.setCamera(camera2);
+            currentMetricEstimatedCamera = new EstimatedCamera();
+            currentMetricEstimatedCamera.setCamera(camera2);
 
             // store points
-            final List<Point3D> triangulatedPoints =
-                    estimator.getTriangulatedPoints();
-            final BitSet validTriangulatedPoints =
-                    estimator.getValidTriangulatedPoints();
+            final var triangulatedPoints = estimator.getTriangulatedPoints();
+            final var validTriangulatedPoints = estimator.getValidTriangulatedPoints();
 
-            mMetricReconstructedPoints = new ArrayList<>();
-            final int size = triangulatedPoints.size();
-            for (int i = 0; i < size; i++) {
-                final ReconstructedPoint3D reconstructedPoint =
-                        new ReconstructedPoint3D();
+            metricReconstructedPoints = new ArrayList<>();
+            final var size = triangulatedPoints.size();
+            for (var i = 0; i < size; i++) {
+                final var reconstructedPoint = new ReconstructedPoint3D();
                 reconstructedPoint.setPoint(triangulatedPoints.get(i));
                 reconstructedPoint.setInlier(validTriangulatedPoints.get(i));
-                mMetricReconstructedPoints.add(reconstructedPoint);
+                metricReconstructedPoints.add(reconstructedPoint);
             }
 
             return true;
@@ -1557,11 +1436,11 @@ public abstract class BasePairedViewsSparseReconstructor<
      */
     private boolean keepLastCenterAndRotation() {
         // keep last metric center and rotation
-        if (mCurrentMetricEstimatedCamera == null || mCurrentEuclideanEstimatedCamera == null) {
+        if (currentMetricEstimatedCamera == null || currentEuclideanEstimatedCamera == null) {
             return true;
         }
 
-        final PinholeCamera metricCamera = mCurrentMetricEstimatedCamera.getCamera();
+        final var metricCamera = currentMetricEstimatedCamera.getCamera();
         if (metricCamera == null) {
             return true;
         }
@@ -1572,7 +1451,7 @@ public abstract class BasePairedViewsSparseReconstructor<
                 metricCamera.decompose();
             }
 
-            mLastMetricCameraCenter = metricCamera.getCameraCenter();
+            lastMetricCameraCenter = metricCamera.getCameraCenter();
             mLastMetricCameraRotation = metricCamera.getCameraRotation();
 
         } catch (final GeometryException e) {
@@ -1580,7 +1459,7 @@ public abstract class BasePairedViewsSparseReconstructor<
         }
 
         // keep last Euclidean center and rotation
-        final PinholeCamera euclideanCamera = mCurrentEuclideanEstimatedCamera.getCamera();
+        final var euclideanCamera = currentEuclideanEstimatedCamera.getCamera();
         if (euclideanCamera == null) {
             return true;
         }
@@ -1591,8 +1470,8 @@ public abstract class BasePairedViewsSparseReconstructor<
                 euclideanCamera.decompose();
             }
 
-            mLastEuclideanCameraCenter = euclideanCamera.getCameraCenter();
-            mLastEuclideanCameraRotation = euclideanCamera.getCameraRotation();
+            lastEuclideanCameraCenter = euclideanCamera.getCameraCenter();
+            lastEuclideanCameraRotation = euclideanCamera.getCameraRotation();
 
             return false;
         } catch (final GeometryException e) {
@@ -1624,14 +1503,12 @@ public abstract class BasePairedViewsSparseReconstructor<
             throws EpipolarException, NotReadyException {
 
         // first compute essential matrix as E = K2a'F*K1a
-        final EssentialMatrix essential = new EssentialMatrix(fundamentalMatrix,
-                intrinsicZeroPrincipalPoint1, intrinsicZeroPrincipalPoint2);
-        final FundamentalMatrix fixedFundamentalMatrix =
-                essential.toFundamentalMatrix(intrinsicPrincipalPoint1,
-                        intrinsicPrincipalPoint2);
+        final var essential = new EssentialMatrix(fundamentalMatrix, intrinsicZeroPrincipalPoint1,
+                intrinsicZeroPrincipalPoint2);
+        final var fixedFundamentalMatrix = essential.toFundamentalMatrix(intrinsicPrincipalPoint1,
+                intrinsicPrincipalPoint2);
         fixedFundamentalMatrix.normalize();
-        mCurrentEstimatedFundamentalMatrix.setFundamentalMatrix(
-                fixedFundamentalMatrix);
-        mCurrentEstimatedFundamentalMatrix.setCovariance(null);
+        currentEstimatedFundamentalMatrix.setFundamentalMatrix(fixedFundamentalMatrix);
+        currentEstimatedFundamentalMatrix.setCovariance(null);
     }
 }

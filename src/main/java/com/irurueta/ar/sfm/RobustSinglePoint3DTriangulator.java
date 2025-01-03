@@ -36,8 +36,7 @@ public abstract class RobustSinglePoint3DTriangulator {
     /**
      * Default robust estimator method when none is provided.
      */
-    public static final RobustEstimatorMethod DEFAULT_ROBUST_METHOD =
-            RobustEstimatorMethod.PROMEDS;
+    public static final RobustEstimatorMethod DEFAULT_ROBUST_METHOD = RobustEstimatorMethod.PROMEDS;
 
     /**
      * Default amount of progress variation before notifying a change in
@@ -97,19 +96,19 @@ public abstract class RobustSinglePoint3DTriangulator {
      * Matched 2D points. Each point in the list is assumed to be projected by
      * the corresponding camera in the list.
      */
-    protected List<Point2D> mPoints2D;
+    protected List<Point2D> points2D;
 
     /**
      * List of cameras associated to the matched 2D point on the same position
      * as the camera on the list.
      */
-    protected List<PinholeCamera> mCameras;
+    protected List<PinholeCamera> cameras;
 
     /**
      * Listener to be notified of events such as when estimation starts, ends or
      * its progress significantly changes.
      */
-    protected RobustSinglePoint3DTriangulatorListener mListener;
+    protected RobustSinglePoint3DTriangulatorListener listener;
 
     /**
      * Indicates whether a solution to an homogeneous system of equations should
@@ -118,19 +117,19 @@ public abstract class RobustSinglePoint3DTriangulator {
      * well-defined, false can be used to solve an inhomogeneous system of equations
      * and obtain a slightly better accuracy.
      */
-    protected boolean mUseHomogeneousSolution;
+    protected boolean useHomogeneousSolution;
 
     /**
      * Indicates if this estimator is locked because an estimation is being
      * computed.
      */
-    protected volatile boolean mLocked;
+    protected volatile boolean locked;
 
     /**
      * Amount of progress variation before notifying a progress change during
      * estimation.
      */
-    protected float mProgressDelta;
+    protected float progressDelta;
 
     /**
      * Amount of confidence expressed as a value between 0.0 and 1.0 (which is
@@ -138,23 +137,23 @@ public abstract class RobustSinglePoint3DTriangulator {
      * that the estimated result is correct. Usually this value will be close
      * to 1.0, but not exactly 1.0.
      */
-    protected double mConfidence;
+    protected double confidence;
 
     /**
      * Maximum allowed number of iterations. When the maximum number of
      * iterations is exceeded, result will not be available, however an
      * approximate result will be available for retrieval.
      */
-    protected int mMaxIterations;
+    protected int maxIterations;
 
     /**
      * Constructor.
      */
     protected RobustSinglePoint3DTriangulator() {
-        mUseHomogeneousSolution = DEFAULT_USE_HOMOGENEOUS_SOLUTION;
-        mProgressDelta = DEFAULT_PROGRESS_DELTA;
-        mConfidence = DEFAULT_CONFIDENCE;
-        mMaxIterations = DEFAULT_MAX_ITERATIONS;
+        useHomogeneousSolution = DEFAULT_USE_HOMOGENEOUS_SOLUTION;
+        progressDelta = DEFAULT_PROGRESS_DELTA;
+        confidence = DEFAULT_CONFIDENCE;
+        maxIterations = DEFAULT_MAX_ITERATIONS;
     }
 
     /**
@@ -166,7 +165,7 @@ public abstract class RobustSinglePoint3DTriangulator {
     protected RobustSinglePoint3DTriangulator(
             final RobustSinglePoint3DTriangulatorListener listener) {
         this();
-        mListener = listener;
+        this.listener = listener;
     }
 
     /**
@@ -180,8 +179,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      *                                  length or their length is less than 2 views, which is the minimum
      *                                  required to compute triangulation.
      */
-    protected RobustSinglePoint3DTriangulator(final List<Point2D> points,
-                                              final List<PinholeCamera> cameras) {
+    protected RobustSinglePoint3DTriangulator(final List<Point2D> points, final List<PinholeCamera> cameras) {
         this();
         internalSetPointsAndCameras(points, cameras);
     }
@@ -203,7 +201,7 @@ public abstract class RobustSinglePoint3DTriangulator {
                                               final List<PinholeCamera> cameras,
                                               final RobustSinglePoint3DTriangulatorListener listener) {
         this(points, cameras);
-        mListener = listener;
+        this.listener = listener;
     }
 
     /**
@@ -213,7 +211,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      * @return listener to be notified of events.
      */
     public RobustSinglePoint3DTriangulatorListener getListener() {
-        return mListener;
+        return listener;
     }
 
     /**
@@ -223,12 +221,11 @@ public abstract class RobustSinglePoint3DTriangulator {
      * @param listener listener to be notified of events.
      * @throws LockedException if robust estimator is locked.
      */
-    public void setListener(final RobustSinglePoint3DTriangulatorListener listener)
-            throws LockedException {
+    public void setListener(final RobustSinglePoint3DTriangulatorListener listener) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mListener = listener;
+        this.listener = listener;
     }
 
     /**
@@ -238,7 +235,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      * @return true if available, false otherwise.
      */
     public boolean isListenerAvailable() {
-        return mListener != null;
+        return listener != null;
     }
 
     /**
@@ -252,7 +249,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      * false otherwise.
      */
     public boolean isUseHomogeneousSolution() {
-        return mUseHomogeneousSolution;
+        return useHomogeneousSolution;
     }
 
     /**
@@ -266,12 +263,11 @@ public abstract class RobustSinglePoint3DTriangulator {
      *                               found, false if an inhomogeneous solution will be found instead.
      * @throws LockedException if this instance is locked.
      */
-    public void setUseHomogeneousSolution(final boolean useHomogeneousSolution)
-            throws LockedException {
+    public void setUseHomogeneousSolution(final boolean useHomogeneousSolution) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mUseHomogeneousSolution = useHomogeneousSolution;
+        this.useHomogeneousSolution = useHomogeneousSolution;
     }
 
     /**
@@ -281,7 +277,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      * @return true if locked, false otherwise.
      */
     public boolean isLocked() {
-        return mLocked;
+        return locked;
     }
 
     /**
@@ -292,7 +288,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      * during estimation.
      */
     public float getProgressDelta() {
-        return mProgressDelta;
+        return progressDelta;
     }
 
     /**
@@ -306,16 +302,14 @@ public abstract class RobustSinglePoint3DTriangulator {
      * @throws LockedException          if this estimator is locked because an estimation
      *                                  is being computed.
      */
-    public void setProgressDelta(final float progressDelta)
-            throws LockedException {
+    public void setProgressDelta(final float progressDelta) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        if (progressDelta < MIN_PROGRESS_DELTA ||
-                progressDelta > MAX_PROGRESS_DELTA) {
+        if (progressDelta < MIN_PROGRESS_DELTA || progressDelta > MAX_PROGRESS_DELTA) {
             throw new IllegalArgumentException();
         }
-        mProgressDelta = progressDelta;
+        this.progressDelta = progressDelta;
     }
 
     /**
@@ -327,7 +321,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      * @return amount of confidence as a value between 0.0 and 1.0.
      */
     public double getConfidence() {
-        return mConfidence;
+        return confidence;
     }
 
     /**
@@ -349,7 +343,7 @@ public abstract class RobustSinglePoint3DTriangulator {
         if (confidence < MIN_CONFIDENCE || confidence > MAX_CONFIDENCE) {
             throw new IllegalArgumentException();
         }
-        mConfidence = confidence;
+        this.confidence = confidence;
     }
 
     /**
@@ -360,7 +354,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      * @return maximum allowed number of iterations.
      */
     public int getMaxIterations() {
-        return mMaxIterations;
+        return maxIterations;
     }
 
     /**
@@ -380,7 +374,7 @@ public abstract class RobustSinglePoint3DTriangulator {
         if (maxIterations < MIN_ITERATIONS) {
             throw new IllegalArgumentException();
         }
-        mMaxIterations = maxIterations;
+        this.maxIterations = maxIterations;
     }
 
     /**
@@ -395,8 +389,8 @@ public abstract class RobustSinglePoint3DTriangulator {
      *                                  length or their length is less than 2 views, which is the minimum
      *                                  required to compute triangulation.
      */
-    public void setPointsAndCameras(final List<Point2D> points2D,
-                                    final List<PinholeCamera> cameras) throws LockedException {
+    public void setPointsAndCameras(final List<Point2D> points2D, final List<PinholeCamera> cameras)
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -410,7 +404,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      * @return list of matched 2D points on each view.
      */
     public List<Point2D> getPoints2D() {
-        return mPoints2D;
+        return points2D;
     }
 
     /**
@@ -419,7 +413,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      * @return cameras for each view where 2D points are represented.
      */
     public List<PinholeCamera> getCameras() {
-        return mCameras;
+        return cameras;
     }
 
     /**
@@ -459,8 +453,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      * @return true if this instance is ready, false otherwise.
      */
     public boolean isReady() {
-        return SinglePoint3DTriangulator.areValidPointsAndCameras(mPoints2D,
-                mCameras);
+        return SinglePoint3DTriangulator.areValidPointsAndCameras(points2D, cameras);
     }
 
     /**
@@ -477,8 +470,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      * @throws RobustEstimatorException if estimation fails for any reason
      *                                  (i.e. numerical instability, no solution available, etc).
      */
-    public abstract Point3D triangulate() throws LockedException,
-            NotReadyException, RobustEstimatorException;
+    public abstract Point3D triangulate() throws LockedException, NotReadyException, RobustEstimatorException;
 
     /**
      * Returns method being used for robust estimation.
@@ -495,21 +487,14 @@ public abstract class RobustSinglePoint3DTriangulator {
      *               triangulation.
      * @return an instance of a robust single 3D point triangulator.
      */
-    public static RobustSinglePoint3DTriangulator create(
-            final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustSinglePoint3DTriangulator();
-            case LMEDS:
-                return new LMedSRobustSinglePoint3DTriangulator();
-            case MSAC:
-                return new MSACRobustSinglePoint3DTriangulator();
-            case PROSAC:
-                return new PROSACRobustSinglePoint3DTriangulator();
-            case PROMEDS:
-            default:
-                return new PROMedSRobustSinglePoint3DTriangulator();
-        }
+    public static RobustSinglePoint3DTriangulator create(final RobustEstimatorMethod method) {
+        return switch (method) {
+            case RANSAC -> new RANSACRobustSinglePoint3DTriangulator();
+            case LMEDS -> new LMedSRobustSinglePoint3DTriangulator();
+            case MSAC -> new MSACRobustSinglePoint3DTriangulator();
+            case PROSAC -> new PROSACRobustSinglePoint3DTriangulator();
+            default -> new PROMedSRobustSinglePoint3DTriangulator();
+        };
     }
 
     /**
@@ -528,25 +513,14 @@ public abstract class RobustSinglePoint3DTriangulator {
      *                                  required to compute triangulation.
      */
     public static RobustSinglePoint3DTriangulator create(
-            final List<Point2D> points, final List<PinholeCamera> cameras,
-            final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustSinglePoint3DTriangulator(points,
-                        cameras);
-            case LMEDS:
-                return new LMedSRobustSinglePoint3DTriangulator(points,
-                        cameras);
-            case MSAC:
-                return new MSACRobustSinglePoint3DTriangulator(points, cameras);
-            case PROSAC:
-                return new PROSACRobustSinglePoint3DTriangulator(points,
-                        cameras);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustSinglePoint3DTriangulator(points,
-                        cameras);
-        }
+            final List<Point2D> points, final List<PinholeCamera> cameras, final RobustEstimatorMethod method) {
+        return switch (method) {
+            case RANSAC -> new RANSACRobustSinglePoint3DTriangulator(points, cameras);
+            case LMEDS -> new LMedSRobustSinglePoint3DTriangulator(points, cameras);
+            case MSAC -> new MSACRobustSinglePoint3DTriangulator(points, cameras);
+            case PROSAC -> new PROSACRobustSinglePoint3DTriangulator(points, cameras);
+            default -> new PROMedSRobustSinglePoint3DTriangulator(points, cameras);
+        };
     }
 
     /**
@@ -566,27 +540,15 @@ public abstract class RobustSinglePoint3DTriangulator {
      *                                  which is the minimum required to compute triangulation.
      */
     public static RobustSinglePoint3DTriangulator create(
-            final List<Point2D> points,
-            final List<PinholeCamera> cameras,
-            final double[] qualityScores,
+            final List<Point2D> points, final List<PinholeCamera> cameras, final double[] qualityScores,
             final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustSinglePoint3DTriangulator(points,
-                        cameras);
-            case LMEDS:
-                return new LMedSRobustSinglePoint3DTriangulator(points,
-                        cameras);
-            case MSAC:
-                return new MSACRobustSinglePoint3DTriangulator(points, cameras);
-            case PROSAC:
-                return new PROSACRobustSinglePoint3DTriangulator(points,
-                        cameras, qualityScores);
-            case PROMEDS:
-            default:
-                return new PROMedSRobustSinglePoint3DTriangulator(points,
-                        cameras, qualityScores);
-        }
+        return switch (method) {
+            case RANSAC -> new RANSACRobustSinglePoint3DTriangulator(points, cameras);
+            case LMEDS -> new LMedSRobustSinglePoint3DTriangulator(points, cameras);
+            case MSAC -> new MSACRobustSinglePoint3DTriangulator(points, cameras);
+            case PROSAC -> new PROSACRobustSinglePoint3DTriangulator(points, cameras, qualityScores);
+            default -> new PROMedSRobustSinglePoint3DTriangulator(points, cameras, qualityScores);
+        };
     }
 
     /**
@@ -613,8 +575,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      *                                  required to compute triangulation.
      */
     public static RobustSinglePoint3DTriangulator create(
-            final List<Point2D> points,
-            final List<PinholeCamera> cameras) {
+            final List<Point2D> points, final List<PinholeCamera> cameras) {
         return create(points, cameras, DEFAULT_ROBUST_METHOD);
     }
 
@@ -633,9 +594,7 @@ public abstract class RobustSinglePoint3DTriangulator {
      *                                  which is the minimum required to compute triangulation.
      */
     public static RobustSinglePoint3DTriangulator create(
-            final List<Point2D> points,
-            final List<PinholeCamera> cameras,
-            final double[] qualityScores) {
+            final List<Point2D> points, final List<PinholeCamera> cameras, final double[] qualityScores) {
         return create(points, cameras, qualityScores, DEFAULT_ROBUST_METHOD);
     }
 
@@ -652,14 +611,13 @@ public abstract class RobustSinglePoint3DTriangulator {
      *                                  required to compute triangulation.
      */
     private void internalSetPointsAndCameras(
-            final List<Point2D> points2D,
-            final List<PinholeCamera> cameras) {
+            final List<Point2D> points2D, final List<PinholeCamera> cameras) {
 
         if (!SinglePoint3DTriangulator.areValidPointsAndCameras(points2D, cameras)) {
             throw new IllegalArgumentException();
         }
 
-        mPoints2D = points2D;
-        mCameras = cameras;
+        this.points2D = points2D;
+        this.cameras = cameras;
     }
 }

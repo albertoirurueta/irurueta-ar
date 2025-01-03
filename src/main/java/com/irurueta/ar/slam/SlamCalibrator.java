@@ -25,38 +25,38 @@ public class SlamCalibrator extends BaseSlamCalibrator<SlamCalibrationData> {
     /**
      * Last sample of linear acceleration along x-axis.
      */
-    private double mLastAccelerationX;
+    private double lastAccelerationX;
 
     /**
      * Last sample of linear acceleration along y-axis.
      */
-    private double mLastAccelerationY;
+    private double lastAccelerationY;
 
     /**
      * Last sample of linear acceleration along z-axis.
      */
-    private double mLastAccelerationZ;
+    private double lastAccelerationZ;
 
     /**
      * Last sample of angular speed along x-axis.
      */
-    private double mLastAngularSpeedX;
+    private double lastAngularSpeedX;
 
     /**
      * Last sample of angular speed along y-axis.
      */
-    private double mLastAngularSpeedY;
+    private double lastAngularSpeedY;
 
     /**
      * Last sample of angular speed along z-axis.
      */
-    private double mLastAngularSpeedZ;
+    private double lastAngularSpeedZ;
 
     /**
      * Last timestamp of a full sample expressed in nanoseconds since the epoch
      * time.
      */
-    private long mLastTimestampNanos = -1;
+    private long lastTimestampNanos = -1;
 
     /**
      * Constructor.
@@ -71,10 +71,9 @@ public class SlamCalibrator extends BaseSlamCalibrator<SlamCalibrationData> {
     @Override
     public void reset() {
         super.reset();
-        mLastAccelerationX = mLastAccelerationY = mLastAccelerationZ =
-                mLastAngularSpeedX = mLastAngularSpeedY = mLastAngularSpeedZ =
-                        0.0;
-        mLastTimestampNanos = -1;
+        lastAccelerationX = lastAccelerationY = lastAccelerationZ =
+                lastAngularSpeedX = lastAngularSpeedY = lastAngularSpeedZ = 0.0;
+        lastTimestampNanos = -1;
     }
 
     /**
@@ -95,7 +94,7 @@ public class SlamCalibrator extends BaseSlamCalibrator<SlamCalibrationData> {
      */
     @Override
     public SlamCalibrationData getCalibrationData() {
-        final SlamCalibrationData result = new SlamCalibrationData();
+        final var result = new SlamCalibrationData();
         getCalibrationData(result);
         return result;
     }
@@ -108,65 +107,59 @@ public class SlamCalibrator extends BaseSlamCalibrator<SlamCalibrationData> {
     @SuppressWarnings("DuplicatedCode")
     @Override
     protected void processFullSample() {
-        if (mListener != null) {
-            mListener.onFullSampleReceived(this);
+        if (listener != null) {
+            listener.onFullSampleReceived(this);
         }
 
-        final long timestamp = getMostRecentTimestampNanos();
-        if (mLastTimestampNanos < 0) {
+        final var timestamp = getMostRecentTimestampNanos();
+        if (lastTimestampNanos < 0) {
             // first time receiving control data we cannot determine its
             // variation
-            mLastAccelerationX = mAccumulatedAccelerationSampleX;
-            mLastAccelerationY = mAccumulatedAccelerationSampleY;
-            mLastAccelerationZ = mAccumulatedAccelerationSampleZ;
+            lastAccelerationX = accumulatedAccelerationSampleX;
+            lastAccelerationY = accumulatedAccelerationSampleY;
+            lastAccelerationZ = accumulatedAccelerationSampleZ;
 
-            mLastAngularSpeedX = mAccumulatedAngularSpeedSampleX;
-            mLastAngularSpeedY = mAccumulatedAngularSpeedSampleY;
-            mLastAngularSpeedZ = mAccumulatedAngularSpeedSampleZ;
+            lastAngularSpeedX = accumulatedAngularSpeedSampleX;
+            lastAngularSpeedY = accumulatedAngularSpeedSampleY;
+            lastAngularSpeedZ = accumulatedAngularSpeedSampleZ;
 
-            mLastTimestampNanos = timestamp;
+            lastTimestampNanos = timestamp;
 
-            if (mListener != null) {
-                mListener.onFullSampleProcessed(this);
+            if (listener != null) {
+                listener.onFullSampleProcessed(this);
             }
 
             return;
         }
 
-        final double deltaAccelerationX = mAccumulatedAccelerationSampleX -
-                mLastAccelerationX;
-        final double deltaAccelerationY = mAccumulatedAccelerationSampleY -
-                mLastAccelerationY;
-        final double deltaAccelerationZ = mAccumulatedAccelerationSampleZ -
-                mLastAccelerationZ;
-        final double deltaAngularSpeedX = mAccumulatedAngularSpeedSampleX -
-                mLastAngularSpeedX;
-        final double deltaAngularSpeedY = mAccumulatedAngularSpeedSampleY -
-                mLastAngularSpeedY;
-        final double deltaAngularSpeedZ = mAccumulatedAngularSpeedSampleZ -
-                mLastAngularSpeedZ;
+        final var deltaAccelerationX = accumulatedAccelerationSampleX - lastAccelerationX;
+        final var deltaAccelerationY = accumulatedAccelerationSampleY - lastAccelerationY;
+        final var deltaAccelerationZ = accumulatedAccelerationSampleZ - lastAccelerationZ;
+        final var deltaAngularSpeedX = accumulatedAngularSpeedSampleX - lastAngularSpeedX;
+        final var deltaAngularSpeedY = accumulatedAngularSpeedSampleY - lastAngularSpeedY;
+        final var deltaAngularSpeedZ = accumulatedAngularSpeedSampleZ - lastAngularSpeedZ;
 
-        mSample[0] = mSample[1] = mSample[2] = 0.0;
-        mSample[3] = deltaAccelerationX;
-        mSample[4] = deltaAccelerationY;
-        mSample[5] = deltaAccelerationZ;
-        mSample[6] = deltaAngularSpeedX;
-        mSample[7] = deltaAngularSpeedY;
-        mSample[8] = deltaAngularSpeedZ;
+        sample[0] = sample[1] = sample[2] = 0.0;
+        sample[3] = deltaAccelerationX;
+        sample[4] = deltaAccelerationY;
+        sample[5] = deltaAccelerationZ;
+        sample[6] = deltaAngularSpeedX;
+        sample[7] = deltaAngularSpeedY;
+        sample[8] = deltaAngularSpeedZ;
         updateSample();
 
-        mLastAccelerationX = mAccumulatedAccelerationSampleX;
-        mLastAccelerationY = mAccumulatedAccelerationSampleY;
-        mLastAccelerationZ = mAccumulatedAccelerationSampleZ;
+        lastAccelerationX = accumulatedAccelerationSampleX;
+        lastAccelerationY = accumulatedAccelerationSampleY;
+        lastAccelerationZ = accumulatedAccelerationSampleZ;
 
-        mLastAngularSpeedX = mAccumulatedAngularSpeedSampleX;
-        mLastAngularSpeedY = mAccumulatedAngularSpeedSampleY;
-        mLastAngularSpeedZ = mAccumulatedAngularSpeedSampleZ;
+        lastAngularSpeedX = accumulatedAngularSpeedSampleX;
+        lastAngularSpeedY = accumulatedAngularSpeedSampleY;
+        lastAngularSpeedZ = accumulatedAngularSpeedSampleZ;
 
-        mLastTimestampNanos = timestamp;
+        lastTimestampNanos = timestamp;
 
-        if (mListener != null) {
-            mListener.onFullSampleProcessed(this);
+        if (listener != null) {
+            listener.onFullSampleProcessed(this);
         }
     }
 }

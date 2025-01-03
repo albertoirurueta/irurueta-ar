@@ -16,21 +16,20 @@
 package com.irurueta.ar.epipolar;
 
 import com.irurueta.geometry.Point2D;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class CorrectorTest {
+class CorrectorTest {
 
     @Test
-    public void testCreate() {
+    void testCreate() {
         // create with type
 
         // SAMPSON
-        Corrector corrector = Corrector.create(CorrectorType.SAMPSON_CORRECTOR);
+        var corrector = Corrector.create(CorrectorType.SAMPSON_CORRECTOR);
 
         // check correctness
         assertNull(corrector.getFundamentalMatrix());
@@ -43,7 +42,7 @@ public class CorrectorTest {
         assertNull(corrector.getListener());
         assertFalse(corrector.isReady());
         assertEquals(CorrectorType.SAMPSON_CORRECTOR, corrector.getType());
-        assertTrue(corrector instanceof SampsonCorrector);
+        assertInstanceOf(SampsonCorrector.class, corrector);
 
         // GOLD STANDARD
         corrector = Corrector.create(CorrectorType.GOLD_STANDARD);
@@ -59,10 +58,10 @@ public class CorrectorTest {
         assertNull(corrector.getListener());
         assertFalse(corrector.isReady());
         assertEquals(CorrectorType.GOLD_STANDARD, corrector.getType());
-        assertTrue(corrector instanceof GoldStandardCorrector);
+        assertInstanceOf(GoldStandardCorrector.class, corrector);
 
         // create with fundamental matrix and type
-        final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix();
+        final var fundamentalMatrix = new FundamentalMatrix();
 
         // SAMPSON
         corrector = Corrector.create(fundamentalMatrix, CorrectorType.SAMPSON_CORRECTOR);
@@ -78,7 +77,7 @@ public class CorrectorTest {
         assertNull(corrector.getListener());
         assertFalse(corrector.isReady());
         assertEquals(CorrectorType.SAMPSON_CORRECTOR, corrector.getType());
-        assertTrue(corrector instanceof SampsonCorrector);
+        assertInstanceOf(SampsonCorrector.class, corrector);
 
         // GOLD STANDARD
         corrector = Corrector.create(fundamentalMatrix, CorrectorType.GOLD_STANDARD);
@@ -94,11 +93,11 @@ public class CorrectorTest {
         assertNull(corrector.getListener());
         assertFalse(corrector.isReady());
         assertEquals(CorrectorType.GOLD_STANDARD, corrector.getType());
-        assertTrue(corrector instanceof GoldStandardCorrector);
+        assertInstanceOf(GoldStandardCorrector.class, corrector);
 
         // create with points and type
-        final List<Point2D> leftPoints = new ArrayList<>();
-        final List<Point2D> rightPoints = new ArrayList<>();
+        final var leftPoints = new ArrayList<Point2D>();
+        final var rightPoints = new ArrayList<Point2D>();
 
         // SAMPSON
         corrector = Corrector.create(leftPoints, rightPoints, CorrectorType.SAMPSON_CORRECTOR);
@@ -114,7 +113,7 @@ public class CorrectorTest {
         assertNull(corrector.getListener());
         assertFalse(corrector.isReady());
         assertEquals(CorrectorType.SAMPSON_CORRECTOR, corrector.getType());
-        assertTrue(corrector instanceof SampsonCorrector);
+        assertInstanceOf(SampsonCorrector.class, corrector);
 
         // GOLD STANDARD
         corrector = Corrector.create(leftPoints, rightPoints, CorrectorType.GOLD_STANDARD);
@@ -130,13 +129,12 @@ public class CorrectorTest {
         assertNull(corrector.getListener());
         assertFalse(corrector.isReady());
         assertEquals(CorrectorType.GOLD_STANDARD, corrector.getType());
-        assertTrue(corrector instanceof GoldStandardCorrector);
+        assertInstanceOf(GoldStandardCorrector.class, corrector);
 
         // create with points, fundamental matrix and type
 
         // SAMPSON
-        corrector = Corrector.create(leftPoints, rightPoints, fundamentalMatrix,
-                CorrectorType.SAMPSON_CORRECTOR);
+        corrector = Corrector.create(leftPoints, rightPoints, fundamentalMatrix, CorrectorType.SAMPSON_CORRECTOR);
 
         // check correctness
         assertSame(fundamentalMatrix, corrector.getFundamentalMatrix());
@@ -149,11 +147,10 @@ public class CorrectorTest {
         assertNull(corrector.getListener());
         assertFalse(corrector.isReady());
         assertEquals(CorrectorType.SAMPSON_CORRECTOR, corrector.getType());
-        assertTrue(corrector instanceof SampsonCorrector);
+        assertInstanceOf(SampsonCorrector.class, corrector);
 
         // GOLD STANDARD
-        corrector = Corrector.create(leftPoints, rightPoints, fundamentalMatrix,
-                CorrectorType.GOLD_STANDARD);
+        corrector = Corrector.create(leftPoints, rightPoints, fundamentalMatrix, CorrectorType.GOLD_STANDARD);
 
         // check correctness
         assertSame(fundamentalMatrix, corrector.getFundamentalMatrix());
@@ -166,21 +163,24 @@ public class CorrectorTest {
         assertNull(corrector.getListener());
         assertFalse(corrector.isReady());
         assertEquals(CorrectorType.GOLD_STANDARD, corrector.getType());
-        assertTrue(corrector instanceof GoldStandardCorrector);
+        assertInstanceOf(GoldStandardCorrector.class, corrector);
 
         // create with listener and type
-        final CorrectorListener listener = new CorrectorListener() {
+        final var listener = new CorrectorListener() {
 
             @Override
             public void onCorrectStart(final Corrector corrector) {
+                // no action needed
             }
 
             @Override
             public void onCorrectEnd(final Corrector corrector) {
+                // no action needed
             }
 
             @Override
             public void onCorrectProgressChange(final Corrector corrector, final float progress) {
+                // no action needed
             }
         };
 
@@ -198,7 +198,7 @@ public class CorrectorTest {
         assertSame(listener, corrector.getListener());
         assertFalse(corrector.isReady());
         assertEquals(CorrectorType.SAMPSON_CORRECTOR, corrector.getType());
-        assertTrue(corrector instanceof SampsonCorrector);
+        assertInstanceOf(SampsonCorrector.class, corrector);
 
         // GOLD STANDARD
         corrector = Corrector.create(listener, CorrectorType.GOLD_STANDARD);
@@ -214,7 +214,7 @@ public class CorrectorTest {
         assertSame(listener, corrector.getListener());
         assertFalse(corrector.isReady());
         assertEquals(CorrectorType.GOLD_STANDARD, corrector.getType());
-        assertTrue(corrector instanceof GoldStandardCorrector);
+        assertInstanceOf(GoldStandardCorrector.class, corrector);
 
         // create with fundamental matrix, listener and type
 
@@ -232,7 +232,7 @@ public class CorrectorTest {
         assertSame(listener, corrector.getListener());
         assertFalse(corrector.isReady());
         assertEquals(CorrectorType.SAMPSON_CORRECTOR, corrector.getType());
-        assertTrue(corrector instanceof SampsonCorrector);
+        assertInstanceOf(SampsonCorrector.class, corrector);
 
         // GOLD STANDARD
         corrector = Corrector.create(fundamentalMatrix, listener, CorrectorType.GOLD_STANDARD);
@@ -248,7 +248,7 @@ public class CorrectorTest {
         assertSame(listener, corrector.getListener());
         assertFalse(corrector.isReady());
         assertEquals(CorrectorType.GOLD_STANDARD, corrector.getType());
-        assertTrue(corrector instanceof GoldStandardCorrector);
+        assertInstanceOf(GoldStandardCorrector.class, corrector);
 
         // create with points, listener and type
 
@@ -266,7 +266,7 @@ public class CorrectorTest {
         assertSame(listener, corrector.getListener());
         assertFalse(corrector.isReady());
         assertEquals(CorrectorType.SAMPSON_CORRECTOR, corrector.getType());
-        assertTrue(corrector instanceof SampsonCorrector);
+        assertInstanceOf(SampsonCorrector.class, corrector);
 
         // GOLD STANDARD
         corrector = Corrector.create(leftPoints, rightPoints, listener, CorrectorType.GOLD_STANDARD);
@@ -282,13 +282,13 @@ public class CorrectorTest {
         assertSame(listener, corrector.getListener());
         assertFalse(corrector.isReady());
         assertEquals(CorrectorType.GOLD_STANDARD, corrector.getType());
-        assertTrue(corrector instanceof GoldStandardCorrector);
+        assertInstanceOf(GoldStandardCorrector.class, corrector);
 
         // create with points, fundamental matrix, listener and type
 
         // SAMPSON
-        corrector = Corrector.create(leftPoints, rightPoints, fundamentalMatrix,
-                listener, CorrectorType.SAMPSON_CORRECTOR);
+        corrector = Corrector.create(leftPoints, rightPoints, fundamentalMatrix, listener,
+                CorrectorType.SAMPSON_CORRECTOR);
 
         // check correctness
         assertSame(fundamentalMatrix, corrector.getFundamentalMatrix());
@@ -301,11 +301,10 @@ public class CorrectorTest {
         assertSame(listener, corrector.getListener());
         assertFalse(corrector.isReady());
         assertEquals(CorrectorType.SAMPSON_CORRECTOR, corrector.getType());
-        assertTrue(corrector instanceof SampsonCorrector);
+        assertInstanceOf(SampsonCorrector.class, corrector);
 
         // GOLD STANDARD
-        corrector = Corrector.create(leftPoints, rightPoints, fundamentalMatrix,
-                listener, CorrectorType.GOLD_STANDARD);
+        corrector = Corrector.create(leftPoints, rightPoints, fundamentalMatrix, listener, CorrectorType.GOLD_STANDARD);
 
         // check correctness
         assertSame(fundamentalMatrix, corrector.getFundamentalMatrix());
@@ -318,7 +317,7 @@ public class CorrectorTest {
         assertSame(listener, corrector.getListener());
         assertFalse(corrector.isReady());
         assertEquals(CorrectorType.GOLD_STANDARD, corrector.getType());
-        assertTrue(corrector instanceof GoldStandardCorrector);
+        assertInstanceOf(GoldStandardCorrector.class, corrector);
 
         // create without arguments
         corrector = Corrector.create();

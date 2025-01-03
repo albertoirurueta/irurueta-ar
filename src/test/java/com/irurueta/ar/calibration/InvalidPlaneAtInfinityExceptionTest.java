@@ -15,26 +15,24 @@
  */
 package com.irurueta.ar.calibration;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class InvalidPlaneAtInfinityExceptionTest {
+class InvalidPlaneAtInfinityExceptionTest {
 
     @Test
-    public void testConstructor() {
-        InvalidPlaneAtInfinityException ex = new InvalidPlaneAtInfinityException();
+    void testConstructor() {
+        var ex = new InvalidPlaneAtInfinityException();
         assertNotNull(ex);
 
         ex = new InvalidPlaneAtInfinityException("message");
         assertNotNull(ex);
 
-        ex = new InvalidPlaneAtInfinityException(
-                new Exception());
+        ex = new InvalidPlaneAtInfinityException(new Exception());
         assertNotNull(ex);
 
-        ex = new InvalidPlaneAtInfinityException("message",
-                new Exception());
+        ex = new InvalidPlaneAtInfinityException("message", new Exception());
         assertNotNull(ex);
     }
 }

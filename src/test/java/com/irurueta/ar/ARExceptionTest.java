@@ -15,15 +15,15 @@
  */
 package com.irurueta.ar;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class ARExceptionTest {
+class ARExceptionTest {
 
     @Test
-    public void testConstructor() {
-        ARException ex = new ARException();
+    void testConstructor() {
+        var ex = new ARException();
         assertNotNull(ex);
 
         ex = new ARException("message");

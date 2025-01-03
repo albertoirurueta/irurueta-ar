@@ -57,27 +57,27 @@ public class HomographyDecomposer {
     /**
      * 2D transformation relating two views (left view to right view).
      */
-    private Transformation2D mHomography;
+    private Transformation2D homography;
 
     /**
      * Intrinsic parameters to be used on left view.
      */
-    private PinholeCameraIntrinsicParameters mLeftIntrinsics;
+    private PinholeCameraIntrinsicParameters leftIntrinsics;
 
     /**
      * Intrinsic parameters to be used on right view.
      */
-    private PinholeCameraIntrinsicParameters mRightIntrinsics;
+    private PinholeCameraIntrinsicParameters rightIntrinsics;
 
     /**
      * Listener to handle events raised by this instance.
      */
-    private HomographyDecomposerListener mListener;
+    private HomographyDecomposerListener listener;
 
     /**
      * Indicates whether decomposer is locked while computing decomposition.
      */
-    private boolean mLocked;
+    private boolean locked;
 
     /**
      * Constructor.
@@ -96,9 +96,9 @@ public class HomographyDecomposer {
     public HomographyDecomposer(final Transformation2D homography,
                                 final PinholeCameraIntrinsicParameters leftIntrinsics,
                                 final PinholeCameraIntrinsicParameters rightIntrinsics) {
-        mHomography = homography;
-        mLeftIntrinsics = leftIntrinsics;
-        mRightIntrinsics = rightIntrinsics;
+        this.homography = homography;
+        this.leftIntrinsics = leftIntrinsics;
+        this.rightIntrinsics = rightIntrinsics;
     }
 
     /**
@@ -115,7 +115,7 @@ public class HomographyDecomposer {
                                 final PinholeCameraIntrinsicParameters rightIntrinsics,
                                 final HomographyDecomposerListener listener) {
         this(homography, leftIntrinsics, rightIntrinsics);
-        mListener = listener;
+        this.listener = listener;
     }
 
     /**
@@ -124,7 +124,7 @@ public class HomographyDecomposer {
      * @return 2D transformation relating two views.
      */
     public Transformation2D getHomography() {
-        return mHomography;
+        return homography;
     }
 
     /**
@@ -133,12 +133,11 @@ public class HomographyDecomposer {
      * @param homography 2D transformation relating two views.
      * @throws LockedException if estimator is locked.
      */
-    public void setHomography(final Transformation2D homography)
-            throws LockedException {
+    public void setHomography(final Transformation2D homography) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mHomography = homography;
+        this.homography = homography;
     }
 
     /**
@@ -147,7 +146,7 @@ public class HomographyDecomposer {
      * @return intrinsic parameters to be used on left view.
      */
     public PinholeCameraIntrinsicParameters getLeftIntrinsics() {
-        return mLeftIntrinsics;
+        return leftIntrinsics;
     }
 
     /**
@@ -156,13 +155,11 @@ public class HomographyDecomposer {
      * @param leftIntrinsics intrinsic parameters to be used on left view.
      * @throws LockedException if estimator is locked.
      */
-    public void setLeftIntrinsics(
-            final PinholeCameraIntrinsicParameters leftIntrinsics)
-            throws LockedException {
+    public void setLeftIntrinsics(final PinholeCameraIntrinsicParameters leftIntrinsics) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mLeftIntrinsics = leftIntrinsics;
+        this.leftIntrinsics = leftIntrinsics;
     }
 
     /**
@@ -171,7 +168,7 @@ public class HomographyDecomposer {
      * @return intrinsic parameters to be used on right view.
      */
     public PinholeCameraIntrinsicParameters getRightIntrinsics() {
-        return mRightIntrinsics;
+        return rightIntrinsics;
     }
 
     /**
@@ -180,13 +177,11 @@ public class HomographyDecomposer {
      * @param rightIntrinsics intrinsic parameters to be used on right view.
      * @throws LockedException if estimator is locked.
      */
-    public void setRightIntrinsics(
-            final PinholeCameraIntrinsicParameters rightIntrinsics)
-            throws LockedException {
+    public void setRightIntrinsics(final PinholeCameraIntrinsicParameters rightIntrinsics) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mRightIntrinsics = rightIntrinsics;
+        this.rightIntrinsics = rightIntrinsics;
     }
 
     /**
@@ -195,7 +190,7 @@ public class HomographyDecomposer {
      * @return listener to handle events raised by this instance.
      */
     public HomographyDecomposerListener getListener() {
-        return mListener;
+        return listener;
     }
 
     /**
@@ -204,7 +199,7 @@ public class HomographyDecomposer {
      * @param listener listener to handle events raised by this instance.
      */
     public void setListener(final HomographyDecomposerListener listener) {
-        mListener = listener;
+        this.listener = listener;
     }
 
     /**
@@ -213,7 +208,7 @@ public class HomographyDecomposer {
      * @return true if decomposer is locked, false otherwise.
      */
     public boolean isLocked() {
-        return mLocked;
+        return locked;
     }
 
     /**
@@ -223,8 +218,7 @@ public class HomographyDecomposer {
      * @return true if decomposer is ready, false otherwise.
      */
     public boolean isReady() {
-        return mHomography != null && mLeftIntrinsics != null &&
-                mRightIntrinsics != null;
+        return homography != null && leftIntrinsics != null && rightIntrinsics != null;
     }
 
     /**
@@ -238,10 +232,9 @@ public class HomographyDecomposer {
      * @throws HomographyDecomposerException if decomposition fails for some
      *                                       other reason (i.e. numerical instabilities).
      */
-    public List<HomographyDecomposition> decompose() throws LockedException,
-            NotReadyException, HomographyDecomposerException {
-        final List<HomographyDecomposition> result =
-                new ArrayList<>();
+    public List<HomographyDecomposition> decompose() throws LockedException, NotReadyException,
+            HomographyDecomposerException {
+        final var result = new ArrayList<HomographyDecomposition>();
         decompose(result);
         return result;
     }
@@ -257,8 +250,7 @@ public class HomographyDecomposer {
      * @throws HomographyDecomposerException if decomposition fails for some
      *                                       other reason (i.e. numerical instabilities).
      */
-    public void decompose(final List<HomographyDecomposition> result)
-            throws LockedException, NotReadyException,
+    public void decompose(final List<HomographyDecomposition> result) throws LockedException, NotReadyException,
             HomographyDecomposerException {
         if (isLocked()) {
             throw new LockedException();
@@ -269,14 +261,14 @@ public class HomographyDecomposer {
         }
 
         try {
-            mLocked = true;
+            locked = true;
             result.clear();
 
-            if (mListener != null) {
-                mListener.onDecomposeStart(this);
+            if (listener != null) {
+                listener.onDecomposeStart(this);
             }
 
-            final Matrix h = computeNormalizedCoordinatesHomographyMatrix();
+            final var h = computeNormalizedCoordinatesHomographyMatrix();
 
             // Homography matrix H can be expressed as:
             // H = d*R + t*n^T
@@ -300,67 +292,58 @@ public class HomographyDecomposer {
             // t = U*t'
             // n^T = n'T*V^T --> n = V*n'
 
-            final SingularValueDecomposer svdDecomposer =
-                    new SingularValueDecomposer(h);
+            final var svdDecomposer = new SingularValueDecomposer(h);
             svdDecomposer.decompose();
-            final Matrix u = svdDecomposer.getU();
-            final double[] singularValues = svdDecomposer.getSingularValues();
-            final Matrix v = svdDecomposer.getV();
+            final var u = svdDecomposer.getU();
+            final var singularValues = svdDecomposer.getSingularValues();
+            final var v = svdDecomposer.getV();
 
-            final List<double[]> n = new ArrayList<>();
-            final List<Matrix> r = new ArrayList<>();
-            final List<double[]> t = new ArrayList<>();
-            final List<Double> d = new ArrayList<>();
-            final int numSolutions = decomposeAllFromSingularValues(singularValues, n,
-                    r, t, d);
+            final var n = new ArrayList<double[]>();
+            final var r = new ArrayList<Matrix>();
+            final var t = new ArrayList<double[]>();
+            final var d = new ArrayList<Double>();
+            final var numSolutions = decomposeAllFromSingularValues(singularValues, n, r, t, d);
 
-            final Matrix transV = v.transposeAndReturnNew();
-            final Matrix translationMatrix = new Matrix(NUM_COORDS_3D, 1);
-            final Matrix planeNormalMatrix = new Matrix(NUM_COORDS_3D, 1);
+            final var transV = v.transposeAndReturnNew();
+            final var translationMatrix = new Matrix(NUM_COORDS_3D, 1);
+            final var planeNormalMatrix = new Matrix(NUM_COORDS_3D, 1);
 
-            for (int i = 0; i < numSolutions; i++) {
+            for (var i = 0; i < numSolutions; i++) {
                 // undo U, V decomposition
 
                 // R = U*R'*V^T
-                final Matrix denormalizedR = new Matrix(u);
+                final var denormalizedR = new Matrix(u);
                 denormalizedR.multiply(r.get(i));
                 denormalizedR.multiply(transV);
 
                 // t = U*t'
                 translationMatrix.fromArray(t.get(i), true);
-                final Matrix denormalizedTranslationMatrix = u.multiplyAndReturnNew(
-                        translationMatrix);
+                final var denormalizedTranslationMatrix = u.multiplyAndReturnNew(translationMatrix);
 
                 // n = V*n'
                 planeNormalMatrix.fromArray(n.get(i));
-                final Matrix denormalizedPlaneNormalMatrix = v.multiplyAndReturnNew(
-                        planeNormalMatrix);
+                final var denormalizedPlaneNormalMatrix = v.multiplyAndReturnNew(planeNormalMatrix);
 
-                final double denormalizedPlaneDistance = d.get(i);
+                final var denormalizedPlaneDistance = d.get(i);
 
                 // rotation
-                final MatrixRotation3D denormalizedRotation = new MatrixRotation3D(
-                        denormalizedR);
-                final double[] denormalizedTranslation =
-                        denormalizedTranslationMatrix.getBuffer();
-                final double[] denormalizedPlaneNormal =
-                        denormalizedPlaneNormalMatrix.getBuffer();
+                final var denormalizedRotation = new MatrixRotation3D(denormalizedR);
+                final var denormalizedTranslation = denormalizedTranslationMatrix.getBuffer();
+                final var denormalizedPlaneNormal = denormalizedPlaneNormalMatrix.getBuffer();
 
                 // set rotation and translation
-                final EuclideanTransformation3D transformation =
-                        new EuclideanTransformation3D(denormalizedRotation,
-                                denormalizedTranslation);
+                final var transformation = new EuclideanTransformation3D(denormalizedRotation, denormalizedTranslation);
 
-                result.add(new HomographyDecomposition(transformation,
-                        denormalizedPlaneNormal, denormalizedPlaneDistance));
+                result.add(new HomographyDecomposition(transformation, denormalizedPlaneNormal,
+                        denormalizedPlaneDistance));
             }
         } catch (final InvalidRotationMatrixException | AlgebraException e) {
             throw new HomographyDecomposerException(e);
         } finally {
-            if (mListener != null) {
-                mListener.onDecomposeEnd(this, result);
+            if (listener != null) {
+                listener.onDecomposeEnd(this, result);
             }
-            mLocked = false;
+            locked = false;
         }
     }
 
@@ -390,10 +373,10 @@ public class HomographyDecomposer {
 
         if (areThreeDifferentSingularValues(singularValues)) {
             // Three different singular values
-            final double[] n1 = new double[NUM_COORDS_3D];
-            final double[] n2 = new double[NUM_COORDS_3D];
-            final double[] n3 = new double[NUM_COORDS_3D];
-            final double[] n4 = new double[NUM_COORDS_3D];
+            final var n1 = new double[NUM_COORDS_3D];
+            final var n2 = new double[NUM_COORDS_3D];
+            final var n3 = new double[NUM_COORDS_3D];
+            final var n4 = new double[NUM_COORDS_3D];
             Matrix r1 = null;
             Matrix r2 = null;
             Matrix r3 = null;
@@ -407,19 +390,19 @@ public class HomographyDecomposer {
                 // never thrown
             }
 
-            final double[] t1 = new double[NUM_COORDS_3D];
-            final double[] t2 = new double[NUM_COORDS_3D];
-            final double[] t3 = new double[NUM_COORDS_3D];
-            final double[] t4 = new double[NUM_COORDS_3D];
+            final var t1 = new double[NUM_COORDS_3D];
+            final var t2 = new double[NUM_COORDS_3D];
+            final var t3 = new double[NUM_COORDS_3D];
+            final var t4 = new double[NUM_COORDS_3D];
 
-            final double planeDistance1 = decomposeFromSingularValues(singularValues,
-                    n1, r1, t1, true, true);
-            final double planeDistance2 = decomposeFromSingularValues(singularValues,
-                    n2, r2, t2, false, true);
-            final double planeDistance3 = decomposeFromSingularValues(singularValues,
-                    n3, r3, t3, true, false);
-            final double planeDistance4 = decomposeFromSingularValues(singularValues,
-                    n4, r4, t4, false, false);
+            final var planeDistance1 = decomposeFromSingularValues(singularValues, n1, r1, t1, true,
+                    true);
+            final var planeDistance2 = decomposeFromSingularValues(singularValues, n2, r2, t2, false,
+                    true);
+            final var planeDistance3 = decomposeFromSingularValues(singularValues, n3, r3, t3, true,
+                    false);
+            final var planeDistance4 = decomposeFromSingularValues(singularValues, n4, r4, t4, false,
+                    false);
 
             n.add(n1);
             n.add(n2);
@@ -445,8 +428,8 @@ public class HomographyDecomposer {
 
         } else if (areTwoEqualSingularValues(singularValues)) {
             // Two different singular values
-            final double[] n1 = new double[NUM_COORDS_3D];
-            final double[] n2 = new double[NUM_COORDS_3D];
+            final var n1 = new double[NUM_COORDS_3D];
+            final var n2 = new double[NUM_COORDS_3D];
             Matrix r1 = null;
             Matrix r2 = null;
             try {
@@ -456,13 +439,13 @@ public class HomographyDecomposer {
                 // never thrown
             }
 
-            final double[] t1 = new double[NUM_COORDS_3D];
-            final double[] t2 = new double[NUM_COORDS_3D];
+            final var t1 = new double[NUM_COORDS_3D];
+            final var t2 = new double[NUM_COORDS_3D];
 
-            final double planeDistance1 = decomposeFromSingularValues(singularValues,
-                    n1, r1, t1, true, true);
-            final double planeDistance2 = decomposeFromSingularValues(singularValues,
-                    n2, r2, t2, true, false);
+            final var planeDistance1 = decomposeFromSingularValues(singularValues, n1, r1, t1, true,
+                    true);
+            final var planeDistance2 = decomposeFromSingularValues(singularValues, n2, r2, t2, true,
+                    false);
 
             n.add(n1);
             n.add(n2);
@@ -491,14 +474,13 @@ public class HomographyDecomposer {
      * @return true if there are three different singular values, false
      * otherwise.
      */
-    private static boolean areThreeDifferentSingularValues(
-            final double[] singularValues) {
-        final double d1 = singularValues[0];
-        final double d2 = singularValues[1];
-        final double d3 = singularValues[2];
+    private static boolean areThreeDifferentSingularValues(final double[] singularValues) {
+        final var d1 = singularValues[0];
+        final var d2 = singularValues[1];
+        final var d3 = singularValues[2];
 
-        return (Math.abs(d1 - d2) > EQUAL_SINGULAR_VALUE_THRESHOLD) &&
-                (Math.abs(d2 - d3) > EQUAL_SINGULAR_VALUE_THRESHOLD);
+        return (Math.abs(d1 - d2) > EQUAL_SINGULAR_VALUE_THRESHOLD)
+                && (Math.abs(d2 - d3) > EQUAL_SINGULAR_VALUE_THRESHOLD);
     }
 
     /**
@@ -508,14 +490,14 @@ public class HomographyDecomposer {
      * @return true if there are two equal singular values, false otherwise.
      */
     private static boolean areTwoEqualSingularValues(final double[] singularValues) {
-        final double d1 = singularValues[0];
-        final double d2 = singularValues[1];
-        final double d3 = singularValues[2];
+        final var d1 = singularValues[0];
+        final var d2 = singularValues[1];
+        final var d3 = singularValues[2];
 
-        return ((Math.abs(d1 - d2) <= EQUAL_SINGULAR_VALUE_THRESHOLD) &&
-                (Math.abs(d2 - d3) > EQUAL_SINGULAR_VALUE_THRESHOLD)) ||
-                ((Math.abs(d1 - d2) > EQUAL_SINGULAR_VALUE_THRESHOLD) &&
-                        (Math.abs(d2 - d3) <= EQUAL_SINGULAR_VALUE_THRESHOLD));
+        return ((Math.abs(d1 - d2) <= EQUAL_SINGULAR_VALUE_THRESHOLD)
+                && (Math.abs(d2 - d3) > EQUAL_SINGULAR_VALUE_THRESHOLD))
+                || ((Math.abs(d1 - d2) > EQUAL_SINGULAR_VALUE_THRESHOLD)
+                && (Math.abs(d2 - d3) <= EQUAL_SINGULAR_VALUE_THRESHOLD));
     }
 
     /**
@@ -532,24 +514,20 @@ public class HomographyDecomposer {
      *                                       when all three singular values are equal.
      */
     private double decomposeFromSingularValues(
-            final double[] singularValues,
-            final double[] n, final Matrix r,
-            final double[] t, final boolean positive1,
+            final double[] singularValues, final double[] n, final Matrix r, final double[] t, final boolean positive1,
             final boolean positive3) throws HomographyDecomposerException {
-        final double d1 = singularValues[0];
-        final double d2 = singularValues[1];
-        final double d3 = singularValues[2];
+        final var d1 = singularValues[0];
+        final var d2 = singularValues[1];
+        final var d3 = singularValues[2];
 
         if (areThreeDifferentSingularValues(singularValues)) {
             // Three different singular values
             if (d2 > 0.0) {
                 // Three different singular values d1 != d2 != d3 and d'= d2 > 0
-                return decomposeFromThreeDifferentSingularValuesPositive(d1, d2,
-                        d3, n, r, t, positive1, positive3);
+                return decomposeFromThreeDifferentSingularValuesPositive(d1, d2, d3, n, r, t, positive1, positive3);
             } else {
                 // Three different singular values and d' = d2 < 0
-                return decomposeFromThreeDifferentSingularValuesNegative(d1, d2,
-                        d3, n, r, t, positive1, positive3);
+                return decomposeFromThreeDifferentSingularValuesNegative(d1, d2, d3, n, r, t, positive1, positive3);
             }
         }
         if (areTwoEqualSingularValues(singularValues)) {
@@ -557,13 +535,11 @@ public class HomographyDecomposer {
             if (d2 > 0.0) {
                 // Two different singular values d1 = d2 != d3 or d1 != d2 = d3
                 // and d2 > 0
-                return decomposeFromTwoDifferentSingularValuesPositive(d1, d2,
-                        d3, n, r, t, positive3);
+                return decomposeFromTwoDifferentSingularValuesPositive(d1, d2, d3, n, r, t, positive3);
             } else {
                 // Two different singular values d1 = d2 != d3 or d1 != d2 = d3
                 // and d2 < 0
-                return decomposeFromTwoDifferentSingularValuesNegative(d1, d2,
-                        d3, n, r, t, positive3);
+                return decomposeFromTwoDifferentSingularValuesNegative(d1, d2, d3, n, r, t, positive3);
             }
         } else {
             // Three equal singular values
@@ -586,8 +562,7 @@ public class HomographyDecomposer {
      * @return distance to plane.
      */
     private double decomposeFromTwoDifferentSingularValuesNegative(
-            final double d1, final double d2, final double d3,
-            final double[] n, final Matrix r, final double[] t,
+            final double d1, final double d2, final double d3, final double[] n, final Matrix r, final double[] t,
             final boolean positive3) {
 
         // fill plane normal solution
@@ -611,7 +586,7 @@ public class HomographyDecomposer {
         r.setElementAt(2, 2, 1.0);
 
         // compute translation
-        final double sum = d3 + d1;
+        final var sum = d3 + d1;
         t[0] = 0.0;
         t[1] = 0.0;
         t[2] = sum * n[2];
@@ -635,8 +610,7 @@ public class HomographyDecomposer {
      * @return distance to plane.
      */
     private double decomposeFromTwoDifferentSingularValuesPositive(
-            final double d1, final double d2, final double d3,
-            final double[] n, final Matrix r, final double[] t,
+            final double d1, final double d2, final double d3, final double[] n, final Matrix r, final double[] t,
             final boolean positive3) {
 
         // fill plane normal solution
@@ -660,7 +634,7 @@ public class HomographyDecomposer {
         r.setElementAt(2, 2, 1.0);
 
         // compute translation
-        final double diff = d1 - d3;
+        final var diff = d1 - d3;
         t[0] = 0.0;
         t[1] = 0.0;
         t[2] = -diff * n[2];
@@ -685,24 +659,23 @@ public class HomographyDecomposer {
      * @return distance to plane.
      */
     private double decomposeFromThreeDifferentSingularValuesNegative(
-            final double d1, final double d2, final double d3,
-            final double[] n, final Matrix r, final double[] t,
+            final double d1, final double d2, final double d3, final double[] n, final Matrix r, final double[] t,
             final boolean positive1, final boolean positive3) {
-        final double d1Sqr = d1 * d1;
-        final double d2Sqr = d2 * d2;
-        final double d3Sqr = d3 * d3;
+        final var d1Sqr = d1 * d1;
+        final var d2Sqr = d2 * d2;
+        final var d3Sqr = d3 * d3;
 
         // compute plane normal
-        final double denom = d1Sqr - d3Sqr;
+        final var denom = d1Sqr - d3Sqr;
 
-        double x1 = Math.sqrt((d1Sqr - d2Sqr) / denom);
+        var x1 = Math.sqrt((d1Sqr - d2Sqr) / denom);
         if (!positive1) {
             x1 = -x1;
         }
 
-        final double x2 = 0.0;
+        final var x2 = 0.0;
 
-        double x3 = Math.sqrt((d2Sqr - d3Sqr) / denom);
+        var x3 = Math.sqrt((d2Sqr - d3Sqr) / denom);
         if (!positive3) {
             x3 = -x3;
         }
@@ -713,11 +686,11 @@ public class HomographyDecomposer {
         n[2] = x3;
 
         // compute rotation
-        final double x1Sqr = x1 * x1;
-        final double x3Sqr = x3 * x3;
+        final var x1Sqr = x1 * x1;
+        final var x3Sqr = x3 * x3;
 
-        final double sinTheta = (d1 + d3) * x1 * x3 / d2;
-        final double cosTheta = (d3 * x1Sqr - d1 * x3Sqr) / d2;
+        final var sinTheta = (d1 + d3) * x1 * x3 / d2;
+        final var cosTheta = (d3 * x1Sqr - d1 * x3Sqr) / d2;
 
         // fill rotation matrix
         r.setElementAt(0, 0, cosTheta);
@@ -732,9 +705,8 @@ public class HomographyDecomposer {
         r.setElementAt(1, 2, 0.0);
         r.setElementAt(2, 2, cosTheta);
 
-
         // compute translation
-        final double sum = d1 + d3;
+        final var sum = d1 + d3;
         t[0] = sum * x1;
         t[1] = 0.0;
         t[2] = sum * x3;
@@ -759,24 +731,23 @@ public class HomographyDecomposer {
      * @return distance to plane.
      */
     private double decomposeFromThreeDifferentSingularValuesPositive(
-            final double d1, final double d2, final double d3,
-            final double[] n, final Matrix r, final double[] t,
+            final double d1, final double d2, final double d3, final double[] n, final Matrix r, final double[] t,
             final boolean positive1, final boolean positive3) {
-        final double d1Sqr = d1 * d1;
-        final double d2Sqr = d2 * d2;
-        final double d3Sqr = d3 * d3;
+        final var d1Sqr = d1 * d1;
+        final var d2Sqr = d2 * d2;
+        final var d3Sqr = d3 * d3;
 
         // compute plane normal
-        final double denom = d1Sqr - d3Sqr;
+        final var denom = d1Sqr - d3Sqr;
 
-        double x1 = Math.sqrt((d1Sqr - d2Sqr) / denom);
+        var x1 = Math.sqrt((d1Sqr - d2Sqr) / denom);
         if (!positive1) {
             x1 = -x1;
         }
 
-        final double x2 = 0.0;
+        final var x2 = 0.0;
 
-        double x3 = Math.sqrt((d2Sqr - d3Sqr) / denom);
+        var x3 = Math.sqrt((d2Sqr - d3Sqr) / denom);
         if (!positive3) {
             x3 = -x3;
         }
@@ -787,11 +758,11 @@ public class HomographyDecomposer {
         n[2] = x3;
 
         // compute rotation
-        final double x1Sqr = x1 * x1;
-        final double x3Sqr = x3 * x3;
+        final var x1Sqr = x1 * x1;
+        final var x3Sqr = x3 * x3;
 
-        final double sinTheta = (d1 - d3) * x1 * x3 / d2;
-        final double cosTheta = (d1 * x3Sqr + d3 * x1Sqr) / d2;
+        final var sinTheta = (d1 - d3) * x1 * x3 / d2;
+        final var cosTheta = (d1 * x3Sqr + d3 * x1Sqr) / d2;
 
         // fill rotation matrix
         r.setElementAt(0, 0, cosTheta);
@@ -808,7 +779,7 @@ public class HomographyDecomposer {
 
 
         // compute translation
-        final double diff = d1 - d3;
+        final var diff = d1 - d3;
         t[0] = diff * x1;
         t[1] = 0.0;
         t[2] = -diff * x3;
@@ -824,8 +795,7 @@ public class HomographyDecomposer {
      * @return normalized homography matrix
      * @throws AlgebraException if there are numerical instabilities.
      */
-    private Matrix computeNormalizedCoordinatesHomographyMatrix()
-            throws AlgebraException {
+    private Matrix computeNormalizedCoordinatesHomographyMatrix() throws AlgebraException {
         // we know that point p1 in the left view is related to point p2
         // in the right view by homography G so that:
         // p2 = G*p1
@@ -840,9 +810,9 @@ public class HomographyDecomposer {
         // and so we obtain:
         // H = K2^-1*G*K1, which is an homography in normalized coordinates
 
-        final Matrix k1 = mLeftIntrinsics.getInternalMatrix();
-        final Matrix invK2 = mRightIntrinsics.getInverseInternalMatrix();
-        final Matrix g = mHomography.asMatrix();
+        final var k1 = leftIntrinsics.getInternalMatrix();
+        final var invK2 = rightIntrinsics.getInverseInternalMatrix();
+        final var g = homography.asMatrix();
 
         // compute H = K2^-1*G*K1
         g.multiply(k1);

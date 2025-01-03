@@ -27,8 +27,7 @@ public interface PlanarBestFundamentalMatrixEstimatorAndReconstructorListener {
      * @param estimatorAndReconstructor a planar best fundamental matrix
      *                                  estimator and re-constructor.
      */
-    void onEstimateStart(
-            final PlanarBestFundamentalMatrixEstimatorAndReconstructor estimatorAndReconstructor);
+    void onEstimateStart(final PlanarBestFundamentalMatrixEstimatorAndReconstructor estimatorAndReconstructor);
 
     /**
      * Called when estimation ends.
@@ -36,6 +35,5 @@ public interface PlanarBestFundamentalMatrixEstimatorAndReconstructorListener {
      * @param estimatorAndReconstructor a planar best fundamental matrix
      *                                  estimator and re-constructor.
      */
-    void onEstimateEnd(
-            final PlanarBestFundamentalMatrixEstimatorAndReconstructor estimatorAndReconstructor);
+    void onEstimateEnd(final PlanarBestFundamentalMatrixEstimatorAndReconstructor estimatorAndReconstructor);
 }

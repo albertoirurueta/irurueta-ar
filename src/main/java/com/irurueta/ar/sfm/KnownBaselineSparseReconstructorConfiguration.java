@@ -23,8 +23,7 @@ import java.io.Serializable;
  * initial baseline (separation between initial cameras) is known.
  */
 public class KnownBaselineSparseReconstructorConfiguration extends
-        BaseSparseReconstructorConfiguration<KnownBaselineSparseReconstructorConfiguration>
-        implements Serializable {
+        BaseSparseReconstructorConfiguration<KnownBaselineSparseReconstructorConfiguration> implements Serializable {
 
     /**
      * Default camera baseline (expressed in a unit of distance such as meters).
@@ -38,7 +37,7 @@ public class KnownBaselineSparseReconstructorConfiguration extends
      * Contains the real separation between camera centers so that the real scale of
      * cameras and reconstructed points can be retrieved.
      */
-    private double mBaseline = DEFAULT_BASELINE;
+    private double baseline = DEFAULT_BASELINE;
 
     /**
      * Creates an instance of a multiple view sparse re-constructor configuration with
@@ -58,7 +57,7 @@ public class KnownBaselineSparseReconstructorConfiguration extends
      * @return camera baseline.
      */
     public double getBaseline() {
-        return mBaseline;
+        return baseline;
     }
 
     /**
@@ -70,7 +69,7 @@ public class KnownBaselineSparseReconstructorConfiguration extends
      * @return this instance so that methods can be easily chained.
      */
     public KnownBaselineSparseReconstructorConfiguration setBaseline(final double baseline) {
-        mBaseline = baseline;
+        this.baseline = baseline;
         return this;
     }
 }

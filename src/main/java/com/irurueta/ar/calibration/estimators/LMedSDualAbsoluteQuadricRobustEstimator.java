@@ -32,8 +32,7 @@ import java.util.List;
  * Finds the best Dual Absolute Quadric (DAQ) for provided collection of cameras
  * using LMedS algorithm.
  */
-public class LMedSDualAbsoluteQuadricRobustEstimator extends
-        DualAbsoluteQuadricRobustEstimator {
+public class LMedSDualAbsoluteQuadricRobustEstimator extends DualAbsoluteQuadricRobustEstimator {
 
     /**
      * Default value to be used for stop threshold. Stop threshold can be used
@@ -68,14 +67,14 @@ public class LMedSDualAbsoluteQuadricRobustEstimator extends
      * lower than one typically used in RANSAC, and yet the algorithm could
      * still produce even smaller thresholds in estimated results.
      */
-    private double mStopThreshold;
+    private double stopThreshold;
 
     /**
      * Constructor.
      */
     public LMedSDualAbsoluteQuadricRobustEstimator() {
         super();
-        mStopThreshold = DEFAULT_STOP_THRESHOLD;
+        stopThreshold = DEFAULT_STOP_THRESHOLD;
     }
 
     /**
@@ -84,10 +83,9 @@ public class LMedSDualAbsoluteQuadricRobustEstimator extends
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      */
-    public LMedSDualAbsoluteQuadricRobustEstimator(
-            final DualAbsoluteQuadricRobustEstimatorListener listener) {
+    public LMedSDualAbsoluteQuadricRobustEstimator(final DualAbsoluteQuadricRobustEstimatorListener listener) {
         super(listener);
-        mStopThreshold = DEFAULT_STOP_THRESHOLD;
+        stopThreshold = DEFAULT_STOP_THRESHOLD;
     }
 
     /**
@@ -98,10 +96,9 @@ public class LMedSDualAbsoluteQuadricRobustEstimator extends
      * @throws IllegalArgumentException if not enough cameras are provided
      *                                  for default settings. Hence, at least 2 cameras must be provided.
      */
-    public LMedSDualAbsoluteQuadricRobustEstimator(
-            final List<PinholeCamera> cameras) {
+    public LMedSDualAbsoluteQuadricRobustEstimator(final List<PinholeCamera> cameras) {
         super(cameras);
-        mStopThreshold = DEFAULT_STOP_THRESHOLD;
+        stopThreshold = DEFAULT_STOP_THRESHOLD;
     }
 
     /**
@@ -115,10 +112,9 @@ public class LMedSDualAbsoluteQuadricRobustEstimator extends
      *                                  for default settings. Hence, at least 2 cameras must be provided.
      */
     public LMedSDualAbsoluteQuadricRobustEstimator(
-            final List<PinholeCamera> cameras,
-            final DualAbsoluteQuadricRobustEstimatorListener listener) {
+            final List<PinholeCamera> cameras, final DualAbsoluteQuadricRobustEstimatorListener listener) {
         super(cameras, listener);
-        mStopThreshold = DEFAULT_STOP_THRESHOLD;
+        stopThreshold = DEFAULT_STOP_THRESHOLD;
     }
 
     /**
@@ -141,7 +137,7 @@ public class LMedSDualAbsoluteQuadricRobustEstimator extends
      * accuracy has been reached.
      */
     public double getStopThreshold() {
-        return mStopThreshold;
+        return stopThreshold;
     }
 
     /**
@@ -173,7 +169,7 @@ public class LMedSDualAbsoluteQuadricRobustEstimator extends
         if (stopThreshold <= MIN_STOP_THRESHOLD) {
             throw new IllegalArgumentException();
         }
-        mStopThreshold = stopThreshold;
+        this.stopThreshold = stopThreshold;
     }
 
     /**
@@ -188,8 +184,7 @@ public class LMedSDualAbsoluteQuadricRobustEstimator extends
      */
     @SuppressWarnings("DuplicatedCode")
     @Override
-    public DualAbsoluteQuadric estimate() throws LockedException,
-            NotReadyException, RobustEstimatorException {
+    public DualAbsoluteQuadric estimate() throws LockedException, NotReadyException, RobustEstimatorException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -197,109 +192,94 @@ public class LMedSDualAbsoluteQuadricRobustEstimator extends
             throw new NotReadyException();
         }
 
-        final LMedSRobustEstimator<DualAbsoluteQuadric> innerEstimator =
-                new LMedSRobustEstimator<>(
-                        new LMedSRobustEstimatorListener<DualAbsoluteQuadric>() {
+        final var innerEstimator = new LMedSRobustEstimator<DualAbsoluteQuadric>(new LMedSRobustEstimatorListener<>() {
 
-                            // subset of cameras picked on each iteration
-                            private final List<PinholeCamera> mSubsetCameras =
-                                    new ArrayList<>();
+            // subset of cameras picked on each iteration
+            private final List<PinholeCamera> subsetCameras = new ArrayList<>();
 
-                            @Override
-                            public int getTotalSamples() {
-                                return mCameras.size();
-                            }
+            @Override
+            public int getTotalSamples() {
+                return cameras.size();
+            }
 
-                            @Override
-                            public int getSubsetSize() {
-                                return mDAQEstimator.getMinNumberOfRequiredCameras();
-                            }
+            @Override
+            public int getSubsetSize() {
+                return daqEstimator.getMinNumberOfRequiredCameras();
+            }
 
-                            @Override
-                            public void estimatePreliminarSolutions(
-                                    final int[] samplesIndices,
-                                    final List<DualAbsoluteQuadric> solutions) {
-                                mSubsetCameras.clear();
-                                for (int samplesIndex : samplesIndices) {
-                                    mSubsetCameras.add(mCameras.get(samplesIndex));
-                                }
+            @Override
+            public void estimatePreliminarSolutions(
+                    final int[] samplesIndices, final List<DualAbsoluteQuadric> solutions) {
+                subsetCameras.clear();
+                for (var samplesIndex : samplesIndices) {
+                    subsetCameras.add(cameras.get(samplesIndex));
+                }
 
-                                try {
-                                    mDAQEstimator.setLMSESolutionAllowed(false);
-                                    mDAQEstimator.setCameras(mSubsetCameras);
+                try {
+                    daqEstimator.setLMSESolutionAllowed(false);
+                    daqEstimator.setCameras(subsetCameras);
 
-                                    DualAbsoluteQuadric daq = mDAQEstimator.estimate();
-                                    solutions.add(daq);
-                                } catch (final Exception e) {
-                                    // if anything fails, no solution is added
-                                }
-                            }
+                    var daq = daqEstimator.estimate();
+                    solutions.add(daq);
+                } catch (final Exception e) {
+                    // if anything fails, no solution is added
+                }
+            }
 
-                            @Override
-                            public double computeResidual(final DualAbsoluteQuadric currentEstimation,
-                                                          final int i) {
-                                return residual(currentEstimation, mCameras.get(i));
-                            }
+            @Override
+            public double computeResidual(final DualAbsoluteQuadric currentEstimation, final int i) {
+                return residual(currentEstimation, cameras.get(i));
+            }
 
-                            @Override
-                            public boolean isReady() {
-                                return LMedSDualAbsoluteQuadricRobustEstimator.this.isReady();
-                            }
+            @Override
+            public boolean isReady() {
+                return LMedSDualAbsoluteQuadricRobustEstimator.this.isReady();
+            }
 
-                            @Override
-                            public void onEstimateStart(
-                                    final RobustEstimator<DualAbsoluteQuadric> estimator) {
-                                if (mListener != null) {
-                                    mListener.onEstimateStart(
-                                            LMedSDualAbsoluteQuadricRobustEstimator.this);
-                                }
-                            }
+            @Override
+            public void onEstimateStart(final RobustEstimator<DualAbsoluteQuadric> estimator) {
+                if (listener != null) {
+                    listener.onEstimateStart(LMedSDualAbsoluteQuadricRobustEstimator.this);
+                }
+            }
 
-                            @Override
-                            public void onEstimateEnd(
-                                    final RobustEstimator<DualAbsoluteQuadric> estimator) {
-                                if (mListener != null) {
-                                    mListener.onEstimateEnd(
-                                            LMedSDualAbsoluteQuadricRobustEstimator.this);
-                                }
-                            }
+            @Override
+            public void onEstimateEnd(final RobustEstimator<DualAbsoluteQuadric> estimator) {
+                if (listener != null) {
+                    listener.onEstimateEnd(LMedSDualAbsoluteQuadricRobustEstimator.this);
+                }
+            }
 
-                            @Override
-                            public void onEstimateNextIteration(
-                                    final RobustEstimator<DualAbsoluteQuadric> estimator,
-                                    final int iteration) {
-                                if (mListener != null) {
-                                    mListener.onEstimateNextIteration(
-                                            LMedSDualAbsoluteQuadricRobustEstimator.this,
-                                            iteration);
-                                }
-                            }
+            @Override
+            public void onEstimateNextIteration(
+                    final RobustEstimator<DualAbsoluteQuadric> estimator, final int iteration) {
+                if (listener != null) {
+                    listener.onEstimateNextIteration(LMedSDualAbsoluteQuadricRobustEstimator.this, iteration);
+                }
+            }
 
-                            @Override
-                            public void onEstimateProgressChange(
-                                    final RobustEstimator<DualAbsoluteQuadric> estimator,
-                                    final float progress) {
-                                if (mListener != null) {
-                                    mListener.onEstimateProgressChange(
-                                            LMedSDualAbsoluteQuadricRobustEstimator.this,
-                                            progress);
-                                }
-                            }
-                        });
+            @Override
+            public void onEstimateProgressChange(
+                    final RobustEstimator<DualAbsoluteQuadric> estimator, final float progress) {
+                if (listener != null) {
+                    listener.onEstimateProgressChange(LMedSDualAbsoluteQuadricRobustEstimator.this, progress);
+                }
+            }
+        });
 
         try {
-            mLocked = true;
-            innerEstimator.setConfidence(mConfidence);
-            innerEstimator.setMaxIterations(mMaxIterations);
-            innerEstimator.setProgressDelta(mProgressDelta);
-            innerEstimator.setStopThreshold(mStopThreshold);
+            locked = true;
+            innerEstimator.setConfidence(confidence);
+            innerEstimator.setMaxIterations(maxIterations);
+            innerEstimator.setProgressDelta(progressDelta);
+            innerEstimator.setStopThreshold(stopThreshold);
             return innerEstimator.estimate();
         } catch (final com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
         } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
         } finally {
-            mLocked = false;
+            locked = false;
         }
     }
 

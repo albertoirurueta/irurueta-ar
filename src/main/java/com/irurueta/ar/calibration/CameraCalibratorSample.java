@@ -43,46 +43,46 @@ public class CameraCalibratorSample {
      * combination of 2D points that must be sampled using the camera to be
      * calibrated.
      */
-    private Pattern2D mPattern;
+    private Pattern2D pattern;
 
     /**
      * Contains the sampled markers taken from a single picture using the
      * camera.
      */
-    private List<Point2D> mSampledMarkers;
+    private List<Point2D> sampledMarkers;
 
     /**
      * Contains the sampled markers of the pattern but accounting for the
      * distortion effect introduced by the camera lens.
      */
-    private List<Point2D> mUndistortedMarkers;
+    private List<Point2D> undistortedMarkers;
 
     /**
      * Quality scores of sampled markers. These can be used during
      * homography estimation if a robust estimation method such as PROSAC or
      * PROMedS is used.
      */
-    private double[] mSampledMarkersQualityScores;
+    private double[] sampledMarkersQualityScores;
 
     /**
      * 2D homography estimated from the sampled pattern points respect to
      * the ideal ones using a single picture.
      */
-    private Transformation2D mHomography;
+    private Transformation2D homography;
 
     /**
      * Estimated camera rotation. This contains the amount of rotation
      * respect to the plane formed by the pattern markers. This is obtained
      * once the IAC of the camera is estimated.
      */
-    private Rotation3D mRotation;
+    private Rotation3D rotation;
 
     /**
      * Estimated camera center. This determines the amount of translation
      * of the camera respect to the plane formed by the pattern markers. This
      * is obtained once the IAC of the camera is estimated.
      */
-    private Point3D mCameraCenter;
+    private Point3D cameraCenter;
 
     /**
      * Estimated camera. Estimated pinhole camera taking into account
@@ -90,7 +90,7 @@ public class CameraCalibratorSample {
      * respect to the plane formed by the pattern markers, but without
      * taking into account any radial distortion introduced by the lens.
      */
-    private PinholeCamera mCamera;
+    private PinholeCamera camera;
 
     /**
      * Constructor.
@@ -123,8 +123,7 @@ public class CameraCalibratorSample {
      *                                  quality scores is smaller than the required minimum (4) to estimate
      *                                  an homography, or if their sizes do not match.
      */
-    public CameraCalibratorSample(final List<Point2D> sampledMarkers,
-                                  final double[] sampledMarkersQualityScores) {
+    public CameraCalibratorSample(final List<Point2D> sampledMarkers, final double[] sampledMarkersQualityScores) {
         if (sampledMarkers.size() != sampledMarkersQualityScores.length) {
             throw new IllegalArgumentException();
         }
@@ -143,9 +142,8 @@ public class CameraCalibratorSample {
      *                                  markers is smaller than the required minimum (4) to estimate an
      *                                  homography.
      */
-    public CameraCalibratorSample(final Pattern2D pattern,
-                                  final List<Point2D> sampledMarkers) {
-        mPattern = pattern;
+    public CameraCalibratorSample(final Pattern2D pattern, final List<Point2D> sampledMarkers) {
+        this.pattern = pattern;
         setSampledMarkers(sampledMarkers);
     }
 
@@ -162,14 +160,13 @@ public class CameraCalibratorSample {
      *                                  quality scores is smaller than the required minimum (4) to estimate
      *                                  an homography, or if their sizes do not match.
      */
-    public CameraCalibratorSample(final Pattern2D pattern,
-                                  final List<Point2D> sampledMarkers,
-                                  double[] sampledMarkersQualityScores) {
+    public CameraCalibratorSample(final Pattern2D pattern, final List<Point2D> sampledMarkers,
+                                  final double[] sampledMarkersQualityScores) {
         if (sampledMarkers.size() != sampledMarkersQualityScores.length) {
             throw new IllegalArgumentException();
         }
 
-        mPattern = pattern;
+        this.pattern = pattern;
         setSampledMarkers(sampledMarkers);
         setSampledMarkersQualityScores(sampledMarkersQualityScores);
     }
@@ -182,7 +179,7 @@ public class CameraCalibratorSample {
      * @return pattern used for camera calibration.
      */
     public Pattern2D getPattern() {
-        return mPattern;
+        return pattern;
     }
 
     /**
@@ -193,7 +190,7 @@ public class CameraCalibratorSample {
      * @param pattern pattern used for camera calibration.
      */
     public void setPattern(final Pattern2D pattern) {
-        mPattern = pattern;
+        this.pattern = pattern;
     }
 
     /**
@@ -203,7 +200,7 @@ public class CameraCalibratorSample {
      * @return sampled markers of the pattern.
      */
     public List<Point2D> getSampledMarkers() {
-        return mSampledMarkers;
+        return sampledMarkers;
     }
 
     /**
@@ -220,7 +217,7 @@ public class CameraCalibratorSample {
             throw new IllegalArgumentException();
         }
 
-        mSampledMarkers = sampledMarkers;
+        this.sampledMarkers = sampledMarkers;
     }
 
     /**
@@ -233,7 +230,7 @@ public class CameraCalibratorSample {
      * @return quality scores of sampled markers.
      */
     public double[] getSampledMarkersQualityScores() {
-        return mSampledMarkersQualityScores;
+        return sampledMarkersQualityScores;
     }
 
     /**
@@ -247,13 +244,12 @@ public class CameraCalibratorSample {
      * @throws IllegalArgumentException if provided number of quality scores
      *                                  is smaller than the required minimum (4) to estimate an homography.
      */
-    public final void setSampledMarkersQualityScores(
-            final double[] sampledMarkersQualityScores) {
+    public final void setSampledMarkersQualityScores(final double[] sampledMarkersQualityScores) {
         if (sampledMarkersQualityScores.length < MIN_REQUIRED_SAMPLED_MARKERS) {
             throw new IllegalArgumentException();
         }
 
-        mSampledMarkersQualityScores = sampledMarkersQualityScores;
+        this.sampledMarkersQualityScores = sampledMarkersQualityScores;
     }
 
     /**
@@ -270,18 +266,17 @@ public class CameraCalibratorSample {
      * @return quality scores of sampled markers.
      */
     public static double[] computeSampledMarkersQualityScores(
-            final List<Point2D> sampledMarkers,
-            final Point2D radialDistortionCenter) {
+            final List<Point2D> sampledMarkers, final Point2D radialDistortionCenter) {
 
-        final Point2D center = radialDistortionCenter != null ?
-                radialDistortionCenter : new InhomogeneousPoint2D(0.0, 0.0);
+        final Point2D center = radialDistortionCenter != null
+                ? radialDistortionCenter : new InhomogeneousPoint2D(0.0, 0.0);
 
-        final double[] qualityScores = new double[sampledMarkers.size()];
+        final var qualityScores = new double[sampledMarkers.size()];
 
-        int counter = 0;
+        var counter = 0;
         double distance;
         double qualityScore;
-        for (final Point2D sampledMarker : sampledMarkers) {
+        for (final var sampledMarker : sampledMarkers) {
             distance = sampledMarker.distanceTo(center);
             qualityScore = 1.0 / (1.0 + distance);
 
@@ -301,8 +296,7 @@ public class CameraCalibratorSample {
      * @param sampledMarkers sampled markers of the pattern.
      * @return quality scores of sampled markers.
      */
-    public static double[] computeSampledMarkersQualityScores(
-            final List<Point2D> sampledMarkers) {
+    public static double[] computeSampledMarkersQualityScores(final List<Point2D> sampledMarkers) {
         return computeSampledMarkersQualityScores(sampledMarkers, null);
     }
 
@@ -317,7 +311,7 @@ public class CameraCalibratorSample {
      * distortion.
      */
     protected List<Point2D> getUndistortedMarkers() {
-        return mUndistortedMarkers;
+        return undistortedMarkers;
     }
 
     /**
@@ -331,7 +325,7 @@ public class CameraCalibratorSample {
      *                           for lens radial distortion.
      */
     protected void setUndistortedMarkers(final List<Point2D> undistortedMarkers) {
-        mUndistortedMarkers = undistortedMarkers;
+        this.undistortedMarkers = undistortedMarkers;
     }
 
     /**
@@ -342,7 +336,7 @@ public class CameraCalibratorSample {
      * ones.
      */
     public Transformation2D getHomography() {
-        return mHomography;
+        return homography;
     }
 
     /**
@@ -354,7 +348,7 @@ public class CameraCalibratorSample {
      * @param homography homography to be set.
      */
     protected void setHomography(final Transformation2D homography) {
-        mHomography = homography;
+        this.homography = homography;
     }
 
     /**
@@ -366,7 +360,7 @@ public class CameraCalibratorSample {
      * @return estimated camera rotation for this sample.
      */
     public Rotation3D getRotation() {
-        return mRotation;
+        return rotation;
     }
 
     /**
@@ -381,7 +375,7 @@ public class CameraCalibratorSample {
      * @param rotation camera rotation for this sample.
      */
     protected void setRotation(final Rotation3D rotation) {
-        mRotation = rotation;
+        this.rotation = rotation;
     }
 
     /**
@@ -392,7 +386,7 @@ public class CameraCalibratorSample {
      * @return estimated camera center.
      */
     public Point3D getCameraCenter() {
-        return mCameraCenter;
+        return cameraCenter;
     }
 
     /**
@@ -403,7 +397,7 @@ public class CameraCalibratorSample {
      * @param cameraCenter estimated camera center.
      */
     protected void setCameraCenter(final Point3D cameraCenter) {
-        mCameraCenter = cameraCenter;
+        this.cameraCenter = cameraCenter;
     }
 
     /**
@@ -416,7 +410,7 @@ public class CameraCalibratorSample {
      * @return estimated camera.
      */
     public PinholeCamera getCamera() {
-        return mCamera;
+        return camera;
     }
 
     /**
@@ -431,7 +425,7 @@ public class CameraCalibratorSample {
      * @param camera estimated camera.
      */
     protected void setCamera(final PinholeCamera camera) {
-        mCamera = camera;
+        this.camera = camera;
     }
 
     /**
@@ -457,12 +451,10 @@ public class CameraCalibratorSample {
      */
     protected Transformation2D estimateHomography(
             final PointCorrespondenceProjectiveTransformation2DRobustEstimator estimator,
-            final List<Point2D> idealPatternMarkers) throws LockedException,
-            NotReadyException, RobustEstimatorException,
-            CoincidentPointsException {
+            final List<Point2D> idealPatternMarkers) throws LockedException, NotReadyException,
+            RobustEstimatorException, CoincidentPointsException {
 
-        final List<Point2D> markers = mUndistortedMarkers != null ?
-                mUndistortedMarkers : mSampledMarkers;
+        final var markers = undistortedMarkers != null ? undistortedMarkers : sampledMarkers;
 
         if (markers.size() < MIN_REQUIRED_SAMPLED_MARKERS) {
             throw new NotReadyException();
@@ -475,23 +467,20 @@ public class CameraCalibratorSample {
             // use non-robust projective transformation estimation since it
             // is faster and will produce the same result as a robust
             // estimator
-            return new ProjectiveTransformation2D(
-                    idealPatternMarkers.get(0), idealPatternMarkers.get(1),
-                    idealPatternMarkers.get(2), idealPatternMarkers.get(3),
-                    markers.get(0), markers.get(1), markers.get(2),
-                    markers.get(3));
+            return new ProjectiveTransformation2D(idealPatternMarkers.get(0), idealPatternMarkers.get(1),
+                    idealPatternMarkers.get(2), idealPatternMarkers.get(3), markers.get(0), markers.get(1),
+                    markers.get(2), markers.get(3));
         } else {
             // use robust projective transformation estimation
             estimator.setPoints(idealPatternMarkers, markers);
-            if (estimator.getMethod() == RobustEstimatorMethod.PROSAC ||
-                    estimator.getMethod() == RobustEstimatorMethod.PROMEDS) {
-                if (mSampledMarkersQualityScores == null) {
+            if (estimator.getMethod() == RobustEstimatorMethod.PROSAC
+                    || estimator.getMethod() == RobustEstimatorMethod.PROMEDS) {
+                if (sampledMarkersQualityScores == null) {
                     // attempt to estimate quality scores based on distance of
                     // samples to origin of coordinates (i.e. image center)
-                    mSampledMarkersQualityScores =
-                            computeSampledMarkersQualityScores(markers);
+                    sampledMarkersQualityScores = computeSampledMarkersQualityScores(markers);
                 }
-                estimator.setQualityScores(mSampledMarkersQualityScores);
+                estimator.setQualityScores(sampledMarkersQualityScores);
             }
 
             return estimator.estimate();
@@ -505,20 +494,19 @@ public class CameraCalibratorSample {
      * @param intrinsic intrinsic pinhole camera parameters.
      * @throws CalibrationException if something fails.
      */
-    protected void computeCameraPose(final PinholeCameraIntrinsicParameters intrinsic)
-            throws CalibrationException {
+    protected void computeCameraPose(final PinholeCameraIntrinsicParameters intrinsic) throws CalibrationException {
         try {
             // reset previous values
-            mRotation = null;
-            mCameraCenter = null;
-            mCamera = null;
+            rotation = null;
+            cameraCenter = null;
+            camera = null;
 
-            final CameraPoseEstimator estimator = new CameraPoseEstimator();
-            estimator.estimate(intrinsic, mHomography);
+            final var estimator = new CameraPoseEstimator();
+            estimator.estimate(intrinsic, homography);
 
-            mRotation = estimator.getRotation();
-            mCameraCenter = estimator.getCameraCenter();
-            mCamera = estimator.getCamera();
+            rotation = estimator.getRotation();
+            cameraCenter = estimator.getCameraCenter();
+            camera = estimator.getCamera();
 
         } catch (final AlgebraException | GeometryException e) {
             throw new CalibrationException(e);

@@ -15,27 +15,24 @@
  */
 package com.irurueta.ar.calibration.estimators;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class DualAbsoluteQuadricEstimatorExceptionTest {
+class DualAbsoluteQuadricEstimatorExceptionTest {
 
     @Test
-    public void testConstructor() {
-        DualAbsoluteQuadricEstimatorException ex = new DualAbsoluteQuadricEstimatorException();
+    void testConstructor() {
+        var ex = new DualAbsoluteQuadricEstimatorException();
         assertNotNull(ex);
 
-        ex = new DualAbsoluteQuadricEstimatorException(
-                "message");
+        ex = new DualAbsoluteQuadricEstimatorException("message");
         assertNotNull(ex);
 
-        ex = new DualAbsoluteQuadricEstimatorException(
-                new Exception());
+        ex = new DualAbsoluteQuadricEstimatorException(new Exception());
         assertNotNull(ex);
 
-        ex = new DualAbsoluteQuadricEstimatorException("message",
-                new Exception());
+        ex = new DualAbsoluteQuadricEstimatorException("message", new Exception());
         assertNotNull(ex);
     }
 }

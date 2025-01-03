@@ -27,7 +27,6 @@ import com.irurueta.geometry.Point2D;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Class implementing Brown's radial distortion.
@@ -79,40 +78,39 @@ public class RadialDistortion extends Distortion implements Serializable {
     /**
      * Radial distortion center.
      */
-    private Point2D mCenter;
+    private Point2D center;
 
     /**
      * Radial distortion parameters.
      */
-    private double[] mKParams;
+    private double[] kParams;
 
     /**
      * Horizontal focal length expressed in pixels.
      */
-    private double mHorizontalFocalLength;
+    private double horizontalFocalLength;
 
     /**
      * Vertical focal length expressed in pixels.
      */
-    private double mVerticalFocalLength;
+    private double verticalFocalLength;
 
     /**
      * Skew in pixels.
      */
-    private double mSkew;
+    private double skew;
 
     /**
      * Inverse of intrinsic parameters' matrix.
      */
-    private Matrix mKinv;
+    private Matrix kInv;
 
     /**
      * Constructor.
      */
     public RadialDistortion() {
         try {
-            setIntrinsic(null, DEFAULT_FOCAL_LENGTH, DEFAULT_FOCAL_LENGTH,
-                    DEFAULT_SKEW);
+            setIntrinsic(null, DEFAULT_FOCAL_LENGTH, DEFAULT_FOCAL_LENGTH, DEFAULT_SKEW);
         } catch (final RadialDistortionException ignore) {
             // never happens
         }
@@ -126,10 +124,9 @@ public class RadialDistortion extends Distortion implements Serializable {
      * @param k2 second degree distortion parameter.
      */
     public RadialDistortion(final double k1, final double k2) {
-        mKParams = new double[]{k1, k2};
+        kParams = new double[]{k1, k2};
         try {
-            setIntrinsic(null, DEFAULT_FOCAL_LENGTH, DEFAULT_FOCAL_LENGTH,
-                    DEFAULT_SKEW);
+            setIntrinsic(null, DEFAULT_FOCAL_LENGTH, DEFAULT_FOCAL_LENGTH, DEFAULT_SKEW);
         } catch (final RadialDistortionException ignore) {
             // never happens
         }
@@ -146,10 +143,9 @@ public class RadialDistortion extends Distortion implements Serializable {
         if (kParams == null) {
             throw new IllegalArgumentException();
         }
-        mKParams = kParams;
+        this.kParams = kParams;
         try {
-            setIntrinsic(null, DEFAULT_FOCAL_LENGTH, DEFAULT_FOCAL_LENGTH,
-                    DEFAULT_SKEW);
+            setIntrinsic(null, DEFAULT_FOCAL_LENGTH, DEFAULT_FOCAL_LENGTH, DEFAULT_SKEW);
         } catch (final RadialDistortionException ignore) {
             // never happens
         }
@@ -166,8 +162,7 @@ public class RadialDistortion extends Distortion implements Serializable {
     public RadialDistortion(final double k1, final double k2, final Point2D center) {
         this(k1, k2);
         try {
-            setIntrinsic(center, DEFAULT_FOCAL_LENGTH, DEFAULT_FOCAL_LENGTH,
-                    DEFAULT_SKEW);
+            setIntrinsic(center, DEFAULT_FOCAL_LENGTH, DEFAULT_FOCAL_LENGTH, DEFAULT_SKEW);
         } catch (final RadialDistortionException ignore) {
             // never happens
         }
@@ -184,8 +179,7 @@ public class RadialDistortion extends Distortion implements Serializable {
     public RadialDistortion(final double[] kParams, final Point2D center) {
         this(kParams);
         try {
-            setIntrinsic(center, DEFAULT_FOCAL_LENGTH, DEFAULT_FOCAL_LENGTH,
-                    DEFAULT_SKEW);
+            setIntrinsic(center, DEFAULT_FOCAL_LENGTH, DEFAULT_FOCAL_LENGTH, DEFAULT_SKEW);
         } catch (final RadialDistortionException ignore) {
             // never happens
         }
@@ -205,9 +199,9 @@ public class RadialDistortion extends Distortion implements Serializable {
      * @throws RadialDistortionException if provided focal lengths are
      *                                   degenerate (i.e. zero).
      */
-    public RadialDistortion(final double k1, final double k2, final Point2D center,
-                            final double horizontalFocalLength, final double verticalFocalLength,
-                            final double skew) throws RadialDistortionException {
+    public RadialDistortion(
+            final double k1, final double k2, final Point2D center, final double horizontalFocalLength,
+            final double verticalFocalLength, final double skew) throws RadialDistortionException {
         this(k1, k2);
         setIntrinsic(center, horizontalFocalLength, verticalFocalLength, skew);
     }
@@ -226,12 +220,10 @@ public class RadialDistortion extends Distortion implements Serializable {
      *                                   degenerate (i.e. zero).
      * @throws IllegalArgumentException  if radial distortion parameters is null.
      */
-    public RadialDistortion(final double[] kParams, final Point2D center,
-                            final double horizontalFocalLength, final double verticalFocalLength,
-                            final double skew) throws RadialDistortionException {
+    public RadialDistortion(final double[] kParams, final Point2D center, final double horizontalFocalLength,
+                            final double verticalFocalLength, final double skew) throws RadialDistortionException {
         this(kParams);
-        setIntrinsic(center, horizontalFocalLength, verticalFocalLength,
-                skew);
+        setIntrinsic(center, horizontalFocalLength, verticalFocalLength, skew);
     }
 
     /**
@@ -250,8 +242,8 @@ public class RadialDistortion extends Distortion implements Serializable {
                             final Point2D distortionCenter) throws RadialDistortionException {
         super();
 
-        setFromPointsAndCenter(distortedPoint1, distortedPoint2,
-                undistortedPoint1, undistortedPoint2, distortionCenter);
+        setFromPointsAndCenter(distortedPoint1, distortedPoint2, undistortedPoint1, undistortedPoint2,
+                distortionCenter);
     }
 
     /**
@@ -267,11 +259,11 @@ public class RadialDistortion extends Distortion implements Serializable {
      */
     public final void setFromPointsAndCenter(
             final Point2D distortedPoint1, final Point2D distortedPoint2,
-            final Point2D undistortedPoint1, final Point2D undistortedPoint2,
-            final Point2D distortionCenter) throws RadialDistortionException {
+            final Point2D undistortedPoint1, final Point2D undistortedPoint2, final Point2D distortionCenter)
+            throws RadialDistortionException {
 
-        final List<Point2D> distortedPoints = new ArrayList<>();
-        final List<Point2D> undistortedPoints = new ArrayList<>();
+        final var distortedPoints = new ArrayList<Point2D>();
+        final var undistortedPoints = new ArrayList<Point2D>();
 
         distortedPoints.add(distortedPoint1);
         distortedPoints.add(distortedPoint2);
@@ -280,14 +272,13 @@ public class RadialDistortion extends Distortion implements Serializable {
         undistortedPoints.add(undistortedPoint2);
 
         try {
-            final LMSERadialDistortionEstimator estimator =
-                    new LMSERadialDistortionEstimator(distortedPoints,
-                            undistortedPoints, distortionCenter);
+            final var estimator = new LMSERadialDistortionEstimator(distortedPoints, undistortedPoints,
+                    distortionCenter);
             estimator.setLMSESolutionAllowed(false);
-            final RadialDistortion distortion = estimator.estimate();
+            final var distortion = estimator.estimate();
 
-            mKParams = distortion.mKParams;
-            mCenter = distortion.mCenter;
+            kParams = distortion.kParams;
+            center = distortion.center;
         } catch (final GeometryException | RadialDistortionEstimatorException e) {
             throw new RadialDistortionException(e);
         }
@@ -299,7 +290,7 @@ public class RadialDistortion extends Distortion implements Serializable {
      * @return radial distortion center.
      */
     public Point2D getCenter() {
-        return mCenter;
+        return center;
     }
 
     /**
@@ -309,8 +300,7 @@ public class RadialDistortion extends Distortion implements Serializable {
      */
     public void setCenter(final Point2D center) {
         try {
-            setIntrinsic(center, mHorizontalFocalLength, mVerticalFocalLength,
-                    mSkew);
+            setIntrinsic(center, horizontalFocalLength, verticalFocalLength, skew);
         } catch (final RadialDistortionException ignore) {
             // never happens
         }
@@ -322,7 +312,7 @@ public class RadialDistortion extends Distortion implements Serializable {
      * @return horizontal focal length expressed in pixels.
      */
     public double getHorizontalFocalLength() {
-        return mHorizontalFocalLength;
+        return horizontalFocalLength;
     }
 
     /**
@@ -332,10 +322,8 @@ public class RadialDistortion extends Distortion implements Serializable {
      * @throws RadialDistortionException if provided value is degenerate (i.e.
      *                                   zero).
      */
-    public void setHorizontalFocalLength(final double horizontalFocalLength)
-            throws RadialDistortionException {
-        setIntrinsic(mCenter, horizontalFocalLength, mVerticalFocalLength,
-                mSkew);
+    public void setHorizontalFocalLength(final double horizontalFocalLength) throws RadialDistortionException {
+        setIntrinsic(center, horizontalFocalLength, verticalFocalLength, skew);
     }
 
     /**
@@ -344,7 +332,7 @@ public class RadialDistortion extends Distortion implements Serializable {
      * @return vertical focal length expressed in pixels.
      */
     public double getVerticalFocalLength() {
-        return mVerticalFocalLength;
+        return verticalFocalLength;
     }
 
     /**
@@ -354,10 +342,8 @@ public class RadialDistortion extends Distortion implements Serializable {
      * @throws RadialDistortionException if provided value is degenerate (i.e.
      *                                   zero).
      */
-    public void setVerticalFocalLength(final double verticalFocalLength)
-            throws RadialDistortionException {
-        setIntrinsic(mCenter, mHorizontalFocalLength, verticalFocalLength,
-                mSkew);
+    public void setVerticalFocalLength(final double verticalFocalLength) throws RadialDistortionException {
+        setIntrinsic(center, horizontalFocalLength, verticalFocalLength, skew);
     }
 
     /**
@@ -366,7 +352,7 @@ public class RadialDistortion extends Distortion implements Serializable {
      * @return skew expressed in pixels.
      */
     public double getSkew() {
-        return mSkew;
+        return skew;
     }
 
     /**
@@ -376,8 +362,7 @@ public class RadialDistortion extends Distortion implements Serializable {
      */
     public void setSkew(final double skew) {
         try {
-            setIntrinsic(mCenter, mHorizontalFocalLength, mVerticalFocalLength,
-                    skew);
+            setIntrinsic(center, horizontalFocalLength, verticalFocalLength, skew);
         } catch (final RadialDistortionException ignore) {
             // never happens
         }
@@ -389,11 +374,11 @@ public class RadialDistortion extends Distortion implements Serializable {
      * @return pinhole camera intrinsic parameters associated to this distortion.
      */
     public PinholeCameraIntrinsicParameters getIntrinsic() {
-        return new PinholeCameraIntrinsicParameters(mHorizontalFocalLength,
-                mVerticalFocalLength,
-                mCenter != null ? mCenter.getInhomX() : 0.0,
-                mCenter != null ? mCenter.getInhomY() : 0.0,
-                mSkew);
+        return new PinholeCameraIntrinsicParameters(horizontalFocalLength,
+                verticalFocalLength,
+                center != null ? center.getInhomX() : 0.0,
+                center != null ? center.getInhomY() : 0.0,
+                skew);
     }
 
     /**
@@ -403,11 +388,9 @@ public class RadialDistortion extends Distortion implements Serializable {
      * @throws RadialDistortionException if focal length is degenerate (i.e.
      *                                   zero).
      */
-    public void setIntrinsic(final PinholeCameraIntrinsicParameters intrinsic)
-            throws RadialDistortionException {
+    public void setIntrinsic(final PinholeCameraIntrinsicParameters intrinsic) throws RadialDistortionException {
         setIntrinsic(new InhomogeneousPoint2D(
-                        intrinsic.getHorizontalPrincipalPoint(),
-                        intrinsic.getVerticalPrincipalPoint()),
+                intrinsic.getHorizontalPrincipalPoint(), intrinsic.getVerticalPrincipalPoint()),
                 intrinsic.getHorizontalFocalLength(),
                 intrinsic.getVerticalFocalLength(),
                 intrinsic.getSkewness());
@@ -423,33 +406,33 @@ public class RadialDistortion extends Distortion implements Serializable {
      * @throws RadialDistortionException if focal length is degenerate (i.e.
      *                                   zero).
      */
-    public final void setIntrinsic(final Point2D center, final double horizontalFocalLength,
-                                   final double verticalFocalLength, final double skew)
-            throws RadialDistortionException {
-        mCenter = center;
-        mHorizontalFocalLength = horizontalFocalLength;
-        mVerticalFocalLength = verticalFocalLength;
-        mSkew = skew;
+    public final void setIntrinsic(
+            final Point2D center, final double horizontalFocalLength, final double verticalFocalLength,
+            final double skew) throws RadialDistortionException {
+        this.center = center;
+        this.horizontalFocalLength = horizontalFocalLength;
+        this.verticalFocalLength = verticalFocalLength;
+        this.skew = skew;
 
         try {
-            if (mKinv == null) {
-                mKinv = new Matrix(3, 3);
+            if (kInv == null) {
+                kInv = new Matrix(3, 3);
             }
 
             // initially matrix is zero
-            final Matrix k = new Matrix(3, 3);
+            final var k = new Matrix(3, 3);
 
             k.setElementAt(0, 0, horizontalFocalLength);
             k.setElementAt(1, 1, verticalFocalLength);
             k.setElementAt(0, 1, skew);
-            if (mCenter != null) {
+            if (this.center != null) {
                 // if center is not provided, values are zero
-                k.setElementAt(0, 2, mCenter.getInhomX());
-                k.setElementAt(1, 2, mCenter.getInhomY());
+                k.setElementAt(0, 2, this.center.getInhomX());
+                k.setElementAt(1, 2, this.center.getInhomY());
             }
             k.setElementAt(2, 2, 1.0);
 
-            Utils.inverse(k, mKinv);
+            Utils.inverse(k, kInv);
         } catch (final AlgebraException e) {
             throw new RadialDistortionException(e);
         }
@@ -461,7 +444,7 @@ public class RadialDistortion extends Distortion implements Serializable {
      * @return first degree distortion parameter or zero if not available.
      */
     public double getK1() {
-        return mKParams != null && mKParams.length > 0 ? mKParams[0] : 0.0;
+        return kParams != null && kParams.length > 0 ? kParams[0] : 0.0;
     }
 
     /**
@@ -470,8 +453,8 @@ public class RadialDistortion extends Distortion implements Serializable {
      * @param k1 first degree distortion parameter.
      */
     public void setK1(final double k1) {
-        if (mKParams == null || mKParams.length < 1) {
-            mKParams = new double[]{k1};
+        if (kParams == null || kParams.length < 1) {
+            kParams = new double[]{k1};
         }
     }
 
@@ -481,7 +464,7 @@ public class RadialDistortion extends Distortion implements Serializable {
      * @return second degree distortion parameter or zero if not available.
      */
     public double getK2() {
-        return mKParams != null && mKParams.length > 1 ? mKParams[1] : 0.0;
+        return kParams != null && kParams.length > 1 ? kParams[1] : 0.0;
     }
 
     /**
@@ -490,12 +473,12 @@ public class RadialDistortion extends Distortion implements Serializable {
      * @param k2 second degree distortion parameter to be set.
      */
     public void setK2(final double k2) {
-        if (mKParams == null || mKParams.length < 2) {
-            final double[] kParams = new double[2];
-            kParams[0] = getK1();
-            mKParams = kParams;
+        if (kParams == null || kParams.length < 2) {
+            final var kp = new double[2];
+            kp[0] = getK1();
+            this.kParams = kp;
         }
-        mKParams[1] = k2;
+        kParams[1] = k2;
     }
 
     /**
@@ -505,7 +488,7 @@ public class RadialDistortion extends Distortion implements Serializable {
      * @return all radial distortion parameters.
      */
     public double[] getKParams() {
-        return mKParams;
+        return kParams;
     }
 
     /**
@@ -515,7 +498,7 @@ public class RadialDistortion extends Distortion implements Serializable {
      * @param kParams radial distortion parameters to be set.
      */
     public void setKParams(final double[] kParams) {
-        mKParams = kParams;
+        this.kParams = kParams;
     }
 
     /**
@@ -530,48 +513,48 @@ public class RadialDistortion extends Distortion implements Serializable {
 
         undistortedPoint.normalize();
 
-        final double uHomX = undistortedPoint.getHomX();
-        final double uHomY = undistortedPoint.getHomY();
-        final double uHomW = undistortedPoint.getHomW();
+        final var uHomX = undistortedPoint.getHomX();
+        final var uHomY = undistortedPoint.getHomY();
+        final var uHomW = undistortedPoint.getHomW();
 
         // multiply mKinv with homogeneous undistorted point coordinates
         // to normalize them respect to principal point and image size
-        final double uNormHomX = mKinv.getElementAt(0, 0) * uHomX +
-                mKinv.getElementAt(0, 1) * uHomY +
-                mKinv.getElementAt(0, 2) * uHomW;
-        final double uNormHomY = mKinv.getElementAt(1, 0) * uHomX +
-                mKinv.getElementAt(1, 1) * uHomY +
-                mKinv.getElementAt(1, 2) * uHomW;
-        final double uNormHomW = mKinv.getElementAt(2, 0) * uHomX +
-                mKinv.getElementAt(2, 1) * uHomY +
-                mKinv.getElementAt(2, 2) * uHomW;
+        final var uNormHomX = kInv.getElementAt(0, 0) * uHomX
+                + kInv.getElementAt(0, 1) * uHomY
+                + kInv.getElementAt(0, 2) * uHomW;
+        final double uNormHomY = kInv.getElementAt(1, 0) * uHomX
+                + kInv.getElementAt(1, 1) * uHomY
+                + kInv.getElementAt(1, 2) * uHomW;
+        final double uNormHomW = kInv.getElementAt(2, 0) * uHomX
+                + kInv.getElementAt(2, 1) * uHomY
+                + kInv.getElementAt(2, 2) * uHomW;
 
-        final double uNormInhomX = uNormHomX / uNormHomW;
-        final double uNormInhomY = uNormHomY / uNormHomW;
+        final var uNormInhomX = uNormHomX / uNormHomW;
+        final var uNormInhomY = uNormHomY / uNormHomW;
 
-        final double r2 = uNormInhomX * uNormInhomX + uNormInhomY * uNormInhomY;
-        double r = r2;
+        final var r2 = uNormInhomX * uNormInhomX + uNormInhomY * uNormInhomY;
+        var r = r2;
 
-        double sum = 0.0;
-        if (mKParams != null) {
-            for (final double kParam : mKParams) {
+        var sum = 0.0;
+        if (kParams != null) {
+            for (final var kParam : kParams) {
                 sum += kParam * r;
                 r *= r2;
             }
         }
 
-        final double uInhomX = uHomX / uHomW;
-        final double uInhomY = uHomY / uHomW;
+        final var uInhomX = uHomX / uHomW;
+        final var uInhomY = uHomY / uHomW;
 
-        double centerX = 0.0;
-        double centerY = 0.0;
-        if (mCenter != null) {
-            centerX = mCenter.getInhomX();
-            centerY = mCenter.getInhomY();
+        var centerX = 0.0;
+        var centerY = 0.0;
+        if (center != null) {
+            centerX = center.getInhomX();
+            centerY = center.getInhomY();
         }
 
-        final double dInhomX = uInhomX + (uInhomX - centerX) * sum;
-        final double dInhomY = uInhomY + (uInhomY - centerY) * sum;
+        final var dInhomX = uInhomX + (uInhomX - centerX) * sum;
+        final var dInhomY = uInhomY + (uInhomY - centerY) * sum;
 
         distortedPoint.setInhomogeneousCoordinates(dInhomX, dInhomY);
     }
@@ -585,8 +568,7 @@ public class RadialDistortion extends Distortion implements Serializable {
      */
     @Override
     public void undistort(final Point2D distortedPoint, final Point2D undistortedPoint) {
-        undistort(distortedPoint, undistortedPoint, DEFAULT_MAX_ITERS,
-                DEFAULT_TOLERANCE);
+        undistort(distortedPoint, undistortedPoint, DEFAULT_MAX_ITERS, DEFAULT_TOLERANCE);
     }
 
     /**
@@ -599,8 +581,8 @@ public class RadialDistortion extends Distortion implements Serializable {
      *                         that convergence is not reached.
      * @param tolerance        tolerance to indicate that convergence has been reached.
      */
-    public void undistort(final Point2D distortedPoint, final Point2D undistortedPoint,
-                          final int maxIters, final double tolerance) {
+    public void undistort(final Point2D distortedPoint, final Point2D undistortedPoint, final int maxIters,
+                          final double tolerance) {
         if (maxIters <= 0) {
             throw new IllegalArgumentException();
         }
@@ -610,45 +592,45 @@ public class RadialDistortion extends Distortion implements Serializable {
 
         distortedPoint.normalize();
 
-        final double dHomX = distortedPoint.getHomX();
-        final double dHomY = distortedPoint.getHomY();
-        final double dHomW = distortedPoint.getHomW();
+        final var dHomX = distortedPoint.getHomX();
+        final var dHomY = distortedPoint.getHomY();
+        final var dHomW = distortedPoint.getHomW();
 
         // initial estimate of undistorted point
         undistortedPoint.setHomogeneousCoordinates(dHomX, dHomY, dHomW);
 
-        final double uHomX = undistortedPoint.getHomX();
-        final double uHomY = undistortedPoint.getHomY();
-        final double uHomW = undistortedPoint.getHomW();
+        final var uHomX = undistortedPoint.getHomX();
+        final var uHomY = undistortedPoint.getHomY();
+        final var uHomW = undistortedPoint.getHomW();
 
         // multiply mKinv with homogeneous undistorted point coordinates
-        final double uHomXDenorm = mKinv.getElementAt(0, 0) * uHomX +
-                mKinv.getElementAt(0, 1) * uHomY +
-                mKinv.getElementAt(0, 2) * uHomW;
-        final double uHomYDenorm = mKinv.getElementAt(1, 0) * uHomX +
-                mKinv.getElementAt(1, 1) * uHomY +
-                mKinv.getElementAt(1, 2) * uHomW;
-        final double uHomWDenorm = mKinv.getElementAt(2, 0) * uHomX +
-                mKinv.getElementAt(2, 1) * uHomY +
-                mKinv.getElementAt(2, 2) * uHomW;
+        final var uHomXDenorm = kInv.getElementAt(0, 0) * uHomX
+                + kInv.getElementAt(0, 1) * uHomY
+                + kInv.getElementAt(0, 2) * uHomW;
+        final double uHomYDenorm = kInv.getElementAt(1, 0) * uHomX
+                + kInv.getElementAt(1, 1) * uHomY
+                + kInv.getElementAt(1, 2) * uHomW;
+        final double uHomWDenorm = kInv.getElementAt(2, 0) * uHomX
+                + kInv.getElementAt(2, 1) * uHomY
+                + kInv.getElementAt(2, 2) * uHomW;
 
-        final double origX = uHomXDenorm / uHomWDenorm;
-        final double origY = uHomYDenorm / uHomWDenorm;
-        double uInhomX = origX;
-        double uInhomY = origY;
+        final var origX = uHomXDenorm / uHomWDenorm;
+        final var origY = uHomYDenorm / uHomWDenorm;
+        var uInhomX = origX;
+        var uInhomY = origY;
 
         // radial distortion magnitude
-        double sum = 0.0;
-        double prevSum = 0.0;
-        for (int iter = 0; iter < maxIters; iter++) {
+        var sum = 0.0;
+        var prevSum = 0.0;
+        for (var iter = 0; iter < maxIters; iter++) {
             // estimate the radial distance
-            final double r2 = uInhomX * uInhomX + uInhomY * uInhomY;
-            double r = r2;
+            final var r2 = uInhomX * uInhomX + uInhomY * uInhomY;
+            var r = r2;
 
             sum = 0.0;
-            if (mKParams != null) {
-                for (final double mKParam : mKParams) {
-                    sum += mKParam * r;
+            if (kParams != null) {
+                for (final var kParam : kParams) {
+                    sum += kParam * r;
                     r *= r2;
                 }
             }
@@ -663,14 +645,14 @@ public class RadialDistortion extends Distortion implements Serializable {
             }
         }
 
-        final double dInhomX = dHomX / dHomW;
-        final double dInhomY = dHomY / dHomW;
+        final var dInhomX = dHomX / dHomW;
+        final var dInhomY = dHomY / dHomW;
 
-        double centerX = 0.0;
-        double centerY = 0.0;
-        if (mCenter != null) {
-            centerX = mCenter.getInhomX();
-            centerY = mCenter.getInhomY();
+        var centerX = 0.0;
+        var centerY = 0.0;
+        if (center != null) {
+            centerX = center.getInhomX();
+            centerY = center.getInhomY();
         }
 
         uInhomX = (dInhomX + centerX * sum) / (1.0 + sum);

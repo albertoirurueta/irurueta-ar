@@ -22,18 +22,14 @@ import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.MatrixRotation3D;
 import com.irurueta.geometry.PinholeCamera;
 import com.irurueta.geometry.PinholeCameraIntrinsicParameters;
-import com.irurueta.geometry.Point3D;
-import com.irurueta.geometry.Rotation3D;
 import com.irurueta.geometry.estimators.LockedException;
 import com.irurueta.geometry.estimators.NotReadyException;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import java.util.Random;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.Assert.*;
-
-public class AlgebraicFundamentalMatrixComparatorTest implements FundamentalMatrixComparatorListener {
+class AlgebraicFundamentalMatrixComparatorTest implements FundamentalMatrixComparatorListener {
 
     private static final double MIN_RANDOM_VALUE = 100.0;
     private static final double MAX_RANDOM_VALUE = 500.0;
@@ -52,12 +48,13 @@ public class AlgebraicFundamentalMatrixComparatorTest implements FundamentalMatr
 
     private static final double ABSOLUTE_ERROR = 1e-6;
 
-    private int compareStart, compareEnd;
+    private int compareStart;
+    private int compareEnd;
 
     @Test
-    public void testConstructor() throws AlgebraException, InvalidFundamentalMatrixException {
+    void testConstructor() throws AlgebraException, InvalidFundamentalMatrixException {
         // test constructor without arguments
-        AlgebraicFundamentalMatrixComparator comparator = new AlgebraicFundamentalMatrixComparator();
+        var comparator = new AlgebraicFundamentalMatrixComparator();
 
         // check default values
         assertNull(comparator.getGroundTruthFundamentalMatrix());
@@ -68,14 +65,13 @@ public class AlgebraicFundamentalMatrixComparatorTest implements FundamentalMatr
         assertEquals(FundamentalMatrixComparatorType.ALGEBRAIC_COMPARATOR, comparator.getType());
 
         // test constructor with fundamental matrices
-        final FundamentalMatrix emptyFundamentalMatrix1 = new FundamentalMatrix();
-        final FundamentalMatrix emptyFundamentalMatrix2 = new FundamentalMatrix();
+        final var emptyFundamentalMatrix1 = new FundamentalMatrix();
+        final var emptyFundamentalMatrix2 = new FundamentalMatrix();
 
-        final FundamentalMatrix fundamentalMatrix1 = createRandomFundamentalMatrix();
-        final FundamentalMatrix fundamentalMatrix2 = createRandomFundamentalMatrix();
+        final var fundamentalMatrix1 = createRandomFundamentalMatrix();
+        final var fundamentalMatrix2 = createRandomFundamentalMatrix();
 
-        comparator = new AlgebraicFundamentalMatrixComparator(
-                emptyFundamentalMatrix1, emptyFundamentalMatrix2);
+        comparator = new AlgebraicFundamentalMatrixComparator(emptyFundamentalMatrix1, emptyFundamentalMatrix2);
 
         // check default values
         assertSame(emptyFundamentalMatrix1, comparator.getGroundTruthFundamentalMatrix());
@@ -130,8 +126,8 @@ public class AlgebraicFundamentalMatrixComparatorTest implements FundamentalMatr
         assertEquals(FundamentalMatrixComparatorType.ALGEBRAIC_COMPARATOR, comparator.getType());
 
         // test constructor with fundamental matrices and listener
-        comparator = new AlgebraicFundamentalMatrixComparator(
-                emptyFundamentalMatrix1, emptyFundamentalMatrix2, this);
+        comparator = new AlgebraicFundamentalMatrixComparator(emptyFundamentalMatrix1, emptyFundamentalMatrix2,
+                this);
 
         // check default values
         assertSame(emptyFundamentalMatrix1, comparator.getGroundTruthFundamentalMatrix());
@@ -142,8 +138,8 @@ public class AlgebraicFundamentalMatrixComparatorTest implements FundamentalMatr
         assertFalse(comparator.isReady());
         assertEquals(FundamentalMatrixComparatorType.ALGEBRAIC_COMPARATOR, comparator.getType());
 
-        comparator = new AlgebraicFundamentalMatrixComparator(
-                fundamentalMatrix1, emptyFundamentalMatrix2, this);
+        comparator = new AlgebraicFundamentalMatrixComparator(fundamentalMatrix1, emptyFundamentalMatrix2,
+                this);
 
         // check default values
         assertSame(fundamentalMatrix1, comparator.getGroundTruthFundamentalMatrix());
@@ -154,8 +150,8 @@ public class AlgebraicFundamentalMatrixComparatorTest implements FundamentalMatr
         assertFalse(comparator.isReady());
         assertEquals(FundamentalMatrixComparatorType.ALGEBRAIC_COMPARATOR, comparator.getType());
 
-        comparator = new AlgebraicFundamentalMatrixComparator(
-                emptyFundamentalMatrix1, fundamentalMatrix2, this);
+        comparator = new AlgebraicFundamentalMatrixComparator(emptyFundamentalMatrix1, fundamentalMatrix2,
+                this);
 
         // check default values
         assertSame(emptyFundamentalMatrix1, comparator.getGroundTruthFundamentalMatrix());
@@ -166,8 +162,7 @@ public class AlgebraicFundamentalMatrixComparatorTest implements FundamentalMatr
         assertFalse(comparator.isReady());
         assertEquals(FundamentalMatrixComparatorType.ALGEBRAIC_COMPARATOR, comparator.getType());
 
-        comparator = new AlgebraicFundamentalMatrixComparator(
-                fundamentalMatrix1, fundamentalMatrix2, this);
+        comparator = new AlgebraicFundamentalMatrixComparator(fundamentalMatrix1, fundamentalMatrix2, this);
 
         // check default values
         assertSame(fundamentalMatrix1, comparator.getGroundTruthFundamentalMatrix());
@@ -179,14 +174,14 @@ public class AlgebraicFundamentalMatrixComparatorTest implements FundamentalMatr
     }
 
     @Test
-    public void testGetSetGroundTruthFundamentalMatrix() throws LockedException {
-        final AlgebraicFundamentalMatrixComparator comparator = new AlgebraicFundamentalMatrixComparator();
+    void testGetSetGroundTruthFundamentalMatrix() throws LockedException {
+        final var comparator = new AlgebraicFundamentalMatrixComparator();
 
         // check default value
         assertNull(comparator.getGroundTruthFundamentalMatrix());
 
         // set new value
-        final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix();
+        final var fundamentalMatrix = new FundamentalMatrix();
         comparator.setGroundTruthFundamentalMatrix(fundamentalMatrix);
 
         // check correctness
@@ -194,14 +189,14 @@ public class AlgebraicFundamentalMatrixComparatorTest implements FundamentalMatr
     }
 
     @Test
-    public void testGetSetOtherFundamentalMatrix() throws LockedException {
-        final AlgebraicFundamentalMatrixComparator comparator = new AlgebraicFundamentalMatrixComparator();
+    void testGetSetOtherFundamentalMatrix() throws LockedException {
+        final var comparator = new AlgebraicFundamentalMatrixComparator();
 
         // check default value
         assertNull(comparator.getOtherFundamentalMatrix());
 
         // set new value
-        final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix();
+        final var fundamentalMatrix = new FundamentalMatrix();
         comparator.setOtherFundamentalMatrix(fundamentalMatrix);
 
         // check correctness
@@ -209,8 +204,8 @@ public class AlgebraicFundamentalMatrixComparatorTest implements FundamentalMatr
     }
 
     @Test
-    public void testGetSetListener() throws LockedException {
-        final AlgebraicFundamentalMatrixComparator comparator = new AlgebraicFundamentalMatrixComparator();
+    void testGetSetListener() throws LockedException {
+        final var comparator = new AlgebraicFundamentalMatrixComparator();
 
         // check default value
         assertNull(comparator.getListener());
@@ -223,66 +218,52 @@ public class AlgebraicFundamentalMatrixComparatorTest implements FundamentalMatr
     }
 
     @Test
-    public void testCompare() throws InvalidPairOfCamerasException, NotReadyException, LockedException,
+    void testCompare() throws InvalidPairOfCamerasException, NotReadyException, LockedException,
             FundamentalMatrixComparatorException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double alphaEuler1 = 0.0;
-        final double betaEuler1 = 0.0;
-        final double gammaEuler1 = 0.0;
-        final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-        final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-        final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+        final var randomizer = new UniformRandomizer();
+        final var alphaEuler1 = 0.0;
+        final var betaEuler1 = 0.0;
+        final var gammaEuler1 = 0.0;
+        final var alphaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var betaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var gammaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-        final double horizontalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-        final double verticalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-        final double horizontalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-        final double verticalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final var horizontalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final var verticalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final var horizontalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final var verticalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-        final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
-        final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+        final var skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+        final var skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
 
-        final double horizontalPrincipalPoint1 = randomizer.nextDouble(
-                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-        final double verticalPrincipalPoint1 = randomizer.nextDouble(
-                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-        final double horizontalPrincipalPoint2 = randomizer.nextDouble(
-                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-        final double verticalPrincipalPoint2 = randomizer.nextDouble(
-                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final var horizontalPrincipalPoint1 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final var verticalPrincipalPoint1 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final var horizontalPrincipalPoint2 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final var verticalPrincipalPoint2 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
-        final Point3D cameraCenter1 = new InhomogeneousPoint3D(
-                randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+        final var cameraCenter1 = new InhomogeneousPoint3D(randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                 randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                 randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-        final Point3D cameraCenter2 = new InhomogeneousPoint3D(
-                randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+        final var cameraCenter2 = new InhomogeneousPoint3D(randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                 randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                 randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
 
-        final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
-        final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+        final var rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+        final var rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-        final PinholeCameraIntrinsicParameters intrinsic1 =
-                new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
-                        verticalFocalLength1, horizontalPrincipalPoint1,
-                        verticalPrincipalPoint1, skewness1);
-        final PinholeCameraIntrinsicParameters intrinsic2 =
-                new PinholeCameraIntrinsicParameters(horizontalFocalLength2,
-                        verticalFocalLength2, horizontalPrincipalPoint2,
-                        verticalPrincipalPoint2, skewness2);
+        final var intrinsic1 = new PinholeCameraIntrinsicParameters(horizontalFocalLength1, verticalFocalLength1,
+                horizontalPrincipalPoint1, verticalPrincipalPoint1, skewness1);
+        final var intrinsic2 = new PinholeCameraIntrinsicParameters(horizontalFocalLength2, verticalFocalLength2,
+                horizontalPrincipalPoint2, verticalPrincipalPoint2, skewness2);
 
-        final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, cameraCenter1);
-        final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, cameraCenter2);
+        final var camera1 = new PinholeCamera(intrinsic1, rotation1, cameraCenter1);
+        final var camera2 = new PinholeCamera(intrinsic2, rotation2, cameraCenter2);
 
-        final FundamentalMatrix fundamentalMatrix1 = new FundamentalMatrix(camera1, camera2);
-        final FundamentalMatrix fundamentalMatrix2 = new FundamentalMatrix(camera1, camera2);
+        final var fundamentalMatrix1 = new FundamentalMatrix(camera1, camera2);
+        final var fundamentalMatrix2 = new FundamentalMatrix(camera1, camera2);
 
-        final AlgebraicFundamentalMatrixComparator comparator =
-                new AlgebraicFundamentalMatrixComparator(fundamentalMatrix1,
-                        fundamentalMatrix2, this);
+        final var comparator = new AlgebraicFundamentalMatrixComparator(fundamentalMatrix1, fundamentalMatrix2,
+                this);
 
         // check status
         assertFalse(comparator.isLocked());
@@ -314,8 +295,7 @@ public class AlgebraicFundamentalMatrixComparatorTest implements FundamentalMatr
     }
 
     @Override
-    public void onCompareProgressChange(final FundamentalMatrixComparator comparator,
-                                        final float progress) {
+    public void onCompareProgressChange(final FundamentalMatrixComparator comparator, final float progress) {
         checkLocked((AlgebraicFundamentalMatrixComparator) comparator);
     }
 
@@ -325,59 +305,37 @@ public class AlgebraicFundamentalMatrixComparatorTest implements FundamentalMatr
 
     private void checkLocked(final AlgebraicFundamentalMatrixComparator comparator) {
         assertTrue(comparator.isLocked());
-        try {
-            comparator.setGroundTruthFundamentalMatrix(null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            comparator.setOtherFundamentalMatrix(null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            comparator.setListener(null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            comparator.compare();
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        } catch (final Exception ignore) {
-            fail("LockedException expected but not thrown");
-        }
+        assertThrows(LockedException.class, () -> comparator.setGroundTruthFundamentalMatrix(null));
+        assertThrows(LockedException.class, () -> comparator.setOtherFundamentalMatrix(null));
+        assertThrows(LockedException.class, () -> comparator.setListener(null));
+        assertThrows(LockedException.class, comparator::compare);
     }
 
-    private FundamentalMatrix createRandomFundamentalMatrix()
-            throws AlgebraException, InvalidFundamentalMatrixException {
+    private FundamentalMatrix createRandomFundamentalMatrix() throws AlgebraException,
+            InvalidFundamentalMatrixException {
         FundamentalMatrix fundamentalMatrix;
         int rank;
         do {
-            Matrix internalMatrix = Matrix.createWithUniformRandomValues(
-                    FundamentalMatrix.FUNDAMENTAL_MATRIX_ROWS,
-                    FundamentalMatrix.FUNDAMENTAL_MATRIX_COLS, MIN_RANDOM_VALUE,
-                    MAX_RANDOM_VALUE);
+            var internalMatrix = Matrix.createWithUniformRandomValues(FundamentalMatrix.FUNDAMENTAL_MATRIX_ROWS,
+                    FundamentalMatrix.FUNDAMENTAL_MATRIX_COLS, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
             // ensure that internal matrix has rank 2
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    internalMatrix);
+            final var decomposer = new SingularValueDecomposer(internalMatrix);
             decomposer.decompose();
 
             // if rank is less than 2 we need to
             // pick another random matrix
             rank = decomposer.getRank();
 
-            final Matrix u = decomposer.getU();
-            final Matrix w = decomposer.getW();
-            final Matrix v = decomposer.getV();
-            final Matrix transV = v.transposeAndReturnNew();
+            final var u = decomposer.getU();
+            final var w = decomposer.getW();
+            final var v = decomposer.getV();
+            final var transV = v.transposeAndReturnNew();
 
             // set last element to 0 to force rank 2
             w.setElementAt(2, 2, 0.0);
 
-            internalMatrix = u.multiplyAndReturnNew(w.multiplyAndReturnNew(
-                    transV));
+            internalMatrix = u.multiplyAndReturnNew(w.multiplyAndReturnNew(transV));
 
             fundamentalMatrix = new FundamentalMatrix(internalMatrix);
         } while (rank < 2);

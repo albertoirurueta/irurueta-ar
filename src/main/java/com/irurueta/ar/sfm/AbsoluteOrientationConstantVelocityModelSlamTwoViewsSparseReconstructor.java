@@ -58,8 +58,7 @@ public class AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstru
      */
     public AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructor(
             final AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructorListener listener) {
-        this(new AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructorConfiguration(),
-                listener);
+        this(new AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstructorConfiguration(), listener);
     }
 
     /**
@@ -71,8 +70,8 @@ public class AbsoluteOrientationConstantVelocityModelSlamTwoViewsSparseReconstru
      */
     @Override
     public boolean processOneView() {
-        if (!mRunning) {
-            mSlamEstimator = new AbsoluteOrientationConstantVelocityModelSlamEstimator();
+        if (!running) {
+            slamEstimator = new AbsoluteOrientationConstantVelocityModelSlamEstimator();
             setUpSlamEstimatorListener();
             setUpCalibrationData();
         }

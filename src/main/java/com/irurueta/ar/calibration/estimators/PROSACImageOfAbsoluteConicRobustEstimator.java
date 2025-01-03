@@ -32,8 +32,7 @@ import java.util.List;
  * Finds the best image of absolute conic (IAC) for provided collection of
  * homographies (2D transformations) using PROSAC algorithm.
  */
-public class PROSACImageOfAbsoluteConicRobustEstimator extends
-        ImageOfAbsoluteConicRobustEstimator {
+public class PROSACImageOfAbsoluteConicRobustEstimator extends ImageOfAbsoluteConicRobustEstimator {
 
     /**
      * Constant defining default threshold to determine whether homographies are
@@ -59,20 +58,20 @@ public class PROSACImageOfAbsoluteConicRobustEstimator extends
      * The threshold refers to the amount of error a possible solution has on
      * the ortho-normality assumption of rotation matrices.
      */
-    private double mThreshold;
+    private double threshold;
 
     /**
      * Quality scores corresponding to each provided homography.
      * The larger the score value the better the quality of the sample.
      */
-    private double[] mQualityScores;
+    private double[] qualityScores;
 
     /**
      * Constructor.
      */
     public PROSACImageOfAbsoluteConicRobustEstimator() {
         super();
-        mThreshold = DEFAULT_THRESHOLD;
+        threshold = DEFAULT_THRESHOLD;
     }
 
     /**
@@ -81,10 +80,9 @@ public class PROSACImageOfAbsoluteConicRobustEstimator extends
      * @param listener listener to be notified of events such as when
      *                 estimation starts, ends or its progress significantly changes.
      */
-    public PROSACImageOfAbsoluteConicRobustEstimator(
-            final ImageOfAbsoluteConicRobustEstimatorListener listener) {
+    public PROSACImageOfAbsoluteConicRobustEstimator(final ImageOfAbsoluteConicRobustEstimatorListener listener) {
         super(listener);
-        mThreshold = DEFAULT_THRESHOLD;
+        threshold = DEFAULT_THRESHOLD;
     }
 
     /**
@@ -96,10 +94,9 @@ public class PROSACImageOfAbsoluteConicRobustEstimator extends
      * @throws IllegalArgumentException if not enough homographies are provided
      *                                  for default settings. Hence, at least 1 homography must be provided.
      */
-    public PROSACImageOfAbsoluteConicRobustEstimator(
-            final List<Transformation2D> homographies) {
+    public PROSACImageOfAbsoluteConicRobustEstimator(final List<Transformation2D> homographies) {
         super(homographies);
-        mThreshold = DEFAULT_THRESHOLD;
+        threshold = DEFAULT_THRESHOLD;
     }
 
     /**
@@ -114,10 +111,9 @@ public class PROSACImageOfAbsoluteConicRobustEstimator extends
      *                                  for default settings. Hence, at least 1 homography must be provided.
      */
     public PROSACImageOfAbsoluteConicRobustEstimator(
-            final List<Transformation2D> homographies,
-            final ImageOfAbsoluteConicRobustEstimatorListener listener) {
+            final List<Transformation2D> homographies, final ImageOfAbsoluteConicRobustEstimatorListener listener) {
         super(homographies, listener);
-        mThreshold = DEFAULT_THRESHOLD;
+        threshold = DEFAULT_THRESHOLD;
     }
 
     /**
@@ -200,7 +196,7 @@ public class PROSACImageOfAbsoluteConicRobustEstimator extends
      * when testing possible estimation solutions.
      */
     public double getThreshold() {
-        return mThreshold;
+        return threshold;
     }
 
     /**
@@ -223,7 +219,7 @@ public class PROSACImageOfAbsoluteConicRobustEstimator extends
         if (threshold <= MIN_THRESHOLD) {
             throw new IllegalArgumentException();
         }
-        mThreshold = threshold;
+        this.threshold = threshold;
     }
 
     /**
@@ -235,7 +231,7 @@ public class PROSACImageOfAbsoluteConicRobustEstimator extends
      */
     @Override
     public double[] getQualityScores() {
-        return mQualityScores;
+        return qualityScores;
     }
 
     /**
@@ -268,8 +264,7 @@ public class PROSACImageOfAbsoluteConicRobustEstimator extends
      */
     @Override
     public boolean isReady() {
-        return super.isReady() && mQualityScores != null &&
-                mQualityScores.length == mHomographies.size();
+        return super.isReady() && qualityScores != null && qualityScores.length == homographies.size();
     }
 
     /**
@@ -285,8 +280,7 @@ public class PROSACImageOfAbsoluteConicRobustEstimator extends
      */
     @SuppressWarnings("DuplicatedCode")
     @Override
-    public ImageOfAbsoluteConic estimate() throws LockedException,
-            NotReadyException, RobustEstimatorException {
+    public ImageOfAbsoluteConic estimate() throws LockedException, NotReadyException, RobustEstimatorException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -294,119 +288,106 @@ public class PROSACImageOfAbsoluteConicRobustEstimator extends
             throw new NotReadyException();
         }
 
-        final PROSACRobustEstimator<ImageOfAbsoluteConic> innerEstimator =
-                new PROSACRobustEstimator<>(
-                        new PROSACRobustEstimatorListener<ImageOfAbsoluteConic>() {
+        final var innerEstimator = new PROSACRobustEstimator<ImageOfAbsoluteConic>(
+                new PROSACRobustEstimatorListener<>() {
 
-                            // subset of homographies picked on each iteration
-                            private final List<Transformation2D> mSubsetHomographies =
-                                    new ArrayList<>();
+                    // subset of homographies picked on each iteration
+                    private final List<Transformation2D> subsetHomographies = new ArrayList<>();
 
-                            @Override
-                            public double getThreshold() {
-                                return mThreshold;
-                            }
+                    @Override
+                    public double getThreshold() {
+                        return threshold;
+                    }
 
-                            @Override
-                            public int getTotalSamples() {
-                                return mHomographies.size();
-                            }
+                    @Override
+                    public int getTotalSamples() {
+                        return homographies.size();
+                    }
 
-                            @Override
-                            public int getSubsetSize() {
-                                return mIACEstimator.getMinNumberOfRequiredHomographies();
-                            }
+                    @Override
+                    public int getSubsetSize() {
+                        return iacEstimator.getMinNumberOfRequiredHomographies();
+                    }
 
-                            @Override
-                            public void estimatePreliminarSolutions(
-                                    final int[] samplesIndices,
-                                    final List<ImageOfAbsoluteConic> solutions) {
-                                mSubsetHomographies.clear();
-                                for (final int samplesIndex : samplesIndices) {
-                                    mSubsetHomographies.add(mHomographies.get(
-                                            samplesIndex));
-                                }
+                    @Override
+                    public void estimatePreliminarSolutions(
+                            final int[] samplesIndices, final List<ImageOfAbsoluteConic> solutions) {
+                        subsetHomographies.clear();
+                        for (final var samplesIndex : samplesIndices) {
+                            subsetHomographies.add(homographies.get(samplesIndex));
+                        }
 
-                                try {
-                                    mIACEstimator.setLMSESolutionAllowed(false);
-                                    mIACEstimator.setHomographies(mSubsetHomographies);
+                        try {
+                            iacEstimator.setLMSESolutionAllowed(false);
+                            iacEstimator.setHomographies(subsetHomographies);
 
-                                    final ImageOfAbsoluteConic iac = mIACEstimator.estimate();
-                                    solutions.add(iac);
-                                } catch (final Exception e) {
-                                    // if anything fails, no solution is added
-                                }
-                            }
+                            final var iac = iacEstimator.estimate();
+                            solutions.add(iac);
+                        } catch (final Exception e) {
+                            // if anything fails, no solution is added
+                        }
+                    }
 
-                            @Override
-                            public double computeResidual(
-                                    final ImageOfAbsoluteConic currentEstimation, final int i) {
-                                return residual(currentEstimation, mHomographies.get(i));
-                            }
+                    @Override
+                    public double computeResidual(final ImageOfAbsoluteConic currentEstimation, final int i) {
+                        return residual(currentEstimation, homographies.get(i));
+                    }
 
-                            @Override
-                            public boolean isReady() {
-                                return PROSACImageOfAbsoluteConicRobustEstimator.this.isReady();
-                            }
+                    @Override
+                    public boolean isReady() {
+                        return PROSACImageOfAbsoluteConicRobustEstimator.this.isReady();
+                    }
 
-                            @Override
-                            public void onEstimateStart(
-                                    final RobustEstimator<ImageOfAbsoluteConic> estimator) {
-                                if (mListener != null) {
-                                    mListener.onEstimateStart(
-                                            PROSACImageOfAbsoluteConicRobustEstimator.this);
-                                }
-                            }
+                    @Override
+                    public void onEstimateStart(final RobustEstimator<ImageOfAbsoluteConic> estimator) {
+                        if (listener != null) {
+                            listener.onEstimateStart(PROSACImageOfAbsoluteConicRobustEstimator.this);
+                        }
+                    }
 
-                            @Override
-                            public void onEstimateEnd(
-                                    final RobustEstimator<ImageOfAbsoluteConic> estimator) {
-                                if (mListener != null) {
-                                    mListener.onEstimateEnd(
-                                            PROSACImageOfAbsoluteConicRobustEstimator.this);
-                                }
-                            }
+                    @Override
+                    public void onEstimateEnd(final RobustEstimator<ImageOfAbsoluteConic> estimator) {
+                        if (listener != null) {
+                            listener.onEstimateEnd(PROSACImageOfAbsoluteConicRobustEstimator.this);
+                        }
+                    }
 
-                            @Override
-                            public void onEstimateNextIteration(
-                                    final RobustEstimator<ImageOfAbsoluteConic> estimator,
-                                    final int iteration) {
-                                if (mListener != null) {
-                                    mListener.onEstimateNextIteration(
-                                            PROSACImageOfAbsoluteConicRobustEstimator.this,
-                                            iteration);
-                                }
-                            }
+                    @Override
+                    public void onEstimateNextIteration(
+                            final RobustEstimator<ImageOfAbsoluteConic> estimator, final int iteration) {
+                        if (listener != null) {
+                            listener.onEstimateNextIteration(
+                                    PROSACImageOfAbsoluteConicRobustEstimator.this, iteration);
+                        }
+                    }
 
-                            @Override
-                            public void onEstimateProgressChange(
-                                    final RobustEstimator<ImageOfAbsoluteConic> estimator,
-                                    final float progress) {
-                                if (mListener != null) {
-                                    mListener.onEstimateProgressChange(
-                                            PROSACImageOfAbsoluteConicRobustEstimator.this,
-                                            progress);
-                                }
-                            }
+                    @Override
+                    public void onEstimateProgressChange(
+                            final RobustEstimator<ImageOfAbsoluteConic> estimator, final float progress) {
+                        if (listener != null) {
+                            listener.onEstimateProgressChange(
+                                    PROSACImageOfAbsoluteConicRobustEstimator.this, progress);
+                        }
+                    }
 
-                            @Override
-                            public double[] getQualityScores() {
-                                return mQualityScores;
-                            }
-                        });
+                    @Override
+                    public double[] getQualityScores() {
+                        return qualityScores;
+                    }
+                });
 
         try {
-            mLocked = true;
-            innerEstimator.setConfidence(mConfidence);
-            innerEstimator.setMaxIterations(mMaxIterations);
-            innerEstimator.setProgressDelta(mProgressDelta);
+            locked = true;
+            innerEstimator.setConfidence(confidence);
+            innerEstimator.setMaxIterations(maxIterations);
+            innerEstimator.setProgressDelta(progressDelta);
             return innerEstimator.estimate();
         } catch (final com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
         } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
         } finally {
-            mLocked = false;
+            locked = false;
         }
     }
 
@@ -431,9 +412,9 @@ public class PROSACImageOfAbsoluteConicRobustEstimator extends
      *                                  settings.
      */
     private void internalSetQualityScores(final double[] qualityScores) {
-        if (qualityScores.length < mIACEstimator.getMinNumberOfRequiredHomographies()) {
+        if (qualityScores.length < iacEstimator.getMinNumberOfRequiredHomographies()) {
             throw new IllegalArgumentException();
         }
-        mQualityScores = qualityScores;
+        this.qualityScores = qualityScores;
     }
 }

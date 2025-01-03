@@ -15,27 +15,24 @@
  */
 package com.irurueta.ar.calibration.estimators;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class ImageOfAbsoluteConicEstimatorExceptionTest {
+class ImageOfAbsoluteConicEstimatorExceptionTest {
 
     @Test
-    public void testConstructor() {
-        ImageOfAbsoluteConicEstimatorException ex = new ImageOfAbsoluteConicEstimatorException();
+    void testConstructor() {
+        var ex = new ImageOfAbsoluteConicEstimatorException();
         assertNotNull(ex);
 
-        ex = new ImageOfAbsoluteConicEstimatorException(
-                "message");
+        ex = new ImageOfAbsoluteConicEstimatorException("message");
         assertNotNull(ex);
 
-        ex = new ImageOfAbsoluteConicEstimatorException(
-                new Exception());
+        ex = new ImageOfAbsoluteConicEstimatorException(new Exception());
         assertNotNull(ex);
 
-        ex = new ImageOfAbsoluteConicEstimatorException("message",
-                new Exception());
+        ex = new ImageOfAbsoluteConicEstimatorException("message", new Exception());
         assertNotNull(ex);
     }
 }

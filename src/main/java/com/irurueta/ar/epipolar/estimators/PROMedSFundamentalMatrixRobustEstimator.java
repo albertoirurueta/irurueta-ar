@@ -32,14 +32,12 @@ import java.util.List;
  * Finds the best fundamental matrix for provided collections of matched 2D
  * points using PROMedS algorithm.
  */
-public class PROMedSFundamentalMatrixRobustEstimator extends
-        FundamentalMatrixRobustEstimator {
+public class PROMedSFundamentalMatrixRobustEstimator extends FundamentalMatrixRobustEstimator {
 
     /**
      * Default non-robust method to estimate a fundamental matrix.
      */
-    public static final FundamentalMatrixEstimatorMethod
-            DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD =
+    public static final FundamentalMatrixEstimatorMethod DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD =
             FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM;
 
     /**
@@ -81,13 +79,13 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      * lower than the one typically used in RANSAC, and yet the algorithm could
      * still produce even smaller thresholds in estimated results.
      */
-    private double mStopThreshold;
+    private double stopThreshold;
 
     /**
      * Quality scores corresponding to each provided point.
      * The larger the score value the better the quality of the sample.
      */
-    private double[] mQualityScores;
+    private double[] qualityScores;
 
     /**
      * Constructor.
@@ -95,10 +93,9 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      * @param fundMatrixEstimatorMethod method for non-robust fundamental matrix
      *                                  estimator.
      */
-    public PROMedSFundamentalMatrixRobustEstimator(
-            final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod) {
+    public PROMedSFundamentalMatrixRobustEstimator(final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod) {
         super(fundMatrixEstimatorMethod);
-        mStopThreshold = DEFAULT_STOP_THRESHOLD;
+        stopThreshold = DEFAULT_STOP_THRESHOLD;
     }
 
     /**
@@ -113,7 +110,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
             final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
             final FundamentalMatrixRobustEstimatorListener listener) {
         super(fundMatrixEstimatorMethod, listener);
-        mStopThreshold = DEFAULT_STOP_THRESHOLD;
+        stopThreshold = DEFAULT_STOP_THRESHOLD;
     }
 
     /**
@@ -133,7 +130,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
         if (leftPoints.size() < EightPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS) {
             throw new IllegalArgumentException();
         }
-        mStopThreshold = DEFAULT_STOP_THRESHOLD;
+        stopThreshold = DEFAULT_STOP_THRESHOLD;
     }
 
     /**
@@ -156,7 +153,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
         if (leftPoints.size() < EightPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS) {
             throw new IllegalArgumentException();
         }
-        mStopThreshold = DEFAULT_STOP_THRESHOLD;
+        stopThreshold = DEFAULT_STOP_THRESHOLD;
     }
 
     /**
@@ -170,8 +167,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      *                                  smaller than required size (i.e. 7 matched pair of points).
      */
     public PROMedSFundamentalMatrixRobustEstimator(
-            final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
-            final double[] qualityScores) {
+            final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod, final double[] qualityScores) {
         this(fundMatrixEstimatorMethod);
         internalSetQualityScores(qualityScores);
     }
@@ -189,8 +185,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      *                                  smaller than required size (i.e. 7 matched pair of points).
      */
     public PROMedSFundamentalMatrixRobustEstimator(
-            final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
-            final double[] qualityScores,
+            final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod, final double[] qualityScores,
             final FundamentalMatrixRobustEstimatorListener listener) {
         this(fundMatrixEstimatorMethod, listener);
         internalSetQualityScores(qualityScores);
@@ -210,9 +205,8 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      *                                  than 7 points.
      */
     public PROMedSFundamentalMatrixRobustEstimator(
-            final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
-            final double[] qualityScores, final List<Point2D> leftPoints,
-            final List<Point2D> rightPoints) {
+            final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod, final double[] qualityScores,
+            final List<Point2D> leftPoints, final List<Point2D> rightPoints) {
         this(fundMatrixEstimatorMethod, leftPoints, rightPoints);
         internalSetQualityScores(qualityScores);
     }
@@ -233,9 +227,8 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      *                                  than 7 points.
      */
     public PROMedSFundamentalMatrixRobustEstimator(
-            final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
-            final double[] qualityScores, final List<Point2D> leftPoints,
-            final List<Point2D> rightPoints,
+            final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod, final double[] qualityScores,
+            final List<Point2D> leftPoints, final List<Point2D> rightPoints,
             final FundamentalMatrixRobustEstimatorListener listener) {
         this(fundMatrixEstimatorMethod, leftPoints, rightPoints, listener);
         internalSetQualityScores(qualityScores);
@@ -254,8 +247,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      * @param listener listener to be notified of events such as when
      *                 estimation starts, ends or its progress significantly changes.
      */
-    public PROMedSFundamentalMatrixRobustEstimator(
-            final FundamentalMatrixRobustEstimatorListener listener) {
+    public PROMedSFundamentalMatrixRobustEstimator(final FundamentalMatrixRobustEstimatorListener listener) {
         this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, listener);
     }
 
@@ -267,8 +259,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      * @throws IllegalArgumentException if provided list of points do not have
      *                                  the same length or their length is less than 8 points.
      */
-    public PROMedSFundamentalMatrixRobustEstimator(
-            final List<Point2D> leftPoints, final List<Point2D> rightPoints) {
+    public PROMedSFundamentalMatrixRobustEstimator(final List<Point2D> leftPoints, final List<Point2D> rightPoints) {
         this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints, rightPoints);
     }
 
@@ -282,11 +273,9 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      * @throws IllegalArgumentException if provided list of points do not have
      *                                  the same length or their length is less than 8 points.
      */
-    public PROMedSFundamentalMatrixRobustEstimator(
-            final List<Point2D> leftPoints, final List<Point2D> rightPoints,
-            final FundamentalMatrixRobustEstimatorListener listener) {
-        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints,
-                rightPoints, listener);
+    public PROMedSFundamentalMatrixRobustEstimator(final List<Point2D> leftPoints, final List<Point2D> rightPoints,
+                                                   final FundamentalMatrixRobustEstimatorListener listener) {
+        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints, rightPoints, listener);
     }
 
     /**
@@ -313,8 +302,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      */
     public PROMedSFundamentalMatrixRobustEstimator(
             final double[] qualityScores, final FundamentalMatrixRobustEstimatorListener listener) {
-        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, qualityScores,
-                listener);
+        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, qualityScores, listener);
     }
 
     /**
@@ -329,8 +317,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      *                                  than 7 points.
      */
     public PROMedSFundamentalMatrixRobustEstimator(
-            final double[] qualityScores, final List<Point2D> leftPoints,
-            final List<Point2D> rightPoints) {
+            final double[] qualityScores, final List<Point2D> leftPoints, final List<Point2D> rightPoints) {
         this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, qualityScores, leftPoints, rightPoints);
     }
 
@@ -348,10 +335,9 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      *                                  than 7 points.
      */
     public PROMedSFundamentalMatrixRobustEstimator(
-            final double[] qualityScores, final List<Point2D> leftPoints,
-            final List<Point2D> rightPoints, final FundamentalMatrixRobustEstimatorListener listener) {
-        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, qualityScores, leftPoints,
-                rightPoints, listener);
+            final double[] qualityScores, final List<Point2D> leftPoints, final List<Point2D> rightPoints,
+            final FundamentalMatrixRobustEstimatorListener listener) {
+        this(DEFAULT_PROMEDS_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, qualityScores, leftPoints, rightPoints, listener);
     }
 
     /**
@@ -365,8 +351,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      *                                  less than 8 points.
      */
     @Override
-    public void setPoints(final List<Point2D> leftPoints, final List<Point2D> rightPoints)
-            throws LockedException {
+    public void setPoints(final List<Point2D> leftPoints, final List<Point2D> rightPoints) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -397,7 +382,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      * accuracy has been reached.
      */
     public double getStopThreshold() {
-        return mStopThreshold;
+        return stopThreshold;
     }
 
     /**
@@ -430,7 +415,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
             throw new IllegalArgumentException();
         }
 
-        mStopThreshold = stopThreshold;
+        this.stopThreshold = stopThreshold;
     }
 
     /**
@@ -442,7 +427,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      */
     @Override
     public double[] getQualityScores() {
-        return mQualityScores;
+        return qualityScores;
     }
 
     /**
@@ -476,8 +461,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      */
     @Override
     public boolean isReady() {
-        return super.isReady() && mQualityScores != null &&
-                mQualityScores.length == mLeftPoints.size();
+        return super.isReady() && qualityScores != null && qualityScores.length == leftPoints.size();
     }
 
     /**
@@ -494,8 +478,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      */
     @SuppressWarnings("DuplicatedCode")
     @Override
-    public FundamentalMatrix estimate() throws LockedException,
-            NotReadyException, RobustEstimatorException {
+    public FundamentalMatrix estimate() throws LockedException, NotReadyException, RobustEstimatorException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -503,119 +486,109 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
             throw new NotReadyException();
         }
 
-        final PROMedSRobustEstimator<FundamentalMatrix> innerEstimator =
-                new PROMedSRobustEstimator<>(
-                        new PROMedSRobustEstimatorListener<FundamentalMatrix>() {
+        final var innerEstimator = new PROMedSRobustEstimator<FundamentalMatrix>(
+                new PROMedSRobustEstimatorListener<>() {
 
-                            // subset of left points
-                            private final List<Point2D> mSubsetLeftPoints = new ArrayList<>();
+                    // subset of left points
+                    private final List<Point2D> subsetLeftPoints = new ArrayList<>();
 
-                            // subset of right points
-                            private final List<Point2D> mSubsetRightPoints = new ArrayList<>();
+                    // subset of right points
+                    private final List<Point2D> subsetRightPoints = new ArrayList<>();
 
-                            @Override
-                            public double getThreshold() {
-                                return mStopThreshold;
-                            }
+                    @Override
+                    public double getThreshold() {
+                        return stopThreshold;
+                    }
 
-                            @Override
-                            public int getTotalSamples() {
-                                return mLeftPoints.size();
-                            }
+                    @Override
+                    public int getTotalSamples() {
+                        return leftPoints.size();
+                    }
 
-                            @Override
-                            public int getSubsetSize() {
-                                return getMinRequiredPoints();
-                            }
+                    @Override
+                    public int getSubsetSize() {
+                        return getMinRequiredPoints();
+                    }
 
-                            @Override
-                            public void estimatePreliminarSolutions(
-                                    final int[] samplesIndices, final List<FundamentalMatrix> solutions) {
+                    @Override
+                    public void estimatePreliminarSolutions(
+                            final int[] samplesIndices, final List<FundamentalMatrix> solutions) {
 
-                                mSubsetLeftPoints.clear();
-                                mSubsetRightPoints.clear();
-                                for (final int samplesIndex : samplesIndices) {
-                                    mSubsetLeftPoints.add(mLeftPoints.get(samplesIndex));
-                                    mSubsetRightPoints.add(mRightPoints.get(samplesIndex));
-                                }
+                        subsetLeftPoints.clear();
+                        subsetRightPoints.clear();
+                        for (final var samplesIndex : samplesIndices) {
+                            subsetLeftPoints.add(leftPoints.get(samplesIndex));
+                            subsetRightPoints.add(rightPoints.get(samplesIndex));
+                        }
 
-                                nonRobustEstimate(solutions, mSubsetLeftPoints, mSubsetRightPoints);
-                            }
+                        nonRobustEstimate(solutions, subsetLeftPoints, subsetRightPoints);
+                    }
 
-                            @Override
-                            public double computeResidual(
-                                    final FundamentalMatrix currentEstimation, final int i) {
-                                final Point2D leftPoint = mLeftPoints.get(i);
-                                final Point2D rightPoint = mRightPoints.get(i);
-                                return residual(currentEstimation, leftPoint, rightPoint);
-                            }
+                    @Override
+                    public double computeResidual(final FundamentalMatrix currentEstimation, final int i) {
+                        final var leftPoint = leftPoints.get(i);
+                        final var rightPoint = rightPoints.get(i);
+                        return residual(currentEstimation, leftPoint, rightPoint);
+                    }
 
-                            @Override
-                            public boolean isReady() {
-                                return PROMedSFundamentalMatrixRobustEstimator.this.isReady();
-                            }
+                    @Override
+                    public boolean isReady() {
+                        return PROMedSFundamentalMatrixRobustEstimator.this.isReady();
+                    }
 
-                            @Override
-                            public void onEstimateStart(
-                                    final RobustEstimator<FundamentalMatrix> estimator) {
-                                if (mListener != null) {
-                                    mListener.onEstimateStart(
-                                            PROMedSFundamentalMatrixRobustEstimator.this);
-                                }
-                            }
+                    @Override
+                    public void onEstimateStart(final RobustEstimator<FundamentalMatrix> estimator) {
+                        if (listener != null) {
+                            listener.onEstimateStart(PROMedSFundamentalMatrixRobustEstimator.this);
+                        }
+                    }
 
-                            @Override
-                            public void onEstimateEnd(
-                                    final RobustEstimator<FundamentalMatrix> estimator) {
-                                if (mListener != null) {
-                                    mListener.onEstimateEnd(
-                                            PROMedSFundamentalMatrixRobustEstimator.this);
-                                }
-                            }
+                    @Override
+                    public void onEstimateEnd(final RobustEstimator<FundamentalMatrix> estimator) {
+                        if (listener != null) {
+                            listener.onEstimateEnd(PROMedSFundamentalMatrixRobustEstimator.this);
+                        }
+                    }
 
-                            @Override
-                            public void onEstimateNextIteration(
-                                    final RobustEstimator<FundamentalMatrix> estimator,
-                                    final int iteration) {
-                                if (mListener != null) {
-                                    mListener.onEstimateNextIteration(
-                                            PROMedSFundamentalMatrixRobustEstimator.this,
-                                            iteration);
-                                }
-                            }
+                    @Override
+                    public void onEstimateNextIteration(
+                            final RobustEstimator<FundamentalMatrix> estimator, final int iteration) {
+                        if (listener != null) {
+                            listener.onEstimateNextIteration(
+                                    PROMedSFundamentalMatrixRobustEstimator.this, iteration);
+                        }
+                    }
 
-                            @Override
-                            public void onEstimateProgressChange(
-                                    final RobustEstimator<FundamentalMatrix> estimator,
-                                    final float progress) {
-                                if (mListener != null) {
-                                    mListener.onEstimateProgressChange(
-                                            PROMedSFundamentalMatrixRobustEstimator.this,
-                                            progress);
-                                }
-                            }
+                    @Override
+                    public void onEstimateProgressChange(
+                            final RobustEstimator<FundamentalMatrix> estimator, final float progress) {
+                        if (listener != null) {
+                            listener.onEstimateProgressChange(
+                                    PROMedSFundamentalMatrixRobustEstimator.this, progress);
+                        }
+                    }
 
-                            @Override
-                            public double[] getQualityScores() {
-                                return mQualityScores;
-                            }
-                        });
+                    @Override
+                    public double[] getQualityScores() {
+                        return qualityScores;
+                    }
+                });
 
         try {
-            mLocked = true;
-            mInliersData = null;
-            innerEstimator.setConfidence(mConfidence);
-            innerEstimator.setMaxIterations(mMaxIterations);
-            innerEstimator.setProgressDelta(mProgressDelta);
-            FundamentalMatrix result = innerEstimator.estimate();
-            mInliersData = innerEstimator.getInliersData();
+            locked = true;
+            inliersData = null;
+            innerEstimator.setConfidence(confidence);
+            innerEstimator.setMaxIterations(maxIterations);
+            innerEstimator.setProgressDelta(progressDelta);
+            final var result = innerEstimator.estimate();
+            inliersData = innerEstimator.getInliersData();
             return attemptRefine(result);
         } catch (final com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
         } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
         } finally {
-            mLocked = false;
+            locked = false;
         }
     }
 
@@ -642,8 +615,7 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
      */
     @Override
     protected double getRefinementStandardDeviation() {
-        final PROMedSRobustEstimator.PROMedSInliersData inliersData =
-                (PROMedSRobustEstimator.PROMedSInliersData) getInliersData();
+        final var inliersData = (PROMedSRobustEstimator.PROMedSInliersData) getInliersData();
         return inliersData.getEstimatedThreshold();
     }
 
@@ -662,6 +634,6 @@ public class PROMedSFundamentalMatrixRobustEstimator extends
             throw new IllegalArgumentException();
         }
 
-        mQualityScores = qualityScores;
+        this.qualityScores = qualityScores;
     }
 }

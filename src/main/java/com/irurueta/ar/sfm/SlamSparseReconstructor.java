@@ -24,11 +24,8 @@ import com.irurueta.ar.slam.SlamEstimator;
  * scale estimation.
  */
 public class SlamSparseReconstructor extends BaseSlamSparseReconstructor<
-        SlamCalibrationData,
-        SlamSparseReconstructorConfiguration,
-        SlamSparseReconstructor,
-        SlamSparseReconstructorListener,
-        SlamEstimator> {
+        SlamCalibrationData, SlamSparseReconstructorConfiguration, SlamSparseReconstructor,
+        SlamSparseReconstructorListener, SlamEstimator> {
 
     /**
      * Constructor.
@@ -50,8 +47,7 @@ public class SlamSparseReconstructor extends BaseSlamSparseReconstructor<
      * @param listener listener in charge of handling events.
      * @throws NullPointerException if listener is not provided.
      */
-    public SlamSparseReconstructor(
-            final SlamSparseReconstructorListener listener) {
+    public SlamSparseReconstructor(final SlamSparseReconstructorListener listener) {
         this(new SlamSparseReconstructorConfiguration(), listener);
     }
 
@@ -64,8 +60,8 @@ public class SlamSparseReconstructor extends BaseSlamSparseReconstructor<
      */
     @Override
     public boolean processOneView() {
-        if (!mRunning) {
-            mSlamEstimator = new SlamEstimator();
+        if (!running) {
+            slamEstimator = new SlamEstimator();
             setUpSlamEstimatorListener();
             setUpCalibrationData();
         }

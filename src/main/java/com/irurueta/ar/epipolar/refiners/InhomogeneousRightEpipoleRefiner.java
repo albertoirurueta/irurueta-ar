@@ -27,7 +27,6 @@ import com.irurueta.geometry.estimators.NotReadyException;
 import com.irurueta.geometry.refiners.RefinerException;
 import com.irurueta.numerical.EvaluationException;
 import com.irurueta.numerical.GradientEstimator;
-import com.irurueta.numerical.MultiDimensionFunctionEvaluatorListener;
 import com.irurueta.numerical.fitting.LevenbergMarquardtMultiDimensionFitter;
 import com.irurueta.numerical.fitting.LevenbergMarquardtMultiDimensionFunctionEvaluator;
 import com.irurueta.numerical.robust.InliersData;
@@ -83,18 +82,11 @@ public class InhomogeneousRightEpipoleRefiner extends RightEpipoleRefiner {
      *                                    epipolar geometry.
      */
     public InhomogeneousRightEpipoleRefiner(
-            final Point2D initialEpipoleEstimation,
-            final boolean keepCovariance,
-            final BitSet inliers,
-            final double[] residuals,
-            final int numInliers,
-            final List<Point2D> samples1,
-            final List<Point2D> samples2,
-            final double refinementStandardDeviation,
-            final Transformation2D homography) {
-        super(initialEpipoleEstimation, keepCovariance, inliers, residuals,
-                numInliers, samples1, samples2, refinementStandardDeviation,
-                homography);
+            final Point2D initialEpipoleEstimation, final boolean keepCovariance, final BitSet inliers,
+            final double[] residuals, final int numInliers, final List<Point2D> samples1, final List<Point2D> samples2,
+            final double refinementStandardDeviation, final Transformation2D homography) {
+        super(initialEpipoleEstimation, keepCovariance, inliers, residuals, numInliers, samples1, samples2,
+                refinementStandardDeviation, homography);
     }
 
     /**
@@ -115,15 +107,11 @@ public class InhomogeneousRightEpipoleRefiner extends RightEpipoleRefiner {
      *                                    epipolar geometry.
      */
     public InhomogeneousRightEpipoleRefiner(
-            final Point2D initialEpipoleEstimation,
-            final boolean keepCovariance,
-            final InliersData inliersData,
-            final List<Point2D> samples1,
-            final List<Point2D> samples2,
-            final double refinementStandardDeviation,
+            final Point2D initialEpipoleEstimation, final boolean keepCovariance, final InliersData inliersData,
+            final List<Point2D> samples1, final List<Point2D> samples2, final double refinementStandardDeviation,
             final Transformation2D homography) {
-        super(initialEpipoleEstimation, keepCovariance, inliersData, samples1,
-                samples2, refinementStandardDeviation, homography);
+        super(initialEpipoleEstimation, keepCovariance, inliersData, samples1, samples2, refinementStandardDeviation,
+                homography);
     }
 
     /**
@@ -142,8 +130,7 @@ public class InhomogeneousRightEpipoleRefiner extends RightEpipoleRefiner {
      */
 
     @Override
-    public boolean refine(final Point2D result) throws NotReadyException,
-            LockedException, RefinerException {
+    public boolean refine(final Point2D result) throws NotReadyException, LockedException, RefinerException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -151,40 +138,37 @@ public class InhomogeneousRightEpipoleRefiner extends RightEpipoleRefiner {
             throw new NotReadyException();
         }
 
-        mLocked = true;
+        locked = true;
 
-        if (mListener != null) {
-            mListener.onRefineStart(this, mInitialEstimation);
+        if (listener != null) {
+            listener.onRefineStart(this, initialEstimation);
         }
 
         try {
-            final InhomogeneousPoint2D epipole = new InhomogeneousPoint2D(
-                    mInitialEstimation);
-            boolean errorDecreased = false;
+            final var epipole = new InhomogeneousPoint2D(initialEstimation);
+            var errorDecreased = false;
             boolean iterErrorDecreased;
-            int numIter = 0;
+            var numIter = 0;
             do {
-                final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix();
-                computeFundamentalMatrix(mHomography, epipole,
-                        fundamentalMatrix);
-                final double initialTotalResidual = totalResidual(fundamentalMatrix);
-                final double[] initParams = epipole.asArray();
+                final var fundamentalMatrix = new FundamentalMatrix();
+                computeFundamentalMatrix(homography, epipole, fundamentalMatrix);
+                final var initialTotalResidual = totalResidual(fundamentalMatrix);
+                final var initParams = epipole.asArray();
 
                 // output values to be fitted/optimized will contain residuals
-                final double[] y = new double[mNumInliers];
+                final var y = new double[numInliers];
                 // input values will contain 2 points to compute residuals
-                final int nDims =
-                        2 * Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH;
-                final Matrix x = new Matrix(mNumInliers, nDims);
-                final int nSamples = mInliers.length();
-                int pos = 0;
+                final var nDims = 2 * Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH;
+                final var x = new Matrix(numInliers, nDims);
+                final var nSamples = inliers.length();
+                var pos = 0;
                 Point2D leftPoint;
                 Point2D rightPoint;
-                for (int i = 0; i < nSamples; i++) {
-                    if (mInliers.get(i)) {
+                for (var i = 0; i < nSamples; i++) {
+                    if (inliers.get(i)) {
                         // sample is inlier
-                        leftPoint = mSamples1.get(i);
-                        rightPoint = mSamples2.get(i);
+                        leftPoint = samples1.get(i);
+                        rightPoint = samples2.get(i);
                         leftPoint.normalize();
                         rightPoint.normalize();
                         x.setElementAt(pos, 0, leftPoint.getInhomX());
@@ -192,114 +176,94 @@ public class InhomogeneousRightEpipoleRefiner extends RightEpipoleRefiner {
                         x.setElementAt(pos, 2, rightPoint.getInhomX());
                         x.setElementAt(pos, 3, rightPoint.getInhomY());
 
-                        y[pos] = mResiduals[i];
+                        y[pos] = residuals[i];
                         pos++;
                     }
                 }
 
-                final LevenbergMarquardtMultiDimensionFunctionEvaluator evaluator =
-                        new LevenbergMarquardtMultiDimensionFunctionEvaluator() {
+                final var evaluator = new LevenbergMarquardtMultiDimensionFunctionEvaluator() {
 
-                            private final Point2D mLeftPoint = Point2D.create(
-                                    CoordinatesType.INHOMOGENEOUS_COORDINATES);
+                    private final Point2D leftPoint = Point2D.create(CoordinatesType.INHOMOGENEOUS_COORDINATES);
 
-                            private final Point2D mRightPoint = Point2D.create(
-                                    CoordinatesType.INHOMOGENEOUS_COORDINATES);
+                    private final Point2D rightPoint = Point2D.create(CoordinatesType.INHOMOGENEOUS_COORDINATES);
 
-                            private final InhomogeneousPoint2D mEpipole =
-                                    new InhomogeneousPoint2D();
+                    private final InhomogeneousPoint2D epipole = new InhomogeneousPoint2D();
 
-                            private final FundamentalMatrix mFundMatrix =
-                                    new FundamentalMatrix();
+                    private final FundamentalMatrix fundMatrix = new FundamentalMatrix();
 
-                            @SuppressWarnings("DuplicatedCode")
-                            private final GradientEstimator mGradientEstimator =
-                                    new GradientEstimator(
-                                            new MultiDimensionFunctionEvaluatorListener() {
-                                                @Override
-                                                public double evaluate(final double[] point)
-                                                        throws EvaluationException {
+                    @SuppressWarnings("DuplicatedCode")
+                    private final GradientEstimator gradientEstimator = new GradientEstimator(point -> {
 
-                                                    try {
-                                                        mEpipole.setCoordinates(point);
-                                                        computeFundamentalMatrix(mHomography, mEpipole,
-                                                                mFundMatrix);
-                                                        return residual(mFundMatrix, mLeftPoint,
-                                                                mRightPoint);
-                                                    } catch (final InvalidFundamentalMatrixException e) {
-                                                        throw new EvaluationException(e);
-                                                    }
-                                                }
-                                            });
+                        try {
+                            epipole.setCoordinates(point);
+                            computeFundamentalMatrix(homography, epipole, fundMatrix);
+                            return residual(fundMatrix, leftPoint, rightPoint);
+                        } catch (final InvalidFundamentalMatrixException e) {
+                            throw new EvaluationException(e);
+                        }
+                    });
 
-                            @Override
-                            public int getNumberOfDimensions() {
-                                return nDims;
-                            }
+                    @Override
+                    public int getNumberOfDimensions() {
+                        return nDims;
+                    }
 
-                            @Override
-                            public double[] createInitialParametersArray() {
-                                return initParams;
-                            }
+                    @Override
+                    public double[] createInitialParametersArray() {
+                        return initParams;
+                    }
 
-                            @Override
-                            public double evaluate(
-                                    final int i, final double[] point,
-                                    final double[] params, final double[] derivatives)
-                                    throws EvaluationException {
-                                try {
-                                    mLeftPoint.setInhomogeneousCoordinates(point[0],
-                                            point[1]);
-                                    mRightPoint.setInhomogeneousCoordinates(point[2],
-                                            point[3]);
+                    @Override
+                    public double evaluate(
+                            final int i, final double[] point, final double[] params, final double[] derivatives)
+                            throws EvaluationException {
+                        try {
+                            leftPoint.setInhomogeneousCoordinates(point[0], point[1]);
+                            rightPoint.setInhomogeneousCoordinates(point[2], point[3]);
 
-                                    mEpipole.setCoordinates(params);
-                                    computeFundamentalMatrix(mHomography, mEpipole,
-                                            mFundMatrix);
+                            epipole.setCoordinates(params);
+                            computeFundamentalMatrix(homography, epipole, fundMatrix);
 
-                                    final double y = residual(mFundMatrix, mLeftPoint,
-                                            mRightPoint);
-                                    mGradientEstimator.gradient(params, derivatives);
+                            final var y = residual(fundMatrix, leftPoint, rightPoint);
+                            gradientEstimator.gradient(params, derivatives);
 
-                                    return y;
-                                } catch (final InvalidFundamentalMatrixException e) {
-                                    throw new EvaluationException(e);
-                                }
-                            }
-                        };
+                            return y;
+                        } catch (final InvalidFundamentalMatrixException e) {
+                            throw new EvaluationException(e);
+                        }
+                    }
+                };
 
-                final LevenbergMarquardtMultiDimensionFitter fitter =
-                        new LevenbergMarquardtMultiDimensionFitter(evaluator, x,
-                                y, getRefinementStandardDeviation());
+                final var fitter = new LevenbergMarquardtMultiDimensionFitter(evaluator, x, y,
+                        getRefinementStandardDeviation());
 
                 fitter.fit();
 
                 // obtain estimated params
-                final double[] params = fitter.getA();
+                final var params = fitter.getA();
 
                 // update initial epipole for next iteration
                 epipole.setInhomogeneousCoordinates(params[0], params[1]);
 
-                computeFundamentalMatrix(mHomography, epipole,
-                        fundamentalMatrix);
+                computeFundamentalMatrix(homography, epipole, fundamentalMatrix);
 
-                final double finalTotalResidual = totalResidual(fundamentalMatrix);
+                final var finalTotalResidual = totalResidual(fundamentalMatrix);
                 iterErrorDecreased = finalTotalResidual < initialTotalResidual;
                 if (iterErrorDecreased || !errorDecreased) {
                     errorDecreased = true;
                     // update final result
                     result.setInhomogeneousCoordinates(params[0], params[1]);
 
-                    if (mKeepCovariance) {
+                    if (keepCovariance) {
                         // keep covariance
-                        mCovariance = fitter.getCovar();
+                        covariance = fitter.getCovar();
                     }
                 }
                 numIter++;
             } while (iterErrorDecreased && numIter < MAX_ITERS);
 
-            if (mListener != null) {
-                mListener.onRefineEnd(this, mInitialEstimation, result, errorDecreased);
+            if (listener != null) {
+                listener.onRefineEnd(this, initialEstimation, result, errorDecreased);
             }
 
             return errorDecreased;
@@ -307,7 +271,7 @@ public class InhomogeneousRightEpipoleRefiner extends RightEpipoleRefiner {
         } catch (final Exception e) {
             throw new RefinerException(e);
         } finally {
-            mLocked = false;
+            locked = false;
         }
     }
 }

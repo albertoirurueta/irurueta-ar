@@ -18,8 +18,7 @@ package com.irurueta.ar.epipolar;
 /**
  * Raised when an essential matrix is not well-defined.
  */
-public class InvalidEssentialMatrixException extends
-        InvalidFundamentalMatrixException {
+public class InvalidEssentialMatrixException extends InvalidFundamentalMatrixException {
 
     /**
      * Constructor
@@ -43,8 +42,7 @@ public class InvalidEssentialMatrixException extends
      * @param message message describing the cause of the exception.
      * @param cause   instance containing the cause of the exception.
      */
-    public InvalidEssentialMatrixException(final String message,
-                                           final Throwable cause) {
+    public InvalidEssentialMatrixException(final String message, final Throwable cause) {
         super(message, cause);
     }
 

@@ -24,20 +24,16 @@ import com.irurueta.algebra.SingularValueDecomposer;
 import com.irurueta.algebra.WrongSizeException;
 import com.irurueta.geometry.HomogeneousPoint2D;
 import com.irurueta.geometry.InhomogeneousPoint3D;
-import com.irurueta.geometry.Line2D;
 import com.irurueta.geometry.MatrixRotation3D;
 import com.irurueta.geometry.PinholeCamera;
 import com.irurueta.geometry.PinholeCameraIntrinsicParameters;
 import com.irurueta.geometry.Point2D;
-import com.irurueta.geometry.Point3D;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import java.util.Random;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.Assert.*;
-
-public class SampsonSingleCorrectorTest {
+class SampsonSingleCorrectorTest {
 
     private static final double ABSOLUTE_ERROR = 1e-6;
 
@@ -60,10 +56,10 @@ public class SampsonSingleCorrectorTest {
     private static final int TIMES = 100;
 
     @Test
-    public void testConstructor() throws WrongSizeException, NotAvailableException, NotReadyException,
-            LockedException, DecomposerException, InvalidFundamentalMatrixException {
+    void testConstructor() throws WrongSizeException, NotAvailableException, NotReadyException, LockedException,
+            DecomposerException, InvalidFundamentalMatrixException {
         // test constructor without arguments
-        SampsonSingleCorrector corrector = new SampsonSingleCorrector();
+        var corrector = new SampsonSingleCorrector();
 
         // check default values
         assertNull(corrector.getLeftPoint());
@@ -75,7 +71,7 @@ public class SampsonSingleCorrectorTest {
         assertEquals(CorrectorType.SAMPSON_CORRECTOR, corrector.getType());
 
         // test constructor with fundamental matrix
-        final FundamentalMatrix emptyFundamentalMatrix = new FundamentalMatrix();
+        final var emptyFundamentalMatrix = new FundamentalMatrix();
         corrector = new SampsonSingleCorrector(emptyFundamentalMatrix);
 
         // check default values
@@ -88,8 +84,8 @@ public class SampsonSingleCorrectorTest {
         assertEquals(CorrectorType.SAMPSON_CORRECTOR, corrector.getType());
 
         // test constructor with left and right points
-        final Point2D leftPoint = Point2D.create();
-        final Point2D rightPoint = Point2D.create();
+        final var leftPoint = Point2D.create();
+        final var rightPoint = Point2D.create();
         corrector = new SampsonSingleCorrector(leftPoint, rightPoint);
 
         // check default values
@@ -106,22 +102,21 @@ public class SampsonSingleCorrectorTest {
         FundamentalMatrix fundamentalMatrix;
         int rank;
         do {
-            Matrix internalMatrix = Matrix.createWithUniformRandomValues(
-                    FundamentalMatrix.FUNDAMENTAL_MATRIX_ROWS,
+            var internalMatrix = Matrix.createWithUniformRandomValues(FundamentalMatrix.FUNDAMENTAL_MATRIX_ROWS,
                     FundamentalMatrix.FUNDAMENTAL_MATRIX_COLS, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
             // ensure that internal matrix has rank 2
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(internalMatrix);
+            final var decomposer = new SingularValueDecomposer(internalMatrix);
             decomposer.decompose();
 
             // if rank is less than 2 we need to
             // pick another random matrix
             rank = decomposer.getRank();
 
-            final Matrix u = decomposer.getU();
-            final Matrix w = decomposer.getW();
-            final Matrix v = decomposer.getV();
-            final Matrix transV = v.transposeAndReturnNew();
+            final var u = decomposer.getU();
+            final var w = decomposer.getW();
+            final var v = decomposer.getV();
+            final var transV = v.transposeAndReturnNew();
 
             // set last element to 0 to force rank 2
             w.setElementAt(2, 2, 0.0);
@@ -157,8 +152,8 @@ public class SampsonSingleCorrectorTest {
     }
 
     @Test
-    public void testGetSetPointsAndFundamentalMatrix() {
-        final SampsonSingleCorrector corrector = new SampsonSingleCorrector();
+    void testGetSetPointsAndFundamentalMatrix() {
+        final var corrector = new SampsonSingleCorrector();
 
         // check default values
         assertNull(corrector.getLeftPoint());
@@ -166,9 +161,9 @@ public class SampsonSingleCorrectorTest {
         assertNull(corrector.getFundamentalMatrix());
 
         // set new values
-        final Point2D leftPoint = Point2D.create();
-        final Point2D rightPoint = Point2D.create();
-        final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix();
+        final var leftPoint = Point2D.create();
+        final var rightPoint = Point2D.create();
+        final var fundamentalMatrix = new FundamentalMatrix();
 
         corrector.setPointsAndFundamentalMatrix(leftPoint, rightPoint, fundamentalMatrix);
 
@@ -179,14 +174,14 @@ public class SampsonSingleCorrectorTest {
     }
 
     @Test
-    public void testGetSetFundamentalMatrix() {
-        final SampsonSingleCorrector corrector = new SampsonSingleCorrector();
+    void testGetSetFundamentalMatrix() {
+        final var corrector = new SampsonSingleCorrector();
 
         // check default value
         assertNull(corrector.getFundamentalMatrix());
 
         // set new value
-        final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix();
+        final var fundamentalMatrix = new FundamentalMatrix();
         corrector.setFundamentalMatrix(fundamentalMatrix);
 
         // check correctness
@@ -194,16 +189,16 @@ public class SampsonSingleCorrectorTest {
     }
 
     @Test
-    public void testGetSetPoints() {
-        final SampsonSingleCorrector corrector = new SampsonSingleCorrector();
+    void testGetSetPoints() {
+        final var corrector = new SampsonSingleCorrector();
 
         // check default values
         assertNull(corrector.getLeftPoint());
         assertNull(corrector.getRightPoint());
 
         // set new values
-        final Point2D leftPoint = Point2D.create();
-        final Point2D rightPoint = Point2D.create();
+        final var leftPoint = Point2D.create();
+        final var rightPoint = Point2D.create();
 
         corrector.setPoints(leftPoint, rightPoint);
 
@@ -213,129 +208,106 @@ public class SampsonSingleCorrectorTest {
     }
 
     @Test
-    public void testCorrect() throws InvalidPairOfCamerasException,
-            com.irurueta.geometry.estimators.NotReadyException {
-        int numImproved = 0;
-        for (int t = 0; t < TIMES; t++) {
+    void testCorrect() throws InvalidPairOfCamerasException, com.irurueta.geometry.estimators.NotReadyException {
+        var numImproved = 0;
+        for (var t = 0; t < TIMES; t++) {
             // create intrinsic parameters
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double alphaEuler1 = 0.0;
-            final double betaEuler1 = 0.0;
-            final double gammaEuler1 = 0.0;
-            final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+            final var randomizer = new UniformRandomizer();
+            final var alphaEuler1 = 0.0;
+            final var betaEuler1 = 0.0;
+            final var gammaEuler1 = 0.0;
+            final var alphaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var betaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var gammaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-            final double horizontalFocalLength1 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength1 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double horizontalFocalLength2 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength2 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var horizontalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var verticalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var horizontalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var verticalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
-            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final var skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final var skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
 
-            final double horizontalPrincipalPoint1 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double verticalPrincipalPoint1 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double horizontalPrincipalPoint2 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double verticalPrincipalPoint2 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var horizontalPrincipalPoint1 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var verticalPrincipalPoint1 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var horizontalPrincipalPoint2 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var verticalPrincipalPoint2 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
-            final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
+            final var cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
-            final PinholeCameraIntrinsicParameters intrinsic1 =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
-                            verticalFocalLength1, horizontalPrincipalPoint1,
-                            verticalPrincipalPoint1, skewness1);
-            final PinholeCameraIntrinsicParameters intrinsic2 =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength2,
-                            verticalFocalLength2, horizontalPrincipalPoint2,
-                            verticalPrincipalPoint2, skewness2);
+            final var intrinsic1 = new PinholeCameraIntrinsicParameters(horizontalFocalLength1, verticalFocalLength1,
+                    horizontalPrincipalPoint1, verticalPrincipalPoint1, skewness1);
+            final var intrinsic2 = new PinholeCameraIntrinsicParameters(horizontalFocalLength2, verticalFocalLength2,
+                    horizontalPrincipalPoint2, verticalPrincipalPoint2, skewness2);
 
             // camera centers
-            final Point3D cameraCenter1 = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+            final var cameraCenter1 = new InhomogeneousPoint3D(randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            final Point3D cameraCenter2 = new InhomogeneousPoint3D(
-                    cameraCenter1.getInhomX() + cameraSeparation,
-                    cameraCenter1.getInhomY() + cameraSeparation,
-                    cameraCenter1.getInhomZ() + cameraSeparation);
+            final var cameraCenter2 = new InhomogeneousPoint3D(cameraCenter1.getInhomX() + cameraSeparation,
+                    cameraCenter1.getInhomY() + cameraSeparation, cameraCenter1.getInhomZ() + cameraSeparation);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+            final var rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final var rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
             // create random 3D point to project
-            final Point3D pointToProject = new InhomogeneousPoint3D(
+            final var pointToProject = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
 
             // create two cameras
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, cameraCenter1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, cameraCenter2);
+            final var camera1 = new PinholeCamera(intrinsic1, rotation1, cameraCenter1);
+            final var camera2 = new PinholeCamera(intrinsic2, rotation2, cameraCenter2);
 
             // project 3D point with both cameras
-            final Point2D leftPoint = camera1.project(pointToProject);
-            final Point2D rightPoint = camera2.project(pointToProject);
+            final var leftPoint = camera1.project(pointToProject);
+            final var rightPoint = camera2.project(pointToProject);
 
             // add error to projected points
-            final double errorLeftX = randomizer.nextDouble(MIN_PROJECTED_ERROR, MAX_PROJECTED_ERROR);
-            final double errorLeftY = randomizer.nextDouble(MIN_PROJECTED_ERROR, MAX_PROJECTED_ERROR);
-            final double errorRightX = randomizer.nextDouble(MIN_PROJECTED_ERROR, MAX_PROJECTED_ERROR);
-            final double errorRightY = randomizer.nextDouble(MIN_PROJECTED_ERROR, MAX_PROJECTED_ERROR);
+            final var errorLeftX = randomizer.nextDouble(MIN_PROJECTED_ERROR, MAX_PROJECTED_ERROR);
+            final var errorLeftY = randomizer.nextDouble(MIN_PROJECTED_ERROR, MAX_PROJECTED_ERROR);
+            final var errorRightX = randomizer.nextDouble(MIN_PROJECTED_ERROR, MAX_PROJECTED_ERROR);
+            final var errorRightY = randomizer.nextDouble(MIN_PROJECTED_ERROR, MAX_PROJECTED_ERROR);
 
-            final Point2D wrongLeftPoint = new HomogeneousPoint2D(
-                    leftPoint.getInhomX() + errorLeftX,
+            final var wrongLeftPoint = new HomogeneousPoint2D(leftPoint.getInhomX() + errorLeftX,
                     leftPoint.getInhomY() + errorLeftY, 1.0);
-            final Point2D wrongRightPoint = new HomogeneousPoint2D(
-                    rightPoint.getInhomX() + errorRightX,
+            final var wrongRightPoint = new HomogeneousPoint2D(rightPoint.getInhomX() + errorRightX,
                     rightPoint.getInhomY() + errorRightY, 1.0);
 
             // create fundamental matrix for the same pair of cameras used to
             // project point
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
+            final var fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // check that points without error belong to epipolar lines
-            Line2D rightEpipolarLine = fundamentalMatrix.getRightEpipolarLine(leftPoint);
-            Line2D leftEpipolarLine = fundamentalMatrix.getLeftEpipolarLine(rightPoint);
+            var rightEpipolarLine = fundamentalMatrix.getRightEpipolarLine(leftPoint);
+            var leftEpipolarLine = fundamentalMatrix.getLeftEpipolarLine(rightPoint);
             assertTrue(rightEpipolarLine.isLocus(rightPoint, ABSOLUTE_ERROR));
             assertTrue(leftEpipolarLine.isLocus(leftPoint, ABSOLUTE_ERROR));
 
             fundamentalMatrix.normalize();
 
             // use corrector to fix points with error
-            final SampsonSingleCorrector corrector = new SampsonSingleCorrector(
-                    wrongLeftPoint, wrongRightPoint, fundamentalMatrix);
+            final var corrector = new SampsonSingleCorrector(wrongLeftPoint, wrongRightPoint, fundamentalMatrix);
 
             assertTrue(corrector.isReady());
 
             corrector.correct();
 
-            final Point2D correctedLeftPoint = corrector.getLeftCorrectedPoint();
-            final Point2D correctedRightPoint = corrector.getRightCorrectedPoint();
+            final var correctedLeftPoint = corrector.getLeftCorrectedPoint();
+            final var correctedRightPoint = corrector.getRightCorrectedPoint();
 
             rightEpipolarLine = fundamentalMatrix.getRightEpipolarLine(correctedLeftPoint);
             leftEpipolarLine = fundamentalMatrix.getLeftEpipolarLine(correctedRightPoint);
 
-            final double correctedDistanceLeft = leftEpipolarLine.signedDistance(correctedLeftPoint);
-            final double correctedDistanceRight = rightEpipolarLine.signedDistance(correctedRightPoint);
+            final var correctedDistanceLeft = leftEpipolarLine.signedDistance(correctedLeftPoint);
+            final var correctedDistanceRight = rightEpipolarLine.signedDistance(correctedRightPoint);
 
             rightEpipolarLine = fundamentalMatrix.getRightEpipolarLine(wrongLeftPoint);
             leftEpipolarLine = fundamentalMatrix.getLeftEpipolarLine(wrongRightPoint);
 
-            final double wrongDistanceLeft = leftEpipolarLine.signedDistance(wrongLeftPoint);
-            final double wrongDistanceRight = rightEpipolarLine.signedDistance(wrongRightPoint);
+            final var wrongDistanceLeft = leftEpipolarLine.signedDistance(wrongLeftPoint);
+            final var wrongDistanceRight = rightEpipolarLine.signedDistance(wrongRightPoint);
 
             // check that corrector has indeed reduced the amount of projection
             // error

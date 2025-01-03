@@ -40,14 +40,12 @@ public abstract class FundamentalMatrixRobustEstimator {
     /**
      * Default robust estimator method when none is provided.
      */
-    public static final RobustEstimatorMethod DEFAULT_ROBUST_METHOD =
-            RobustEstimatorMethod.PROSAC;
+    public static final RobustEstimatorMethod DEFAULT_ROBUST_METHOD = RobustEstimatorMethod.PROSAC;
 
     /**
      * Default non-robust method to estimate a fundamental matrix.
      */
-    public static final FundamentalMatrixEstimatorMethod
-            DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD =
+    public static final FundamentalMatrixEstimatorMethod DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD =
             FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM;
 
     /**
@@ -107,30 +105,30 @@ public abstract class FundamentalMatrixRobustEstimator {
     /**
      * List of 2D points corresponding to left view.
      */
-    protected List<Point2D> mLeftPoints;
+    protected List<Point2D> leftPoints;
 
     /**
      * List of 2D points corresponding to right view.
      */
-    protected List<Point2D> mRightPoints;
+    protected List<Point2D> rightPoints;
 
     /**
      * Listener to be notified of events such as when estimation starts, ends or
      * its progress significantly changes.
      */
-    protected FundamentalMatrixRobustEstimatorListener mListener;
+    protected FundamentalMatrixRobustEstimatorListener listener;
 
     /**
      * Indicates if this estimator is locked because an estimation is being
      * computed.
      */
-    protected boolean mLocked;
+    protected boolean locked;
 
     /**
      * Amount of progress variation before notifying a progress change during
      * estimation.
      */
-    protected float mProgressDelta;
+    protected float progressDelta;
 
     /**
      * Amount of confidence expressed as a value between 0.0 and 1.0 (which is
@@ -138,19 +136,19 @@ public abstract class FundamentalMatrixRobustEstimator {
      * that the estimated result is correct. Usually this value will be close
      * to 1.0, but not exactly 1.0.
      */
-    protected double mConfidence;
+    protected double confidence;
 
     /**
      * Maximum allowed number of iterations. When the maximum number of
      * iterations is exceeded, result will not be available, however an
      * approximate result will be available for retrieval.
      */
-    protected int mMaxIterations;
+    protected int maxIterations;
 
     /**
      * Data related to inliers found after estimation.
      */
-    protected InliersData mInliersData;
+    protected InliersData inliersData;
 
     /**
      * Indicates whether result must be refined using Levenberg-Marquardt
@@ -158,30 +156,30 @@ public abstract class FundamentalMatrixRobustEstimator {
      * If true, inliers will be computed and kept in any implementation
      * regardless of the settings.
      */
-    protected boolean mRefineResult;
+    protected boolean refineResult;
 
     /**
      * Indicates whether covariance must be kept after refining result.
      * This setting is only taken into account if result is refined.
      */
-    private boolean mKeepCovariance;
+    private boolean keepCovariance;
 
     /**
      * Estimated covariance of estimated fundamental matrix.
      * This is only available when result has been refined and covariance is
      * kept.
      */
-    private Matrix mCovariance;
+    private Matrix covariance;
 
     /**
      * Test line to compute epipolar residuals.
      */
-    private final Line2D mTestLine = new Line2D();
+    private final Line2D testLine = new Line2D();
 
     /**
      * Internal non robust estimator of fundamental matrix.
      */
-    private FundamentalMatrixEstimator mFundMatrixEstimator;
+    private FundamentalMatrixEstimator fundMatrixEstimator;
 
     /**
      * Constructor.
@@ -189,15 +187,13 @@ public abstract class FundamentalMatrixRobustEstimator {
      * @param fundMatrixEstimatorMethod method for non-robust fundamental matrix
      *                                  estimator.
      */
-    protected FundamentalMatrixRobustEstimator(
-            final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod) {
-        mProgressDelta = DEFAULT_PROGRESS_DELTA;
-        mConfidence = DEFAULT_CONFIDENCE;
-        mMaxIterations = DEFAULT_MAX_ITERATIONS;
-        mFundMatrixEstimator = FundamentalMatrixEstimator.create(
-                fundMatrixEstimatorMethod);
-        mRefineResult = DEFAULT_REFINE_RESULT;
-        mKeepCovariance = DEFAULT_KEEP_COVARIANCE;
+    protected FundamentalMatrixRobustEstimator(final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod) {
+        progressDelta = DEFAULT_PROGRESS_DELTA;
+        confidence = DEFAULT_CONFIDENCE;
+        maxIterations = DEFAULT_MAX_ITERATIONS;
+        fundMatrixEstimator = FundamentalMatrixEstimator.create(fundMatrixEstimatorMethod);
+        refineResult = DEFAULT_REFINE_RESULT;
+        keepCovariance = DEFAULT_KEEP_COVARIANCE;
     }
 
     /**
@@ -212,7 +208,7 @@ public abstract class FundamentalMatrixRobustEstimator {
             final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
             final FundamentalMatrixRobustEstimatorListener listener) {
         this(fundMatrixEstimatorMethod);
-        mListener = listener;
+        this.listener = listener;
     }
 
     /**
@@ -265,7 +261,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * @return non-robust method to estimate a fundamental matrix.
      */
     public FundamentalMatrixEstimatorMethod getNonRobustFundamentalMatrixEstimatorMethod() {
-        return mFundMatrixEstimator.getMethod();
+        return fundMatrixEstimator.getMethod();
     }
 
     /**
@@ -274,8 +270,8 @@ public abstract class FundamentalMatrixRobustEstimator {
      * @param method non-robust method to estimate a fundamental matrix.
      * @throws LockedException if this fundamental matrix estimator is locked.
      */
-    public void setNonRobustFundamentalMatrixEstimatorMethod(
-            final FundamentalMatrixEstimatorMethod method) throws LockedException {
+    public void setNonRobustFundamentalMatrixEstimatorMethod(final FundamentalMatrixEstimatorMethod method)
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -283,7 +279,7 @@ public abstract class FundamentalMatrixRobustEstimator {
         if (method != getNonRobustFundamentalMatrixEstimatorMethod()) {
             // if method changes, recreate internal non-robust fundamental matrix
             // estimator
-            mFundMatrixEstimator = FundamentalMatrixEstimator.create(method);
+            fundMatrixEstimator = FundamentalMatrixEstimator.create(method);
         }
     }
 
@@ -293,7 +289,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * @return 2D points on left view.
      */
     public List<Point2D> getLeftPoints() {
-        return mLeftPoints;
+        return leftPoints;
     }
 
     /**
@@ -302,7 +298,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * @return 2D points on right view.
      */
     public List<Point2D> getRightPoints() {
-        return mRightPoints;
+        return rightPoints;
     }
 
     /**
@@ -315,8 +311,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      *                                  right views do not have the same length or if their length is
      *                                  less than 7 points.
      */
-    public void setPoints(final List<Point2D> leftPoints, final List<Point2D> rightPoints)
-            throws LockedException {
+    public void setPoints(final List<Point2D> leftPoints, final List<Point2D> rightPoints) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -331,7 +326,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * @return listener to be notified of events.
      */
     public FundamentalMatrixRobustEstimatorListener getListener() {
-        return mListener;
+        return listener;
     }
 
     /**
@@ -341,12 +336,11 @@ public abstract class FundamentalMatrixRobustEstimator {
      * @param listener listener to be notified of events.
      * @throws LockedException if robust estimator is locked.
      */
-    public void setListener(final FundamentalMatrixRobustEstimatorListener listener)
-            throws LockedException {
+    public void setListener(final FundamentalMatrixRobustEstimatorListener listener) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mListener = listener;
+        this.listener = listener;
     }
 
     /**
@@ -356,7 +350,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * @return true if available, false otherwise.
      */
     public boolean isListenerAvailable() {
-        return mListener != null;
+        return listener != null;
     }
 
     /**
@@ -366,7 +360,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * @return true if estimator is locked, false otherwise.
      */
     public boolean isLocked() {
-        return mLocked;
+        return locked;
     }
 
     /**
@@ -377,7 +371,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * during estimation.
      */
     public float getProgressDelta() {
-        return mProgressDelta;
+        return progressDelta;
     }
 
     /**
@@ -391,16 +385,14 @@ public abstract class FundamentalMatrixRobustEstimator {
      * @throws LockedException          if this estimator is locked because an estimation
      *                                  is being computed.
      */
-    public void setProgressDelta(final float progressDelta)
-            throws LockedException {
+    public void setProgressDelta(final float progressDelta) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        if (progressDelta < MIN_PROGRESS_DELTA ||
-                progressDelta > MAX_PROGRESS_DELTA) {
+        if (progressDelta < MIN_PROGRESS_DELTA || progressDelta > MAX_PROGRESS_DELTA) {
             throw new IllegalArgumentException();
         }
-        mProgressDelta = progressDelta;
+        this.progressDelta = progressDelta;
     }
 
     /**
@@ -412,7 +404,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * @return amount of confidence as a value between 0.0 and 1.0.
      */
     public double getConfidence() {
-        return mConfidence;
+        return confidence;
     }
 
     /**
@@ -427,15 +419,14 @@ public abstract class FundamentalMatrixRobustEstimator {
      * @throws LockedException          if this estimator is locked because an estimator
      *                                  is being computed.
      */
-    public void setConfidence(final double confidence)
-            throws LockedException {
+    public void setConfidence(final double confidence) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
         if (confidence < MIN_CONFIDENCE || confidence > MAX_CONFIDENCE) {
             throw new IllegalArgumentException();
         }
-        mConfidence = confidence;
+        this.confidence = confidence;
     }
 
     /**
@@ -446,7 +437,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * @return maximum allowed number of iterations.
      */
     public int getMaxIterations() {
-        return mMaxIterations;
+        return maxIterations;
     }
 
     /**
@@ -459,15 +450,14 @@ public abstract class FundamentalMatrixRobustEstimator {
      * @throws LockedException          if this estimator is locked because an estimation
      *                                  is being computed.
      */
-    public void setMaxIterations(final int maxIterations)
-            throws LockedException {
+    public void setMaxIterations(final int maxIterations) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
         if (maxIterations < MIN_ITERATIONS) {
             throw new IllegalArgumentException();
         }
-        mMaxIterations = maxIterations;
+        this.maxIterations = maxIterations;
     }
 
     /**
@@ -476,7 +466,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * @return data related to inliers found after estimation.
      */
     public InliersData getInliersData() {
-        return mInliersData;
+        return inliersData;
     }
 
     /**
@@ -489,7 +479,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * robust estimator without further refining.
      */
     public boolean isResultRefined() {
-        return mRefineResult;
+        return refineResult;
     }
 
     /**
@@ -504,7 +494,7 @@ public abstract class FundamentalMatrixRobustEstimator {
         if (isLocked()) {
             throw new LockedException();
         }
-        mRefineResult = refineResult;
+        this.refineResult = refineResult;
     }
 
     /**
@@ -515,7 +505,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * otherwise.
      */
     public boolean isCovarianceKept() {
-        return mKeepCovariance;
+        return keepCovariance;
     }
 
     /**
@@ -526,12 +516,11 @@ public abstract class FundamentalMatrixRobustEstimator {
      *                       result, false otherwise.
      * @throws LockedException if estimator is locked.
      */
-    public void setCovarianceKept(final boolean keepCovariance)
-            throws LockedException {
+    public void setCovarianceKept(final boolean keepCovariance) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mKeepCovariance = keepCovariance;
+        this.keepCovariance = keepCovariance;
     }
 
     /**
@@ -542,7 +531,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * the estimation.
      */
     public int getMinRequiredPoints() {
-        return mFundMatrixEstimator.getMinRequiredPoints();
+        return fundMatrixEstimator.getMinRequiredPoints();
     }
 
     /**
@@ -554,9 +543,8 @@ public abstract class FundamentalMatrixRobustEstimator {
      * @return true if estimator is ready, false otherwise.
      */
     public boolean isReady() {
-        return mLeftPoints != null && mRightPoints != null &&
-                mLeftPoints.size() == mRightPoints.size() &&
-                mLeftPoints.size() >= SevenPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS;
+        return leftPoints != null && rightPoints != null && leftPoints.size() == rightPoints.size()
+                && leftPoints.size() >= SevenPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS;
     }
 
     /**
@@ -597,7 +585,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * @return estimated covariance or null.
      */
     public Matrix getCovariance() {
-        return mCovariance;
+        return covariance;
     }
 
     /**
@@ -611,8 +599,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * @throws RobustEstimatorException if estimation fails for any reason
      *                                  (i.e. numerical instability, no solution available, etc).
      */
-    public abstract FundamentalMatrix estimate() throws LockedException,
-            NotReadyException, RobustEstimatorException;
+    public abstract FundamentalMatrix estimate() throws LockedException, NotReadyException, RobustEstimatorException;
 
     /**
      * Returns method being used for robust estimation.
@@ -628,21 +615,14 @@ public abstract class FundamentalMatrixRobustEstimator {
      *               fundamental matrix.
      * @return an instance of a fundamental matrix robust estimator.
      */
-    public static FundamentalMatrixRobustEstimator create(
-            final RobustEstimatorMethod method) {
-        switch (method) {
-            case LMEDS:
-                return new LMedSFundamentalMatrixRobustEstimator();
-            case MSAC:
-                return new MSACFundamentalMatrixRobustEstimator();
-            case PROSAC:
-                return new PROSACFundamentalMatrixRobustEstimator();
-            case PROMEDS:
-                return new PROMedSFundamentalMatrixRobustEstimator();
-            case RANSAC:
-            default:
-                return new RANSACFundamentalMatrixRobustEstimator();
-        }
+    public static FundamentalMatrixRobustEstimator create(final RobustEstimatorMethod method) {
+        return switch (method) {
+            case LMEDS -> new LMedSFundamentalMatrixRobustEstimator();
+            case MSAC -> new MSACFundamentalMatrixRobustEstimator();
+            case PROSAC -> new PROSACFundamentalMatrixRobustEstimator();
+            case PROMEDS -> new PROMedSFundamentalMatrixRobustEstimator();
+            default -> new RANSACFundamentalMatrixRobustEstimator();
+        };
     }
 
     /**
@@ -658,26 +638,14 @@ public abstract class FundamentalMatrixRobustEstimator {
      *                                  the same length or their length is less than 7 points.
      */
     public static FundamentalMatrixRobustEstimator create(
-            final List<Point2D> leftPoints, final List<Point2D> rightPoints,
-            final RobustEstimatorMethod method) {
-        switch (method) {
-            case LMEDS:
-                return new LMedSFundamentalMatrixRobustEstimator(leftPoints,
-                        rightPoints);
-            case MSAC:
-                return new MSACFundamentalMatrixRobustEstimator(leftPoints,
-                        rightPoints);
-            case PROSAC:
-                return new PROSACFundamentalMatrixRobustEstimator(leftPoints,
-                        rightPoints);
-            case PROMEDS:
-                return new PROMedSFundamentalMatrixRobustEstimator(leftPoints,
-                        rightPoints);
-            case RANSAC:
-            default:
-                return new RANSACFundamentalMatrixRobustEstimator(leftPoints,
-                        rightPoints);
-        }
+            final List<Point2D> leftPoints, final List<Point2D> rightPoints, final RobustEstimatorMethod method) {
+        return switch (method) {
+            case LMEDS -> new LMedSFundamentalMatrixRobustEstimator(leftPoints, rightPoints);
+            case MSAC -> new MSACFundamentalMatrixRobustEstimator(leftPoints, rightPoints);
+            case PROSAC -> new PROSACFundamentalMatrixRobustEstimator(leftPoints, rightPoints);
+            case PROMEDS -> new PROMedSFundamentalMatrixRobustEstimator(leftPoints, rightPoints);
+            default -> new RANSACFundamentalMatrixRobustEstimator(leftPoints, rightPoints);
+        };
     }
 
     /**
@@ -695,26 +663,15 @@ public abstract class FundamentalMatrixRobustEstimator {
      *                                  the same length or their length is less than 7 points.
      */
     public static FundamentalMatrixRobustEstimator create(
-            final List<Point2D> leftPoints, final List<Point2D> rightPoints,
-            final double[] qualityScores, final RobustEstimatorMethod method) {
-        switch (method) {
-            case LMEDS:
-                return new LMedSFundamentalMatrixRobustEstimator(leftPoints,
-                        rightPoints);
-            case MSAC:
-                return new MSACFundamentalMatrixRobustEstimator(leftPoints,
-                        rightPoints);
-            case PROSAC:
-                return new PROSACFundamentalMatrixRobustEstimator(qualityScores,
-                        leftPoints, rightPoints);
-            case PROMEDS:
-                return new PROMedSFundamentalMatrixRobustEstimator(
-                        qualityScores, leftPoints, rightPoints);
-            case RANSAC:
-            default:
-                return new RANSACFundamentalMatrixRobustEstimator(leftPoints,
-                        rightPoints);
-        }
+            final List<Point2D> leftPoints, final List<Point2D> rightPoints, final double[] qualityScores,
+            final RobustEstimatorMethod method) {
+        return switch (method) {
+            case LMEDS -> new LMedSFundamentalMatrixRobustEstimator(leftPoints, rightPoints);
+            case MSAC -> new MSACFundamentalMatrixRobustEstimator(leftPoints, rightPoints);
+            case PROSAC -> new PROSACFundamentalMatrixRobustEstimator(qualityScores, leftPoints, rightPoints);
+            case PROMEDS -> new PROMedSFundamentalMatrixRobustEstimator(qualityScores, leftPoints, rightPoints);
+            default -> new RANSACFundamentalMatrixRobustEstimator(leftPoints, rightPoints);
+        };
     }
 
     /**
@@ -754,10 +711,8 @@ public abstract class FundamentalMatrixRobustEstimator {
      *                                  the same length or their length is less than 7 points.
      */
     public static FundamentalMatrixRobustEstimator create(
-            final List<Point2D> leftPoints, final List<Point2D> rightPoints,
-            final double[] qualityScores) {
-        return create(leftPoints, rightPoints, qualityScores,
-                DEFAULT_ROBUST_METHOD);
+            final List<Point2D> leftPoints, final List<Point2D> rightPoints, final double[] qualityScores) {
+        return create(leftPoints, rightPoints, qualityScores, DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -770,18 +725,16 @@ public abstract class FundamentalMatrixRobustEstimator {
      * @return residual (distance of point to epipolar line).
      */
     @SuppressWarnings("DuplicatedCode")
-    protected double residual(final FundamentalMatrix fundamentalMatrix,
-                              final Point2D leftPoint, final Point2D rightPoint) {
+    protected double residual(
+            final FundamentalMatrix fundamentalMatrix, final Point2D leftPoint, final Point2D rightPoint) {
         try {
             leftPoint.normalize();
             rightPoint.normalize();
             fundamentalMatrix.normalize();
-            fundamentalMatrix.leftEpipolarLine(rightPoint, mTestLine);
-            final double leftDistance = Math.abs(mTestLine.signedDistance(
-                    leftPoint));
-            fundamentalMatrix.rightEpipolarLine(leftPoint, mTestLine);
-            final double rightDistance = Math.abs(mTestLine.signedDistance(
-                    rightPoint));
+            fundamentalMatrix.leftEpipolarLine(rightPoint, testLine);
+            final var leftDistance = Math.abs(testLine.signedDistance(leftPoint));
+            fundamentalMatrix.rightEpipolarLine(leftPoint, testLine);
+            final var rightDistance = Math.abs(testLine.signedDistance(rightPoint));
             // return average distance as an error residual
             return 0.5 * (leftDistance + rightDistance);
         } catch (final NotReadyException e) {
@@ -798,20 +751,16 @@ public abstract class FundamentalMatrixRobustEstimator {
      * @param subsetLeftPoints  subset of left view matched points.
      * @param subsetRightPoints subset of right view matched points.
      */
-    protected void nonRobustEstimate(final List<FundamentalMatrix> solutions,
-                                     final List<Point2D> subsetLeftPoints,
-                                     final List<Point2D> subsetRightPoints) {
+    protected void nonRobustEstimate(
+            final List<FundamentalMatrix> solutions, final List<Point2D> subsetLeftPoints,
+            final List<Point2D> subsetRightPoints) {
         try {
-            mFundMatrixEstimator.setPoints(subsetLeftPoints,
-                    subsetRightPoints);
-            if (mFundMatrixEstimator.getMethod() ==
-                    FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM) {
-                final List<FundamentalMatrix> matrices =
-                        ((SevenPointsFundamentalMatrixEstimator)
-                                mFundMatrixEstimator).estimateAll();
+            fundMatrixEstimator.setPoints(subsetLeftPoints, subsetRightPoints);
+            if (fundMatrixEstimator.getMethod() == FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM) {
+                final var matrices = ((SevenPointsFundamentalMatrixEstimator) fundMatrixEstimator).estimateAll();
                 solutions.addAll(matrices);
             } else {
-                solutions.add(mFundMatrixEstimator.estimate());
+                solutions.add(fundMatrixEstimator.estimate());
             }
         } catch (final GeometryException e) {
             // if anything fails, no solution is added
@@ -830,21 +779,18 @@ public abstract class FundamentalMatrixRobustEstimator {
      * @return solution after refinement (if requested) or the provided
      * non-refined solution if not requested or if refinement failed.
      */
-    protected FundamentalMatrix attemptRefine(
-            final FundamentalMatrix fundamentalMatrix) {
-        if (mRefineResult) {
-            final FundamentalMatrixRefiner refiner = new FundamentalMatrixRefiner(
-                    fundamentalMatrix, mKeepCovariance, getInliersData(),
-                    mLeftPoints, mRightPoints,
-                    getRefinementStandardDeviation());
+    protected FundamentalMatrix attemptRefine(final FundamentalMatrix fundamentalMatrix) {
+        if (refineResult) {
+            final var refiner = new FundamentalMatrixRefiner(fundamentalMatrix, keepCovariance, getInliersData(),
+                    leftPoints, rightPoints, getRefinementStandardDeviation());
 
             try {
-                final FundamentalMatrix result = new FundamentalMatrix();
-                final boolean improved = refiner.refine(result);
+                final var result = new FundamentalMatrix();
+                final var improved = refiner.refine(result);
 
-                if (mKeepCovariance) {
+                if (keepCovariance) {
                     // keep covariance
-                    mCovariance = refiner.getCovariance();
+                    covariance = refiner.getCovariance();
                 }
 
                 return improved ? result : fundamentalMatrix;
@@ -880,8 +826,7 @@ public abstract class FundamentalMatrixRobustEstimator {
      * @throws IllegalArgumentException if provided lists of points don't have
      *                                  the same size.
      */
-    private void internalSetPoints(final List<Point2D> leftPoints,
-                                   final List<Point2D> rightPoints) {
+    private void internalSetPoints(final List<Point2D> leftPoints, final List<Point2D> rightPoints) {
         if (leftPoints.size() != rightPoints.size()) {
             throw new IllegalArgumentException();
         }
@@ -889,7 +834,7 @@ public abstract class FundamentalMatrixRobustEstimator {
             throw new IllegalArgumentException();
         }
 
-        mLeftPoints = leftPoints;
-        mRightPoints = rightPoints;
+        this.leftPoints = leftPoints;
+        this.rightPoints = rightPoints;
     }
 }

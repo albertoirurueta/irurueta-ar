@@ -16,17 +16,17 @@
 package com.irurueta.ar.sfm;
 
 import com.irurueta.ar.SerializationHelper;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class PointColorDataTest {
+class PointColorDataTest {
 
     @Test
-    public void testConstructor() {
-        final PointColorData data = new CustomPointColorData();
+    void testConstructor() {
+        final var data = new CustomPointColorData();
 
         // check default value
         assertNull(data.getId());
@@ -34,8 +34,8 @@ public class PointColorDataTest {
     }
 
     @Test
-    public void testGetSetId() {
-        final PointColorData data = new CustomPointColorData();
+    void testGetSetId() {
+        final var data = new CustomPointColorData();
 
         // check default value
         assertNull(data.getId());
@@ -48,8 +48,8 @@ public class PointColorDataTest {
     }
 
     @Test
-    public void testGetSetQualityScore() {
-        final PointColorData data = new CustomPointColorData();
+    void testGetSetQualityScore() {
+        final var data = new CustomPointColorData();
 
         // check default value
         assertEquals(PointColorData.DEFAULT_QUALITY_SCORE, data.getQualityScore(), 0.0);
@@ -62,10 +62,10 @@ public class PointColorDataTest {
     }
 
     @Test
-    public void testAverage() {
-        final PointColorData data1 = new CustomPointColorData();
-        final PointColorData data2 = new CustomPointColorData();
-        final PointColorData data3 = new CustomPointColorData();
+    void testAverage() {
+        final var data1 = new CustomPointColorData();
+        final var data2 = new CustomPointColorData();
+        final var data3 = new CustomPointColorData();
 
         data1.average(data2, data3);
 
@@ -75,8 +75,8 @@ public class PointColorDataTest {
     }
 
     @Test
-    public void testSerializeDeserialize() throws IOException, ClassNotFoundException {
-        final PointColorData data1 = new CustomPointColorData();
+    void testSerializeDeserialize() throws IOException, ClassNotFoundException {
+        final var data1 = new CustomPointColorData();
 
         // set new values
         data1.setId("id");
@@ -87,8 +87,8 @@ public class PointColorDataTest {
         assertEquals(5.0, data1.getQualityScore(), 0.0);
 
         // serialize and deserialize
-        final byte[] bytes = SerializationHelper.serialize(data1);
-        final PointColorData data2 = SerializationHelper.deserialize(bytes);
+        final var bytes = SerializationHelper.serialize(data1);
+        final var data2 = SerializationHelper.<PointColorData>deserialize(bytes);
 
         assertEquals(data1.getId(), data2.getId());
         assertEquals(data1.getQualityScore(), data2.getQualityScore(), 0.0);
@@ -98,6 +98,7 @@ public class PointColorDataTest {
 
         @Override
         public void average(final PointColorData other, final PointColorData result) {
+            // no action needed
         }
     }
 }

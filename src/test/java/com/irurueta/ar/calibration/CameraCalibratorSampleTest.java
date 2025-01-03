@@ -24,15 +24,13 @@ import com.irurueta.geometry.estimators.NotReadyException;
 import com.irurueta.geometry.estimators.PointCorrespondenceProjectiveTransformation2DRobustEstimator;
 import com.irurueta.numerical.robust.RobustEstimatorException;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class CameraCalibratorSampleTest {
+class CameraCalibratorSampleTest {
 
     private static final double MIN_RANDOM_VALUE = -1.0;
     private static final double MAX_RANDOM_VALUE = 1.0;
@@ -56,9 +54,9 @@ public class CameraCalibratorSampleTest {
     private static final int TIMES = 1000;
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         // test constructor without arguments
-        CameraCalibratorSample sample = new CameraCalibratorSample();
+        var sample = new CameraCalibratorSample();
 
         // check correctness
         assertNull(sample.getPattern());
@@ -71,8 +69,8 @@ public class CameraCalibratorSampleTest {
         assertNull(sample.getCamera());
 
         // test constructor with sampled markers
-        final List<Point2D> sampledMarkers = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
+        final var sampledMarkers = new ArrayList<Point2D>();
+        for (var i = 0; i < 4; i++) {
             sampledMarkers.add(Point2D.create());
         }
         sample = new CameraCalibratorSample(sampledMarkers);
@@ -88,17 +86,11 @@ public class CameraCalibratorSampleTest {
         assertNull(sample.getCamera());
 
         // Force IllegalArgumentException
-        final List<Point2D> emptyMarkers = new ArrayList<>();
-        sample = null;
-        try {
-            sample = new CameraCalibratorSample(emptyMarkers);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(sample);
+        final var emptyMarkers = new ArrayList<Point2D>();
+        assertThrows(IllegalArgumentException.class, () -> new CameraCalibratorSample(emptyMarkers));
 
         // test constructor with sampled markers and quality scores
-        final double[] qualityScores = new double[4];
+        final var qualityScores = new double[4];
         sample = new CameraCalibratorSample(sampledMarkers, qualityScores);
 
         // check correctness
@@ -112,17 +104,12 @@ public class CameraCalibratorSampleTest {
         assertNull(sample.getCamera());
 
         // Force IllegalArgumentException
-        final double[] shortQualityScores = new double[1];
-        sample = null;
-        try {
-            sample = new CameraCalibratorSample(sampledMarkers, shortQualityScores);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(sample);
+        final var shortQualityScores = new double[1];
+        assertThrows(IllegalArgumentException.class,
+                () -> new CameraCalibratorSample(sampledMarkers, shortQualityScores));
 
         // test constructor with pattern and sampled markers
-        final Pattern2D pattern = Pattern2D.create(Pattern2DType.QR);
+        final var pattern = Pattern2D.create(Pattern2DType.QR);
         sample = new CameraCalibratorSample(pattern, sampledMarkers);
 
         // check correctness
@@ -136,13 +123,7 @@ public class CameraCalibratorSampleTest {
         assertNull(sample.getCamera());
 
         // Force IllegalArgumentException
-        sample = null;
-        try {
-            sample = new CameraCalibratorSample(pattern, emptyMarkers);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(sample);
+        assertThrows(IllegalArgumentException.class, () -> new CameraCalibratorSample(pattern, emptyMarkers));
 
         // test constructor with sampled markers and quality scores
         sample = new CameraCalibratorSample(pattern, sampledMarkers, qualityScores);
@@ -158,23 +139,18 @@ public class CameraCalibratorSampleTest {
         assertNull(sample.getCamera());
 
         // Force IllegalArgumentException
-        sample = null;
-        try {
-            sample = new CameraCalibratorSample(pattern, sampledMarkers, shortQualityScores);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(sample);
+        assertThrows(IllegalArgumentException.class,
+                () -> new CameraCalibratorSample(pattern, sampledMarkers, shortQualityScores));
     }
 
     @Test
-    public void testGetSetPattern() {
-        final CameraCalibratorSample sample = new CameraCalibratorSample();
+    void testGetSetPattern() {
+        final var sample = new CameraCalibratorSample();
 
         assertNull(sample.getPattern());
 
         // set new value
-        final Pattern2D pattern = Pattern2D.create(Pattern2DType.QR);
+        final var pattern = Pattern2D.create(Pattern2DType.QR);
         sample.setPattern(pattern);
 
         // check correctness
@@ -182,15 +158,15 @@ public class CameraCalibratorSampleTest {
     }
 
     @Test
-    public void testGetSetSampledMarkers() {
-        final CameraCalibratorSample sample = new CameraCalibratorSample();
+    void testGetSetSampledMarkers() {
+        final var sample = new CameraCalibratorSample();
 
         // check default value
         assertNull(sample.getSampledMarkers());
 
         // set new value
-        final List<Point2D> sampledMarkers = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
+        final var sampledMarkers = new ArrayList<Point2D>();
+        for (var i = 0; i < 4; i++) {
             sampledMarkers.add(Point2D.create());
         }
         sample.setSampledMarkers(sampledMarkers);
@@ -199,91 +175,79 @@ public class CameraCalibratorSampleTest {
         assertSame(sample.getSampledMarkers(), sampledMarkers);
 
         // Force IllegalArgumentException
-        final List<Point2D> emptyMarkers = new ArrayList<>();
-        try {
-            sample.setSampledMarkers(emptyMarkers);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        final var emptyMarkers = new ArrayList<Point2D>();
+        assertThrows(IllegalArgumentException.class, () -> sample.setSampledMarkers(emptyMarkers));
     }
 
     @Test
-    public void testGetSetSampledMarkersQualityScores() {
-        final CameraCalibratorSample sample = new CameraCalibratorSample();
+    void testGetSetSampledMarkersQualityScores() {
+        final var sample = new CameraCalibratorSample();
 
         // check default value
         assertNull(sample.getSampledMarkersQualityScores());
 
         // set new value
-        final double[] qualityScores = new double[4];
+        final var qualityScores = new double[4];
         sample.setSampledMarkersQualityScores(qualityScores);
 
         // check correctness
         assertSame(qualityScores, sample.getSampledMarkersQualityScores());
 
         // Force IllegalArgumentException
-        final double[] shortScores = new double[1];
-        try {
-            sample.setSampledMarkersQualityScores(shortScores);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        final var shortScores = new double[1];
+        assertThrows(IllegalArgumentException.class, () -> sample.setSampledMarkersQualityScores(shortScores));
     }
 
     @Test
-    public void testComputeSampledMarkersQualityScores() {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testComputeSampledMarkersQualityScores() {
+        final var randomizer = new UniformRandomizer();
 
-        final int numMarkers = randomizer.nextInt(MIN_NUM_MARKERS, MAX_NUM_MARKERS);
+        final var numMarkers = randomizer.nextInt(MIN_NUM_MARKERS, MAX_NUM_MARKERS);
 
-        final Point2D center = new InhomogeneousPoint2D(
-                randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+        final var center = new InhomogeneousPoint2D(randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                 randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-        final List<Point2D> sampledMarkers = new ArrayList<>();
+        final var sampledMarkers = new ArrayList<Point2D>();
         Point2D marker;
-        final double[] scoresWithCenter = new double[numMarkers];
-        final double[] scoresNoCenter = new double[numMarkers];
+        final var scoresWithCenter = new double[numMarkers];
+        final var scoresNoCenter = new double[numMarkers];
         double distance;
-        for (int i = 0; i < numMarkers; i++) {
-            marker = new InhomogeneousPoint2D(
-                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+        for (var i = 0; i < numMarkers; i++) {
+            marker = new InhomogeneousPoint2D(randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
             sampledMarkers.add(marker);
 
             // distance with center at origin of coordinates
-            distance = Math.sqrt(Math.pow(marker.getInhomX(), 2.0) +
-                    Math.pow(marker.getInhomY(), 2.0));
+            distance = Math.sqrt(Math.pow(marker.getInhomX(), 2.0) + Math.pow(marker.getInhomY(), 2.0));
             scoresNoCenter[i] = 1.0 / (1.0 + distance);
 
             // distance respect to center
-            distance = Math.sqrt(Math.pow(marker.getInhomX() - center.getInhomX(), 2.0) +
-                    Math.pow(marker.getInhomY() - center.getInhomY(), 2.0));
+            distance = Math.sqrt(Math.pow(marker.getInhomX() - center.getInhomX(), 2.0)
+                    + Math.pow(marker.getInhomY() - center.getInhomY(), 2.0));
             scoresWithCenter[i] = 1.0 / (1.0 + distance);
         }
 
         // check correctness
-        assertArrayEquals(scoresNoCenter,
-                CameraCalibratorSample.computeSampledMarkersQualityScores(sampledMarkers), ABSOLUTE_ERROR);
-
-        assertArrayEquals(scoresWithCenter,
-                CameraCalibratorSample.computeSampledMarkersQualityScores(sampledMarkers, center),
+        assertArrayEquals(scoresNoCenter, CameraCalibratorSample.computeSampledMarkersQualityScores(sampledMarkers),
                 ABSOLUTE_ERROR);
+
+        assertArrayEquals(scoresWithCenter, CameraCalibratorSample.computeSampledMarkersQualityScores(sampledMarkers,
+                        center), ABSOLUTE_ERROR);
     }
 
     @Test
-    public void testGetSetUndistortedMarkers() {
-        final List<Point2D> sampledMarkers = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
+    void testGetSetUndistortedMarkers() {
+        final var sampledMarkers = new ArrayList<Point2D>();
+        for (var i = 0; i < 4; i++) {
             sampledMarkers.add(Point2D.create());
         }
-        final CameraCalibratorSample sample = new CameraCalibratorSample(sampledMarkers);
+        final var sample = new CameraCalibratorSample(sampledMarkers);
 
         // check default value
         assertNull(sample.getUndistortedMarkers());
 
         // set new value
-        final List<Point2D> undistortedMarkers = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
+        final var undistortedMarkers = new ArrayList<Point2D>();
+        for (var i = 0; i < 4; i++) {
             undistortedMarkers.add(Point2D.create());
         }
         sample.setUndistortedMarkers(undistortedMarkers);
@@ -293,14 +257,14 @@ public class CameraCalibratorSampleTest {
     }
 
     @Test
-    public void testGetSetHomography() {
-        final CameraCalibratorSample sample = new CameraCalibratorSample();
+    void testGetSetHomography() {
+        final var sample = new CameraCalibratorSample();
 
         // check default value
         assertNull(sample.getHomography());
 
         // set new value
-        final ProjectiveTransformation2D homography = new ProjectiveTransformation2D();
+        final var homography = new ProjectiveTransformation2D();
         sample.setHomography(homography);
 
         // check correctness
@@ -308,14 +272,14 @@ public class CameraCalibratorSampleTest {
     }
 
     @Test
-    public void testGetSetRotation() {
-        final CameraCalibratorSample sample = new CameraCalibratorSample();
+    void testGetSetRotation() {
+        final var sample = new CameraCalibratorSample();
 
         // check default value
         assertNull(sample.getRotation());
 
         // set new value
-        final Rotation3D r = Rotation3D.create();
+        final var r = Rotation3D.create();
         sample.setRotation(r);
 
         // check correctness
@@ -323,14 +287,14 @@ public class CameraCalibratorSampleTest {
     }
 
     @Test
-    public void testGetSetCameraCenter() {
-        final CameraCalibratorSample sample = new CameraCalibratorSample();
+    void testGetSetCameraCenter() {
+        final var sample = new CameraCalibratorSample();
 
         // check default value
         assertNull(sample.getCameraCenter());
 
         // set new value
-        final Point3D center = Point3D.create();
+        final var center = Point3D.create();
         sample.setCameraCenter(center);
 
         // check correctness
@@ -338,14 +302,14 @@ public class CameraCalibratorSampleTest {
     }
 
     @Test
-    public void testGetSetCamera() {
-        final CameraCalibratorSample sample = new CameraCalibratorSample();
+    void testGetSetCamera() {
+        final var sample = new CameraCalibratorSample();
 
         // check default value
         assertNull(sample.getCamera());
 
         // set new value
-        final PinholeCamera camera = new PinholeCamera();
+        final var camera = new PinholeCamera();
         sample.setCamera(camera);
 
         // check correctness
@@ -353,75 +317,64 @@ public class CameraCalibratorSampleTest {
     }
 
     @Test
-    public void testEstimateHomographyCirclesPattern() throws LockedException, NotReadyException,
-            RobustEstimatorException, CoincidentPointsException {
+    void testEstimateHomographyCirclesPattern() throws LockedException, NotReadyException, RobustEstimatorException,
+            CoincidentPointsException {
 
-        int totalPoints = 0;
-        double avgTotalError = 0.0;
-        for (int j = 0; j < TIMES; j++) {
-            final Pattern2D pattern = Pattern2D.create(Pattern2DType.CIRCLES);
-            final List<Point2D> patternPoints = pattern.getIdealPoints();
+        var totalPoints = 0;
+        var avgTotalError = 0.0;
+        for (var j = 0; j < TIMES; j++) {
+            final var pattern = Pattern2D.create(Pattern2DType.CIRCLES);
+            final var patternPoints = pattern.getIdealPoints();
 
             // assume that pattern points are located on a 3D plane
             // (for instance Z = 0), but can be really any plane
-            final List<Point3D> points3D = new ArrayList<>();
-            for (final Point2D patternPoint : patternPoints) {
-                points3D.add(new HomogeneousPoint3D(patternPoint.getInhomX(),
-                        patternPoint.getInhomY(), 0.0, 1.0));
+            final var points3D = new ArrayList<Point3D>();
+            for (final var patternPoint : patternPoints) {
+                points3D.add(new HomogeneousPoint3D(patternPoint.getInhomX(), patternPoint.getInhomY(), 0.0,
+                        1.0));
             }
 
             // create random camera to project 3D points
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double skewness = 0.0;
-            final double horizontalPrincipalPoint = 0.0;
-            final double verticalPrincipalPoint = 0.0;
+            final var randomizer = new UniformRandomizer();
+            final var focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var skewness = 0.0;
+            final var horizontalPrincipalPoint = 0.0;
+            final var verticalPrincipalPoint = 0.0;
 
-            final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength,
-                            focalLength, horizontalPrincipalPoint,
-                            verticalPrincipalPoint, skewness);
+            final var intrinsic = new PinholeCameraIntrinsicParameters(focalLength, focalLength,
+                    horizontalPrincipalPoint, verticalPrincipalPoint, skewness);
 
             // rotation
-            final double alphaEuler = randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES * Math.PI / 180.0,
-                    MAX_ANGLE_DEGREES * Math.PI / 180.0);
-            final double betaEuler = randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES * Math.PI / 180.0,
-                    MAX_ANGLE_DEGREES * Math.PI / 180.0);
-            final double gammaEuler = randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES * Math.PI / 180.0,
-                    MAX_ANGLE_DEGREES * Math.PI / 180.0);
+            final var alphaEuler = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var betaEuler = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var gammaEuler = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-            final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler,
-                    betaEuler, gammaEuler);
+            final var rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
 
             // camera center
-            final double[] cameraCenterArray = new double[INHOM_3D_COORDS];
+            final var cameraCenterArray = new double[INHOM_3D_COORDS];
             randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-            final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
+            final var cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
 
             // create camera with intrinsic parameters, rotation and camera
             // center
-            final PinholeCamera camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
+            final var camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
             camera.normalize();
 
             // project 3D pattern points
-            final List<Point2D> projectedPatternPoints = camera.project(points3D);
+            final var projectedPatternPoints = camera.project(points3D);
 
             // create sample with projected pattern markers
-            final CameraCalibratorSample sample = new CameraCalibratorSample(
-                    projectedPatternPoints, CameraCalibratorSample.
+            final var sample = new CameraCalibratorSample(projectedPatternPoints, CameraCalibratorSample.
                     computeSampledMarkersQualityScores(projectedPatternPoints));
 
             // estimate homography using ideal markers as reference
-            final PointCorrespondenceProjectiveTransformation2DRobustEstimator estimator =
-                    PointCorrespondenceProjectiveTransformation2DRobustEstimator.create();
-            final Transformation2D homography = sample.estimateHomography(estimator, patternPoints);
+            final var estimator = PointCorrespondenceProjectiveTransformation2DRobustEstimator.create();
+            final var homography = sample.estimateHomography(estimator, patternPoints);
 
             // check that points are properly transformed
             double distance;
-            for (int i = 0; i < patternPoints.size(); i++) {
+            for (var i = 0; i < patternPoints.size(); i++) {
                 distance = projectedPatternPoints.get(i).distanceTo(
                         homography.transformAndReturnNew(patternPoints.get(i)));
                 avgTotalError += distance;
@@ -434,70 +387,58 @@ public class CameraCalibratorSampleTest {
     }
 
     @Test
-    public void testEstimateHomographyQRPattern() throws LockedException, NotReadyException,
-            RobustEstimatorException {
+    void testEstimateHomographyQRPattern() throws LockedException, NotReadyException, RobustEstimatorException {
 
-        int totalPoints = 0;
-        double avgTotalError = 0.0;
-        for (int j = 0; j < 2 * TIMES; j++) {
-            final Pattern2D pattern = Pattern2D.create(Pattern2DType.QR);
-            final List<Point2D> patternPoints = pattern.getIdealPoints();
+        var totalPoints = 0;
+        var avgTotalError = 0.0;
+        for (var j = 0; j < 2 * TIMES; j++) {
+            final var pattern = Pattern2D.create(Pattern2DType.QR);
+            final var patternPoints = pattern.getIdealPoints();
 
             // assume that pattern points are located on a 3D plane
             // (for instance Z = 0), but can be really any plane
-            final List<Point3D> points3D = new ArrayList<>();
-            for (final Point2D patternPoint : patternPoints) {
-                points3D.add(new HomogeneousPoint3D(patternPoint.getInhomX(),
-                        patternPoint.getInhomY(), 0.0, 1.0));
+            final var points3D = new ArrayList<Point3D>();
+            for (final var patternPoint : patternPoints) {
+                points3D.add(new HomogeneousPoint3D(patternPoint.getInhomX(), patternPoint.getInhomY(), 0.0,
+                        1.0));
             }
 
             // create random camera to project 3D points
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double skewness = 0.0;
-            final double horizontalPrincipalPoint = 0.0;
-            final double verticalPrincipalPoint = 0.0;
+            final var randomizer = new UniformRandomizer();
+            final var focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var skewness = 0.0;
+            final var horizontalPrincipalPoint = 0.0;
+            final var verticalPrincipalPoint = 0.0;
 
-            final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength,
-                            focalLength, horizontalPrincipalPoint,
-                            verticalPrincipalPoint, skewness);
+            final var intrinsic = new PinholeCameraIntrinsicParameters(focalLength, focalLength,
+                    horizontalPrincipalPoint, verticalPrincipalPoint, skewness);
 
             // rotation
-            final double alphaEuler = randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES * Math.PI / 180.0,
-                    MAX_ANGLE_DEGREES * Math.PI / 180.0);
-            final double betaEuler = randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES * Math.PI / 180.0,
-                    MAX_ANGLE_DEGREES * Math.PI / 180.0);
-            final double gammaEuler = randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES * Math.PI / 180.0,
-                    MAX_ANGLE_DEGREES * Math.PI / 180.0);
+            final var alphaEuler = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var betaEuler = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var gammaEuler = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-            final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
+            final var rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
 
             // camera center
-            final double[] cameraCenterArray = new double[INHOM_3D_COORDS];
+            final var cameraCenterArray = new double[INHOM_3D_COORDS];
             randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-            final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
+            final var cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
 
             // create camera with intrinsic parameters, rotation and camera
             // center
-            final PinholeCamera camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
+            final var camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
             camera.normalize();
 
             // project 3D pattern points
-            final List<Point2D> projectedPatternPoints = camera.project(points3D);
+            final var projectedPatternPoints = camera.project(points3D);
 
             // create sample with projected pattern markers
-            final CameraCalibratorSample sample = new CameraCalibratorSample(
-                    projectedPatternPoints, CameraCalibratorSample.computeSampledMarkersQualityScores(
-                            projectedPatternPoints));
+            final var sample = new CameraCalibratorSample(projectedPatternPoints,
+                    CameraCalibratorSample.computeSampledMarkersQualityScores(projectedPatternPoints));
 
             // estimate homography using ideal markers as reference
-            final PointCorrespondenceProjectiveTransformation2DRobustEstimator estimator =
-                    PointCorrespondenceProjectiveTransformation2DRobustEstimator.create();
+            final var estimator = PointCorrespondenceProjectiveTransformation2DRobustEstimator.create();
             final Transformation2D homography;
             try {
                 homography = sample.estimateHomography(estimator, patternPoints);
@@ -507,9 +448,9 @@ public class CameraCalibratorSampleTest {
 
             // check that points are properly transformed
             double distance;
-            for (int i = 0; i < patternPoints.size(); i++) {
-                distance = projectedPatternPoints.get(i).distanceTo(
-                        homography.transformAndReturnNew(patternPoints.get(i)));
+            for (var i = 0; i < patternPoints.size(); i++) {
+                distance = projectedPatternPoints.get(i).distanceTo(homography.transformAndReturnNew(
+                        patternPoints.get(i)));
                 avgTotalError += distance;
                 totalPoints++;
             }
@@ -520,71 +461,61 @@ public class CameraCalibratorSampleTest {
     }
 
     @Test
-    public void testComputeCameraPose() throws LockedException, NotReadyException, RobustEstimatorException,
+    void testComputeCameraPose() throws LockedException, NotReadyException, RobustEstimatorException,
             CoincidentPointsException, CalibrationException, NotAvailableException, WrongSizeException {
 
-        int totalPoints = 0;
-        double avgProjectionError = 0.0;
-        double avgCenterError = 0.0;
-        for (int j = 0; j < TIMES; j++) {
-            final Pattern2D pattern = Pattern2D.create(Pattern2DType.CIRCLES);
-            final List<Point2D> patternPoints = pattern.getIdealPoints();
+        var totalPoints = 0;
+        var avgProjectionError = 0.0;
+        var avgCenterError = 0.0;
+        for (var j = 0; j < TIMES; j++) {
+            final var pattern = Pattern2D.create(Pattern2DType.CIRCLES);
+            final var patternPoints = pattern.getIdealPoints();
 
             // assume that pattern points are located on a 3D plane
             // (for instance Z = 0)
-            final List<Point3D> points3D = new ArrayList<>();
-            for (final Point2D patternPoint : patternPoints) {
-                points3D.add(new HomogeneousPoint3D(patternPoint.getInhomX(),
-                        patternPoint.getInhomY(), 0.0, 1.0));
+            final var points3D = new ArrayList<Point3D>();
+            for (final var patternPoint : patternPoints) {
+                points3D.add(new HomogeneousPoint3D(patternPoint.getInhomX(), patternPoint.getInhomY(), 0.0,
+                        1.0));
             }
 
             // create random camera to project 3D points
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double skewness = 0.0;
-            final double horizontalPrincipalPoint = 0.0;
-            final double verticalPrincipalPoint = 0.0;
+            final var randomizer = new UniformRandomizer();
+            final var focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var skewness = 0.0;
+            final var horizontalPrincipalPoint = 0.0;
+            final var verticalPrincipalPoint = 0.0;
 
-            final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength,
-                            focalLength, horizontalPrincipalPoint,
-                            verticalPrincipalPoint, skewness);
+            final var intrinsic = new PinholeCameraIntrinsicParameters(focalLength, focalLength,
+                    horizontalPrincipalPoint, verticalPrincipalPoint, skewness);
 
             // rotation
-            final double alphaEuler = randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES * Math.PI / 180.0,
-                    MAX_ANGLE_DEGREES * Math.PI / 180.0);
-            final double betaEuler = randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES * Math.PI / 180.0,
-                    MAX_ANGLE_DEGREES * Math.PI / 180.0);
-            final double gammaEuler = randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES * Math.PI / 180.0,
-                    MAX_ANGLE_DEGREES * Math.PI / 180.0);
+            final var alphaEuler = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var betaEuler = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var gammaEuler = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-            final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
+            final var rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
 
             // camera center
-            final double[] cameraCenterArray = new double[INHOM_3D_COORDS];
+            final var cameraCenterArray = new double[INHOM_3D_COORDS];
             randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-            final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
+            final var cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
 
             // create camera with intrinsic parameters, rotation and camera
             // center
-            final PinholeCamera camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
+            final var camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
             camera.normalize();
 
             // project 3D pattern points
-            final List<Point2D> projectedPatternPoints = camera.project(points3D);
+            final var projectedPatternPoints = camera.project(points3D);
 
             // create sample with projected pattern markers
-            final CameraCalibratorSample sample = new CameraCalibratorSample(
-                    projectedPatternPoints, CameraCalibratorSample.computeSampledMarkersQualityScores(
-                            projectedPatternPoints));
+            final var sample = new CameraCalibratorSample(projectedPatternPoints,
+                    CameraCalibratorSample.computeSampledMarkersQualityScores(projectedPatternPoints));
 
             // estimate homography using ideal markers as reference
-            final PointCorrespondenceProjectiveTransformation2DRobustEstimator estimator =
-                    PointCorrespondenceProjectiveTransformation2DRobustEstimator.create();
-            final Transformation2D homography = sample.estimateHomography(estimator, patternPoints);
+            final var estimator = PointCorrespondenceProjectiveTransformation2DRobustEstimator.create();
+            final var homography = sample.estimateHomography(estimator, patternPoints);
 
             // set homography
             sample.setHomography(homography);
@@ -600,16 +531,15 @@ public class CameraCalibratorSampleTest {
             // check correctness
 
             // compare rotation
-            final Matrix sRotMat = sample.getRotation().asInhomogeneousMatrix();
-            final Matrix rotMat = rotation.asInhomogeneousMatrix();
-            final Matrix rotDiff = new Matrix(3, 3);
-            for (int r = 0; r < 3; r++) {
-                for (int c = 0; c < 3; c++) {
+            final var sRotMat = sample.getRotation().asInhomogeneousMatrix();
+            final var rotMat = rotation.asInhomogeneousMatrix();
+            final var rotDiff = new Matrix(3, 3);
+            for (var r = 0; r < 3; r++) {
+                for (var c = 0; c < 3; c++) {
                     // signs of columns 1,2 and column 3 of rotation might
                     // be reversed and rotation would still be equal
-                    rotDiff.setElementAt(r, c,
-                            Math.abs(sRotMat.getElementAt(r, c)) -
-                                    Math.abs(rotMat.getElementAt(r, c)));
+                    rotDiff.setElementAt(r, c, Math.abs(sRotMat.getElementAt(r, c))
+                            - Math.abs(rotMat.getElementAt(r, c)));
                 }
             }
             assertEquals(0.0, Utils.normF(rotDiff), LARGE_ABSOLUTE_ERROR);
@@ -620,16 +550,15 @@ public class CameraCalibratorSampleTest {
             // compare camera parameters
             assertSame(sample.getCamera().getIntrinsicParameters(), intrinsic);
             assertSame(sample.getCamera().getCameraRotation(), sample.getRotation());
-            assertEquals(0.0, sample.getCamera().getCameraCenter().distanceTo(
-                    sample.getCameraCenter()), ABSOLUTE_ERROR);
+            assertEquals(0.0, sample.getCamera().getCameraCenter().distanceTo(sample.getCameraCenter()),
+                    ABSOLUTE_ERROR);
 
             // project ideal pattern points using estimated camera and
             // compare against sampled points
-            final List<Point2D> projectedPatternPoints2 = sample.getCamera().project(points3D);
+            final var projectedPatternPoints2 = sample.getCamera().project(points3D);
             double distance;
-            for (int i = 0; i < patternPoints.size(); i++) {
-                distance = projectedPatternPoints.get(i).distanceTo(
-                        projectedPatternPoints2.get(i));
+            for (var i = 0; i < patternPoints.size(); i++) {
+                distance = projectedPatternPoints.get(i).distanceTo(projectedPatternPoints2.get(i));
                 avgProjectionError += distance;
                 totalPoints++;
             }

@@ -48,17 +48,17 @@ public class CameraPoseEstimator {
     /**
      * Estimated camera rotation.
      */
-    private Rotation3D mRotation;
+    private Rotation3D rotation;
 
     /**
      * Estimated camera center.
      */
-    private Point3D mCameraCenter;
+    private Point3D cameraCenter;
 
     /**
      * Estimated camera.
      */
-    private PinholeCamera mCamera;
+    private PinholeCamera camera;
 
     /**
      * Estimates camera posed based on provided intrinsic parameters and
@@ -69,13 +69,12 @@ public class CameraPoseEstimator {
      * @throws AlgebraException  if provided data is numerically unstable.
      * @throws GeometryException if a proper camera rotation cannot be found.
      */
-    public void estimate(
-            final PinholeCameraIntrinsicParameters intrinsic,
-            final Transformation2D homography) throws AlgebraException, GeometryException {
-        mRotation = new MatrixRotation3D();
-        mCameraCenter = Point3D.create(CoordinatesType.HOMOGENEOUS_COORDINATES);
-        mCamera = new PinholeCamera();
-        estimate(intrinsic, homography, mRotation, mCameraCenter, mCamera);
+    public void estimate(final PinholeCameraIntrinsicParameters intrinsic, final Transformation2D homography)
+        throws AlgebraException, GeometryException {
+        rotation = new MatrixRotation3D();
+        cameraCenter = Point3D.create(CoordinatesType.HOMOGENEOUS_COORDINATES);
+        camera = new PinholeCamera();
+        estimate(intrinsic, homography, rotation, cameraCenter, camera);
     }
 
     /**
@@ -84,7 +83,7 @@ public class CameraPoseEstimator {
      * @return estimated camera rotation.
      */
     public Rotation3D getRotation() {
-        return mRotation;
+        return rotation;
     }
 
     /**
@@ -93,7 +92,7 @@ public class CameraPoseEstimator {
      * @return estimated camera center.
      */
     public Point3D getCameraCenter() {
-        return mCameraCenter;
+        return cameraCenter;
     }
 
     /**
@@ -102,7 +101,7 @@ public class CameraPoseEstimator {
      * @return estimated camera.
      */
     public PinholeCamera getCamera() {
-        return mCamera;
+        return camera;
     }
 
     /**
@@ -129,32 +128,30 @@ public class CameraPoseEstimator {
         // inverse of intrinsic parameters matrix
 
         // what follows next is equivalent to Utils.inverse(intrinsic.getInternalMatrix())
-        final Matrix intrinsicInvMatrix = intrinsic.getInverseInternalMatrix();
+        final var intrinsicInvMatrix = intrinsic.getInverseInternalMatrix();
 
-        if (homography instanceof ProjectiveTransformation2D) {
-            ((ProjectiveTransformation2D) homography).normalize();
+        if (homography instanceof ProjectiveTransformation2D projectiveTransformation2D) {
+            projectiveTransformation2D.normalize();
         }
-        final Matrix homographyMatrix = homography.asMatrix();
+        final var homographyMatrix = homography.asMatrix();
 
-        final Matrix h1 = homographyMatrix.getSubmatrix(
-                0, 0, 2, 0);
-        final Matrix h2 = homographyMatrix.getSubmatrix(
-                0, 1, 2, 1);
-        final Matrix h3 = homographyMatrix.getSubmatrix(
-                0, 2, 2, 2);
+        final var h1 = homographyMatrix.getSubmatrix(0, 0, 2, 0);
+        final var h2 = homographyMatrix.getSubmatrix(
+            0, 1, 2, 1);
+        final var h3 = homographyMatrix.getSubmatrix(0, 2, 2, 2);
 
-        final Matrix matR1 = intrinsicInvMatrix.multiplyAndReturnNew(h1);
-        final Matrix matR2 = intrinsicInvMatrix.multiplyAndReturnNew(h2);
-        final Matrix matT = intrinsicInvMatrix.multiplyAndReturnNew(h3);
+        final var matR1 = intrinsicInvMatrix.multiplyAndReturnNew(h1);
+        final var matR2 = intrinsicInvMatrix.multiplyAndReturnNew(h2);
+        final var matT = intrinsicInvMatrix.multiplyAndReturnNew(h3);
 
         // because rotation matrices are orthonormal, we find norm of 1st or
         // 2nd column (both should be equal, except for rounding errors)
         // to normalize columns 1 and 2.
         // Because norms might not be equal, we use average or norms of matR1 and
         // matR2
-        final double norm1 = Utils.normF(matR1);
-        final double norm2 = Utils.normF(matR2);
-        final double invNorm = 2.0 / (norm1 + norm2);
+        final var norm1 = Utils.normF(matR1);
+        final var norm2 = Utils.normF(matR2);
+        final var invNorm = 2.0 / (norm1 + norm2);
         matR1.multiplyByScalar(invNorm);
         matR2.multiplyByScalar(invNorm);
 
@@ -162,15 +159,15 @@ public class CameraPoseEstimator {
         // up to scale
         matT.multiplyByScalar(invNorm);
 
-        final double[] r1 = matR1.getBuffer();
-        final double[] r2 = matR2.getBuffer();
+        final var r1 = matR1.getBuffer();
+        final var r2 = matR2.getBuffer();
 
         // 3rd column of rotation must be orthogonal to 1st and 2nd columns and
         // also have norm 1, because rotations are orthonormal
-        final double[] r3 = Utils.crossProduct(r1, r2);
+        final var r3 = Utils.crossProduct(r1, r2);
         ArrayUtils.normalize(r3);
 
-        final Matrix rot = new Matrix(3, 3);
+        final var rot = new Matrix(3, 3);
         rot.setSubmatrix(0, 0, 2, 0, r1);
         rot.setSubmatrix(0, 1, 2, 1, r2);
         rot.setSubmatrix(0, 2, 2, 2, r3);
@@ -181,11 +178,10 @@ public class CameraPoseEstimator {
         // the closest orthonormal matrix to ensure that it is a valid rotation
         // matrix. This is done by obtaining the SVD decomposition and setting
         // all singular values to one, so that R = U*S*V' = U*V', S = I
-        final SingularValueDecomposer decomposer =
-                new SingularValueDecomposer(rot);
+        final var decomposer = new SingularValueDecomposer(rot);
         decomposer.decompose();
-        final Matrix u = decomposer.getU();
-        final Matrix v = decomposer.getV();
+        final var u = decomposer.getU();
+        final var v = decomposer.getV();
         v.transpose();
 
         // U and V are orthonormal, hence U*V' is also orthonormal and can be
@@ -194,7 +190,7 @@ public class CameraPoseEstimator {
 
         // we need to ensure that rotation has determinant equal to 1, otherwise
         // we change sign
-        final double det = Utils.det(rot);
+        final var det = Utils.det(rot);
         if (det < 0.0) {
             rot.multiplyByScalar(-1.0);
         }
@@ -205,18 +201,16 @@ public class CameraPoseEstimator {
 
         // t = K^-1*h3 = -R*C --> C=-R^-1*t=-R'*t
         // p4 = -K*R*C = K*t = K*K^-1*h3 = h3 --> C= -(K*R)^-1*h3
-        final Matrix invRot = rot.transposeAndReturnNew();
+        final var invRot = rot.transposeAndReturnNew();
         invRot.multiply(matT);
         invRot.multiplyByScalar(-1.0);
 
-        final double[] centerBuffer = invRot.getBuffer();
-        estimatedCameraCenter.setInhomogeneousCoordinates(
-                centerBuffer[0], centerBuffer[1], centerBuffer[2]);
+        final var centerBuffer = invRot.getBuffer();
+        estimatedCameraCenter.setInhomogeneousCoordinates(centerBuffer[0], centerBuffer[1], centerBuffer[2]);
 
         // check that origin of coordinates (which is typically one of the
         // pattern points) is located in front of the camera, otherwise
         // fix camera
-        estimatedCamera.setIntrinsicAndExtrinsicParameters(intrinsic,
-                estimatedRotation, estimatedCameraCenter);
+        estimatedCamera.setIntrinsicAndExtrinsicParameters(intrinsic, estimatedRotation, estimatedCameraCenter);
     }
 }

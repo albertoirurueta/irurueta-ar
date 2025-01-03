@@ -26,7 +26,6 @@ import com.irurueta.geometry.estimators.NotReadyException;
 import com.irurueta.numerical.robust.WeightSelection;
 import com.irurueta.sorting.SortingException;
 
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -52,26 +51,26 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
      * Maximum number of points (i.e. correspondences) to be weighted and taken
      * into account.
      */
-    private int mMaxPoints;
+    private int maxPoints;
     
     /**
      * Indicates if weights are sorted by default so that largest weighted
      * correspondences are used first.
      */
-    private boolean mSortWeights;
+    private boolean sortWeights;
     
     /**
      * Array containing weights for all point correspondences.
      */
-    private double[] mWeights;
+    private double[] weights;
     
     /**
      * Constructor.
      */
     public WeightedRadialDistortionEstimator() {
         super();
-        mMaxPoints = DEFAULT_MAX_POINTS;
-        mSortWeights = DEFAULT_SORT_WEIGHTS;
+        maxPoints = DEFAULT_MAX_POINTS;
+        sortWeights = DEFAULT_SORT_WEIGHTS;
     }
     
     /**
@@ -79,11 +78,10 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
      * @param listener listener to be notified of events such as when estimation
      * starts, ends or estimation progress changes.
      */
-    public WeightedRadialDistortionEstimator(
-            final RadialDistortionEstimatorListener listener) {
+    public WeightedRadialDistortionEstimator(final RadialDistortionEstimatorListener listener) {
         super(listener);
-        mMaxPoints = DEFAULT_MAX_POINTS;
-        mSortWeights = DEFAULT_SORT_WEIGHTS;
+        maxPoints = DEFAULT_MAX_POINTS;
+        sortWeights = DEFAULT_SORT_WEIGHTS;
     }
     
     /**
@@ -98,12 +96,12 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
      * the same size or their size is smaller than 
      * MIN_NUMBER_OF_POINT_CORRESPONDENCES.
      */
-    public WeightedRadialDistortionEstimator(final List<Point2D> distortedPoints,
-            final List<Point2D> undistortedPoints, final double[] weights) {
+    public WeightedRadialDistortionEstimator(final List<Point2D> distortedPoints, final List<Point2D> undistortedPoints,
+                                             final double[] weights) {
         super();
         internalSetPointsAndWeights(distortedPoints, undistortedPoints, weights);
-        mMaxPoints = DEFAULT_MAX_POINTS;
-        mSortWeights = DEFAULT_SORT_WEIGHTS;        
+        maxPoints = DEFAULT_MAX_POINTS;
+        sortWeights = DEFAULT_SORT_WEIGHTS;
     }
    
     /**
@@ -121,13 +119,12 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
      * MIN_NUMBER_OF_POINT_CORRESPONDENCES.
      */
     
-    public WeightedRadialDistortionEstimator(final List<Point2D> distortedPoints,
-            final List<Point2D> undistortedPoints, final double[] weights,
-            final RadialDistortionEstimatorListener listener) {
+    public WeightedRadialDistortionEstimator(final List<Point2D> distortedPoints, final List<Point2D> undistortedPoints,
+                                             final double[] weights, final RadialDistortionEstimatorListener listener) {
         super(listener);
         internalSetPointsAndWeights(distortedPoints, undistortedPoints, weights);
-        mMaxPoints = DEFAULT_MAX_POINTS;
-        mSortWeights = DEFAULT_SORT_WEIGHTS;        
+        maxPoints = DEFAULT_MAX_POINTS;
+        sortWeights = DEFAULT_SORT_WEIGHTS;
     }
 
     /**
@@ -138,8 +135,8 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
      */
     public WeightedRadialDistortionEstimator(final Point2D distortionCenter) {
         super(distortionCenter);
-        mMaxPoints = DEFAULT_MAX_POINTS;
-        mSortWeights = DEFAULT_SORT_WEIGHTS;        
+        maxPoints = DEFAULT_MAX_POINTS;
+        sortWeights = DEFAULT_SORT_WEIGHTS;
     }
     
     /**
@@ -151,10 +148,10 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
      * starts, ends or estimation progress changes.
      */
     public WeightedRadialDistortionEstimator(final Point2D distortionCenter,
-            final RadialDistortionEstimatorListener listener) {
+                                             final RadialDistortionEstimatorListener listener) {
         super(distortionCenter, listener);
-        mMaxPoints = DEFAULT_MAX_POINTS;
-        mSortWeights = DEFAULT_SORT_WEIGHTS;        
+        maxPoints = DEFAULT_MAX_POINTS;
+        sortWeights = DEFAULT_SORT_WEIGHTS;
     }
     
     /**
@@ -172,15 +169,12 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
      * the same size or their size is smaller than 
      * MIN_NUMBER_OF_POINT_CORRESPONDENCES.
      */
-    public WeightedRadialDistortionEstimator(
-            final List<Point2D> distortedPoints,
-            final List<Point2D> undistortedPoints,
-            final double[] weights,
-            final Point2D distortionCenter) {
+    public WeightedRadialDistortionEstimator(final List<Point2D> distortedPoints, final List<Point2D> undistortedPoints,
+                                             final double[] weights, final Point2D distortionCenter) {
         super(distortionCenter);
         internalSetPointsAndWeights(distortedPoints, undistortedPoints, weights);
-        mMaxPoints = DEFAULT_MAX_POINTS;
-        mSortWeights = DEFAULT_SORT_WEIGHTS;        
+        maxPoints = DEFAULT_MAX_POINTS;
+        sortWeights = DEFAULT_SORT_WEIGHTS;
     }
    
     /**
@@ -200,14 +194,13 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
      * the same size or their size is smaller than
      * MIN_NUMBER_OF_POINT_CORRESPONDENCES.
      */ 
-    public WeightedRadialDistortionEstimator(final List<Point2D> distortedPoints,
-            final List<Point2D> undistortedPoints, final double[] weights,
-            final Point2D distortionCenter,
-            final RadialDistortionEstimatorListener listener) {
+    public WeightedRadialDistortionEstimator(final List<Point2D> distortedPoints, final List<Point2D> undistortedPoints,
+                                             final double[] weights, final Point2D distortionCenter,
+                                             final RadialDistortionEstimatorListener listener) {
         super(distortionCenter, listener);
         internalSetPointsAndWeights(distortedPoints, undistortedPoints, weights);
-        mMaxPoints = DEFAULT_MAX_POINTS;
-        mSortWeights = DEFAULT_SORT_WEIGHTS;        
+        maxPoints = DEFAULT_MAX_POINTS;
+        sortWeights = DEFAULT_SORT_WEIGHTS;
     }
     
     /**
@@ -224,9 +217,8 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
      * or if the length of the weights array is not equal to the number of point 
      * correspondences.
      */
-    public void setPointsAndWeights(final List<Point2D> distortedPoints,
-            final List<Point2D> undistortedPoints, final double[] weights)
-            throws LockedException {
+    public void setPointsAndWeights(final List<Point2D> distortedPoints, final List<Point2D> undistortedPoints,
+                                    final double[] weights) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -247,16 +239,14 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
      * correspondence will be.
      * @return true if lists of points are valid, false otherwise.
      */
-    public boolean areValidPointsAndWeights(final List<Point2D> distortedPoints,
-            final List<Point2D> undistortedPoints, final double[] weights){
-        if (distortedPoints == null || undistortedPoints == null ||
-                weights == null) {
+    public boolean areValidPointsAndWeights(final List<Point2D> distortedPoints, final List<Point2D> undistortedPoints,
+                                            final double[] weights){
+        if (distortedPoints == null || undistortedPoints == null || weights == null) {
             return false;
         }
         
-        return distortedPoints.size() == undistortedPoints.size() &&
-                distortedPoints.size() == weights.length &&
-                distortedPoints.size() >= getMinNumberOfMatchedPoints();
+        return distortedPoints.size() == undistortedPoints.size() && distortedPoints.size() == weights.length
+                && distortedPoints.size() >= getMinNumberOfMatchedPoints();
     }    
     
     /**
@@ -266,7 +256,7 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
      * @return array containing weights for each correspondence.
      */
     public double[] getWeights() {
-        return mWeights;
+        return weights;
     }
     
     /**
@@ -275,7 +265,7 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
      * @return true if weights are available, false otherwise.
      */
     public boolean areWeightsAvailable() {
-        return mWeights != null;
+        return weights != null;
     }    
     
     /**
@@ -284,7 +274,7 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
      * @return maximum number of points to be weighted.
      */
     public int getMaxPoints() {
-        return mMaxPoints;
+        return maxPoints;
     }
     
     /**
@@ -303,7 +293,7 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
             throw new IllegalArgumentException();
         }
         
-        mMaxPoints = maxPoints;
+        this.maxPoints = maxPoints;
     }
     
     /**
@@ -312,7 +302,7 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
      * @return true if weights are sorted, false otherwise.
      */
     public boolean isSortWeightsEnabled() {
-        return mSortWeights;
+        return sortWeights;
     }
     
     /**
@@ -321,13 +311,12 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
      * @param sortWeights true if weights are sorted, false otherwise.
      * @throws LockedException if this instance is locked.
      */
-    public void setSortWeightsEnabled(final boolean sortWeights)
-            throws LockedException {
+    public void setSortWeightsEnabled(final boolean sortWeights) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
         
-        mSortWeights = sortWeights;
+        this.sortWeights = sortWeights;
     }
     
     /**
@@ -350,8 +339,7 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
      */    
     @SuppressWarnings("DuplicatedCode")
     @Override
-    public RadialDistortion estimate() throws LockedException, 
-            NotReadyException, RadialDistortionEstimatorException {
+    public RadialDistortion estimate() throws LockedException, NotReadyException, RadialDistortionEstimatorException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -360,28 +348,26 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
         }
         
         try {
-            mLocked = true;
-            if (mListener != null) {
-                mListener.onEstimateStart(this);
+            locked = true;
+            if (listener != null) {
+                listener.onEstimateStart(this);
             }
             
-            final WeightSelection selection = WeightSelection.selectWeights(mWeights,
-                    mSortWeights, mMaxPoints);
-            final boolean[] selected = selection.getSelected();
+            final var selection = WeightSelection.selectWeights(weights, sortWeights, maxPoints);
+            final var selected = selection.getSelected();
             
-            final int nPoints = mDistortedPoints.size();
+            final var nPoints = distortedPoints.size();
             
-            final Matrix aMatrix = new Matrix(2 * nPoints, mNumKParams);
-            final double[] b = new double[2 * nPoints];
+            final var aMatrix = new Matrix(2 * nPoints, numKParams);
+            final var b = new double[2 * nPoints];
             
-            final Iterator<Point2D> iteratorDistorted = mDistortedPoints.iterator();
-            final Iterator<Point2D> iteratorUndistorted =
-                    mUndistortedPoints.iterator();
+            final var iteratorDistorted = distortedPoints.iterator();
+            final var iteratorUndistorted = undistortedPoints.iterator();
             
             Point2D distorted;
             Point2D undistorted;
-            int index = 0;
-            int counter = 0;
+            var index = 0;
+            var counter = 0;
             
             // undistorted normalized homogeneous coordinates
             double uNormHomX;
@@ -404,11 +390,11 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
             double rowNormY;
             
             // radial distortion center
-            double centerX = 0.0;
-            double centerY = 0.0;
-            if (mDistortionCenter != null) {
-                centerX = mDistortionCenter.getInhomX();
-                centerY = mDistortionCenter.getInhomY();
+            var centerX = 0.0;
+            var centerY = 0.0;
+            if (distortionCenter != null) {
+                centerX = distortionCenter.getInhomX();
+                centerY = distortionCenter.getInhomY();
             }
             
             // radial distance of undistorted normalized (calibration independent)
@@ -425,7 +411,7 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
                 if (selected[index]) {
                     undistorted.normalize();                    
                     
-                    weight = mWeights[index];
+                    weight = weights[index];
                     
                     uDenormHomX = undistorted.getHomX();
                     uDenormHomY = undistorted.getHomY();
@@ -435,15 +421,15 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
                     uDenormInhomY = uDenormHomY / uDenormHomW;
                 
                     // multiply intrinsic parameters by undistorted point
-                    uNormHomX = mKinv.getElementAt(0, 0) * uDenormHomX +
-                            mKinv.getElementAt(0, 1) * uDenormHomY +
-                            mKinv.getElementAt(0, 2) * uDenormHomW;
-                    uNormHomY = mKinv.getElementAt(1, 0) * uDenormHomX +
-                            mKinv.getElementAt(1, 1) * uDenormHomY +
-                            mKinv.getElementAt(1, 2) * uDenormHomW;
-                    uNormHomW = mKinv.getElementAt(2, 0) * uDenormHomX +
-                            mKinv.getElementAt(2, 1) * uDenormHomY +
-                            mKinv.getElementAt(2, 2) * uDenormHomW;
+                    uNormHomX = kInv.getElementAt(0, 0) * uDenormHomX
+                            + kInv.getElementAt(0, 1) * uDenormHomY
+                            + kInv.getElementAt(0, 2) * uDenormHomW;
+                    uNormHomY = kInv.getElementAt(1, 0) * uDenormHomX
+                            + kInv.getElementAt(1, 1) * uDenormHomY
+                            + kInv.getElementAt(1, 2) * uDenormHomW;
+                    uNormHomW = kInv.getElementAt(2, 0) * uDenormHomX
+                            + kInv.getElementAt(2, 1) * uDenormHomY
+                            + kInv.getElementAt(2, 2) * uDenormHomW;
                 
                     uNormInhomX = uNormHomX / uNormHomW;
                     uNormInhomY = uNormHomY / uNormHomW;
@@ -455,7 +441,7 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
                     
                     a = 1.0;
                     rowNormX = rowNormY = 0.0;
-                    for (int i = 0; i < mNumKParams; i++) {
+                    for (var i = 0; i < numKParams; i++) {
                         a *= r2;
                         
                         // x and y coordinates generate linear dependent equations, for
@@ -487,7 +473,7 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
                     rowNormY += Math.pow(value, 2.0);
                     
                     // normalize rows to increase accuracy
-                    for (int i = 0; i < mNumKParams; i++) {
+                    for (var i = 0; i < numKParams; i++) {
                         aMatrix.setElementAt(counter * 2, i,
                                 aMatrix.getElementAt(counter * 2, i) / rowNormX);
                         aMatrix.setElementAt(counter * 2 + 1, i,
@@ -503,21 +489,20 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
                 index++;
             }
             
-            final double[] params = Utils.solve(aMatrix, b);
+            final var params = Utils.solve(aMatrix, b);
             
-            final RadialDistortion distortion =
-                    new RadialDistortion(params, mDistortionCenter,
-                    mHorizontalFocalLength, mVerticalFocalLength, mSkew);
+            final var distortion = new RadialDistortion(params, distortionCenter, horizontalFocalLength,
+                    verticalFocalLength, skew);
             
-            if (mListener != null) {
-                mListener.onEstimateEnd(this);
+            if (listener != null) {
+                listener.onEstimateEnd(this);
             }
             
             return distortion;
         } catch (final AlgebraException | SortingException | RadialDistortionException e) {
             throw new RadialDistortionEstimatorException(e);
         } finally {
-            mLocked = false;
+            locked = false;
         }
     }    
     
@@ -527,8 +512,7 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
      */    
     @Override
     public RadialDistortionEstimatorType getType() {
-        return RadialDistortionEstimatorType.
-                WEIGHTED_RADIAL_DISTORTION_ESTIMATOR;
+        return RadialDistortionEstimatorType.WEIGHTED_RADIAL_DISTORTION_ESTIMATOR;
     }  
             
     /**
@@ -545,11 +529,10 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
      * or if the length of the weights array is not equal to the number of point 
      * correspondences.
      */
-    private void internalSetPointsAndWeights(final List<Point2D> distortedPoints,
-            final List<Point2D> undistortedPoints, final double[] weights) {
+    private void internalSetPointsAndWeights(final List<Point2D> distortedPoints, final List<Point2D> undistortedPoints,
+                                             final double[] weights) {
         
-        if (distortedPoints == null || undistortedPoints == null ||
-                weights == null) {
+        if (distortedPoints == null || undistortedPoints == null || weights == null) {
             throw new IllegalArgumentException();
         }
         
@@ -557,8 +540,8 @@ public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator
             throw new IllegalArgumentException();
         }
         
-        mDistortedPoints = distortedPoints;
-        mUndistortedPoints = undistortedPoints;        
-        mWeights = weights;
+        this.distortedPoints = distortedPoints;
+        this.undistortedPoints = undistortedPoints;
+        this.weights = weights;
     }        
 }

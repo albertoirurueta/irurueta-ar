@@ -43,8 +43,7 @@ public interface CameraCalibratorListener {
      * @param progress   current percentage of progress expressed as a value
      *                   between 0.0f and 1.0f.
      */
-    void onCalibrateProgressChange(final CameraCalibrator calibrator,
-                                   final float progress);
+    void onCalibrateProgressChange(final CameraCalibrator calibrator, final float progress);
 
     /**
      * Called when a calibrator starts the estimation of intrinsic parameters
@@ -54,8 +53,7 @@ public interface CameraCalibratorListener {
      *
      * @param calibrator reference to a camera calibrator.
      */
-    void onIntrinsicParametersEstimationStarts(
-            final CameraCalibrator calibrator);
+    void onIntrinsicParametersEstimationStarts(final CameraCalibrator calibrator);
 
     /**
      * Called when a calibrator finishes the estimation of intrinsic parameters
@@ -67,8 +65,8 @@ public interface CameraCalibratorListener {
      * @param intrinsicParameters intrinsic parameters that have been estimated
      *                            so far.
      */
-    void onIntrinsicParametersEstimationEnds(final CameraCalibrator calibrator,
-                                             final PinholeCameraIntrinsicParameters intrinsicParameters);
+    void onIntrinsicParametersEstimationEnds(
+            final CameraCalibrator calibrator, final PinholeCameraIntrinsicParameters intrinsicParameters);
 
     /**
      * Called when a calibrator starts the estimation of radial distortion of
@@ -89,6 +87,5 @@ public interface CameraCalibratorListener {
      * @param calibrator reference to a camera calibrator.
      * @param distortion radial distortion that has been estimated so far.
      */
-    void onRadialDistortionEstimationEnds(final CameraCalibrator calibrator,
-                                          final RadialDistortion distortion);
+    void onRadialDistortionEstimationEnds(final CameraCalibrator calibrator, final RadialDistortion distortion);
 }

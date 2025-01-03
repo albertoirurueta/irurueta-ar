@@ -15,15 +15,15 @@
  */
 package com.irurueta.ar.calibration;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class DistortionExceptionTest {
+class DistortionExceptionTest {
 
     @Test
-    public void testConstructor() {
-        DistortionException ex = new DistortionException();
+    void testConstructor() {
+        var ex = new DistortionException();
         assertNotNull(ex);
 
         ex = new DistortionException("message");

@@ -34,22 +34,22 @@ public abstract class AbsoluteOrientationBaseSlamCalibrator<D extends BaseCalibr
      * Timestamp expressed in nanoseconds since the epoch time of the last
      * sample containing absolute orientation.
      */
-    protected long mOrientationTimestampNanos = -1;
+    protected long orientationTimestampNanos = -1;
 
     /**
      * Number of orientation samples accumulated since last full sample.
      */
-    protected int mAccumulatedOrientationSamples = 0;
+    protected int accumulatedOrientationSamples = 0;
 
     /**
      * Average orientation accumulated since last full sample.
      */
-    protected final Quaternion mAccumulatedOrientation;
+    protected final Quaternion accumulatedOrientation;
 
     /**
      * Temporary quaternion. For memory reuse.
      */
-    private Quaternion mTempQ;
+    private Quaternion tempQ;
 
     /**
      * Constructor.
@@ -60,7 +60,7 @@ public abstract class AbsoluteOrientationBaseSlamCalibrator<D extends BaseCalibr
      */
     protected AbsoluteOrientationBaseSlamCalibrator(final int sampleLength) {
         super(sampleLength);
-        mAccumulatedOrientation = new Quaternion();
+        accumulatedOrientation = new Quaternion();
     }
 
     /**
@@ -71,7 +71,7 @@ public abstract class AbsoluteOrientationBaseSlamCalibrator<D extends BaseCalibr
      * last orientation sample, or -1.
      */
     public long getOrientationTimestampNanos() {
-        return mOrientationTimestampNanos;
+        return orientationTimestampNanos;
     }
 
     /**
@@ -80,7 +80,7 @@ public abstract class AbsoluteOrientationBaseSlamCalibrator<D extends BaseCalibr
      * @return orientation accumulated since last full sample.
      */
     public Rotation3D getAccumulatedOrientation() {
-        return mAccumulatedOrientation.toQuaternion();
+        return accumulatedOrientation.toQuaternion();
     }
 
     /**
@@ -90,7 +90,7 @@ public abstract class AbsoluteOrientationBaseSlamCalibrator<D extends BaseCalibr
      *               sample will be stored.
      */
     public void getAccumulatedOrientation(final Rotation3D result) {
-        result.fromRotation(mAccumulatedOrientation);
+        result.fromRotation(accumulatedOrientation);
     }
 
     /**
@@ -99,7 +99,7 @@ public abstract class AbsoluteOrientationBaseSlamCalibrator<D extends BaseCalibr
      * @return number of orientation samples accumulated since last full sample.
      */
     public int getAccumulatedOrientationSamples() {
-        return mAccumulatedOrientationSamples;
+        return accumulatedOrientationSamples;
     }
 
     /**
@@ -109,7 +109,7 @@ public abstract class AbsoluteOrientationBaseSlamCalibrator<D extends BaseCalibr
      * @return true if orientation sample has been received, false otherwise.
      */
     public boolean isOrientationSampleReceived() {
-        return mAccumulatedOrientationSamples > 0;
+        return accumulatedOrientationSamples > 0;
     }
 
     /**
@@ -135,47 +135,42 @@ public abstract class AbsoluteOrientationBaseSlamCalibrator<D extends BaseCalibr
      * @param orientation new orientation.
      */
     @SuppressWarnings("DuplicatedCode")
-    public void updateOrientationSample(final long timestamp,
-                                        final Rotation3D orientation) {
+    public void updateOrientationSample(final long timestamp, final Rotation3D orientation) {
         if (!isFullSampleAvailable()) {
-            mOrientationTimestampNanos = timestamp;
+            orientationTimestampNanos = timestamp;
             if (isAccumulationEnabled() && isOrientationSampleReceived()) {
                 // accumulation enabled
-                final int nextSamples = mAccumulatedOrientationSamples + 1;
+                final var nextSamples = accumulatedOrientationSamples + 1;
 
-                double accumA = mAccumulatedOrientation.getA();
-                double accumB = mAccumulatedOrientation.getB();
-                double accumC = mAccumulatedOrientation.getC();
-                double accumD = mAccumulatedOrientation.getD();
+                var accumA = accumulatedOrientation.getA();
+                var accumB = accumulatedOrientation.getB();
+                var accumC = accumulatedOrientation.getC();
+                var accumD = accumulatedOrientation.getD();
 
-                if (mTempQ == null) {
-                    mTempQ = new Quaternion();
+                if (tempQ == null) {
+                    tempQ = new Quaternion();
                 }
-                mTempQ.fromRotation(orientation);
-                mTempQ.normalize();
-                final double a = mTempQ.getA();
-                final double b = mTempQ.getB();
-                final double c = mTempQ.getC();
-                final double d = mTempQ.getD();
+                tempQ.fromRotation(orientation);
+                tempQ.normalize();
+                final var a = tempQ.getA();
+                final var b = tempQ.getB();
+                final var c = tempQ.getC();
+                final var d = tempQ.getD();
 
-                accumA = (accumA * mAccumulatedOrientationSamples + a) /
-                        nextSamples;
-                accumB = (accumB * mAccumulatedOrientationSamples + b) /
-                        nextSamples;
-                accumC = (accumC * mAccumulatedOrientationSamples + c) /
-                        nextSamples;
-                accumD = (accumD * mAccumulatedOrientationSamples + d) /
-                        nextSamples;
+                accumA = (accumA * accumulatedOrientationSamples + a) / nextSamples;
+                accumB = (accumB * accumulatedOrientationSamples + b) / nextSamples;
+                accumC = (accumC * accumulatedOrientationSamples + c) / nextSamples;
+                accumD = (accumD * accumulatedOrientationSamples + d) / nextSamples;
 
-                mAccumulatedOrientation.setA(accumA);
-                mAccumulatedOrientation.setB(accumB);
-                mAccumulatedOrientation.setC(accumC);
-                mAccumulatedOrientation.setD(accumD);
-                mAccumulatedOrientationSamples = nextSamples;
+                accumulatedOrientation.setA(accumA);
+                accumulatedOrientation.setB(accumB);
+                accumulatedOrientation.setC(accumC);
+                accumulatedOrientation.setD(accumD);
+                accumulatedOrientationSamples = nextSamples;
             } else {
                 // accumulation disabled
-                mAccumulatedOrientation.fromRotation(orientation);
-                mAccumulatedOrientationSamples++;
+                accumulatedOrientation.fromRotation(orientation);
+                accumulatedOrientationSamples++;
             }
             notifyFullSampleAndResetSampleReceive();
         }
@@ -189,8 +184,8 @@ public abstract class AbsoluteOrientationBaseSlamCalibrator<D extends BaseCalibr
      */
     @Override
     public long getMostRecentTimestampNanos() {
-        final long mostRecent = super.getMostRecentTimestampNanos();
-        return Math.max(mostRecent, mOrientationTimestampNanos);
+        final var mostRecent = super.getMostRecentTimestampNanos();
+        return Math.max(mostRecent, orientationTimestampNanos);
     }
 
     /**
@@ -201,8 +196,7 @@ public abstract class AbsoluteOrientationBaseSlamCalibrator<D extends BaseCalibr
     protected void notifyFullSampleAndResetSampleReceive() {
         if (isFullSampleAvailable()) {
             processFullSample();
-            mAccumulatedAccelerometerSamples = mAccumulatedGyroscopeSamples =
-                    mAccumulatedOrientationSamples = 0;
+            accumulatedAccelerometerSamples = accumulatedGyroscopeSamples = accumulatedOrientationSamples = 0;
         }
     }
 }

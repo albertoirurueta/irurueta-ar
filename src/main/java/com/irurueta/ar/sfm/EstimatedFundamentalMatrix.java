@@ -36,50 +36,50 @@ public class EstimatedFundamentalMatrix implements Serializable {
      * ID to identify this instance. This is useful in case that this data is
      * stored in some sort of database and must be set externally.
      */
-    private String mId;
+    private String id;
 
     /**
      * Estimated fundamental matrix.
      */
-    private FundamentalMatrix mFundamentalMatrix;
+    private FundamentalMatrix fundamentalMatrix;
 
     /**
      * Quality score of estimated fundamental matrix. The larger the value,
      * the better the quality.
      */
-    private double mQualityScore = DEFAULT_QUALITY_SCORE;
+    private double qualityScore = DEFAULT_QUALITY_SCORE;
 
     /**
      * Covariance of estimated fundamental matrix. This can be computed during
      * estimation.
      */
-    private Matrix mCovariance;
+    private Matrix covariance;
 
     /**
      * ID of first view related by fundamental matrix.
      */
-    private int mViewId1;
+    private int viewId1;
 
     /**
      * ID of second view related by fundamental matrix.
      */
-    private int mViewId2;
+    private int viewId2;
 
     /**
      * Indicates which samples used for fundamental matrix estimation where
      * considered inliers.
      */
-    private BitSet mInliers;
+    private BitSet inliers;
 
     /**
      * Left samples used for fundamental matrix estimation.
      */
-    private List<Sample2D> mLeftSamples;
+    private List<Sample2D> leftSamples;
 
     /**
      * Right samples used for fundamental matrix estimation.
      */
-    private List<Sample2D> mRightSamples;
+    private List<Sample2D> rightSamples;
 
     /**
      * Gets id to identify this instance. This is useful in case that this data
@@ -88,7 +88,7 @@ public class EstimatedFundamentalMatrix implements Serializable {
      * @return id to identify this instance.
      */
     public String getId() {
-        return mId;
+        return id;
     }
 
     /**
@@ -98,7 +98,7 @@ public class EstimatedFundamentalMatrix implements Serializable {
      * @param id id to identify this instance.
      */
     public void setId(final String id) {
-        mId = id;
+        this.id = id;
     }
 
     /**
@@ -107,7 +107,7 @@ public class EstimatedFundamentalMatrix implements Serializable {
      * @return estimated fundamental matrix.
      */
     public FundamentalMatrix getFundamentalMatrix() {
-        return mFundamentalMatrix;
+        return fundamentalMatrix;
     }
 
     /**
@@ -116,7 +116,7 @@ public class EstimatedFundamentalMatrix implements Serializable {
      * @param fundamentalMatrix estimated fundamental matrix.
      */
     public void setFundamentalMatrix(final FundamentalMatrix fundamentalMatrix) {
-        mFundamentalMatrix = fundamentalMatrix;
+        this.fundamentalMatrix = fundamentalMatrix;
     }
 
     /**
@@ -126,7 +126,7 @@ public class EstimatedFundamentalMatrix implements Serializable {
      * @return quality score of estimated fundamental matrix.
      */
     public double getQualityScore() {
-        return mQualityScore;
+        return qualityScore;
     }
 
     /**
@@ -136,7 +136,7 @@ public class EstimatedFundamentalMatrix implements Serializable {
      * @param qualityScore quality score of estimated fundamental matrix.
      */
     public void setQualityScore(final double qualityScore) {
-        mQualityScore = qualityScore;
+        this.qualityScore = qualityScore;
     }
 
     /**
@@ -146,7 +146,7 @@ public class EstimatedFundamentalMatrix implements Serializable {
      * @return covariance of estimated fundamental matrix.
      */
     public Matrix getCovariance() {
-        return mCovariance;
+        return covariance;
     }
 
     /**
@@ -156,7 +156,7 @@ public class EstimatedFundamentalMatrix implements Serializable {
      * @param covariance covariance of estimated fundamental matrix.
      */
     public void setCovariance(final Matrix covariance) {
-        mCovariance = covariance;
+        this.covariance = covariance;
     }
 
     /**
@@ -165,7 +165,7 @@ public class EstimatedFundamentalMatrix implements Serializable {
      * @return id of first view related by fundamental matrix.
      */
     public int getViewId1() {
-        return mViewId1;
+        return viewId1;
     }
 
     /**
@@ -174,7 +174,7 @@ public class EstimatedFundamentalMatrix implements Serializable {
      * @param viewId1 id of first view related by fundamental matrix.
      */
     public void setViewId1(final int viewId1) {
-        mViewId1 = viewId1;
+        this.viewId1 = viewId1;
     }
 
     /**
@@ -183,7 +183,7 @@ public class EstimatedFundamentalMatrix implements Serializable {
      * @return id of second view related by fundamental matrix.
      */
     public int getViewId2() {
-        return mViewId2;
+        return viewId2;
     }
 
     /**
@@ -192,7 +192,7 @@ public class EstimatedFundamentalMatrix implements Serializable {
      * @param viewId2 id of second view related by fundamental matrix.
      */
     public void setViewId2(final int viewId2) {
-        mViewId2 = viewId2;
+        this.viewId2 = viewId2;
     }
 
     /**
@@ -203,7 +203,7 @@ public class EstimatedFundamentalMatrix implements Serializable {
      * considered inliers.
      */
     public BitSet getInliers() {
-        return mInliers;
+        return inliers;
     }
 
     /**
@@ -214,7 +214,7 @@ public class EstimatedFundamentalMatrix implements Serializable {
      *                considered inliers.
      */
     public void setInliers(final BitSet inliers) {
-        mInliers = inliers;
+        this.inliers = inliers;
     }
 
     /**
@@ -223,7 +223,7 @@ public class EstimatedFundamentalMatrix implements Serializable {
      * @return left samples used for fundamental matrix estimation.
      */
     public List<Sample2D> getLeftSamples() {
-        return mLeftSamples;
+        return leftSamples;
     }
 
     /**
@@ -232,7 +232,7 @@ public class EstimatedFundamentalMatrix implements Serializable {
      * @param leftSamples left samples used for fundamental matrix estimation.
      */
     public void setLeftSamples(final List<Sample2D> leftSamples) {
-        mLeftSamples = leftSamples;
+        this.leftSamples = leftSamples;
     }
 
     /**
@@ -241,7 +241,7 @@ public class EstimatedFundamentalMatrix implements Serializable {
      * @return right samples used for fundamental matrix estimation.
      */
     public List<Sample2D> getRightSamples() {
-        return mRightSamples;
+        return rightSamples;
     }
 
     /**
@@ -250,6 +250,6 @@ public class EstimatedFundamentalMatrix implements Serializable {
      * @param rightSamples right samples used for fundamental matrix estimation.
      */
     public void setRightSamples(final List<Sample2D> rightSamples) {
-        mRightSamples = rightSamples;
+        this.rightSamples = rightSamples;
     }
 }

@@ -26,8 +26,7 @@ import java.util.List;
  *
  * @param <R> type of re-constructor.
  */
-public interface BasePairedViewsSparseReconstructorListener<
-        R extends BasePairedViewsSparseReconstructor<?, ?, ?>> {
+public interface BasePairedViewsSparseReconstructorListener<R extends BasePairedViewsSparseReconstructor<?, ?, ?>> {
 
     /**
      * Called to determine whether there are more views available to attempt to use for
@@ -152,8 +151,7 @@ public interface BasePairedViewsSparseReconstructorListener<
      * @param viewId        id of view whose parameters are requested.
      * @return intrinsic parameters if known, null otherwise.
      */
-    PinholeCameraIntrinsicParameters onIntrinsicParametersRequested(
-            final R reconstructor, final int viewId);
+    PinholeCameraIntrinsicParameters onIntrinsicParametersRequested(final R reconstructor, final int viewId);
 
     /**
      * Called when reconstruction starts.

@@ -30,17 +30,17 @@ public class HomographyDecomposition {
     /**
      * Contains rotation and translation obtained from homography decomposition.
      */
-    private EuclideanTransformation3D mTransformation;
+    private EuclideanTransformation3D transformation;
 
     /**
      * Contains computed plane normal obtained from homography decomposition.
      */
-    private double[] mPlaneNormal;
+    private double[] planeNormal;
 
     /**
      * Distance to computed plane.
      */
-    private double mPlaneDistance;
+    private double planeDistance;
 
     /**
      * Constructor.
@@ -59,11 +59,11 @@ public class HomographyDecomposition {
      * @throws IllegalArgumentException if provided plane normal does not have
      *                                  length 3.
      */
-    public HomographyDecomposition(final EuclideanTransformation3D transformation,
-                                   final double[] planeNormal, final double planeDistance) {
+    public HomographyDecomposition(final EuclideanTransformation3D transformation, final double[] planeNormal,
+                                   final double planeDistance) {
         setPlaneNormal(planeNormal);
-        mTransformation = transformation;
-        mPlaneDistance = planeDistance;
+        this.transformation = transformation;
+        this.planeDistance = planeDistance;
     }
 
     /**
@@ -72,7 +72,7 @@ public class HomographyDecomposition {
      * @return rotation and translation obtained from homography decomposition.
      */
     public EuclideanTransformation3D getTransformation() {
-        return mTransformation;
+        return transformation;
     }
 
     /**
@@ -82,7 +82,7 @@ public class HomographyDecomposition {
      *                       decomposition.
      */
     public void setTransformation(final EuclideanTransformation3D transformation) {
-        mTransformation = transformation;
+        this.transformation = transformation;
     }
 
     /**
@@ -91,7 +91,7 @@ public class HomographyDecomposition {
      * @return plane normal obtained from homography decomposition.
      */
     public double[] getPlaneNormal() {
-        return mPlaneNormal;
+        return planeNormal;
     }
 
     /**
@@ -105,7 +105,7 @@ public class HomographyDecomposition {
         if (planeNormal.length != PLANE_NORMAL_LENGTH) {
             throw new IllegalArgumentException();
         }
-        mPlaneNormal = planeNormal;
+        this.planeNormal = planeNormal;
     }
 
     /**
@@ -114,7 +114,7 @@ public class HomographyDecomposition {
      * @return distance to computed plane.
      */
     public double getPlaneDistance() {
-        return mPlaneDistance;
+        return planeDistance;
     }
 
     /**
@@ -123,6 +123,6 @@ public class HomographyDecomposition {
      * @param planeDistance distance to computed plane.
      */
     public void setPlaneDistance(final double planeDistance) {
-        mPlaneDistance = planeDistance;
+        this.planeDistance = planeDistance;
     }
 }

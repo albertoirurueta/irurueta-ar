@@ -35,8 +35,6 @@ public interface PairedViewsSparseReconstructorListener extends
      * @param metricCamera2 estimated second metric camera
      * @return baseline separating cameras.
      */
-    double onBaselineRequested(final PairedViewsSparseReconstructor reconstructor,
-                               final int viewId1, final int viewId2,
-                               final EstimatedCamera metricCamera1,
-                               final EstimatedCamera metricCamera2);
+    double onBaselineRequested(final PairedViewsSparseReconstructor reconstructor, final int viewId1, final int viewId2,
+                               final EstimatedCamera metricCamera1, final EstimatedCamera metricCamera2);
 }

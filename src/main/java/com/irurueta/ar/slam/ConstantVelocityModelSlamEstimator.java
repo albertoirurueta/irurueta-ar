@@ -31,8 +31,7 @@ import java.io.Serializable;
  */
 @SuppressWarnings("DuplicatedCode")
 public class ConstantVelocityModelSlamEstimator extends
-        BaseSlamEstimator<ConstantVelocityModelSlamCalibrationData>
-        implements Serializable {
+        BaseSlamEstimator<ConstantVelocityModelSlamCalibrationData> implements Serializable {
 
     /**
      * Internal state array length.
@@ -56,7 +55,7 @@ public class ConstantVelocityModelSlamEstimator extends
      * quaternion-d, linear-velocity-x, linear-velocity-y, linear-velocity-z,
      * angular-velocity-x, angular-velocity-y, angular-velocity-z.
      */
-    private final double[] mX;
+    private final double[] x;
 
     /**
      * Control signals containing the following values:
@@ -64,28 +63,28 @@ public class ConstantVelocityModelSlamEstimator extends
      * linear-velocity-change-z, angular-velocity-change-x,
      * angular-velocity-change-y, angular-velocity-change-z.
      */
-    private final double[] mU;
+    private final double[] u;
 
     /**
      * Jacobian respect x state during prediction (13x13).
      */
-    private Matrix mJacobianPredictionX;
+    private Matrix jacobianPredictionX;
 
     /**
      * Jacobian respect u control during state prediction (13x6).
      */
-    private Matrix mJacobianPredictionU;
+    private Matrix jacobianPredictionU;
 
     /**
      * Column matrix containing mU values to be passed as control values during
      * Kalman filter prediction.
      */
-    private Matrix mControl;
+    private Matrix control;
 
     /**
      * Kalman's filter to remove effects of noise.
      */
-    private KalmanFilter mKalmanFilter;
+    private KalmanFilter kalmanFilter;
 
     /**
      * Matrix of size 3x13 relating system status with obtained measures.
@@ -93,7 +92,7 @@ public class ConstantVelocityModelSlamEstimator extends
      * [0   1   0   0   0   0   0   0   0   0   0   0   0]
      * [0   0   1   0   0   0   0   0   0   0   0   0   0]
      */
-    private Matrix mMeasurementMatrix;
+    private Matrix measurementMatrix;
 
     /**
      * Measurement data for the Kalman filter in a column matrix.
@@ -105,28 +104,28 @@ public class ConstantVelocityModelSlamEstimator extends
      * [angularSpeedY]
      * [angularSpeedZ]
      */
-    private Matrix mMeasurement;
+    private Matrix measurement;
 
     /**
      * Last sample of angular speed along x-axis.
      */
-    private double mLastAngularSpeedX;
+    private double lastAngularSpeedX;
 
     /**
      * Last sample of angular speed along y-axis.
      */
-    private double mLastAngularSpeedY;
+    private double lastAngularSpeedY;
 
     /**
      * Last sample of angular speed along z-axis.
      */
-    private double mLastAngularSpeedZ;
+    private double lastAngularSpeedZ;
 
     /**
      * Last timestamp of a full sample expressed in nanoseconds since the epoch
      * time.
      */
-    private long mLastTimestampNanos = -1;
+    private long lastTimestampNanos = -1;
 
     /**
      * Indicates whether a prediction has been made to initialize the internal
@@ -134,34 +133,32 @@ public class ConstantVelocityModelSlamEstimator extends
      * a prediction has been made. Attempts to request corrections before having
      * a prediction will be ignored.
      */
-    private boolean mPredictionAvailable;
+    private boolean predictionAvailable;
 
     /**
      * Constructor.
      */
     public ConstantVelocityModelSlamEstimator() {
         super();
-        mX = new double[STATE_LENGTH];
+        x = new double[STATE_LENGTH];
         // initial value of quaternion.
-        mX[3] = 1.0;
-        mU = new double[CONTROL_LENGTH];
+        x[3] = 1.0;
+        u = new double[CONTROL_LENGTH];
         try {
-            mJacobianPredictionX = new Matrix(STATE_LENGTH, STATE_LENGTH);
-            mJacobianPredictionU = new Matrix(STATE_LENGTH, CONTROL_LENGTH);
-            mControl = new Matrix(CONTROL_LENGTH, 1);
-            mMeasurement = new Matrix(MEASUREMENT_LENGTH, 1);
-            mMeasurementMatrix = Matrix.identity(MEASUREMENT_LENGTH,
-                    STATE_LENGTH);
+            jacobianPredictionX = new Matrix(STATE_LENGTH, STATE_LENGTH);
+            jacobianPredictionU = new Matrix(STATE_LENGTH, CONTROL_LENGTH);
+            control = new Matrix(CONTROL_LENGTH, 1);
+            measurement = new Matrix(MEASUREMENT_LENGTH, 1);
+            measurementMatrix = Matrix.identity(MEASUREMENT_LENGTH, STATE_LENGTH);
 
         } catch (final WrongSizeException ignore) {
             // never thrown
         }
 
         try {
-            mKalmanFilter = new KalmanFilter(STATE_LENGTH, MEASUREMENT_LENGTH,
-                    CONTROL_LENGTH);
+            kalmanFilter = new KalmanFilter(STATE_LENGTH, MEASUREMENT_LENGTH, CONTROL_LENGTH);
             // setup matrix relating position measures with internal status.
-            mKalmanFilter.setMeasurementMatrix(mMeasurementMatrix);
+            kalmanFilter.setMeasurementMatrix(measurementMatrix);
         } catch (final SignalProcessingException ignore) {
             // never thrown
         }
@@ -169,8 +166,8 @@ public class ConstantVelocityModelSlamEstimator extends
         try {
             // set initial Kalman filter state (state pre and pro must be two
             // different instances!)
-            mKalmanFilter.getStatePre().fromArray(mX);
-            mKalmanFilter.getStatePost().fromArray(mX);
+            kalmanFilter.getStatePre().fromArray(x);
+            kalmanFilter.getStatePost().fromArray(x);
 
         } catch (final WrongSizeException ignore) {
             // never thrown
@@ -190,7 +187,7 @@ public class ConstantVelocityModelSlamEstimator extends
      */
     @Override
     public Matrix getStateCovariance() {
-        return mKalmanFilter.getStatePre();
+        return kalmanFilter.getStatePre();
     }
 
     /**
@@ -206,7 +203,7 @@ public class ConstantVelocityModelSlamEstimator extends
     @Override
     public void setPositionCovarianceMatrix(final Matrix positionCovariance) {
         if (positionCovariance != null) {
-            mKalmanFilter.setMeasurementNoiseCov(positionCovariance);
+            kalmanFilter.setMeasurementNoiseCov(positionCovariance);
         }
     }
 
@@ -218,7 +215,7 @@ public class ConstantVelocityModelSlamEstimator extends
      */
     @Override
     public Matrix getPositionCovarianceMatrix() {
-        return mKalmanFilter.getMeasurementNoiseCov();
+        return kalmanFilter.getMeasurementNoiseCov();
     }
 
     /**
@@ -230,34 +227,32 @@ public class ConstantVelocityModelSlamEstimator extends
      * @param positionZ new position along z-axis expressed in meters (m).
      */
     @Override
-    public void correctWithPositionMeasure(
-            final double positionX, final double positionY, final double positionZ) {
-        if (!mPredictionAvailable) {
+    public void correctWithPositionMeasure(final double positionX, final double positionY, final double positionZ) {
+        if (!predictionAvailable) {
             return;
         }
 
-        if (mListener != null) {
-            mListener.onCorrectWithPositionMeasure(this);
+        if (listener != null) {
+            listener.onCorrectWithPositionMeasure(this);
         }
 
         try {
-            mMeasurement.setElementAtIndex(0, positionX);
-            mMeasurement.setElementAtIndex(1, positionY);
-            mMeasurement.setElementAtIndex(2, positionZ);
+            measurement.setElementAtIndex(0, positionX);
+            measurement.setElementAtIndex(1, positionY);
+            measurement.setElementAtIndex(2, positionZ);
 
-            updateCorrectedState(mKalmanFilter.correct(mMeasurement));
+            updateCorrectedState(kalmanFilter.correct(measurement));
 
             // copy corrected state to predicted state
-            mKalmanFilter.getStatePost().copyTo(mKalmanFilter.getStatePre());
-            mKalmanFilter.getErrorCovPost().copyTo(
-                    mKalmanFilter.getErrorCovPre());
+            kalmanFilter.getStatePost().copyTo(kalmanFilter.getStatePre());
+            kalmanFilter.getErrorCovPost().copyTo(kalmanFilter.getErrorCovPre());
 
         } catch (final SignalProcessingException e) {
-            mError = true;
+            error = true;
         }
 
-        if (mListener != null) {
-            mListener.onCorrectedWithPositionMeasure(this);
+        if (listener != null) {
+            listener.onCorrectedWithPositionMeasure(this);
         }
     }
 
@@ -276,92 +271,81 @@ public class ConstantVelocityModelSlamEstimator extends
      */
     @Override
     protected void processFullSample() {
-        if (mListener != null) {
-            mListener.onFullSampleReceived(this);
+        if (listener != null) {
+            listener.onFullSampleReceived(this);
         }
 
-        final long timestamp = getMostRecentTimestampNanos();
-        if (mLastTimestampNanos < 0) {
+        final var timestamp = getMostRecentTimestampNanos();
+        if (lastTimestampNanos < 0) {
             // first time receiving control data, we just set linear acceleration
             // and angular speed into system state
-            mStateAccelerationX = mAccumulatedAccelerationSampleX;
-            mStateAccelerationY = mAccumulatedAccelerationSampleY;
-            mStateAccelerationZ = mAccumulatedAccelerationSampleZ;
-            mLastAngularSpeedX = mStateAngularSpeedX = mX[10] =
-                    mAccumulatedAngularSpeedSampleX;
-            mLastAngularSpeedY = mStateAngularSpeedY = mX[11] =
-                    mAccumulatedAngularSpeedSampleY;
-            mLastAngularSpeedZ = mStateAngularSpeedZ = mX[12] =
-                    mAccumulatedAngularSpeedSampleZ;
+            stateAccelerationX = accumulatedAccelerationSampleX;
+            stateAccelerationY = accumulatedAccelerationSampleY;
+            stateAccelerationZ = accumulatedAccelerationSampleZ;
+            lastAngularSpeedX = stateAngularSpeedX = x[10] = accumulatedAngularSpeedSampleX;
+            lastAngularSpeedY = stateAngularSpeedY = x[11] = accumulatedAngularSpeedSampleY;
+            lastAngularSpeedZ = stateAngularSpeedZ = x[12] = accumulatedAngularSpeedSampleZ;
 
             try {
-                mKalmanFilter.getStatePre().fromArray(mX);
-                mKalmanFilter.getStatePost().fromArray(mX);
+                kalmanFilter.getStatePre().fromArray(x);
+                kalmanFilter.getStatePost().fromArray(x);
             } catch (final WrongSizeException ignore) {
                 // never thrown
             }
 
-            mLastTimestampNanos = timestamp;
+            lastTimestampNanos = timestamp;
 
-            if (mListener != null) {
-                mListener.onFullSampleProcessed(this);
+            if (listener != null) {
+                listener.onFullSampleProcessed(this);
             }
 
             return;
         }
 
-        final double deltaAngularSpeedX = mAccumulatedAngularSpeedSampleX -
-                mLastAngularSpeedX;
-        final double deltaAngularSpeedY = mAccumulatedAngularSpeedSampleY -
-                mLastAngularSpeedY;
-        final double deltaAngularSpeedZ = mAccumulatedAngularSpeedSampleZ -
-                mLastAngularSpeedZ;
-        final double deltaTimestamp = (timestamp - mLastTimestampNanos) *
-                NANOS_TO_SECONDS;
+        final var deltaAngularSpeedX = accumulatedAngularSpeedSampleX - lastAngularSpeedX;
+        final var deltaAngularSpeedY = accumulatedAngularSpeedSampleY - lastAngularSpeedY;
+        final var deltaAngularSpeedZ = accumulatedAngularSpeedSampleZ - lastAngularSpeedZ;
+        final var deltaTimestamp = (timestamp - lastTimestampNanos) * NANOS_TO_SECONDS;
 
         // when a full sample is received, we update the data model
         // change in linear speed
-        mU[0] = mAccumulatedAccelerationSampleX * deltaTimestamp;
-        mU[1] = mAccumulatedAccelerationSampleY * deltaTimestamp;
-        mU[2] = mAccumulatedAccelerationSampleZ * deltaTimestamp;
+        u[0] = accumulatedAccelerationSampleX * deltaTimestamp;
+        u[1] = accumulatedAccelerationSampleY * deltaTimestamp;
+        u[2] = accumulatedAccelerationSampleZ * deltaTimestamp;
         // change in angular speed
-        mU[3] = deltaAngularSpeedX;
-        mU[4] = deltaAngularSpeedY;
-        mU[5] = deltaAngularSpeedZ;
+        u[3] = deltaAngularSpeedX;
+        u[4] = deltaAngularSpeedY;
+        u[5] = deltaAngularSpeedZ;
 
-        if (mCalibrationData != null &&
-                mCalibrationData.getControlMean() != null) {
+        if (calibrationData != null && calibrationData.getControlMean() != null) {
             // if calibrator is available, remove mean to correct possible biases
-            ArrayUtils.subtract(mU, mCalibrationData.getControlMean(), mU);
+            ArrayUtils.subtract(u, calibrationData.getControlMean(), u);
         }
 
-        ConstantVelocityModelStatePredictor.predict(mX, mU, deltaTimestamp, mX,
-                mJacobianPredictionX, mJacobianPredictionU);
+        ConstantVelocityModelStatePredictor.predict(x, u, deltaTimestamp, x, jacobianPredictionX, jacobianPredictionU);
 
         // update Kalman filter transition matrix taking into account current
         // state
-        mKalmanFilter.setTransitionMatrix(mJacobianPredictionX);
+        kalmanFilter.setTransitionMatrix(jacobianPredictionX);
 
         // update control matrix from control vector jacobian
-        mKalmanFilter.setControlMatrix(mJacobianPredictionU);
+        kalmanFilter.setControlMatrix(jacobianPredictionU);
 
-        if (mCalibrationData != null &&
-                mCalibrationData.getControlMean() != null &&
-                mCalibrationData.getControlCovariance() != null) {
+        if (calibrationData != null && calibrationData.getControlMean() != null
+                && calibrationData.getControlCovariance() != null) {
             // if calibrator is available, propagate covariance to set process
             // covariance matrix
-            if (mNormalDist == null) {
-                mNormalDist = new MultivariateNormalDist(STATE_LENGTH);
+            if (normalDist == null) {
+                normalDist = new MultivariateNormalDist(STATE_LENGTH);
             }
 
             try {
-                mCalibrationData.propagateWithControlJacobian(
-                        mJacobianPredictionU, mNormalDist);
+                calibrationData.propagateWithControlJacobian(jacobianPredictionU, normalDist);
                 // update Kalman filter process noise
-                final Matrix processNoise = mKalmanFilter.getProcessNoiseCov();
+                final var processNoise = kalmanFilter.getProcessNoiseCov();
 
                 // copy normal dist covariance into processNoise
-                mNormalDist.getCovariance(processNoise);
+                normalDist.getCovariance(processNoise);
             } catch (final InvalidCovarianceMatrixException e) {
                 // ignore
             }
@@ -370,26 +354,25 @@ public class ConstantVelocityModelSlamEstimator extends
         try {
             // also predict the state using Kalman filter with current control
             // data
-            mControl.fromArray(mU, true);
-            updatePredictedState(mKalmanFilter.predict(mControl));
+            control.fromArray(u, true);
+            updatePredictedState(kalmanFilter.predict(control));
 
             // copy predicted state to corrected state
-            mKalmanFilter.getStatePre().copyTo(mKalmanFilter.getStatePost());
-            mKalmanFilter.getErrorCovPre().copyTo(
-                    mKalmanFilter.getErrorCovPost());
+            kalmanFilter.getStatePre().copyTo(kalmanFilter.getStatePost());
+            kalmanFilter.getErrorCovPre().copyTo(kalmanFilter.getErrorCovPost());
 
-            mPredictionAvailable = true;
+            predictionAvailable = true;
         } catch (final Exception e) {
-            mError = true;
+            error = true;
         }
 
-        mLastAngularSpeedX = mStateAngularSpeedX;
-        mLastAngularSpeedY = mStateAngularSpeedY;
-        mLastAngularSpeedZ = mStateAngularSpeedZ;
-        mLastTimestampNanos = timestamp;
+        lastAngularSpeedX = stateAngularSpeedX;
+        lastAngularSpeedY = stateAngularSpeedY;
+        lastAngularSpeedZ = stateAngularSpeedZ;
+        lastTimestampNanos = timestamp;
 
-        if (mListener != null) {
-            mListener.onFullSampleProcessed(this);
+        if (listener != null) {
+            listener.onFullSampleProcessed(this);
         }
     }
 
@@ -438,40 +421,40 @@ public class ConstantVelocityModelSlamEstimator extends
                 stateAccelerationX, stateAccelerationY, stateAccelerationZ,
                 stateQuaternionA, stateQuaternionB, stateQuaternionC, stateQuaternionD,
                 stateAngularSpeedX, stateAngularSpeedY, stateAngularSpeedZ);
-        if (mX != null) {
+        if (x != null) {
             // position
-            mX[0] = statePositionX;
-            mX[1] = statePositionY;
-            mX[2] = statePositionZ;
+            x[0] = statePositionX;
+            x[1] = statePositionY;
+            x[2] = statePositionZ;
 
             // quaternion
-            mX[3] = stateQuaternionA;
-            mX[4] = stateQuaternionB;
-            mX[5] = stateQuaternionC;
-            mX[6] = stateQuaternionD;
+            x[3] = stateQuaternionA;
+            x[4] = stateQuaternionB;
+            x[5] = stateQuaternionC;
+            x[6] = stateQuaternionD;
 
             // velocity
-            mX[7] = stateVelocityX;
-            mX[8] = stateVelocityY;
-            mX[9] = stateVelocityZ;
+            x[7] = stateVelocityX;
+            x[8] = stateVelocityY;
+            x[9] = stateVelocityZ;
 
             // angular speed
-            mX[10] = stateAngularSpeedX;
-            mX[11] = stateAngularSpeedY;
-            mX[12] = stateAngularSpeedZ;
+            x[10] = stateAngularSpeedX;
+            x[11] = stateAngularSpeedY;
+            x[12] = stateAngularSpeedZ;
 
             try {
                 // set initial Kalman filter state (state pre and pro must be two
                 // different instances!)
-                mKalmanFilter.getStatePre().fromArray(mX);
-                mKalmanFilter.getStatePost().fromArray(mX);
+                kalmanFilter.getStatePre().fromArray(x);
+                kalmanFilter.getStatePost().fromArray(x);
             } catch (final WrongSizeException ignore) {
                 // never thrown
             }
         }
-        mError = false;
-        mLastTimestampNanos = -1;
-        mPredictionAvailable = false;
+        error = false;
+        lastTimestampNanos = -1;
+        predictionAvailable = false;
     }
 
     /**
@@ -487,12 +470,12 @@ public class ConstantVelocityModelSlamEstimator extends
      */
     private void updatePredictedState(final Matrix state) {
         // position
-        mStatePositionX = mX[0];
-        mX[0] = state.getElementAtIndex(0);
-        mStatePositionY = mX[1];
-        mX[1] = state.getElementAtIndex(1);
-        mStatePositionZ = mX[2];
-        mX[2] = state.getElementAtIndex(2);
+        statePositionX = x[0];
+        x[0] = state.getElementAtIndex(0);
+        statePositionY = x[1];
+        x[1] = state.getElementAtIndex(1);
+        statePositionZ = x[2];
+        x[2] = state.getElementAtIndex(2);
 
         // quaternion state predictor is more reliable than Kalman filter, for
         // that reason we ignore predicted quaternion values on Kalman filter and
@@ -500,31 +483,31 @@ public class ConstantVelocityModelSlamEstimator extends
         // much more reliable than accelerometer ones. For that reason state
         // elements corresponding to quaternion (3 to 6) are not copied into mX
         // array.
-        mStateQuaternionA = mX[3];
-        mStateQuaternionB = mX[4];
-        mStateQuaternionC = mX[5];
-        mStateQuaternionD = mX[6];
+        stateQuaternionA = x[3];
+        stateQuaternionB = x[4];
+        stateQuaternionC = x[5];
+        stateQuaternionD = x[6];
 
         // velocity
-        mStateVelocityX = mX[7];
-        mX[7] = state.getElementAtIndex(7);
-        mStateVelocityY = mX[8];
-        mX[8] = state.getElementAtIndex(8);
-        mStateVelocityZ = mX[9];
-        mX[9] = state.getElementAtIndex(9);
+        stateVelocityX = x[7];
+        x[7] = state.getElementAtIndex(7);
+        stateVelocityY = x[8];
+        x[8] = state.getElementAtIndex(8);
+        stateVelocityZ = x[9];
+        x[9] = state.getElementAtIndex(9);
 
         // linear acceleration
-        mStateAccelerationX = mAccumulatedAccelerationSampleX;
-        mStateAccelerationY = mAccumulatedAccelerationSampleY;
-        mStateAccelerationZ = mAccumulatedAccelerationSampleZ;
+        stateAccelerationX = accumulatedAccelerationSampleX;
+        stateAccelerationY = accumulatedAccelerationSampleY;
+        stateAccelerationZ = accumulatedAccelerationSampleZ;
 
         // angular velocity
-        mStateAngularSpeedX = mX[10];
-        mX[10] = state.getElementAtIndex(10);
-        mStateAngularSpeedY = mX[11];
-        mX[11] = state.getElementAtIndex(11);
-        mStateAngularSpeedZ = mX[12];
-        mX[12] = state.getElementAtIndex(12);
+        stateAngularSpeedX = x[10];
+        x[10] = state.getElementAtIndex(10);
+        stateAngularSpeedY = x[11];
+        x[11] = state.getElementAtIndex(11);
+        stateAngularSpeedZ = x[12];
+        x[12] = state.getElementAtIndex(12);
     }
 
     /**
@@ -535,40 +518,27 @@ public class ConstantVelocityModelSlamEstimator extends
      */
     private void updateCorrectedState(final Matrix state) {
         // position
-        mStatePositionX = mX[0] =
-                state.getElementAtIndex(0);
-        mStatePositionY = mX[1] =
-                state.getElementAtIndex(1);
-        mStatePositionZ = mX[2] =
-                state.getElementAtIndex(2);
+        statePositionX = x[0] = state.getElementAtIndex(0);
+        statePositionY = x[1] = state.getElementAtIndex(1);
+        statePositionZ = x[2] = state.getElementAtIndex(2);
 
         // quaternion
-        mStateQuaternionA = mX[3] =
-                state.getElementAtIndex(3);
-        mStateQuaternionB = mX[4] =
-                state.getElementAtIndex(4);
-        mStateQuaternionC = mX[5] =
-                state.getElementAtIndex(5);
-        mStateQuaternionD = mX[6] =
-                state.getElementAtIndex(6);
+        stateQuaternionA = x[3] = state.getElementAtIndex(3);
+        stateQuaternionB = x[4] = state.getElementAtIndex(4);
+        stateQuaternionC = x[5] = state.getElementAtIndex(5);
+        stateQuaternionD = x[6] = state.getElementAtIndex(6);
 
         // velocity
-        mStateVelocityX = mX[7] =
-                state.getElementAtIndex(7);
-        mStateVelocityY = mX[8] =
-                state.getElementAtIndex(8);
-        mStateVelocityZ = mX[9] =
-                state.getElementAtIndex(9);
+        stateVelocityX = x[7] = state.getElementAtIndex(7);
+        stateVelocityY = x[8] = state.getElementAtIndex(8);
+        stateVelocityZ = x[9] = state.getElementAtIndex(9);
 
         // linear acceleration (is not contained in state, thus it is not
         // corrected)
 
         // angular velocity
-        mStateAngularSpeedX = mX[10] =
-                state.getElementAtIndex(10);
-        mStateAngularSpeedY = mX[10] =
-                state.getElementAtIndex(10);
-        mStateAngularSpeedZ = mX[10] =
-                state.getElementAtIndex(10);
+        stateAngularSpeedX = x[10] = state.getElementAtIndex(10);
+        stateAngularSpeedY = x[10] = state.getElementAtIndex(10);
+        stateAngularSpeedZ = x[10] = state.getElementAtIndex(10);
     }
 }

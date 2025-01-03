@@ -18,9 +18,7 @@ package com.irurueta.ar.sfm;
 
 import com.irurueta.algebra.AlgebraException;
 import com.irurueta.geometry.MetricTransformation3D;
-import com.irurueta.geometry.PinholeCamera;
 import com.irurueta.geometry.Point3D;
-import com.irurueta.geometry.Rotation3D;
 
 import java.util.ArrayList;
 
@@ -51,8 +49,7 @@ public class PairedViewsSparseReconstructor extends BasePairedViewsSparseReconst
      * @param listener listener in charge of handling events.
      * @throws NullPointerException if listener or configuration is not provided.
      */
-    public PairedViewsSparseReconstructor(
-            final PairedViewsSparseReconstructorListener listener) {
+    public PairedViewsSparseReconstructor(final PairedViewsSparseReconstructorListener listener) {
         this(new PairedViewsSparseReconstructorConfiguration(), listener);
     }
 
@@ -78,85 +75,76 @@ public class PairedViewsSparseReconstructor extends BasePairedViewsSparseReconst
     @SuppressWarnings("DuplicatedCode")
     @Override
     protected boolean transformPairOfCamerasAndPoints(
-            final boolean isInitialPairOfViews,
-            final boolean hasAbsoluteOrientation) {
-        final PinholeCamera previousMetricCamera = mPreviousMetricEstimatedCamera.getCamera();
-        final PinholeCamera currentMetricCamera = mCurrentMetricEstimatedCamera.getCamera();
+            final boolean isInitialPairOfViews, final boolean hasAbsoluteOrientation) {
+        final var previousMetricCamera = previousMetricEstimatedCamera.getCamera();
+        final var currentMetricCamera = currentMetricEstimatedCamera.getCamera();
         if (previousMetricCamera == null || currentMetricCamera == null) {
             return false;
         }
 
-        mCurrentScale = mListener.onBaselineRequested(this, mPreviousViewId, mCurrentViewId,
-                mPreviousMetricEstimatedCamera, mCurrentMetricEstimatedCamera);
-        final double sqrScale = mCurrentScale * mCurrentScale;
+        currentScale = listener.onBaselineRequested(this, previousViewId, currentViewId,
+                previousMetricEstimatedCamera, currentMetricEstimatedCamera);
+        final var sqrScale = currentScale * currentScale;
 
-        final MetricTransformation3D scaleTransformation = new MetricTransformation3D(mCurrentScale);
+        final var scaleTransformation = new MetricTransformation3D(currentScale);
 
         if (isInitialPairOfViews) {
             // the first pair of views does not require setting translation and rotation
-            mReferenceEuclideanTransformation = scaleTransformation;
+            referenceEuclideanTransformation = scaleTransformation;
         } else {
             // additional pairs also need to translate and rotate
-            final Rotation3D invRot = mLastEuclideanCameraRotation.inverseRotationAndReturnNew();
-            final double[] translation = new double[Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH];
-            translation[0] = mLastEuclideanCameraCenter.getInhomX();
-            translation[1] = mLastEuclideanCameraCenter.getInhomY();
-            translation[2] = mLastEuclideanCameraCenter.getInhomZ();
-            mReferenceEuclideanTransformation = scaleTransformation.
-                    combineAndReturnNew(new MetricTransformation3D(invRot, translation, 1.0));
-            mReferenceEuclideanTransformation.setRotation(invRot);
-            mReferenceEuclideanTransformation.setTranslation(mLastEuclideanCameraCenter);
+            final var invRot = lastEuclideanCameraRotation.inverseRotationAndReturnNew();
+            final var translation = new double[Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH];
+            translation[0] = lastEuclideanCameraCenter.getInhomX();
+            translation[1] = lastEuclideanCameraCenter.getInhomY();
+            translation[2] = lastEuclideanCameraCenter.getInhomZ();
+            referenceEuclideanTransformation = scaleTransformation.combineAndReturnNew(
+                    new MetricTransformation3D(invRot, translation, 1.0));
+            referenceEuclideanTransformation.setRotation(invRot);
+            referenceEuclideanTransformation.setTranslation(lastEuclideanCameraCenter);
         }
 
         try {
             // transform cameras
-            final PinholeCamera previousEuclideanCamera = mReferenceEuclideanTransformation.
-                    transformAndReturnNew(previousMetricCamera);
-            final PinholeCamera currentEuclideanCamera = mReferenceEuclideanTransformation.
-                    transformAndReturnNew(currentMetricCamera);
+            final var previousEuclideanCamera = referenceEuclideanTransformation.transformAndReturnNew(
+                    previousMetricCamera);
+            final var currentEuclideanCamera = referenceEuclideanTransformation.transformAndReturnNew(
+                    currentMetricCamera);
 
-            mPreviousEuclideanEstimatedCamera = new EstimatedCamera();
-            mPreviousEuclideanEstimatedCamera.setCamera(previousEuclideanCamera);
-            mPreviousEuclideanEstimatedCamera.setViewId(mPreviousMetricEstimatedCamera.getViewId());
-            mPreviousEuclideanEstimatedCamera.setQualityScore(
-                    mPreviousMetricEstimatedCamera.getQualityScore());
-            if (mPreviousMetricEstimatedCamera.getCovariance() != null) {
-                mPreviousEuclideanEstimatedCamera.setCovariance(
-                        mPreviousMetricEstimatedCamera.getCovariance().multiplyByScalarAndReturnNew(
-                                sqrScale));
+            previousEuclideanEstimatedCamera = new EstimatedCamera();
+            previousEuclideanEstimatedCamera.setCamera(previousEuclideanCamera);
+            previousEuclideanEstimatedCamera.setViewId(previousMetricEstimatedCamera.getViewId());
+            previousEuclideanEstimatedCamera.setQualityScore(previousMetricEstimatedCamera.getQualityScore());
+            if (previousMetricEstimatedCamera.getCovariance() != null) {
+                previousEuclideanEstimatedCamera.setCovariance(
+                        previousMetricEstimatedCamera.getCovariance().multiplyByScalarAndReturnNew(sqrScale));
             }
 
-            mCurrentEuclideanEstimatedCamera = new EstimatedCamera();
-            mCurrentEuclideanEstimatedCamera.setCamera(currentEuclideanCamera);
-            mCurrentEuclideanEstimatedCamera.setViewId(mCurrentMetricEstimatedCamera.getViewId());
-            mCurrentEuclideanEstimatedCamera.setQualityScore(
-                    mCurrentMetricEstimatedCamera.getQualityScore());
-            if (mCurrentMetricEstimatedCamera.getCovariance() != null) {
-                mCurrentEuclideanEstimatedCamera.setCovariance(
-                        mCurrentMetricEstimatedCamera.getCovariance().multiplyByScalarAndReturnNew(
-                                sqrScale));
+            currentEuclideanEstimatedCamera = new EstimatedCamera();
+            currentEuclideanEstimatedCamera.setCamera(currentEuclideanCamera);
+            currentEuclideanEstimatedCamera.setViewId(currentMetricEstimatedCamera.getViewId());
+            currentEuclideanEstimatedCamera.setQualityScore(currentMetricEstimatedCamera.getQualityScore());
+            if (currentMetricEstimatedCamera.getCovariance() != null) {
+                currentEuclideanEstimatedCamera.setCovariance(
+                        currentMetricEstimatedCamera.getCovariance().multiplyByScalarAndReturnNew(sqrScale));
             }
 
             // transform points
-            mEuclideanReconstructedPoints = new ArrayList<>();
-            ReconstructedPoint3D euclideanReconstructedPoint;
-            Point3D metricPoint;
-            Point3D euclideanPoint;
-            for (final ReconstructedPoint3D metricReconstructedPoint : mMetricReconstructedPoints) {
-                metricPoint = metricReconstructedPoint.getPoint();
-                euclideanPoint = mReferenceEuclideanTransformation.transformAndReturnNew(
-                        metricPoint);
-                euclideanReconstructedPoint = new ReconstructedPoint3D();
+            euclideanReconstructedPoints = new ArrayList<>();
+            for (final var metricReconstructedPoint : metricReconstructedPoints) {
+                final var metricPoint = metricReconstructedPoint.getPoint();
+                final var euclideanPoint = referenceEuclideanTransformation.transformAndReturnNew(metricPoint);
+                final var euclideanReconstructedPoint = new ReconstructedPoint3D();
                 euclideanReconstructedPoint.setPoint(euclideanPoint);
                 euclideanReconstructedPoint.setInlier(metricReconstructedPoint.isInlier());
                 euclideanReconstructedPoint.setId(metricReconstructedPoint.getId());
                 euclideanReconstructedPoint.setColorData(metricReconstructedPoint.getColorData());
                 if (metricReconstructedPoint.getCovariance() != null) {
-                    euclideanReconstructedPoint.setCovariance(metricReconstructedPoint.getCovariance().
-                            multiplyByScalarAndReturnNew(sqrScale));
+                    euclideanReconstructedPoint.setCovariance(
+                            metricReconstructedPoint.getCovariance().multiplyByScalarAndReturnNew(sqrScale));
                 }
                 euclideanReconstructedPoint.setQualityScore(metricReconstructedPoint.getQualityScore());
-                mEuclideanReconstructedPoints.add(euclideanReconstructedPoint);
+                euclideanReconstructedPoints.add(euclideanReconstructedPoint);
             }
 
         } catch (final AlgebraException e) {

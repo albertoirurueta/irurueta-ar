@@ -29,56 +29,56 @@ public class AbsoluteOrientationSlamCalibrator extends
     /**
      * Last sample of linear acceleration along x-axis.
      */
-    private double mLastAccelerationX;
+    private double lastAccelerationX;
 
     /**
      * Last sample of linear acceleration along y-axis.
      */
-    private double mLastAccelerationY;
+    private double lastAccelerationY;
 
     /**
      * Last sample of linear acceleration along z-axis.
      */
-    private double mLastAccelerationZ;
+    private double lastAccelerationZ;
 
     /**
      * Last sample of angular speed along x-axis.
      */
-    private double mLastAngularSpeedX;
+    private double lastAngularSpeedX;
 
     /**
      * Last sample of angular speed along y-axis.
      */
-    private double mLastAngularSpeedY;
+    private double lastAngularSpeedY;
 
     /**
      * Last sample of angular speed along z-axis.
      */
-    private double mLastAngularSpeedZ;
+    private double lastAngularSpeedZ;
 
     /**
      * Last timestamp of a full sample expressed in nanoseconds since the epoch
      * time.
      */
-    private long mLastTimestampNanos = -1;
+    private long lastTimestampNanos = -1;
 
     /**
      * Last sample of absolute orientation.
      */
-    private Quaternion mLastOrientation;
+    private Quaternion lastOrientation;
 
     /**
      * Variation of orientation respect to last sample.
      */
-    private final Quaternion mDeltaOrientation;
+    private final Quaternion deltaOrientation;
 
     /**
      * Constructor.
      */
     public AbsoluteOrientationSlamCalibrator() {
         super(AbsoluteOrientationSlamEstimator.CONTROL_LENGTH);
-        mLastOrientation = new Quaternion();
-        mDeltaOrientation = new Quaternion();
+        lastOrientation = new Quaternion();
+        deltaOrientation = new Quaternion();
     }
 
     /**
@@ -87,11 +87,10 @@ public class AbsoluteOrientationSlamCalibrator extends
     @Override
     public void reset() {
         super.reset();
-        mLastOrientation = new Quaternion();
-        mLastAccelerationX = mLastAccelerationY = mLastAccelerationZ =
-                mLastAngularSpeedX = mLastAngularSpeedY = mLastAngularSpeedZ =
-                        0.0;
-        mLastTimestampNanos = -1;
+        lastOrientation = new Quaternion();
+        lastAccelerationX = lastAccelerationY = lastAccelerationZ =
+                lastAngularSpeedX = lastAngularSpeedY = lastAngularSpeedZ = 0.0;
+        lastTimestampNanos = -1;
     }
 
     /**
@@ -112,8 +111,7 @@ public class AbsoluteOrientationSlamCalibrator extends
      */
     @Override
     public AbsoluteOrientationSlamCalibrationData getCalibrationData() {
-        final AbsoluteOrientationSlamCalibrationData result =
-                new AbsoluteOrientationSlamCalibrationData();
+        final var result = new AbsoluteOrientationSlamCalibrationData();
         getCalibrationData(result);
         return result;
     }
@@ -125,80 +123,74 @@ public class AbsoluteOrientationSlamCalibrator extends
     @SuppressWarnings("DuplicatedCode")
     @Override
     protected void processFullSample() {
-        if (mListener != null) {
-            mListener.onFullSampleReceived(this);
+        if (listener != null) {
+            listener.onFullSampleReceived(this);
         }
 
-        final long timestamp = getMostRecentTimestampNanos();
-        if (mLastTimestampNanos < 0) {
+        final var timestamp = getMostRecentTimestampNanos();
+        if (lastTimestampNanos < 0) {
             // first time receiving control data we cannot determine its
             // variation
-            mLastOrientation.fromQuaternion(mAccumulatedOrientation);
+            lastOrientation.fromQuaternion(accumulatedOrientation);
 
-            mLastAccelerationX = mAccumulatedAccelerationSampleX;
-            mLastAccelerationY = mAccumulatedAccelerationSampleY;
-            mLastAccelerationZ = mAccumulatedAccelerationSampleZ;
+            lastAccelerationX = accumulatedAccelerationSampleX;
+            lastAccelerationY = accumulatedAccelerationSampleY;
+            lastAccelerationZ = accumulatedAccelerationSampleZ;
 
-            mLastAngularSpeedX = mAccumulatedAngularSpeedSampleX;
-            mLastAngularSpeedY = mAccumulatedAngularSpeedSampleY;
-            mLastAngularSpeedZ = mAccumulatedAngularSpeedSampleZ;
+            lastAngularSpeedX = accumulatedAngularSpeedSampleX;
+            lastAngularSpeedY = accumulatedAngularSpeedSampleY;
+            lastAngularSpeedZ = accumulatedAngularSpeedSampleZ;
 
-            mLastTimestampNanos = timestamp;
+            lastTimestampNanos = timestamp;
 
-            if (mListener != null) {
-                mListener.onFullSampleProcessed(this);
+            if (listener != null) {
+                listener.onFullSampleProcessed(this);
             }
 
             return;
         }
 
-        mAccumulatedOrientation.normalize();
+        accumulatedOrientation.normalize();
 
-        mLastOrientation.inverse(mDeltaOrientation);
-        mDeltaOrientation.combine(mAccumulatedOrientation);
-        mDeltaOrientation.normalize();
+        lastOrientation.inverse(deltaOrientation);
+        deltaOrientation.combine(accumulatedOrientation);
+        deltaOrientation.normalize();
 
-        final double deltaAccelerationX = mAccumulatedAccelerationSampleX -
-                mLastAccelerationX;
-        final double deltaAccelerationY = mAccumulatedAccelerationSampleY -
-                mLastAccelerationY;
-        final double deltaAccelerationZ = mAccumulatedAccelerationSampleZ -
-                mLastAccelerationZ;
-        final double deltaAngularSpeedX = mAccumulatedAngularSpeedSampleX -
-                mLastAngularSpeedX;
-        final double deltaAngularSpeedY = mAccumulatedAngularSpeedSampleY -
-                mLastAngularSpeedY;
-        final double deltaAngularSpeedZ = mAccumulatedAngularSpeedSampleZ -
-                mLastAngularSpeedZ;
+        final var deltaAccelerationX = accumulatedAccelerationSampleX - lastAccelerationX;
+        final var deltaAccelerationY = accumulatedAccelerationSampleY - lastAccelerationY;
+        final var deltaAccelerationZ = accumulatedAccelerationSampleZ - lastAccelerationZ;
+        final var deltaAngularSpeedX = accumulatedAngularSpeedSampleX - lastAngularSpeedX;
+        final var deltaAngularSpeedY = accumulatedAngularSpeedSampleY - lastAngularSpeedY;
+        final var deltaAngularSpeedZ = accumulatedAngularSpeedSampleZ - lastAngularSpeedZ;
 
-        mSample[0] = mDeltaOrientation.getA();
-        mSample[1] = mDeltaOrientation.getB();
-        mSample[2] = mDeltaOrientation.getC();
-        mSample[3] = mDeltaOrientation.getD();
-        mSample[4] = mSample[5] = mSample[6] = 0.0;
+        sample[0] = deltaOrientation.getA();
+        sample[1] = deltaOrientation.getB();
+        sample[2] = deltaOrientation.getC();
+        sample[3] = deltaOrientation.getD();
+        sample[4] = sample[5] = sample[6] = 0.0;
 
-        mSample[7] = deltaAccelerationX;
-        mSample[8] = deltaAccelerationY;
-        mSample[9] = deltaAccelerationZ;
+        sample[7] = deltaAccelerationX;
+        sample[8] = deltaAccelerationY;
+        sample[9] = deltaAccelerationZ;
 
-        mSample[10] = deltaAngularSpeedX;
-        mSample[11] = deltaAngularSpeedY;
-        mSample[12] = deltaAngularSpeedZ;
+        sample[10] = deltaAngularSpeedX;
+        sample[11] = deltaAngularSpeedY;
+        sample[12] = deltaAngularSpeedZ;
         updateSample();
 
-        mLastOrientation.combine(mDeltaOrientation);
-        mLastAccelerationX = mAccumulatedAccelerationSampleX;
-        mLastAccelerationY = mAccumulatedAccelerationSampleY;
-        mLastAccelerationZ = mAccumulatedAccelerationSampleZ;
+        lastOrientation.combine(deltaOrientation);
+        lastAccelerationX = accumulatedAccelerationSampleX;
+        lastAccelerationY = accumulatedAccelerationSampleY;
+        lastAccelerationZ = accumulatedAccelerationSampleZ;
 
-        mLastAngularSpeedX = mAccumulatedAngularSpeedSampleX;
-        mLastAngularSpeedY = mAccumulatedAngularSpeedSampleY;
-        mLastAngularSpeedZ = mAccumulatedAngularSpeedSampleZ;
+        lastAngularSpeedX = accumulatedAngularSpeedSampleX;
+        lastAngularSpeedY = accumulatedAngularSpeedSampleY;
+        lastAngularSpeedZ = accumulatedAngularSpeedSampleZ;
 
-        mLastTimestampNanos = timestamp;
+        lastTimestampNanos = timestamp;
 
-        if (mListener != null) {
-            mListener.onFullSampleProcessed(this);
+        if (listener != null) {
+            listener.onFullSampleProcessed(this);
         }
     }
 }

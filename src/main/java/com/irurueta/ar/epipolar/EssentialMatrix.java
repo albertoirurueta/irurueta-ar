@@ -38,13 +38,13 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      */
     public static final double DEFAULT_SINGULAR_VALUES_THRESHOLD = 1e-8;
 
-    private Rotation3D mRotation1;
-    private Rotation3D mRotation2;
+    private Rotation3D rotation1;
+    private Rotation3D rotation2;
 
-    private Point2D mTranslation1;
-    private Point2D mTranslation2;
+    private Point2D translation1;
+    private Point2D translation2;
 
-    private boolean mPossibleRotationsAndTranslationsAvailable;
+    private boolean possibleRotationsAndTranslationsAvailable;
 
     /**
      * Constructor.
@@ -64,8 +64,7 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      *                                         are not equal up to provided threshold.
      * @throws IllegalArgumentException        if provided threshold is negative.
      */
-    public EssentialMatrix(final Matrix internalMatrix,
-                           final double singularValuesThreshold)
+    public EssentialMatrix(final Matrix internalMatrix, final double singularValuesThreshold)
             throws InvalidEssentialMatrixException {
         super();
         setInternalMatrix(internalMatrix, singularValuesThreshold);
@@ -79,8 +78,7 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      *                                         does not have rank 2 or its two non-zero singular values
      *                                         are not equal.
      */
-    public EssentialMatrix(final Matrix internalMatrix)
-            throws InvalidEssentialMatrixException {
+    public EssentialMatrix(final Matrix internalMatrix) throws InvalidEssentialMatrixException {
         this(internalMatrix, DEFAULT_SINGULAR_VALUES_THRESHOLD);
     }
 
@@ -97,9 +95,7 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      * @throws IllegalArgumentException      if provided threshold is negative.
      */
     public EssentialMatrix(
-            final PinholeCamera leftCamera,
-            final PinholeCamera rightCamera,
-            final double singularValuesThreshold)
+            final PinholeCamera leftCamera, final PinholeCamera rightCamera, final double singularValuesThreshold)
             throws InvalidPairOfCamerasException {
         super();
         setFromPairOfCameras(leftCamera, rightCamera, singularValuesThreshold);
@@ -115,9 +111,7 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      *                                       configuration).
      */
     public EssentialMatrix(
-            final PinholeCamera leftCamera,
-            final PinholeCamera rightCamera)
-            throws InvalidPairOfCamerasException {
+            final PinholeCamera leftCamera, final PinholeCamera rightCamera) throws InvalidPairOfCamerasException {
         this(leftCamera, rightCamera, DEFAULT_SINGULAR_VALUES_THRESHOLD);
     }
 
@@ -136,13 +130,10 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      * @throws IllegalArgumentException               if provided threshold is negative.
      */
     public EssentialMatrix(
-            final Rotation3D rotation,
-            final Point2D translation,
-            final double singularValuesThreshold)
+            final Rotation3D rotation, final Point2D translation, final double singularValuesThreshold)
             throws InvalidRotationAndTranslationException {
         super();
-        setFromRotationAndTranslation(rotation, translation,
-                singularValuesThreshold);
+        setFromRotationAndTranslation(rotation, translation, singularValuesThreshold);
     }
 
     /**
@@ -157,9 +148,7 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      *                                                translation yield a degenerate epipolar geometry.
      */
     public EssentialMatrix(
-            final Rotation3D rotation,
-            final Point2D translation)
-            throws InvalidRotationAndTranslationException {
+            final Rotation3D rotation, final Point2D translation) throws InvalidRotationAndTranslationException {
         this(rotation, translation, DEFAULT_SINGULAR_VALUES_THRESHOLD);
     }
 
@@ -177,12 +166,9 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      * @throws IllegalArgumentException               if provided threshold is negative.
      */
     public EssentialMatrix(
-            final Rotation3D rotation,
-            final Point3D cameraCenter,
-            final double singularValuesThreshold)
+            final Rotation3D rotation, final Point3D cameraCenter, final double singularValuesThreshold)
             throws InvalidRotationAndTranslationException {
-        setFromRotationAndCameraCenter(rotation, cameraCenter,
-                singularValuesThreshold);
+        setFromRotationAndCameraCenter(rotation, cameraCenter, singularValuesThreshold);
     }
 
     /**
@@ -196,9 +182,7 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      *                                                translation yield a degenerate epipolar geometry.
      */
     public EssentialMatrix(
-            final Rotation3D rotation,
-            final Point3D cameraCenter)
-            throws InvalidRotationAndTranslationException {
+            final Rotation3D rotation, final Point3D cameraCenter) throws InvalidRotationAndTranslationException {
         this(rotation, cameraCenter, DEFAULT_SINGULAR_VALUES_THRESHOLD);
     }
 
@@ -216,8 +200,7 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
             final PinholeCameraIntrinsicParameters leftIntrinsicParameters,
             final PinholeCameraIntrinsicParameters rightIntrinsicParameters)
             throws InvalidPairOfIntrinsicParametersException {
-        setFromFundamentalMatrixAndIntrinsics(fundamentalMatrix,
-                leftIntrinsicParameters, rightIntrinsicParameters);
+        setFromFundamentalMatrixAndIntrinsics(fundamentalMatrix, leftIntrinsicParameters, rightIntrinsicParameters);
     }
 
     /**
@@ -230,8 +213,7 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      *                                         are not equal.
      */
     @Override
-    public final void setInternalMatrix(final Matrix internalMatrix)
-            throws InvalidEssentialMatrixException {
+    public final void setInternalMatrix(final Matrix internalMatrix) throws InvalidEssentialMatrixException {
         setInternalMatrix(internalMatrix, DEFAULT_SINGULAR_VALUES_THRESHOLD);
     }
 
@@ -248,17 +230,15 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      *                                         are not equal up to provided threshold.
      */
     public final void setInternalMatrix(
-            final Matrix internalMatrix,
-            final double singularValuesThreshold)
-            throws InvalidEssentialMatrixException {
+            final Matrix internalMatrix, final double singularValuesThreshold) throws InvalidEssentialMatrixException {
         if (!isValidInternalMatrix(internalMatrix, singularValuesThreshold)) {
             throw new InvalidEssentialMatrixException();
         }
 
         // because provided matrix is valid, we proceed to setting it
-        mInternalMatrix = new Matrix(internalMatrix);
-        mNormalized = false;
-        mLeftEpipole = mRightEpipole = null;
+        this.internalMatrix = new Matrix(internalMatrix);
+        normalized = false;
+        leftEpipole = rightEpipole = null;
     }
 
     /**
@@ -271,8 +251,7 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      * otherwise.
      */
     public static boolean isValidInternalMatrix(final Matrix internalMatrix) {
-        return isValidInternalMatrix(internalMatrix,
-                DEFAULT_SINGULAR_VALUES_THRESHOLD);
+        return isValidInternalMatrix(internalMatrix, DEFAULT_SINGULAR_VALUES_THRESHOLD);
     }
 
     /**
@@ -287,31 +266,28 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      * otherwise.
      * @throws IllegalArgumentException if provided threshold is negative.
      */
-    public static boolean isValidInternalMatrix(
-            final Matrix internalMatrix,
-            final double singularValuesThreshold) {
+    public static boolean isValidInternalMatrix(final Matrix internalMatrix, final double singularValuesThreshold) {
         if (singularValuesThreshold < 0) {
             throw new IllegalArgumentException();
         }
 
-        if (internalMatrix.getColumns() != FUNDAMENTAL_MATRIX_COLS ||
-                internalMatrix.getRows() != FUNDAMENTAL_MATRIX_ROWS) {
+        if (internalMatrix.getColumns() != FUNDAMENTAL_MATRIX_COLS
+                || internalMatrix.getRows() != FUNDAMENTAL_MATRIX_ROWS) {
             return false;
         }
 
         try {
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    internalMatrix);
+            final var decomposer = new SingularValueDecomposer(internalMatrix);
 
             decomposer.decompose();
 
-            final double rankEssential = decomposer.getRank();
+            final var rankEssential = decomposer.getRank();
 
             if (rankEssential != FUNDAMENTAL_MATRIX_RANK) {
                 return false;
             }
 
-            final double[] singularValues = decomposer.getSingularValues();
+            final var singularValues = decomposer.getSingularValues();
 
             return (Math.abs(singularValues[0] - singularValues[1]) <= singularValuesThreshold);
         } catch (final AlgebraException e) {
@@ -329,11 +305,9 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      *                                       configuration).
      */
     @Override
-    public void setFromPairOfCameras(
-            final PinholeCamera leftCamera,
-            final PinholeCamera rightCamera) throws InvalidPairOfCamerasException {
-        setFromPairOfCameras(leftCamera, rightCamera,
-                DEFAULT_SINGULAR_VALUES_THRESHOLD);
+    public void setFromPairOfCameras(final PinholeCamera leftCamera, final PinholeCamera rightCamera)
+            throws InvalidPairOfCamerasException {
+        setFromPairOfCameras(leftCamera, rightCamera, DEFAULT_SINGULAR_VALUES_THRESHOLD);
     }
 
     /**
@@ -349,9 +323,7 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      * @throws IllegalArgumentException      if provided threshold is negative.
      */
     public final void setFromPairOfCameras(
-            final PinholeCamera leftCamera,
-            final PinholeCamera rightCamera,
-            final double singularValuesThreshold)
+            final PinholeCamera leftCamera, final PinholeCamera rightCamera, final double singularValuesThreshold)
             throws InvalidPairOfCamerasException {
 
         if (singularValuesThreshold < 0) {
@@ -380,23 +352,19 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
                 rightCamera.decompose(true, false);
             }
 
-            final PinholeCameraIntrinsicParameters leftIntrinsics =
-                    leftCamera.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters rightIntrinsics =
-                    rightCamera.getIntrinsicParameters();
+            final var leftIntrinsics = leftCamera.getIntrinsicParameters();
+            final var rightIntrinsics = rightCamera.getIntrinsicParameters();
 
-            final Matrix leftIntrinsicsMatrix = leftIntrinsics.getInternalMatrix();
-            final Matrix rightIntrinsicsMatrix = rightIntrinsics.getInternalMatrix();
+            final var leftIntrinsicsMatrix = leftIntrinsics.getInternalMatrix();
+            final var rightIntrinsicsMatrix = rightIntrinsics.getInternalMatrix();
 
             // get left and right internal matrices of cameras
-            final Matrix leftCameraInternalMatrix = leftCamera.getInternalMatrix();
-            final Matrix rightCameraInternalMatrix = rightCamera.getInternalMatrix();
+            final var leftCameraInternalMatrix = leftCamera.getInternalMatrix();
+            final var rightCameraInternalMatrix = rightCamera.getInternalMatrix();
 
             // normalize internal camera matrices using inverse intrinsic matrices
-            final Matrix invLeftIntrinsicsMatrix = Utils.inverse(
-                    leftIntrinsicsMatrix);
-            final Matrix invRightIntrinsicsMatrix = Utils.inverse(
-                    rightIntrinsicsMatrix);
+            final var invLeftIntrinsicsMatrix = Utils.inverse(leftIntrinsicsMatrix);
+            final var invRightIntrinsicsMatrix = Utils.inverse(rightIntrinsicsMatrix);
 
             // normalize cameras
             // P1' = inv(K1) * P1
@@ -407,36 +375,31 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
 
             // instantiate normalized left camera to project right camera center
             // and obtain left eipole
-            final PinholeCamera normLeftCamera = new PinholeCamera(invLeftIntrinsicsMatrix);
+            final var normLeftCamera = new PinholeCamera(invLeftIntrinsicsMatrix);
 
             // instantiate normalized right camera to decompose it and obtain its
             // center
-            final PinholeCamera normRightCamera = new PinholeCamera(
-                    invRightIntrinsicsMatrix);
+            final var normRightCamera = new PinholeCamera(invRightIntrinsicsMatrix);
 
             normRightCamera.decompose(false, true);
 
-            final Point3D rightCameraCenter = normRightCamera.getCameraCenter();
-            final Point2D normLeftEpipole = normLeftCamera.project(rightCameraCenter);
+            final var rightCameraCenter = normRightCamera.getCameraCenter();
+            final var normLeftEpipole = normLeftCamera.project(rightCameraCenter);
             // to increase accuracy
             normLeftEpipole.normalize();
 
             // compute skew matrix of left epipole
-            final Matrix skewNormLeftEpipoleMatrix = Utils.skewMatrix(new double[]{
-                    normLeftEpipole.getHomX(), normLeftEpipole.getHomY(),
-                    normLeftEpipole.getHomW()});
+            final var skewNormLeftEpipoleMatrix = Utils.skewMatrix(new double[]{
+                    normLeftEpipole.getHomX(), normLeftEpipole.getHomY(), normLeftEpipole.getHomW()});
 
             // compute transposed of internal normalized left pinhole camera
-            final Matrix transNormLeftCameraMatrix =
-                    invLeftIntrinsicsMatrix.transposeAndReturnNew();
+            final var transNormLeftCameraMatrix = invLeftIntrinsicsMatrix.transposeAndReturnNew();
 
             // compute transposed of internal normalized right pinhole camera
-            final Matrix transNormRightCameraMatrix =
-                    invRightIntrinsicsMatrix.transposeAndReturnNew();
+            final var transNormRightCameraMatrix = invRightIntrinsicsMatrix.transposeAndReturnNew();
 
             // compute pseudo-inverse of transposed normalized right pinhole camera
-            final Matrix pseudoTransNormRightCameraMatrix = Utils.pseudoInverse(
-                    transNormRightCameraMatrix);
+            final var pseudoTransNormRightCameraMatrix = Utils.pseudoInverse(transNormRightCameraMatrix);
 
             // obtain essential matrix as: inv(P2norm') * P1norm' * skew(e1)
             transNormLeftCameraMatrix.multiply(skewNormLeftEpipoleMatrix);
@@ -460,10 +423,8 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      *                                                translation yield a degenerate epipolar geometry.
      */
     public void setFromRotationAndTranslation(
-            final Rotation3D rotation,
-            final Point2D translation) throws InvalidRotationAndTranslationException {
-        setFromRotationAndTranslation(rotation, translation,
-                DEFAULT_SINGULAR_VALUES_THRESHOLD);
+            final Rotation3D rotation, final Point2D translation) throws InvalidRotationAndTranslationException {
+        setFromRotationAndTranslation(rotation, translation, DEFAULT_SINGULAR_VALUES_THRESHOLD);
     }
 
     /**
@@ -481,9 +442,7 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      * @throws IllegalArgumentException               if provided threshold is negative.
      */
     public final void setFromRotationAndTranslation(
-            final Rotation3D rotation,
-            final Point2D translation,
-            final double singularValuesThreshold)
+            final Rotation3D rotation, final Point2D translation, final double singularValuesThreshold)
             throws InvalidRotationAndTranslationException {
 
         if (singularValuesThreshold < 0) {
@@ -493,13 +452,13 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
         try {
             // to increase accuracy
             translation.normalize();
-            final double[] translationArray = new double[]{
+            final var translationArray = new double[]{
                     translation.getHomX(), translation.getHomY(), translation.getHomW()
             };
 
-            final Matrix skewTranslationMatrix = Utils.skewMatrix(translationArray);
+            final var skewTranslationMatrix = Utils.skewMatrix(translationArray);
 
-            final Matrix rotationMatrix = rotation.asInhomogeneousMatrix();
+            final var rotationMatrix = rotation.asInhomogeneousMatrix();
 
             // obtain essential matrix as: skew(translation) * rotation
             skewTranslationMatrix.multiply(rotationMatrix);
@@ -521,10 +480,8 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      *                                                camera center yield a degenerate epipolar geometry.
      */
     public void setFromRotationAndCameraCenter(
-            final Rotation3D rotation,
-            final Point3D cameraCenter) throws InvalidRotationAndTranslationException {
-        setFromRotationAndCameraCenter(rotation, cameraCenter,
-                DEFAULT_SINGULAR_VALUES_THRESHOLD);
+            final Rotation3D rotation, final Point3D cameraCenter) throws InvalidRotationAndTranslationException {
+        setFromRotationAndCameraCenter(rotation, cameraCenter, DEFAULT_SINGULAR_VALUES_THRESHOLD);
     }
 
     /**
@@ -541,21 +498,19 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      * @throws IllegalArgumentException               if provided threshold is negative.
      */
     public final void setFromRotationAndCameraCenter(
-            final Rotation3D rotation,
-            final Point3D cameraCenter,
-            final double singularValuesThreshold) throws InvalidRotationAndTranslationException {
+            final Rotation3D rotation, final Point3D cameraCenter, final double singularValuesThreshold)
+            throws InvalidRotationAndTranslationException {
 
         if (singularValuesThreshold < 0) {
             throw new IllegalArgumentException();
         }
 
         try {
-            Matrix rotationMatrix = rotation.asInhomogeneousMatrix();
+            var rotationMatrix = rotation.asInhomogeneousMatrix();
 
             // to increase accuracy
             cameraCenter.normalize();
-            final Matrix inhomCenterMatrix = new Matrix(
-                    Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH, 1);
+            final var inhomCenterMatrix = new Matrix(Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH, 1);
             inhomCenterMatrix.setElementAtIndex(0, cameraCenter.getInhomX());
             inhomCenterMatrix.setElementAtIndex(1, cameraCenter.getInhomY());
             inhomCenterMatrix.setElementAtIndex(2, cameraCenter.getInhomZ());
@@ -563,10 +518,10 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
             // translationMatrix = -rotationMatrix * inhomCenterMatrix
             rotationMatrix.multiplyByScalar(-1.0);
             rotationMatrix.multiply(inhomCenterMatrix);
-            final Matrix translationMatrix = rotationMatrix;
+            final var translationMatrix = rotationMatrix;
 
             // essentialMatrix = skew(translationMatrix) * rotationMatrix
-            final Matrix skewTranslationMatrix = Utils.skewMatrix(translationMatrix);
+            final var skewTranslationMatrix = Utils.skewMatrix(translationMatrix);
             rotationMatrix = rotation.asInhomogeneousMatrix();
             skewTranslationMatrix.multiply(rotationMatrix);
 
@@ -588,23 +543,22 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      *                                                   parameters generate an invalid essential matrix.
      */
     public final void setFromFundamentalMatrixAndIntrinsics(
-            final FundamentalMatrix fundamentalMatrix,
-            final PinholeCameraIntrinsicParameters leftIntrinsicParameters,
+            final FundamentalMatrix fundamentalMatrix, final PinholeCameraIntrinsicParameters leftIntrinsicParameters,
             final PinholeCameraIntrinsicParameters rightIntrinsicParameters)
             throws InvalidPairOfIntrinsicParametersException {
 
         try {
-            final Matrix k1 = leftIntrinsicParameters.getInternalMatrix();
-            final double normK1 = Utils.normF(k1);
+            final var k1 = leftIntrinsicParameters.getInternalMatrix();
+            final var normK1 = Utils.normF(k1);
             k1.multiplyByScalar(1.0 / normK1);
 
-            final Matrix k2 = rightIntrinsicParameters.getInternalMatrix();
-            final double normK2 = Utils.normF(k2);
+            final var k2 = rightIntrinsicParameters.getInternalMatrix();
+            final var normK2 = Utils.normF(k2);
             k2.multiplyByScalar(1.0 / normK2);
 
             // to increase accuracy
             fundamentalMatrix.normalize();
-            final Matrix fundMatrix = fundamentalMatrix.getInternalMatrix();
+            final var fundMatrix = fundamentalMatrix.getInternalMatrix();
 
             k2.transpose();
 
@@ -612,12 +566,12 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
             fundMatrix.multiply(k1);
             k2.multiply(fundMatrix);
 
-            final double normEssential = Utils.normF(k2);
+            final var normEssential = Utils.normF(k2);
             k2.multiplyByScalar(1.0 / normEssential);
 
-            mInternalMatrix = k2;
-            mNormalized = false;
-            mLeftEpipole = mRightEpipole = null;
+            internalMatrix = k2;
+            normalized = false;
+            leftEpipole = rightEpipole = null;
         } catch (final AlgebraException | GeometryException e) {
             throw new InvalidPairOfIntrinsicParametersException(e);
         }
@@ -639,21 +593,20 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      */
     public FundamentalMatrix toFundamentalMatrix(
             final PinholeCameraIntrinsicParameters leftIntrinsicParameters,
-            final PinholeCameraIntrinsicParameters rightIntrinsicParameters)
-            throws EpipolarException {
+            final PinholeCameraIntrinsicParameters rightIntrinsicParameters) throws EpipolarException {
         try {
             normalize();
 
-            final Matrix essentialMatrix = getInternalMatrix();
+            final var essentialMatrix = getInternalMatrix();
 
-            final Matrix k1 = leftIntrinsicParameters.getInternalMatrix();
-            final Matrix invK1 = Utils.inverse(k1);
-            final double normInvK1 = Utils.normF(invK1);
+            final var k1 = leftIntrinsicParameters.getInternalMatrix();
+            final var invK1 = Utils.inverse(k1);
+            final var normInvK1 = Utils.normF(invK1);
             invK1.multiplyByScalar(1.0 / normInvK1);
 
-            final Matrix k2 = rightIntrinsicParameters.getInternalMatrix();
-            final Matrix invK2 = Utils.inverse(k2);
-            final double normInvK2 = Utils.normF(invK2);
+            final var k2 = rightIntrinsicParameters.getInternalMatrix();
+            final var invK2 = Utils.inverse(k2);
+            final var normInvK2 = Utils.normF(invK2);
             invK2.multiplyByScalar(1.0 / normInvK2);
             invK2.transpose();
 
@@ -674,45 +627,43 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      * @throws InvalidEssentialMatrixException if essential matrix contains
      *                                         numerically unstable values.
      */
-    public void computePossibleRotationAndTranslations()
-            throws InvalidEssentialMatrixException {
+    public void computePossibleRotationAndTranslations() throws InvalidEssentialMatrixException {
         try {
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    mInternalMatrix);
+            final var decomposer = new SingularValueDecomposer(internalMatrix);
 
             decomposer.decompose();
 
-            final Matrix u = decomposer.getU();
-            final Matrix v = decomposer.getV();
+            final var u = decomposer.getU();
+            final var v = decomposer.getV();
 
             v.transpose();
 
-            mTranslation1 = new HomogeneousPoint2D(u.getElementAt(0, 2),
+            translation1 = new HomogeneousPoint2D(u.getElementAt(0, 2),
                     u.getElementAt(1, 2), u.getElementAt(2, 2));
-            mTranslation2 = new HomogeneousPoint2D(-u.getElementAt(0, 2),
+            translation2 = new HomogeneousPoint2D(-u.getElementAt(0, 2),
                     -u.getElementAt(1, 2), -u.getElementAt(2, 2));
 
             // W is a skew-symmetric matrix that can be used to obtain two possible
             // rotations
-            final Matrix w = new Matrix(FUNDAMENTAL_MATRIX_ROWS, FUNDAMENTAL_MATRIX_COLS);
+            final var w = new Matrix(FUNDAMENTAL_MATRIX_ROWS, FUNDAMENTAL_MATRIX_COLS);
             w.setElementAt(0, 1, -1.0);
             w.setElementAt(1, 0, 1.0);
             w.setElementAt(2, 2, 1.0);
 
-            final Matrix transW = w.transposeAndReturnNew();
+            final var transW = w.transposeAndReturnNew();
 
             // R1 = U * W * V'
             w.multiply(v);
-            final Matrix rotationMatrix1 = u.multiplyAndReturnNew(w);
+            final var rotationMatrix1 = u.multiplyAndReturnNew(w);
 
             // R2 = U * W' * V'
             transW.multiply(v);
-            final Matrix rotationMatrix2 = u.multiplyAndReturnNew(transW);
+            final var rotationMatrix2 = u.multiplyAndReturnNew(transW);
 
-            mRotation1 = new MatrixRotation3D(rotationMatrix1);
-            mRotation2 = new MatrixRotation3D(rotationMatrix2);
+            rotation1 = new MatrixRotation3D(rotationMatrix1);
+            rotation2 = new MatrixRotation3D(rotationMatrix2);
 
-            mPossibleRotationsAndTranslationsAvailable = true;
+            possibleRotationsAndTranslationsAvailable = true;
         } catch (final AlgebraException | InvalidRotationMatrixException e) {
             throw new InvalidEssentialMatrixException(e);
         }
@@ -726,7 +677,7 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
      * computed, false otherwise.
      */
     public boolean arePossibleRotationsAndTranslationsAvailable() {
-        return mPossibleRotationsAndTranslationsAvailable;
+        return possibleRotationsAndTranslationsAvailable;
     }
 
     /**
@@ -741,7 +692,7 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
             throw new NotAvailableException();
         }
 
-        return mRotation1;
+        return rotation1;
     }
 
     /**
@@ -756,7 +707,7 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
             throw new NotAvailableException();
         }
 
-        return mRotation2;
+        return rotation2;
     }
 
     /**
@@ -771,7 +722,7 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
             throw new NotAvailableException();
         }
 
-        return mTranslation1;
+        return translation1;
     }
 
     /**
@@ -786,7 +737,6 @@ public class EssentialMatrix extends FundamentalMatrix implements Serializable {
             throw new NotAvailableException();
         }
 
-        return mTranslation2;
+        return translation2;
     }
-
 }

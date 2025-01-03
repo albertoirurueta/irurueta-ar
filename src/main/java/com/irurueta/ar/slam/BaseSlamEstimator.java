@@ -32,8 +32,7 @@ import java.io.Serializable;
  *            data.
  */
 @SuppressWarnings("DuplicatedCode")
-public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
-        implements Serializable {
+public abstract class BaseSlamEstimator<D extends BaseCalibrationData> implements Serializable {
 
     /**
      * Number of components in 3D.
@@ -53,180 +52,179 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
     /**
      * Current position of the device along x-axis expressed in meters (m).
      */
-    protected double mStatePositionX;
+    protected double statePositionX;
 
     /**
      * Current position of the device along y-axis expressed in meters (m).
      */
-    protected double mStatePositionY;
+    protected double statePositionY;
 
     /**
      * Current position of the device along z-axis expressed in meters (m).
      */
-    protected double mStatePositionZ;
+    protected double statePositionZ;
 
     /**
      * Current linear velocity of the device along x-axis expressed in meters
      * per second (m/s).
      */
-    protected double mStateVelocityX;
+    protected double stateVelocityX;
 
     /**
      * Current linear velocity of the device along y-axis expressed in meters
      * per second (m/s).
      */
-    protected double mStateVelocityY;
+    protected double stateVelocityY;
 
     /**
      * Current linear velocity of the device along z-axis expressed in meters
      * per second (m/s).
      */
-    protected double mStateVelocityZ;
+    protected double stateVelocityZ;
 
     /**
      * Current linear acceleration of the device along x-axis expressed in
      * meters per squared second (m/s^2).
      */
-    protected double mStateAccelerationX;
+    protected double stateAccelerationX;
 
     /**
      * Current linear acceleration of the device along y-axis expressed in
      * meters per squared second (m/s^2).
      */
-    protected double mStateAccelerationY;
+    protected double stateAccelerationY;
 
     /**
      * Current linear acceleration of the device along z-axis expressed in
      * meters per squared second (m/s^2).
      */
-    protected double mStateAccelerationZ;
+    protected double stateAccelerationZ;
 
     /**
      * A value of quaternion containing current device orientation.
      */
-    protected double mStateQuaternionA;
+    protected double stateQuaternionA;
 
     /**
      * B value of quaternion containing current device orientation.
      */
-    protected double mStateQuaternionB;
+    protected double stateQuaternionB;
 
     /**
      * C value of quaternion containing current device orientation.
      */
-    protected double mStateQuaternionC;
+    protected double stateQuaternionC;
 
     /**
      * D value of quaternion containing current device orientation.
      */
-    protected double mStateQuaternionD;
+    protected double stateQuaternionD;
 
     /**
      * Angular speed of rotation of the device along x-axis expressed in radians
      * per second (rad/s).
      */
-    protected double mStateAngularSpeedX;
+    protected double stateAngularSpeedX;
 
     /**
      * Angular speed of rotation of the device along y-axis expressed in radians
      * per second (rad/s).
      */
-    protected double mStateAngularSpeedY;
+    protected double stateAngularSpeedY;
 
     /**
      * Angular speed of rotation of the device along z-axis expressed in radians
      * per second (rad/s).
      */
-    protected double mStateAngularSpeedZ;
+    protected double stateAngularSpeedZ;
 
     /**
      * Indicates whether an error occurred during the estimation.
      * If an error occurs the estimator should be restarted since state values
      * might become unreliable.
      */
-    protected boolean mError;
+    protected boolean error;
 
     /**
      * Indicates whether accumulation of samples is enabled or not.
      */
-    protected boolean mAccumulationEnabled =
-            DEFAULT_ENABLE_SAMPLE_ACCUMULATION;
+    protected boolean accumulationEnabled = DEFAULT_ENABLE_SAMPLE_ACCUMULATION;
 
     /**
      * Timestamp expressed in nanoseconds since the epoch time of the last
      * accelerometer sample.
      */
-    protected long mAccelerometerTimestampNanos = -1;
+    protected long accelerometerTimestampNanos = -1;
 
     /**
      * Timestamp expressed in nanoseconds since the epoch time of the last
      * gyroscope sample.
      */
-    protected long mGyroscopeTimestampNanos = -1;
+    protected long gyroscopeTimestampNanos = -1;
 
     /**
      * Number of accelerometer samples accumulated since last full sample.
      */
-    protected int mAccumulatedAccelerometerSamples = 0;
+    protected int accumulatedAccelerometerSamples = 0;
 
     /**
      * Number of gyroscope samples accumulated since last full sample.
      */
-    protected int mAccumulatedGyroscopeSamples = 0;
+    protected int accumulatedGyroscopeSamples = 0;
 
     /**
      * Average of acceleration along x-axis accumulated since last full sample.
      * Expressed in meters per squared second (m/s^2).
      */
-    protected double mAccumulatedAccelerationSampleX;
+    protected double accumulatedAccelerationSampleX;
 
     /**
      * Average of acceleration along y-axis accumulated since last full sample.
      * Expressed in meters per squared second (m/s^2).
      */
-    protected double mAccumulatedAccelerationSampleY;
+    protected double accumulatedAccelerationSampleY;
 
     /**
      * Average of acceleration along z-axis accumulated since last full sample.
      * Expressed in meters per squared second (m/s^2).
      */
-    protected double mAccumulatedAccelerationSampleZ;
+    protected double accumulatedAccelerationSampleZ;
 
     /**
      * Average of angular speed along x-axis accumulated since last full sample.
      * Expressed in radians per second (rad/s).
      */
-    protected double mAccumulatedAngularSpeedSampleX;
+    protected double accumulatedAngularSpeedSampleX;
 
     /**
      * Average of angular speed along y-axis accumulated since last full sample.
      * Expressed in radians per second (rad/s).
      */
-    protected double mAccumulatedAngularSpeedSampleY;
+    protected double accumulatedAngularSpeedSampleY;
 
     /**
      * Average of angular speed along z-axis accumulated since last full sample.
      * Expressed in radians per second (red/s).
      */
-    protected double mAccumulatedAngularSpeedSampleZ;
+    protected double accumulatedAngularSpeedSampleZ;
 
     /**
      * Listener in charge of handling events raised by instances of this class.
      */
-    protected transient BaseSlamEstimatorListener<D> mListener;
+    protected transient BaseSlamEstimatorListener<D> listener;
 
     /**
      * Calibration data. When provided, its mean and covariance are used
      * to correct control samples and adjust process covariance matrix during
      * Kalman filtering in prediction stage.
      */
-    protected D mCalibrationData;
+    protected D calibrationData;
 
     /**
      * Multivariate distribution to be reused during propagation of calibrated
      * covariance.
      */
-    protected transient MultivariateNormalDist mNormalDist;
+    protected transient MultivariateNormalDist normalDist;
 
     /**
      * Constructor.
@@ -239,20 +237,20 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * Resets position and timestamp to zero while keeping other state parameters.
      */
     public final void resetPosition() {
-        reset(0.0, 0.0, 0.0, mStateVelocityX, mStateVelocityY,
-                mStateVelocityZ, mStateAccelerationX, mStateAccelerationY, mStateAccelerationZ,
-                mStateQuaternionA, mStateQuaternionB, mStateQuaternionC, mStateQuaternionD,
-                mStateAngularSpeedX, mStateAngularSpeedY, mStateAngularSpeedZ);
+        reset(0.0, 0.0, 0.0, stateVelocityX, stateVelocityY,
+                stateVelocityZ, stateAccelerationX, stateAccelerationY, stateAccelerationZ,
+                stateQuaternionA, stateQuaternionB, stateQuaternionC, stateQuaternionD,
+                stateAngularSpeedX, stateAngularSpeedY, stateAngularSpeedZ);
     }
 
     /**
      * Resets linear velocity and timestamp to zero while keeping other state parameters.
      */
     public final void resetVelocity() {
-        reset(mStatePositionX, mStatePositionY, mStatePositionZ, 0.0, 0.0,
-                0.0, mStateAccelerationX, mStateAccelerationY, mStateAccelerationZ,
-                mStateQuaternionA, mStateQuaternionB, mStateQuaternionC, mStateQuaternionD,
-                mStateAngularSpeedX, mStateAngularSpeedY, mStateAngularSpeedZ);
+        reset(statePositionX, statePositionY, statePositionZ, 0.0, 0.0,
+                0.0, stateAccelerationX, stateAccelerationY, stateAccelerationZ,
+                stateQuaternionA, stateQuaternionB, stateQuaternionC, stateQuaternionD,
+                stateAngularSpeedX, stateAngularSpeedY, stateAngularSpeedZ);
     }
 
     /**
@@ -260,41 +258,41 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      */
     public final void resetPositionAndVelocity() {
         reset(0.0, 0.0, 0.0, 0.0, 0.0,
-                0.0, mStateAccelerationX, mStateAccelerationY, mStateAccelerationZ,
-                mStateQuaternionA, mStateQuaternionB, mStateQuaternionC, mStateQuaternionD,
-                mStateAngularSpeedX, mStateAngularSpeedY, mStateAngularSpeedZ);
+                0.0, stateAccelerationX, stateAccelerationY, stateAccelerationZ,
+                stateQuaternionA, stateQuaternionB, stateQuaternionC, stateQuaternionD,
+                stateAngularSpeedX, stateAngularSpeedY, stateAngularSpeedZ);
     }
 
     /**
      * Resets acceleration and timestamp to zero while keeping other state parameters.
      */
     public final void resetAcceleration() {
-        reset(mStatePositionX, mStatePositionY, mStatePositionZ,
-                mStateVelocityX, mStateVelocityY, mStateVelocityZ, 0.0,
-                0.0, 0.0, mStateQuaternionA, mStateQuaternionB,
-                mStateQuaternionC, mStateQuaternionD, mStateAngularSpeedX, mStateAngularSpeedY,
-                mStateAngularSpeedZ);
+        reset(statePositionX, statePositionY, statePositionZ,
+                stateVelocityX, stateVelocityY, stateVelocityZ, 0.0,
+                0.0, 0.0, stateQuaternionA, stateQuaternionB,
+                stateQuaternionC, stateQuaternionD, stateAngularSpeedX, stateAngularSpeedY,
+                stateAngularSpeedZ);
     }
 
     /**
      * Resets orientation and timestamp to zero while keeping other state parameters.
      */
     public final void resetOrientation() {
-        reset(mStatePositionX, mStatePositionY, mStatePositionZ,
-                mStateVelocityX, mStateVelocityY, mStateVelocityZ,
-                mStateAccelerationX, mStateAccelerationY, mStateAccelerationZ,
+        reset(statePositionX, statePositionY, statePositionZ,
+                stateVelocityX, stateVelocityY, stateVelocityZ,
+                stateAccelerationX, stateAccelerationY, stateAccelerationZ,
                 1.0, 0.0, 0.0, 0.0,
-                mStateAngularSpeedX, mStateAngularSpeedY, mStateAngularSpeedZ);
+                stateAngularSpeedX, stateAngularSpeedY, stateAngularSpeedZ);
     }
 
     /**
      * Resets angular speed and timestamp to zero while keeping other state parameters.
      */
     public final void resetAngularSpeed() {
-        reset(mStatePositionX, mStatePositionY, mStatePositionZ,
-                mStateVelocityX, mStateVelocityY, mStateVelocityZ,
-                mStateAccelerationX, mStateAccelerationY, mStateAccelerationZ,
-                mStateQuaternionA, mStateQuaternionB, mStateQuaternionC, mStateQuaternionD,
+        reset(statePositionX, statePositionY, statePositionZ,
+                stateVelocityX, stateVelocityY, stateVelocityZ,
+                stateAccelerationX, stateAccelerationY, stateAccelerationZ,
+                stateQuaternionA, stateQuaternionB, stateQuaternionC, stateQuaternionD,
                 0.0, 0.0, 0.0);
     }
 
@@ -317,7 +315,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @return x-position of the device expressed in meters (m).
      */
     public double getStatePositionX() {
-        return mStatePositionX;
+        return statePositionX;
     }
 
     /**
@@ -326,7 +324,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @return y-position of the device expressed in meters (m).
      */
     public double getStatePositionY() {
-        return mStatePositionY;
+        return statePositionY;
     }
 
     /**
@@ -335,7 +333,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @return z-position of the device expressed in meters (m).
      */
     public double getStatePositionZ() {
-        return mStatePositionZ;
+        return statePositionZ;
     }
 
     /**
@@ -344,7 +342,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @return position of the device.
      */
     public double[] getStatePosition() {
-        return new double[]{mStatePositionX, mStatePositionY, mStatePositionZ};
+        return new double[]{statePositionX, statePositionY, statePositionZ};
     }
 
     /**
@@ -359,9 +357,9 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
             // result must have length 3
             throw new IllegalArgumentException();
         }
-        result[0] = mStatePositionX;
-        result[1] = mStatePositionY;
-        result[2] = mStatePositionZ;
+        result[0] = statePositionX;
+        result[1] = statePositionY;
+        result[2] = statePositionZ;
     }
 
     /**
@@ -372,7 +370,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * (m/s).
      */
     public double getStateVelocityX() {
-        return mStateVelocityX;
+        return stateVelocityX;
     }
 
     /**
@@ -383,7 +381,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * (m/s).
      */
     public double getStateVelocityY() {
-        return mStateVelocityY;
+        return stateVelocityY;
     }
 
     /**
@@ -394,7 +392,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * (m/s).
      */
     public double getStateVelocityZ() {
-        return mStateVelocityZ;
+        return stateVelocityZ;
     }
 
     /**
@@ -404,7 +402,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @return current linear velocity of the device.
      */
     public double[] getStateVelocity() {
-        return new double[]{mStateVelocityX, mStateVelocityY, mStateVelocityZ};
+        return new double[]{stateVelocityX, stateVelocityY, stateVelocityZ};
     }
 
     /**
@@ -419,9 +417,9 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
             // result must have length 3
             throw new IllegalArgumentException();
         }
-        result[0] = mStateVelocityX;
-        result[1] = mStateVelocityY;
-        result[2] = mStateVelocityZ;
+        result[0] = stateVelocityX;
+        result[1] = stateVelocityY;
+        result[2] = stateVelocityZ;
     }
 
     /**
@@ -431,7 +429,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @return linear acceleration of the device along x-axis.
      */
     public double getStateAccelerationX() {
-        return mStateAccelerationX;
+        return stateAccelerationX;
     }
 
     /**
@@ -441,7 +439,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @return linear acceleration of the device along y-axis.
      */
     public double getStateAccelerationY() {
-        return mStateAccelerationY;
+        return stateAccelerationY;
     }
 
     /**
@@ -451,7 +449,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @return linear acceleration of the device along z-axis.
      */
     public double getStateAccelerationZ() {
-        return mStateAccelerationZ;
+        return stateAccelerationZ;
     }
 
     /**
@@ -461,8 +459,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @return current linear acceleration of the device.
      */
     public double[] getStateAcceleration() {
-        return new double[]{mStateAccelerationX, mStateAccelerationY,
-                mStateAccelerationZ};
+        return new double[]{stateAccelerationX, stateAccelerationY, stateAccelerationZ};
     }
 
     /**
@@ -478,9 +475,9 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
             // result must have length 3
             throw new IllegalArgumentException();
         }
-        result[0] = mStateAccelerationX;
-        result[1] = mStateAccelerationY;
-        result[2] = mStateAccelerationZ;
+        result[0] = stateAccelerationX;
+        result[1] = stateAccelerationY;
+        result[2] = stateAccelerationZ;
     }
 
     /**
@@ -489,7 +486,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @return A value of quaternion containing current device orientation.
      */
     public double getStateQuaternionA() {
-        return mStateQuaternionA;
+        return stateQuaternionA;
     }
 
     /**
@@ -498,7 +495,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @return B value of quaternion containing current device orientation.
      */
     public double getStateQuaternionB() {
-        return mStateQuaternionB;
+        return stateQuaternionB;
     }
 
     /**
@@ -507,7 +504,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @return C value of quaternion containing current device orientation.
      */
     public double getStateQuaternionC() {
-        return mStateQuaternionC;
+        return stateQuaternionC;
     }
 
     /**
@@ -516,7 +513,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @return D value of quaternion containing current device orientation.
      */
     public double getStateQuaternionD() {
-        return mStateQuaternionD;
+        return stateQuaternionD;
     }
 
     /**
@@ -527,8 +524,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * orientation.
      */
     public double[] getStateQuaternionArray() {
-        return new double[]{mStateQuaternionA, mStateQuaternionB,
-                mStateQuaternionC, mStateQuaternionD};
+        return new double[]{stateQuaternionA, stateQuaternionB, stateQuaternionC, stateQuaternionD};
     }
 
     /**
@@ -544,10 +540,10 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
         if (result.length != Quaternion.N_PARAMS) {
             throw new IllegalArgumentException("result must have length 4");
         }
-        result[0] = mStateQuaternionA;
-        result[1] = mStateQuaternionB;
-        result[2] = mStateQuaternionC;
-        result[3] = mStateQuaternionD;
+        result[0] = stateQuaternionA;
+        result[1] = stateQuaternionB;
+        result[2] = stateQuaternionC;
+        result[3] = stateQuaternionD;
     }
 
     /**
@@ -556,8 +552,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @return quaternion containing current device orientation.
      */
     public Quaternion getStateQuaternion() {
-        return new Quaternion(mStateQuaternionA, mStateQuaternionB,
-                mStateQuaternionC, mStateQuaternionD);
+        return new Quaternion(stateQuaternionA, stateQuaternionB, stateQuaternionC, stateQuaternionD);
     }
 
     /**
@@ -566,10 +561,10 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @param result instance where quaternion data will be stored.
      */
     public void getStateQuaternion(final Quaternion result) {
-        result.setA(mStateQuaternionA);
-        result.setB(mStateQuaternionB);
-        result.setC(mStateQuaternionC);
-        result.setD(mStateQuaternionD);
+        result.setA(stateQuaternionA);
+        result.setB(stateQuaternionB);
+        result.setC(stateQuaternionC);
+        result.setD(stateQuaternionD);
     }
 
     /**
@@ -578,7 +573,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @return angular speed along x-axis.
      */
     public double getStateAngularSpeedX() {
-        return mStateAngularSpeedX;
+        return stateAngularSpeedX;
     }
 
     /**
@@ -587,7 +582,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @return angular speed along y-axis.
      */
     public double getStateAngularSpeedY() {
-        return mStateAngularSpeedY;
+        return stateAngularSpeedY;
     }
 
     /**
@@ -596,7 +591,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @return angular speed along z-axis.
      */
     public double getStateAngularSpeedZ() {
-        return mStateAngularSpeedZ;
+        return stateAngularSpeedZ;
     }
 
     /**
@@ -606,8 +601,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @return device's angular speed.
      */
     public double[] getStateAngularSpeed() {
-        return new double[]{mStateAngularSpeedX, mStateAngularSpeedY,
-                mStateAngularSpeedZ};
+        return new double[]{stateAngularSpeedX, stateAngularSpeedY, stateAngularSpeedZ};
     }
 
     /**
@@ -624,9 +618,9 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
             // result must have length 3
             throw new IllegalArgumentException();
         }
-        result[0] = mStateAngularSpeedX;
-        result[1] = mStateAngularSpeedY;
-        result[2] = mStateAngularSpeedZ;
+        result[0] = stateAngularSpeedX;
+        result[1] = stateAngularSpeedY;
+        result[2] = stateAngularSpeedZ;
     }
 
     /**
@@ -646,7 +640,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @return true if an error occurred since last start time, false otherwise.
      */
     public boolean hasError() {
-        return mError;
+        return error;
     }
 
     /**
@@ -655,7 +649,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @return true if accumulation of samples is enabled, false otherwise.
      */
     public boolean isAccumulationEnabled() {
-        return mAccumulationEnabled;
+        return accumulationEnabled;
     }
 
     /**
@@ -665,7 +659,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      *                            false otherwise.
      */
     public void setAccumulationEnabled(final boolean accumulationEnabled) {
-        mAccumulationEnabled = accumulationEnabled;
+        this.accumulationEnabled = accumulationEnabled;
     }
 
     /**
@@ -676,7 +670,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * last accelerometer sample, or -1.
      */
     public long getAccelerometerTimestampNanos() {
-        return mAccelerometerTimestampNanos;
+        return accelerometerTimestampNanos;
     }
 
     /**
@@ -687,7 +681,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * last gyroscope sample, or -1.
      */
     public long getGyroscopeTimestampNanos() {
-        return mGyroscopeTimestampNanos;
+        return gyroscopeTimestampNanos;
     }
 
     /**
@@ -697,7 +691,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * sample.
      */
     public int getAccumulatedAccelerometerSamples() {
-        return mAccumulatedAccelerometerSamples;
+        return accumulatedAccelerometerSamples;
     }
 
     /**
@@ -706,7 +700,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @return number of gyroscope samples accumulated since last full sample.
      */
     public int getAccumulatedGyroscopeSamples() {
-        return mAccumulatedGyroscopeSamples;
+        return accumulatedGyroscopeSamples;
     }
 
     /**
@@ -716,7 +710,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @return true if accelerometer sample has been received, false otherwise.
      */
     public boolean isAccelerometerSampleReceived() {
-        return mAccumulatedAccelerometerSamples > 0;
+        return accumulatedAccelerometerSamples > 0;
     }
 
     /**
@@ -726,7 +720,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @return true if gyroscope sample has been received, false otherwise.
      */
     public boolean isGyroscopeSampleReceived() {
-        return mAccumulatedGyroscopeSamples > 0;
+        return accumulatedGyroscopeSamples > 0;
     }
 
     /**
@@ -747,7 +741,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * sample.
      */
     public double getAccumulatedAccelerationSampleX() {
-        return mAccumulatedAccelerationSampleX;
+        return accumulatedAccelerationSampleX;
     }
 
     /**
@@ -758,7 +752,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * sample.
      */
     public double getAccumulatedAccelerationSampleY() {
-        return mAccumulatedAccelerationSampleY;
+        return accumulatedAccelerationSampleY;
     }
 
     /**
@@ -769,7 +763,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * sample.
      */
     public double getAccumulatedAccelerationSampleZ() {
-        return mAccumulatedAccelerationSampleZ;
+        return accumulatedAccelerationSampleZ;
     }
 
     /**
@@ -781,9 +775,9 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      */
     public double[] getAccumulatedAccelerationSample() {
         return new double[]{
-                mAccumulatedAccelerationSampleX,
-                mAccumulatedAccelerationSampleY,
-                mAccumulatedAccelerationSampleZ
+                accumulatedAccelerationSampleX,
+                accumulatedAccelerationSampleY,
+                accumulatedAccelerationSampleZ
         };
     }
 
@@ -800,9 +794,9 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
         if (result.length != N_COMPONENTS_3D) {
             throw new IllegalArgumentException("result must have length 3");
         }
-        result[0] = mAccumulatedAccelerationSampleX;
-        result[1] = mAccumulatedAccelerationSampleY;
-        result[2] = mAccumulatedAccelerationSampleZ;
+        result[0] = accumulatedAccelerationSampleX;
+        result[1] = accumulatedAccelerationSampleY;
+        result[2] = accumulatedAccelerationSampleZ;
     }
 
     /**
@@ -813,7 +807,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * second (rad/s).
      */
     public double getAccumulatedAngularSpeedSampleX() {
-        return mAccumulatedAngularSpeedSampleX;
+        return accumulatedAngularSpeedSampleX;
     }
 
     /**
@@ -824,7 +818,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * second (rad/s).
      */
     public double getAccumulatedAngularSpeedSampleY() {
-        return mAccumulatedAngularSpeedSampleY;
+        return accumulatedAngularSpeedSampleY;
     }
 
     /**
@@ -835,7 +829,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * second.
      */
     public double getAccumulatedAngularSpeedSampleZ() {
-        return mAccumulatedAngularSpeedSampleZ;
+        return accumulatedAngularSpeedSampleZ;
     }
 
     /**
@@ -847,9 +841,9 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      */
     public double[] getAccumulatedAngularSpeedSample() {
         return new double[]{
-                mAccumulatedAngularSpeedSampleX,
-                mAccumulatedAngularSpeedSampleY,
-                mAccumulatedAngularSpeedSampleZ
+                accumulatedAngularSpeedSampleX,
+                accumulatedAngularSpeedSampleY,
+                accumulatedAngularSpeedSampleZ
         };
     }
 
@@ -866,9 +860,9 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
         if (result.length != N_COMPONENTS_3D) {
             throw new IllegalArgumentException("result must have length 3");
         }
-        result[0] = mAccumulatedAngularSpeedSampleX;
-        result[1] = mAccumulatedAngularSpeedSampleY;
-        result[2] = mAccumulatedAngularSpeedSampleZ;
+        result[0] = accumulatedAngularSpeedSampleX;
+        result[1] = accumulatedAngularSpeedSampleY;
+        result[2] = accumulatedAngularSpeedSampleZ;
     }
 
     /**
@@ -887,29 +881,26 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @param accelerationZ linear acceleration along z-axis expressed in meters
      *                      per squared second (m/s^2).
      */
-    public void updateAccelerometerSample(final long timestamp, final float accelerationX,
-                                          final float accelerationY, final float accelerationZ) {
+    public void updateAccelerometerSample(
+            final long timestamp, final float accelerationX, final float accelerationY, final float accelerationZ) {
         if (!isFullSampleAvailable()) {
-            mAccelerometerTimestampNanos = timestamp;
+            accelerometerTimestampNanos = timestamp;
             if (isAccumulationEnabled() && isAccelerometerSampleReceived()) {
                 // accumulation enabled
-                final int nextSamples = mAccumulatedAccelerometerSamples + 1;
-                mAccumulatedAccelerationSampleX =
-                        (mAccumulatedAccelerationSampleX * mAccumulatedAccelerometerSamples +
-                                accelerationX) / nextSamples;
-                mAccumulatedAccelerationSampleY =
-                        (mAccumulatedAccelerationSampleY * mAccumulatedAccelerometerSamples +
-                                accelerationY) / nextSamples;
-                mAccumulatedAccelerationSampleZ =
-                        (mAccumulatedAccelerationSampleZ * mAccumulatedAccelerometerSamples +
-                                accelerationZ) / nextSamples;
-                mAccumulatedAccelerometerSamples = nextSamples;
+                final var nextSamples = accumulatedAccelerometerSamples + 1;
+                accumulatedAccelerationSampleX = (accumulatedAccelerationSampleX * accumulatedAccelerometerSamples
+                        + accelerationX) / nextSamples;
+                accumulatedAccelerationSampleY = (accumulatedAccelerationSampleY * accumulatedAccelerometerSamples
+                        + accelerationY) / nextSamples;
+                accumulatedAccelerationSampleZ = (accumulatedAccelerationSampleZ * accumulatedAccelerometerSamples
+                        + accelerationZ) / nextSamples;
+                accumulatedAccelerometerSamples = nextSamples;
             } else {
                 // accumulation disabled
-                mAccumulatedAccelerationSampleX = accelerationX;
-                mAccumulatedAccelerationSampleY = accelerationY;
-                mAccumulatedAccelerationSampleZ = accelerationZ;
-                mAccumulatedAccelerometerSamples++;
+                accumulatedAccelerationSampleX = accelerationX;
+                accumulatedAccelerationSampleY = accelerationY;
+                accumulatedAccelerationSampleZ = accelerationZ;
+                accumulatedAccelerometerSamples++;
             }
             notifyFullSampleAndResetSampleReceive();
         }
@@ -931,11 +922,9 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      */
     public void updateAccelerometerSample(final long timestamp, final float[] data) {
         if (data.length != N_COMPONENTS_3D) {
-            throw new IllegalArgumentException(
-                    "acceleration must have length 3");
+            throw new IllegalArgumentException("acceleration must have length 3");
         }
-        updateAccelerometerSample(timestamp, data[0], data[1],
-                data[2]);
+        updateAccelerometerSample(timestamp, data[0], data[1], data[2]);
     }
 
     /**
@@ -955,29 +944,25 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      *                      radians per second (rad/s).
      */
     public void updateGyroscopeSample(
-            final long timestamp, final float angularSpeedX,
-            final float angularSpeedY, final float angularSpeedZ) {
+            final long timestamp, final float angularSpeedX, final float angularSpeedY, final float angularSpeedZ) {
         if (!isFullSampleAvailable()) {
-            mGyroscopeTimestampNanos = timestamp;
+            gyroscopeTimestampNanos = timestamp;
             if (isAccumulationEnabled() && isGyroscopeSampleReceived()) {
                 // accumulation enabled
-                final int nextSamples = mAccumulatedGyroscopeSamples + 1;
-                mAccumulatedAngularSpeedSampleX =
-                        (mAccumulatedAngularSpeedSampleX * mAccumulatedGyroscopeSamples +
-                                angularSpeedX) / nextSamples;
-                mAccumulatedAngularSpeedSampleY =
-                        (mAccumulatedAngularSpeedSampleY * mAccumulatedGyroscopeSamples +
-                                angularSpeedY) / nextSamples;
-                mAccumulatedAngularSpeedSampleZ =
-                        (mAccumulatedAngularSpeedSampleZ * mAccumulatedGyroscopeSamples +
-                                angularSpeedZ) / nextSamples;
-                mAccumulatedGyroscopeSamples = nextSamples;
+                final var nextSamples = accumulatedGyroscopeSamples + 1;
+                accumulatedAngularSpeedSampleX = (accumulatedAngularSpeedSampleX * accumulatedGyroscopeSamples
+                        + angularSpeedX) / nextSamples;
+                accumulatedAngularSpeedSampleY = (accumulatedAngularSpeedSampleY * accumulatedGyroscopeSamples
+                        + angularSpeedY) / nextSamples;
+                accumulatedAngularSpeedSampleZ = (accumulatedAngularSpeedSampleZ * accumulatedGyroscopeSamples
+                        + angularSpeedZ) / nextSamples;
+                accumulatedGyroscopeSamples = nextSamples;
             } else {
                 // accumulation disabled
-                mAccumulatedAngularSpeedSampleX = angularSpeedX;
-                mAccumulatedAngularSpeedSampleY = angularSpeedY;
-                mAccumulatedAngularSpeedSampleZ = angularSpeedZ;
-                mAccumulatedGyroscopeSamples++;
+                accumulatedAngularSpeedSampleX = angularSpeedX;
+                accumulatedAngularSpeedSampleY = angularSpeedY;
+                accumulatedAngularSpeedSampleZ = angularSpeedZ;
+                accumulatedGyroscopeSamples++;
             }
             notifyFullSampleAndResetSampleReceive();
         }
@@ -999,8 +984,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      */
     public void updateGyroscopeSample(final long timestamp, final float[] data) {
         if (data.length != N_COMPONENTS_3D) {
-            throw new IllegalArgumentException(
-                    "angular speed must have length 3");
+            throw new IllegalArgumentException("angular speed must have length 3");
         }
         updateGyroscopeSample(timestamp, data[0], data[1], data[2]);
     }
@@ -1012,7 +996,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @return most recent timestamp of received partial sample.
      */
     public long getMostRecentTimestampNanos() {
-        return Math.max(mAccelerometerTimestampNanos, mGyroscopeTimestampNanos);
+        return Math.max(accelerometerTimestampNanos, gyroscopeTimestampNanos);
     }
 
     /**
@@ -1029,8 +1013,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      *                                  3x3.
      */
     public void correctWithPositionMeasure(
-            final double positionX, final double positionY,
-            final double positionZ, final Matrix positionCovariance) {
+            final double positionX, final double positionY, final double positionZ, final Matrix positionCovariance) {
         setPositionCovarianceMatrix(positionCovariance);
         correctWithPositionMeasure(positionX, positionY, positionZ);
     }
@@ -1047,14 +1030,11 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @throws IllegalArgumentException if provided covariance matrix is not
      *                                  3x3 or if provided position array does not have length 3.
      */
-    public void correctWithPositionMeasure(
-            final double[] position,
-            final Matrix positionCovariance) {
+    public void correctWithPositionMeasure(final double[] position, final Matrix positionCovariance) {
         if (position.length != N_COMPONENTS_3D) {
             throw new IllegalArgumentException("position must have length 3");
         }
-        correctWithPositionMeasure(position[0], position[1], position[2],
-                positionCovariance);
+        correctWithPositionMeasure(position[0], position[1], position[2], positionCovariance);
     }
 
     /**
@@ -1068,11 +1048,9 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @throws IllegalArgumentException if provided covariance matrix is not
      *                                  3x3.
      */
-    public void correctWithPositionMeasure(
-            final Point3D position,
-            final Matrix positionCovariance) {
-        correctWithPositionMeasure(position.getInhomX(), position.getInhomY(),
-                position.getInhomZ(), positionCovariance);
+    public void correctWithPositionMeasure(final Point3D position, final Matrix positionCovariance) {
+        correctWithPositionMeasure(position.getInhomX(), position.getInhomY(), position.getInhomZ(),
+                positionCovariance);
     }
 
     /**
@@ -1137,7 +1115,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * class.
      */
     public BaseSlamEstimatorListener<D> getListener() {
-        return mListener;
+        return listener;
     }
 
     /**
@@ -1148,7 +1126,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      *                 of this class.
      */
     public void setListener(final BaseSlamEstimatorListener<D> listener) {
-        mListener = listener;
+        this.listener = listener;
     }
 
     /**
@@ -1159,7 +1137,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @return calibration data.
      */
     public D getCalibrationData() {
-        return mCalibrationData;
+        return calibrationData;
     }
 
     /**
@@ -1170,7 +1148,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
      * @param calibrationData calibration data.
      */
     public void setCalibrationData(final D calibrationData) {
-        mCalibrationData = calibrationData;
+        this.calibrationData = calibrationData;
     }
 
     /**
@@ -1206,28 +1184,27 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
     protected void reset(
             final double statePositionX, final double statePositionY, final double statePositionZ,
             final double stateVelocityX, final double stateVelocityY, final double stateVelocityZ,
-            final double stateAccelerationX, final double stateAccelerationY,
-            final double stateAccelerationZ, final double stateQuaternionA, final double stateQuaternionB,
+            final double stateAccelerationX, final double stateAccelerationY, final double stateAccelerationZ,
+            final double stateQuaternionA, final double stateQuaternionB,
             final double stateQuaternionC, final double stateQuaternionD,
-            final double stateAngularSpeedX, final double stateAngularSpeedY,
-            final double stateAngularSpeedZ) {
-        mStatePositionX = statePositionX;
-        mStatePositionY = statePositionY;
-        mStatePositionZ = statePositionZ;
-        mStateVelocityX = stateVelocityX;
-        mStateVelocityY = stateVelocityY;
-        mStateVelocityZ = stateVelocityZ;
-        mStateAccelerationX = stateAccelerationX;
-        mStateAccelerationY = stateAccelerationY;
-        mStateAccelerationZ = stateAccelerationZ;
-        mStateQuaternionA = stateQuaternionA;
-        mStateQuaternionB = stateQuaternionB;
-        mStateQuaternionC = stateQuaternionC;
-        mStateQuaternionD = stateQuaternionD;
-        mStateAngularSpeedX = stateAngularSpeedX;
-        mStateAngularSpeedY = stateAngularSpeedY;
-        mStateAngularSpeedZ = stateAngularSpeedZ;
-        mAccelerometerTimestampNanos = mGyroscopeTimestampNanos = -1;
+            final double stateAngularSpeedX, final double stateAngularSpeedY, final double stateAngularSpeedZ) {
+        this.statePositionX = statePositionX;
+        this.statePositionY = statePositionY;
+        this.statePositionZ = statePositionZ;
+        this.stateVelocityX = stateVelocityX;
+        this.stateVelocityY = stateVelocityY;
+        this.stateVelocityZ = stateVelocityZ;
+        this.stateAccelerationX = stateAccelerationX;
+        this.stateAccelerationY = stateAccelerationY;
+        this.stateAccelerationZ = stateAccelerationZ;
+        this.stateQuaternionA = stateQuaternionA;
+        this.stateQuaternionB = stateQuaternionB;
+        this.stateQuaternionC = stateQuaternionC;
+        this.stateQuaternionD = stateQuaternionD;
+        this.stateAngularSpeedX = stateAngularSpeedX;
+        this.stateAngularSpeedY = stateAngularSpeedY;
+        this.stateAngularSpeedZ = stateAngularSpeedZ;
+        accelerometerTimestampNanos = gyroscopeTimestampNanos = -1;
     }
 
     /**
@@ -1237,7 +1214,7 @@ public abstract class BaseSlamEstimator<D extends BaseCalibrationData>
     protected void notifyFullSampleAndResetSampleReceive() {
         if (isFullSampleAvailable()) {
             processFullSample();
-            mAccumulatedAccelerometerSamples = mAccumulatedGyroscopeSamples = 0;
+            accumulatedAccelerometerSamples = accumulatedGyroscopeSamples = 0;
         }
     }
 

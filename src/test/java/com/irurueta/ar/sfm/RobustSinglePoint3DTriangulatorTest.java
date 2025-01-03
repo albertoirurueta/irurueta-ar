@@ -18,22 +18,20 @@ package com.irurueta.ar.sfm;
 import com.irurueta.geometry.PinholeCamera;
 import com.irurueta.geometry.Point2D;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class RobustSinglePoint3DTriangulatorTest {
+class RobustSinglePoint3DTriangulatorTest {
 
     @Test
-    public void testCreate() {
+    void testCreate() {
         // create with method
 
         // RANSAC
-        RobustSinglePoint3DTriangulator triangulator = RobustSinglePoint3DTriangulator.create(
-                RobustEstimatorMethod.RANSAC);
+        var triangulator = RobustSinglePoint3DTriangulator.create(RobustEstimatorMethod.RANSAC);
 
         // check correctness
         assertNull(triangulator.getListener());
@@ -41,18 +39,15 @@ public class RobustSinglePoint3DTriangulatorTest {
         assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_USE_HOMOGENEOUS_SOLUTION,
                 triangulator.isUseHomogeneousSolution());
         assertFalse(triangulator.isLocked());
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA,
-                triangulator.getProgressDelta(), 0.0);
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE,
-                triangulator.getConfidence(), 0.0);
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS,
-                triangulator.getMaxIterations());
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA, triangulator.getProgressDelta(), 0.0);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE, triangulator.getConfidence(), 0.0);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS, triangulator.getMaxIterations());
         assertNull(triangulator.getPoints2D());
         assertNull(triangulator.getCameras());
         assertNull(triangulator.getQualityScores());
         assertFalse(triangulator.isReady());
         assertEquals(RobustEstimatorMethod.RANSAC, triangulator.getMethod());
-        assertTrue(triangulator instanceof RANSACRobustSinglePoint3DTriangulator);
+        assertInstanceOf(RANSACRobustSinglePoint3DTriangulator.class, triangulator);
 
         // LMedS
         triangulator = RobustSinglePoint3DTriangulator.create(RobustEstimatorMethod.LMEDS);
@@ -63,18 +58,16 @@ public class RobustSinglePoint3DTriangulatorTest {
         assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_USE_HOMOGENEOUS_SOLUTION,
                 triangulator.isUseHomogeneousSolution());
         assertFalse(triangulator.isLocked());
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA,
-                triangulator.getProgressDelta(), 0.0);
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE,
-                triangulator.getConfidence(), 0.0);
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS,
-                triangulator.getMaxIterations());
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA, triangulator.getProgressDelta(),
+                0.0);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE, triangulator.getConfidence(), 0.0);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS, triangulator.getMaxIterations());
         assertNull(triangulator.getPoints2D());
         assertNull(triangulator.getCameras());
         assertNull(triangulator.getQualityScores());
         assertFalse(triangulator.isReady());
         assertEquals(RobustEstimatorMethod.LMEDS, triangulator.getMethod());
-        assertTrue(triangulator instanceof LMedSRobustSinglePoint3DTriangulator);
+        assertInstanceOf(LMedSRobustSinglePoint3DTriangulator.class, triangulator);
 
         // MSAC
         triangulator = RobustSinglePoint3DTriangulator.create(RobustEstimatorMethod.MSAC);
@@ -85,18 +78,16 @@ public class RobustSinglePoint3DTriangulatorTest {
         assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_USE_HOMOGENEOUS_SOLUTION,
                 triangulator.isUseHomogeneousSolution());
         assertFalse(triangulator.isLocked());
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA,
-                triangulator.getProgressDelta(), 0.0);
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE,
-                triangulator.getConfidence(), 0.0);
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS,
-                triangulator.getMaxIterations());
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA, triangulator.getProgressDelta(),
+                0.0);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE, triangulator.getConfidence(), 0.0);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS, triangulator.getMaxIterations());
         assertNull(triangulator.getPoints2D());
         assertNull(triangulator.getCameras());
         assertNull(triangulator.getQualityScores());
         assertFalse(triangulator.isReady());
         assertEquals(RobustEstimatorMethod.MSAC, triangulator.getMethod());
-        assertTrue(triangulator instanceof MSACRobustSinglePoint3DTriangulator);
+        assertInstanceOf(MSACRobustSinglePoint3DTriangulator.class, triangulator);
 
         // PROSAC
         triangulator = RobustSinglePoint3DTriangulator.create(RobustEstimatorMethod.PROSAC);
@@ -107,18 +98,16 @@ public class RobustSinglePoint3DTriangulatorTest {
         assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_USE_HOMOGENEOUS_SOLUTION,
                 triangulator.isUseHomogeneousSolution());
         assertFalse(triangulator.isLocked());
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA,
-                triangulator.getProgressDelta(), 0.0);
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE,
-                triangulator.getConfidence(), 0.0);
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS,
-                triangulator.getMaxIterations());
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA, triangulator.getProgressDelta(),
+                0.0);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE, triangulator.getConfidence(), 0.0);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS, triangulator.getMaxIterations());
         assertNull(triangulator.getPoints2D());
         assertNull(triangulator.getCameras());
         assertNull(triangulator.getQualityScores());
         assertFalse(triangulator.isReady());
         assertEquals(RobustEstimatorMethod.PROSAC, triangulator.getMethod());
-        assertTrue(triangulator instanceof PROSACRobustSinglePoint3DTriangulator);
+        assertInstanceOf(PROSACRobustSinglePoint3DTriangulator.class, triangulator);
 
         // PROMedS
         triangulator = RobustSinglePoint3DTriangulator.create(RobustEstimatorMethod.PROMEDS);
@@ -129,26 +118,24 @@ public class RobustSinglePoint3DTriangulatorTest {
         assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_USE_HOMOGENEOUS_SOLUTION,
                 triangulator.isUseHomogeneousSolution());
         assertFalse(triangulator.isLocked());
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA,
-                triangulator.getProgressDelta(), 0.0);
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE,
-                triangulator.getConfidence(), 0.0);
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS,
-                triangulator.getMaxIterations());
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA, triangulator.getProgressDelta(),
+                0.0);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE, triangulator.getConfidence(), 0.0);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS, triangulator.getMaxIterations());
         assertNull(triangulator.getPoints2D());
         assertNull(triangulator.getCameras());
         assertNull(triangulator.getQualityScores());
         assertFalse(triangulator.isReady());
         assertEquals(RobustEstimatorMethod.PROMEDS, triangulator.getMethod());
-        assertTrue(triangulator instanceof PROMedSRobustSinglePoint3DTriangulator);
+        assertInstanceOf(PROMedSRobustSinglePoint3DTriangulator.class, triangulator);
 
         // create with points, cameras and methods
 
-        final List<Point2D> points = new ArrayList<>();
+        final var points = new ArrayList<Point2D>();
         points.add(Point2D.create());
         points.add(Point2D.create());
 
-        final List<PinholeCamera> cameras = new ArrayList<>();
+        final var cameras = new ArrayList<PinholeCamera>();
         cameras.add(new PinholeCamera());
         cameras.add(new PinholeCamera());
 
@@ -161,18 +148,16 @@ public class RobustSinglePoint3DTriangulatorTest {
         assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_USE_HOMOGENEOUS_SOLUTION,
                 triangulator.isUseHomogeneousSolution());
         assertFalse(triangulator.isLocked());
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA,
-                triangulator.getProgressDelta(), 0.0);
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE,
-                triangulator.getConfidence(), 0.0);
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS,
-                triangulator.getMaxIterations());
-        assertSame(triangulator.getPoints2D(), points);
-        assertSame(triangulator.getCameras(), cameras);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA, triangulator.getProgressDelta(),
+                0.0);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE, triangulator.getConfidence(), 0.0);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS, triangulator.getMaxIterations());
+        assertSame(points, triangulator.getPoints2D());
+        assertSame(cameras, triangulator.getCameras());
         assertNull(triangulator.getQualityScores());
         assertTrue(triangulator.isReady());
         assertEquals(RobustEstimatorMethod.RANSAC, triangulator.getMethod());
-        assertTrue(triangulator instanceof RANSACRobustSinglePoint3DTriangulator);
+        assertInstanceOf(RANSACRobustSinglePoint3DTriangulator.class, triangulator);
 
         // LMedS
         triangulator = RobustSinglePoint3DTriangulator.create(points, cameras, RobustEstimatorMethod.LMEDS);
@@ -183,22 +168,19 @@ public class RobustSinglePoint3DTriangulatorTest {
         assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_USE_HOMOGENEOUS_SOLUTION,
                 triangulator.isUseHomogeneousSolution());
         assertFalse(triangulator.isLocked());
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA,
-                triangulator.getProgressDelta(), 0.0);
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE,
-                triangulator.getConfidence(), 0.0);
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS,
-                triangulator.getMaxIterations());
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA, triangulator.getProgressDelta(),
+                0.0);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE, triangulator.getConfidence(), 0.0);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS, triangulator.getMaxIterations());
         assertSame(points, triangulator.getPoints2D());
         assertSame(cameras, triangulator.getCameras());
         assertNull(triangulator.getQualityScores());
         assertTrue(triangulator.isReady());
         assertEquals(RobustEstimatorMethod.LMEDS, triangulator.getMethod());
-        assertTrue(triangulator instanceof LMedSRobustSinglePoint3DTriangulator);
+        assertInstanceOf(LMedSRobustSinglePoint3DTriangulator.class, triangulator);
 
         // MSAC
-        triangulator = RobustSinglePoint3DTriangulator.create(points, cameras,
-                RobustEstimatorMethod.MSAC);
+        triangulator = RobustSinglePoint3DTriangulator.create(points, cameras, RobustEstimatorMethod.MSAC);
 
         // check correctness
         assertNull(triangulator.getListener());
@@ -206,18 +188,16 @@ public class RobustSinglePoint3DTriangulatorTest {
         assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_USE_HOMOGENEOUS_SOLUTION,
                 triangulator.isUseHomogeneousSolution());
         assertFalse(triangulator.isLocked());
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA,
-                triangulator.getProgressDelta(), 0.0);
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE,
-                triangulator.getConfidence(), 0.0);
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS,
-                triangulator.getMaxIterations());
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA, triangulator.getProgressDelta(),
+                0.0);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE, triangulator.getConfidence(), 0.0);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS, triangulator.getMaxIterations());
         assertSame(points, triangulator.getPoints2D());
         assertSame(cameras, triangulator.getCameras());
         assertNull(triangulator.getQualityScores());
         assertTrue(triangulator.isReady());
         assertEquals(RobustEstimatorMethod.MSAC, triangulator.getMethod());
-        assertTrue(triangulator instanceof MSACRobustSinglePoint3DTriangulator);
+        assertInstanceOf(MSACRobustSinglePoint3DTriangulator.class, triangulator);
 
         // PROSAC
         triangulator = RobustSinglePoint3DTriangulator.create(points, cameras, RobustEstimatorMethod.PROSAC);
@@ -228,18 +208,16 @@ public class RobustSinglePoint3DTriangulatorTest {
         assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_USE_HOMOGENEOUS_SOLUTION,
                 triangulator.isUseHomogeneousSolution());
         assertFalse(triangulator.isLocked());
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA,
-                triangulator.getProgressDelta(), 0.0);
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE,
-                triangulator.getConfidence(), 0.0);
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS,
-                triangulator.getMaxIterations());
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA, triangulator.getProgressDelta(),
+                0.0);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE, triangulator.getConfidence(), 0.0);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS, triangulator.getMaxIterations());
         assertSame(points, triangulator.getPoints2D());
         assertSame(cameras, triangulator.getCameras());
         assertNull(triangulator.getQualityScores());
         assertFalse(triangulator.isReady());
         assertEquals(RobustEstimatorMethod.PROSAC, triangulator.getMethod());
-        assertTrue(triangulator instanceof PROSACRobustSinglePoint3DTriangulator);
+        assertInstanceOf(PROSACRobustSinglePoint3DTriangulator.class, triangulator);
 
         // PROMedS
         triangulator = RobustSinglePoint3DTriangulator.create(points, cameras, RobustEstimatorMethod.PROMEDS);
@@ -250,25 +228,23 @@ public class RobustSinglePoint3DTriangulatorTest {
         assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_USE_HOMOGENEOUS_SOLUTION,
                 triangulator.isUseHomogeneousSolution());
         assertFalse(triangulator.isLocked());
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA,
-                triangulator.getProgressDelta(), 0.0);
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE,
-                triangulator.getConfidence(), 0.0);
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS,
-                triangulator.getMaxIterations());
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA, triangulator.getProgressDelta(),
+                0.0);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE, triangulator.getConfidence(), 0.0);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS, triangulator.getMaxIterations());
         assertSame(points, triangulator.getPoints2D());
         assertSame(cameras, triangulator.getCameras());
         assertNull(triangulator.getQualityScores());
         assertFalse(triangulator.isReady());
         assertEquals(RobustEstimatorMethod.PROMEDS, triangulator.getMethod());
-        assertTrue(triangulator instanceof PROMedSRobustSinglePoint3DTriangulator);
+        assertInstanceOf(PROMedSRobustSinglePoint3DTriangulator.class, triangulator);
 
         // create with points, cameras, quality scores and method
-        final double[] qualityScores = new double[2];
+        final var qualityScores = new double[2];
 
         // RANSAC
-        triangulator = RobustSinglePoint3DTriangulator.create(points, cameras,
-                qualityScores, RobustEstimatorMethod.RANSAC);
+        triangulator = RobustSinglePoint3DTriangulator.create(points, cameras, qualityScores,
+                RobustEstimatorMethod.RANSAC);
 
         // check correctness
         assertNull(triangulator.getListener());
@@ -276,22 +252,20 @@ public class RobustSinglePoint3DTriangulatorTest {
         assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_USE_HOMOGENEOUS_SOLUTION,
                 triangulator.isUseHomogeneousSolution());
         assertFalse(triangulator.isLocked());
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA,
-                triangulator.getProgressDelta(), 0.0);
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE,
-                triangulator.getConfidence(), 0.0);
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS,
-                triangulator.getMaxIterations());
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA, triangulator.getProgressDelta(),
+                0.0);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE, triangulator.getConfidence(), 0.0);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS, triangulator.getMaxIterations());
         assertSame(points, triangulator.getPoints2D());
         assertSame(cameras, triangulator.getCameras());
         assertNull(triangulator.getQualityScores());
         assertTrue(triangulator.isReady());
         assertEquals(RobustEstimatorMethod.RANSAC, triangulator.getMethod());
-        assertTrue(triangulator instanceof RANSACRobustSinglePoint3DTriangulator);
+        assertInstanceOf(RANSACRobustSinglePoint3DTriangulator.class, triangulator);
 
         // LMedS
-        triangulator = RobustSinglePoint3DTriangulator.create(points, cameras,
-                qualityScores, RobustEstimatorMethod.LMEDS);
+        triangulator = RobustSinglePoint3DTriangulator.create(points, cameras, qualityScores,
+                RobustEstimatorMethod.LMEDS);
 
         // check correctness
         assertNull(triangulator.getListener());
@@ -299,22 +273,20 @@ public class RobustSinglePoint3DTriangulatorTest {
         assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_USE_HOMOGENEOUS_SOLUTION,
                 triangulator.isUseHomogeneousSolution());
         assertFalse(triangulator.isLocked());
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA,
-                triangulator.getProgressDelta(), 0.0);
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE,
-                triangulator.getConfidence(), 0.0);
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS,
-                triangulator.getMaxIterations());
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA, triangulator.getProgressDelta(),
+                0.0);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE, triangulator.getConfidence(), 0.0);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS, triangulator.getMaxIterations());
         assertSame(points, triangulator.getPoints2D());
         assertSame(cameras, triangulator.getCameras());
         assertNull(triangulator.getQualityScores());
         assertTrue(triangulator.isReady());
         assertEquals(RobustEstimatorMethod.LMEDS, triangulator.getMethod());
-        assertTrue(triangulator instanceof LMedSRobustSinglePoint3DTriangulator);
+        assertInstanceOf(LMedSRobustSinglePoint3DTriangulator.class, triangulator);
 
         // MSAC
-        triangulator = RobustSinglePoint3DTriangulator.create(points, cameras,
-                qualityScores, RobustEstimatorMethod.MSAC);
+        triangulator = RobustSinglePoint3DTriangulator.create(points, cameras, qualityScores,
+                RobustEstimatorMethod.MSAC);
 
         // check correctness
         assertNull(triangulator.getListener());
@@ -322,22 +294,20 @@ public class RobustSinglePoint3DTriangulatorTest {
         assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_USE_HOMOGENEOUS_SOLUTION,
                 triangulator.isUseHomogeneousSolution());
         assertFalse(triangulator.isLocked());
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA,
-                triangulator.getProgressDelta(), 0.0);
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE,
-                triangulator.getConfidence(), 0.0);
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS,
-                triangulator.getMaxIterations());
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA, triangulator.getProgressDelta(),
+                0.0);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE, triangulator.getConfidence(), 0.0);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS, triangulator.getMaxIterations());
         assertSame(points, triangulator.getPoints2D());
         assertSame(cameras, triangulator.getCameras());
         assertNull(triangulator.getQualityScores());
         assertTrue(triangulator.isReady());
         assertEquals(RobustEstimatorMethod.MSAC, triangulator.getMethod());
-        assertTrue(triangulator instanceof MSACRobustSinglePoint3DTriangulator);
+        assertInstanceOf(MSACRobustSinglePoint3DTriangulator.class, triangulator);
 
         // PROSAC
-        triangulator = RobustSinglePoint3DTriangulator.create(points, cameras,
-                qualityScores, RobustEstimatorMethod.PROSAC);
+        triangulator = RobustSinglePoint3DTriangulator.create(points, cameras, qualityScores,
+                RobustEstimatorMethod.PROSAC);
 
         // check correctness
         assertNull(triangulator.getListener());
@@ -345,22 +315,20 @@ public class RobustSinglePoint3DTriangulatorTest {
         assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_USE_HOMOGENEOUS_SOLUTION,
                 triangulator.isUseHomogeneousSolution());
         assertFalse(triangulator.isLocked());
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA,
-                triangulator.getProgressDelta(), 0.0);
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE,
-                triangulator.getConfidence(), 0.0);
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS,
-                triangulator.getMaxIterations());
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA, triangulator.getProgressDelta(),
+                0.0);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE, triangulator.getConfidence(), 0.0);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS, triangulator.getMaxIterations());
         assertSame(points, triangulator.getPoints2D());
         assertSame(cameras, triangulator.getCameras());
         assertSame(qualityScores, triangulator.getQualityScores());
         assertTrue(triangulator.isReady());
         assertEquals(RobustEstimatorMethod.PROSAC, triangulator.getMethod());
-        assertTrue(triangulator instanceof PROSACRobustSinglePoint3DTriangulator);
+        assertInstanceOf(PROSACRobustSinglePoint3DTriangulator.class, triangulator);
 
         // PROMedS
-        triangulator = RobustSinglePoint3DTriangulator.create(points, cameras,
-                qualityScores, RobustEstimatorMethod.PROMEDS);
+        triangulator = RobustSinglePoint3DTriangulator.create(points, cameras, qualityScores,
+                RobustEstimatorMethod.PROMEDS);
 
         // check correctness
         assertNull(triangulator.getListener());
@@ -368,18 +336,16 @@ public class RobustSinglePoint3DTriangulatorTest {
         assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_USE_HOMOGENEOUS_SOLUTION,
                 triangulator.isUseHomogeneousSolution());
         assertFalse(triangulator.isLocked());
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA,
-                triangulator.getProgressDelta(), 0.0);
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE,
-                triangulator.getConfidence(), 0.0);
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS,
-                triangulator.getMaxIterations());
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA, triangulator.getProgressDelta(),
+                0.0);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE, triangulator.getConfidence(), 0.0);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS, triangulator.getMaxIterations());
         assertSame(points, triangulator.getPoints2D());
         assertSame(cameras, triangulator.getCameras());
         assertSame(qualityScores, triangulator.getQualityScores());
         assertTrue(triangulator.isReady());
         assertEquals(RobustEstimatorMethod.PROMEDS, triangulator.getMethod());
-        assertTrue(triangulator instanceof PROMedSRobustSinglePoint3DTriangulator);
+        assertInstanceOf(PROMedSRobustSinglePoint3DTriangulator.class, triangulator);
 
         // test without arguments
         triangulator = RobustSinglePoint3DTriangulator.create();
@@ -390,19 +356,16 @@ public class RobustSinglePoint3DTriangulatorTest {
         assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_USE_HOMOGENEOUS_SOLUTION,
                 triangulator.isUseHomogeneousSolution());
         assertFalse(triangulator.isLocked());
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA,
-                triangulator.getProgressDelta(), 0.0);
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE,
-                triangulator.getConfidence(), 0.0);
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS,
-                triangulator.getMaxIterations());
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA, triangulator.getProgressDelta(),
+                0.0);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE, triangulator.getConfidence(), 0.0);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS, triangulator.getMaxIterations());
         assertNull(triangulator.getPoints2D());
         assertNull(triangulator.getCameras());
         assertNull(triangulator.getQualityScores());
         assertFalse(triangulator.isReady());
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_ROBUST_METHOD,
-                triangulator.getMethod());
-        assertTrue(triangulator instanceof PROMedSRobustSinglePoint3DTriangulator);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_ROBUST_METHOD, triangulator.getMethod());
+        assertInstanceOf(PROMedSRobustSinglePoint3DTriangulator.class, triangulator);
 
         // test with points and cameras
         triangulator = RobustSinglePoint3DTriangulator.create(points, cameras);
@@ -413,19 +376,16 @@ public class RobustSinglePoint3DTriangulatorTest {
         assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_USE_HOMOGENEOUS_SOLUTION,
                 triangulator.isUseHomogeneousSolution());
         assertFalse(triangulator.isLocked());
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA,
-                triangulator.getProgressDelta(), 0.0);
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE,
-                triangulator.getConfidence(), 0.0);
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS,
-                triangulator.getMaxIterations());
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA, triangulator.getProgressDelta(),
+                0.0);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE, triangulator.getConfidence(), 0.0);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS, triangulator.getMaxIterations());
         assertSame(points, triangulator.getPoints2D());
         assertSame(cameras, triangulator.getCameras());
         assertNull(triangulator.getQualityScores());
         assertFalse(triangulator.isReady());
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_ROBUST_METHOD,
-                triangulator.getMethod());
-        assertTrue(triangulator instanceof PROMedSRobustSinglePoint3DTriangulator);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_ROBUST_METHOD, triangulator.getMethod());
+        assertInstanceOf(PROMedSRobustSinglePoint3DTriangulator.class, triangulator);
 
         // test with points, cameras and quality scores
         triangulator = RobustSinglePoint3DTriangulator.create(points, cameras, qualityScores);
@@ -436,18 +396,15 @@ public class RobustSinglePoint3DTriangulatorTest {
         assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_USE_HOMOGENEOUS_SOLUTION,
                 triangulator.isUseHomogeneousSolution());
         assertFalse(triangulator.isLocked());
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA,
-                triangulator.getProgressDelta(), 0.0);
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE,
-                triangulator.getConfidence(), 0.0);
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS,
-                triangulator.getMaxIterations());
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_PROGRESS_DELTA, triangulator.getProgressDelta(),
+                0.0);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_CONFIDENCE, triangulator.getConfidence(), 0.0);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_MAX_ITERATIONS, triangulator.getMaxIterations());
         assertSame(points, triangulator.getPoints2D());
         assertSame(cameras, triangulator.getCameras());
         assertSame(qualityScores, triangulator.getQualityScores());
         assertTrue(triangulator.isReady());
-        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_ROBUST_METHOD,
-                triangulator.getMethod());
-        assertTrue(triangulator instanceof PROMedSRobustSinglePoint3DTriangulator);
+        assertEquals(RobustSinglePoint3DTriangulator.DEFAULT_ROBUST_METHOD, triangulator.getMethod());
+        assertInstanceOf(PROMedSRobustSinglePoint3DTriangulator.class, triangulator);
     }
 }

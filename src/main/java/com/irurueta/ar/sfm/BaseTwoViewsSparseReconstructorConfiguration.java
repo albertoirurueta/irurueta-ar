@@ -36,8 +36,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * Default robust fundamental matrix estimator method.
      * This is only used when general scenes are allowed.
      */
-    public static final RobustEstimatorMethod
-            DEFAULT_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD =
+    public static final RobustEstimatorMethod DEFAULT_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD =
             RobustEstimatorMethod.PROSAC;
 
     /**
@@ -45,8 +44,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * within a robust estimator.
      * This is only used when general scenes are allowed.
      */
-    public static final FundamentalMatrixEstimatorMethod
-            DEFAULT_NON_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD =
+    public static final FundamentalMatrixEstimatorMethod DEFAULT_NON_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD =
             FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM;
 
     /**
@@ -61,8 +59,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * estimation.
      * This is only used when general scenes are allowed.
      */
-    public static final boolean DEFAULT_KEEP_FUNDAMENTAL_MATRIX_COVARIANCE =
-            false;
+    public static final boolean DEFAULT_KEEP_FUNDAMENTAL_MATRIX_COVARIANCE = false;
 
     /**
      * Default confidence of robustly estimated fundamental matrix. By default,
@@ -93,32 +90,27 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * fundamental matrix estimation.
      * This is only used when general scenes are allowed.
      */
-    public static final boolean
-            DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_INLIERS = true;
+    public static final boolean DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_INLIERS = true;
 
     /**
      * Default value indicating that residual data is kept after robust
      * fundamental matrix estimation.
      * This is only used when general scenes are allowed.
      */
-    public static final boolean
-            DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_RESIDUALS = true;
+    public static final boolean DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_RESIDUALS = true;
 
     /**
      * Default method to use for initial estimation of cameras.
      */
-    public static final InitialCamerasEstimatorMethod
-            DEFAULT_INITIAL_CAMERAS_ESTIMATOR_METHOD =
-            InitialCamerasEstimatorMethod.
-                    DUAL_ABSOLUTE_QUADRIC_AND_ESSENTIAL_MATRIX;
+    public static final InitialCamerasEstimatorMethod DEFAULT_INITIAL_CAMERAS_ESTIMATOR_METHOD =
+            InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC_AND_ESSENTIAL_MATRIX;
 
     /**
      * Indicates whether an homogeneous point triangulator is used for point
      * triangulation when Dual Absolute Quadric (DAQ) camera initialization is
      * used.
      */
-    public static final boolean DEFAULT_DAQ_USE_HOMOGENEOUS_POINT_TRIANGULATOR =
-            true;
+    public static final boolean DEFAULT_DAQ_USE_HOMOGENEOUS_POINT_TRIANGULATOR = true;
 
     /**
      * Default aspect ratio for initial cameras.
@@ -130,32 +122,28 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * estimation using Dual Image of Absolute Conic (DIAC) or Dual Absolute
      * Quadric (DAQ) methods.
      */
-    public static final double DEFAULT_INITIAL_CAMERAS_PRINCIPAL_POINT_X =
-            0.0;
+    public static final double DEFAULT_INITIAL_CAMERAS_PRINCIPAL_POINT_X = 0.0;
 
     /**
      * Default vertical principal point value to use for initial cameras
      * estimation using Dual Image of Absolute Conic (DIAC) or Dual Absolute
      * Quadric (DAQ) methods.
      */
-    public static final double DEFAULT_INITIAL_CAMERAS_PRINCIPAL_POINT_Y =
-            0.0;
+    public static final double DEFAULT_INITIAL_CAMERAS_PRINCIPAL_POINT_Y = 0.0;
 
     /**
      * Default corrector type to use for point triangulation when initial
      * cameras are being estimated using either Dual Image of Absolute Conic
      * (DIAC), Dual Absolute Quadric (DAQ) or essential matrix methods.
      */
-    public static final CorrectorType DEFAULT_INITIAL_CAMERAS_CORRECTOR_TYPE =
-            CorrectorType.SAMPSON_CORRECTOR;
+    public static final CorrectorType DEFAULT_INITIAL_CAMERAS_CORRECTOR_TYPE = CorrectorType.SAMPSON_CORRECTOR;
 
     /**
      * Default value indicating whether valid triangulated points are marked
      * during initial cameras estimation using either Dual Image of Absolute
      * Conic (DIAC) or essential matrix methods.
      */
-    public static final boolean
-            DEFAULT_INITIAL_CAMERAS_MARK_VALID_TRIANGULATED_POINTS = true;
+    public static final boolean DEFAULT_INITIAL_CAMERAS_MARK_VALID_TRIANGULATED_POINTS = true;
 
     /**
      * Indicates whether a general (points are laying in a general 3D position)
@@ -176,8 +164,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * Default robust planar homography estimator method.
      * This is only used when planar scenes are allowed.
      */
-    public static final RobustEstimatorMethod
-            DEFAULT_ROBUST_PLANAR_HOMOGRAPHY_ESTIMATOR_METHOD =
+    public static final RobustEstimatorMethod DEFAULT_ROBUST_PLANAR_HOMOGRAPHY_ESTIMATOR_METHOD =
             RobustEstimatorMethod.PROMEDS;
 
     /**
@@ -192,8 +179,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * estimation.
      * This is only used when planar scenes are allowed.
      */
-    public static final boolean DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE =
-            false;
+    public static final boolean DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE = false;
 
     /**
      * Default confidence of robustly estimated planar homography. By default,
@@ -223,23 +209,20 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * homography estimation.
      * This is only used when planar scenes are allowed.
      */
-    public static final boolean
-            DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS = true;
+    public static final boolean DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS = true;
 
     /**
      * Default value indicating that residual data is kept after robust planar
      * homography estimation.
      * This is only used when planar scenes are allowed.
      */
-    public static final boolean
-            DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS = true;
+    public static final boolean DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS = true;
 
     /**
      * Method to use for non-robust fundamental matrix estimation.
      * This is only used when general scenes are allowed.
      */
-    private FundamentalMatrixEstimatorMethod
-            mNonRobustFundamentalMatrixEstimatorMethod =
+    private FundamentalMatrixEstimatorMethod mNonRobustFundamentalMatrixEstimatorMethod =
             DEFAULT_NON_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD;
 
     /**
@@ -254,118 +237,104 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * inliers.
      * This is only used when general scenes are allowed.
      */
-    private boolean mRefineFundamentalMatrix =
-            DEFAULT_REFINE_FUNDAMENTAL_MATRIX;
+    private boolean refineFundamentalMatrix = DEFAULT_REFINE_FUNDAMENTAL_MATRIX;
 
     /**
      * Indicates whether covariance of estimated fundamental matrix is kept
      * after the estimation.
      * This is only used when general scenes are allowed.
      */
-    private boolean mKeepFundamentalMatrixCovariance =
-            DEFAULT_KEEP_FUNDAMENTAL_MATRIX_COVARIANCE;
+    private boolean keepFundamentalMatrixCovariance = DEFAULT_KEEP_FUNDAMENTAL_MATRIX_COVARIANCE;
 
     /**
      * Confidence of robustly estimated fundamental matrix.
      * This is only used when general scenes are allowed.
      */
-    private double mFundamentalMatrixConfidence =
-            DEFAULT_FUNDAMENTAL_MATRIX_CONFIDENCE;
+    private double fundamentalMatrixConfidence = DEFAULT_FUNDAMENTAL_MATRIX_CONFIDENCE;
 
     /**
      * Maximum number of iterations to robustly estimate fundamental matrix.
      * This is only used when general scenes are allowed.
      */
-    private int mFundamentalMatrixMaxIterations =
-            DEFAULT_FUNDAMENTAL_MATRIX_MAX_ITERATIONS;
+    private int fundamentalMatrixMaxIterations = DEFAULT_FUNDAMENTAL_MATRIX_MAX_ITERATIONS;
 
     /**
      * Threshold to determine whether samples for robust fundamental matrix
      * estimation are inliers or not.
      * This is only used when general scenes are allowed.
      */
-    private double mFundamentalMatrixThreshold =
-            DEFAULT_FUNDAMENTAL_MATRIX_THRESHOLD;
+    private double fundamentalMatrixThreshold = DEFAULT_FUNDAMENTAL_MATRIX_THRESHOLD;
 
     /**
      * Indicates whether inliers must be kept during robust fundamental matrix
      * estimation.
      * This is only used when general scenes are allowed.
      */
-    private boolean mFundamentalMatrixComputeAndKeepInliers =
-            DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_INLIERS;
+    private boolean fundamentalMatrixComputeAndKeepInliers = DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_INLIERS;
 
     /**
      * Indicates whether residuals must be computed and kept during robust
      * fundamental matrix estimation.
      * This is only used when general scenes are allowed.
      */
-    private boolean mFundamentalMatrixComputeAndKeepResiduals =
-            DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_RESIDUALS;
+    private boolean fundamentalMatrixComputeAndKeepResiduals = DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_RESIDUALS;
 
     /**
      * Method to use for initial estimation of cameras.
      */
-    private InitialCamerasEstimatorMethod mInitialCamerasEstimatorMethod =
-            DEFAULT_INITIAL_CAMERAS_ESTIMATOR_METHOD;
+    private InitialCamerasEstimatorMethod initialCamerasEstimatorMethod = DEFAULT_INITIAL_CAMERAS_ESTIMATOR_METHOD;
 
     /**
      * Indicates whether an homogeneous point triangulator is used for point
      * triangulation when Dual Absolute Quadric (DAQ) camera initialization is
      * used.
      */
-    private boolean mDaqUseHomogeneousPointTriangulator =
-            DEFAULT_DAQ_USE_HOMOGENEOUS_POINT_TRIANGULATOR;
+    private boolean daqUseHomogeneousPointTriangulator = DEFAULT_DAQ_USE_HOMOGENEOUS_POINT_TRIANGULATOR;
 
     /**
      * Aspect ratio for initial cameras.
      */
-    private double mInitialCamerasAspectRatio =
-            DEFAULT_INITIAL_CAMERAS_ASPECT_RATIO;
+    private double initialCamerasAspectRatio = DEFAULT_INITIAL_CAMERAS_ASPECT_RATIO;
 
     /**
      * Horizontal principal point value to use for initial cameras estimation
      * using Dual Image of Absolute Conic (DIAC) or Dual Absolute Quadric (DAQ)
      * methods.
      */
-    private double mPrincipalPointX =
-            DEFAULT_INITIAL_CAMERAS_PRINCIPAL_POINT_X;
+    private double principalPointX = DEFAULT_INITIAL_CAMERAS_PRINCIPAL_POINT_X;
 
     /**
      * Vertical principal point value to use for initial cameras estimation
      * using Dual Image of Absolute Conic (DIAC) or Dual Absolute Quadric (DAQ)
      * methods.
      */
-    private double mPrincipalPointY =
-            DEFAULT_INITIAL_CAMERAS_PRINCIPAL_POINT_Y;
+    private double principalPointY = DEFAULT_INITIAL_CAMERAS_PRINCIPAL_POINT_Y;
 
     /**
      * Corrector type to use for point triangulation when initial cameras are
      * being estimated using either Dual Image of Absolute Conic (DIAC) or
      * essential matrix methods or null if no corrector is used.
      */
-    private CorrectorType mInitialCamerasCorrectorType =
-            DEFAULT_INITIAL_CAMERAS_CORRECTOR_TYPE;
+    private CorrectorType initialCamerasCorrectorType = DEFAULT_INITIAL_CAMERAS_CORRECTOR_TYPE;
 
     /**
      * Value indicating whether valid triangulated points are marked during
      * initial cameras estimation using either Dual Image of Absolute Conic
      * (DIAC) or essential matrix methods.
      */
-    private boolean mInitialCamerasMarkValidTriangulatedPoints =
-            DEFAULT_INITIAL_CAMERAS_MARK_VALID_TRIANGULATED_POINTS;
+    private boolean initialCamerasMarkValidTriangulatedPoints = DEFAULT_INITIAL_CAMERAS_MARK_VALID_TRIANGULATED_POINTS;
 
     /**
      * Intrinsic parameters of first camera estimated using the essential matrix
      * method.
      */
-    private PinholeCameraIntrinsicParameters mInitialIntrinsic1;
+    private PinholeCameraIntrinsicParameters initialIntrinsic1;
 
     /**
      * Intrinsic parameters of second camera estimated using the essential
      * matrix method.
      */
-    private PinholeCameraIntrinsicParameters mInitialIntrinsic2;
+    private PinholeCameraIntrinsicParameters initialIntrinsic2;
 
     /**
      * Indicates whether a general scene (points laying in a general 3D
@@ -373,19 +342,19 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * When true, an initial geometry estimation is attempted for general
      * points.
      */
-    private boolean mAllowGeneralScene = DEFAULT_ALLOW_GENERAL_SCENE;
+    private boolean allowGeneralScene = DEFAULT_ALLOW_GENERAL_SCENE;
 
     /**
      * Indicates whether a planar scene (points laying in a 3D plane) is allowed.
      * When true, an initial geometry estimation is attempted for planar points.
      */
-    private boolean mAllowPlanarScene = DEFAULT_ALLOW_PLANAR_SCENE;
+    private boolean allowPlanarScene = DEFAULT_ALLOW_PLANAR_SCENE;
 
     /**
      * Robust method to use for planar homography estimation.
      * This is only used when planar scenes are allowed.
      */
-    private RobustEstimatorMethod mRobustPlanarHomographyEstimatorMethod =
+    private RobustEstimatorMethod robustPlanarHomographyEstimatorMethod =
             DEFAULT_ROBUST_PLANAR_HOMOGRAPHY_ESTIMATOR_METHOD;
 
     /**
@@ -393,53 +362,47 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * not.
      * This is only used when planar scenes are allowed.
      */
-    private boolean mRefinePlanarHomography = DEFAULT_REFINE_PLANAR_HOMOGRAPHY;
+    private boolean refinePlanarHomography = DEFAULT_REFINE_PLANAR_HOMOGRAPHY;
 
     /**
      * Indicates whether planar homography covariance is kept after estimation.
      * This is only used when planar scenes are allowed.
      */
-    private boolean mKeepPlanarHomographyCovariance =
-            DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE;
+    private boolean keepPlanarHomographyCovariance = DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE;
 
     /**
      * Confidence of robustly estimated planar homography. By default, this is
      * 99%.
      * This is only used when planar scenes are allowed.
      */
-    private double mPlanarHomographyConfidence =
-            DEFAULT_PLANAR_HOMOGRAPHY_CONFIDENCE;
+    private double planarHomographyConfidence = DEFAULT_PLANAR_HOMOGRAPHY_CONFIDENCE;
 
     /**
      * Maximum number of iterations to make while robustly estimating planar
      * homography. By default, this is 5000.
      * This is only used when planar scenes are allowed.
      */
-    private int mPlanarHomographyMaxIterations =
-            DEFAULT_PLANAR_HOMOGRAPHY_MAX_ITERATIONS;
+    private int planarHomographyMaxIterations = DEFAULT_PLANAR_HOMOGRAPHY_MAX_ITERATIONS;
 
     /**
      * Threshold to determine whether samples for robust projective 2D
      * transformation estimation are inliers or not.
      */
-    private double mPlanarHomographyThreshold =
-            DEFAULT_PLANAR_HOMOGRAPHY_THRESHOLD;
+    private double planarHomographyThreshold = DEFAULT_PLANAR_HOMOGRAPHY_THRESHOLD;
 
     /**
      * Value indicating that inlier data is kept after robust planar homography
      * estimation.
      * This is only used when planar scenes are allowed.
      */
-    private boolean mPlanarHomographyComputeAndKeepInliers =
-            DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS;
+    private boolean planarHomographyComputeAndKeepInliers = DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS;
 
     /**
      * Value indicating that residual data is kept after robust planar
      * homography estimation.
      * This is only used when planar scenes are allowed.
      */
-    private boolean mPlanarHomographyComputeAndKeepResiduals =
-            DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS;
+    private boolean planarHomographyComputeAndKeepResiduals = DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS;
 
     /**
      * Constructor.
@@ -464,8 +427,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * @param method method to use for non-robust fundamental matrix estimation.
      * @return this instance so that method can be easily chained.
      */
-    public T setNonRobustFundamentalMatrixEstimatorMethod(
-            final FundamentalMatrixEstimatorMethod method) {
+    public T setNonRobustFundamentalMatrixEstimatorMethod(final FundamentalMatrixEstimatorMethod method) {
         mNonRobustFundamentalMatrixEstimatorMethod = method;
         //noinspection unchecked
         return (T) this;
@@ -488,8 +450,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * @param method method to use for robust fundamental matrix estimation.
      * @return this instance so that method can be easily chained.
      */
-    public T setRobustFundamentalMatrixEstimatorMethod(
-            final RobustEstimatorMethod method) {
+    public T setRobustFundamentalMatrixEstimatorMethod(final RobustEstimatorMethod method) {
         mRobustFundamentalMatrixEstimatorMethod = method;
         //noinspection unchecked
         return (T) this;
@@ -503,7 +464,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * @return true if fundamental matrix is refined, false otherwise.
      */
     public boolean isFundamentalMatrixRefined() {
-        return mRefineFundamentalMatrix;
+        return refineFundamentalMatrix;
     }
 
     /**
@@ -516,7 +477,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * @return this instance so that method can be easily chained.
      */
     public T setFundamentalMatrixRefined(final boolean refineFundamentalMatrix) {
-        mRefineFundamentalMatrix = refineFundamentalMatrix;
+        this.refineFundamentalMatrix = refineFundamentalMatrix;
         //noinspection unchecked
         return (T) this;
     }
@@ -529,7 +490,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * @return true if covariance is kept, false otherwise.
      */
     public boolean isFundamentalMatrixCovarianceKept() {
-        return mKeepFundamentalMatrixCovariance;
+        return keepFundamentalMatrixCovariance;
     }
 
     /**
@@ -541,9 +502,8 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      *                                        otherwise.
      * @return this instance so that method can be easily chained.
      */
-    public T setFundamentalMatrixCovarianceKept(
-            final boolean keepFundamentalMatrixCovariance) {
-        mKeepFundamentalMatrixCovariance = keepFundamentalMatrixCovariance;
+    public T setFundamentalMatrixCovarianceKept(final boolean keepFundamentalMatrixCovariance) {
+        this.keepFundamentalMatrixCovariance = keepFundamentalMatrixCovariance;
         //noinspection unchecked
         return (T) this;
     }
@@ -555,7 +515,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * @return confidence of robustly estimated fundamental matrix.
      */
     public double getFundamentalMatrixConfidence() {
-        return mFundamentalMatrixConfidence;
+        return fundamentalMatrixConfidence;
     }
 
     /**
@@ -566,9 +526,8 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      *                                    fundamental matrix.
      * @return this instance so that method can be easily chained.
      */
-    public T setFundamentalMatrixConfidence(
-            final double fundamentalMatrixConfidence) {
-        mFundamentalMatrixConfidence = fundamentalMatrixConfidence;
+    public T setFundamentalMatrixConfidence(final double fundamentalMatrixConfidence) {
+        this.fundamentalMatrixConfidence = fundamentalMatrixConfidence;
         //noinspection unchecked
         return (T) this;
     }
@@ -582,7 +541,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * matrix.
      */
     public int getFundamentalMatrixMaxIterations() {
-        return mFundamentalMatrixMaxIterations;
+        return fundamentalMatrixMaxIterations;
     }
 
     /**
@@ -594,9 +553,8 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      *                                       robustly estimate fundamental matrix.
      * @return this instance so that method can be easily chained.
      */
-    public T setFundamentalMatrixMaxIterations(
-            final int fundamentalMatrixMaxIterations) {
-        mFundamentalMatrixMaxIterations = fundamentalMatrixMaxIterations;
+    public T setFundamentalMatrixMaxIterations(final int fundamentalMatrixMaxIterations) {
+        this.fundamentalMatrixMaxIterations = fundamentalMatrixMaxIterations;
         //noinspection unchecked
         return (T) this;
     }
@@ -610,7 +568,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * matrix estimation are inliers or not.
      */
     public double getFundamentalMatrixThreshold() {
-        return mFundamentalMatrixThreshold;
+        return fundamentalMatrixThreshold;
     }
 
     /**
@@ -623,7 +581,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * @return this instance so that method can be easily chained.
      */
     public T setFundamentalMatrixThreshold(final double fundamentalMatrixThreshold) {
-        mFundamentalMatrixThreshold = fundamentalMatrixThreshold;
+        this.fundamentalMatrixThreshold = fundamentalMatrixThreshold;
         //noinspection unchecked
         return (T) this;
     }
@@ -637,7 +595,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * estimation, false otherwise.
      */
     public boolean getFundamentalMatrixComputeAndKeepInliers() {
-        return mFundamentalMatrixComputeAndKeepInliers;
+        return fundamentalMatrixComputeAndKeepInliers;
     }
 
     /**
@@ -650,10 +608,8 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      *                                               false otherwise.
      * @return this instance so that method can be easily chained.
      */
-    public T setFundamentalMatrixComputeAndKeepInliers(
-            final boolean fundamentalMatrixComputeAndKeepInliers) {
-        mFundamentalMatrixComputeAndKeepInliers =
-                fundamentalMatrixComputeAndKeepInliers;
+    public T setFundamentalMatrixComputeAndKeepInliers(final boolean fundamentalMatrixComputeAndKeepInliers) {
+        this.fundamentalMatrixComputeAndKeepInliers = fundamentalMatrixComputeAndKeepInliers;
         //noinspection unchecked
         return (T) this;
     }
@@ -666,7 +622,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * @return true if residuals must be computed and kept, false otherwise.
      */
     public boolean getFundamentalMatrixComputeAndKeepResiduals() {
-        return mFundamentalMatrixComputeAndKeepResiduals;
+        return fundamentalMatrixComputeAndKeepResiduals;
     }
 
     /**
@@ -678,10 +634,8 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      *                                                 computed and kept, false otherwise.
      * @return this instance so that method can be easily chained.
      */
-    public T setFundamentalMatrixComputeAndKeepResiduals(
-            final boolean fundamentalMatrixComputeAndKeepResiduals) {
-        mFundamentalMatrixComputeAndKeepResiduals =
-                fundamentalMatrixComputeAndKeepResiduals;
+    public T setFundamentalMatrixComputeAndKeepResiduals(final boolean fundamentalMatrixComputeAndKeepResiduals) {
+        this.fundamentalMatrixComputeAndKeepResiduals = fundamentalMatrixComputeAndKeepResiduals;
         //noinspection unchecked
         return (T) this;
     }
@@ -692,7 +646,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * @return method to use for initial estimation of cameras.
      */
     public InitialCamerasEstimatorMethod getInitialCamerasEstimatorMethod() {
-        return mInitialCamerasEstimatorMethod;
+        return initialCamerasEstimatorMethod;
     }
 
     /**
@@ -701,9 +655,8 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * @param method method to use for initial estimation of cameras.
      * @return this instance so that method can be easily chained.
      */
-    public T setInitialCamerasEstimatorMethod(
-            final InitialCamerasEstimatorMethod method) {
-        mInitialCamerasEstimatorMethod = method;
+    public T setInitialCamerasEstimatorMethod(final InitialCamerasEstimatorMethod method) {
+        initialCamerasEstimatorMethod = method;
         //noinspection unchecked
         return (T) this;
     }
@@ -717,7 +670,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * inhomogeneous point triangulator is used instead.
      */
     public boolean getDaqUseHomogeneousPointTriangulator() {
-        return mDaqUseHomogeneousPointTriangulator;
+        return daqUseHomogeneousPointTriangulator;
     }
 
     /**
@@ -730,10 +683,8 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      *                                           triangulator is used instead.
      * @return this instance so that method can be easily chained.
      */
-    public T setDaqUseHomogeneousPointTriangulator(
-            final boolean daqUseHomogeneousPointTriangulator) {
-        mDaqUseHomogeneousPointTriangulator =
-                daqUseHomogeneousPointTriangulator;
+    public T setDaqUseHomogeneousPointTriangulator(final boolean daqUseHomogeneousPointTriangulator) {
+        this.daqUseHomogeneousPointTriangulator = daqUseHomogeneousPointTriangulator;
         //noinspection unchecked
         return (T) this;
     }
@@ -745,7 +696,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * @return aspect ratio for initial cameras using DAQ or DIAC methods.
      */
     public double getInitialCamerasAspectRatio() {
-        return mInitialCamerasAspectRatio;
+        return initialCamerasAspectRatio;
     }
 
     /**
@@ -756,7 +707,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * @return this instance so that method can be easily chained.
      */
     public T setInitialCamerasAspectRatio(final double initialCamerasAspectRatio) {
-        mInitialCamerasAspectRatio = initialCamerasAspectRatio;
+        this.initialCamerasAspectRatio = initialCamerasAspectRatio;
         //noinspection unchecked
         return (T) this;
     }
@@ -769,7 +720,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * estimation using DIAC or DAQ methods.
      */
     public double getPrincipalPointX() {
-        return mPrincipalPointX;
+        return principalPointX;
     }
 
     /**
@@ -781,7 +732,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * @return this instance so that method can be easily chained.
      */
     public T setPrincipalPointX(final double principalPointX) {
-        mPrincipalPointX = principalPointX;
+        this.principalPointX = principalPointX;
         //noinspection unchecked
         return (T) this;
     }
@@ -794,7 +745,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * estimation using DIAC or DAQ methods.
      */
     public double getPrincipalPointY() {
-        return mPrincipalPointY;
+        return principalPointY;
     }
 
     /**
@@ -806,7 +757,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * @return this instance so that method can be easily chained.
      */
     public T setPrincipalPointY(final double principalPointY) {
-        mPrincipalPointY = principalPointY;
+        this.principalPointY = principalPointY;
         //noinspection unchecked
         return (T) this;
     }
@@ -821,7 +772,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * or null if no corrector is used.
      */
     public CorrectorType getInitialCamerasCorrectorType() {
-        return mInitialCamerasCorrectorType;
+        return initialCamerasCorrectorType;
     }
 
     /**
@@ -835,7 +786,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * @return this instance so that method can be easily chained.
      */
     public T setInitialCamerasCorrectorType(final CorrectorType type) {
-        mInitialCamerasCorrectorType = type;
+        initialCamerasCorrectorType = type;
         //noinspection unchecked
         return (T) this;
     }
@@ -849,7 +800,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * methods.
      */
     public boolean getInitialCamerasMarkValidTriangulatedPoints() {
-        return mInitialCamerasMarkValidTriangulatedPoints;
+        return initialCamerasMarkValidTriangulatedPoints;
     }
 
     /**
@@ -862,10 +813,8 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      *                                                  essential matrix methods.
      * @return this instance so that method can be easily chained.
      */
-    public T setInitialCamerasMarkValidTriangulatedPoints(
-            final boolean initialCamerasMarkValidTriangulatedPoints) {
-        mInitialCamerasMarkValidTriangulatedPoints =
-                initialCamerasMarkValidTriangulatedPoints;
+    public T setInitialCamerasMarkValidTriangulatedPoints(final boolean initialCamerasMarkValidTriangulatedPoints) {
+        this.initialCamerasMarkValidTriangulatedPoints = initialCamerasMarkValidTriangulatedPoints;
         //noinspection unchecked
         return (T) this;
     }
@@ -878,7 +827,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * essential matrix method.
      */
     public PinholeCameraIntrinsicParameters getInitialIntrinsic1() {
-        return mInitialIntrinsic1;
+        return initialIntrinsic1;
     }
 
     /**
@@ -889,9 +838,8 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      *                          using the essential matrix method.
      * @return this instance so that method can be easily chained.
      */
-    public T setInitialIntrinsic1(
-            final PinholeCameraIntrinsicParameters initialIntrinsic1) {
-        mInitialIntrinsic1 = initialIntrinsic1;
+    public T setInitialIntrinsic1(final PinholeCameraIntrinsicParameters initialIntrinsic1) {
+        this.initialIntrinsic1 = initialIntrinsic1;
         //noinspection unchecked
         return (T) this;
     }
@@ -904,7 +852,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * essential matrix method.
      */
     public PinholeCameraIntrinsicParameters getInitialIntrinsic2() {
-        return mInitialIntrinsic2;
+        return initialIntrinsic2;
     }
 
     /**
@@ -915,9 +863,8 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      *                          using the essential matrix method.
      * @return this instance so that method can be easily chained.
      */
-    public T setInitialIntrinsic2(
-            final PinholeCameraIntrinsicParameters initialIntrinsic2) {
-        mInitialIntrinsic2 = initialIntrinsic2;
+    public T setInitialIntrinsic2(final PinholeCameraIntrinsicParameters initialIntrinsic2) {
+        this.initialIntrinsic2 = initialIntrinsic2;
         //noinspection unchecked
         return (T) this;
     }
@@ -931,7 +878,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * @return true if general scene is allowed, false otherwise.
      */
     public boolean isGeneralSceneAllowed() {
-        return mAllowGeneralScene;
+        return allowGeneralScene;
     }
 
     /**
@@ -945,7 +892,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * @return this instance so that method can be easily chained.
      */
     public T setGeneralSceneAllowed(final boolean allowGeneralScene) {
-        mAllowGeneralScene = allowGeneralScene;
+        this.allowGeneralScene = allowGeneralScene;
         //noinspection unchecked
         return (T) this;
     }
@@ -958,7 +905,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * @return true if planar scene is allowed, false otherwise.
      */
     public boolean isPlanarSceneAllowed() {
-        return mAllowPlanarScene;
+        return allowPlanarScene;
     }
 
     /**
@@ -970,7 +917,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * @return this instance so that method can be easily chained.
      */
     public T setPlanarSceneAllowed(final boolean allowPlanarScene) {
-        mAllowPlanarScene = allowPlanarScene;
+        this.allowPlanarScene = allowPlanarScene;
         //noinspection unchecked
         return (T) this;
     }
@@ -982,7 +929,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * @return robust method to use for planar homography estimation.
      */
     public RobustEstimatorMethod getRobustPlanarHomographyEstimatorMethod() {
-        return mRobustPlanarHomographyEstimatorMethod;
+        return robustPlanarHomographyEstimatorMethod;
     }
 
     /**
@@ -995,8 +942,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      */
     public T setRobustPlanarHomographyEstimatorMethod(
             final RobustEstimatorMethod robustPlanarHomographyEstimatorMethod) {
-        mRobustPlanarHomographyEstimatorMethod =
-                robustPlanarHomographyEstimatorMethod;
+        this.robustPlanarHomographyEstimatorMethod = robustPlanarHomographyEstimatorMethod;
         //noinspection unchecked
         return (T) this;
     }
@@ -1009,7 +955,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * @return true if planar homography is refined, false otherwise.
      */
     public boolean isPlanarHomographyRefined() {
-        return mRefinePlanarHomography;
+        return refinePlanarHomography;
     }
 
     /**
@@ -1022,7 +968,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * @return this instance so that method can be easily chained.
      */
     public T setPlanarHomographyRefined(final boolean refinePlanarHomography) {
-        mRefinePlanarHomography = refinePlanarHomography;
+        this.refinePlanarHomography = refinePlanarHomography;
         //noinspection unchecked
         return (T) this;
     }
@@ -1034,7 +980,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * @return true if planar homography covariance is kept, false otherwise.
      */
     public boolean isPlanarHomographyCovarianceKept() {
-        return mKeepPlanarHomographyCovariance;
+        return keepPlanarHomographyCovariance;
     }
 
     /**
@@ -1045,9 +991,8 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      *                                       covariance is kept, false otherwise.
      * @return this instance so that method can be easily chained.
      */
-    public T setPlanarHomographyCovarianceKept(
-            final boolean keepPlanarHomographyCovariance) {
-        mKeepPlanarHomographyCovariance = keepPlanarHomographyCovariance;
+    public T setPlanarHomographyCovarianceKept(final boolean keepPlanarHomographyCovariance) {
+        this.keepPlanarHomographyCovariance = keepPlanarHomographyCovariance;
         //noinspection unchecked
         return (T) this;
     }
@@ -1060,7 +1005,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * @return confidence of robustly estimated planar homography.
      */
     public double getPlanarHomographyConfidence() {
-        return mPlanarHomographyConfidence;
+        return planarHomographyConfidence;
     }
 
     /**
@@ -1073,7 +1018,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * @return this instance so that method can be easily chained.
      */
     public T setPlanarHomographyConfidence(final double planarHomographyConfidence) {
-        mPlanarHomographyConfidence = planarHomographyConfidence;
+        this.planarHomographyConfidence = planarHomographyConfidence;
         //noinspection unchecked
         return (T) this;
     }
@@ -1087,7 +1032,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * planar homography.
      */
     public int getPlanarHomographyMaxIterations() {
-        return mPlanarHomographyMaxIterations;
+        return planarHomographyMaxIterations;
     }
 
     /**
@@ -1099,9 +1044,8 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      *                                      while robustly estimating planar homography.
      * @return this instance so that method can be easily chained.
      */
-    public T setPlanarHomographyMaxIterations(
-            final int planarHomographyMaxIterations) {
-        mPlanarHomographyMaxIterations = planarHomographyMaxIterations;
+    public T setPlanarHomographyMaxIterations(final int planarHomographyMaxIterations) {
+        this.planarHomographyMaxIterations = planarHomographyMaxIterations;
         //noinspection unchecked
         return (T) this;
     }
@@ -1114,7 +1058,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * @return threshold to robustly estimate projective 2D transformation.
      */
     public double getPlanarHomographyThreshold() {
-        return mPlanarHomographyThreshold;
+        return planarHomographyThreshold;
     }
 
     /**
@@ -1127,7 +1071,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * @return this instance so that method can be easily chained.
      */
     public T setPlanarHomographyThreshold(final double planarHomographyThreshold) {
-        mPlanarHomographyThreshold = planarHomographyThreshold;
+        this.planarHomographyThreshold = planarHomographyThreshold;
         //noinspection unchecked
         return (T) this;
     }
@@ -1140,7 +1084,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * @return true if inlier data is kept, false otherwise.
      */
     public boolean getPlanarHomographyComputeAndKeepInliers() {
-        return mPlanarHomographyComputeAndKeepInliers;
+        return planarHomographyComputeAndKeepInliers;
     }
 
     /**
@@ -1152,10 +1096,8 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      *                                              false otherwise.
      * @return this instance so that method can be easily chained.
      */
-    public T setPlanarHomographyComputeAndKeepInliers(
-            final boolean planarHomographyComputeAndKeepInliers) {
-        mPlanarHomographyComputeAndKeepInliers =
-                planarHomographyComputeAndKeepInliers;
+    public T setPlanarHomographyComputeAndKeepInliers(final boolean planarHomographyComputeAndKeepInliers) {
+        this.planarHomographyComputeAndKeepInliers = planarHomographyComputeAndKeepInliers;
         //noinspection unchecked
         return (T) this;
     }
@@ -1168,7 +1110,7 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      * @return true if residual data is kept, false otherwise.
      */
     public boolean getPlanarHomographyComputeAndKeepResiduals() {
-        return mPlanarHomographyComputeAndKeepResiduals;
+        return planarHomographyComputeAndKeepResiduals;
     }
 
     /**
@@ -1180,10 +1122,8 @@ public abstract class BaseTwoViewsSparseReconstructorConfiguration<
      *                                                kept, false otherwise.
      * @return this instance so that method can be easily chained.
      */
-    public T setPlanarHomographyComputeAndKeepResiduals(
-            final boolean planarHomographyComputeAndKeepResiduals) {
-        mPlanarHomographyComputeAndKeepResiduals =
-                planarHomographyComputeAndKeepResiduals;
+    public T setPlanarHomographyComputeAndKeepResiduals(final boolean planarHomographyComputeAndKeepResiduals) {
+        this.planarHomographyComputeAndKeepResiduals = planarHomographyComputeAndKeepResiduals;
         //noinspection unchecked
         return (T) this;
     }

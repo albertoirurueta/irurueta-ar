@@ -26,8 +26,7 @@ public interface RobustSinglePoint3DTriangulatorListener {
      *
      * @param triangulator reference to robust triangulator.
      */
-    void onTriangulateStart(
-            final RobustSinglePoint3DTriangulator triangulator);
+    void onTriangulateStart(final RobustSinglePoint3DTriangulator triangulator);
 
     /**
      * Called when triangulation ends.
@@ -42,8 +41,7 @@ public interface RobustSinglePoint3DTriangulatorListener {
      * @param triangulator reference to robust triangulator.
      * @param iteration    current iteration.
      */
-    void onTriangulateNextIteration(
-            final RobustSinglePoint3DTriangulator triangulator, final int iteration);
+    void onTriangulateNextIteration(final RobustSinglePoint3DTriangulator triangulator, final int iteration);
 
     /**
      * Called when estimation progress changes significantly.
@@ -52,6 +50,5 @@ public interface RobustSinglePoint3DTriangulatorListener {
      * @param progress     progress of estimation expressed as a value between 0.0
      *                     and 1.0.
      */
-    void onTriangulateProgressChange(
-            final RobustSinglePoint3DTriangulator triangulator, final float progress);
+    void onTriangulateProgressChange(final RobustSinglePoint3DTriangulator triangulator, final float progress);
 }
