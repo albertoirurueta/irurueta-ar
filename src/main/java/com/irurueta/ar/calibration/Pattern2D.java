@@ -59,12 +59,6 @@ public abstract class Pattern2D {
      * @return an instance of a 2D pattern.
      */
     public static Pattern2D create(final Pattern2DType type) {
-        switch (type) {
-            case QR:
-                return new QRPattern2D();
-            case CIRCLES:
-            default:
-                return new CirclesPattern2D();
-        }
+        return type == Pattern2DType.QR ? new QRPattern2D() : new CirclesPattern2D();
     }
 }

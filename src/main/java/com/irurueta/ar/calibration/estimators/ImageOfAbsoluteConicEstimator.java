@@ -97,7 +97,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
     /**
      * Indicates whether camera skewness is assumed to be zero or not.
      */
-    protected boolean mZeroSkewness;
+    protected boolean zeroSkewness;
 
     /**
      * Indicates whether principal point is assumed to be at origin of
@@ -105,7 +105,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * If false, the principal point will be estimated, otherwise it will be
      * assumed to be at image center (i.e. origin of coordinates).
      */
-    protected boolean mPrincipalPointAtOrigin;
+    protected boolean principalPointAtOrigin;
 
     /**
      * Indicates whether aspect ratio of focal distances (i.e. vertical focal
@@ -116,7 +116,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * This value is only taken into account if skewness is assumed to be
      * zero, otherwise it is ignored.
      */
-    protected boolean mFocalDistanceAspectRatioKnown;
+    protected boolean focalDistanceAspectRatioKnown;
 
     /**
      * Contains aspect ratio of focal distances (i.e. vertical focal distance
@@ -130,39 +130,38 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * Notice that focal distance aspect ratio is not related to image size
      * aspect ratio.
      */
-    protected double mFocalDistanceAspectRatio;
+    protected double focalDistanceAspectRatio;
 
     /**
      * True when estimator is estimating IAC.
      */
-    protected boolean mLocked;
+    protected boolean locked;
 
     /**
      * Listener to be notified of events such as when estimation starts, ends or
      * estimation progress changes.
      */
-    protected ImageOfAbsoluteConicEstimatorListener mListener;
+    protected ImageOfAbsoluteConicEstimatorListener listener;
 
     /**
      * List of homographies (2D transformations) used to estimate the image
      * of absolute conic (IAC), which can be used to obtain pinhole camera
      * intrinsic parameters.
      */
-    protected List<Transformation2D> mHomographies;
+    protected List<Transformation2D> homographies;
 
     /**
      * Constructor.
      */
     protected ImageOfAbsoluteConicEstimator() {
-        mZeroSkewness = DEFAULT_ZERO_SKEWNESS;
-        mPrincipalPointAtOrigin = DEFAULT_PRINCIPAL_POINT_AT_ORIGIN;
-        mFocalDistanceAspectRatioKnown =
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN;
-        mFocalDistanceAspectRatio = DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO;
+        zeroSkewness = DEFAULT_ZERO_SKEWNESS;
+        principalPointAtOrigin = DEFAULT_PRINCIPAL_POINT_AT_ORIGIN;
+        focalDistanceAspectRatioKnown = DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN;
+        focalDistanceAspectRatio = DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO;
 
-        mLocked = false;
-        mListener = null;
-        mHomographies = null;
+        locked = false;
+        listener = null;
+        homographies = null;
     }
 
     /**
@@ -171,10 +170,9 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or estimation progress changes.
      */
-    protected ImageOfAbsoluteConicEstimator(
-            final ImageOfAbsoluteConicEstimatorListener listener) {
+    protected ImageOfAbsoluteConicEstimator(final ImageOfAbsoluteConicEstimatorListener listener) {
         this();
-        mListener = listener;
+        this.listener = listener;
     }
 
     /**
@@ -202,8 +200,8 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * @throws IllegalArgumentException if not enough homographies are provided
      *                                  for default settings. Hence, at least 1 homography must be provided.
      */
-    protected ImageOfAbsoluteConicEstimator(final List<Transformation2D> homographies,
-                                            final ImageOfAbsoluteConicEstimatorListener listener) {
+    protected ImageOfAbsoluteConicEstimator(
+            final List<Transformation2D> homographies, final ImageOfAbsoluteConicEstimatorListener listener) {
         this(listener);
         internalSetHomographies(homographies);
     }
@@ -219,7 +217,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * skewness is estimated.
      */
     public boolean isZeroSkewness() {
-        return mZeroSkewness;
+        return zeroSkewness;
     }
 
     /**
@@ -238,7 +236,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
             throw new LockedException();
         }
 
-        mZeroSkewness = zeroSkewness;
+        this.zeroSkewness = zeroSkewness;
     }
 
     /**
@@ -252,7 +250,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * coordinates, false if principal point must be estimated.
      */
     public boolean isPrincipalPointAtOrigin() {
-        return mPrincipalPointAtOrigin;
+        return principalPointAtOrigin;
     }
 
     /**
@@ -266,13 +264,12 @@ public abstract class ImageOfAbsoluteConicEstimator {
      *                               origin of coordinates, false if principal point must be estimated.
      * @throws LockedException if estimator is locked.
      */
-    public void setPrincipalPointAtOrigin(final boolean principalPointAtOrigin)
-            throws LockedException {
+    public void setPrincipalPointAtOrigin(final boolean principalPointAtOrigin) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
 
-        mPrincipalPointAtOrigin = principalPointAtOrigin;
+        this.principalPointAtOrigin = principalPointAtOrigin;
     }
 
     /**
@@ -288,7 +285,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * @return true if focal distance aspect ratio is known, false otherwise.
      */
     public boolean isFocalDistanceAspectRatioKnown() {
-        return mFocalDistanceAspectRatioKnown;
+        return focalDistanceAspectRatioKnown;
     }
 
     /**
@@ -305,13 +302,12 @@ public abstract class ImageOfAbsoluteConicEstimator {
      *                                      is known, false otherwise.
      * @throws LockedException if estimator is locked.
      */
-    public void setFocalDistanceAspectRatioKnown(
-            final boolean focalDistanceAspectRatioKnown) throws LockedException {
+    public void setFocalDistanceAspectRatioKnown(final boolean focalDistanceAspectRatioKnown) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
 
-        mFocalDistanceAspectRatioKnown = focalDistanceAspectRatioKnown;
+        this.focalDistanceAspectRatioKnown = focalDistanceAspectRatioKnown;
     }
 
     /**
@@ -334,7 +330,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * @return aspect ratio of focal distances.
      */
     public double getFocalDistanceAspectRatio() {
-        return mFocalDistanceAspectRatio;
+        return focalDistanceAspectRatio;
     }
 
     /**
@@ -360,8 +356,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * @throws IllegalArgumentException if focal distance aspect ratio is too
      *                                  close to zero, as it might produce numerical instabilities.
      */
-    public void setFocalDistanceAspectRatio(final double focalDistanceAspectRatio)
-            throws LockedException {
+    public void setFocalDistanceAspectRatio(final double focalDistanceAspectRatio) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -369,7 +364,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
             throw new IllegalArgumentException();
         }
 
-        mFocalDistanceAspectRatio = focalDistanceAspectRatio;
+        this.focalDistanceAspectRatio = focalDistanceAspectRatio;
     }
 
     /**
@@ -379,7 +374,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * otherwise.
      */
     public boolean isLocked() {
-        return mLocked;
+        return locked;
     }
 
     /**
@@ -389,7 +384,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * @return listener to be notified of events.
      */
     public ImageOfAbsoluteConicEstimatorListener getListener() {
-        return mListener;
+        return listener;
     }
 
     /**
@@ -399,12 +394,11 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * @param listener listener to be notified of events.
      * @throws LockedException if estimator is locked.
      */
-    public void setListener(final ImageOfAbsoluteConicEstimatorListener listener)
-            throws LockedException {
+    public void setListener(final ImageOfAbsoluteConicEstimatorListener listener) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mListener = listener;
+        this.listener = listener;
     }
 
     /**
@@ -413,7 +407,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * @return list of homographies to estimate IAC.
      */
     public List<Transformation2D> getHomographies() {
-        return mHomographies;
+        return homographies;
     }
 
     /**
@@ -424,8 +418,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * @throws IllegalArgumentException if provided list of homographies does not
      *                                  contain enough elements to estimate the IAC using current settings.
      */
-    public void setHomographies(final List<Transformation2D> homographies)
-            throws LockedException {
+    public void setHomographies(final List<Transformation2D> homographies) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -448,14 +441,14 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * IAC
      */
     public int getMinNumberOfRequiredHomographies() {
-        int numEquations = MIN_REQUIRED_EQUATIONS;
-        if (mZeroSkewness) {
-            if (mFocalDistanceAspectRatioKnown) {
+        var numEquations = MIN_REQUIRED_EQUATIONS;
+        if (zeroSkewness) {
+            if (focalDistanceAspectRatioKnown) {
                 numEquations--;
             }
             numEquations--;
         }
-        if (mPrincipalPointAtOrigin) {
+        if (principalPointAtOrigin) {
             numEquations -= 2;
         }
 
@@ -471,8 +464,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * @return true if estimator is ready, false otherwise.
      */
     public boolean isReady() {
-        return mHomographies != null &&
-                mHomographies.size() >= getMinNumberOfRequiredHomographies();
+        return homographies != null && homographies.size() >= getMinNumberOfRequiredHomographies();
     }
 
     /**
@@ -493,8 +485,8 @@ public abstract class ImageOfAbsoluteConicEstimator {
      *                                                avoid this exception, homographies must be purely
      *                                                projective.
      */
-    public abstract ImageOfAbsoluteConic estimate() throws LockedException,
-            NotReadyException, ImageOfAbsoluteConicEstimatorException;
+    public abstract ImageOfAbsoluteConic estimate() throws LockedException, NotReadyException,
+            ImageOfAbsoluteConicEstimatorException;
 
     /**
      * Returns type of IAC estimator.
@@ -520,8 +512,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      *                 starts, ends or estimation progress changes.
      * @return an instance of an IAC estimator.
      */
-    public static ImageOfAbsoluteConicEstimator create(
-            final ImageOfAbsoluteConicEstimatorListener listener) {
+    public static ImageOfAbsoluteConicEstimator create(final ImageOfAbsoluteConicEstimatorListener listener) {
         return create(listener, DEFAULT_ESTIMATOR_TYPE);
     }
 
@@ -535,8 +526,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * @throws IllegalArgumentException if not enough homographies are provided
      *                                  for default IAC estimation constraints.
      */
-    public static ImageOfAbsoluteConicEstimator create(
-            final List<Transformation2D> homographies) {
+    public static ImageOfAbsoluteConicEstimator create(final List<Transformation2D> homographies) {
         return create(homographies, DEFAULT_ESTIMATOR_TYPE);
     }
 
@@ -554,8 +544,7 @@ public abstract class ImageOfAbsoluteConicEstimator {
      *                                  for default IAC estimation constraints.
      */
     public static ImageOfAbsoluteConicEstimator create(
-            final List<Transformation2D> homographies,
-            final ImageOfAbsoluteConicEstimatorListener listener) {
+            final List<Transformation2D> homographies, final ImageOfAbsoluteConicEstimatorListener listener) {
         return create(homographies, listener, DEFAULT_ESTIMATOR_TYPE);
     }
 
@@ -566,15 +555,9 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * @param type type of IAC estimator to create.
      * @return an instance of an IAC estimator.
      */
-    public static ImageOfAbsoluteConicEstimator create(
-            final ImageOfAbsoluteConicEstimatorType type) {
-        switch (type) {
-            case WEIGHTED_IAC_ESTIMATOR:
-                return new WeightedImageOfAbsoluteConicEstimator();
-            case LMSE_IAC_ESTIMATOR:
-            default:
-                return new LMSEImageOfAbsoluteConicEstimator();
-        }
+    public static ImageOfAbsoluteConicEstimator create(final ImageOfAbsoluteConicEstimatorType type) {
+        return type == ImageOfAbsoluteConicEstimatorType.WEIGHTED_IAC_ESTIMATOR
+                ? new WeightedImageOfAbsoluteConicEstimator() : new LMSEImageOfAbsoluteConicEstimator();
     }
 
     /**
@@ -587,15 +570,10 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * @return an instance of an IAC estimator.
      */
     public static ImageOfAbsoluteConicEstimator create(
-            final ImageOfAbsoluteConicEstimatorListener listener,
-            final ImageOfAbsoluteConicEstimatorType type) {
-        switch (type) {
-            case WEIGHTED_IAC_ESTIMATOR:
-                return new WeightedImageOfAbsoluteConicEstimator(listener);
-            case LMSE_IAC_ESTIMATOR:
-            default:
-                return new LMSEImageOfAbsoluteConicEstimator(listener);
-        }
+            final ImageOfAbsoluteConicEstimatorListener listener, final ImageOfAbsoluteConicEstimatorType type) {
+        return type == ImageOfAbsoluteConicEstimatorType.WEIGHTED_IAC_ESTIMATOR
+                ? new WeightedImageOfAbsoluteConicEstimator(listener)
+                : new LMSEImageOfAbsoluteConicEstimator(listener);
     }
 
     /**
@@ -611,14 +589,12 @@ public abstract class ImageOfAbsoluteConicEstimator {
      *                                  for default IAC estimation constraints.
      */
     public static ImageOfAbsoluteConicEstimator create(
-            final List<Transformation2D> homographies,
-            final ImageOfAbsoluteConicEstimatorType type) {
+            final List<Transformation2D> homographies, final ImageOfAbsoluteConicEstimatorType type) {
         switch (type) {
             case WEIGHTED_IAC_ESTIMATOR:
-                double[] weights = new double[homographies.size()];
+                final var weights = new double[homographies.size()];
                 Arrays.fill(weights, 1.0);
-                return new WeightedImageOfAbsoluteConicEstimator(homographies,
-                        weights);
+                return new WeightedImageOfAbsoluteConicEstimator(homographies, weights);
             case LMSE_IAC_ESTIMATOR:
             default:
                 return new LMSEImageOfAbsoluteConicEstimator(homographies);
@@ -640,19 +616,16 @@ public abstract class ImageOfAbsoluteConicEstimator {
      *                                  for default IAC estimation constraints.
      */
     public static ImageOfAbsoluteConicEstimator create(
-            final List<Transformation2D> homographies,
-            final ImageOfAbsoluteConicEstimatorListener listener,
+            final List<Transformation2D> homographies, final ImageOfAbsoluteConicEstimatorListener listener,
             final ImageOfAbsoluteConicEstimatorType type) {
         switch (type) {
             case WEIGHTED_IAC_ESTIMATOR:
-                double[] weights = new double[homographies.size()];
+                final var weights = new double[homographies.size()];
                 Arrays.fill(weights, 1.0);
-                return new WeightedImageOfAbsoluteConicEstimator(homographies,
-                        weights, listener);
+                return new WeightedImageOfAbsoluteConicEstimator(homographies, weights, listener);
             case LMSE_IAC_ESTIMATOR:
             default:
-                return new LMSEImageOfAbsoluteConicEstimator(homographies,
-                        listener);
+                return new LMSEImageOfAbsoluteConicEstimator(homographies, listener);
         }
     }
 
@@ -664,12 +637,10 @@ public abstract class ImageOfAbsoluteConicEstimator {
      * @throws IllegalArgumentException if provided list of homographies does not
      *                                  contain enough elements to estimate the DIAC using current settings.
      */
-    protected final void internalSetHomographies(
-            final List<Transformation2D> homographies) {
-        if (homographies == null ||
-                homographies.size() < getMinNumberOfRequiredHomographies()) {
+    protected final void internalSetHomographies(final List<Transformation2D> homographies) {
+        if (homographies == null || homographies.size() < getMinNumberOfRequiredHomographies()) {
             throw new IllegalArgumentException();
         }
-        mHomographies = homographies;
+        this.homographies = homographies;
     }
 }

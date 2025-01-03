@@ -81,20 +81,20 @@ public class QRPattern2D extends Pattern2D implements Serializable {
      * QR code width expressed in meters.
      * This value is used to obtain a reference physical measure.
      */
-    private double mCodeWidth;
+    private double codeWidth;
 
     /**
      * QR code height expressed in meters.
      * This value is used to obtain a reference physical measure.
      */
-    private double mCodeHeight;
+    private double codeHeight;
 
     /**
      * Constructor.
      */
     public QRPattern2D() {
-        mCodeWidth = DEFAULT_QR_CODE_WIDTH;
-        mCodeHeight = DEFAULT_QR_CODE_HEIGHT;
+        codeWidth = DEFAULT_QR_CODE_WIDTH;
+        codeHeight = DEFAULT_QR_CODE_HEIGHT;
     }
 
     /**
@@ -104,7 +104,7 @@ public class QRPattern2D extends Pattern2D implements Serializable {
      * @return QR code width expressed in meters.
      */
     public double getCodeWidth() {
-        return mCodeWidth;
+        return codeWidth;
     }
 
     /**
@@ -119,7 +119,7 @@ public class QRPattern2D extends Pattern2D implements Serializable {
             throw new IllegalArgumentException();
         }
 
-        mCodeWidth = codeWidth;
+        this.codeWidth = codeWidth;
     }
 
     /**
@@ -129,7 +129,7 @@ public class QRPattern2D extends Pattern2D implements Serializable {
      * @return QR code height expressed in meters.
      */
     public double getCodeHeight() {
-        return mCodeHeight;
+        return codeHeight;
     }
 
     /**
@@ -144,7 +144,7 @@ public class QRPattern2D extends Pattern2D implements Serializable {
             throw new IllegalArgumentException();
         }
 
-        mCodeHeight = codeHeight;
+        this.codeHeight = codeHeight;
     }
 
     /**
@@ -155,7 +155,7 @@ public class QRPattern2D extends Pattern2D implements Serializable {
      */
     @Override
     public List<Point2D> getIdealPoints() {
-        final List<Point2D> points = new ArrayList<>();
+        final var points = new ArrayList<Point2D>();
 
         // The size of a QR code (expressed in modules, i.e. each small square)
         // can be calculated with the formula (((V-1)*4)+21), where V is the QR
@@ -190,27 +190,23 @@ public class QRPattern2D extends Pattern2D implements Serializable {
         // is located at ([(((V-1)*4)+21) - 7 - 3], [(((V-1)*4)+21) - 7 - 3]),
         // so for version 2 this is equal to (15, 15)
 
-        final double moduleWidth = mCodeWidth / NUMBER_OF_MODULES;
-        final double moduleHeight = mCodeHeight / NUMBER_OF_MODULES;
+        final var moduleWidth = codeWidth / NUMBER_OF_MODULES;
+        final var moduleHeight = codeHeight / NUMBER_OF_MODULES;
 
         // below is equivalent to [(((V-1)*4)+21) - 7] = 18
-        final int finderModulePos = NUMBER_OF_MODULES - 3 - ORIGIN_OFFSET;
+        final var finderModulePos = NUMBER_OF_MODULES - 3 - ORIGIN_OFFSET;
         // below is always 15
-        final int alignModulePos = finderModulePos - 3;
+        final var alignModulePos = finderModulePos - 3;
 
         // bottom-left finder pattern
-        points.add(new InhomogeneousPoint2D(0.0,
-                finderModulePos * moduleHeight));
+        points.add(new InhomogeneousPoint2D(0.0, finderModulePos * moduleHeight));
         // top-left finder pattern
         points.add(new InhomogeneousPoint2D(0.0, 0.0));
         // top-right finder pattern
-        points.add(new InhomogeneousPoint2D(
-                finderModulePos * moduleWidth, 0.0));
+        points.add(new InhomogeneousPoint2D(finderModulePos * moduleWidth, 0.0));
 
         // bottom-right alignment pattern
-        points.add(new InhomogeneousPoint2D(
-                alignModulePos * moduleWidth,
-                alignModulePos * moduleHeight));
+        points.add(new InhomogeneousPoint2D(alignModulePos * moduleWidth, alignModulePos * moduleHeight));
 
         return points;
     }

@@ -31,28 +31,28 @@ public abstract class BaseCalibrationData implements Serializable {
     /**
      * Length of control signal.
      */
-    private final int mControlLength;
+    private final int controlLength;
 
     /**
      * Length of state in SLAM estimator.
      */
-    private final int mStateLength;
+    private final int stateLength;
 
     /**
      * Control signal mean to correct biases in control signal.
      */
-    private double[] mControlMean;
+    private double[] controlMean;
 
     /**
      * Control signal covariance to take into account for estimation of process
      * noise during Kalman prediction stage.
      */
-    private Matrix mControlCovariance;
+    private Matrix controlCovariance;
 
     /**
      * Evaluator for distribution propagation.
      */
-    private MultivariateNormalDist.JacobianEvaluator mEvaluator;
+    private transient MultivariateNormalDist.JacobianEvaluator evaluator;
 
     /**
      * Constructor.
@@ -64,12 +64,11 @@ public abstract class BaseCalibrationData implements Serializable {
      */
     protected BaseCalibrationData(final int controlLength, final int stateLength) {
         if (controlLength < 1 || stateLength < 1) {
-            throw new IllegalArgumentException(
-                    "length must be greater than zero");
+            throw new IllegalArgumentException("length must be greater than zero");
         }
 
-        mControlLength = controlLength;
-        mStateLength = stateLength;
+        this.controlLength = controlLength;
+        this.stateLength = stateLength;
     }
 
     /**
@@ -78,7 +77,7 @@ public abstract class BaseCalibrationData implements Serializable {
      * @return length of control signal.
      */
     public int getControlLength() {
-        return mControlLength;
+        return controlLength;
     }
 
     /**
@@ -87,7 +86,7 @@ public abstract class BaseCalibrationData implements Serializable {
      * @return length of state in SLAM estimator.
      */
     public int getStateLength() {
-        return mStateLength;
+        return stateLength;
     }
 
     /**
@@ -96,7 +95,7 @@ public abstract class BaseCalibrationData implements Serializable {
      * @return control signal mean.
      */
     public double[] getControlMean() {
-        return mControlMean;
+        return controlMean;
     }
 
     /**
@@ -107,11 +106,11 @@ public abstract class BaseCalibrationData implements Serializable {
      *                                  length.
      */
     public void setControlMean(final double[] controlMean) {
-        if (controlMean.length != mControlLength) {
+        if (controlMean.length != controlLength) {
             throw new IllegalArgumentException("wrong mean length");
         }
 
-        mControlMean = controlMean;
+        this.controlMean = controlMean;
     }
 
     /**
@@ -121,7 +120,7 @@ public abstract class BaseCalibrationData implements Serializable {
      * @return control signal covariance.
      */
     public Matrix getControlCovariance() {
-        return mControlCovariance;
+        return controlCovariance;
     }
 
     /**
@@ -132,12 +131,11 @@ public abstract class BaseCalibrationData implements Serializable {
      * @throws IllegalArgumentException if provided covariance size is wrong.
      */
     public void setControlCovariance(final Matrix controlCovariance) {
-        if (controlCovariance.getRows() != mControlLength ||
-                controlCovariance.getColumns() != mControlLength) {
+        if (controlCovariance.getRows() != controlLength || controlCovariance.getColumns() != controlLength) {
             throw new IllegalArgumentException("wrong covariance size");
         }
 
-        mControlCovariance = controlCovariance;
+        this.controlCovariance = controlCovariance;
     }
 
     /**
@@ -150,19 +148,16 @@ public abstract class BaseCalibrationData implements Serializable {
      * @throws IllegalArgumentException if provided mean or covariance do not
      *                                  have proper size or length.
      */
-    public void setControlMeanAndCovariance(final double[] controlMean,
-                                            final Matrix controlCovariance) {
-        if (controlMean.length != mControlLength) {
+    public void setControlMeanAndCovariance(final double[] controlMean, final Matrix controlCovariance) {
+        if (controlMean.length != controlLength) {
             throw new IllegalArgumentException("wrong mean length");
         }
-        if (controlCovariance.getRows() != mControlLength ||
-                controlCovariance.getColumns() != mControlLength) {
+        if (controlCovariance.getRows() != controlLength || controlCovariance.getColumns() != controlLength) {
             throw new IllegalArgumentException("wrong covariance size");
         }
 
-
-        mControlMean = controlMean;
-        mControlCovariance = controlCovariance;
+        this.controlMean = controlMean;
+        this.controlCovariance = controlCovariance;
     }
 
     /**
@@ -177,9 +172,9 @@ public abstract class BaseCalibrationData implements Serializable {
      *                                          valid.
      * @throws IllegalArgumentException         if provided jacobian has invalid size.
      */
-    public MultivariateNormalDist propagateWithControlJacobian(
-            final Matrix controlJacobian) throws InvalidCovarianceMatrixException {
-        final MultivariateNormalDist dist = new MultivariateNormalDist();
+    public MultivariateNormalDist propagateWithControlJacobian(final Matrix controlJacobian)
+            throws InvalidCovarianceMatrixException {
+        final var dist = new MultivariateNormalDist();
         propagateWithControlJacobian(controlJacobian, dist);
         return dist;
     }
@@ -197,15 +192,13 @@ public abstract class BaseCalibrationData implements Serializable {
      * @throws IllegalArgumentException         if provided jacobian has invalid size.
      */
     public void propagateWithControlJacobian(
-            final Matrix controlJacobian,
-            final MultivariateNormalDist result) throws InvalidCovarianceMatrixException {
-        if (controlJacobian.getRows() != mStateLength ||
-                controlJacobian.getColumns() != mControlLength) {
+            final Matrix controlJacobian, final MultivariateNormalDist result) throws InvalidCovarianceMatrixException {
+        if (controlJacobian.getRows() != stateLength || controlJacobian.getColumns() != controlLength) {
             throw new IllegalArgumentException("wrong control jacobian size");
         }
 
-        if (mEvaluator == null) {
-            mEvaluator = new MultivariateNormalDist.JacobianEvaluator() {
+        if (evaluator == null) {
+            evaluator = new MultivariateNormalDist.JacobianEvaluator() {
                 @Override
                 public void evaluate(final double[] x, final double[] y, final Matrix jacobian) {
                     controlJacobian.copyTo(jacobian);
@@ -213,14 +206,13 @@ public abstract class BaseCalibrationData implements Serializable {
 
                 @Override
                 public int getNumberOfVariables() {
-                    return mStateLength;
+                    return stateLength;
                 }
             };
         }
 
         try {
-            MultivariateNormalDist.propagate(mEvaluator, mControlMean,
-                    mControlCovariance, result);
+            MultivariateNormalDist.propagate(evaluator, controlMean, controlCovariance, result);
         } catch (final WrongSizeException e) {
             throw new InvalidCovarianceMatrixException(e);
         }

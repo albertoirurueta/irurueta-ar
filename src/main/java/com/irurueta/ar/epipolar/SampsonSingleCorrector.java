@@ -89,12 +89,9 @@ public class SampsonSingleCorrector extends SingleCorrector {
             throw new NotReadyException();
         }
 
-        mLeftCorrectedPoint = Point2D.create(
-                CoordinatesType.HOMOGENEOUS_COORDINATES);
-        mRightCorrectedPoint = Point2D.create(
-                CoordinatesType.HOMOGENEOUS_COORDINATES);
-        correct(mLeftPoint, mRightPoint, mFundamentalMatrix,
-                mLeftCorrectedPoint, mRightCorrectedPoint);
+        leftCorrectedPoint = Point2D.create(CoordinatesType.HOMOGENEOUS_COORDINATES);
+        rightCorrectedPoint = Point2D.create(CoordinatesType.HOMOGENEOUS_COORDINATES);
+        correct(leftPoint, rightPoint, fundamentalMatrix, leftCorrectedPoint, rightCorrectedPoint);
     }
 
     /**
@@ -124,10 +121,10 @@ public class SampsonSingleCorrector extends SingleCorrector {
                                final FundamentalMatrix fundamentalMatrix, final Point2D correctedLeftPoint,
                                final Point2D correctedRightPoint) throws NotReadyException {
 
-        final Line2D leftEpipolarLine = new Line2D();
-        final Line2D rightEpipolarLine = new Line2D();
-        correct(leftPoint, rightPoint, fundamentalMatrix, correctedLeftPoint,
-                correctedRightPoint, leftEpipolarLine, rightEpipolarLine);
+        final var leftEpipolarLine = new Line2D();
+        final var rightEpipolarLine = new Line2D();
+        correct(leftPoint, rightPoint, fundamentalMatrix, correctedLeftPoint, correctedRightPoint, leftEpipolarLine,
+                rightEpipolarLine);
     }
 
     /**
@@ -149,9 +146,8 @@ public class SampsonSingleCorrector extends SingleCorrector {
      * @throws NotReadyException if provided fundamental matrix is not ready.
      */
     protected static void correct(
-            final Point2D leftPoint, final Point2D rightPoint,
-            final FundamentalMatrix fundamentalMatrix, final Point2D correctedLeftPoint,
-            final Point2D correctedRightPoint, final Line2D leftEpipolarLine,
+            final Point2D leftPoint, final Point2D rightPoint, final FundamentalMatrix fundamentalMatrix,
+            final Point2D correctedLeftPoint, final Point2D correctedRightPoint, final Line2D leftEpipolarLine,
             final Line2D rightEpipolarLine) throws NotReadyException {
 
         // normalize to increase accuracy
@@ -165,30 +161,28 @@ public class SampsonSingleCorrector extends SingleCorrector {
         leftEpipolarLine.normalize();
         rightEpipolarLine.normalize();
 
-        final double numerator = rightPoint.getHomX() * rightEpipolarLine.getA() +
-                rightPoint.getHomY() * rightEpipolarLine.getB() +
-                rightPoint.getHomW() * rightEpipolarLine.getC();
+        final var numerator = rightPoint.getHomX() * rightEpipolarLine.getA()
+                + rightPoint.getHomY() * rightEpipolarLine.getB()
+                + rightPoint.getHomW() * rightEpipolarLine.getC();
 
-        final double denominator = Math.pow(rightEpipolarLine.getA(), 2.0) +
-                Math.pow(rightEpipolarLine.getB(), 2.0) +
-                Math.pow(leftEpipolarLine.getA(), 2.0) +
-                Math.pow(leftEpipolarLine.getB(), 2.0);
+        final var denominator = Math.pow(rightEpipolarLine.getA(), 2.0)
+                + Math.pow(rightEpipolarLine.getB(), 2.0)
+                + Math.pow(leftEpipolarLine.getA(), 2.0)
+                + Math.pow(leftEpipolarLine.getB(), 2.0);
 
-        final double factor = numerator / denominator;
+        final var factor = numerator / denominator;
 
-        final double leftCorrectionX = factor * leftEpipolarLine.getA();
-        final double leftCorrectionY = factor * leftEpipolarLine.getB();
-        final double rightCorrectionX = factor * rightEpipolarLine.getA();
-        final double rightCorrectionY = factor * rightEpipolarLine.getB();
+        final var leftCorrectionX = factor * leftEpipolarLine.getA();
+        final var leftCorrectionY = factor * leftEpipolarLine.getB();
+        final var rightCorrectionX = factor * rightEpipolarLine.getA();
+        final var rightCorrectionY = factor * rightEpipolarLine.getB();
 
-        final double correctedLeftX = leftPoint.getInhomX() - leftCorrectionX;
-        final double correctedLeftY = leftPoint.getInhomY() - leftCorrectionY;
-        final double correctedRightX = rightPoint.getInhomX() - rightCorrectionX;
-        final double correctedRightY = rightPoint.getInhomY() - rightCorrectionY;
+        final var correctedLeftX = leftPoint.getInhomX() - leftCorrectionX;
+        final var correctedLeftY = leftPoint.getInhomY() - leftCorrectionY;
+        final var correctedRightX = rightPoint.getInhomX() - rightCorrectionX;
+        final var correctedRightY = rightPoint.getInhomY() - rightCorrectionY;
 
-        correctedLeftPoint.setInhomogeneousCoordinates(correctedLeftX,
-                correctedLeftY);
-        correctedRightPoint.setInhomogeneousCoordinates(correctedRightX,
-                correctedRightY);
+        correctedLeftPoint.setInhomogeneousCoordinates(correctedLeftX, correctedLeftY);
+        correctedRightPoint.setInhomogeneousCoordinates(correctedRightX, correctedRightY);
     }
 }

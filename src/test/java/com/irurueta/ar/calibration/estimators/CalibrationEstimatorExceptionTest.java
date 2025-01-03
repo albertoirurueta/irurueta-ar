@@ -15,15 +15,15 @@
  */
 package com.irurueta.ar.calibration.estimators;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class CalibrationEstimatorExceptionTest {
+class CalibrationEstimatorExceptionTest {
 
     @Test
-    public void testConstructor() {
-        CalibrationEstimatorException ex = new CalibrationEstimatorException();
+    void testConstructor() {
+        var ex = new CalibrationEstimatorException();
         assertNotNull(ex);
 
         ex = new CalibrationEstimatorException("message");

@@ -25,17 +25,14 @@ import com.irurueta.ar.epipolar.InvalidFundamentalMatrixException;
 import com.irurueta.ar.epipolar.InvalidPairOfCamerasException;
 import com.irurueta.geometry.*;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.BitSet;
-import java.util.List;
-import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class EssentialMatrixInitialCamerasEstimatorTest implements
-        InitialCamerasEstimatorListener {
+class EssentialMatrixInitialCamerasEstimatorTest implements InitialCamerasEstimatorListener {
 
     private static final double MIN_FOCAL_LENGTH = 1.0;
     private static final double MAX_FOCAL_LENGTH = 100.0;
@@ -59,8 +56,8 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
     private static final int MAX_TRIES = 2000;
 
     @Test
-    public void testConstructor() {
-        EssentialMatrixInitialCamerasEstimator estimator = new EssentialMatrixInitialCamerasEstimator();
+    void testConstructor() {
+        var estimator = new EssentialMatrixInitialCamerasEstimator();
 
         // check default values
         assertNull(estimator.getFundamentalMatrix());
@@ -68,8 +65,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         assertFalse(estimator.isLocked());
         assertNull(estimator.getEstimatedLeftCamera());
         assertNull(estimator.getEstimatedRightCamera());
-        assertEquals(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX,
-                estimator.getMethod());
+        assertEquals(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX, estimator.getMethod());
         assertFalse(estimator.isReady());
         assertNull(estimator.getLeftIntrinsic());
         assertNull(estimator.getRightIntrinsic());
@@ -83,7 +79,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         assertNull(estimator.getTriangulatedPoints());
         assertNull(estimator.getValidTriangulatedPoints());
 
-        final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix();
+        final var fundamentalMatrix = new FundamentalMatrix();
         estimator = new EssentialMatrixInitialCamerasEstimator(fundamentalMatrix);
 
         // check default values
@@ -106,8 +102,8 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         assertNull(estimator.getTriangulatedPoints());
         assertNull(estimator.getValidTriangulatedPoints());
 
-        final PinholeCameraIntrinsicParameters leftIntrinsic = new PinholeCameraIntrinsicParameters();
-        final PinholeCameraIntrinsicParameters rightIntrinsic = new PinholeCameraIntrinsicParameters();
+        final var leftIntrinsic = new PinholeCameraIntrinsicParameters();
+        final var rightIntrinsic = new PinholeCameraIntrinsicParameters();
         estimator = new EssentialMatrixInitialCamerasEstimator(leftIntrinsic, rightIntrinsic);
 
         // check default values
@@ -130,8 +126,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         assertNull(estimator.getTriangulatedPoints());
         assertNull(estimator.getValidTriangulatedPoints());
 
-        estimator = new EssentialMatrixInitialCamerasEstimator(
-                fundamentalMatrix, leftIntrinsic, rightIntrinsic);
+        estimator = new EssentialMatrixInitialCamerasEstimator(fundamentalMatrix, leftIntrinsic, rightIntrinsic);
 
         // check default values
         assertSame(estimator.getFundamentalMatrix(), fundamentalMatrix);
@@ -153,9 +148,9 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         assertNull(estimator.getTriangulatedPoints());
         assertNull(estimator.getValidTriangulatedPoints());
 
-        final List<Point2D> leftPoints = new ArrayList<>();
+        final var leftPoints = new ArrayList<Point2D>();
         leftPoints.add(Point2D.create());
-        final List<Point2D> rightPoints = new ArrayList<>();
+        final var rightPoints = new ArrayList<Point2D>();
         rightPoints.add(Point2D.create());
         estimator = new EssentialMatrixInitialCamerasEstimator(leftPoints, rightPoints);
 
@@ -180,18 +175,10 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         assertNull(estimator.getValidTriangulatedPoints());
 
         // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new EssentialMatrixInitialCamerasEstimator(leftPoints, null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new EssentialMatrixInitialCamerasEstimator(null, rightPoints);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
+        assertThrows(IllegalArgumentException.class,
+                () -> new EssentialMatrixInitialCamerasEstimator(leftPoints, null));
+        assertThrows(IllegalArgumentException.class,
+                () -> new EssentialMatrixInitialCamerasEstimator(null, rightPoints));
 
         estimator = new EssentialMatrixInitialCamerasEstimator(fundamentalMatrix, leftPoints, rightPoints);
 
@@ -216,23 +203,12 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         assertNull(estimator.getValidTriangulatedPoints());
 
         // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new EssentialMatrixInitialCamerasEstimator(
-                    fundamentalMatrix, leftPoints, null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new EssentialMatrixInitialCamerasEstimator(
-                    fundamentalMatrix, null, rightPoints);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
+        assertThrows(IllegalArgumentException.class, () -> new EssentialMatrixInitialCamerasEstimator(
+                fundamentalMatrix, leftPoints, null));
+        assertThrows(IllegalArgumentException.class, () -> new EssentialMatrixInitialCamerasEstimator(
+                fundamentalMatrix, null, rightPoints));
 
-        estimator = new EssentialMatrixInitialCamerasEstimator(leftIntrinsic,
-                rightIntrinsic, leftPoints, rightPoints);
+        estimator = new EssentialMatrixInitialCamerasEstimator(leftIntrinsic, rightIntrinsic, leftPoints, rightPoints);
 
         // check default values
         assertNull(estimator.getFundamentalMatrix());
@@ -242,10 +218,10 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         assertNull(estimator.getEstimatedRightCamera());
         assertEquals(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX, estimator.getMethod());
         assertFalse(estimator.isReady());
-        assertSame(estimator.getLeftIntrinsic(), leftIntrinsic);
-        assertSame(estimator.getRightIntrinsic(), rightIntrinsic);
-        assertSame(estimator.getLeftPoints(), leftPoints);
-        assertSame(estimator.getRightPoints(), rightPoints);
+        assertSame(leftIntrinsic, estimator.getLeftIntrinsic());
+        assertSame(rightIntrinsic, estimator.getRightIntrinsic());
+        assertSame(leftPoints, estimator.getLeftPoints());
+        assertSame(rightPoints, estimator.getRightPoints());
         assertEquals(Corrector.DEFAULT_TYPE, estimator.getCorrectorType());
         assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_TRIANGULATE_POINTS,
                 estimator.arePointsTriangulated());
@@ -255,23 +231,13 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         assertNull(estimator.getValidTriangulatedPoints());
 
         // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new EssentialMatrixInitialCamerasEstimator(
-                    leftIntrinsic, rightIntrinsic, leftPoints, null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new EssentialMatrixInitialCamerasEstimator(
-                    leftIntrinsic, rightIntrinsic, null, rightPoints);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
+        assertThrows(IllegalArgumentException.class, () -> new EssentialMatrixInitialCamerasEstimator(
+                leftIntrinsic, rightIntrinsic, leftPoints, null));
+        assertThrows(IllegalArgumentException.class, () -> new EssentialMatrixInitialCamerasEstimator(
+                leftIntrinsic, rightIntrinsic, null, rightPoints));
 
-        estimator = new EssentialMatrixInitialCamerasEstimator(
-                fundamentalMatrix, leftIntrinsic, rightIntrinsic, leftPoints, rightPoints);
+        estimator = new EssentialMatrixInitialCamerasEstimator(fundamentalMatrix, leftIntrinsic, rightIntrinsic,
+                leftPoints, rightPoints);
 
         // check default values
         assertSame(fundamentalMatrix, estimator.getFundamentalMatrix());
@@ -279,8 +245,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         assertFalse(estimator.isLocked());
         assertNull(estimator.getEstimatedLeftCamera());
         assertNull(estimator.getEstimatedRightCamera());
-        assertEquals(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX,
-                estimator.getMethod());
+        assertEquals(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX, estimator.getMethod());
         assertTrue(estimator.isReady());
         assertSame(leftIntrinsic, estimator.getLeftIntrinsic());
         assertSame(rightIntrinsic, estimator.getRightIntrinsic());
@@ -295,20 +260,10 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         assertNull(estimator.getValidTriangulatedPoints());
 
         // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new EssentialMatrixInitialCamerasEstimator(
-                    fundamentalMatrix, leftIntrinsic, rightIntrinsic, leftPoints, null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new EssentialMatrixInitialCamerasEstimator(
-                    fundamentalMatrix, leftIntrinsic, rightIntrinsic, null, rightPoints);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
+        assertThrows(IllegalArgumentException.class, () -> new EssentialMatrixInitialCamerasEstimator(
+                fundamentalMatrix, leftIntrinsic, rightIntrinsic, leftPoints, null));
+        assertThrows(IllegalArgumentException.class, () -> new EssentialMatrixInitialCamerasEstimator(
+                fundamentalMatrix, leftIntrinsic, rightIntrinsic, null, rightPoints));
 
         estimator = new EssentialMatrixInitialCamerasEstimator(this);
 
@@ -332,8 +287,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         assertNull(estimator.getTriangulatedPoints());
         assertNull(estimator.getValidTriangulatedPoints());
 
-        estimator = new EssentialMatrixInitialCamerasEstimator(
-                fundamentalMatrix, this);
+        estimator = new EssentialMatrixInitialCamerasEstimator(fundamentalMatrix, this);
 
         // check default values
         assertSame(fundamentalMatrix, estimator.getFundamentalMatrix());
@@ -341,8 +295,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         assertFalse(estimator.isLocked());
         assertNull(estimator.getEstimatedLeftCamera());
         assertNull(estimator.getEstimatedRightCamera());
-        assertEquals(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX,
-                estimator.getMethod());
+        assertEquals(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX, estimator.getMethod());
         assertFalse(estimator.isReady());
         assertNull(estimator.getLeftIntrinsic());
         assertNull(estimator.getRightIntrinsic());
@@ -356,8 +309,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         assertNull(estimator.getTriangulatedPoints());
         assertNull(estimator.getValidTriangulatedPoints());
 
-        estimator = new EssentialMatrixInitialCamerasEstimator(leftIntrinsic, rightIntrinsic,
-                this);
+        estimator = new EssentialMatrixInitialCamerasEstimator(leftIntrinsic, rightIntrinsic, this);
 
         // check default values
         assertNull(estimator.getFundamentalMatrix());
@@ -365,8 +317,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         assertFalse(estimator.isLocked());
         assertNull(estimator.getEstimatedLeftCamera());
         assertNull(estimator.getEstimatedRightCamera());
-        assertEquals(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX,
-                estimator.getMethod());
+        assertEquals(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX, estimator.getMethod());
         assertFalse(estimator.isReady());
         assertSame(leftIntrinsic, estimator.getLeftIntrinsic());
         assertSame(rightIntrinsic, estimator.getRightIntrinsic());
@@ -380,8 +331,8 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         assertNull(estimator.getTriangulatedPoints());
         assertNull(estimator.getValidTriangulatedPoints());
 
-        estimator = new EssentialMatrixInitialCamerasEstimator(
-                fundamentalMatrix, leftIntrinsic, rightIntrinsic, this);
+        estimator = new EssentialMatrixInitialCamerasEstimator(fundamentalMatrix, leftIntrinsic, rightIntrinsic,
+                this);
 
         // check default values
         assertSame(fundamentalMatrix, estimator.getFundamentalMatrix());
@@ -389,11 +340,10 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         assertFalse(estimator.isLocked());
         assertNull(estimator.getEstimatedLeftCamera());
         assertNull(estimator.getEstimatedRightCamera());
-        assertEquals(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX,
-                estimator.getMethod());
+        assertEquals(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX, estimator.getMethod());
         assertFalse(estimator.isReady());
-        assertSame(estimator.getLeftIntrinsic(), leftIntrinsic);
-        assertSame(estimator.getRightIntrinsic(), rightIntrinsic);
+        assertSame(leftIntrinsic, estimator.getLeftIntrinsic());
+        assertSame(rightIntrinsic, estimator.getRightIntrinsic());
         assertNull(estimator.getLeftPoints());
         assertNull(estimator.getRightPoints());
         assertEquals(Corrector.DEFAULT_TYPE, estimator.getCorrectorType());
@@ -427,23 +377,13 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         assertNull(estimator.getValidTriangulatedPoints());
 
         // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new EssentialMatrixInitialCamerasEstimator(leftPoints,
-                    null, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new EssentialMatrixInitialCamerasEstimator(null,
-                    rightPoints, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
+        assertThrows(IllegalArgumentException.class, () -> new EssentialMatrixInitialCamerasEstimator(leftPoints,
+                null, this));
+        assertThrows(IllegalArgumentException.class, () -> new EssentialMatrixInitialCamerasEstimator(null,
+                rightPoints, this));
 
-        estimator = new EssentialMatrixInitialCamerasEstimator(
-                fundamentalMatrix, leftPoints, rightPoints, this);
+        estimator = new EssentialMatrixInitialCamerasEstimator(fundamentalMatrix, leftPoints, rightPoints,
+                this);
 
         // check default values
         assertSame(fundamentalMatrix, estimator.getFundamentalMatrix());
@@ -455,8 +395,8 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         assertFalse(estimator.isReady());
         assertNull(estimator.getLeftIntrinsic());
         assertNull(estimator.getRightIntrinsic());
-        assertSame(estimator.getLeftPoints(), leftPoints);
-        assertSame(estimator.getRightPoints(), rightPoints);
+        assertSame(leftPoints, estimator.getLeftPoints());
+        assertSame(rightPoints, estimator.getRightPoints());
         assertEquals(Corrector.DEFAULT_TYPE, estimator.getCorrectorType());
         assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_TRIANGULATE_POINTS,
                 estimator.arePointsTriangulated());
@@ -466,23 +406,13 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         assertNull(estimator.getValidTriangulatedPoints());
 
         // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new EssentialMatrixInitialCamerasEstimator(
-                    fundamentalMatrix, leftPoints, null, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new EssentialMatrixInitialCamerasEstimator(
-                    fundamentalMatrix, null, rightPoints, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
+        assertThrows(IllegalArgumentException.class, () -> new EssentialMatrixInitialCamerasEstimator(
+                fundamentalMatrix, leftPoints, null, this));
+        assertThrows(IllegalArgumentException.class, () -> new EssentialMatrixInitialCamerasEstimator(
+                fundamentalMatrix, null, rightPoints, this));
 
-        estimator = new EssentialMatrixInitialCamerasEstimator(leftIntrinsic,
-                rightIntrinsic, leftPoints, rightPoints, this);
+        estimator = new EssentialMatrixInitialCamerasEstimator(leftIntrinsic, rightIntrinsic, leftPoints, rightPoints,
+                this);
 
         // check default values
         assertNull(estimator.getFundamentalMatrix());
@@ -505,24 +435,13 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         assertNull(estimator.getValidTriangulatedPoints());
 
         // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new EssentialMatrixInitialCamerasEstimator(
-                    leftIntrinsic, rightIntrinsic, leftPoints, null, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new EssentialMatrixInitialCamerasEstimator(
-                    leftIntrinsic, rightIntrinsic, null, rightPoints, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
+        assertThrows(IllegalArgumentException.class, () -> new EssentialMatrixInitialCamerasEstimator(
+                leftIntrinsic, rightIntrinsic, leftPoints, null, this));
+        assertThrows(IllegalArgumentException.class, () -> new EssentialMatrixInitialCamerasEstimator(
+                leftIntrinsic, rightIntrinsic, null, rightPoints, this));
 
-        estimator = new EssentialMatrixInitialCamerasEstimator(
-                fundamentalMatrix, leftIntrinsic, rightIntrinsic, leftPoints,
-                rightPoints, this);
+        estimator = new EssentialMatrixInitialCamerasEstimator(fundamentalMatrix, leftIntrinsic, rightIntrinsic,
+                leftPoints, rightPoints, this);
 
         // check default values
         assertSame(fundamentalMatrix, estimator.getFundamentalMatrix());
@@ -530,8 +449,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         assertFalse(estimator.isLocked());
         assertNull(estimator.getEstimatedLeftCamera());
         assertNull(estimator.getEstimatedRightCamera());
-        assertEquals(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX,
-                estimator.getMethod());
+        assertEquals(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX, estimator.getMethod());
         assertTrue(estimator.isReady());
         assertSame(leftIntrinsic, estimator.getLeftIntrinsic());
         assertSame(rightIntrinsic, estimator.getRightIntrinsic());
@@ -546,35 +464,21 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         assertNull(estimator.getValidTriangulatedPoints());
 
         // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new EssentialMatrixInitialCamerasEstimator(
-                    fundamentalMatrix, leftIntrinsic, rightIntrinsic,
-                    leftPoints, null, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new EssentialMatrixInitialCamerasEstimator(
-                    fundamentalMatrix, leftIntrinsic, rightIntrinsic, null,
-                    rightPoints, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
+        assertThrows(IllegalArgumentException.class, () -> new EssentialMatrixInitialCamerasEstimator(
+                fundamentalMatrix, leftIntrinsic, rightIntrinsic, leftPoints, null, this));
+        assertThrows(IllegalArgumentException.class, () -> new EssentialMatrixInitialCamerasEstimator(
+                fundamentalMatrix, leftIntrinsic, rightIntrinsic, null, rightPoints, this));
     }
 
     @Test
-    public void testGetSetFundamentalMatrix() throws
-            com.irurueta.geometry.estimators.LockedException {
-        final EssentialMatrixInitialCamerasEstimator estimator =
-                new EssentialMatrixInitialCamerasEstimator();
+    void testGetSetFundamentalMatrix() throws com.irurueta.geometry.estimators.LockedException {
+        final var estimator = new EssentialMatrixInitialCamerasEstimator();
 
         // check default value
         assertNull(estimator.getFundamentalMatrix());
 
         // set new value
-        final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix();
+        final var fundamentalMatrix = new FundamentalMatrix();
         estimator.setFundamentalMatrix(fundamentalMatrix);
 
         // check correctness
@@ -582,9 +486,8 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
     }
 
     @Test
-    public void testGetSetListener() {
-        final EssentialMatrixInitialCamerasEstimator estimator =
-                new EssentialMatrixInitialCamerasEstimator();
+    void testGetSetListener() {
+        final var estimator = new EssentialMatrixInitialCamerasEstimator();
 
         // check default value
         assertNull(estimator.getListener());
@@ -597,17 +500,14 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
     }
 
     @Test
-    public void testGetSetLeftIntrinsic()
-            throws com.irurueta.geometry.estimators.LockedException {
-        final EssentialMatrixInitialCamerasEstimator estimator =
-                new EssentialMatrixInitialCamerasEstimator();
+    void testGetSetLeftIntrinsic() throws com.irurueta.geometry.estimators.LockedException {
+        final var estimator = new EssentialMatrixInitialCamerasEstimator();
 
         // check default value
         assertNull(estimator.getLeftIntrinsic());
 
         // set new value
-        final PinholeCameraIntrinsicParameters leftIntrinsic =
-                new PinholeCameraIntrinsicParameters();
+        final var leftIntrinsic = new PinholeCameraIntrinsicParameters();
         estimator.setLeftIntrinsic(leftIntrinsic);
 
         // check correctness
@@ -615,17 +515,14 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
     }
 
     @Test
-    public void testGetSetRightIntrinsic()
-            throws com.irurueta.geometry.estimators.LockedException {
-        final EssentialMatrixInitialCamerasEstimator estimator =
-                new EssentialMatrixInitialCamerasEstimator();
+    void testGetSetRightIntrinsic() throws com.irurueta.geometry.estimators.LockedException {
+        final var estimator = new EssentialMatrixInitialCamerasEstimator();
 
         // check default value
         assertNull(estimator.getRightIntrinsic());
 
         // set new value
-        final PinholeCameraIntrinsicParameters rightIntrinsic =
-                new PinholeCameraIntrinsicParameters();
+        final var rightIntrinsic = new PinholeCameraIntrinsicParameters();
         estimator.setRightIntrinsic(rightIntrinsic);
 
         // check correctness
@@ -633,18 +530,16 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
     }
 
     @Test
-    public void testSetLeftAndRightIntrinsics()
-            throws com.irurueta.geometry.estimators.LockedException {
-        final EssentialMatrixInitialCamerasEstimator estimator =
-                new EssentialMatrixInitialCamerasEstimator();
+    void testSetLeftAndRightIntrinsics() throws com.irurueta.geometry.estimators.LockedException {
+        final var estimator = new EssentialMatrixInitialCamerasEstimator();
 
         // check default values
         assertNull(estimator.getLeftIntrinsic());
         assertNull(estimator.getRightIntrinsic());
 
         // set new values
-        final PinholeCameraIntrinsicParameters leftIntrinsic = new PinholeCameraIntrinsicParameters();
-        final PinholeCameraIntrinsicParameters rightIntrinsic = new PinholeCameraIntrinsicParameters();
+        final var leftIntrinsic = new PinholeCameraIntrinsicParameters();
+        final var rightIntrinsic = new PinholeCameraIntrinsicParameters();
         estimator.setLeftAndRightIntrinsics(leftIntrinsic, rightIntrinsic);
 
         // check correctness
@@ -653,17 +548,15 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
     }
 
     @Test
-    public void testSetIntrinsicsForBoth()
-            throws com.irurueta.geometry.estimators.LockedException {
-        final EssentialMatrixInitialCamerasEstimator estimator =
-                new EssentialMatrixInitialCamerasEstimator();
+    void testSetIntrinsicsForBoth() throws com.irurueta.geometry.estimators.LockedException {
+        final var estimator = new EssentialMatrixInitialCamerasEstimator();
 
         // check default values
         assertNull(estimator.getLeftIntrinsic());
         assertNull(estimator.getRightIntrinsic());
 
         // set new value
-        final PinholeCameraIntrinsicParameters intrinsic = new PinholeCameraIntrinsicParameters();
+        final var intrinsic = new PinholeCameraIntrinsicParameters();
         estimator.setIntrinsicsForBoth(intrinsic);
 
         // check correctness
@@ -672,16 +565,14 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
     }
 
     @Test
-    public void testGetSetLeftPoints()
-            throws com.irurueta.geometry.estimators.LockedException {
-        final EssentialMatrixInitialCamerasEstimator estimator =
-                new EssentialMatrixInitialCamerasEstimator();
+    void testGetSetLeftPoints() throws com.irurueta.geometry.estimators.LockedException {
+        final var estimator = new EssentialMatrixInitialCamerasEstimator();
 
         // check default value
         assertNull(estimator.getLeftPoints());
 
         // set new value
-        final List<Point2D> leftPoints = new ArrayList<>();
+        final var leftPoints = new ArrayList<Point2D>();
         estimator.setLeftPoints(leftPoints);
 
         // check correctness
@@ -689,16 +580,14 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
     }
 
     @Test
-    public void testGetSetRightPoints()
-            throws com.irurueta.geometry.estimators.LockedException {
-        final EssentialMatrixInitialCamerasEstimator estimator =
-                new EssentialMatrixInitialCamerasEstimator();
+    void testGetSetRightPoints() throws com.irurueta.geometry.estimators.LockedException {
+        final var estimator = new EssentialMatrixInitialCamerasEstimator();
 
         // check default value
         assertNull(estimator.getRightPoints());
 
         // set new value
-        final List<Point2D> rightPoints = new ArrayList<>();
+        final var rightPoints = new ArrayList<Point2D>();
         estimator.setRightPoints(rightPoints);
 
         // check correctness
@@ -706,19 +595,17 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
     }
 
     @Test
-    public void testSetLeftAndRightPoints()
-            throws com.irurueta.geometry.estimators.LockedException {
-        final EssentialMatrixInitialCamerasEstimator estimator =
-                new EssentialMatrixInitialCamerasEstimator();
+    void testSetLeftAndRightPoints() throws com.irurueta.geometry.estimators.LockedException {
+        final var estimator = new EssentialMatrixInitialCamerasEstimator();
 
         // check default values
         assertNull(estimator.getLeftPoints());
         assertNull(estimator.getRightPoints());
 
         // set new values
-        final List<Point2D> leftPoints = new ArrayList<>();
+        final var leftPoints = new ArrayList<Point2D>();
         leftPoints.add(Point2D.create());
-        final List<Point2D> rightPoints = new ArrayList<>();
+        final var rightPoints = new ArrayList<Point2D>();
         rightPoints.add(Point2D.create());
         estimator.setLeftAndRightPoints(leftPoints, rightPoints);
 
@@ -727,30 +614,16 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
         assertSame(rightPoints, estimator.getRightPoints());
 
         // Force IllegalArgumentException
-        try {
-            estimator.setLeftAndRightPoints(leftPoints, null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator.setLeftAndRightPoints(null, rightPoints);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> estimator.setLeftAndRightPoints(leftPoints, null));
+        assertThrows(IllegalArgumentException.class, () -> estimator.setLeftAndRightPoints(null, rightPoints));
 
-        final List<Point2D> wrongPoints = new ArrayList<>();
-        try {
-            estimator.setLeftAndRightPoints(leftPoints, wrongPoints);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        final var wrongPoints = new ArrayList<Point2D>();
+        assertThrows(IllegalArgumentException.class, () -> estimator.setLeftAndRightPoints(leftPoints, wrongPoints));
     }
 
     @Test
-    public void testGetSetCorrectorType()
-            throws com.irurueta.geometry.estimators.LockedException {
-        final EssentialMatrixInitialCamerasEstimator estimator =
-                new EssentialMatrixInitialCamerasEstimator();
+    void testGetSetCorrectorType() throws com.irurueta.geometry.estimators.LockedException {
+        final var estimator = new EssentialMatrixInitialCamerasEstimator();
 
         // check default value
         assertEquals(Corrector.DEFAULT_TYPE, estimator.getCorrectorType());
@@ -763,18 +636,15 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
     }
 
     @Test
-    public void testAreSetPointsTriangulated()
-            throws com.irurueta.geometry.estimators.LockedException {
-        final EssentialMatrixInitialCamerasEstimator estimator =
-                new EssentialMatrixInitialCamerasEstimator();
+    void testAreSetPointsTriangulated() throws com.irurueta.geometry.estimators.LockedException {
+        final var estimator = new EssentialMatrixInitialCamerasEstimator();
 
         // check default value
         assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_TRIANGULATE_POINTS,
                 estimator.arePointsTriangulated());
 
         // set new value
-        estimator.setPointsTriangulated(
-                !EssentialMatrixInitialCamerasEstimator.DEFAULT_TRIANGULATE_POINTS);
+        estimator.setPointsTriangulated(!EssentialMatrixInitialCamerasEstimator.DEFAULT_TRIANGULATE_POINTS);
 
         // check correctness
         assertEquals(!EssentialMatrixInitialCamerasEstimator.DEFAULT_TRIANGULATE_POINTS,
@@ -782,10 +652,8 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
     }
 
     @Test
-    public void testAreValidTriangulatedPointsMarked()
-            throws com.irurueta.geometry.estimators.LockedException {
-        final EssentialMatrixInitialCamerasEstimator estimator =
-                new EssentialMatrixInitialCamerasEstimator();
+    void testAreValidTriangulatedPointsMarked() throws com.irurueta.geometry.estimators.LockedException {
+        final var estimator = new EssentialMatrixInitialCamerasEstimator();
 
         // check default value
         assertEquals(EssentialMatrixInitialCamerasEstimator.DEFAULT_MARK_VALID_TRIANGULATED_POINTS,
@@ -801,59 +669,50 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
     }
 
     @Test
-    public void testEstimate() throws InvalidPairOfCamerasException, CameraException,
-            com.irurueta.geometry.estimators.LockedException,
-            com.irurueta.geometry.estimators.NotReadyException,
+    void testEstimate() throws InvalidPairOfCamerasException, CameraException,
+            com.irurueta.geometry.estimators.LockedException, com.irurueta.geometry.estimators.NotReadyException,
             InitialCamerasEstimationFailedException, com.irurueta.geometry.NotAvailableException,
             InvalidFundamentalMatrixException, AlgebraException {
-        int numValidTimes = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double alphaEuler1 = 0.0;
-            final double betaEuler1 = 0.0;
-            final double gammaEuler1 = 0.0;
-            final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+        var numValidTimes = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var randomizer = new UniformRandomizer();
+            final var alphaEuler1 = 0.0;
+            final var betaEuler1 = 0.0;
+            final var gammaEuler1 = 0.0;
+            final var alphaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var betaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var gammaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double skewness = 0.0;
-            final double principalPoint = 0.0;
+            final var focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var skewness = 0.0;
+            final var principalPoint = 0.0;
 
-            final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
+            final var cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
-            final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
-            final Point3D center2 = new InhomogeneousPoint3D(
-                    center1.getInhomX() + cameraSeparation,
-                    center1.getInhomY() + cameraSeparation,
-                    center1.getInhomZ() + cameraSeparation);
+            final var center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
+            final var center2 = new InhomogeneousPoint3D(center1.getInhomX() + cameraSeparation,
+                    center1.getInhomY() + cameraSeparation, center1.getInhomZ() + cameraSeparation);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+            final var rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final var rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-            final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength, focalLength,
-                            principalPoint, principalPoint, skewness);
+            final var intrinsic = new PinholeCameraIntrinsicParameters(focalLength, focalLength, principalPoint,
+                    principalPoint, skewness);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
+            final var camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final var camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
+            final var fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
 
             // 1st find an approximate central point by intersecting the axis
             // planes of both cameras
-            final Plane horizontalPlane1 = camera1.getHorizontalAxisPlane();
-            final Plane verticalPlane1 = camera1.getVerticalAxisPlane();
-            final Plane horizontalPlane2 = camera2.getHorizontalAxisPlane();
-            final Plane verticalPlane2 = camera2.getVerticalAxisPlane();
-            final Matrix planesIntersectionMatrix = new Matrix(
-                    Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
+            final var horizontalPlane1 = camera1.getHorizontalAxisPlane();
+            final var verticalPlane1 = camera1.getVerticalAxisPlane();
+            final var horizontalPlane2 = camera2.getHorizontalAxisPlane();
+            final var verticalPlane2 = camera2.getVerticalAxisPlane();
+            final var planesIntersectionMatrix = new Matrix(Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
             planesIntersectionMatrix.setElementAt(0, 0, verticalPlane1.getA());
             planesIntersectionMatrix.setElementAt(0, 1, verticalPlane1.getB());
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
@@ -874,48 +733,44 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
             planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
+            final var decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
-            final Matrix v = decomposer.getV();
-            final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
+            final var v = decomposer.getV();
+            final var centralCommonPoint = new HomogeneousPoint3D(
                     v.getElementAt(0, 3),
                     v.getElementAt(1, 3),
                     v.getElementAt(2, 3),
                     v.getElementAt(3, 3));
 
-            final double[] principalAxis1 = camera1.getPrincipalAxisArray();
-            final double[] principalAxis2 = camera2.getPrincipalAxisArray();
+            final var principalAxis1 = camera1.getPrincipalAxisArray();
+            final var principalAxis2 = camera2.getPrincipalAxisArray();
             double lambda1;
             double lambda2;
 
-            final int nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
+            final var nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
 
             InhomogeneousPoint3D worldPoint;
-            final List<InhomogeneousPoint3D> worldPoints = new ArrayList<>();
+            final var worldPoints = new ArrayList<InhomogeneousPoint3D>();
             Point2D leftPoint;
             Point2D rightPoint;
-            final List<Point2D> leftPoints = new ArrayList<>();
-            final List<Point2D> rightPoints = new ArrayList<>();
+            final var leftPoints = new ArrayList<Point2D>();
+            final var rightPoints = new ArrayList<Point2D>();
             boolean leftFront;
             boolean rightFront;
-            for (int i = 0; i < nPoints; i++) {
+            for (var i = 0; i < nPoints; i++) {
                 // generate points and ensure they lie in front of both cameras
-                int numTry = 0;
+                var numTry = 0;
                 do {
                     lambda1 = randomizer.nextDouble(MIN_LAMBDA, MAX_LAMBDA);
                     lambda2 = randomizer.nextDouble(MIN_LAMBDA, MAX_LAMBDA);
 
                     worldPoint = new InhomogeneousPoint3D(
-                            centralCommonPoint.getInhomX() +
-                                    principalAxis1[0] * lambda1 +
-                                    principalAxis2[0] * lambda2,
-                            centralCommonPoint.getInhomY() +
-                                    principalAxis1[1] * lambda1 +
-                                    principalAxis2[1] * lambda2,
-                            centralCommonPoint.getInhomZ() +
-                                    principalAxis1[2] * lambda1 +
-                                    principalAxis2[2] * lambda2);
+                            centralCommonPoint.getInhomX() + principalAxis1[0] * lambda1
+                                    + principalAxis2[0] * lambda2,
+                            centralCommonPoint.getInhomY() + principalAxis1[1] * lambda1
+                                    + principalAxis2[1] * lambda2,
+                            centralCommonPoint.getInhomZ() + principalAxis1[2] * lambda1
+                                    + principalAxis2[2] * lambda2);
                     leftFront = camera1.isPointInFrontOfCamera(worldPoint);
                     rightFront = camera2.isPointInFrontOfCamera(worldPoint);
                     if (numTry > MAX_TRIES) {
@@ -925,9 +780,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 } while (!leftFront || !rightFront);
                 worldPoints.add(worldPoint);
 
-                // check that world point is in front of both cameras
-                assertTrue(leftFront);
-                assertTrue(rightFront);
+                // here world point is in front of both cameras
 
                 // project world point into both cameras
                 leftPoint = camera1.project(worldPoint);
@@ -937,9 +790,8 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 rightPoints.add(rightPoint);
             }
 
-            EssentialMatrixInitialCamerasEstimator estimator =
-                    new EssentialMatrixInitialCamerasEstimator(fundamentalMatrix, intrinsic, intrinsic,
-                            leftPoints, rightPoints, this);
+            var estimator = new EssentialMatrixInitialCamerasEstimator(fundamentalMatrix, intrinsic, intrinsic,
+                    leftPoints, rightPoints, this);
             estimator.setPointsTriangulated(true);
             estimator.setValidTriangulatedPointsMarked(true);
 
@@ -951,22 +803,22 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
 
             estimator.estimate();
 
-            final PinholeCamera camera1b = estimator.getEstimatedLeftCamera();
-            final PinholeCamera camera2b = estimator.getEstimatedRightCamera();
-            final List<Point3D> triangulatedPoints = estimator.getTriangulatedPoints();
-            final BitSet validTriangulatedPoints = estimator.getValidTriangulatedPoints();
+            final var camera1b = estimator.getEstimatedLeftCamera();
+            final var camera2b = estimator.getEstimatedRightCamera();
+            final var triangulatedPoints = estimator.getTriangulatedPoints();
+            final var validTriangulatedPoints = estimator.getValidTriangulatedPoints();
 
             camera1b.decompose();
             camera2b.decompose();
 
-            final PinholeCameraIntrinsicParameters intrinsic1b = camera1b.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters intrinsic2b = camera2b.getIntrinsicParameters();
+            final var intrinsic1b = camera1b.getIntrinsicParameters();
+            final var intrinsic2b = camera2b.getIntrinsicParameters();
 
-            final Rotation3D rotation1b = camera1b.getCameraRotation();
-            final Rotation3D rotation2b = camera2b.getCameraRotation();
+            final var rotation1b = camera1b.getCameraRotation();
+            final var rotation2b = camera2b.getCameraRotation();
 
-            final Point3D center1b = camera1b.getCameraCenter();
-            final Point3D center2b = camera2b.getCameraCenter();
+            final var center1b = camera1b.getCameraCenter();
+            final var center2b = camera2b.getCameraCenter();
 
             assertEquals(focalLength, intrinsic1b.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(focalLength, intrinsic1b.getVerticalFocalLength(), ABSOLUTE_ERROR);
@@ -980,55 +832,49 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             assertEquals(0.0, intrinsic2b.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(0.0, intrinsic2b.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
 
-            final Rotation3D diffRotation = rotation2b.combineAndReturnNew(
-                    rotation1b.inverseRotationAndReturnNew());
+            final var diffRotation = rotation2b.combineAndReturnNew(rotation1b.inverseRotationAndReturnNew());
 
-            assertTrue(rotation1b.asInhomogeneousMatrix().equals(
-                    Matrix.identity(3, 3), ABSOLUTE_ERROR));
-            assertTrue(rotation2.asInhomogeneousMatrix().equals(
-                    diffRotation.asInhomogeneousMatrix(), ABSOLUTE_ERROR));
+            assertTrue(rotation1b.asInhomogeneousMatrix().equals(Matrix.identity(3, 3), ABSOLUTE_ERROR));
+            assertTrue(rotation2.asInhomogeneousMatrix().equals(diffRotation.asInhomogeneousMatrix(), ABSOLUTE_ERROR));
 
             assertNotNull(center1b);
             assertNotNull(center2b);
 
             // compute scale factor
-            final double distanceA = center1.distanceTo(center2);
-            final double distanceB = center1b.distanceTo(center2b);
-            final double scaleFactor = distanceB / distanceA;
-            final double invScaleFactor = distanceA / distanceB;
+            final var distanceA = center1.distanceTo(center2);
+            final var distanceB = center1b.distanceTo(center2b);
+            final var scaleFactor = distanceB / distanceA;
+            final var invScaleFactor = distanceA / distanceB;
 
             // NOTE: distance between estimated cameras is always normalized
             assertEquals(1.0, distanceB, ABSOLUTE_ERROR);
 
-            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(scaleFactor);
-            final Transformation3D invScaleTransformation = scaleTransformation.inverseAndReturnNew();
-            final MetricTransformation3D invScaleTransformation2 =
-                    new MetricTransformation3D(invScaleFactor);
+            final var scaleTransformation = new MetricTransformation3D(scaleFactor);
+            final var invScaleTransformation = scaleTransformation.inverseAndReturnNew();
+            final var invScaleTransformation2 = new MetricTransformation3D(invScaleFactor);
 
-            assertTrue(invScaleTransformation.asMatrix().equals(
-                    invScaleTransformation2.asMatrix(), ABSOLUTE_ERROR));
-
+            assertTrue(invScaleTransformation.asMatrix().equals(invScaleTransformation2.asMatrix(), ABSOLUTE_ERROR));
 
             // check that estimated cameras generate the same input fundamental
             // matrix
-            FundamentalMatrix fundamentalMatrixB = new FundamentalMatrix(camera1b, camera2b);
+            var fundamentalMatrixB = new FundamentalMatrix(camera1b, camera2b);
 
             // compare fundamental matrices by checking generated epipolar
             // geometry
             fundamentalMatrix.normalize();
             fundamentalMatrixB.normalize();
 
-            final Point2D epipole1 = camera1.project(center2);
-            final Point2D epipole2 = camera2.project(center1);
+            final var epipole1 = camera1.project(center2);
+            final var epipole2 = camera2.project(center1);
 
             fundamentalMatrix.computeEpipoles();
             fundamentalMatrixB.computeEpipoles();
 
-            final Point2D epipole1a = fundamentalMatrix.getLeftEpipole();
-            final Point2D epipole2a = fundamentalMatrix.getRightEpipole();
+            final var epipole1a = fundamentalMatrix.getLeftEpipole();
+            final var epipole2a = fundamentalMatrix.getRightEpipole();
 
-            final Point2D epipole1b = fundamentalMatrixB.getLeftEpipole();
-            final Point2D epipole2b = fundamentalMatrixB.getRightEpipole();
+            final var epipole1b = fundamentalMatrixB.getLeftEpipole();
+            final var epipole2b = fundamentalMatrixB.getRightEpipole();
 
             assertEquals(0.0, epipole1.distanceTo(epipole1a), ABSOLUTE_ERROR);
             assertEquals(0.0, epipole2.distanceTo(epipole2a), ABSOLUTE_ERROR);
@@ -1040,12 +886,12 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             Point3D scaledWorldPoint;
             Point3D triangulatedPoint;
             Point3D scaledTriangulatedPoint;
-            int numValid1a = 0;
-            int numValid2a = 0;
-            int numValid1b = 0;
-            int numValid2b = 0;
-            int numValidEqual = 0;
-            for (int i = 0; i < nPoints; i++) {
+            var numValid1a = 0;
+            var numValid2a = 0;
+            var numValid1b = 0;
+            var numValid2b = 0;
+            var numValidEqual = 0;
+            for (var i = 0; i < nPoints; i++) {
                 worldPoint = worldPoints.get(i);
                 leftPoint = leftPoints.get(i);
                 rightPoint = rightPoints.get(i);
@@ -1053,11 +899,11 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 triangulatedPoint = triangulatedPoints.get(i);
                 assertTrue(validTriangulatedPoints.get(i));
 
-                final Line2D line1a = fundamentalMatrix.getLeftEpipolarLine(rightPoint);
-                final Line2D line2a = fundamentalMatrix.getRightEpipolarLine(leftPoint);
+                final var line1a = fundamentalMatrix.getLeftEpipolarLine(rightPoint);
+                final var line2a = fundamentalMatrix.getRightEpipolarLine(leftPoint);
 
-                final Line2D line1b = fundamentalMatrixB.getLeftEpipolarLine(rightPoint);
-                final Line2D line2b = fundamentalMatrixB.getRightEpipolarLine(leftPoint);
+                final var line1b = fundamentalMatrixB.getLeftEpipolarLine(rightPoint);
+                final var line2b = fundamentalMatrixB.getRightEpipolarLine(leftPoint);
 
                 // check that points lie on their corresponding epipolar lines
                 assertTrue(line1a.isLocus(leftPoint, ABSOLUTE_ERROR));
@@ -1068,11 +914,11 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
 
                 // back-project epipolar lines for each pair of cameras and check
                 // that each pair of lines correspond to the same epipolar plane
-                final Plane epipolarPlane1a = camera1.backProject(line1a);
-                final Plane epipolarPlane2a = camera2.backProject(line2a);
+                final var epipolarPlane1a = camera1.backProject(line1a);
+                final var epipolarPlane2a = camera2.backProject(line2a);
 
-                final Plane epipolarPlane1b = camera1b.backProject(line1b);
-                final Plane epipolarPlane2b = camera2b.backProject(line2b);
+                final var epipolarPlane1b = camera1b.backProject(line1b);
+                final var epipolarPlane2b = camera2b.backProject(line2b);
 
                 assertTrue(epipolarPlane1a.equals(epipolarPlane2a, ABSOLUTE_ERROR));
                 assertTrue(epipolarPlane1b.equals(epipolarPlane2b, ABSOLUTE_ERROR));
@@ -1117,14 +963,13 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 }
             }
 
-            if (numValid1a > 0 && numValid2a > 0 && numValid1b > 0 && numValid2b > 0
-                    && numValidEqual > 0) {
+            if (numValid1a > 0 && numValid2a > 0 && numValid1b > 0 && numValid2b > 0 && numValidEqual > 0) {
                 numValidTimes++;
             }
 
             // recover scale of cameras by undoing their transformations
-            final PinholeCamera camera1c = invScaleTransformation.transformAndReturnNew(camera1b);
-            final PinholeCamera camera2c = invScaleTransformation.transformAndReturnNew(camera2b);
+            final var camera1c = invScaleTransformation.transformAndReturnNew(camera1b);
+            final var camera2c = invScaleTransformation.transformAndReturnNew(camera2b);
 
             // check that now cameras are equal to the original ones
             camera1.normalize();
@@ -1132,85 +977,68 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             camera1c.normalize();
             camera2c.normalize();
 
-            final Matrix camera1Matrix = camera1.getInternalMatrix();
-            final Matrix camera1cMatrix = camera1c.getInternalMatrix();
+            final var camera1Matrix = camera1.getInternalMatrix();
+            final var camera1cMatrix = camera1c.getInternalMatrix();
             assertTrue(camera1Matrix.equals(camera1cMatrix, ABSOLUTE_ERROR));
 
-            final Matrix camera2Matrix = camera2.getInternalMatrix();
-            final Matrix camera2cMatrix = camera2c.getInternalMatrix();
+            final var camera2Matrix = camera2.getInternalMatrix();
+            final var camera2cMatrix = camera2c.getInternalMatrix();
             assertTrue(camera2Matrix.equals(camera2cMatrix, ABSOLUTE_ERROR));
 
             // force NotReadyException
             estimator = new EssentialMatrixInitialCamerasEstimator();
 
             assertFalse(estimator.isReady());
-
-            try {
-                estimator.estimate();
-                fail("NotReadyException expected but not thrown");
-            } catch (final com.irurueta.geometry.estimators.NotReadyException ignore) {
-            }
+            assertThrows(com.irurueta.geometry.estimators.NotReadyException.class, estimator::estimate);
         }
 
         assertTrue(numValidTimes > 0);
     }
 
     @Test
-    public void testGenerateInitialMetricCamerasFromEssentialMatrix1()
-            throws InvalidPairOfCamerasException, CameraException,
-            InitialCamerasEstimationFailedException,
-            com.irurueta.geometry.NotAvailableException,
-            com.irurueta.geometry.estimators.NotReadyException,
-            InvalidFundamentalMatrixException, AlgebraException {
-        int numValidTimes = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double alphaEuler1 = 0.0;
-            final double betaEuler1 = 0.0;
-            final double gammaEuler1 = 0.0;
-            final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+    void testGenerateInitialMetricCamerasFromEssentialMatrix1() throws InvalidPairOfCamerasException, CameraException,
+            InitialCamerasEstimationFailedException, com.irurueta.geometry.NotAvailableException,
+            com.irurueta.geometry.estimators.NotReadyException, InvalidFundamentalMatrixException, AlgebraException {
+        var numValidTimes = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var randomizer = new UniformRandomizer();
+            final var alphaEuler1 = 0.0;
+            final var betaEuler1 = 0.0;
+            final var gammaEuler1 = 0.0;
+            final var alphaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var betaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var gammaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                    MAX_FOCAL_LENGTH);
-            final double skewness = 0.0;
-            final double principalPoint = 0.0;
+            final var focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var skewness = 0.0;
+            final var principalPoint = 0.0;
 
-            final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
+            final var cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
-            final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
-            final Point3D center2 = new InhomogeneousPoint3D(
-                    center1.getInhomX() + cameraSeparation,
-                    center1.getInhomY() + cameraSeparation,
-                    center1.getInhomZ() + cameraSeparation);
+            final var center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
+            final var center2 = new InhomogeneousPoint3D(center1.getInhomX() + cameraSeparation,
+                    center1.getInhomY() + cameraSeparation, center1.getInhomZ() + cameraSeparation);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+            final var rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final var rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-            final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength, focalLength,
-                            principalPoint, principalPoint, skewness);
+            final var intrinsic = new PinholeCameraIntrinsicParameters(focalLength, focalLength, principalPoint,
+                    principalPoint, skewness);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
+            final var camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final var camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
+            final var fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
 
             // 1st find an approximate central point by intersecting the axis
             // planes of both cameras
-            final Plane horizontalPlane1 = camera1.getHorizontalAxisPlane();
-            final Plane verticalPlane1 = camera1.getVerticalAxisPlane();
-            final Plane horizontalPlane2 = camera2.getHorizontalAxisPlane();
-            final Plane verticalPlane2 = camera2.getVerticalAxisPlane();
-            final Matrix planesIntersectionMatrix = new Matrix(
-                    Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
+            final var horizontalPlane1 = camera1.getHorizontalAxisPlane();
+            final var verticalPlane1 = camera1.getVerticalAxisPlane();
+            final var horizontalPlane2 = camera2.getHorizontalAxisPlane();
+            final var verticalPlane2 = camera2.getVerticalAxisPlane();
+            final var planesIntersectionMatrix = new Matrix(Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
             planesIntersectionMatrix.setElementAt(0, 0, verticalPlane1.getA());
             planesIntersectionMatrix.setElementAt(0, 1, verticalPlane1.getB());
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
@@ -1231,48 +1059,44 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
             planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
+            final var decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
-            final Matrix v = decomposer.getV();
-            final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
+            final var v = decomposer.getV();
+            final var centralCommonPoint = new HomogeneousPoint3D(
                     v.getElementAt(0, 3),
                     v.getElementAt(1, 3),
                     v.getElementAt(2, 3),
                     v.getElementAt(3, 3));
 
-            final double[] principalAxis1 = camera1.getPrincipalAxisArray();
-            final double[] principalAxis2 = camera2.getPrincipalAxisArray();
+            final var principalAxis1 = camera1.getPrincipalAxisArray();
+            final var principalAxis2 = camera2.getPrincipalAxisArray();
             double lambda1;
             double lambda2;
 
-            final int nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
+            final var nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
 
             InhomogeneousPoint3D worldPoint;
-            final List<InhomogeneousPoint3D> worldPoints = new ArrayList<>();
+            final var worldPoints = new ArrayList<InhomogeneousPoint3D>();
             Point2D leftPoint;
             Point2D rightPoint;
-            final List<Point2D> leftPoints = new ArrayList<>();
-            final List<Point2D> rightPoints = new ArrayList<>();
+            final var leftPoints = new ArrayList<Point2D>();
+            final var rightPoints = new ArrayList<Point2D>();
             boolean leftFront;
             boolean rightFront;
-            for (int i = 0; i < nPoints; i++) {
+            for (var i = 0; i < nPoints; i++) {
                 // generate points and ensure they lie in front of both cameras
-                int numTry = 0;
+                var numTry = 0;
                 do {
                     lambda1 = randomizer.nextDouble(MIN_LAMBDA, MAX_LAMBDA);
                     lambda2 = randomizer.nextDouble(MIN_LAMBDA, MAX_LAMBDA);
 
                     worldPoint = new InhomogeneousPoint3D(
-                            centralCommonPoint.getInhomX() +
-                                    principalAxis1[0] * lambda1 +
-                                    principalAxis2[0] * lambda2,
-                            centralCommonPoint.getInhomY() +
-                                    principalAxis1[1] * lambda1 +
-                                    principalAxis2[1] * lambda2,
-                            centralCommonPoint.getInhomZ() +
-                                    principalAxis1[2] * lambda1 +
-                                    principalAxis2[2] * lambda2);
+                            centralCommonPoint.getInhomX() + principalAxis1[0] * lambda1
+                                    + principalAxis2[0] * lambda2,
+                            centralCommonPoint.getInhomY() + principalAxis1[1] * lambda1
+                                    + principalAxis2[1] * lambda2,
+                            centralCommonPoint.getInhomZ() + principalAxis1[2] * lambda1
+                                    + principalAxis2[2] * lambda2);
                     leftFront = camera1.isPointInFrontOfCamera(worldPoint);
                     rightFront = camera2.isPointInFrontOfCamera(worldPoint);
                     if (numTry > MAX_TRIES) {
@@ -1282,9 +1106,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 } while (!leftFront || !rightFront);
                 worldPoints.add(worldPoint);
 
-                // check that world point is in front of both cameras
-                assertTrue(leftFront);
-                assertTrue(rightFront);
+                // here world point is in front of both cameras
 
                 // project world point into both cameras
                 leftPoint = camera1.project(worldPoint);
@@ -1294,12 +1116,10 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 rightPoints.add(rightPoint);
             }
 
-            final PinholeCamera camera1b = new PinholeCamera();
-            final PinholeCamera camera2b = new PinholeCamera();
-            final int numValid = EssentialMatrixInitialCamerasEstimator.
-                    generateInitialMetricCamerasFromEssentialMatrix(
-                            fundamentalMatrix, intrinsic, intrinsic, leftPoints, rightPoints,
-                            camera1b, camera2b);
+            final var camera1b = new PinholeCamera();
+            final var camera2b = new PinholeCamera();
+            final var numValid = EssentialMatrixInitialCamerasEstimator.generateInitialMetricCamerasFromEssentialMatrix(
+                    fundamentalMatrix, intrinsic, intrinsic, leftPoints, rightPoints, camera1b, camera2b);
 
             // check correctness
             assertEquals(numValid, nPoints);
@@ -1307,14 +1127,14 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             camera1b.decompose();
             camera2b.decompose();
 
-            final PinholeCameraIntrinsicParameters intrinsic1b = camera1b.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters intrinsic2b = camera2b.getIntrinsicParameters();
+            final var intrinsic1b = camera1b.getIntrinsicParameters();
+            final var intrinsic2b = camera2b.getIntrinsicParameters();
 
-            final Rotation3D rotation1b = camera1b.getCameraRotation();
-            final Rotation3D rotation2b = camera2b.getCameraRotation();
+            final var rotation1b = camera1b.getCameraRotation();
+            final var rotation2b = camera2b.getCameraRotation();
 
-            final Point3D center1b = camera1b.getCameraCenter();
-            final Point3D center2b = camera2b.getCameraCenter();
+            final var center1b = camera1b.getCameraCenter();
+            final var center2b = camera2b.getCameraCenter();
 
             assertEquals(focalLength, intrinsic1b.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(focalLength, intrinsic1b.getVerticalFocalLength(), ABSOLUTE_ERROR);
@@ -1328,55 +1148,50 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             assertEquals(0.0, intrinsic2b.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(0.0, intrinsic2b.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
 
-            final Rotation3D diffRotation = rotation2b.combineAndReturnNew(
-                    rotation1b.inverseRotationAndReturnNew());
+            final var diffRotation = rotation2b.combineAndReturnNew(rotation1b.inverseRotationAndReturnNew());
 
-            assertTrue(rotation1b.asInhomogeneousMatrix().equals(
-                    Matrix.identity(3, 3), ABSOLUTE_ERROR));
-            assertTrue(rotation2.asInhomogeneousMatrix().equals(
-                    diffRotation.asInhomogeneousMatrix(), ABSOLUTE_ERROR));
+            assertTrue(rotation1b.asInhomogeneousMatrix().equals(Matrix.identity(3, 3), ABSOLUTE_ERROR));
+            assertTrue(rotation2.asInhomogeneousMatrix().equals(diffRotation.asInhomogeneousMatrix(), ABSOLUTE_ERROR));
 
             assertNotNull(center1b);
             assertNotNull(center2b);
 
             // compute scale factor
-            final double distanceA = center1.distanceTo(center2);
-            final double distanceB = center1b.distanceTo(center2b);
-            final double scaleFactor = distanceB / distanceA;
-            final double invScaleFactor = distanceA / distanceB;
+            final var distanceA = center1.distanceTo(center2);
+            final var distanceB = center1b.distanceTo(center2b);
+            final var scaleFactor = distanceB / distanceA;
+            final var invScaleFactor = distanceA / distanceB;
 
             // NOTE: distance between estimated cameras is always normalized
             assertEquals(1.0, distanceB, ABSOLUTE_ERROR);
 
-            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(scaleFactor);
-            final Transformation3D invScaleTransformation = scaleTransformation.inverseAndReturnNew();
-            final MetricTransformation3D invScaleTransformation2 =
-                    new MetricTransformation3D(invScaleFactor);
+            final var scaleTransformation = new MetricTransformation3D(scaleFactor);
+            final var invScaleTransformation = scaleTransformation.inverseAndReturnNew();
+            final var invScaleTransformation2 = new MetricTransformation3D(invScaleFactor);
 
-            assertTrue(invScaleTransformation.asMatrix().equals(
-                    invScaleTransformation2.asMatrix(), ABSOLUTE_ERROR));
+            assertTrue(invScaleTransformation.asMatrix().equals(invScaleTransformation2.asMatrix(), ABSOLUTE_ERROR));
 
 
             // check that estimated cameras generate the same input fundamental
             // matrix
-            final FundamentalMatrix fundamentalMatrixB = new FundamentalMatrix(camera1b, camera2b);
+            final var fundamentalMatrixB = new FundamentalMatrix(camera1b, camera2b);
 
             // compare fundamental matrices by checking generated epipolar
             // geometry
             fundamentalMatrix.normalize();
             fundamentalMatrixB.normalize();
 
-            final Point2D epipole1 = camera1.project(center2);
-            final Point2D epipole2 = camera2.project(center1);
+            final var epipole1 = camera1.project(center2);
+            final var epipole2 = camera2.project(center1);
 
             fundamentalMatrix.computeEpipoles();
             fundamentalMatrixB.computeEpipoles();
 
-            final Point2D epipole1a = fundamentalMatrix.getLeftEpipole();
-            final Point2D epipole2a = fundamentalMatrix.getRightEpipole();
+            final var epipole1a = fundamentalMatrix.getLeftEpipole();
+            final var epipole2a = fundamentalMatrix.getRightEpipole();
 
-            final Point2D epipole1b = fundamentalMatrixB.getLeftEpipole();
-            final Point2D epipole2b = fundamentalMatrixB.getRightEpipole();
+            final var epipole1b = fundamentalMatrixB.getLeftEpipole();
+            final var epipole2b = fundamentalMatrixB.getRightEpipole();
 
             assertEquals(0.0, epipole1.distanceTo(epipole1a), ABSOLUTE_ERROR);
             assertEquals(0.0, epipole2.distanceTo(epipole2a), ABSOLUTE_ERROR);
@@ -1386,20 +1201,20 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
 
             // generate epipolar lines
             Point3D scaledWorldPoint;
-            int numValid1a = 0;
-            int numValid2a = 0;
-            int numValid1b = 0;
-            int numValid2b = 0;
-            for (int i = 0; i < nPoints; i++) {
+            var numValid1a = 0;
+            var numValid2a = 0;
+            var numValid1b = 0;
+            var numValid2b = 0;
+            for (var i = 0; i < nPoints; i++) {
                 worldPoint = worldPoints.get(i);
                 leftPoint = leftPoints.get(i);
                 rightPoint = rightPoints.get(i);
 
-                final Line2D line1a = fundamentalMatrix.getLeftEpipolarLine(rightPoint);
-                final Line2D line2a = fundamentalMatrix.getRightEpipolarLine(leftPoint);
+                final var line1a = fundamentalMatrix.getLeftEpipolarLine(rightPoint);
+                final var line2a = fundamentalMatrix.getRightEpipolarLine(leftPoint);
 
-                final Line2D line1b = fundamentalMatrixB.getLeftEpipolarLine(rightPoint);
-                final Line2D line2b = fundamentalMatrixB.getRightEpipolarLine(leftPoint);
+                final var line1b = fundamentalMatrixB.getLeftEpipolarLine(rightPoint);
+                final var line2b = fundamentalMatrixB.getRightEpipolarLine(leftPoint);
 
                 // check that points lie on their corresponding epipolar lines
                 assertTrue(line1a.isLocus(leftPoint, ABSOLUTE_ERROR));
@@ -1410,11 +1225,11 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
 
                 // back-project epipolar lines for each pair of cameras and check
                 // that each pair of lines correspond to the same epipolar plane
-                final Plane epipolarPlane1a = camera1.backProject(line1a);
-                final Plane epipolarPlane2a = camera2.backProject(line2a);
+                final var epipolarPlane1a = camera1.backProject(line1a);
+                final var epipolarPlane2a = camera2.backProject(line2a);
 
-                final Plane epipolarPlane1b = camera1b.backProject(line1b);
-                final Plane epipolarPlane2b = camera2b.backProject(line2b);
+                final var epipolarPlane1b = camera1b.backProject(line1b);
+                final var epipolarPlane2b = camera2b.backProject(line2b);
 
                 assertTrue(epipolarPlane1a.equals(epipolarPlane2a, ABSOLUTE_ERROR));
                 assertTrue(epipolarPlane1b.equals(epipolarPlane2b, ABSOLUTE_ERROR));
@@ -1436,8 +1251,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 // notice that since estimated cameras have an arbitrary scale,
                 // original world point doesn't need to lie on epipolar plane
                 // because first a scale transformation needs to be done
-                scaledWorldPoint = scaleTransformation.transformAndReturnNew(
-                        worldPoint);
+                scaledWorldPoint = scaleTransformation.transformAndReturnNew(worldPoint);
                 if (epipolarPlane1a.isLocus(scaledWorldPoint, ABSOLUTE_ERROR)) {
                     numValid1b++;
                 }
@@ -1456,8 +1270,8 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             }
 
             // recover scale of cameras by undoing their transformations
-            final PinholeCamera camera1c = invScaleTransformation.transformAndReturnNew(camera1b);
-            final PinholeCamera camera2c = invScaleTransformation.transformAndReturnNew(camera2b);
+            final var camera1c = invScaleTransformation.transformAndReturnNew(camera1b);
+            final var camera2c = invScaleTransformation.transformAndReturnNew(camera2b);
 
             // check that now cameras are equal to the original ones
             camera1.normalize();
@@ -1465,12 +1279,12 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             camera1c.normalize();
             camera2c.normalize();
 
-            final Matrix camera1Matrix = camera1.getInternalMatrix();
-            final Matrix camera1cMatrix = camera1c.getInternalMatrix();
+            final var camera1Matrix = camera1.getInternalMatrix();
+            final var camera1cMatrix = camera1c.getInternalMatrix();
             assertTrue(camera1Matrix.equals(camera1cMatrix, ABSOLUTE_ERROR));
 
-            final Matrix camera2Matrix = camera2.getInternalMatrix();
-            final Matrix camera2cMatrix = camera2c.getInternalMatrix();
+            final var camera2Matrix = camera2.getInternalMatrix();
+            final var camera2cMatrix = camera2c.getInternalMatrix();
             assertTrue(camera2Matrix.equals(camera2cMatrix, ABSOLUTE_ERROR));
         }
 
@@ -1478,62 +1292,51 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
     }
 
     @Test
-    public void testGenerateInitialMetricCamerasFromEssentialMatrix2()
-            throws InvalidPairOfCamerasException, CameraException,
-            InitialCamerasEstimationFailedException,
-            com.irurueta.geometry.NotAvailableException,
-            com.irurueta.geometry.estimators.NotReadyException,
-            InvalidFundamentalMatrixException, AlgebraException {
-        int numValidTimes = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double alphaEuler1 = 0.0;
-            final double betaEuler1 = 0.0;
-            final double gammaEuler1 = 0.0;
-            final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+    void testGenerateInitialMetricCamerasFromEssentialMatrix2() throws InvalidPairOfCamerasException, CameraException,
+            InitialCamerasEstimationFailedException, com.irurueta.geometry.NotAvailableException,
+            com.irurueta.geometry.estimators.NotReadyException, InvalidFundamentalMatrixException, AlgebraException {
+        var numValidTimes = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var randomizer = new UniformRandomizer();
+            final var alphaEuler1 = 0.0;
+            final var betaEuler1 = 0.0;
+            final var gammaEuler1 = 0.0;
+            final var alphaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var betaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var gammaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double skewness = 0.0;
-            final double principalPoint = 0.0;
+            final var focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var skewness = 0.0;
+            final var principalPoint = 0.0;
 
-            final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
+            final var cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
-            final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
-            final Point3D center2 = new InhomogeneousPoint3D(
+            final var center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
+            final var center2 = new InhomogeneousPoint3D(
                     center1.getInhomX() + cameraSeparation,
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
+            final var rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final var rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-            final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength, focalLength,
-                            principalPoint, principalPoint, skewness);
+            final var intrinsic = new PinholeCameraIntrinsicParameters(focalLength, focalLength, principalPoint,
+                    principalPoint, skewness);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
+            final var camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final var camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
+            final var fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
 
             // 1st find an approximate central point by intersecting the axis
             // planes of both cameras
-            final Plane horizontalPlane1 = camera1.getHorizontalAxisPlane();
-            final Plane verticalPlane1 = camera1.getVerticalAxisPlane();
-            final Plane horizontalPlane2 = camera2.getHorizontalAxisPlane();
-            final Plane verticalPlane2 = camera2.getVerticalAxisPlane();
-            final Matrix planesIntersectionMatrix = new Matrix(Plane.PLANE_NUMBER_PARAMS,
-                    Plane.PLANE_NUMBER_PARAMS);
+            final var horizontalPlane1 = camera1.getHorizontalAxisPlane();
+            final var verticalPlane1 = camera1.getVerticalAxisPlane();
+            final var horizontalPlane2 = camera2.getHorizontalAxisPlane();
+            final var verticalPlane2 = camera2.getVerticalAxisPlane();
+            final var planesIntersectionMatrix = new Matrix(Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
             planesIntersectionMatrix.setElementAt(0, 0, verticalPlane1.getA());
             planesIntersectionMatrix.setElementAt(0, 1, verticalPlane1.getB());
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
@@ -1554,48 +1357,44 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
             planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
+            final var decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
-            final Matrix v = decomposer.getV();
-            final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
+            final var v = decomposer.getV();
+            final var centralCommonPoint = new HomogeneousPoint3D(
                     v.getElementAt(0, 3),
                     v.getElementAt(1, 3),
                     v.getElementAt(2, 3),
                     v.getElementAt(3, 3));
 
-            final double[] principalAxis1 = camera1.getPrincipalAxisArray();
-            final double[] principalAxis2 = camera2.getPrincipalAxisArray();
+            final var principalAxis1 = camera1.getPrincipalAxisArray();
+            final var principalAxis2 = camera2.getPrincipalAxisArray();
             double lambda1;
             double lambda2;
 
-            final int nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
+            final var nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
 
             InhomogeneousPoint3D worldPoint;
-            final List<InhomogeneousPoint3D> worldPoints = new ArrayList<>();
+            final var worldPoints = new ArrayList<InhomogeneousPoint3D>();
             Point2D leftPoint;
             Point2D rightPoint;
-            final List<Point2D> leftPoints = new ArrayList<>();
-            final List<Point2D> rightPoints = new ArrayList<>();
+            final var leftPoints = new ArrayList<Point2D>();
+            final var rightPoints = new ArrayList<Point2D>();
             boolean leftFront;
             boolean rightFront;
-            for (int i = 0; i < nPoints; i++) {
+            for (var i = 0; i < nPoints; i++) {
                 // generate points and ensure they lie in front of both cameras
-                int numTry = 0;
+                var numTry = 0;
                 do {
                     lambda1 = randomizer.nextDouble(MIN_LAMBDA, MAX_LAMBDA);
                     lambda2 = randomizer.nextDouble(MIN_LAMBDA, MAX_LAMBDA);
 
                     worldPoint = new InhomogeneousPoint3D(
-                            centralCommonPoint.getInhomX() +
-                                    principalAxis1[0] * lambda1 +
-                                    principalAxis2[0] * lambda2,
-                            centralCommonPoint.getInhomY() +
-                                    principalAxis1[1] * lambda1 +
-                                    principalAxis2[1] * lambda2,
-                            centralCommonPoint.getInhomZ() +
-                                    principalAxis1[2] * lambda1 +
-                                    principalAxis2[2] * lambda2);
+                            centralCommonPoint.getInhomX() + principalAxis1[0] * lambda1
+                                    + principalAxis2[0] * lambda2,
+                            centralCommonPoint.getInhomY() + principalAxis1[1] * lambda1
+                                    + principalAxis2[1] * lambda2,
+                            centralCommonPoint.getInhomZ() + principalAxis1[2] * lambda1
+                                    + principalAxis2[2] * lambda2);
                     leftFront = camera1.isPointInFrontOfCamera(worldPoint);
                     rightFront = camera2.isPointInFrontOfCamera(worldPoint);
                     if (numTry > MAX_TRIES) {
@@ -1605,9 +1404,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 } while (!leftFront || !rightFront);
                 worldPoints.add(worldPoint);
 
-                // check that world point is in front of both cameras
-                assertTrue(leftFront);
-                assertTrue(rightFront);
+                // here world point is in front of both cameras
 
                 // project world point into both cameras
                 leftPoint = camera1.project(worldPoint);
@@ -1617,12 +1414,11 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 rightPoints.add(rightPoint);
             }
 
-            final PinholeCamera camera1b = new PinholeCamera();
-            final PinholeCamera camera2b = new PinholeCamera();
-            final int numValid = EssentialMatrixInitialCamerasEstimator.
-                    generateInitialMetricCamerasFromEssentialMatrix(
-                            fundamentalMatrix, intrinsic, intrinsic, leftPoints,
-                            rightPoints, null, camera1b, camera2b);
+            final var camera1b = new PinholeCamera();
+            final var camera2b = new PinholeCamera();
+            final var numValid = EssentialMatrixInitialCamerasEstimator.generateInitialMetricCamerasFromEssentialMatrix(
+                    fundamentalMatrix, intrinsic, intrinsic, leftPoints, rightPoints, null, camera1b,
+                    camera2b);
 
             // check correctness
             assertEquals(numValid, nPoints);
@@ -1630,14 +1426,14 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             camera1b.decompose();
             camera2b.decompose();
 
-            final PinholeCameraIntrinsicParameters intrinsic1b = camera1b.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters intrinsic2b = camera2b.getIntrinsicParameters();
+            final var intrinsic1b = camera1b.getIntrinsicParameters();
+            final var intrinsic2b = camera2b.getIntrinsicParameters();
 
-            final Rotation3D rotation1b = camera1b.getCameraRotation();
-            final Rotation3D rotation2b = camera2b.getCameraRotation();
+            final var rotation1b = camera1b.getCameraRotation();
+            final var rotation2b = camera2b.getCameraRotation();
 
-            final Point3D center1b = camera1b.getCameraCenter();
-            final Point3D center2b = camera2b.getCameraCenter();
+            final var center1b = camera1b.getCameraCenter();
+            final var center2b = camera2b.getCameraCenter();
 
             assertEquals(focalLength, intrinsic1b.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(focalLength, intrinsic1b.getVerticalFocalLength(), ABSOLUTE_ERROR);
@@ -1651,54 +1447,49 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             assertEquals(0.0, intrinsic2b.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(0.0, intrinsic2b.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
 
-            final Rotation3D diffRotation = rotation2b.combineAndReturnNew(
-                    rotation1b.inverseRotationAndReturnNew());
+            final var diffRotation = rotation2b.combineAndReturnNew(rotation1b.inverseRotationAndReturnNew());
 
-            assertTrue(rotation1b.asInhomogeneousMatrix().equals(
-                    Matrix.identity(3, 3), ABSOLUTE_ERROR));
-            assertTrue(rotation2.asInhomogeneousMatrix().equals(
-                    diffRotation.asInhomogeneousMatrix(), ABSOLUTE_ERROR));
+            assertTrue(rotation1b.asInhomogeneousMatrix().equals(Matrix.identity(3, 3), ABSOLUTE_ERROR));
+            assertTrue(rotation2.asInhomogeneousMatrix().equals(diffRotation.asInhomogeneousMatrix(), ABSOLUTE_ERROR));
 
             assertNotNull(center1b);
             assertNotNull(center2b);
 
             // compute scale factor
-            final double distanceA = center1.distanceTo(center2);
-            final double distanceB = center1b.distanceTo(center2b);
-            final double scaleFactor = distanceB / distanceA;
-            final double invScaleFactor = distanceA / distanceB;
+            final var distanceA = center1.distanceTo(center2);
+            final var distanceB = center1b.distanceTo(center2b);
+            final var scaleFactor = distanceB / distanceA;
+            final var invScaleFactor = distanceA / distanceB;
 
             // NOTE: distance between estimated cameras is always normalized
             assertEquals(1.0, distanceB, ABSOLUTE_ERROR);
 
-            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(scaleFactor);
-            final Transformation3D invScaleTransformation = scaleTransformation.inverseAndReturnNew();
-            final MetricTransformation3D invScaleTransformation2 =
-                    new MetricTransformation3D(invScaleFactor);
+            final var scaleTransformation = new MetricTransformation3D(scaleFactor);
+            final var invScaleTransformation = scaleTransformation.inverseAndReturnNew();
+            final var invScaleTransformation2 = new MetricTransformation3D(invScaleFactor);
 
-            assertTrue(invScaleTransformation.asMatrix().equals(
-                    invScaleTransformation2.asMatrix(), ABSOLUTE_ERROR));
+            assertTrue(invScaleTransformation.asMatrix().equals(invScaleTransformation2.asMatrix(), ABSOLUTE_ERROR));
 
             // check that estimated cameras generate the same input fundamental
             // matrix
-            final FundamentalMatrix fundamentalMatrixB = new FundamentalMatrix(camera1b, camera2b);
+            final var fundamentalMatrixB = new FundamentalMatrix(camera1b, camera2b);
 
             // compare fundamental matrices by checking generated epipolar
             // geometry
             fundamentalMatrix.normalize();
             fundamentalMatrixB.normalize();
 
-            final Point2D epipole1 = camera1.project(center2);
-            final Point2D epipole2 = camera2.project(center1);
+            final var epipole1 = camera1.project(center2);
+            final var epipole2 = camera2.project(center1);
 
             fundamentalMatrix.computeEpipoles();
             fundamentalMatrixB.computeEpipoles();
 
-            final Point2D epipole1a = fundamentalMatrix.getLeftEpipole();
-            final Point2D epipole2a = fundamentalMatrix.getRightEpipole();
+            final var epipole1a = fundamentalMatrix.getLeftEpipole();
+            final var epipole2a = fundamentalMatrix.getRightEpipole();
 
-            final Point2D epipole1b = fundamentalMatrixB.getLeftEpipole();
-            final Point2D epipole2b = fundamentalMatrixB.getRightEpipole();
+            final var epipole1b = fundamentalMatrixB.getLeftEpipole();
+            final var epipole2b = fundamentalMatrixB.getRightEpipole();
 
             assertEquals(0.0, epipole1.distanceTo(epipole1a), ABSOLUTE_ERROR);
             assertEquals(0.0, epipole2.distanceTo(epipole2a), ABSOLUTE_ERROR);
@@ -1708,20 +1499,20 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
 
             // generate epipolar lines
             Point3D scaledWorldPoint;
-            int numValid1a = 0;
-            int numValid2a = 0;
-            int numValid1b = 0;
-            int numValid2b = 0;
-            for (int i = 0; i < nPoints; i++) {
+            var numValid1a = 0;
+            var numValid2a = 0;
+            var numValid1b = 0;
+            var numValid2b = 0;
+            for (var i = 0; i < nPoints; i++) {
                 worldPoint = worldPoints.get(i);
                 leftPoint = leftPoints.get(i);
                 rightPoint = rightPoints.get(i);
 
-                final Line2D line1a = fundamentalMatrix.getLeftEpipolarLine(rightPoint);
-                final Line2D line2a = fundamentalMatrix.getRightEpipolarLine(leftPoint);
+                final var line1a = fundamentalMatrix.getLeftEpipolarLine(rightPoint);
+                final var line2a = fundamentalMatrix.getRightEpipolarLine(leftPoint);
 
-                final Line2D line1b = fundamentalMatrixB.getLeftEpipolarLine(rightPoint);
-                final Line2D line2b = fundamentalMatrixB.getRightEpipolarLine(leftPoint);
+                final var line1b = fundamentalMatrixB.getLeftEpipolarLine(rightPoint);
+                final var line2b = fundamentalMatrixB.getRightEpipolarLine(leftPoint);
 
                 // check that points lie on their corresponding epipolar lines
                 assertTrue(line1a.isLocus(leftPoint, ABSOLUTE_ERROR));
@@ -1732,11 +1523,11 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
 
                 // back-project epipolar lines for each pair of cameras and check
                 // that each pair of lines correspond to the same epipolar plane
-                final Plane epipolarPlane1a = camera1.backProject(line1a);
-                final Plane epipolarPlane2a = camera2.backProject(line2a);
+                final var epipolarPlane1a = camera1.backProject(line1a);
+                final var epipolarPlane2a = camera2.backProject(line2a);
 
-                final Plane epipolarPlane1b = camera1b.backProject(line1b);
-                final Plane epipolarPlane2b = camera2b.backProject(line2b);
+                final var epipolarPlane1b = camera1b.backProject(line1b);
+                final var epipolarPlane2b = camera2b.backProject(line2b);
 
                 assertTrue(epipolarPlane1a.equals(epipolarPlane2a, ABSOLUTE_ERROR));
                 assertTrue(epipolarPlane1b.equals(epipolarPlane2b, ABSOLUTE_ERROR));
@@ -1772,14 +1563,13 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 assertTrue(epipolarPlane2b.isLocus(center2b, ABSOLUTE_ERROR));
             }
 
-            if (numValid1a > 0 && numValid2a > 0 && numValid1b > 0 &&
-                    numValid2b > 0) {
+            if (numValid1a > 0 && numValid2a > 0 && numValid1b > 0 && numValid2b > 0) {
                 numValidTimes++;
             }
 
             // recover scale of cameras by undoing their transformations
-            final PinholeCamera camera1c = invScaleTransformation.transformAndReturnNew(camera1b);
-            final PinholeCamera camera2c = invScaleTransformation.transformAndReturnNew(camera2b);
+            final var camera1c = invScaleTransformation.transformAndReturnNew(camera1b);
+            final var camera2c = invScaleTransformation.transformAndReturnNew(camera2b);
 
             // check that now cameras are equal to the original ones
             camera1.normalize();
@@ -1787,12 +1577,12 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             camera1c.normalize();
             camera2c.normalize();
 
-            final Matrix camera1Matrix = camera1.getInternalMatrix();
-            final Matrix camera1cMatrix = camera1c.getInternalMatrix();
+            final var camera1Matrix = camera1.getInternalMatrix();
+            final var camera1cMatrix = camera1c.getInternalMatrix();
             assertTrue(camera1Matrix.equals(camera1cMatrix, ABSOLUTE_ERROR));
 
-            final Matrix camera2Matrix = camera2.getInternalMatrix();
-            final Matrix camera2cMatrix = camera2c.getInternalMatrix();
+            final var camera2Matrix = camera2.getInternalMatrix();
+            final var camera2cMatrix = camera2c.getInternalMatrix();
             assertTrue(camera2Matrix.equals(camera2cMatrix, ABSOLUTE_ERROR));
         }
 
@@ -1800,60 +1590,51 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
     }
 
     @Test
-    public void testGenerateInitialMetricCamerasFromEssentialMatrix3()
-            throws InvalidPairOfCamerasException, CameraException,
-            InitialCamerasEstimationFailedException,
-            com.irurueta.geometry.NotAvailableException,
-            com.irurueta.geometry.estimators.NotReadyException,
-            InvalidFundamentalMatrixException, AlgebraException {
-        int numValidTimes = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double alphaEuler1 = 0.0;
-            final double betaEuler1 = 0.0;
-            final double gammaEuler1 = 0.0;
-            final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+    void testGenerateInitialMetricCamerasFromEssentialMatrix3() throws InvalidPairOfCamerasException, CameraException,
+            InitialCamerasEstimationFailedException, com.irurueta.geometry.NotAvailableException,
+            com.irurueta.geometry.estimators.NotReadyException, InvalidFundamentalMatrixException, AlgebraException {
+        var numValidTimes = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var randomizer = new UniformRandomizer();
+            final var alphaEuler1 = 0.0;
+            final var betaEuler1 = 0.0;
+            final var gammaEuler1 = 0.0;
+            final var alphaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var betaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var gammaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double skewness = 0.0;
-            final double principalPoint = 0.0;
+            final var focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var skewness = 0.0;
+            final var principalPoint = 0.0;
 
-            final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
+            final var cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
-            final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
-            final Point3D center2 = new InhomogeneousPoint3D(
+            final var center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
+            final var center2 = new InhomogeneousPoint3D(
                     center1.getInhomX() + cameraSeparation,
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+            final var rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final var rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-            final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength, focalLength,
-                            principalPoint, principalPoint, skewness);
+            final var intrinsic = new PinholeCameraIntrinsicParameters(focalLength, focalLength, principalPoint,
+                    principalPoint, skewness);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
+            final var camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final var camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
+            final var fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
 
             // 1st find an approximate central point by intersecting the axis
             // planes of both cameras
-            final Plane horizontalPlane1 = camera1.getHorizontalAxisPlane();
-            final Plane verticalPlane1 = camera1.getVerticalAxisPlane();
-            final Plane horizontalPlane2 = camera2.getHorizontalAxisPlane();
-            final Plane verticalPlane2 = camera2.getVerticalAxisPlane();
-            final Matrix planesIntersectionMatrix = new Matrix(
-                    Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
+            final var horizontalPlane1 = camera1.getHorizontalAxisPlane();
+            final var verticalPlane1 = camera1.getVerticalAxisPlane();
+            final var horizontalPlane2 = camera2.getHorizontalAxisPlane();
+            final var verticalPlane2 = camera2.getVerticalAxisPlane();
+            final var planesIntersectionMatrix = new Matrix(Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
             planesIntersectionMatrix.setElementAt(0, 0, verticalPlane1.getA());
             planesIntersectionMatrix.setElementAt(0, 1, verticalPlane1.getB());
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
@@ -1874,48 +1655,44 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
             planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
+            final var decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
-            final Matrix v = decomposer.getV();
-            final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
+            final var v = decomposer.getV();
+            final var centralCommonPoint = new HomogeneousPoint3D(
                     v.getElementAt(0, 3),
                     v.getElementAt(1, 3),
                     v.getElementAt(2, 3),
                     v.getElementAt(3, 3));
 
-            final double[] principalAxis1 = camera1.getPrincipalAxisArray();
-            final double[] principalAxis2 = camera2.getPrincipalAxisArray();
+            final var principalAxis1 = camera1.getPrincipalAxisArray();
+            final var principalAxis2 = camera2.getPrincipalAxisArray();
             double lambda1;
             double lambda2;
 
-            final int nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
+            final var nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
 
             InhomogeneousPoint3D worldPoint;
-            final List<InhomogeneousPoint3D> worldPoints = new ArrayList<>();
+            final var worldPoints = new ArrayList<InhomogeneousPoint3D>();
             Point2D leftPoint;
             Point2D rightPoint;
-            final List<Point2D> leftPoints = new ArrayList<>();
-            final List<Point2D> rightPoints = new ArrayList<>();
+            final var leftPoints = new ArrayList<Point2D>();
+            final var rightPoints = new ArrayList<Point2D>();
             boolean leftFront;
             boolean rightFront;
-            for (int i = 0; i < nPoints; i++) {
+            for (var i = 0; i < nPoints; i++) {
                 // generate points and ensure they lie in front of both cameras
-                int numTry = 0;
+                var numTry = 0;
                 do {
                     lambda1 = randomizer.nextDouble(MIN_LAMBDA, MAX_LAMBDA);
                     lambda2 = randomizer.nextDouble(MIN_LAMBDA, MAX_LAMBDA);
 
                     worldPoint = new InhomogeneousPoint3D(
-                            centralCommonPoint.getInhomX() +
-                                    principalAxis1[0] * lambda1 +
-                                    principalAxis2[0] * lambda2,
-                            centralCommonPoint.getInhomY() +
-                                    principalAxis1[1] * lambda1 +
-                                    principalAxis2[1] * lambda2,
-                            centralCommonPoint.getInhomZ() +
-                                    principalAxis1[2] * lambda1 +
-                                    principalAxis2[2] * lambda2);
+                            centralCommonPoint.getInhomX() + principalAxis1[0] * lambda1
+                                    + principalAxis2[0] * lambda2,
+                            centralCommonPoint.getInhomY() + principalAxis1[1] * lambda1
+                                    + principalAxis2[1] * lambda2,
+                            centralCommonPoint.getInhomZ() + principalAxis1[2] * lambda1
+                                    + principalAxis2[2] * lambda2);
                     leftFront = camera1.isPointInFrontOfCamera(worldPoint);
                     rightFront = camera2.isPointInFrontOfCamera(worldPoint);
                     if (numTry > MAX_TRIES) {
@@ -1925,9 +1702,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 } while (!leftFront || !rightFront);
                 worldPoints.add(worldPoint);
 
-                // check that world point is in front of both cameras
-                assertTrue(leftFront);
-                assertTrue(rightFront);
+                // here world point is in front of both cameras
 
                 // project world point into both cameras
                 leftPoint = camera1.project(worldPoint);
@@ -1937,15 +1712,13 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 rightPoints.add(rightPoint);
             }
 
-            final PinholeCamera camera1b = new PinholeCamera();
-            final PinholeCamera camera2b = new PinholeCamera();
-            final List<Point3D> triangulatedPoints = new ArrayList<>();
-            final BitSet validTriangulatedPoints = new BitSet(nPoints);
-            final int numValid = EssentialMatrixInitialCamerasEstimator.
-                    generateInitialMetricCamerasFromEssentialMatrix(
-                            fundamentalMatrix, intrinsic, intrinsic, leftPoints,
-                            rightPoints, camera1b, camera2b, triangulatedPoints,
-                            validTriangulatedPoints);
+            final var camera1b = new PinholeCamera();
+            final var camera2b = new PinholeCamera();
+            final var triangulatedPoints = new ArrayList<Point3D>();
+            final var validTriangulatedPoints = new BitSet(nPoints);
+            final var numValid = EssentialMatrixInitialCamerasEstimator.generateInitialMetricCamerasFromEssentialMatrix(
+                    fundamentalMatrix, intrinsic, intrinsic, leftPoints, rightPoints, camera1b, camera2b,
+                    triangulatedPoints, validTriangulatedPoints);
 
             // check correctness
             assertEquals(numValid, nPoints);
@@ -1953,14 +1726,14 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             camera1b.decompose();
             camera2b.decompose();
 
-            final PinholeCameraIntrinsicParameters intrinsic1b = camera1b.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters intrinsic2b = camera2b.getIntrinsicParameters();
+            final var intrinsic1b = camera1b.getIntrinsicParameters();
+            final var intrinsic2b = camera2b.getIntrinsicParameters();
 
-            final Rotation3D rotation1b = camera1b.getCameraRotation();
-            final Rotation3D rotation2b = camera2b.getCameraRotation();
+            final var rotation1b = camera1b.getCameraRotation();
+            final var rotation2b = camera2b.getCameraRotation();
 
-            final Point3D center1b = camera1b.getCameraCenter();
-            final Point3D center2b = camera2b.getCameraCenter();
+            final var center1b = camera1b.getCameraCenter();
+            final var center2b = camera2b.getCameraCenter();
 
             assertEquals(focalLength, intrinsic1b.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(focalLength, intrinsic1b.getVerticalFocalLength(), ABSOLUTE_ERROR);
@@ -1974,53 +1747,48 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             assertEquals(0.0, intrinsic2b.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(0.0, intrinsic2b.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
 
-            final Rotation3D diffRotation = rotation2b.combineAndReturnNew(
-                    rotation1b.inverseRotationAndReturnNew());
+            final var diffRotation = rotation2b.combineAndReturnNew(rotation1b.inverseRotationAndReturnNew());
 
-            assertTrue(rotation1b.asInhomogeneousMatrix().equals(
-                    Matrix.identity(3, 3), ABSOLUTE_ERROR));
-            assertTrue(rotation2.asInhomogeneousMatrix().equals(
-                    diffRotation.asInhomogeneousMatrix(), ABSOLUTE_ERROR));
+            assertTrue(rotation1b.asInhomogeneousMatrix().equals(Matrix.identity(3, 3), ABSOLUTE_ERROR));
+            assertTrue(rotation2.asInhomogeneousMatrix().equals(diffRotation.asInhomogeneousMatrix(), ABSOLUTE_ERROR));
 
             assertNotNull(center1b);
             assertNotNull(center2b);
 
             // compute scale factor
-            final double distanceA = center1.distanceTo(center2);
-            final double distanceB = center1b.distanceTo(center2b);
-            final double scaleFactor = distanceB / distanceA;
-            final double invScaleFactor = distanceA / distanceB;
+            final var distanceA = center1.distanceTo(center2);
+            final var distanceB = center1b.distanceTo(center2b);
+            final var scaleFactor = distanceB / distanceA;
+            final var invScaleFactor = distanceA / distanceB;
 
             // NOTE: distance between estimated cameras is always normalized
             assertEquals(1.0, distanceB, ABSOLUTE_ERROR);
 
-            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(scaleFactor);
-            final Transformation3D invScaleTransformation = scaleTransformation.inverseAndReturnNew();
-            final MetricTransformation3D invScaleTransformation2 =
-                    new MetricTransformation3D(invScaleFactor);
+            final var scaleTransformation = new MetricTransformation3D(scaleFactor);
+            final var invScaleTransformation = scaleTransformation.inverseAndReturnNew();
+            final var invScaleTransformation2 = new MetricTransformation3D(invScaleFactor);
 
-            assertTrue(invScaleTransformation.asMatrix().equals(
-                    invScaleTransformation2.asMatrix(), ABSOLUTE_ERROR));
+            assertTrue(invScaleTransformation.asMatrix().equals(invScaleTransformation2.asMatrix(), ABSOLUTE_ERROR));
 
             // check that estimated cameras generate the same input fundamental
             // matrix
-            final FundamentalMatrix fundamentalMatrixB = new FundamentalMatrix(camera1b, camera2b);
+            final var fundamentalMatrixB = new FundamentalMatrix(camera1b, camera2b);
 
             // compare fundamental matrices by checking generated epipolar geometry
             fundamentalMatrix.normalize();
             fundamentalMatrixB.normalize();
 
-            final Point2D epipole1 = camera1.project(center2);
-            final Point2D epipole2 = camera2.project(center1);
+            final var epipole1 = camera1.project(center2);
+            final var epipole2 = camera2.project(center1);
 
             fundamentalMatrix.computeEpipoles();
             fundamentalMatrixB.computeEpipoles();
 
-            final Point2D epipole1a = fundamentalMatrix.getLeftEpipole();
-            final Point2D epipole2a = fundamentalMatrix.getRightEpipole();
+            final var epipole1a = fundamentalMatrix.getLeftEpipole();
+            final var epipole2a = fundamentalMatrix.getRightEpipole();
 
-            final Point2D epipole1b = fundamentalMatrixB.getLeftEpipole();
-            final Point2D epipole2b = fundamentalMatrixB.getRightEpipole();
+            final var epipole1b = fundamentalMatrixB.getLeftEpipole();
+            final var epipole2b = fundamentalMatrixB.getRightEpipole();
 
             assertEquals(0.0, epipole1.distanceTo(epipole1a), ABSOLUTE_ERROR);
             assertEquals(0.0, epipole2.distanceTo(epipole2a), ABSOLUTE_ERROR);
@@ -2032,12 +1800,12 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             Point3D scaledWorldPoint;
             Point3D triangulatedPoint;
             Point3D scaledTriangulatedPoint;
-            int numValid1a = 0;
-            int numValid2a = 0;
-            int numValid1b = 0;
-            int numValid2b = 0;
-            int numValidEqual = 0;
-            for (int i = 0; i < nPoints; i++) {
+            var numValid1a = 0;
+            var numValid2a = 0;
+            var numValid1b = 0;
+            var numValid2b = 0;
+            var numValidEqual = 0;
+            for (var i = 0; i < nPoints; i++) {
                 worldPoint = worldPoints.get(i);
                 leftPoint = leftPoints.get(i);
                 rightPoint = rightPoints.get(i);
@@ -2045,11 +1813,11 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 triangulatedPoint = triangulatedPoints.get(i);
                 assertTrue(validTriangulatedPoints.get(i));
 
-                final Line2D line1a = fundamentalMatrix.getLeftEpipolarLine(rightPoint);
-                final Line2D line2a = fundamentalMatrix.getRightEpipolarLine(leftPoint);
+                final var line1a = fundamentalMatrix.getLeftEpipolarLine(rightPoint);
+                final var line2a = fundamentalMatrix.getRightEpipolarLine(leftPoint);
 
-                final Line2D line1b = fundamentalMatrixB.getLeftEpipolarLine(rightPoint);
-                final Line2D line2b = fundamentalMatrixB.getRightEpipolarLine(leftPoint);
+                final var line1b = fundamentalMatrixB.getLeftEpipolarLine(rightPoint);
+                final var line2b = fundamentalMatrixB.getRightEpipolarLine(leftPoint);
 
                 // check that points lie on their corresponding epipolar lines
                 assertTrue(line1a.isLocus(leftPoint, ABSOLUTE_ERROR));
@@ -2060,11 +1828,11 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
 
                 // back-project epipolar lines for each pair of cameras and check
                 // that each pair of lines correspond to the same epipolar plane
-                final Plane epipolarPlane1a = camera1.backProject(line1a);
-                final Plane epipolarPlane2a = camera2.backProject(line2a);
+                final var epipolarPlane1a = camera1.backProject(line1a);
+                final var epipolarPlane2a = camera2.backProject(line2a);
 
-                final Plane epipolarPlane1b = camera1b.backProject(line1b);
-                final Plane epipolarPlane2b = camera2b.backProject(line2b);
+                final var epipolarPlane1b = camera1b.backProject(line1b);
+                final var epipolarPlane2b = camera2b.backProject(line2b);
 
                 assertTrue(epipolarPlane1a.equals(epipolarPlane2a, ABSOLUTE_ERROR));
                 assertTrue(epipolarPlane1b.equals(epipolarPlane2b, ABSOLUTE_ERROR));
@@ -2104,20 +1872,18 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
 
                 // check that triangulated point after recovering scale matches
                 // original point
-                if (worldPoint.equals(scaledTriangulatedPoint,
-                        LARGE_ABSOLUTE_ERROR)) {
+                if (worldPoint.equals(scaledTriangulatedPoint, LARGE_ABSOLUTE_ERROR)) {
                     numValidEqual++;
                 }
             }
 
-            if (numValid1a > 0 && numValid2a > 0 && numValid1b > 0 && numValid2b > 0
-                    && numValidEqual > 0) {
+            if (numValid1a > 0 && numValid2a > 0 && numValid1b > 0 && numValid2b > 0 && numValidEqual > 0) {
                 numValidTimes++;
             }
 
             // recover scale of cameras by undoing their transformations
-            final PinholeCamera camera1c = invScaleTransformation.transformAndReturnNew(camera1b);
-            final PinholeCamera camera2c = invScaleTransformation.transformAndReturnNew(camera2b);
+            final var camera1c = invScaleTransformation.transformAndReturnNew(camera1b);
+            final var camera2c = invScaleTransformation.transformAndReturnNew(camera2b);
 
             // check that now cameras are equal to the original ones
             camera1.normalize();
@@ -2125,12 +1891,12 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             camera1c.normalize();
             camera2c.normalize();
 
-            final Matrix camera1Matrix = camera1.getInternalMatrix();
-            final Matrix camera1cMatrix = camera1c.getInternalMatrix();
+            final var camera1Matrix = camera1.getInternalMatrix();
+            final var camera1cMatrix = camera1c.getInternalMatrix();
             assertTrue(camera1Matrix.equals(camera1cMatrix, ABSOLUTE_ERROR));
 
-            final Matrix camera2Matrix = camera2.getInternalMatrix();
-            final Matrix camera2cMatrix = camera2c.getInternalMatrix();
+            final var camera2Matrix = camera2.getInternalMatrix();
+            final var camera2cMatrix = camera2c.getInternalMatrix();
             assertTrue(camera2Matrix.equals(camera2cMatrix, ABSOLUTE_ERROR));
         }
 
@@ -2138,60 +1904,51 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
     }
 
     @Test
-    public void testGenerateInitialMetricCamerasFromEssentialMatrix4()
-            throws InvalidPairOfCamerasException, CameraException,
-            InitialCamerasEstimationFailedException,
-            com.irurueta.geometry.NotAvailableException,
-            com.irurueta.geometry.estimators.NotReadyException,
-            InvalidFundamentalMatrixException, AlgebraException {
-        int numValidTimes = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double alphaEuler1 = 0.0;
-            final double betaEuler1 = 0.0;
-            final double gammaEuler1 = 0.0;
-            final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+    void testGenerateInitialMetricCamerasFromEssentialMatrix4() throws InvalidPairOfCamerasException, CameraException,
+            InitialCamerasEstimationFailedException, com.irurueta.geometry.NotAvailableException,
+            com.irurueta.geometry.estimators.NotReadyException, InvalidFundamentalMatrixException, AlgebraException {
+        var numValidTimes = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var randomizer = new UniformRandomizer();
+            final var alphaEuler1 = 0.0;
+            final var betaEuler1 = 0.0;
+            final var gammaEuler1 = 0.0;
+            final var alphaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var betaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var gammaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double skewness = 0.0;
-            final double principalPoint = 0.0;
+            final var focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var skewness = 0.0;
+            final var principalPoint = 0.0;
 
-            final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
+            final var cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
-            final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
-            final Point3D center2 = new InhomogeneousPoint3D(
+            final var center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
+            final var center2 = new InhomogeneousPoint3D(
                     center1.getInhomX() + cameraSeparation,
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+            final var rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final var rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-            final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength, focalLength,
-                            principalPoint, principalPoint, skewness);
+            final var intrinsic = new PinholeCameraIntrinsicParameters(focalLength, focalLength, principalPoint,
+                    principalPoint, skewness);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
+            final var camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final var camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
+            final var fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
 
             // 1st find an approximate central point by intersecting the axis
             // planes of both cameras
-            final Plane horizontalPlane1 = camera1.getHorizontalAxisPlane();
-            final Plane verticalPlane1 = camera1.getVerticalAxisPlane();
-            final Plane horizontalPlane2 = camera2.getHorizontalAxisPlane();
-            final Plane verticalPlane2 = camera2.getVerticalAxisPlane();
-            final Matrix planesIntersectionMatrix = new Matrix(
-                    Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
+            final var horizontalPlane1 = camera1.getHorizontalAxisPlane();
+            final var verticalPlane1 = camera1.getVerticalAxisPlane();
+            final var horizontalPlane2 = camera2.getHorizontalAxisPlane();
+            final var verticalPlane2 = camera2.getVerticalAxisPlane();
+            final var planesIntersectionMatrix = new Matrix(Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
             planesIntersectionMatrix.setElementAt(0, 0, verticalPlane1.getA());
             planesIntersectionMatrix.setElementAt(0, 1, verticalPlane1.getB());
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
@@ -2212,48 +1969,44 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
             planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
+            final var decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
-            final Matrix v = decomposer.getV();
-            final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
+            final var v = decomposer.getV();
+            final var centralCommonPoint = new HomogeneousPoint3D(
                     v.getElementAt(0, 3),
                     v.getElementAt(1, 3),
                     v.getElementAt(2, 3),
                     v.getElementAt(3, 3));
 
-            final double[] principalAxis1 = camera1.getPrincipalAxisArray();
-            final double[] principalAxis2 = camera2.getPrincipalAxisArray();
+            final var principalAxis1 = camera1.getPrincipalAxisArray();
+            final var principalAxis2 = camera2.getPrincipalAxisArray();
             double lambda1;
             double lambda2;
 
-            final int nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
+            final var nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
 
             InhomogeneousPoint3D worldPoint;
-            final List<InhomogeneousPoint3D> worldPoints = new ArrayList<>();
+            final var worldPoints = new ArrayList<InhomogeneousPoint3D>();
             Point2D leftPoint;
             Point2D rightPoint;
-            final List<Point2D> leftPoints = new ArrayList<>();
-            final List<Point2D> rightPoints = new ArrayList<>();
+            final var leftPoints = new ArrayList<Point2D>();
+            final var rightPoints = new ArrayList<Point2D>();
             boolean leftFront;
             boolean rightFront;
-            for (int i = 0; i < nPoints; i++) {
+            for (var i = 0; i < nPoints; i++) {
                 // generate points and ensure they lie in front of both cameras
-                int numTry = 0;
+                var numTry = 0;
                 do {
                     lambda1 = randomizer.nextDouble(MIN_LAMBDA, MAX_LAMBDA);
                     lambda2 = randomizer.nextDouble(MIN_LAMBDA, MAX_LAMBDA);
 
                     worldPoint = new InhomogeneousPoint3D(
-                            centralCommonPoint.getInhomX() +
-                                    principalAxis1[0] * lambda1 +
-                                    principalAxis2[0] * lambda2,
-                            centralCommonPoint.getInhomY() +
-                                    principalAxis1[1] * lambda1 +
-                                    principalAxis2[1] * lambda2,
-                            centralCommonPoint.getInhomZ() +
-                                    principalAxis1[2] * lambda1 +
-                                    principalAxis2[2] * lambda2);
+                            centralCommonPoint.getInhomX() + principalAxis1[0] * lambda1
+                                    + principalAxis2[0] * lambda2,
+                            centralCommonPoint.getInhomY() + principalAxis1[1] * lambda1
+                                    + principalAxis2[1] * lambda2,
+                            centralCommonPoint.getInhomZ() + principalAxis1[2] * lambda1
+                                    + principalAxis2[2] * lambda2);
                     leftFront = camera1.isPointInFrontOfCamera(worldPoint);
                     rightFront = camera2.isPointInFrontOfCamera(worldPoint);
                     if (numTry > MAX_TRIES) {
@@ -2263,9 +2016,7 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 } while (!leftFront || !rightFront);
                 worldPoints.add(worldPoint);
 
-                // check that world point is in front of both cameras
-                assertTrue(leftFront);
-                assertTrue(rightFront);
+                // here world point is in front of both cameras
 
                 // project world point into both cameras
                 leftPoint = camera1.project(worldPoint);
@@ -2275,15 +2026,13 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 rightPoints.add(rightPoint);
             }
 
-            final PinholeCamera camera1b = new PinholeCamera();
-            final PinholeCamera camera2b = new PinholeCamera();
-            final List<Point3D> triangulatedPoints = new ArrayList<>();
-            final BitSet validTriangulatedPoints = new BitSet(nPoints);
-            final int numValid = EssentialMatrixInitialCamerasEstimator.
-                    generateInitialMetricCamerasFromEssentialMatrix(
-                            fundamentalMatrix, intrinsic, intrinsic, leftPoints,
-                            rightPoints, CorrectorType.SAMPSON_CORRECTOR, camera1b,
-                            camera2b, triangulatedPoints, validTriangulatedPoints);
+            final var camera1b = new PinholeCamera();
+            final var camera2b = new PinholeCamera();
+            final var triangulatedPoints = new ArrayList<Point3D>();
+            final var validTriangulatedPoints = new BitSet(nPoints);
+            final var numValid = EssentialMatrixInitialCamerasEstimator.generateInitialMetricCamerasFromEssentialMatrix(
+                    fundamentalMatrix, intrinsic, intrinsic, leftPoints, rightPoints, CorrectorType.SAMPSON_CORRECTOR,
+                    camera1b, camera2b, triangulatedPoints, validTriangulatedPoints);
 
             // check correctness
             assertEquals(numValid, nPoints);
@@ -2291,14 +2040,14 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             camera1b.decompose();
             camera2b.decompose();
 
-            final PinholeCameraIntrinsicParameters intrinsic1b = camera1b.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters intrinsic2b = camera2b.getIntrinsicParameters();
+            final var intrinsic1b = camera1b.getIntrinsicParameters();
+            final var intrinsic2b = camera2b.getIntrinsicParameters();
 
-            final Rotation3D rotation1b = camera1b.getCameraRotation();
-            final Rotation3D rotation2b = camera2b.getCameraRotation();
+            final var rotation1b = camera1b.getCameraRotation();
+            final var rotation2b = camera2b.getCameraRotation();
 
-            final Point3D center1b = camera1b.getCameraCenter();
-            final Point3D center2b = camera2b.getCameraCenter();
+            final var center1b = camera1b.getCameraCenter();
+            final var center2b = camera2b.getCameraCenter();
 
             assertEquals(focalLength, intrinsic1b.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(focalLength, intrinsic1b.getVerticalFocalLength(), ABSOLUTE_ERROR);
@@ -2312,55 +2061,50 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             assertEquals(0.0, intrinsic2b.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(0.0, intrinsic2b.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
 
-            final Rotation3D diffRotation = rotation2b.combineAndReturnNew(
-                    rotation1b.inverseRotationAndReturnNew());
+            final var diffRotation = rotation2b.combineAndReturnNew(rotation1b.inverseRotationAndReturnNew());
 
-            assertTrue(rotation1b.asInhomogeneousMatrix().equals(
-                    Matrix.identity(3, 3), ABSOLUTE_ERROR));
-            assertTrue(rotation2.asInhomogeneousMatrix().equals(
-                    diffRotation.asInhomogeneousMatrix(), ABSOLUTE_ERROR));
+            assertTrue(rotation1b.asInhomogeneousMatrix().equals(Matrix.identity(3, 3), ABSOLUTE_ERROR));
+            assertTrue(rotation2.asInhomogeneousMatrix().equals(diffRotation.asInhomogeneousMatrix(), ABSOLUTE_ERROR));
 
             assertNotNull(center1b);
             assertNotNull(center2b);
 
             // compute scale factor
-            final double distanceA = center1.distanceTo(center2);
-            final double distanceB = center1b.distanceTo(center2b);
-            final double scaleFactor = distanceB / distanceA;
-            final double invScaleFactor = distanceA / distanceB;
+            final var distanceA = center1.distanceTo(center2);
+            final var distanceB = center1b.distanceTo(center2b);
+            final var scaleFactor = distanceB / distanceA;
+            final var invScaleFactor = distanceA / distanceB;
 
             // NOTE: distance between estimated cameras is always normalized
             assertEquals(1.0, distanceB, ABSOLUTE_ERROR);
 
-            final MetricTransformation3D scaleTransformation = new MetricTransformation3D(scaleFactor);
-            final Transformation3D invScaleTransformation = scaleTransformation.inverseAndReturnNew();
-            final MetricTransformation3D invScaleTransformation2 =
-                    new MetricTransformation3D(invScaleFactor);
+            final var scaleTransformation = new MetricTransformation3D(scaleFactor);
+            final var invScaleTransformation = scaleTransformation.inverseAndReturnNew();
+            final var invScaleTransformation2 = new MetricTransformation3D(invScaleFactor);
 
-            assertTrue(invScaleTransformation.asMatrix().equals(
-                    invScaleTransformation2.asMatrix(), ABSOLUTE_ERROR));
+            assertTrue(invScaleTransformation.asMatrix().equals(invScaleTransformation2.asMatrix(), ABSOLUTE_ERROR));
 
 
             // check that estimated cameras generate the same input fundamental
             // matrix
-            final FundamentalMatrix fundamentalMatrixB = new FundamentalMatrix(camera1b, camera2b);
+            final var fundamentalMatrixB = new FundamentalMatrix(camera1b, camera2b);
 
             // compare fundamental matrices by checking generated epipolar
             // geometry
             fundamentalMatrix.normalize();
             fundamentalMatrixB.normalize();
 
-            final Point2D epipole1 = camera1.project(center2);
-            final Point2D epipole2 = camera2.project(center1);
+            final var epipole1 = camera1.project(center2);
+            final var epipole2 = camera2.project(center1);
 
             fundamentalMatrix.computeEpipoles();
             fundamentalMatrixB.computeEpipoles();
 
-            final Point2D epipole1a = fundamentalMatrix.getLeftEpipole();
-            final Point2D epipole2a = fundamentalMatrix.getRightEpipole();
+            final var epipole1a = fundamentalMatrix.getLeftEpipole();
+            final var epipole2a = fundamentalMatrix.getRightEpipole();
 
-            final Point2D epipole1b = fundamentalMatrixB.getLeftEpipole();
-            final Point2D epipole2b = fundamentalMatrixB.getRightEpipole();
+            final var epipole1b = fundamentalMatrixB.getLeftEpipole();
+            final var epipole2b = fundamentalMatrixB.getRightEpipole();
 
             assertEquals(0.0, epipole1.distanceTo(epipole1a), ABSOLUTE_ERROR);
             assertEquals(0.0, epipole2.distanceTo(epipole2a), ABSOLUTE_ERROR);
@@ -2372,12 +2116,12 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             Point3D scaledWorldPoint;
             Point3D triangulatedPoint;
             Point3D scaledTriangulatedPoint;
-            int numValid1a = 0;
-            int numValid2a = 0;
-            int numValid1b = 0;
-            int numValid2b = 0;
-            int numValidEqual = 0;
-            for (int i = 0; i < nPoints; i++) {
+            var numValid1a = 0;
+            var numValid2a = 0;
+            var numValid1b = 0;
+            var numValid2b = 0;
+            var numValidEqual = 0;
+            for (var i = 0; i < nPoints; i++) {
                 worldPoint = worldPoints.get(i);
                 leftPoint = leftPoints.get(i);
                 rightPoint = rightPoints.get(i);
@@ -2385,11 +2129,11 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
                 triangulatedPoint = triangulatedPoints.get(i);
                 assertTrue(validTriangulatedPoints.get(i));
 
-                final Line2D line1a = fundamentalMatrix.getLeftEpipolarLine(rightPoint);
-                final Line2D line2a = fundamentalMatrix.getRightEpipolarLine(leftPoint);
+                final var line1a = fundamentalMatrix.getLeftEpipolarLine(rightPoint);
+                final var line2a = fundamentalMatrix.getRightEpipolarLine(leftPoint);
 
-                final Line2D line1b = fundamentalMatrixB.getLeftEpipolarLine(rightPoint);
-                final Line2D line2b = fundamentalMatrixB.getRightEpipolarLine(leftPoint);
+                final var line1b = fundamentalMatrixB.getLeftEpipolarLine(rightPoint);
+                final var line2b = fundamentalMatrixB.getRightEpipolarLine(leftPoint);
 
                 // check that points lie on their corresponding epipolar lines
                 assertTrue(line1a.isLocus(leftPoint, ABSOLUTE_ERROR));
@@ -2400,11 +2144,11 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
 
                 // back-project epipolar lines for each pair of cameras and check
                 // that each pair of lines correspond to the same epipolar plane
-                final Plane epipolarPlane1a = camera1.backProject(line1a);
-                final Plane epipolarPlane2a = camera2.backProject(line2a);
+                final var epipolarPlane1a = camera1.backProject(line1a);
+                final var epipolarPlane2a = camera2.backProject(line2a);
 
-                final Plane epipolarPlane1b = camera1b.backProject(line1b);
-                final Plane epipolarPlane2b = camera2b.backProject(line2b);
+                final var epipolarPlane1b = camera1b.backProject(line1b);
+                final var epipolarPlane2b = camera2b.backProject(line2b);
 
                 assertTrue(epipolarPlane1a.equals(epipolarPlane2a, ABSOLUTE_ERROR));
                 assertTrue(epipolarPlane1b.equals(epipolarPlane2b, ABSOLUTE_ERROR));
@@ -2444,20 +2188,18 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
 
                 // check that triangulated point after recovering scale matches
                 // original point
-                if (worldPoint.equals(scaledTriangulatedPoint,
-                        LARGE_ABSOLUTE_ERROR)) {
+                if (worldPoint.equals(scaledTriangulatedPoint, LARGE_ABSOLUTE_ERROR)) {
                     numValidEqual++;
                 }
             }
 
-            if (numValid1a > 0 && numValid2a > 0 && numValid1b > 0 &&
-                    numValid2b > 0 && numValidEqual > 0) {
+            if (numValid1a > 0 && numValid2a > 0 && numValid1b > 0 && numValid2b > 0 && numValidEqual > 0) {
                 numValidTimes++;
             }
 
             // recover scale of cameras by undoing their transformations
-            final PinholeCamera camera1c = invScaleTransformation.transformAndReturnNew(camera1b);
-            final PinholeCamera camera2c = invScaleTransformation.transformAndReturnNew(camera2b);
+            final var camera1c = invScaleTransformation.transformAndReturnNew(camera1b);
+            final var camera2c = invScaleTransformation.transformAndReturnNew(camera2b);
 
             // check that now cameras are equal to the original ones
             camera1.normalize();
@@ -2465,12 +2207,12 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
             camera1c.normalize();
             camera2c.normalize();
 
-            final Matrix camera1Matrix = camera1.getInternalMatrix();
-            final Matrix camera1cMatrix = camera1c.getInternalMatrix();
+            final var camera1Matrix = camera1.getInternalMatrix();
+            final var camera1cMatrix = camera1c.getInternalMatrix();
             assertTrue(camera1Matrix.equals(camera1cMatrix, ABSOLUTE_ERROR));
 
-            final Matrix camera2Matrix = camera2.getInternalMatrix();
-            final Matrix camera2cMatrix = camera2c.getInternalMatrix();
+            final var camera2Matrix = camera2.getInternalMatrix();
+            final var camera2cMatrix = camera2c.getInternalMatrix();
             assertTrue(camera2Matrix.equals(camera2cMatrix, ABSOLUTE_ERROR));
         }
 
@@ -2490,74 +2232,28 @@ public class EssentialMatrixInitialCamerasEstimatorTest implements
     }
 
     @Override
-    public void onFail(final InitialCamerasEstimator estimator,
-                       final InitialCamerasEstimationFailedException e) {
+    public void onFail(final InitialCamerasEstimator estimator, final InitialCamerasEstimationFailedException e) {
         checkLocked((EssentialMatrixInitialCamerasEstimator) estimator);
     }
 
-    private void checkLocked(final EssentialMatrixInitialCamerasEstimator estimator) {
-        try {
-            estimator.estimate();
-            fail("LockedException expected but not thrown");
-        } catch (final com.irurueta.geometry.estimators.LockedException ignore) {
-        } catch (final com.irurueta.geometry.estimators.NotReadyException |
-                InitialCamerasEstimationFailedException ex) {
-            fail("LockedException expected but not thrown");
-        }
-        try {
-            estimator.setLeftIntrinsic(null);
-            fail("LockedException expected but not thrown");
-        } catch (final com.irurueta.geometry.estimators.LockedException ignore) {
-        }
-        try {
-            estimator.setRightIntrinsic(null);
-            fail("LockedException expected but not thrown");
-        } catch (final com.irurueta.geometry.estimators.LockedException ignore) {
-        }
-        try {
-            estimator.setLeftAndRightIntrinsics(null, null);
-            fail("LockedException expected but not thrown");
-        } catch (final com.irurueta.geometry.estimators.LockedException ignore) {
-        }
-        try {
-            estimator.setIntrinsicsForBoth(null);
-            fail("LockedException expected but not thrown");
-        } catch (final com.irurueta.geometry.estimators.LockedException ignore) {
-        }
-        try {
-            estimator.setLeftPoints(null);
-            fail("LockedException expected but not thrown");
-        } catch (final com.irurueta.geometry.estimators.LockedException ignore) {
-        }
-        try {
-            estimator.setRightPoints(null);
-            fail("LockedException expected but not thrown");
-        } catch (final com.irurueta.geometry.estimators.LockedException ignore) {
-        }
-        try {
-            estimator.setLeftAndRightPoints(null, null);
-            fail("LockedException expected but not thrown");
-        } catch (final com.irurueta.geometry.estimators.LockedException ignore) {
-        }
-        try {
-            estimator.setCorrectorType(null);
-            fail("LockedException expected but not thrown");
-        } catch (final com.irurueta.geometry.estimators.LockedException ignore) {
-        }
-        try {
-            estimator.setPointsTriangulated(true);
-            fail("LockedException expected but not thrown");
-        } catch (final com.irurueta.geometry.estimators.LockedException ignore) {
-        }
-        try {
-            estimator.setValidTriangulatedPointsMarked(true);
-            fail("LockedException expected but not thrown");
-        } catch (final com.irurueta.geometry.estimators.LockedException ignore) {
-        }
-        try {
-            estimator.setFundamentalMatrix(null);
-            fail("LockedException expected but not thrown");
-        } catch (final com.irurueta.geometry.estimators.LockedException ignore) {
-        }
+    private static void checkLocked(final EssentialMatrixInitialCamerasEstimator estimator) {
+        assertThrows(com.irurueta.geometry.estimators.LockedException.class, estimator::estimate);
+        assertThrows(com.irurueta.geometry.estimators.LockedException.class, () -> estimator.setLeftIntrinsic(null));
+        assertThrows(com.irurueta.geometry.estimators.LockedException.class, () -> estimator.setRightIntrinsic(null));
+        assertThrows(com.irurueta.geometry.estimators.LockedException.class,
+                () -> estimator.setLeftAndRightIntrinsics(null, null));
+        assertThrows(com.irurueta.geometry.estimators.LockedException.class,
+                () -> estimator.setIntrinsicsForBoth(null));
+        assertThrows(com.irurueta.geometry.estimators.LockedException.class, () -> estimator.setLeftPoints(null));
+        assertThrows(com.irurueta.geometry.estimators.LockedException.class, () -> estimator.setRightPoints(null));
+        assertThrows(com.irurueta.geometry.estimators.LockedException.class,
+                () -> estimator.setLeftAndRightPoints(null, null));
+        assertThrows(com.irurueta.geometry.estimators.LockedException.class, () -> estimator.setCorrectorType(null));
+        assertThrows(com.irurueta.geometry.estimators.LockedException.class,
+                () -> estimator.setPointsTriangulated(true));
+        assertThrows(com.irurueta.geometry.estimators.LockedException.class,
+                () -> estimator.setValidTriangulatedPointsMarked(true));
+        assertThrows(com.irurueta.geometry.estimators.LockedException.class,
+                () -> estimator.setFundamentalMatrix(null));
     }
 }

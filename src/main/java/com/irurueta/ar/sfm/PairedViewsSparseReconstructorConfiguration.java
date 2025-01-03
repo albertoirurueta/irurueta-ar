@@ -23,8 +23,8 @@ import java.io.Serializable;
  */
 @SuppressWarnings("WeakerAccess")
 public class PairedViewsSparseReconstructorConfiguration extends
-        BasePairedViewsSparseReconstructorConfiguration<PairedViewsSparseReconstructorConfiguration>
-        implements Serializable {
+        BasePairedViewsSparseReconstructorConfiguration<PairedViewsSparseReconstructorConfiguration> implements
+        Serializable {
 
     /**
      * Creates an instance of a sparse re-constructor configuration.

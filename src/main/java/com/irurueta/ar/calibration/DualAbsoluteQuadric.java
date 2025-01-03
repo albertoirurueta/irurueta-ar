@@ -16,7 +16,6 @@
 package com.irurueta.ar.calibration;
 
 import com.irurueta.algebra.AlgebraException;
-import com.irurueta.algebra.Complex;
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.SingularValueDecomposer;
 import com.irurueta.algebra.Utils;
@@ -87,8 +86,7 @@ public class DualAbsoluteQuadric extends DualQuadric implements Serializable {
      * @param planeAtInfinity plane at infinity in an arbitrary projective
      *                        stratum.
      */
-    public DualAbsoluteQuadric(final DualImageOfAbsoluteConic diac,
-                               final Plane planeAtInfinity) {
+    public DualAbsoluteQuadric(final DualImageOfAbsoluteConic diac, final Plane planeAtInfinity) {
         super();
         setDualImageOfAbsoluteConicAndPlaneAtInfinity(diac, planeAtInfinity);
     }
@@ -105,12 +103,12 @@ public class DualAbsoluteQuadric extends DualQuadric implements Serializable {
 
         diac.normalize();
 
-        final double a = diac.getA();
-        final double b = diac.getC();
-        final double c = diac.getF();
-        final double d = diac.getB();
-        final double e = diac.getE();
-        final double f = diac.getD();
+        final var a = diac.getA();
+        final var b = diac.getC();
+        final var c = diac.getF();
+        final var d = diac.getB();
+        final var e = diac.getE();
+        final var f = diac.getD();
         setParameters(a, b, c, d, e, f, 0.0, 0.0, 0.0, 0.0);
     }
 
@@ -123,20 +121,20 @@ public class DualAbsoluteQuadric extends DualQuadric implements Serializable {
     public DualAbsoluteQuadric(final Plane planeAtInfinity) {
         super();
 
-        double planeA = planeAtInfinity.getA();
-        double planeB = planeAtInfinity.getB();
-        double planeC = planeAtInfinity.getC();
-        final double planeD = planeAtInfinity.getD();
+        var planeA = planeAtInfinity.getA();
+        var planeB = planeAtInfinity.getB();
+        var planeC = planeAtInfinity.getC();
+        final var planeD = planeAtInfinity.getD();
 
         // normalize plane components so that last one is the unit
         planeA /= planeD;
         planeB /= planeD;
         planeC /= planeD;
 
-        final double g = -planeA;
-        final double h = -planeB;
-        final double i = -planeC;
-        final double j = planeA * planeA + planeB * planeB + planeC * planeC;
+        final var g = -planeA;
+        final var h = -planeB;
+        final var i = -planeC;
+        final var j = planeA * planeA + planeB * planeB + planeC * planeC;
 
         setParameters(1.0, 1.0, 1.0, 0.0, 0.0, 0.0, g, h, i, j);
     }
@@ -151,8 +149,7 @@ public class DualAbsoluteQuadric extends DualQuadric implements Serializable {
      * @throws InvalidTransformationException if provided transformation is
      *                                        numerically unstable.
      */
-    public DualAbsoluteQuadric(
-            final ProjectiveTransformation3D metricToProjectiveTransformation)
+    public DualAbsoluteQuadric(final ProjectiveTransformation3D metricToProjectiveTransformation)
             throws InvalidTransformationException {
         setMetricToProjectiveTransformation(metricToProjectiveTransformation);
     }
@@ -167,22 +164,20 @@ public class DualAbsoluteQuadric extends DualQuadric implements Serializable {
      *                                        numerically unstable.
      */
     public final void setMetricToProjectiveTransformation(
-            final ProjectiveTransformation3D metricToProjectiveTransformation)
-            throws InvalidTransformationException {
+            final ProjectiveTransformation3D metricToProjectiveTransformation) throws InvalidTransformationException {
         metricToProjectiveTransformation.normalize();
 
         try {
             // transformation
-            final Matrix t = metricToProjectiveTransformation.asMatrix();
+            final var t = metricToProjectiveTransformation.asMatrix();
 
             // identity except for the last element. This is the DAQ in metric
             // stratum
-            final Matrix i = Matrix.identity(BASEQUADRIC_MATRIX_ROW_SIZE,
-                    BASEQUADRIC_MATRIX_COLUMN_SIZE);
+            final var i = Matrix.identity(BASEQUADRIC_MATRIX_ROW_SIZE, BASEQUADRIC_MATRIX_COLUMN_SIZE);
             i.setElementAt(3, 3, 0.0);
 
             // transformation transposed
-            final Matrix tt = t.transposeAndReturnNew();
+            final var tt = t.transposeAndReturnNew();
 
             // make product t * i * tt
             t.multiply(i);
@@ -205,9 +200,8 @@ public class DualAbsoluteQuadric extends DualQuadric implements Serializable {
      *                                        determined because dual absolute quadric is numerically
      *                                        unstable.
      */
-    public ProjectiveTransformation3D getMetricToProjectiveTransformation()
-            throws InvalidTransformationException {
-        final ProjectiveTransformation3D result = new ProjectiveTransformation3D();
+    public ProjectiveTransformation3D getMetricToProjectiveTransformation() throws InvalidTransformationException {
+        final var result = new ProjectiveTransformation3D();
         getMetricToProjectiveTransformation(result);
         return result;
     }
@@ -222,8 +216,7 @@ public class DualAbsoluteQuadric extends DualQuadric implements Serializable {
      *                                        determined because dual absolute quadric is numerically
      *                                        unstable.
      */
-    public void getMetricToProjectiveTransformation(
-            final ProjectiveTransformation3D result)
+    public void getMetricToProjectiveTransformation(final ProjectiveTransformation3D result)
             throws InvalidTransformationException {
         // DAQ can be decomposed as DAQ = H * I * H^t, where
         // I =   [1  0   0   0]
@@ -252,21 +245,20 @@ public class DualAbsoluteQuadric extends DualQuadric implements Serializable {
         // DAQ, and transformation H is equal to matrix U (up to scale)
 
         try {
-            final Matrix daqMatrix = asMatrix();
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    daqMatrix);
+            final var daqMatrix = asMatrix();
+            final var decomposer = new SingularValueDecomposer(daqMatrix);
             decomposer.decompose();
             // since daq matrix will always be symmetric U = V
-            final Matrix u = decomposer.getU();
+            final var u = decomposer.getU();
             // we need to undo the effect of possible different singular values
             // because we want H * I * H^t, so that middle matrix is the identity
             // except for the last element which is zero.
             // For that reason we multiply each column of U by the square root
             // of each singular value
-            final double[] w = decomposer.getSingularValues();
-            for (int i = 0; i < BASEQUADRIC_MATRIX_COLUMN_SIZE - 1; i++) {
-                final double scalar = Math.sqrt(w[i]);
-                for (int j = 0; j < BASEQUADRIC_MATRIX_ROW_SIZE; j++) {
+            final var w = decomposer.getSingularValues();
+            for (var i = 0; i < BASEQUADRIC_MATRIX_COLUMN_SIZE - 1; i++) {
+                final var scalar = Math.sqrt(w[i]);
+                for (var j = 0; j < BASEQUADRIC_MATRIX_ROW_SIZE; j++) {
                     u.setElementAt(j, i, scalar * u.getElementAt(j, i));
                 }
             }
@@ -286,33 +278,27 @@ public class DualAbsoluteQuadric extends DualQuadric implements Serializable {
     public final void setDualImageOfAbsoluteConicAndPlaneAtInfinity(
             final DualImageOfAbsoluteConic diac, final Plane planeAtInfinity) {
 
-        double planeA = planeAtInfinity.getA();
-        double planeB = planeAtInfinity.getB();
-        double planeC = planeAtInfinity.getC();
-        final double planeD = planeAtInfinity.getD();
+        var planeA = planeAtInfinity.getA();
+        var planeB = planeAtInfinity.getB();
+        var planeC = planeAtInfinity.getC();
+        final var planeD = planeAtInfinity.getD();
 
         // normalize plane components so that last one is the unit
         planeA /= planeD;
         planeB /= planeD;
         planeC /= planeD;
 
-        final double a = diac.getA();
-        final double b = diac.getC();
-        final double c = diac.getF();
-        final double d = diac.getB();
-        final double e = diac.getE();
-        final double f = diac.getD();
+        final var a = diac.getA();
+        final var b = diac.getC();
+        final var c = diac.getF();
+        final var d = diac.getB();
+        final var e = diac.getE();
+        final var f = diac.getD();
 
-        final double g = -(diac.getA() * planeA + diac.getB() * planeB +
-                diac.getD() * planeC);
-
-        final double h = -(diac.getB() * planeA + diac.getC() * planeB +
-                diac.getE() * planeC);
-
-        final double i = -(diac.getD() * planeA + diac.getE() * planeB +
-                diac.getF() * planeC);
-
-        final double j = -(planeA * g + planeB * h + planeC * i);
+        final var g = -(diac.getA() * planeA + diac.getB() * planeB + diac.getD() * planeC);
+        final var h = -(diac.getB() * planeA + diac.getC() * planeB + diac.getE() * planeC);
+        final var i = -(diac.getD() * planeA + diac.getE() * planeB + diac.getF() * planeC);
+        final var j = -(planeA * g + planeB * h + planeC * i);
 
         setParameters(a, b, c, d, e, f, g, h, i, j);
     }
@@ -325,7 +311,7 @@ public class DualAbsoluteQuadric extends DualQuadric implements Serializable {
      * quadric.
      */
     public DualImageOfAbsoluteConic getDualImageOfAbsoluteConic() {
-        final DualImageOfAbsoluteConic result = new DualImageOfAbsoluteConic();
+        final var result = new DualImageOfAbsoluteConic();
         getDualImageOfAbsoluteConic(result);
         return result;
     }
@@ -338,12 +324,12 @@ public class DualAbsoluteQuadric extends DualQuadric implements Serializable {
      * @param result instance where dual image of absolute conic will be stored.
      */
     public void getDualImageOfAbsoluteConic(final DualImageOfAbsoluteConic result) {
-        final double a = getA();
-        final double b = getD();
-        final double c = getB();
-        final double d = getF();
-        final double e = getE();
-        final double f = getC();
+        final var a = getA();
+        final var b = getD();
+        final var c = getB();
+        final var d = getF();
+        final var e = getE();
+        final var f = getC();
         result.setParameters(a, b, c, d, e, f);
     }
 
@@ -357,7 +343,7 @@ public class DualAbsoluteQuadric extends DualQuadric implements Serializable {
      */
     public final void setDualImageOfAbsoluteConic(final DualImageOfAbsoluteConic diac)
             throws InvalidPlaneAtInfinityException {
-        final Plane planeAtInfinity = getPlaneAtInfinity();
+        final var planeAtInfinity = getPlaneAtInfinity();
         setDualImageOfAbsoluteConicAndPlaneAtInfinity(diac, planeAtInfinity);
     }
 
@@ -370,7 +356,7 @@ public class DualAbsoluteQuadric extends DualQuadric implements Serializable {
      *                                         determined.
      */
     public Plane getPlaneAtInfinity() throws InvalidPlaneAtInfinityException {
-        final Plane result = new Plane();
+        final var result = new Plane();
         getPlaneAtInfinity(result);
         return result;
     }
@@ -383,26 +369,25 @@ public class DualAbsoluteQuadric extends DualQuadric implements Serializable {
      * @throws InvalidPlaneAtInfinityException if plane at infinity cannot be
      *                                         determined.
      */
-    public void getPlaneAtInfinity(final Plane result)
-            throws InvalidPlaneAtInfinityException {
+    public void getPlaneAtInfinity(final Plane result) throws InvalidPlaneAtInfinityException {
         try {
-            final DualImageOfAbsoluteConic diac = getDualImageOfAbsoluteConic();
-            final Matrix m = diac.asMatrix();
+            final var diac = getDualImageOfAbsoluteConic();
+            final var m = diac.asMatrix();
             Utils.inverse(m, m);
 
-            final double g = getG();
-            final double h = getH();
-            final double i = getI();
+            final var g = getG();
+            final var h = getH();
+            final var i = getI();
 
-            final double planeA = -m.getElementAt(0, 0) * g
+            final var planeA = -m.getElementAt(0, 0) * g
                     - m.getElementAt(0, 1) * h
                     - m.getElementAt(0, 2) * i;
 
-            final double planeB = -m.getElementAt(1, 0) * g
+            final var planeB = -m.getElementAt(1, 0) * g
                     - m.getElementAt(1, 1) * h
                     - m.getElementAt(1, 2) * i;
 
-            final double planeC = -m.getElementAt(2, 0) * g
+            final var planeC = -m.getElementAt(2, 0) * g
                     - m.getElementAt(2, 1) * h
                     - m.getElementAt(2, 2) * i;
 
@@ -425,17 +410,17 @@ public class DualAbsoluteQuadric extends DualQuadric implements Serializable {
 
             // hence we create the 2nd degree polynomial shown above and solve
             // planeD value
-            final double a = getA();
-            final double b = getB();
-            final double c = getC();
-            final double d = getD();
-            final double e = getE();
-            final double f = getF();
-            final double j = getJ();
-            final double[] polyParams = new double[]{
-                    planeA * (a * planeA + d * planeB + f * planeC) +
-                            planeB * (d * planeA + b * planeB + e * planeC) +
-                            planeC * (f * planeA + e * planeB + c * planeC),
+            final var a = getA();
+            final var b = getB();
+            final var c = getC();
+            final var d = getD();
+            final var e = getE();
+            final var f = getF();
+            final var j = getJ();
+            final var polyParams = new double[]{
+                    planeA * (a * planeA + d * planeB + f * planeC)
+                            + planeB * (d * planeA + b * planeB + e * planeC)
+                            + planeC * (f * planeA + e * planeB + c * planeC),
                     2.0 * (g * planeA + h * planeB + i * planeC),
                     j
             };
@@ -443,34 +428,31 @@ public class DualAbsoluteQuadric extends DualQuadric implements Serializable {
             double planeD;
             if (SecondDegreePolynomialRootsEstimator.isSecondDegree(polyParams)) {
                 // second degree
-                final SecondDegreePolynomialRootsEstimator estimator =
-                        new SecondDegreePolynomialRootsEstimator(polyParams);
+                final var estimator = new SecondDegreePolynomialRootsEstimator(polyParams);
 
 
-                final boolean hasDoubleRoot = estimator.hasDoubleRoot();
+                final var hasDoubleRoot = estimator.hasDoubleRoot();
 
                 // a double REAL root (same root happening twice) must be present
                 // because only one plane at infinity should be defined
                 if (!hasDoubleRoot) {
-                    throw new InvalidPlaneAtInfinityException(
-                            "more than one possible solution");
+                    throw new InvalidPlaneAtInfinityException("more than one possible solution");
                 }
 
                 estimator.estimate();
 
-                final Complex[] roots = estimator.getRoots();
+                final var roots = estimator.getRoots();
                 planeD = roots[0].getReal();
             } else {
                 // polynomial is not second degree, attempt to solve as 1 degree
                 if (FirstDegreePolynomialRootsEstimator.isFirstDegree(polyParams)) {
                     // first degree
-                    final FirstDegreePolynomialRootsEstimator estimatorFirst =
-                            new FirstDegreePolynomialRootsEstimator(
-                                    new double[]{polyParams[0], polyParams[1]});
+                    final var estimatorFirst = new FirstDegreePolynomialRootsEstimator(
+                            new double[]{polyParams[0], polyParams[1]});
 
                     estimatorFirst.estimate();
 
-                    final Complex[] roots = estimatorFirst.getRoots();
+                    final var roots = estimatorFirst.getRoots();
                     planeD = roots[0].getReal();
                 } else {
                     // degenerate polynomial (i.e. metric stratum)
@@ -491,7 +473,7 @@ public class DualAbsoluteQuadric extends DualQuadric implements Serializable {
      * @param planeAtInfinity plane at infinity to be set.
      */
     public final void setPlaneAtInfinity(final Plane planeAtInfinity) {
-        final DualImageOfAbsoluteConic diac = getDualImageOfAbsoluteConic();
+        final var diac = getDualImageOfAbsoluteConic();
         setDualImageOfAbsoluteConicAndPlaneAtInfinity(diac, planeAtInfinity);
     }
 }

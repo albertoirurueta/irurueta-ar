@@ -42,18 +42,17 @@ import java.util.List;
  * generate an inaccurate fundamental matrix.
  */
 @SuppressWarnings("DuplicatedCode")
-public abstract class RightEpipoleRefiner extends
-        PairMatchesAndInliersDataRefiner<Point2D, Point2D, Point2D> {
+public abstract class RightEpipoleRefiner extends PairMatchesAndInliersDataRefiner<Point2D, Point2D, Point2D> {
 
     /**
      * Test line to compute epipolar residuals.
      */
-    protected final Line2D mTestLine = new Line2D();
+    protected final Line2D testLine = new Line2D();
 
     /**
      * Homography relating two views through a given planar scene.
      */
-    protected Transformation2D mHomography;
+    protected Transformation2D homography;
 
     /**
      * Standard deviation used for Levenberg-Marquardt fitting during
@@ -64,7 +63,7 @@ public abstract class RightEpipoleRefiner extends
      * estimation, since residuals of found inliers are within the range of
      * such threshold.
      */
-    private double mRefinementStandardDeviation;
+    private double refinementStandardDeviation;
 
     /**
      * Constructor.
@@ -91,14 +90,12 @@ public abstract class RightEpipoleRefiner extends
      *                                    epipolar geometry.
      */
     protected RightEpipoleRefiner(
-            final Point2D initialEpipoleEstimation,
-            final boolean keepCovariance, final BitSet inliers, final double[] residuals,
-            final int numInliers, final List<Point2D> samples1, final List<Point2D> samples2,
+            final Point2D initialEpipoleEstimation, final boolean keepCovariance, final BitSet inliers,
+            final double[] residuals, final int numInliers, final List<Point2D> samples1, final List<Point2D> samples2,
             final double refinementStandardDeviation, final Transformation2D homography) {
-        super(initialEpipoleEstimation, keepCovariance, inliers, residuals,
-                numInliers, samples1, samples2);
-        mHomography = homography;
-        mRefinementStandardDeviation = refinementStandardDeviation;
+        super(initialEpipoleEstimation, keepCovariance, inliers, residuals, numInliers, samples1, samples2);
+        this.homography = homography;
+        this.refinementStandardDeviation = refinementStandardDeviation;
     }
 
     /**
@@ -119,14 +116,12 @@ public abstract class RightEpipoleRefiner extends
      *                                    epipolar geometry.
      */
     protected RightEpipoleRefiner(
-            final Point2D initialEpipoleEstimation,
-            final boolean keepCovariance, final InliersData inliersData,
-            final List<Point2D> samples1, final List<Point2D> samples2,
-            final double refinementStandardDeviation, final Transformation2D homography) {
-        super(initialEpipoleEstimation, keepCovariance, inliersData, samples1,
-                samples2);
-        mHomography = homography;
-        mRefinementStandardDeviation = refinementStandardDeviation;
+            final Point2D initialEpipoleEstimation, final boolean keepCovariance, final InliersData inliersData,
+            final List<Point2D> samples1, final List<Point2D> samples2, final double refinementStandardDeviation,
+            final Transformation2D homography) {
+        super(initialEpipoleEstimation, keepCovariance, inliersData, samples1, samples2);
+        this.homography = homography;
+        this.refinementStandardDeviation = refinementStandardDeviation;
     }
 
     /**
@@ -141,7 +136,7 @@ public abstract class RightEpipoleRefiner extends
      * @return standard deviation used for refinement.
      */
     public double getRefinementStandardDeviation() {
-        return mRefinementStandardDeviation;
+        return refinementStandardDeviation;
     }
 
     /**
@@ -157,12 +152,11 @@ public abstract class RightEpipoleRefiner extends
      *                                    refinement.
      * @throws LockedException if estimator is locked.
      */
-    public void setRefinementStandardDeviation(
-            final double refinementStandardDeviation) throws LockedException {
+    public void setRefinementStandardDeviation(final double refinementStandardDeviation) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mRefinementStandardDeviation = refinementStandardDeviation;
+        this.refinementStandardDeviation = refinementStandardDeviation;
     }
 
     /**
@@ -172,7 +166,7 @@ public abstract class RightEpipoleRefiner extends
      * @return homography relating samples in two views.
      */
     public Transformation2D getHomography() {
-        return mHomography;
+        return homography;
     }
 
     /**
@@ -182,12 +176,11 @@ public abstract class RightEpipoleRefiner extends
      * @param homography homography relating samples in two views.
      * @throws LockedException if estimator is locked.
      */
-    public void setHomography(final Transformation2D homography)
-            throws LockedException {
+    public void setHomography(final Transformation2D homography) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mHomography = homography;
+        this.homography = homography;
     }
 
     /**
@@ -197,7 +190,7 @@ public abstract class RightEpipoleRefiner extends
      */
     @Override
     public boolean isReady() {
-        return mHomography != null && super.isReady();
+        return homography != null && super.isReady();
     }
 
     /**
@@ -211,9 +204,8 @@ public abstract class RightEpipoleRefiner extends
      *                           to converge to a result).
      */
     @Override
-    public Point2D refine() throws NotReadyException, LockedException,
-            RefinerException {
-        final HomogeneousPoint2D result = new HomogeneousPoint2D();
+    public Point2D refine() throws NotReadyException, LockedException, RefinerException {
+        final var result = new HomogeneousPoint2D();
         refine(result);
         return result;
     }
@@ -230,9 +222,7 @@ public abstract class RightEpipoleRefiner extends
      *                                           fundamental matrix.
      */
     public static void computeFundamentalMatrix(
-            final Transformation2D homography,
-            final Point2D rightEpipole,
-            final FundamentalMatrix result)
+            final Transformation2D homography, final Point2D rightEpipole, final FundamentalMatrix result)
             throws InvalidFundamentalMatrixException {
 
         result.setFromHomography(homography, rightEpipole);
@@ -248,19 +238,15 @@ public abstract class RightEpipoleRefiner extends
      * @return residual (distance of point to epipolar line).
      */
     protected double residual(
-            final FundamentalMatrix fundamentalMatrix,
-            final Point2D leftPoint,
-            final Point2D rightPoint) {
+            final FundamentalMatrix fundamentalMatrix, final Point2D leftPoint, final Point2D rightPoint) {
         try {
             leftPoint.normalize();
             rightPoint.normalize();
             fundamentalMatrix.normalize();
-            fundamentalMatrix.leftEpipolarLine(rightPoint, mTestLine);
-            final double leftDistance = Math.abs(mTestLine.signedDistance(
-                    leftPoint));
-            fundamentalMatrix.rightEpipolarLine(leftPoint, mTestLine);
-            final double rightDistance = Math.abs(mTestLine.signedDistance(
-                    rightPoint));
+            fundamentalMatrix.leftEpipolarLine(rightPoint, testLine);
+            final var leftDistance = Math.abs(testLine.signedDistance(leftPoint));
+            fundamentalMatrix.rightEpipolarLine(leftPoint, testLine);
+            final var rightDistance = Math.abs(testLine.signedDistance(rightPoint));
             // return average distance as an error residual
             return 0.5 * (leftDistance + rightDistance);
         } catch (final NotReadyException e) {
@@ -274,18 +260,15 @@ public abstract class RightEpipoleRefiner extends
      * @param fundamentalMatrix a fundamental matrix.
      * @return total residual.
      */
-    protected double totalResidual(
-            final FundamentalMatrix fundamentalMatrix) {
-        double result = 0.0;
+    protected double totalResidual(final FundamentalMatrix fundamentalMatrix) {
+        var result = 0.0;
 
-        final int nSamples = mInliers.length();
-        Point2D leftPoint;
-        Point2D rightPoint;
-        for (int i = 0; i < nSamples; i++) {
-            if (mInliers.get(i)) {
+        final var nSamples = inliers.length();
+        for (var i = 0; i < nSamples; i++) {
+            if (inliers.get(i)) {
                 // sample is inlier
-                leftPoint = mSamples1.get(i);
-                rightPoint = mSamples2.get(i);
+                final var leftPoint = samples1.get(i);
+                final var rightPoint = samples2.get(i);
                 leftPoint.normalize();
                 rightPoint.normalize();
                 result += residual(fundamentalMatrix, leftPoint, rightPoint);

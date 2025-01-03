@@ -42,8 +42,7 @@ public class FundamentalMatrixComparatorException extends EpipolarException {
      * @param message message describing the cause of the exception.
      * @param cause   instance containing the cause of the exception.
      */
-    public FundamentalMatrixComparatorException(final String message,
-                                                final Throwable cause) {
+    public FundamentalMatrixComparatorException(final String message, final Throwable cause) {
         super(message, cause);
     }
 

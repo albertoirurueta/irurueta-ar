@@ -26,14 +26,11 @@ import com.irurueta.geometry.Quaternion;
 import com.irurueta.geometry.estimators.LockedException;
 import com.irurueta.geometry.estimators.NotReadyException;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import java.util.Random;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.Assert.*;
-
-public class KruppaDualImageOfAbsoluteConicEstimatorTest implements
-        KruppaDualImageOfAbsoluteConicEstimatorListener {
+class KruppaDualImageOfAbsoluteConicEstimatorTest implements KruppaDualImageOfAbsoluteConicEstimatorListener {
 
     private static final double MIN_FOCAL_LENGTH = 1.0;
     private static final double MAX_FOCAL_LENGTH = 100.0;
@@ -56,9 +53,9 @@ public class KruppaDualImageOfAbsoluteConicEstimatorTest implements
     private int estimateEnd;
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         // test empty constructor
-        KruppaDualImageOfAbsoluteConicEstimator estimator = new KruppaDualImageOfAbsoluteConicEstimator();
+        var estimator = new KruppaDualImageOfAbsoluteConicEstimator();
 
         // check default values
         assertEquals(0.0, estimator.getPrincipalPointX(), 0.0);
@@ -112,16 +109,15 @@ public class KruppaDualImageOfAbsoluteConicEstimatorTest implements
     }
 
     @Test
-    public void testGetSetPrincipalPointX() throws LockedException {
-        final KruppaDualImageOfAbsoluteConicEstimator estimator =
-                new KruppaDualImageOfAbsoluteConicEstimator();
+    void testGetSetPrincipalPointX() throws LockedException {
+        final var estimator = new KruppaDualImageOfAbsoluteConicEstimator();
 
         // check default value
         assertEquals(0.0, estimator.getPrincipalPointX(), 0.0);
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double principalPointX = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var principalPointX = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
         estimator.setPrincipalPointX(principalPointX);
 
         // check correctness
@@ -129,16 +125,15 @@ public class KruppaDualImageOfAbsoluteConicEstimatorTest implements
     }
 
     @Test
-    public void testGetSetPrincipalPointY() throws LockedException {
-        final KruppaDualImageOfAbsoluteConicEstimator estimator =
-                new KruppaDualImageOfAbsoluteConicEstimator();
+    void testGetSetPrincipalPointY() throws LockedException {
+        final var estimator = new KruppaDualImageOfAbsoluteConicEstimator();
 
         // check default value
         assertEquals(0.0, estimator.getPrincipalPointY(), 0.0);
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double principalPointY = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var principalPointY = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
         estimator.setPrincipalPointY(principalPointY);
 
         // check correctness
@@ -146,10 +141,8 @@ public class KruppaDualImageOfAbsoluteConicEstimatorTest implements
     }
 
     @Test
-    public void testIsSetFocalDistanceAspectRatioKnown()
-            throws LockedException {
-        final KruppaDualImageOfAbsoluteConicEstimator estimator =
-                new KruppaDualImageOfAbsoluteConicEstimator();
+    void testIsSetFocalDistanceAspectRatioKnown() throws LockedException {
+        final var estimator = new KruppaDualImageOfAbsoluteConicEstimator();
 
         // check default value
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
@@ -162,16 +155,15 @@ public class KruppaDualImageOfAbsoluteConicEstimatorTest implements
     }
 
     @Test
-    public void testGetSetFocalDistanceAspectRatio() throws LockedException {
-        final KruppaDualImageOfAbsoluteConicEstimator estimator =
-                new KruppaDualImageOfAbsoluteConicEstimator();
+    void testGetSetFocalDistanceAspectRatio() throws LockedException {
+        final var estimator = new KruppaDualImageOfAbsoluteConicEstimator();
 
         // check default value
         assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double aspectRatio = randomizer.nextDouble(MIN_ASPECT_RATIO, MAX_ASPECT_RATIO);
+        final var randomizer = new UniformRandomizer();
+        final var aspectRatio = randomizer.nextDouble(MIN_ASPECT_RATIO, MAX_ASPECT_RATIO);
 
         estimator.setFocalDistanceAspectRatio(aspectRatio);
 
@@ -180,9 +172,8 @@ public class KruppaDualImageOfAbsoluteConicEstimatorTest implements
     }
 
     @Test
-    public void testGetSetListener() throws LockedException {
-        final KruppaDualImageOfAbsoluteConicEstimator estimator =
-                new KruppaDualImageOfAbsoluteConicEstimator();
+    void testGetSetListener() throws LockedException {
+        final var estimator = new KruppaDualImageOfAbsoluteConicEstimator();
 
         // check default value
         assertNull(estimator.getListener());
@@ -195,16 +186,15 @@ public class KruppaDualImageOfAbsoluteConicEstimatorTest implements
     }
 
     @Test
-    public void testGetSetFundamentalMatrixAndIsReady() throws LockedException {
-        final KruppaDualImageOfAbsoluteConicEstimator estimator =
-                new KruppaDualImageOfAbsoluteConicEstimator();
+    void testGetSetFundamentalMatrixAndIsReady() throws LockedException {
+        final var estimator = new KruppaDualImageOfAbsoluteConicEstimator();
 
         // check default value
         assertNull(estimator.getFundamentalMatrix());
         assertFalse(estimator.isReady());
 
         // set new value
-        final FundamentalMatrix f = new FundamentalMatrix();
+        final var f = new FundamentalMatrix();
         estimator.setFundamentalMatrix(f);
 
         // check correctness
@@ -213,63 +203,54 @@ public class KruppaDualImageOfAbsoluteConicEstimatorTest implements
     }
 
     @Test
-    public void testEstimateWithKnownAspectRatio() throws LockedException,
-            NotReadyException, InvalidPinholeCameraIntrinsicParametersException {
+    void testEstimateWithKnownAspectRatio() throws LockedException, NotReadyException,
+            InvalidPinholeCameraIntrinsicParametersException {
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var randomizer = new UniformRandomizer();
 
             // create ground truth intrinsic parameters
-            final double aspectRatio = 1.0;
-            final double horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength = aspectRatio * horizontalFocalLength;
-            final double skewness = 0.0;
-            final double horizontalPrincipalPoint = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                    MAX_RANDOM_VALUE);
-            final double verticalPrincipalPoint = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                    MAX_RANDOM_VALUE);
+            final var aspectRatio = 1.0;
+            final var horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var verticalFocalLength = aspectRatio * horizontalFocalLength;
+            final var skewness = 0.0;
+            final var horizontalPrincipalPoint = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+            final var verticalPrincipalPoint = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
-            final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength,
-                            verticalFocalLength, horizontalPrincipalPoint,
-                            verticalPrincipalPoint, skewness);
+            final var intrinsic = new PinholeCameraIntrinsicParameters(horizontalFocalLength, verticalFocalLength,
+                    horizontalPrincipalPoint, verticalPrincipalPoint, skewness);
 
-            final double rollLeft = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                    2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double pitchLeft = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double yawLeft = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                    2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double xLeft = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-            final double yLeft = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-            final double zLeft = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-            final double rollRight = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                    2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double pitchRight = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double yawRight = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                    2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double xRight = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-            final double yRight = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-            final double zRight = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-            final Quaternion qLeft = new Quaternion(rollLeft, pitchLeft, yawLeft);
-            final Quaternion qRight = new Quaternion(rollRight, pitchRight, yawRight);
-            final InhomogeneousPoint3D leftCameraCenter = new InhomogeneousPoint3D(xLeft, yLeft, zLeft);
-            final InhomogeneousPoint3D rightCameraCenter = new InhomogeneousPoint3D(xRight, yRight, zRight);
-            final PinholeCamera leftCamera = new PinholeCamera(intrinsic, qLeft, leftCameraCenter);
-            final PinholeCamera rightCamera = new PinholeCamera(intrinsic, qRight, rightCameraCenter);
+            final var rollLeft = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
+            final var pitchLeft = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES,
+                    MAX_ANGLE_DEGREES));
+            final var yawLeft = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
+            final var xLeft = Math.toRadians(randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+            final var yLeft = Math.toRadians(randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+            final var zLeft = Math.toRadians(randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+            final var rollRight = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
+                    2.0 * MAX_ANGLE_DEGREES));
+            final var pitchRight = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var yawRight = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
+                    2.0 * MAX_ANGLE_DEGREES));
+            final var xRight = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+            final var yRight = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+            final var zRight = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+            final var qLeft = new Quaternion(rollLeft, pitchLeft, yawLeft);
+            final var qRight = new Quaternion(rollRight, pitchRight, yawRight);
+            final var leftCameraCenter = new InhomogeneousPoint3D(xLeft, yLeft, zLeft);
+            final var rightCameraCenter = new InhomogeneousPoint3D(xRight, yRight, zRight);
+            final var leftCamera = new PinholeCamera(intrinsic, qLeft, leftCameraCenter);
+            final var rightCamera = new PinholeCamera(intrinsic, qRight, rightCameraCenter);
 
             final FundamentalMatrix fundamentalMatrix;
             try {
-                fundamentalMatrix = new FundamentalMatrix(leftCamera,
-                        rightCamera);
+                fundamentalMatrix = new FundamentalMatrix(leftCamera, rightCamera);
             } catch (final InvalidPairOfCamerasException e) {
                 continue;
             }
 
-            final KruppaDualImageOfAbsoluteConicEstimator estimator =
-                    new KruppaDualImageOfAbsoluteConicEstimator(fundamentalMatrix, this);
+            final var estimator = new KruppaDualImageOfAbsoluteConicEstimator(fundamentalMatrix, this);
             estimator.setPrincipalPointX(horizontalPrincipalPoint);
             estimator.setPrincipalPointY(verticalPrincipalPoint);
             estimator.setFocalDistanceAspectRatioKnown(true);
@@ -282,8 +263,7 @@ public class KruppaDualImageOfAbsoluteConicEstimatorTest implements
             assertTrue(estimator.isReady());
 
             final DualImageOfAbsoluteConic diac;
-            final DualImageOfAbsoluteConic diac2 = new DualImageOfAbsoluteConic(
-                    0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+            final var diac2 = new DualImageOfAbsoluteConic(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
             try {
                 diac = estimator.estimate();
                 estimator.estimate(diac2);
@@ -299,23 +279,21 @@ public class KruppaDualImageOfAbsoluteConicEstimatorTest implements
 
             assertTrue(diac.asMatrix().equals(diac2.asMatrix(), ABSOLUTE_ERROR));
 
-            final PinholeCameraIntrinsicParameters intrinsic2 = diac.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters intrinsic3 = diac2.getIntrinsicParameters();
+            final var intrinsic2 = diac.getIntrinsicParameters();
+            final var intrinsic3 = diac2.getIntrinsicParameters();
 
             if (Math.abs(intrinsic2.getHorizontalFocalLength() - horizontalFocalLength) > ABSOLUTE_ERROR) {
                 continue;
             }
             assertEquals(horizontalFocalLength, intrinsic2.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(verticalFocalLength, intrinsic2.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(horizontalPrincipalPoint, intrinsic2.getHorizontalPrincipalPoint(),
-                    ABSOLUTE_ERROR);
+            assertEquals(horizontalPrincipalPoint, intrinsic2.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(verticalPrincipalPoint, intrinsic2.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(0.0, intrinsic2.getSkewness(), ABSOLUTE_ERROR);
 
             assertEquals(horizontalFocalLength, intrinsic3.getHorizontalFocalLength(), ABSOLUTE_ERROR);
             assertEquals(verticalFocalLength, intrinsic3.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(horizontalPrincipalPoint, intrinsic3.getHorizontalPrincipalPoint(),
-                    ABSOLUTE_ERROR);
+            assertEquals(horizontalPrincipalPoint, intrinsic3.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(verticalPrincipalPoint, intrinsic3.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(0.0, intrinsic3.getSkewness(), ABSOLUTE_ERROR);
 
@@ -327,55 +305,46 @@ public class KruppaDualImageOfAbsoluteConicEstimatorTest implements
     }
 
     @Test
-    public void testEstimateWithUnknownAspectRatio()
-            throws LockedException, NotReadyException,
+    void testEstimateWithUnknownAspectRatio() throws LockedException, NotReadyException,
             InvalidPinholeCameraIntrinsicParametersException {
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var randomizer = new UniformRandomizer();
 
             // create ground truth intrinsic parameters
-            final double aspectRatio = randomizer.nextDouble(MIN_ASPECT_RATIO, MAX_ASPECT_RATIO);
-            final double horizontalFocalLength =
-                    randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength = aspectRatio * horizontalFocalLength;
-            final double skewness = 0.0;
-            final double horizontalPrincipalPoint = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                    MAX_RANDOM_VALUE);
-            final double verticalPrincipalPoint = randomizer.nextDouble(MIN_RANDOM_VALUE,
-                    MAX_RANDOM_VALUE);
+            final var aspectRatio = randomizer.nextDouble(MIN_ASPECT_RATIO, MAX_ASPECT_RATIO);
+            final var horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var verticalFocalLength = aspectRatio * horizontalFocalLength;
+            final var skewness = 0.0;
+            final var horizontalPrincipalPoint = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+            final var verticalPrincipalPoint = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
-            final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength,
-                            verticalFocalLength, horizontalPrincipalPoint,
-                            verticalPrincipalPoint, skewness);
+            final var intrinsic = new PinholeCameraIntrinsicParameters(horizontalFocalLength, verticalFocalLength,
+                    horizontalPrincipalPoint, verticalPrincipalPoint, skewness);
 
-            final double rollLeft = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                    2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double pitchLeft = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double yawLeft = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                    2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double xLeft = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-            final double yLeft = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-            final double zLeft = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-            final double rollRight = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                    2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double pitchRight = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double yawRight = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                    2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double xRight = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-            final double yRight = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-            final double zRight = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-            final Quaternion qLeft = new Quaternion(rollLeft, pitchLeft, yawLeft);
-            final Quaternion qRight = new Quaternion(rollRight, pitchRight, yawRight);
-            final InhomogeneousPoint3D leftCameraCenter = new InhomogeneousPoint3D(xLeft, yLeft, zLeft);
-            final InhomogeneousPoint3D rightCameraCenter = new InhomogeneousPoint3D(xRight, yRight,
-                    zRight);
-            final PinholeCamera leftCamera = new PinholeCamera(intrinsic, qLeft, leftCameraCenter);
-            final PinholeCamera rightCamera = new PinholeCamera(intrinsic, qRight, rightCameraCenter);
+            final var rollLeft = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
+                    2.0 * MAX_ANGLE_DEGREES));
+            final var pitchLeft = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var yawLeft = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
+                    2.0 * MAX_ANGLE_DEGREES));
+            final var xLeft = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+            final var yLeft = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+            final var zLeft = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+            final var rollRight = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
+                    2.0 * MAX_ANGLE_DEGREES));
+            final var pitchRight = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var yawRight = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
+                    2.0 * MAX_ANGLE_DEGREES));
+            final var xRight = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+            final var yRight = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+            final var zRight = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+            final var qLeft = new Quaternion(rollLeft, pitchLeft, yawLeft);
+            final var qRight = new Quaternion(rollRight, pitchRight, yawRight);
+            final var leftCameraCenter = new InhomogeneousPoint3D(xLeft, yLeft, zLeft);
+            final var rightCameraCenter = new InhomogeneousPoint3D(xRight, yRight, zRight);
+            final var leftCamera = new PinholeCamera(intrinsic, qLeft, leftCameraCenter);
+            final var rightCamera = new PinholeCamera(intrinsic, qRight, rightCameraCenter);
 
             final FundamentalMatrix fundamentalMatrix;
             try {
@@ -384,8 +353,7 @@ public class KruppaDualImageOfAbsoluteConicEstimatorTest implements
                 continue;
             }
 
-            final KruppaDualImageOfAbsoluteConicEstimator estimator =
-                    new KruppaDualImageOfAbsoluteConicEstimator(fundamentalMatrix, this);
+            final var estimator = new KruppaDualImageOfAbsoluteConicEstimator(fundamentalMatrix, this);
             estimator.setPrincipalPointX(horizontalPrincipalPoint);
             estimator.setPrincipalPointY(verticalPrincipalPoint);
             estimator.setFocalDistanceAspectRatioKnown(false);
@@ -397,8 +365,7 @@ public class KruppaDualImageOfAbsoluteConicEstimatorTest implements
             assertTrue(estimator.isReady());
 
             final DualImageOfAbsoluteConic diac;
-            final DualImageOfAbsoluteConic diac2 = new DualImageOfAbsoluteConic(
-                    0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+            final var diac2 = new DualImageOfAbsoluteConic(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
             try {
                 diac = estimator.estimate();
                 estimator.estimate(diac2);
@@ -414,34 +381,27 @@ public class KruppaDualImageOfAbsoluteConicEstimatorTest implements
 
             assertTrue(diac.asMatrix().equals(diac2.asMatrix(), ABSOLUTE_ERROR));
 
-            final PinholeCameraIntrinsicParameters intrinsic2 = diac.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters intrinsic3 = diac2.getIntrinsicParameters();
+            final var intrinsic2 = diac.getIntrinsicParameters();
+            final var intrinsic3 = diac2.getIntrinsicParameters();
 
-            if (Math.abs(intrinsic2.getHorizontalFocalLength() -
-                    horizontalFocalLength) > LARGE_ABSOLUTE_ERROR) {
+            if (Math.abs(intrinsic2.getHorizontalFocalLength() - horizontalFocalLength) > LARGE_ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(horizontalFocalLength, intrinsic2.getHorizontalFocalLength(),
-                    LARGE_ABSOLUTE_ERROR);
-            if (Math.abs(intrinsic2.getVerticalFocalLength() -
-                    verticalFocalLength) > LARGE_ABSOLUTE_ERROR) {
+            assertEquals(horizontalFocalLength, intrinsic2.getHorizontalFocalLength(), LARGE_ABSOLUTE_ERROR);
+            if (Math.abs(intrinsic2.getVerticalFocalLength() - verticalFocalLength) > LARGE_ABSOLUTE_ERROR) {
                 continue;
             }
             assertEquals(verticalFocalLength, intrinsic2.getVerticalFocalLength(), LARGE_ABSOLUTE_ERROR);
-            if (Math.abs(intrinsic2.getHorizontalPrincipalPoint() -
-                    horizontalPrincipalPoint) > ABSOLUTE_ERROR) {
+            if (Math.abs(intrinsic2.getHorizontalPrincipalPoint() - horizontalPrincipalPoint) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(horizontalPrincipalPoint, intrinsic2.getHorizontalPrincipalPoint(),
-                    ABSOLUTE_ERROR);
+            assertEquals(horizontalPrincipalPoint, intrinsic2.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(verticalPrincipalPoint, intrinsic2.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(0.0, intrinsic2.getSkewness(), ABSOLUTE_ERROR);
 
-            assertEquals(horizontalFocalLength, intrinsic3.getHorizontalFocalLength(),
-                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(horizontalFocalLength, intrinsic3.getHorizontalFocalLength(), LARGE_ABSOLUTE_ERROR);
             assertEquals(verticalFocalLength, intrinsic3.getVerticalFocalLength(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(horizontalPrincipalPoint, intrinsic3.getHorizontalPrincipalPoint(),
-                    ABSOLUTE_ERROR);
+            assertEquals(horizontalPrincipalPoint, intrinsic3.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(verticalPrincipalPoint, intrinsic3.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
             assertEquals(0.0, intrinsic3.getSkewness(), ABSOLUTE_ERROR);
 
@@ -457,66 +417,27 @@ public class KruppaDualImageOfAbsoluteConicEstimatorTest implements
     }
 
     @Override
-    public void onEstimateStart(
-            final KruppaDualImageOfAbsoluteConicEstimator estimator) {
+    public void onEstimateStart(final KruppaDualImageOfAbsoluteConicEstimator estimator) {
         estimateStart++;
         checkLocked(estimator);
     }
 
     @Override
-    public void onEstimateEnd(
-            final KruppaDualImageOfAbsoluteConicEstimator estimator) {
+    public void onEstimateEnd(final KruppaDualImageOfAbsoluteConicEstimator estimator) {
         estimateEnd++;
         checkLocked(estimator);
     }
 
-    private void checkLocked(
-            final KruppaDualImageOfAbsoluteConicEstimator estimator) {
+    private static void checkLocked(final KruppaDualImageOfAbsoluteConicEstimator estimator) {
         assertTrue(estimator.isLocked());
 
-        try {
-            estimator.setPrincipalPointX(0.0);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            estimator.setPrincipalPointY(0.0);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            estimator.setFocalDistanceAspectRatioKnown(true);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            estimator.setFocalDistanceAspectRatio(1.0);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            estimator.setListener(null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            estimator.setFundamentalMatrix(null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            estimator.estimate();
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        } catch (final Exception ignore) {
-            fail("LockedException expected but not thrown");
-        }
-        try {
-            estimator.estimate(null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        } catch (final Exception ignore) {
-            fail("LockedException expected but not thrown");
-        }
+        assertThrows(LockedException.class, () -> estimator.setPrincipalPointX(0.0));
+        assertThrows(LockedException.class, () -> estimator.setPrincipalPointY(0.0));
+        assertThrows(LockedException.class, () -> estimator.setFocalDistanceAspectRatioKnown(true));
+        assertThrows(LockedException.class, () -> estimator.setFocalDistanceAspectRatio(1.0));
+        assertThrows(LockedException.class, () -> estimator.setListener(null));
+        assertThrows(LockedException.class, () -> estimator.setFundamentalMatrix(null));
+        assertThrows(LockedException.class, estimator::estimate);
+        assertThrows(LockedException.class, () -> estimator.estimate(null));
     }
 }

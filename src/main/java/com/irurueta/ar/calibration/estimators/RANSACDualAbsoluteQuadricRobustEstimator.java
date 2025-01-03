@@ -31,8 +31,7 @@ import java.util.List;
 /**
  * Finds the best dual absolute quadric (DAQ) using RANSAC algorithm.
  */
-public class RANSACDualAbsoluteQuadricRobustEstimator extends
-        DualAbsoluteQuadricRobustEstimator {
+public class RANSACDualAbsoluteQuadricRobustEstimator extends DualAbsoluteQuadricRobustEstimator {
 
     /**
      * Constant defining default threshold to determine whether cameras are
@@ -54,14 +53,14 @@ public class RANSACDualAbsoluteQuadricRobustEstimator extends
      * testing possible estimation solutions.
      * The threshold refers to the amount of error a possible solution has.
      */
-    private double mThreshold;
+    private double threshold;
 
     /**
      * Constructor.
      */
     public RANSACDualAbsoluteQuadricRobustEstimator() {
         super();
-        mThreshold = DEFAULT_THRESHOLD;
+        threshold = DEFAULT_THRESHOLD;
     }
 
     /**
@@ -70,10 +69,9 @@ public class RANSACDualAbsoluteQuadricRobustEstimator extends
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      */
-    public RANSACDualAbsoluteQuadricRobustEstimator(
-            final DualAbsoluteQuadricRobustEstimatorListener listener) {
+    public RANSACDualAbsoluteQuadricRobustEstimator(final DualAbsoluteQuadricRobustEstimatorListener listener) {
         super(listener);
-        mThreshold = DEFAULT_THRESHOLD;
+        threshold = DEFAULT_THRESHOLD;
     }
 
     /**
@@ -84,10 +82,9 @@ public class RANSACDualAbsoluteQuadricRobustEstimator extends
      * @throws IllegalArgumentException if not enough cameras are provided for
      *                                  default settings. Hence, at least 2 cameras must be provided.
      */
-    public RANSACDualAbsoluteQuadricRobustEstimator(
-            final List<PinholeCamera> cameras) {
+    public RANSACDualAbsoluteQuadricRobustEstimator(final List<PinholeCamera> cameras) {
         super(cameras);
-        mThreshold = DEFAULT_THRESHOLD;
+        threshold = DEFAULT_THRESHOLD;
     }
 
     /**
@@ -101,10 +98,9 @@ public class RANSACDualAbsoluteQuadricRobustEstimator extends
      *                                  default settings. Hence, at least 2 cameras must be provided.
      */
     public RANSACDualAbsoluteQuadricRobustEstimator(
-            final List<PinholeCamera> cameras,
-            final DualAbsoluteQuadricRobustEstimatorListener listener) {
+            final List<PinholeCamera> cameras, final DualAbsoluteQuadricRobustEstimatorListener listener) {
         super(cameras, listener);
-        mThreshold = DEFAULT_THRESHOLD;
+        threshold = DEFAULT_THRESHOLD;
     }
 
     /**
@@ -115,7 +111,7 @@ public class RANSACDualAbsoluteQuadricRobustEstimator extends
      * @return threshold to determine whether cameras are inliers or not.
      */
     public double getThreshold() {
-        return mThreshold;
+        return threshold;
     }
 
     /**
@@ -137,7 +133,7 @@ public class RANSACDualAbsoluteQuadricRobustEstimator extends
         if (threshold <= MIN_THRESHOLD) {
             throw new IllegalArgumentException();
         }
-        mThreshold = threshold;
+        this.threshold = threshold;
     }
 
     /**
@@ -152,8 +148,7 @@ public class RANSACDualAbsoluteQuadricRobustEstimator extends
      */
     @SuppressWarnings("DuplicatedCode")
     @Override
-    public DualAbsoluteQuadric estimate() throws LockedException,
-            NotReadyException, RobustEstimatorException {
+    public DualAbsoluteQuadric estimate() throws LockedException, NotReadyException, RobustEstimatorException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -161,112 +156,101 @@ public class RANSACDualAbsoluteQuadricRobustEstimator extends
             throw new NotReadyException();
         }
 
-        final RANSACRobustEstimator<DualAbsoluteQuadric> innerEstimator =
-                new RANSACRobustEstimator<>(
-                        new RANSACRobustEstimatorListener<DualAbsoluteQuadric>() {
+        final var innerEstimator = new RANSACRobustEstimator<DualAbsoluteQuadric>(
+                new RANSACRobustEstimatorListener<>() {
 
-                            // subset of cameras picked on each iteration
-                            private final List<PinholeCamera> mSubsetCameras =
-                                    new ArrayList<>();
+                    // subset of cameras picked on each iteration
+                    private final List<PinholeCamera> subsetCameras = new ArrayList<>();
 
-                            @Override
-                            public double getThreshold() {
-                                return mThreshold;
-                            }
+                    @Override
+                    public double getThreshold() {
+                        return threshold;
+                    }
 
-                            @Override
-                            public int getTotalSamples() {
-                                return mCameras.size();
-                            }
+                    @Override
+                    public int getTotalSamples() {
+                        return cameras.size();
+                    }
 
-                            @Override
-                            public int getSubsetSize() {
-                                return mDAQEstimator.getMinNumberOfRequiredCameras();
-                            }
+                    @Override
+                    public int getSubsetSize() {
+                        return daqEstimator.getMinNumberOfRequiredCameras();
+                    }
 
-                            @Override
-                            public void estimatePreliminarSolutions(
-                                    final int[] samplesIndices, final List<DualAbsoluteQuadric> solutions) {
-                                mSubsetCameras.clear();
-                                for (final int samplesIndex : samplesIndices) {
-                                    mSubsetCameras.add(mCameras.get(samplesIndex));
-                                }
+                    @Override
+                    public void estimatePreliminarSolutions(
+                            final int[] samplesIndices, final List<DualAbsoluteQuadric> solutions) {
+                        subsetCameras.clear();
+                        for (final var samplesIndex : samplesIndices) {
+                            subsetCameras.add(cameras.get(samplesIndex));
+                        }
 
-                                try {
-                                    mDAQEstimator.setLMSESolutionAllowed(false);
-                                    mDAQEstimator.setCameras(mSubsetCameras);
+                        try {
+                            daqEstimator.setLMSESolutionAllowed(false);
+                            daqEstimator.setCameras(subsetCameras);
 
-                                    final DualAbsoluteQuadric daq = mDAQEstimator.estimate();
-                                    solutions.add(daq);
-                                } catch (final Exception e) {
-                                    // if anything fails, no solution is added
-                                }
-                            }
+                            final var daq = daqEstimator.estimate();
+                            solutions.add(daq);
+                        } catch (final Exception e) {
+                            // if anything fails, no solution is added
+                        }
+                    }
 
-                            @Override
-                            public double computeResidual(
-                                    final DualAbsoluteQuadric currentEstimation, final int i) {
-                                return residual(currentEstimation, mCameras.get(i));
-                            }
+                    @Override
+                    public double computeResidual(final DualAbsoluteQuadric currentEstimation, final int i) {
+                        return residual(currentEstimation, cameras.get(i));
+                    }
 
-                            @Override
-                            public boolean isReady() {
-                                return RANSACDualAbsoluteQuadricRobustEstimator.this.isReady();
-                            }
+                    @Override
+                    public boolean isReady() {
+                        return RANSACDualAbsoluteQuadricRobustEstimator.this.isReady();
+                    }
 
-                            @Override
-                            public void onEstimateStart(
-                                    final RobustEstimator<DualAbsoluteQuadric> estimator) {
-                                if (mListener != null) {
-                                    mListener.onEstimateStart(
-                                            RANSACDualAbsoluteQuadricRobustEstimator.this);
-                                }
-                            }
+                    @Override
+                    public void onEstimateStart(final RobustEstimator<DualAbsoluteQuadric> estimator) {
+                        if (listener != null) {
+                            listener.onEstimateStart(RANSACDualAbsoluteQuadricRobustEstimator.this);
+                        }
+                    }
 
-                            @Override
-                            public void onEstimateEnd(
-                                    final RobustEstimator<DualAbsoluteQuadric> estimator) {
-                                if (mListener != null) {
-                                    mListener.onEstimateEnd(
-                                            RANSACDualAbsoluteQuadricRobustEstimator.this);
-                                }
-                            }
+                    @Override
+                    public void onEstimateEnd(final RobustEstimator<DualAbsoluteQuadric> estimator) {
+                        if (listener != null) {
+                            listener.onEstimateEnd(RANSACDualAbsoluteQuadricRobustEstimator.this);
+                        }
+                    }
 
-                            @Override
-                            public void onEstimateNextIteration(
-                                    final RobustEstimator<DualAbsoluteQuadric> estimator,
-                                    final int iteration) {
-                                if (mListener != null) {
-                                    mListener.onEstimateNextIteration(
-                                            RANSACDualAbsoluteQuadricRobustEstimator.this,
-                                            iteration);
-                                }
-                            }
+                    @Override
+                    public void onEstimateNextIteration(
+                            final RobustEstimator<DualAbsoluteQuadric> estimator, final int iteration) {
+                        if (listener != null) {
+                            listener.onEstimateNextIteration(
+                                    RANSACDualAbsoluteQuadricRobustEstimator.this, iteration);
+                        }
+                    }
 
-                            @Override
-                            public void onEstimateProgressChange(
-                                    final RobustEstimator<DualAbsoluteQuadric> estimator,
-                                    final float progress) {
-                                if (mListener != null) {
-                                    mListener.onEstimateProgressChange(
-                                            RANSACDualAbsoluteQuadricRobustEstimator.this,
-                                            progress);
-                                }
-                            }
-                        });
+                    @Override
+                    public void onEstimateProgressChange(
+                            final RobustEstimator<DualAbsoluteQuadric> estimator, final float progress) {
+                        if (listener != null) {
+                            listener.onEstimateProgressChange(
+                                    RANSACDualAbsoluteQuadricRobustEstimator.this, progress);
+                        }
+                    }
+                });
 
         try {
-            mLocked = true;
-            innerEstimator.setConfidence(mConfidence);
-            innerEstimator.setMaxIterations(mMaxIterations);
-            innerEstimator.setProgressDelta(mProgressDelta);
+            locked = true;
+            innerEstimator.setConfidence(confidence);
+            innerEstimator.setMaxIterations(maxIterations);
+            innerEstimator.setProgressDelta(progressDelta);
             return innerEstimator.estimate();
         } catch (final com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
         } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
         } finally {
-            mLocked = false;
+            locked = false;
         }
     }
 

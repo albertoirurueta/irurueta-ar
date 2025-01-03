@@ -58,14 +58,14 @@ public class RANSACRobustSinglePoint3DTriangulator extends
      * The threshold refers to the amount of projection error (i.e. distance of
      * projected solution using each camera).
      */
-    private double mThreshold;
+    private double threshold;
 
     /**
      * Constructor.
      */
     public RANSACRobustSinglePoint3DTriangulator() {
         super();
-        mThreshold = DEFAULT_THRESHOLD;
+        threshold = DEFAULT_THRESHOLD;
     }
 
     /**
@@ -74,10 +74,9 @@ public class RANSACRobustSinglePoint3DTriangulator extends
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      */
-    public RANSACRobustSinglePoint3DTriangulator(
-            final RobustSinglePoint3DTriangulatorListener listener) {
+    public RANSACRobustSinglePoint3DTriangulator(final RobustSinglePoint3DTriangulatorListener listener) {
         super(listener);
-        mThreshold = DEFAULT_THRESHOLD;
+        threshold = DEFAULT_THRESHOLD;
     }
 
     /**
@@ -91,10 +90,9 @@ public class RANSACRobustSinglePoint3DTriangulator extends
      *                                  length or their length is less than 2 views, which is the minimum
      *                                  required to compute triangulation.
      */
-    public RANSACRobustSinglePoint3DTriangulator(final List<Point2D> points,
-                                                 final List<PinholeCamera> cameras) {
+    public RANSACRobustSinglePoint3DTriangulator(final List<Point2D> points, final List<PinholeCamera> cameras) {
         super(points, cameras);
-        mThreshold = DEFAULT_THRESHOLD;
+        threshold = DEFAULT_THRESHOLD;
     }
 
     /**
@@ -110,11 +108,10 @@ public class RANSACRobustSinglePoint3DTriangulator extends
      *                                  length or their length is less than 2 views, which is the minimum
      *                                  required to compute triangulation.
      */
-    public RANSACRobustSinglePoint3DTriangulator(final List<Point2D> points,
-                                                 final List<PinholeCamera> cameras,
+    public RANSACRobustSinglePoint3DTriangulator(final List<Point2D> points, final List<PinholeCamera> cameras,
                                                  final RobustSinglePoint3DTriangulatorListener listener) {
         super(points, cameras, listener);
-        mThreshold = DEFAULT_THRESHOLD;
+        threshold = DEFAULT_THRESHOLD;
     }
 
     /**
@@ -127,7 +124,7 @@ public class RANSACRobustSinglePoint3DTriangulator extends
      * testing possible estimation solutions.
      */
     public double getThreshold() {
-        return mThreshold;
+        return threshold;
     }
 
     /**
@@ -149,7 +146,7 @@ public class RANSACRobustSinglePoint3DTriangulator extends
         if (threshold <= MIN_THRESHOLD) {
             throw new IllegalArgumentException();
         }
-        mThreshold = threshold;
+        this.threshold = threshold;
     }
 
     /**
@@ -168,8 +165,7 @@ public class RANSACRobustSinglePoint3DTriangulator extends
      */
     @SuppressWarnings("DuplicatedCode")
     @Override
-    public Point3D triangulate() throws LockedException, NotReadyException,
-            RobustEstimatorException {
+    public Point3D triangulate() throws LockedException, NotReadyException, RobustEstimatorException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -177,130 +173,117 @@ public class RANSACRobustSinglePoint3DTriangulator extends
             throw new NotReadyException();
         }
 
-        final RANSACRobustEstimator<Point3D> innerEstimator =
-                new RANSACRobustEstimator<>(
-                        new RANSACRobustEstimatorListener<Point3D>() {
+        final var innerEstimator = new RANSACRobustEstimator<Point3D>(new RANSACRobustEstimatorListener<>() {
 
-                            // point to be reused when computing residuals
-                            private final Point2D mTestPoint = Point2D.create(
-                                    CoordinatesType.HOMOGENEOUS_COORDINATES);
+            // point to be reused when computing residuals
+            private final Point2D testPoint = Point2D.create(CoordinatesType.HOMOGENEOUS_COORDINATES);
 
-                            // non-robust 3D point triangulator
-                            private final SinglePoint3DTriangulator mTriangulator =
-                                    SinglePoint3DTriangulator.create(mUseHomogeneousSolution ?
-                                            Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR :
-                                            Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR);
+            // non-robust 3D point triangulator
+            private final SinglePoint3DTriangulator triangulator = SinglePoint3DTriangulator.create(
+                    useHomogeneousSolution ? Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR
+                            : Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR);
 
-                            // subset of 2D points
-                            private final List<Point2D> mSubsetPoints = new ArrayList<>();
+            // subset of 2D points
+            private final List<Point2D> subsetPoints = new ArrayList<>();
 
-                            // subst of cameras
-                            private final List<PinholeCamera> mSubsetCameras =
-                                    new ArrayList<>();
+            // subst of cameras
+            private final List<PinholeCamera> subsetCameras = new ArrayList<>();
 
-                            @Override
-                            public double getThreshold() {
-                                return mThreshold;
-                            }
+            @Override
+            public double getThreshold() {
+                return threshold;
+            }
 
-                            @Override
-                            public int getTotalSamples() {
-                                return mPoints2D.size();
-                            }
+            @Override
+            public int getTotalSamples() {
+                return points2D.size();
+            }
 
-                            @Override
-                            public int getSubsetSize() {
-                                return MIN_REQUIRED_VIEWS;
-                            }
+            @Override
+            public int getSubsetSize() {
+                return MIN_REQUIRED_VIEWS;
+            }
 
-                            @Override
-                            public void estimatePreliminarSolutions(final int[] samplesIndices,
-                                                                    final List<Point3D> solutions) {
-                                mSubsetPoints.clear();
-                                mSubsetPoints.add(mPoints2D.get(samplesIndices[0]));
-                                mSubsetPoints.add(mPoints2D.get(samplesIndices[1]));
+            @Override
+            public void estimatePreliminarSolutions(final int[] samplesIndices, final List<Point3D> solutions) {
+                subsetPoints.clear();
+                subsetPoints.add(points2D.get(samplesIndices[0]));
+                subsetPoints.add(points2D.get(samplesIndices[1]));
 
-                                mSubsetCameras.clear();
-                                mSubsetCameras.add(mCameras.get(samplesIndices[0]));
-                                mSubsetCameras.add(mCameras.get(samplesIndices[1]));
+                subsetCameras.clear();
+                subsetCameras.add(cameras.get(samplesIndices[0]));
+                subsetCameras.add(cameras.get(samplesIndices[1]));
 
-                                try {
-                                    mTriangulator.setPointsAndCameras(mSubsetPoints,
-                                            mSubsetCameras);
-                                    final Point3D triangulated = mTriangulator.triangulate();
-                                    solutions.add(triangulated);
-                                } catch (final Exception e) {
-                                    // if anything fails, no solution is added
-                                }
-                            }
+                try {
+                    triangulator.setPointsAndCameras(subsetPoints, subsetCameras);
+                    final var triangulated = triangulator.triangulate();
+                    solutions.add(triangulated);
+                } catch (final Exception e) {
+                    // if anything fails, no solution is added
+                }
+            }
 
-                            @Override
-                            public double computeResidual(final Point3D currentEstimation, final int i) {
-                                final Point2D point2D = mPoints2D.get(i);
-                                final PinholeCamera camera = mCameras.get(i);
+            @Override
+            public double computeResidual(final Point3D currentEstimation, final int i) {
+                final var point2D = points2D.get(i);
+                final var camera = cameras.get(i);
 
-                                // project estimated point with camera
-                                camera.project(currentEstimation, mTestPoint);
+                // project estimated point with camera
+                camera.project(currentEstimation, testPoint);
 
-                                // return distance of projected point respect to the original one
-                                // as a residual
-                                return mTestPoint.distanceTo(point2D);
-                            }
+                // return distance of projected point respect to the original one
+                // as a residual
+                return testPoint.distanceTo(point2D);
+            }
 
-                            @Override
-                            public boolean isReady() {
-                                return RANSACRobustSinglePoint3DTriangulator.this.isReady();
-                            }
+            @Override
+            public boolean isReady() {
+                return RANSACRobustSinglePoint3DTriangulator.this.isReady();
+            }
 
-                            @Override
-                            public void onEstimateStart(final RobustEstimator<Point3D> estimator) {
-                                if (mListener != null) {
-                                    mListener.onTriangulateStart(
-                                            RANSACRobustSinglePoint3DTriangulator.this);
-                                }
-                            }
+            @Override
+            public void onEstimateStart(final RobustEstimator<Point3D> estimator) {
+                if (listener != null) {
+                    listener.onTriangulateStart(RANSACRobustSinglePoint3DTriangulator.this);
+                }
+            }
 
-                            @Override
-                            public void onEstimateEnd(final RobustEstimator<Point3D> estimator) {
-                                if (mListener != null) {
-                                    mListener.onTriangulateEnd(
-                                            RANSACRobustSinglePoint3DTriangulator.this);
-                                }
-                            }
+            @Override
+            public void onEstimateEnd(final RobustEstimator<Point3D> estimator) {
+                if (listener != null) {
+                    listener.onTriangulateEnd(RANSACRobustSinglePoint3DTriangulator.this);
+                }
+            }
 
-                            @Override
-                            public void onEstimateNextIteration(
-                                    final RobustEstimator<Point3D> estimator, final int iteration) {
-                                if (mListener != null) {
-                                    mListener.onTriangulateNextIteration(
-                                            RANSACRobustSinglePoint3DTriangulator.this,
-                                            iteration);
-                                }
-                            }
+            @Override
+            public void onEstimateNextIteration(final RobustEstimator<Point3D> estimator, final int iteration) {
+                if (listener != null) {
+                    listener.onTriangulateNextIteration(
+                            RANSACRobustSinglePoint3DTriangulator.this, iteration);
+                }
+            }
 
-                            @Override
-                            public void onEstimateProgressChange(
-                                    final RobustEstimator<Point3D> estimator, final float progress) {
-                                if (mListener != null) {
-                                    mListener.onTriangulateProgressChange(
-                                            RANSACRobustSinglePoint3DTriangulator.this,
-                                            progress);
-                                }
-                            }
-                        });
+            @Override
+            public void onEstimateProgressChange(final RobustEstimator<Point3D> estimator, final float progress) {
+                if (listener != null) {
+                    listener.onTriangulateProgressChange(
+                            RANSACRobustSinglePoint3DTriangulator.this, progress);
+                }
+            }
+        });
 
         try {
-            mLocked = true;
-            innerEstimator.setConfidence(mConfidence);
-            innerEstimator.setMaxIterations(mMaxIterations);
-            innerEstimator.setProgressDelta(mProgressDelta);
+            locked = true;
+            innerEstimator.setConfidence(confidence);
+            innerEstimator.setMaxIterations(maxIterations);
+            innerEstimator.setProgressDelta(progressDelta);
             return innerEstimator.estimate();
         } catch (final com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
         } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
         } finally {
-            mLocked = false;
+            locked = false;
         }
     }
 

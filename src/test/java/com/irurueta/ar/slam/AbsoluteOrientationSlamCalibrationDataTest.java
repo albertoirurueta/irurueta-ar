@@ -21,20 +21,19 @@ import com.irurueta.ar.SerializationHelper;
 import com.irurueta.statistics.InvalidCovarianceMatrixException;
 import com.irurueta.statistics.MultivariateNormalDist;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class AbsoluteOrientationSlamCalibrationDataTest {
+class AbsoluteOrientationSlamCalibrationDataTest {
 
     public static final double ABSOLUTE_ERROR = 1e-8;
 
     @Test
-    public void testConstructorGetControlLengthAndGetStateLength() {
-        final AbsoluteOrientationSlamCalibrationData data = new AbsoluteOrientationSlamCalibrationData();
+    void testConstructorGetControlLengthAndGetStateLength() {
+        final var data = new AbsoluteOrientationSlamCalibrationData();
 
         // check initial values
         assertEquals(AbsoluteOrientationSlamEstimator.CONTROL_LENGTH, data.getControlLength());
@@ -44,37 +43,33 @@ public class AbsoluteOrientationSlamCalibrationDataTest {
     }
 
     @Test
-    public void testGetSetControlMean() {
-        final AbsoluteOrientationSlamCalibrationData data = new AbsoluteOrientationSlamCalibrationData();
+    void testGetSetControlMean() {
+        final var data = new AbsoluteOrientationSlamCalibrationData();
 
         // check initial value
         assertNull(data.getControlMean());
 
         // set new value
-        final double[] mean = new double[AbsoluteOrientationSlamEstimator.CONTROL_LENGTH];
+        final var mean = new double[AbsoluteOrientationSlamEstimator.CONTROL_LENGTH];
         data.setControlMean(mean);
 
         // check correctness
         assertSame(mean, data.getControlMean());
 
         // Force IllegalArgumentException
-        final double[] wrong = new double[1];
-        try {
-            data.setControlMean(wrong);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        final var wrong = new double[1];
+        assertThrows(IllegalArgumentException.class, () -> data.setControlMean(wrong));
     }
 
     @Test
-    public void testGetSetControlCovariance() throws WrongSizeException {
-        final AbsoluteOrientationSlamCalibrationData data = new AbsoluteOrientationSlamCalibrationData();
+    void testGetSetControlCovariance() throws WrongSizeException {
+        final var data = new AbsoluteOrientationSlamCalibrationData();
 
         // check initial value
         assertNull(data.getControlCovariance());
 
         // set new value
-        final Matrix cov = new Matrix(AbsoluteOrientationSlamEstimator.CONTROL_LENGTH,
+        final var cov = new Matrix(AbsoluteOrientationSlamEstimator.CONTROL_LENGTH,
                 AbsoluteOrientationSlamEstimator.CONTROL_LENGTH);
         data.setControlCovariance(cov);
 
@@ -82,21 +77,17 @@ public class AbsoluteOrientationSlamCalibrationDataTest {
         assertSame(cov, data.getControlCovariance());
 
         // Force IllegalArgumentException
-        final Matrix wrong = new Matrix(1, 1);
-        try {
-            data.setControlCovariance(wrong);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        final var wrong = new Matrix(1, 1);
+        assertThrows(IllegalArgumentException.class, () -> data.setControlCovariance(wrong));
     }
 
     @Test
-    public void testSetControlMeanAndCovariance() throws WrongSizeException {
-        final AbsoluteOrientationSlamCalibrationData data = new AbsoluteOrientationSlamCalibrationData();
+    void testSetControlMeanAndCovariance() throws WrongSizeException {
+        final var data = new AbsoluteOrientationSlamCalibrationData();
 
         // set new values
-        final double[] mean = new double[AbsoluteOrientationSlamEstimator.CONTROL_LENGTH];
-        final Matrix cov = new Matrix(AbsoluteOrientationSlamEstimator.CONTROL_LENGTH,
+        final var mean = new double[AbsoluteOrientationSlamEstimator.CONTROL_LENGTH];
+        final var cov = new Matrix(AbsoluteOrientationSlamEstimator.CONTROL_LENGTH,
                 AbsoluteOrientationSlamEstimator.CONTROL_LENGTH);
         data.setControlMeanAndCovariance(mean, cov);
 
@@ -105,71 +96,62 @@ public class AbsoluteOrientationSlamCalibrationDataTest {
         assertSame(cov, data.getControlCovariance());
 
         // Force IllegalArgumentException
-        final double[] wrongMean = new double[1];
-        Matrix wrongCov = new Matrix(1, 1);
+        final var wrongMean = new double[1];
+        final var wrongCov = new Matrix(1, 1);
 
-        try {
-            data.setControlMeanAndCovariance(wrongMean, cov);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            data.setControlMeanAndCovariance(mean, wrongCov);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> data.setControlMeanAndCovariance(wrongMean, cov));
+        assertThrows(IllegalArgumentException.class, () -> data.setControlMeanAndCovariance(mean, wrongCov));
     }
 
 
     @Test
-    public void testPropagateWithControlJacobian() throws WrongSizeException, InvalidCovarianceMatrixException {
+    void testPropagateWithControlJacobian() throws WrongSizeException, InvalidCovarianceMatrixException {
 
-        final Matrix cov = Matrix.identity(
+        final var cov = Matrix.identity(
                 AbsoluteOrientationSlamEstimator.CONTROL_LENGTH,
                 AbsoluteOrientationSlamEstimator.CONTROL_LENGTH).
                 multiplyByScalarAndReturnNew(1e-3);
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double[] mean = new double[AbsoluteOrientationSlamEstimator.CONTROL_LENGTH];
+        final var randomizer = new UniformRandomizer();
+        final var mean = new double[AbsoluteOrientationSlamEstimator.CONTROL_LENGTH];
         randomizer.fill(mean);
 
-        final AbsoluteOrientationSlamCalibrationData data = new AbsoluteOrientationSlamCalibrationData();
+        final var data = new AbsoluteOrientationSlamCalibrationData();
         data.setControlMeanAndCovariance(mean, cov);
 
-        final Matrix jacobian = Matrix.identity(
+        final var jacobian = Matrix.identity(
                 AbsoluteOrientationSlamEstimator.STATE_LENGTH,
                 AbsoluteOrientationSlamEstimator.CONTROL_LENGTH).
                 multiplyByScalarAndReturnNew(2.0);
 
-        final MultivariateNormalDist dist = data.propagateWithControlJacobian(jacobian);
-        final MultivariateNormalDist dist2 = new MultivariateNormalDist();
+        final var dist = data.propagateWithControlJacobian(jacobian);
+        final var dist2 = new MultivariateNormalDist();
         data.propagateWithControlJacobian(jacobian, dist2);
 
         // check correctness
-        final Matrix propagatedCov = jacobian.multiplyAndReturnNew(cov).
-                multiplyAndReturnNew(jacobian.transposeAndReturnNew());
+        final var propagatedCov = jacobian.multiplyAndReturnNew(cov).multiplyAndReturnNew(
+                jacobian.transposeAndReturnNew());
 
         assertTrue(dist.getCovariance().equals(propagatedCov, ABSOLUTE_ERROR));
         assertTrue(dist2.getCovariance().equals(propagatedCov, ABSOLUTE_ERROR));
 
-        assertArrayEquals(dist.getMean(),
-                new double[AbsoluteOrientationSlamEstimator.STATE_LENGTH], 0.0);
-        assertArrayEquals(dist2.getMean(),
-                new double[AbsoluteOrientationSlamEstimator.STATE_LENGTH], 0.0);
+        assertArrayEquals(new double[AbsoluteOrientationSlamEstimator.STATE_LENGTH],
+                dist.getMean(), 0.0);
+        assertArrayEquals(new double[AbsoluteOrientationSlamEstimator.STATE_LENGTH],
+                dist2.getMean(), 0.0);
     }
 
     @Test
-    public void testSerializeDeserialize() throws WrongSizeException, IOException, ClassNotFoundException {
-        final AbsoluteOrientationSlamCalibrationData data1 =
-                new AbsoluteOrientationSlamCalibrationData();
+    void testSerializeDeserialize() throws WrongSizeException, IOException, ClassNotFoundException {
+        final var data1 = new AbsoluteOrientationSlamCalibrationData();
 
         // set new values
-        final UniformRandomizer randomizer = new UniformRandomizer();
+        final var randomizer = new UniformRandomizer();
 
-        final double[] mean = new double[AbsoluteOrientationSlamEstimator.CONTROL_LENGTH];
+        final var mean = new double[AbsoluteOrientationSlamEstimator.CONTROL_LENGTH];
         randomizer.fill(mean);
         data1.setControlMean(mean);
-        final Matrix cov = new Matrix(AbsoluteOrientationSlamEstimator.CONTROL_LENGTH,
+        final var cov = new Matrix(AbsoluteOrientationSlamEstimator.CONTROL_LENGTH,
                 AbsoluteOrientationSlamEstimator.CONTROL_LENGTH);
         data1.setControlCovariance(cov);
 
@@ -178,8 +160,8 @@ public class AbsoluteOrientationSlamCalibrationDataTest {
         assertSame(data1.getControlCovariance(), cov);
 
         // serialize and deserialize
-        final byte[] bytes = SerializationHelper.serialize(data1);
-        final AbsoluteOrientationSlamCalibrationData data2 = SerializationHelper.deserialize(bytes);
+        final var bytes = SerializationHelper.serialize(data1);
+        final var data2 = SerializationHelper.<AbsoluteOrientationSlamCalibrationData>deserialize(bytes);
 
         // check
         assertArrayEquals(data1.getControlMean(), data2.getControlMean(), 0.0);

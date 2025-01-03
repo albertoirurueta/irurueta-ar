@@ -18,8 +18,7 @@ package com.irurueta.ar.calibration.estimators;
 /**
  * Thrown when IAC estimation fails.
  */
-public class ImageOfAbsoluteConicEstimatorException extends
-        CalibrationEstimatorException {
+public class ImageOfAbsoluteConicEstimatorException extends CalibrationEstimatorException {
 
     /**
      * Constructor.
@@ -43,8 +42,7 @@ public class ImageOfAbsoluteConicEstimatorException extends
      * @param message Message describing the cause of the exception.
      * @param cause   Instance containing the cause of the exception.
      */
-    public ImageOfAbsoluteConicEstimatorException(final String message,
-                                                  final Throwable cause) {
+    public ImageOfAbsoluteConicEstimatorException(final String message, final Throwable cause) {
         super(message, cause);
     }
 

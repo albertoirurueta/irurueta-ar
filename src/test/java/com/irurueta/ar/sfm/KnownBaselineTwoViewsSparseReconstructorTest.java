@@ -31,16 +31,15 @@ import com.irurueta.geometry.estimators.MetricTransformation3DRobustEstimator;
 import com.irurueta.numerical.robust.RobustEstimatorException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class KnownBaselineTwoViewsSparseReconstructorTest {
+class KnownBaselineTwoViewsSparseReconstructorTest {
 
     private static final double MIN_RANDOM_VALUE = -100.0;
     private static final double MAX_RANDOM_VALUE = 100.0;
@@ -84,107 +83,110 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
     private static final double ABSOLUTE_ERROR = 1e-6;
     private static final double LARGE_ABSOLUTE_ERROR = 1e-3;
 
-    private int mViewCount = 0;
-    private EstimatedFundamentalMatrix mEstimatedFundamentalMatrix;
-    private EstimatedCamera mEstimatedCamera1;
-    private EstimatedCamera mEstimatedCamera2;
-    private List<ReconstructedPoint3D> mReconstructedPoints;
+    private int viewCount = 0;
+    private EstimatedFundamentalMatrix estimatedFundamentalMatrix;
+    private EstimatedCamera estimatedCamera1;
+    private EstimatedCamera estimatedCamera2;
+    private List<ReconstructedPoint3D> reconstructedPoints;
 
-    private boolean mStarted;
-    private boolean mFinished;
-    private boolean mFailed;
-    private boolean mCancelled;
+    private boolean started;
+    private boolean finished;
+    private boolean failed;
+    private boolean cancelled;
 
-    @Before
-    public void setUp() {
-        mViewCount = 0;
-        mEstimatedFundamentalMatrix = null;
-        mEstimatedCamera1 = mEstimatedCamera2 = null;
-        mReconstructedPoints = null;
-        mStarted = mFinished = mFailed = mCancelled = false;
+    @BeforeEach
+    void setUp() {
+        viewCount = 0;
+        estimatedFundamentalMatrix = null;
+        estimatedCamera1 = estimatedCamera2 = null;
+        reconstructedPoints = null;
+        started = finished = failed = cancelled = false;
     }
 
     @Test
-    public void testConstructor() {
-        final KnownBaselineTwoViewsSparseReconstructorConfiguration configuration =
-                new KnownBaselineTwoViewsSparseReconstructorConfiguration();
-        final KnownBaselineTwoViewsSparseReconstructorListener listener =
-                new KnownBaselineTwoViewsSparseReconstructorListener() {
+    void testConstructor() {
+        final var configuration = new KnownBaselineTwoViewsSparseReconstructorConfiguration();
+        final var listener = new KnownBaselineTwoViewsSparseReconstructorListener() {
 
-                    @Override
-                    public boolean hasMoreViewsAvailable(
-                            final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                        return false;
-                    }
+            @Override
+            public boolean hasMoreViewsAvailable(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                return false;
+            }
 
-                    @Override
-                    public void onRequestSamplesForCurrentView(
-                            final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                            final int viewId, final List<Sample2D> samples) {
-                    }
+            @Override
+            public void onRequestSamplesForCurrentView(
+                    final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                    final int viewId, final List<Sample2D> samples) {
+                // no action needed
+            }
 
-                    @Override
-                    public void onSamplesAccepted(
-                            final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                            final int viewId, final List<Sample2D> samples) {
-                    }
+            @Override
+            public void onSamplesAccepted(
+                    final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                    final int viewId, final List<Sample2D> samples) {
+                // no action needed
+            }
 
-                    @Override
-                    public void onSamplesRejected(
-                            final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                            final int viewId, final List<Sample2D> samples) {
-                    }
+            @Override
+            public void onSamplesRejected(
+                    final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                    final int viewId, final List<Sample2D> samples) {
+                // no action needed
+            }
 
-                    @Override
-                    public void onRequestMatches(
-                            final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                            final List<Sample2D> samples1, final List<Sample2D> samples2,
-                            final int viewId1, final int viewId2, final List<MatchedSamples> matches) {
-                    }
+            @Override
+            public void onRequestMatches(
+                    final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                    final List<Sample2D> samples1, final List<Sample2D> samples2,
+                    final int viewId1, final int viewId2, final List<MatchedSamples> matches) {
+                // no action needed
+            }
 
-                    @Override
-                    public void onFundamentalMatrixEstimated(
-                            final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                            final EstimatedFundamentalMatrix estimatedFundamentalMatrix) {
-                    }
+            @Override
+            public void onFundamentalMatrixEstimated(
+                    final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                    final EstimatedFundamentalMatrix estimatedFundamentalMatrix) {
+                // no action needed
+            }
 
-                    @Override
-                    public void onCamerasEstimated(
-                            final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                            final int viewId1, final int viewId2, final EstimatedCamera camera1,
-                            final EstimatedCamera camera2) {
-                    }
+            @Override
+            public void onCamerasEstimated(
+                    final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                    final int viewId1, final int viewId2, final EstimatedCamera camera1,
+                    final EstimatedCamera camera2) {
+                // no action needed
+            }
 
-                    @Override
-                    public void onReconstructedPointsEstimated(
-                            final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                            final List<MatchedSamples> matches, final List<ReconstructedPoint3D> points) {
-                    }
+            @Override
+            public void onReconstructedPointsEstimated(
+                    final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                    final List<MatchedSamples> matches, final List<ReconstructedPoint3D> points) {
+                // no action needed
+            }
 
-                    @Override
-                    public void onStart(
-                            final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                    }
+            @Override
+            public void onStart(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                // no action needed
+            }
 
-                    @Override
-                    public void onFinish(
-                            final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                    }
+            @Override
+            public void onFinish(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                // no action needed
+            }
 
-                    @Override
-                    public void onCancel(
-                            final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                    }
+            @Override
+            public void onCancel(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                // no action needed
+            }
 
-                    @Override
-                    public void onFail(
-                            final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                    }
-                };
+            @Override
+            public void onFail(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                // no action needed
+            }
+        };
 
         // constructor with listener
-        KnownBaselineTwoViewsSparseReconstructor reconstructor =
-                new KnownBaselineTwoViewsSparseReconstructor(listener);
+        var reconstructor = new KnownBaselineTwoViewsSparseReconstructor(listener);
 
         // check default values
         assertNotNull(reconstructor.getConfiguration());
@@ -216,72 +218,64 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
     }
 
     @Test
-    public void testGeneralPointsEssential() throws InvalidPairOfCamerasException, WrongSizeException,
-            NotReadyException, LockedException, DecomposerException, NotAvailableException, CameraException,
-            com.irurueta.geometry.estimators.NotReadyException,
-            com.irurueta.geometry.NotAvailableException {
+    void testGeneralPointsEssential() throws InvalidPairOfCamerasException, WrongSizeException, NotReadyException,
+            LockedException, DecomposerException, NotAvailableException, CameraException,
+            com.irurueta.geometry.estimators.NotReadyException, com.irurueta.geometry.NotAvailableException {
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final KnownBaselineTwoViewsSparseReconstructorConfiguration configuration =
-                    new KnownBaselineTwoViewsSparseReconstructorConfiguration();
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var configuration = new KnownBaselineTwoViewsSparseReconstructorConfiguration();
             configuration.setInitialCamerasEstimatorMethod(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
 
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
-            final double aspectRatio = configuration.getInitialCamerasAspectRatio();
-            final double skewness = 0.0;
-            final double principalPoint = 0.0;
+            final var randomizer = new UniformRandomizer();
+            final var focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
+            final var aspectRatio = configuration.getInitialCamerasAspectRatio();
+            final var skewness = 0.0;
+            final var principalPoint = 0.0;
 
-            final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength,
-                            focalLength, principalPoint, principalPoint, skewness);
+            final var intrinsic = new PinholeCameraIntrinsicParameters(focalLength, focalLength, principalPoint,
+                    principalPoint, skewness);
             intrinsic.setAspectRatioKeepingHorizontalFocalLength(aspectRatio);
 
             configuration.setInitialIntrinsic1(intrinsic);
             configuration.setInitialIntrinsic2(intrinsic);
 
-            final double alphaEuler1 = 0.0;
-            final double betaEuler1 = 0.0;
-            final double gammaEuler1 = 0.0;
-            final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+            final var alphaEuler1 = 0.0;
+            final var betaEuler1 = 0.0;
+            final var gammaEuler1 = 0.0;
+            final var alphaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var betaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var gammaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-            final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
+            final var cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION_ESSENTIAL,
+                    MAX_CAMERA_SEPARATION_ESSENTIAL);
 
-            final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
-            final Point3D center2 = new InhomogeneousPoint3D(
+            final var center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
+            final var center2 = new InhomogeneousPoint3D(
                     center1.getInhomX() + cameraSeparation,
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final double baseline = center1.distanceTo(center2);
+            final var baseline = center1.distanceTo(center2);
             configuration.setBaseline(baseline);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+            final var rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final var rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
+            final var camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final var camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
+            final var fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
 
             // 1st find an approximate central point by intersecting the axis
             // planes of both cameras
-            final Plane horizontalPlane1 = camera1.getHorizontalAxisPlane();
-            final Plane verticalPlane1 = camera1.getVerticalAxisPlane();
-            final Plane horizontalPlane2 = camera2.getHorizontalAxisPlane();
-            final Plane verticalPlane2 = camera2.getVerticalAxisPlane();
-            final Matrix planesIntersectionMatrix = new Matrix(
-                    Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
+            final var horizontalPlane1 = camera1.getHorizontalAxisPlane();
+            final var verticalPlane1 = camera1.getVerticalAxisPlane();
+            final var horizontalPlane2 = camera2.getHorizontalAxisPlane();
+            final var verticalPlane2 = camera2.getVerticalAxisPlane();
+            final var planesIntersectionMatrix = new Matrix(Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
             planesIntersectionMatrix.setElementAt(0, 0, verticalPlane1.getA());
             planesIntersectionMatrix.setElementAt(0, 1, verticalPlane1.getB());
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
@@ -302,11 +296,10 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
             planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
             planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
+            final var decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
-            final Matrix v = decomposer.getV();
-            final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
+            final var v = decomposer.getV();
+            final var centralCommonPoint = new HomogeneousPoint3D(
                     v.getElementAt(0, 3),
                     v.getElementAt(1, 3),
                     v.getElementAt(2, 3),
@@ -316,19 +309,19 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
             double lambdaY;
             double lambdaZ;
 
-            final int numPoints = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final var numPoints = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
 
             InhomogeneousPoint3D point3D;
-            final List<InhomogeneousPoint3D> points3D = new ArrayList<>();
+            final var points3D = new ArrayList<InhomogeneousPoint3D>();
             Point2D projectedPoint1;
             Point2D projectedPoint2;
-            final List<Point2D> projectedPoints1 = new ArrayList<>();
-            final List<Point2D> projectedPoints2 = new ArrayList<>();
+            final var projectedPoints1 = new ArrayList<Point2D>();
+            final var projectedPoints2 = new ArrayList<Point2D>();
             boolean front1;
             boolean front2;
-            for (int i = 0; i < numPoints; i++) {
+            for (var i = 0; i < numPoints; i++) {
                 // generate points and ensure they lie in front of both cameras
-                int numTry = 0;
+                var numTry = 0;
                 do {
                     lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
                     lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
@@ -348,9 +341,7 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
                 } while (!front1 || !front2);
                 points3D.add(point3D);
 
-                // check that 3D point is in front of both cameras
-                assertTrue(front1);
-                assertTrue(front2);
+                // here 3D point is in front of both cameras
 
                 // project 3D point into both cameras
                 projectedPoint1 = new InhomogeneousPoint2D();
@@ -362,194 +353,184 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
                 projectedPoints2.add(projectedPoint2);
             }
 
-            final KnownBaselineTwoViewsSparseReconstructorListener listener =
-                    new KnownBaselineTwoViewsSparseReconstructorListener() {
+            final var listener = new KnownBaselineTwoViewsSparseReconstructorListener() {
 
-                        @Override
-                        public boolean hasMoreViewsAvailable(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            return mViewCount < 2;
+                @Override
+                public boolean hasMoreViewsAvailable(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    return viewCount < 2;
+                }
+
+                @Override
+                public void onRequestSamplesForCurrentView(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final int viewId, final List<Sample2D> samples) {
+
+                    samples.clear();
+
+                    Sample2D sample;
+                    if (viewCount == 0) {
+                        // first view
+                        for (var i = 0; i < numPoints; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints1.get(i));
+                            sample.setViewId(viewId);
+                            samples.add(sample);
                         }
-
-                        @Override
-                        public void onRequestSamplesForCurrentView(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId, final List<Sample2D> samples) {
-
-                            samples.clear();
-
-                            Sample2D sample;
-                            if (mViewCount == 0) {
-                                // first view
-                                for (int i = 0; i < numPoints; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints1.get(i));
-                                    sample.setViewId(viewId);
-                                    samples.add(sample);
-                                }
-                            } else {
-                                // second view
-                                for (int i = 0; i < numPoints; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints2.get(i));
-                                    sample.setViewId(viewId);
-                                    samples.add(sample);
-                                }
-                            }
+                    } else {
+                        // second view
+                        for (var i = 0; i < numPoints; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints2.get(i));
+                            sample.setViewId(viewId);
+                            samples.add(sample);
                         }
+                    }
+                }
 
-                        @Override
-                        public void onSamplesAccepted(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId, final List<Sample2D> samples) {
-                            mViewCount++;
-                        }
+                @Override
+                public void onSamplesAccepted(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final int viewId, final List<Sample2D> samples) {
+                    viewCount++;
+                }
 
-                        @Override
-                        public void onSamplesRejected(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId, final List<Sample2D> samples) {
-                        }
+                @Override
+                public void onSamplesRejected(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final int viewId, final List<Sample2D> samples) {
+                    // no action needed
+                }
 
-                        @Override
-                        public void onRequestMatches(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final List<Sample2D> samples1, final List<Sample2D> samples2,
-                                final int viewId1, final int viewId2,
-                                final List<MatchedSamples> matches) {
-                            matches.clear();
+                @Override
+                public void onRequestMatches(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final List<Sample2D> samples1, final List<Sample2D> samples2,
+                        final int viewId1, final int viewId2,
+                        final List<MatchedSamples> matches) {
+                    matches.clear();
 
-                            MatchedSamples match;
-                            for (int i = 0; i < numPoints; i++) {
-                                match = new MatchedSamples();
-                                match.setSamples(new Sample2D[]{
-                                        samples1.get(i), samples2.get(i)
-                                });
-                                match.setViewIds(new int[]{viewId1, viewId2});
-                                matches.add(match);
-                            }
-                        }
+                    MatchedSamples match;
+                    for (var i = 0; i < numPoints; i++) {
+                        match = new MatchedSamples();
+                        match.setSamples(new Sample2D[]{samples1.get(i), samples2.get(i)});
+                        match.setViewIds(new int[]{viewId1, viewId2});
+                        matches.add(match);
+                    }
+                }
 
-                        @Override
-                        public void onFundamentalMatrixEstimated(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final EstimatedFundamentalMatrix estimatedFundamentalMatrix) {
-                            mEstimatedFundamentalMatrix = estimatedFundamentalMatrix;
-                        }
+                @Override
+                public void onFundamentalMatrixEstimated(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final EstimatedFundamentalMatrix estimatedFundamentalMatrix) {
+                    KnownBaselineTwoViewsSparseReconstructorTest.this.estimatedFundamentalMatrix =
+                            estimatedFundamentalMatrix;
+                }
 
-                        @Override
-                        public void onCamerasEstimated(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId1, final int viewId2, final EstimatedCamera camera1,
-                                final EstimatedCamera camera2) {
-                            mEstimatedCamera1 = camera1;
-                            mEstimatedCamera2 = camera2;
-                        }
+                @Override
+                public void onCamerasEstimated(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final int viewId1, final int viewId2, final EstimatedCamera camera1,
+                        final EstimatedCamera camera2) {
+                    estimatedCamera1 = camera1;
+                    estimatedCamera2 = camera2;
+                }
 
-                        @Override
-                        public void onReconstructedPointsEstimated(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final List<MatchedSamples> matches,
-                                final List<ReconstructedPoint3D> points) {
-                            mReconstructedPoints = points;
-                        }
+                @Override
+                public void onReconstructedPointsEstimated(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final List<MatchedSamples> matches,
+                        final List<ReconstructedPoint3D> points) {
+                    reconstructedPoints = points;
+                }
 
-                        @Override
-                        public void onStart(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mStarted = true;
-                        }
+                @Override
+                public void onStart(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    started = true;
+                }
 
-                        @Override
-                        public void onFinish(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mFinished = true;
-                        }
+                @Override
+                public void onFinish(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    finished = true;
+                }
 
-                        @Override
-                        public void onCancel(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mCancelled = true;
-                        }
+                @Override
+                public void onCancel(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    cancelled = true;
+                }
 
-                        @Override
-                        public void onFail(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mFailed = true;
-                        }
-                    };
+                @Override
+                public void onFail(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    failed = true;
+                }
+            };
 
-            final KnownBaselineTwoViewsSparseReconstructor reconstructor =
-                    new KnownBaselineTwoViewsSparseReconstructor(configuration, listener);
+            final var reconstructor = new KnownBaselineTwoViewsSparseReconstructor(configuration, listener);
 
             // check initial values
             reset();
-            assertFalse(mStarted);
-            assertFalse(mFinished);
-            assertFalse(mCancelled);
-            assertFalse(mFailed);
+            assertFalse(started);
+            assertFalse(finished);
+            assertFalse(cancelled);
+            assertFalse(failed);
             assertFalse(reconstructor.isFinished());
 
             reconstructor.start();
 
             // check correctness
-            assertTrue(mStarted);
-            assertTrue(mFinished);
-            assertFalse(mCancelled);
-            assertFalse(mFailed);
+            assertTrue(started);
+            assertTrue(finished);
+            assertFalse(cancelled);
+            assertFalse(failed);
             assertTrue(reconstructor.isFinished());
 
             // check that estimated fundamental matrix is correct
             fundamentalMatrix.normalize();
-            mEstimatedFundamentalMatrix.getFundamentalMatrix().normalize();
+            estimatedFundamentalMatrix.getFundamentalMatrix().normalize();
 
             // matrices are equal up to scale
             if (!fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
                     && !fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                    ABSOLUTE_ERROR)) {
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
                     ABSOLUTE_ERROR) || fundamentalMatrix.getInternalMatrix()
                     .multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                            estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
                             ABSOLUTE_ERROR));
 
             // check that reconstructed points are in a Euclidean stratum (with
             // correct scale)
-            final PinholeCamera estimatedCamera1 = mEstimatedCamera1.getCamera();
-            final PinholeCamera estimatedCamera2 = mEstimatedCamera2.getCamera();
+            final var estCam1 = this.estimatedCamera1.getCamera();
+            final var estCam2 = this.estimatedCamera2.getCamera();
 
-            estimatedCamera1.decompose();
-            estimatedCamera2.decompose();
+            estCam1.decompose();
+            estCam2.decompose();
 
-            final List<Point3D> reconstructedPoints3D = new ArrayList<>();
-            for (int i = 0; i < numPoints; i++) {
-                reconstructedPoints3D.add(mReconstructedPoints.get(i).getPoint());
+            final var reconstructedPoints3D = new ArrayList<Point3D>();
+            for (var i = 0; i < numPoints; i++) {
+                reconstructedPoints3D.add(reconstructedPoints.get(i).getPoint());
             }
 
             // check that all points are in front of both cameras
-            for (int i = 0; i < numPoints; i++) {
-                final Point3D p = reconstructedPoints3D.get(i);
-                assertTrue(estimatedCamera1.isPointInFrontOfCamera(p));
-                assertTrue(estimatedCamera2.isPointInFrontOfCamera(p));
+            for (var i = 0; i < numPoints; i++) {
+                final var p = reconstructedPoints3D.get(i);
+                assertTrue(estCam1.isPointInFrontOfCamera(p));
+                assertTrue(estCam2.isPointInFrontOfCamera(p));
             }
 
-            final Point3D estimatedCenter1 = estimatedCamera1.getCameraCenter();
-            final Point3D estimatedCenter2 = estimatedCamera2.getCameraCenter();
+            final var estimatedCenter1 = estCam1.getCameraCenter();
+            final var estimatedCenter2 = estCam2.getCameraCenter();
 
-            final PinholeCameraIntrinsicParameters estimatedIntrinsic1 =
-                    estimatedCamera1.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters estimatedIntrinsic2 =
-                    estimatedCamera2.getIntrinsicParameters();
+            final var estimatedIntrinsic1 = estCam1.getIntrinsicParameters();
+            final var estimatedIntrinsic2 = estCam2.getIntrinsicParameters();
 
-            final Rotation3D estimatedRotation1 = estimatedCamera1.getCameraRotation();
-            final Rotation3D estimatedRotation2 = estimatedCamera2.getCameraRotation();
+            final var estimatedRotation1 = estCam1.getCameraRotation();
+            final var estimatedRotation2 = estCam2.getCameraRotation();
 
-            final double estimatedBaseline = estimatedCenter1.distanceTo(estimatedCenter2);
+            final var estimatedBaseline = estimatedCenter1.distanceTo(estimatedCenter2);
 
             // check cameras are correct
             if (Math.abs(estimatedBaseline - baseline) > LARGE_ABSOLUTE_ERROR) {
@@ -563,34 +544,34 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
             }
             assertTrue(center2.equals(estimatedCenter2, LARGE_ABSOLUTE_ERROR));
 
-            assertEquals(estimatedIntrinsic1.getHorizontalFocalLength(),
-                    intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(estimatedIntrinsic1.getVerticalFocalLength(),
-                    intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic1.getHorizontalFocalLength(), intrinsic.getHorizontalFocalLength(),
+                    ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic1.getVerticalFocalLength(), intrinsic.getVerticalFocalLength(),
+                    ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic1.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
-            assertEquals(estimatedIntrinsic1.getHorizontalPrincipalPoint(),
-                    intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
-            assertEquals(estimatedIntrinsic1.getVerticalPrincipalPoint(),
-                    intrinsic.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic1.getHorizontalPrincipalPoint(), intrinsic.getHorizontalPrincipalPoint(),
+                    ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic1.getVerticalPrincipalPoint(), intrinsic.getVerticalPrincipalPoint(),
+                    ABSOLUTE_ERROR);
 
-            assertEquals(estimatedIntrinsic2.getHorizontalFocalLength(),
-                    intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(estimatedIntrinsic2.getVerticalFocalLength(),
-                    intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic2.getHorizontalFocalLength(), intrinsic.getHorizontalFocalLength(),
+                    ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic2.getVerticalFocalLength(), intrinsic.getVerticalFocalLength(),
+                    ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
-            assertEquals(estimatedIntrinsic2.getHorizontalPrincipalPoint(),
-                    intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
-            assertEquals(estimatedIntrinsic2.getVerticalPrincipalPoint(),
-                    intrinsic.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic2.getHorizontalPrincipalPoint(), intrinsic.getHorizontalPrincipalPoint(),
+                    ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic2.getVerticalPrincipalPoint(), intrinsic.getVerticalPrincipalPoint(),
+                    ABSOLUTE_ERROR);
 
-            assertTrue(estimatedRotation1.asInhomogeneousMatrix().equals(
-                    rotation1.asInhomogeneousMatrix(), ABSOLUTE_ERROR));
-            assertTrue(estimatedRotation2.asInhomogeneousMatrix().equals(
-                    rotation2.asInhomogeneousMatrix(), ABSOLUTE_ERROR));
+            assertTrue(estimatedRotation1.asInhomogeneousMatrix().equals(rotation1.asInhomogeneousMatrix(),
+                    ABSOLUTE_ERROR));
+            assertTrue(estimatedRotation2.asInhomogeneousMatrix().equals(rotation2.asInhomogeneousMatrix(),
+                    ABSOLUTE_ERROR));
 
             // check that points are correct
-            boolean validPoints = true;
-            for (int i = 0; i < numPoints; i++) {
+            var validPoints = true;
+            for (var i = 0; i < numPoints; i++) {
                 if (!points3D.get(i).equals(reconstructedPoints3D.get(i), LARGE_ABSOLUTE_ERROR)) {
                     validPoints = false;
                     break;
@@ -616,74 +597,64 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
     }
 
     @Test
-    public void testGeneralPointsDIAC() throws InvalidPairOfCamerasException,
-            CameraException, com.irurueta.geometry.estimators.NotReadyException,
-            com.irurueta.geometry.NotAvailableException, AlgebraException {
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final KnownBaselineTwoViewsSparseReconstructorConfiguration configuration =
-                    new KnownBaselineTwoViewsSparseReconstructorConfiguration();
-            configuration.setInitialCamerasEstimatorMethod(
-                    InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC);
+    void testGeneralPointsDIAC() throws InvalidPairOfCamerasException, CameraException,
+            com.irurueta.geometry.estimators.NotReadyException, com.irurueta.geometry.NotAvailableException,
+            AlgebraException {
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var configuration = new KnownBaselineTwoViewsSparseReconstructorConfiguration();
+            configuration.setInitialCamerasEstimatorMethod(InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC);
 
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH_DIAC, MAX_FOCAL_LENGTH_DIAC);
-            final double aspectRatio = configuration.getInitialCamerasAspectRatio();
-            final double skewness = 0.0;
-            final double principalPointX = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT_DIAC, MAX_PRINCIPAL_POINT_DIAC);
-            final double principalPointY = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT_DIAC, MAX_PRINCIPAL_POINT_DIAC);
+            final var randomizer = new UniformRandomizer();
+            final var focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH_DIAC, MAX_FOCAL_LENGTH_DIAC);
+            final var aspectRatio = configuration.getInitialCamerasAspectRatio();
+            final var skewness = 0.0;
+            final var principalPointX = randomizer.nextDouble(MIN_PRINCIPAL_POINT_DIAC, MAX_PRINCIPAL_POINT_DIAC);
+            final var principalPointY = randomizer.nextDouble(MIN_PRINCIPAL_POINT_DIAC, MAX_PRINCIPAL_POINT_DIAC);
 
-            final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength, focalLength,
-                            principalPointX, principalPointY, skewness);
+            final var intrinsic = new PinholeCameraIntrinsicParameters(focalLength, focalLength, principalPointX,
+                    principalPointY, skewness);
             intrinsic.setAspectRatioKeepingHorizontalFocalLength(aspectRatio);
 
             configuration.setPrincipalPointX(principalPointX);
             configuration.setPrincipalPointY(principalPointY);
             configuration.setInitialCamerasAspectRatio(aspectRatio);
 
-            final double alphaEuler1 = 0.0;
-            final double betaEuler1 = 0.0;
-            final double gammaEuler1 = 0.0;
-            final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+            final var alphaEuler1 = 0.0;
+            final var betaEuler1 = 0.0;
+            final var gammaEuler1 = 0.0;
+            final var alphaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var betaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var gammaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-            final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_DIAC, MAX_CAMERA_SEPARATION_DIAC);
+            final var cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION_DIAC, MAX_CAMERA_SEPARATION_DIAC);
 
-            final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
-            final Point3D center2 = new InhomogeneousPoint3D(
+            final var center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
+            final var center2 = new InhomogeneousPoint3D(
                     center1.getInhomX() + cameraSeparation,
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final double baseline = center1.distanceTo(center2);
+            final var baseline = center1.distanceTo(center2);
             configuration.setBaseline(baseline);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+            final var rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final var rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
+            final var camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final var camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
+            final var fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
 
             // 1st find an approximate central point by intersecting the axis
             // planes of both cameras
-            final Plane horizontalPlane1 = camera1.getHorizontalAxisPlane();
-            final Plane verticalPlane1 = camera1.getVerticalAxisPlane();
-            final Plane horizontalPlane2 = camera2.getHorizontalAxisPlane();
-            final Plane verticalPlane2 = camera2.getVerticalAxisPlane();
-            final Matrix planesIntersectionMatrix = new Matrix(
-                    Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
+            final var horizontalPlane1 = camera1.getHorizontalAxisPlane();
+            final var verticalPlane1 = camera1.getVerticalAxisPlane();
+            final var horizontalPlane2 = camera2.getHorizontalAxisPlane();
+            final var verticalPlane2 = camera2.getVerticalAxisPlane();
+            final var planesIntersectionMatrix = new Matrix(Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
             planesIntersectionMatrix.setElementAt(0, 0, verticalPlane1.getA());
             planesIntersectionMatrix.setElementAt(0, 1, verticalPlane1.getB());
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
@@ -704,9 +675,9 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
             planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
             planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
+            final var decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
-            final Matrix v = decomposer.getV();
+            final var v = decomposer.getV();
             HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
                     v.getElementAt(0, 3),
                     v.getElementAt(1, 3),
@@ -717,21 +688,20 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
             double lambdaY;
             double lambdaZ;
 
-            final int numPoints = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final var numPoints = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
 
             InhomogeneousPoint3D point3D;
-            final List<InhomogeneousPoint3D> points3D =
-                    new ArrayList<>();
+            final var points3D = new ArrayList<InhomogeneousPoint3D>();
             Point2D projectedPoint1;
             Point2D projectedPoint2;
-            final List<Point2D> projectedPoints1 = new ArrayList<>();
-            final List<Point2D> projectedPoints2 = new ArrayList<>();
+            final var projectedPoints1 = new ArrayList<Point2D>();
+            final var projectedPoints2 = new ArrayList<Point2D>();
             boolean front1;
             boolean front2;
-            boolean maxTriesReached = false;
-            for (int i = 0; i < numPoints; i++) {
+            var maxTriesReached = false;
+            for (var i = 0; i < numPoints; i++) {
                 // generate points and ensure they lie in front of both cameras
-                int numTry = 0;
+                var numTry = 0;
                 do {
                     lambdaX = randomizer.nextDouble(MIN_LAMBDA_DIAC, MAX_LAMBDA_DIAC);
                     lambdaY = randomizer.nextDouble(MIN_LAMBDA_DIAC, MAX_LAMBDA_DIAC);
@@ -757,9 +727,7 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
 
                 points3D.add(point3D);
 
-                // check that 3D point is in front of both cameras
-                assertTrue(front1);
-                assertTrue(front2);
+                // here 3D point is in front of both cameras
 
                 // project 3D point into both cameras
                 projectedPoint1 = new InhomogeneousPoint2D();
@@ -775,185 +743,176 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
                 continue;
             }
 
-            final KnownBaselineTwoViewsSparseReconstructorListener listener =
-                    new KnownBaselineTwoViewsSparseReconstructorListener() {
+            final var listener = new KnownBaselineTwoViewsSparseReconstructorListener() {
 
-                        @Override
-                        public boolean hasMoreViewsAvailable(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            return mViewCount < 2;
+                @Override
+                public boolean hasMoreViewsAvailable(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    return viewCount < 2;
+                }
+
+                @Override
+                public void onRequestSamplesForCurrentView(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final int viewId, final List<Sample2D> samples) {
+
+                    samples.clear();
+
+                    Sample2D sample;
+                    if (viewCount == 0) {
+                        // first view
+                        for (var i = 0; i < numPoints; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints1.get(i));
+                            sample.setViewId(viewId);
+                            samples.add(sample);
                         }
-
-                        @Override
-                        public void onRequestSamplesForCurrentView(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId, final List<Sample2D> samples) {
-
-                            samples.clear();
-
-                            Sample2D sample;
-                            if (mViewCount == 0) {
-                                // first view
-                                for (int i = 0; i < numPoints; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints1.get(i));
-                                    sample.setViewId(viewId);
-                                    samples.add(sample);
-                                }
-                            } else {
-                                // second view
-                                for (int i = 0; i < numPoints; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints2.get(i));
-                                    sample.setViewId(viewId);
-                                    samples.add(sample);
-                                }
-                            }
+                    } else {
+                        // second view
+                        for (var i = 0; i < numPoints; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints2.get(i));
+                            sample.setViewId(viewId);
+                            samples.add(sample);
                         }
+                    }
+                }
 
-                        @Override
-                        public void onSamplesAccepted(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId, final List<Sample2D> samples) {
-                            mViewCount++;
-                        }
+                @Override
+                public void onSamplesAccepted(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final int viewId, final List<Sample2D> samples) {
+                    viewCount++;
+                }
 
-                        @Override
-                        public void onSamplesRejected(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId, final List<Sample2D> samples) {
-                        }
+                @Override
+                public void onSamplesRejected(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final int viewId, final List<Sample2D> samples) {
+                    // no action needed
+                }
 
-                        @Override
-                        public void onRequestMatches(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final List<Sample2D> samples1, final List<Sample2D> samples2,
-                                final int viewId1, final int viewId2,
-                                final List<MatchedSamples> matches) {
-                            matches.clear();
+                @Override
+                public void onRequestMatches(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final List<Sample2D> samples1, final List<Sample2D> samples2,
+                        final int viewId1, final int viewId2, final List<MatchedSamples> matches) {
+                    matches.clear();
 
-                            MatchedSamples match;
-                            for (int i = 0; i < numPoints; i++) {
-                                match = new MatchedSamples();
-                                match.setSamples(new Sample2D[]{
-                                        samples1.get(i), samples2.get(i)
-                                });
-                                match.setViewIds(new int[]{viewId1, viewId2});
-                                matches.add(match);
-                            }
-                        }
+                    MatchedSamples match;
+                    for (var i = 0; i < numPoints; i++) {
+                        match = new MatchedSamples();
+                        match.setSamples(new Sample2D[]{
+                                samples1.get(i), samples2.get(i)
+                        });
+                        match.setViewIds(new int[]{viewId1, viewId2});
+                        matches.add(match);
+                    }
+                }
 
-                        @Override
-                        public void onFundamentalMatrixEstimated(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final EstimatedFundamentalMatrix estimatedFundamentalMatrix) {
-                            mEstimatedFundamentalMatrix = estimatedFundamentalMatrix;
-                        }
+                @Override
+                public void onFundamentalMatrixEstimated(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final EstimatedFundamentalMatrix estimatedFundamentalMatrix) {
+                    KnownBaselineTwoViewsSparseReconstructorTest.this.estimatedFundamentalMatrix =
+                            estimatedFundamentalMatrix;
+                }
 
-                        @Override
-                        public void onCamerasEstimated(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId1, final int viewId2, final EstimatedCamera camera1,
-                                final EstimatedCamera camera2) {
-                            mEstimatedCamera1 = camera1;
-                            mEstimatedCamera2 = camera2;
-                        }
+                @Override
+                public void onCamerasEstimated(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final int viewId1, final int viewId2, final EstimatedCamera camera1,
+                        final EstimatedCamera camera2) {
+                    estimatedCamera1 = camera1;
+                    estimatedCamera2 = camera2;
+                }
 
-                        @Override
-                        public void onReconstructedPointsEstimated(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final List<MatchedSamples> matches,
-                                final List<ReconstructedPoint3D> points) {
-                            mReconstructedPoints = points;
-                        }
+                @Override
+                public void onReconstructedPointsEstimated(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final List<MatchedSamples> matches, final List<ReconstructedPoint3D> points) {
+                    reconstructedPoints = points;
+                }
 
-                        @Override
-                        public void onStart(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mStarted = true;
-                        }
+                @Override
+                public void onStart(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    started = true;
+                }
 
-                        @Override
-                        public void onFinish(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mFinished = true;
-                        }
+                @Override
+                public void onFinish(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    finished = true;
+                }
 
-                        @Override
-                        public void onCancel(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mCancelled = true;
-                        }
+                @Override
+                public void onCancel(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    cancelled = true;
+                }
 
-                        @Override
-                        public void onFail(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mFailed = true;
-                        }
-                    };
+                @Override
+                public void onFail(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    failed = true;
+                }
+            };
 
-            final KnownBaselineTwoViewsSparseReconstructor reconstructor =
-                    new KnownBaselineTwoViewsSparseReconstructor(configuration, listener);
+            final var reconstructor = new KnownBaselineTwoViewsSparseReconstructor(configuration, listener);
 
             // check initial values
             reset();
-            assertFalse(mStarted);
-            assertFalse(mFinished);
-            assertFalse(mCancelled);
-            assertFalse(mFailed);
+            assertFalse(started);
+            assertFalse(finished);
+            assertFalse(cancelled);
+            assertFalse(failed);
             assertFalse(reconstructor.isFinished());
 
             reconstructor.start();
 
-            if (!mFinished) {
+            if (!finished) {
                 continue;
             }
 
             // check correctness
-            assertTrue(mStarted);
-            assertTrue(mFinished);
-            assertFalse(mCancelled);
-            assertFalse(mFailed);
+            assertTrue(started);
+            assertFalse(cancelled);
+            assertFalse(failed);
             assertTrue(reconstructor.isFinished());
 
             // check that estimated fundamental matrix is correct
             fundamentalMatrix.normalize();
-            mEstimatedFundamentalMatrix.getFundamentalMatrix().normalize();
+            estimatedFundamentalMatrix.getFundamentalMatrix().normalize();
 
             // matrices are equal up to scale
             if (!fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
                     && !fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                    ABSOLUTE_ERROR)) {
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
                     || fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                    ABSOLUTE_ERROR));
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR));
 
             // check that reconstructed points are in a metric stratum (up to a
             // certain scale)
-            final PinholeCamera estimatedCamera1 = mEstimatedCamera1.getCamera();
-            final PinholeCamera estimatedCamera2 = mEstimatedCamera2.getCamera();
+            final var estCam1 = this.estimatedCamera1.getCamera();
+            final var estCam2 = this.estimatedCamera2.getCamera();
 
-            estimatedCamera1.decompose();
-            estimatedCamera2.decompose();
+            estCam1.decompose();
+            estCam2.decompose();
 
-            final List<Point3D> reconstructedPoints3D = new ArrayList<>();
-            for (int i = 0; i < numPoints; i++) {
-                reconstructedPoints3D.add(mReconstructedPoints.get(i).getPoint());
+            final var reconstructedPoints3D = new ArrayList<Point3D>();
+            for (var i = 0; i < numPoints; i++) {
+                reconstructedPoints3D.add(reconstructedPoints.get(i).getPoint());
             }
 
             // check that most of the points are in front of both cameras
-            int valid = 0, invalid = 0;
-            for (int i = 0; i < numPoints; i++) {
-                if (mReconstructedPoints.get(i).isInlier()) {
-                    final Point3D p = reconstructedPoints3D.get(i);
-                    assertTrue(estimatedCamera1.isPointInFrontOfCamera(p));
-                    assertTrue(estimatedCamera2.isPointInFrontOfCamera(p));
+            var valid = 0;
+            var invalid = 0;
+            for (var i = 0; i < numPoints; i++) {
+                if (reconstructedPoints.get(i).isInlier()) {
+                    final var p = reconstructedPoints3D.get(i);
+                    assertTrue(estCam1.isPointInFrontOfCamera(p));
+                    assertTrue(estCam2.isPointInFrontOfCamera(p));
                     valid++;
                 } else {
                     invalid++;
@@ -964,18 +923,16 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
                 continue;
             }
 
-            final Point3D estimatedCenter1 = estimatedCamera1.getCameraCenter();
-            final Point3D estimatedCenter2 = estimatedCamera2.getCameraCenter();
+            final var estimatedCenter1 = estCam1.getCameraCenter();
+            final var estimatedCenter2 = estCam2.getCameraCenter();
 
-            final PinholeCameraIntrinsicParameters estimatedIntrinsic1 =
-                    estimatedCamera1.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters estimatedIntrinsic2 =
-                    estimatedCamera2.getIntrinsicParameters();
+            final var estimatedIntrinsic1 = estCam1.getIntrinsicParameters();
+            final var estimatedIntrinsic2 = estCam2.getIntrinsicParameters();
 
-            final Rotation3D estimatedRotation1 = estimatedCamera1.getCameraRotation();
-            final Rotation3D estimatedRotation2 = estimatedCamera2.getCameraRotation();
+            final var estimatedRotation1 = estCam1.getCameraRotation();
+            final var estimatedRotation2 = estCam2.getCameraRotation();
 
-            final double estimatedBaseline = estimatedCenter1.distanceTo(estimatedCenter2);
+            final var estimatedBaseline = estimatedCenter1.distanceTo(estimatedCenter2);
 
             // check cameras are correct
             if (Math.abs(estimatedBaseline - baseline) > LARGE_ABSOLUTE_ERROR) {
@@ -989,76 +946,72 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
             }
             assertTrue(center2.equals(estimatedCenter2, LARGE_ABSOLUTE_ERROR));
 
-            if (Math.abs(estimatedIntrinsic1.getHorizontalFocalLength() -
-                    intrinsic.getHorizontalFocalLength()) > ABSOLUTE_ERROR) {
+            if (Math.abs(estimatedIntrinsic1.getHorizontalFocalLength()
+                    - intrinsic.getHorizontalFocalLength()) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(estimatedIntrinsic1.getHorizontalFocalLength(),
-                    intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
-            if (Math.abs(estimatedIntrinsic1.getVerticalFocalLength() -
-                    intrinsic.getVerticalFocalLength()) > ABSOLUTE_ERROR) {
+            assertEquals(estimatedIntrinsic1.getHorizontalFocalLength(), intrinsic.getHorizontalFocalLength(),
+                    ABSOLUTE_ERROR);
+            if (Math.abs(estimatedIntrinsic1.getVerticalFocalLength()
+                    - intrinsic.getVerticalFocalLength()) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(estimatedIntrinsic1.getVerticalFocalLength(),
-                    intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            if (Math.abs(estimatedIntrinsic1.getSkewness() -
-                    intrinsic.getSkewness()) > ABSOLUTE_ERROR) {
+            assertEquals(estimatedIntrinsic1.getVerticalFocalLength(), intrinsic.getVerticalFocalLength(),
+                    ABSOLUTE_ERROR);
+            if (Math.abs(estimatedIntrinsic1.getSkewness() - intrinsic.getSkewness()) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(estimatedIntrinsic1.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
-            if (Math.abs(estimatedIntrinsic1.getHorizontalPrincipalPoint() -
-                    intrinsic.getHorizontalPrincipalPoint()) > ABSOLUTE_ERROR) {
+            assertEquals(estimatedIntrinsic1.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            if (Math.abs(estimatedIntrinsic1.getHorizontalPrincipalPoint()
+                    - intrinsic.getHorizontalPrincipalPoint()) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(estimatedIntrinsic1.getHorizontalPrincipalPoint(),
-                    intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
-            if (Math.abs(estimatedIntrinsic1.getVerticalPrincipalPoint() -
-                    intrinsic.getVerticalPrincipalPoint()) > ABSOLUTE_ERROR) {
+            assertEquals(estimatedIntrinsic1.getHorizontalPrincipalPoint(), intrinsic.getHorizontalPrincipalPoint(),
+                    ABSOLUTE_ERROR);
+            if (Math.abs(estimatedIntrinsic1.getVerticalPrincipalPoint()
+                    - intrinsic.getVerticalPrincipalPoint()) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(estimatedIntrinsic1.getVerticalPrincipalPoint(),
-                    intrinsic.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic1.getVerticalPrincipalPoint(), intrinsic.getVerticalPrincipalPoint(),
+                    ABSOLUTE_ERROR);
 
-            if (Math.abs(estimatedIntrinsic2.getHorizontalFocalLength() -
-                    intrinsic.getHorizontalFocalLength()) > ABSOLUTE_ERROR) {
+            if (Math.abs(estimatedIntrinsic2.getHorizontalFocalLength()
+                    - intrinsic.getHorizontalFocalLength()) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(estimatedIntrinsic2.getHorizontalFocalLength(),
-                    intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
-            if (Math.abs(estimatedIntrinsic2.getVerticalFocalLength() -
-                    intrinsic.getVerticalFocalLength()) > ABSOLUTE_ERROR) {
+            assertEquals(estimatedIntrinsic2.getHorizontalFocalLength(), intrinsic.getHorizontalFocalLength(),
+                    ABSOLUTE_ERROR);
+            if (Math.abs(estimatedIntrinsic2.getVerticalFocalLength()
+                    - intrinsic.getVerticalFocalLength()) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(estimatedIntrinsic2.getVerticalFocalLength(),
-                    intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            if (Math.abs(estimatedIntrinsic2.getSkewness() -
-                    intrinsic.getSkewness()) > ABSOLUTE_ERROR) {
+            assertEquals(estimatedIntrinsic2.getVerticalFocalLength(), intrinsic.getVerticalFocalLength(),
+                    ABSOLUTE_ERROR);
+            if (Math.abs(estimatedIntrinsic2.getSkewness() - intrinsic.getSkewness()) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(estimatedIntrinsic2.getSkewness(),
-                    intrinsic.getSkewness(), ABSOLUTE_ERROR);
-            if (Math.abs(estimatedIntrinsic2.getHorizontalPrincipalPoint() -
-                    intrinsic.getHorizontalPrincipalPoint()) > ABSOLUTE_ERROR) {
+            assertEquals(estimatedIntrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            if (Math.abs(estimatedIntrinsic2.getHorizontalPrincipalPoint()
+                    - intrinsic.getHorizontalPrincipalPoint()) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(estimatedIntrinsic2.getHorizontalPrincipalPoint(),
-                    intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
-            if (Math.abs(estimatedIntrinsic2.getVerticalPrincipalPoint() -
-                    intrinsic.getVerticalPrincipalPoint()) > ABSOLUTE_ERROR) {
+            assertEquals(estimatedIntrinsic2.getHorizontalPrincipalPoint(), intrinsic.getHorizontalPrincipalPoint(),
+                    ABSOLUTE_ERROR);
+            if (Math.abs(estimatedIntrinsic2.getVerticalPrincipalPoint()
+                    - intrinsic.getVerticalPrincipalPoint()) > ABSOLUTE_ERROR) {
                 continue;
             }
-            assertEquals(estimatedIntrinsic2.getVerticalPrincipalPoint(),
-                    intrinsic.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic2.getVerticalPrincipalPoint(), intrinsic.getVerticalPrincipalPoint(),
+                    ABSOLUTE_ERROR);
 
-            assertTrue(estimatedRotation1.asInhomogeneousMatrix().equals(
-                    rotation1.asInhomogeneousMatrix(), ABSOLUTE_ERROR));
-            assertTrue(estimatedRotation2.asInhomogeneousMatrix().equals(
-                    rotation2.asInhomogeneousMatrix(), ABSOLUTE_ERROR));
+            assertTrue(estimatedRotation1.asInhomogeneousMatrix().equals(rotation1.asInhomogeneousMatrix(),
+                    ABSOLUTE_ERROR));
+            assertTrue(estimatedRotation2.asInhomogeneousMatrix().equals(rotation2.asInhomogeneousMatrix(),
+                    ABSOLUTE_ERROR));
 
             // check that points are correct
-            boolean validPoints = true;
-            for (int i = 0; i < numPoints; i++) {
+            var validPoints = true;
+            for (var i = 0; i < numPoints; i++) {
                 if (!points3D.get(i).equals(reconstructedPoints3D.get(i), LARGE_ABSOLUTE_ERROR)) {
                     validPoints = false;
                     break;
@@ -1084,73 +1037,65 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
     }
 
     @Test
-    public void testGeneralPointsDAQAndEssentialZeroPrincipalPoint()
-            throws InvalidPairOfCamerasException, CameraException,
+    void testGeneralPointsDAQAndEssentialZeroPrincipalPoint() throws InvalidPairOfCamerasException, CameraException,
             AlgebraException, com.irurueta.geometry.estimators.NotReadyException,
             com.irurueta.geometry.NotAvailableException {
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final KnownBaselineTwoViewsSparseReconstructorConfiguration configuration =
-                    new KnownBaselineTwoViewsSparseReconstructorConfiguration();
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var configuration = new KnownBaselineTwoViewsSparseReconstructorConfiguration();
             configuration.setInitialCamerasEstimatorMethod(
                     InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC_AND_ESSENTIAL_MATRIX);
 
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
-            final double aspectRatio = configuration.getInitialCamerasAspectRatio();
-            final double skewness = 0.0;
-            final double principalPointX = 0.0;
-            final double principalPointY = 0.0;
+            final var randomizer = new UniformRandomizer();
+            final var focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
+            final var aspectRatio = configuration.getInitialCamerasAspectRatio();
+            final var skewness = 0.0;
+            final var principalPointX = 0.0;
+            final var principalPointY = 0.0;
 
             configuration.setPrincipalPointX(principalPointX);
             configuration.setPrincipalPointY(principalPointY);
 
-            final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength, focalLength,
-                            principalPointX, principalPointY, skewness);
+            final var intrinsic = new PinholeCameraIntrinsicParameters(focalLength, focalLength, principalPointX,
+                    principalPointY, skewness);
             intrinsic.setAspectRatioKeepingHorizontalFocalLength(aspectRatio);
 
-            final double alphaEuler1 = 0.0;
-            final double betaEuler1 = 0.0;
-            final double gammaEuler1 = 0.0;
-            final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+            final var alphaEuler1 = 0.0;
+            final var betaEuler1 = 0.0;
+            final var gammaEuler1 = 0.0;
+            final var alphaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var betaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var gammaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-            final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
+            final var cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION_ESSENTIAL,
+                    MAX_CAMERA_SEPARATION_ESSENTIAL);
 
-            final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
-            final Point3D center2 = new InhomogeneousPoint3D(
+            final var center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
+            final var center2 = new InhomogeneousPoint3D(
                     center1.getInhomX() + cameraSeparation,
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final double baseline = center1.distanceTo(center2);
+            final var baseline = center1.distanceTo(center2);
             configuration.setBaseline(baseline);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+            final var rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final var rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
+            final var camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final var camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
+            final var fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
 
             // 1st find an approximate central point by intersecting the axis
             // planes of both cameras
-            final Plane horizontalPlane1 = camera1.getHorizontalAxisPlane();
-            final Plane verticalPlane1 = camera1.getVerticalAxisPlane();
-            final Plane horizontalPlane2 = camera2.getHorizontalAxisPlane();
-            final Plane verticalPlane2 = camera2.getVerticalAxisPlane();
-            final Matrix planesIntersectionMatrix = new Matrix(
-                    Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
+            final var horizontalPlane1 = camera1.getHorizontalAxisPlane();
+            final var verticalPlane1 = camera1.getVerticalAxisPlane();
+            final var horizontalPlane2 = camera2.getHorizontalAxisPlane();
+            final var verticalPlane2 = camera2.getVerticalAxisPlane();
+            final var planesIntersectionMatrix = new Matrix(Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
             planesIntersectionMatrix.setElementAt(0, 0, verticalPlane1.getA());
             planesIntersectionMatrix.setElementAt(0, 1, verticalPlane1.getB());
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
@@ -1171,11 +1116,10 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
             planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
             planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
+            final var decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
-            final Matrix v = decomposer.getV();
-            final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
+            final var v = decomposer.getV();
+            final var centralCommonPoint = new HomogeneousPoint3D(
                     v.getElementAt(0, 3),
                     v.getElementAt(1, 3),
                     v.getElementAt(2, 3),
@@ -1185,20 +1129,20 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
             double lambdaY;
             double lambdaZ;
 
-            final int numPoints = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final var numPoints = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
 
             InhomogeneousPoint3D point3D;
-            final List<InhomogeneousPoint3D> points3D = new ArrayList<>();
+            final var points3D = new ArrayList<InhomogeneousPoint3D>();
             Point2D projectedPoint1;
             Point2D projectedPoint2;
-            final List<Point2D> projectedPoints1 = new ArrayList<>();
-            final List<Point2D> projectedPoints2 = new ArrayList<>();
+            final var projectedPoints1 = new ArrayList<Point2D>();
+            final var projectedPoints2 = new ArrayList<Point2D>();
             boolean leftFront;
             boolean rightFront;
-            boolean maxTriesReached = false;
-            for (int i = 0; i < numPoints; i++) {
+            var maxTriesReached = false;
+            for (var i = 0; i < numPoints; i++) {
                 // generate points and ensure they lie in front of both cameras
-                int numTry = 0;
+                var numTry = 0;
                 do {
                     lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
                     lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
@@ -1224,9 +1168,7 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
 
                 points3D.add(point3D);
 
-                // check that world point is in front of both cameras
-                assertTrue(leftFront);
-                assertTrue(rightFront);
+                // here world point is in front of both cameras
 
                 // project world point into both cameras
                 projectedPoint1 = new InhomogeneousPoint2D();
@@ -1242,193 +1184,182 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
                 continue;
             }
 
-            final KnownBaselineTwoViewsSparseReconstructorListener listener =
-                    new KnownBaselineTwoViewsSparseReconstructorListener() {
-                        @Override
-                        public boolean hasMoreViewsAvailable(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            return mViewCount < 2;
+            final var listener = new KnownBaselineTwoViewsSparseReconstructorListener() {
+                @Override
+                public boolean hasMoreViewsAvailable(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    return viewCount < 2;
+                }
+
+                @Override
+                public void onRequestSamplesForCurrentView(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final int viewId, final List<Sample2D> samples) {
+
+                    samples.clear();
+
+                    Sample2D sample;
+                    if (viewCount == 0) {
+                        // first view
+                        for (var i = 0; i < numPoints; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints1.get(i));
+                            sample.setViewId(viewId);
+                            samples.add(sample);
                         }
-
-                        @Override
-                        public void onRequestSamplesForCurrentView(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId, final List<Sample2D> samples) {
-
-                            samples.clear();
-
-                            Sample2D sample;
-                            if (mViewCount == 0) {
-                                // first view
-                                for (int i = 0; i < numPoints; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints1.get(i));
-                                    sample.setViewId(viewId);
-                                    samples.add(sample);
-                                }
-                            } else {
-                                // second view
-                                for (int i = 0; i < numPoints; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints2.get(i));
-                                    sample.setViewId(viewId);
-                                    samples.add(sample);
-                                }
-                            }
+                    } else {
+                        // second view
+                        for (var i = 0; i < numPoints; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints2.get(i));
+                            sample.setViewId(viewId);
+                            samples.add(sample);
                         }
+                    }
+                }
 
-                        @Override
-                        public void onSamplesAccepted(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId, final List<Sample2D> samples) {
-                            mViewCount++;
-                        }
+                @Override
+                public void onSamplesAccepted(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final int viewId, final List<Sample2D> samples) {
+                    viewCount++;
+                }
 
-                        @Override
-                        public void onSamplesRejected(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId, final List<Sample2D> samples) {
-                        }
+                @Override
+                public void onSamplesRejected(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final int viewId, final List<Sample2D> samples) {
+                    // no action needed
+                }
 
-                        @Override
-                        public void onRequestMatches(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final List<Sample2D> samples1, final List<Sample2D> samples2,
-                                final int viewId1, final int viewId2,
-                                final List<MatchedSamples> matches) {
-                            matches.clear();
+                @Override
+                public void onRequestMatches(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final List<Sample2D> samples1, final List<Sample2D> samples2,
+                        final int viewId1, final int viewId2,
+                        final List<MatchedSamples> matches) {
+                    matches.clear();
 
-                            MatchedSamples match;
-                            for (int i = 0; i < numPoints; i++) {
-                                match = new MatchedSamples();
-                                match.setSamples(new Sample2D[]{
-                                        samples1.get(i), samples2.get(i)
-                                });
-                                match.setViewIds(new int[]{viewId1, viewId2});
-                                matches.add(match);
-                            }
-                        }
+                    MatchedSamples match;
+                    for (var i = 0; i < numPoints; i++) {
+                        match = new MatchedSamples();
+                        match.setSamples(new Sample2D[]{
+                                samples1.get(i), samples2.get(i)
+                        });
+                        match.setViewIds(new int[]{viewId1, viewId2});
+                        matches.add(match);
+                    }
+                }
 
-                        @Override
-                        public void onFundamentalMatrixEstimated(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final EstimatedFundamentalMatrix estimatedFundamentalMatrix) {
-                            mEstimatedFundamentalMatrix = estimatedFundamentalMatrix;
-                        }
+                @Override
+                public void onFundamentalMatrixEstimated(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final EstimatedFundamentalMatrix estimatedFundamentalMatrix) {
+                    KnownBaselineTwoViewsSparseReconstructorTest.this.estimatedFundamentalMatrix =
+                            estimatedFundamentalMatrix;
+                }
 
-                        @Override
-                        public void onCamerasEstimated(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId1, final int viewId2, final EstimatedCamera camera1,
-                                final EstimatedCamera camera2) {
-                            mEstimatedCamera1 = camera1;
-                            mEstimatedCamera2 = camera2;
-                        }
+                @Override
+                public void onCamerasEstimated(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final int viewId1, final int viewId2, final EstimatedCamera camera1,
+                        final EstimatedCamera camera2) {
+                    estimatedCamera1 = camera1;
+                    estimatedCamera2 = camera2;
+                }
 
-                        @Override
-                        public void onReconstructedPointsEstimated(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final List<MatchedSamples> matches,
-                                final List<ReconstructedPoint3D> points) {
-                            mReconstructedPoints = points;
-                        }
+                @Override
+                public void onReconstructedPointsEstimated(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final List<MatchedSamples> matches, final List<ReconstructedPoint3D> points) {
+                    reconstructedPoints = points;
+                }
 
-                        @Override
-                        public void onStart(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mStarted = true;
-                        }
+                @Override
+                public void onStart(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    started = true;
+                }
 
-                        @Override
-                        public void onFinish(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mFinished = true;
-                        }
+                @Override
+                public void onFinish(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    finished = true;
+                }
 
-                        @Override
-                        public void onCancel(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mCancelled = true;
-                        }
+                @Override
+                public void onCancel(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    cancelled = true;
+                }
 
-                        @Override
-                        public void onFail(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mFailed = true;
-                        }
-                    };
+                @Override
+                public void onFail(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    failed = true;
+                }
+            };
 
-            final KnownBaselineTwoViewsSparseReconstructor reconstructor =
-                    new KnownBaselineTwoViewsSparseReconstructor(configuration,
-                            listener);
+            final var reconstructor = new KnownBaselineTwoViewsSparseReconstructor(configuration, listener);
 
             // check initial values
             reset();
-            assertFalse(mStarted);
-            assertFalse(mFinished);
-            assertFalse(mCancelled);
-            assertFalse(mFailed);
+            assertFalse(started);
+            assertFalse(finished);
+            assertFalse(cancelled);
+            assertFalse(failed);
             assertFalse(reconstructor.isFinished());
 
             reconstructor.start();
 
             // check correctness
-            assertTrue(mStarted);
-            assertTrue(mFinished);
-            assertFalse(mCancelled);
-            assertFalse(mFailed);
+            assertTrue(started);
+            assertTrue(finished);
+            assertFalse(cancelled);
+            assertFalse(failed);
             assertTrue(reconstructor.isFinished());
 
             // check that estimated fundamental matrix is correct
             fundamentalMatrix.normalize();
-            mEstimatedFundamentalMatrix.getFundamentalMatrix().normalize();
+            estimatedFundamentalMatrix.getFundamentalMatrix().normalize();
 
             // matrices are equal up to scale
             if (!fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
                     && !fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                    ABSOLUTE_ERROR)) {
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
                     || fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                    ABSOLUTE_ERROR));
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR));
 
             // check that reconstructed points are in a metric stratum (up to a
             // certain scale)
-            final PinholeCamera estimatedCamera1 = mEstimatedCamera1.getCamera();
-            final PinholeCamera estimatedCamera2 = mEstimatedCamera2.getCamera();
+            final var estCam1 = this.estimatedCamera1.getCamera();
+            final var estCam2 = this.estimatedCamera2.getCamera();
 
-            estimatedCamera1.decompose();
-            estimatedCamera2.decompose();
+            estCam1.decompose();
+            estCam2.decompose();
 
-            final List<Point3D> reconstructedPoints3D = new ArrayList<>();
-            for (int i = 0; i < numPoints; i++) {
-                reconstructedPoints3D.add(mReconstructedPoints.get(i).getPoint());
+            final var reconstructedPoints3D = new ArrayList<Point3D>();
+            for (var i = 0; i < numPoints; i++) {
+                reconstructedPoints3D.add(reconstructedPoints.get(i).getPoint());
             }
 
             // check that all points are in front of both cameras
-            for (int i = 0; i < numPoints; i++) {
-                final Point3D p = reconstructedPoints3D.get(i);
-                assertTrue(estimatedCamera1.isPointInFrontOfCamera(p));
-                assertTrue(estimatedCamera2.isPointInFrontOfCamera(p));
+            for (var i = 0; i < numPoints; i++) {
+                final var p = reconstructedPoints3D.get(i);
+                assertTrue(estCam1.isPointInFrontOfCamera(p));
+                assertTrue(estCam2.isPointInFrontOfCamera(p));
             }
 
-            final Point3D estimatedCenter1 = estimatedCamera1.getCameraCenter();
-            final Point3D estimatedCenter2 = estimatedCamera2.getCameraCenter();
+            final var estimatedCenter1 = estCam1.getCameraCenter();
+            final var estimatedCenter2 = estCam2.getCameraCenter();
 
-            final PinholeCameraIntrinsicParameters estimatedIntrinsic1 =
-                    estimatedCamera1.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters estimatedIntrinsic2 =
-                    estimatedCamera2.getIntrinsicParameters();
+            final var estimatedIntrinsic1 = estCam1.getIntrinsicParameters();
+            final var estimatedIntrinsic2 = estCam2.getIntrinsicParameters();
 
-            final Rotation3D estimatedRotation1 = estimatedCamera1.getCameraRotation();
-            final Rotation3D estimatedRotation2 = estimatedCamera2.getCameraRotation();
+            final var estimatedRotation1 = estCam1.getCameraRotation();
+            final var estimatedRotation2 = estCam2.getCameraRotation();
 
-            final double estimatedBaseline = estimatedCenter1.distanceTo(estimatedCenter2);
+            final var estimatedBaseline = estimatedCenter1.distanceTo(estimatedCenter2);
 
             // check cameras are correct
             if (Math.abs(estimatedBaseline - baseline) > LARGE_ABSOLUTE_ERROR) {
@@ -1442,34 +1373,34 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
             }
             assertTrue(center2.equals(estimatedCenter2, LARGE_ABSOLUTE_ERROR));
 
-            assertEquals(estimatedIntrinsic1.getHorizontalFocalLength(),
-                    intrinsic.getHorizontalFocalLength(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(estimatedIntrinsic1.getVerticalFocalLength(),
-                    intrinsic.getVerticalFocalLength(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic1.getHorizontalFocalLength(), intrinsic.getHorizontalFocalLength(),
+                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic1.getVerticalFocalLength(), intrinsic.getVerticalFocalLength(),
+                    LARGE_ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic1.getSkewness(), intrinsic.getSkewness(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(estimatedIntrinsic1.getHorizontalPrincipalPoint(),
-                    intrinsic.getHorizontalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(estimatedIntrinsic1.getVerticalPrincipalPoint(),
-                    intrinsic.getVerticalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic1.getHorizontalPrincipalPoint(), intrinsic.getHorizontalPrincipalPoint(),
+                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic1.getVerticalPrincipalPoint(), intrinsic.getVerticalPrincipalPoint(),
+                    LARGE_ABSOLUTE_ERROR);
 
-            assertEquals(estimatedIntrinsic2.getHorizontalFocalLength(),
-                    intrinsic.getHorizontalFocalLength(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(estimatedIntrinsic2.getVerticalFocalLength(),
-                    intrinsic.getVerticalFocalLength(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic2.getHorizontalFocalLength(), intrinsic.getHorizontalFocalLength(),
+                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic2.getVerticalFocalLength(), intrinsic.getVerticalFocalLength(),
+                    LARGE_ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic2.getSkewness(), intrinsic.getSkewness(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(estimatedIntrinsic2.getHorizontalPrincipalPoint(),
-                    intrinsic.getHorizontalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(estimatedIntrinsic2.getVerticalPrincipalPoint(),
-                    intrinsic.getVerticalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic2.getHorizontalPrincipalPoint(), intrinsic.getHorizontalPrincipalPoint(),
+                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic2.getVerticalPrincipalPoint(), intrinsic.getVerticalPrincipalPoint(),
+                    LARGE_ABSOLUTE_ERROR);
 
-            assertTrue(estimatedRotation1.asInhomogeneousMatrix().equals(
-                    rotation1.asInhomogeneousMatrix(), ABSOLUTE_ERROR));
-            assertTrue(estimatedRotation2.asInhomogeneousMatrix().equals(
-                    rotation2.asInhomogeneousMatrix(), ABSOLUTE_ERROR));
+            assertTrue(estimatedRotation1.asInhomogeneousMatrix().equals(rotation1.asInhomogeneousMatrix(),
+                    ABSOLUTE_ERROR));
+            assertTrue(estimatedRotation2.asInhomogeneousMatrix().equals(rotation2.asInhomogeneousMatrix(),
+                    ABSOLUTE_ERROR));
 
             // check that points are correct
-            boolean validPoints = true;
-            for (int i = 0; i < numPoints; i++) {
+            var validPoints = true;
+            for (var i = 0; i < numPoints; i++) {
                 if (!points3D.get(i).equals(reconstructedPoints3D.get(i), LARGE_ABSOLUTE_ERROR)) {
                     validPoints = false;
                     break;
@@ -1495,74 +1426,66 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
     }
 
     @Test
-    public void testGeneralPointsDAQAndEssential() throws InvalidPairOfCamerasException, CameraException,
-            AlgebraException, com.irurueta.geometry.estimators.NotReadyException,
-            com.irurueta.geometry.NotAvailableException {
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final KnownBaselineTwoViewsSparseReconstructorConfiguration configuration =
-                    new KnownBaselineTwoViewsSparseReconstructorConfiguration();
+    void testGeneralPointsDAQAndEssential() throws InvalidPairOfCamerasException, CameraException, AlgebraException,
+            com.irurueta.geometry.estimators.NotReadyException, com.irurueta.geometry.NotAvailableException {
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var configuration = new KnownBaselineTwoViewsSparseReconstructorConfiguration();
             configuration.setInitialCamerasEstimatorMethod(
                     InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC_AND_ESSENTIAL_MATRIX);
 
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
-            final double aspectRatio = configuration.getInitialCamerasAspectRatio();
-            final double skewness = 0.0;
-            final double principalPointX = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT_ESSENTIAL, MAX_PRINCIPAL_POINT_ESSENTIAL);
-            final double principalPointY = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT_ESSENTIAL, MAX_PRINCIPAL_POINT_ESSENTIAL);
+            final var randomizer = new UniformRandomizer();
+            final var focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
+            final var aspectRatio = configuration.getInitialCamerasAspectRatio();
+            final var skewness = 0.0;
+            final var principalPointX = randomizer.nextDouble(MIN_PRINCIPAL_POINT_ESSENTIAL,
+                    MAX_PRINCIPAL_POINT_ESSENTIAL);
+            final var principalPointY = randomizer.nextDouble(MIN_PRINCIPAL_POINT_ESSENTIAL,
+                    MAX_PRINCIPAL_POINT_ESSENTIAL);
 
             configuration.setPrincipalPointX(principalPointX);
             configuration.setPrincipalPointY(principalPointY);
 
-            final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength, focalLength,
-                            principalPointX, principalPointY, skewness);
+            final var intrinsic = new PinholeCameraIntrinsicParameters(focalLength, focalLength, principalPointX,
+                    principalPointY, skewness);
             intrinsic.setAspectRatioKeepingHorizontalFocalLength(aspectRatio);
 
-            final double alphaEuler1 = 0.0;
-            final double betaEuler1 = 0.0;
-            final double gammaEuler1 = 0.0;
-            final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+            final var alphaEuler1 = 0.0;
+            final var betaEuler1 = 0.0;
+            final var gammaEuler1 = 0.0;
+            final var alphaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var betaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var gammaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-            final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
+            final var cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION_ESSENTIAL,
+                    MAX_CAMERA_SEPARATION_ESSENTIAL);
 
-            final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
-            final Point3D center2 = new InhomogeneousPoint3D(
+            final var center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
+            final var center2 = new InhomogeneousPoint3D(
                     center1.getInhomX() + cameraSeparation,
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final double baseline = center1.distanceTo(center2);
+            final var baseline = center1.distanceTo(center2);
             configuration.setBaseline(baseline);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+            final var rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final var rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
+            final var camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final var camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
+            final var fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
 
             // 1st find an approximate central point by intersecting the axis
             // planes of both cameras
-            final Plane horizontalPlane1 = camera1.getHorizontalAxisPlane();
-            final Plane verticalPlane1 = camera1.getVerticalAxisPlane();
-            final Plane horizontalPlane2 = camera2.getHorizontalAxisPlane();
-            final Plane verticalPlane2 = camera2.getVerticalAxisPlane();
-            final Matrix planesIntersectionMatrix = new Matrix(
-                    Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
+            final var horizontalPlane1 = camera1.getHorizontalAxisPlane();
+            final var verticalPlane1 = camera1.getVerticalAxisPlane();
+            final var horizontalPlane2 = camera2.getHorizontalAxisPlane();
+            final var verticalPlane2 = camera2.getVerticalAxisPlane();
+            final var planesIntersectionMatrix = new Matrix(Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
             planesIntersectionMatrix.setElementAt(0, 0, verticalPlane1.getA());
             planesIntersectionMatrix.setElementAt(0, 1, verticalPlane1.getB());
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
@@ -1583,10 +1506,10 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
             planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
             planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
+            final var decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
-            final Matrix v = decomposer.getV();
-            final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
+            final var v = decomposer.getV();
+            final var centralCommonPoint = new HomogeneousPoint3D(
                     v.getElementAt(0, 3),
                     v.getElementAt(1, 3),
                     v.getElementAt(2, 3),
@@ -1596,20 +1519,20 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
             double lambdaY;
             double lambdaZ;
 
-            final int numPoints = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final var numPoints = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
 
             InhomogeneousPoint3D point3D;
-            final List<InhomogeneousPoint3D> points3D = new ArrayList<>();
+            final var points3D = new ArrayList<InhomogeneousPoint3D>();
             Point2D projectedPoint1;
             Point2D projectedPoint2;
-            final List<Point2D> projectedPoints1 = new ArrayList<>();
-            final List<Point2D> projectedPoints2 = new ArrayList<>();
+            final var projectedPoints1 = new ArrayList<Point2D>();
+            final var projectedPoints2 = new ArrayList<Point2D>();
             boolean leftFront;
             boolean rightFront;
-            boolean maxTriesReached = false;
-            for (int i = 0; i < numPoints; i++) {
+            var maxTriesReached = false;
+            for (var i = 0; i < numPoints; i++) {
                 // generate points and ensure they lie in front of both cameras
-                int numTry = 0;
+                var numTry = 0;
                 do {
                     lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
                     lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
@@ -1635,9 +1558,7 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
 
                 points3D.add(point3D);
 
-                // check that world point is in front of both cameras
-                assertTrue(leftFront);
-                assertTrue(rightFront);
+                // here world point is in front of both cameras
 
                 // project world point into both cameras
                 projectedPoint1 = new InhomogeneousPoint2D();
@@ -1653,192 +1574,182 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
                 continue;
             }
 
-            final KnownBaselineTwoViewsSparseReconstructorListener listener =
-                    new KnownBaselineTwoViewsSparseReconstructorListener() {
-                        @Override
-                        public boolean hasMoreViewsAvailable(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            return mViewCount < 2;
+            final var listener = new KnownBaselineTwoViewsSparseReconstructorListener() {
+                @Override
+                public boolean hasMoreViewsAvailable(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    return viewCount < 2;
+                }
+
+                @Override
+                public void onRequestSamplesForCurrentView(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final int viewId, final List<Sample2D> samples) {
+
+                    samples.clear();
+
+                    Sample2D sample;
+                    if (viewCount == 0) {
+                        // first view
+                        for (var i = 0; i < numPoints; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints1.get(i));
+                            sample.setViewId(viewId);
+                            samples.add(sample);
                         }
-
-                        @Override
-                        public void onRequestSamplesForCurrentView(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId, final List<Sample2D> samples) {
-
-                            samples.clear();
-
-                            Sample2D sample;
-                            if (mViewCount == 0) {
-                                // first view
-                                for (int i = 0; i < numPoints; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints1.get(i));
-                                    sample.setViewId(viewId);
-                                    samples.add(sample);
-                                }
-                            } else {
-                                // second view
-                                for (int i = 0; i < numPoints; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints2.get(i));
-                                    sample.setViewId(viewId);
-                                    samples.add(sample);
-                                }
-                            }
+                    } else {
+                        // second view
+                        for (var i = 0; i < numPoints; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints2.get(i));
+                            sample.setViewId(viewId);
+                            samples.add(sample);
                         }
+                    }
+                }
 
-                        @Override
-                        public void onSamplesAccepted(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId, final List<Sample2D> samples) {
-                            mViewCount++;
-                        }
+                @Override
+                public void onSamplesAccepted(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final int viewId, final List<Sample2D> samples) {
+                    viewCount++;
+                }
 
-                        @Override
-                        public void onSamplesRejected(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId, final List<Sample2D> samples) {
-                        }
+                @Override
+                public void onSamplesRejected(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final int viewId, final List<Sample2D> samples) {
+                    // no action needed
+                }
 
-                        @Override
-                        public void onRequestMatches(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final List<Sample2D> samples1, final List<Sample2D> samples2,
-                                final int viewId1, final int viewId2, final List<MatchedSamples> matches) {
-                            matches.clear();
+                @Override
+                public void onRequestMatches(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final List<Sample2D> samples1, final List<Sample2D> samples2,
+                        final int viewId1, final int viewId2, final List<MatchedSamples> matches) {
+                    matches.clear();
 
-                            MatchedSamples match;
-                            for (int i = 0; i < numPoints; i++) {
-                                match = new MatchedSamples();
-                                match.setSamples(new Sample2D[]{
-                                        samples1.get(i), samples2.get(i)
-                                });
-                                match.setViewIds(new int[]{viewId1, viewId2});
-                                matches.add(match);
-                            }
-                        }
+                    MatchedSamples match;
+                    for (var i = 0; i < numPoints; i++) {
+                        match = new MatchedSamples();
+                        match.setSamples(new Sample2D[]{
+                                samples1.get(i), samples2.get(i)
+                        });
+                        match.setViewIds(new int[]{viewId1, viewId2});
+                        matches.add(match);
+                    }
+                }
 
-                        @Override
-                        public void onFundamentalMatrixEstimated(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final EstimatedFundamentalMatrix estimatedFundamentalMatrix) {
-                            mEstimatedFundamentalMatrix = estimatedFundamentalMatrix;
-                        }
+                @Override
+                public void onFundamentalMatrixEstimated(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final EstimatedFundamentalMatrix estimatedFundamentalMatrix) {
+                    KnownBaselineTwoViewsSparseReconstructorTest.this.estimatedFundamentalMatrix =
+                            estimatedFundamentalMatrix;
+                }
 
-                        @Override
-                        public void onCamerasEstimated(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId1, final int viewId2, final EstimatedCamera camera1,
-                                final EstimatedCamera camera2) {
-                            mEstimatedCamera1 = camera1;
-                            mEstimatedCamera2 = camera2;
-                        }
+                @Override
+                public void onCamerasEstimated(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final int viewId1, final int viewId2, final EstimatedCamera camera1,
+                        final EstimatedCamera camera2) {
+                    estimatedCamera1 = camera1;
+                    estimatedCamera2 = camera2;
+                }
 
-                        @Override
-                        public void onReconstructedPointsEstimated(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final List<MatchedSamples> matches,
-                                final List<ReconstructedPoint3D> points) {
-                            mReconstructedPoints = points;
-                        }
+                @Override
+                public void onReconstructedPointsEstimated(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final List<MatchedSamples> matches,
+                        final List<ReconstructedPoint3D> points) {
+                    reconstructedPoints = points;
+                }
 
-                        @Override
-                        public void onStart(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mStarted = true;
-                        }
+                @Override
+                public void onStart(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    started = true;
+                }
 
-                        @Override
-                        public void onFinish(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mFinished = true;
-                        }
+                @Override
+                public void onFinish(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    finished = true;
+                }
 
-                        @Override
-                        public void onCancel(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mCancelled = true;
-                        }
+                @Override
+                public void onCancel(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    cancelled = true;
+                }
 
-                        @Override
-                        public void onFail(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mFailed = true;
-                        }
-                    };
+                @Override
+                public void onFail(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    failed = true;
+                }
+            };
 
-            final KnownBaselineTwoViewsSparseReconstructor reconstructor =
-                    new KnownBaselineTwoViewsSparseReconstructor(configuration, listener);
+            final var reconstructor = new KnownBaselineTwoViewsSparseReconstructor(configuration, listener);
 
             // check initial values
             reset();
-            assertFalse(mStarted);
-            assertFalse(mFinished);
-            assertFalse(mCancelled);
-            assertFalse(mFailed);
+            assertFalse(started);
+            assertFalse(finished);
+            assertFalse(cancelled);
+            assertFalse(failed);
             assertFalse(reconstructor.isFinished());
 
             reconstructor.start();
 
             // check correctness
-            assertTrue(mStarted);
-            assertTrue(mFinished);
-            assertFalse(mCancelled);
-            assertFalse(mFailed);
+            assertTrue(started);
+            assertTrue(finished);
+            assertFalse(cancelled);
+            assertFalse(failed);
             assertTrue(reconstructor.isFinished());
 
             // check that estimated fundamental matrix is correct
             fundamentalMatrix.normalize();
-            mEstimatedFundamentalMatrix.getFundamentalMatrix().normalize();
+            estimatedFundamentalMatrix.getFundamentalMatrix().normalize();
 
             // matrices are equal up to scale
             if (!fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
-                    && !fundamentalMatrix.getInternalMatrix().
-                    multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                            ABSOLUTE_ERROR)) {
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    && !fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
                     || fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                    ABSOLUTE_ERROR));
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR));
 
             // check that reconstructed points are in a metric stratum (up to a
             // certain scale)
-            final PinholeCamera estimatedCamera1 = mEstimatedCamera1.getCamera();
-            final PinholeCamera estimatedCamera2 = mEstimatedCamera2.getCamera();
+            final var estCam1 = this.estimatedCamera1.getCamera();
+            final var estCam2 = this.estimatedCamera2.getCamera();
 
-            estimatedCamera1.decompose();
-            estimatedCamera2.decompose();
+            estCam1.decompose();
+            estCam2.decompose();
 
-            final List<Point3D> reconstructedPoints3D = new ArrayList<>();
-            for (int i = 0; i < numPoints; i++) {
-                reconstructedPoints3D.add(mReconstructedPoints.get(i).getPoint());
+            final var reconstructedPoints3D = new ArrayList<Point3D>();
+            for (var i = 0; i < numPoints; i++) {
+                reconstructedPoints3D.add(reconstructedPoints.get(i).getPoint());
             }
 
             // check that all points are in front of both cameras
-            for (int i = 0; i < numPoints; i++) {
-                Point3D p = reconstructedPoints3D.get(i);
-                assertTrue(estimatedCamera1.isPointInFrontOfCamera(p));
-                assertTrue(estimatedCamera2.isPointInFrontOfCamera(p));
+            for (var i = 0; i < numPoints; i++) {
+                final var p = reconstructedPoints3D.get(i);
+                assertTrue(estCam1.isPointInFrontOfCamera(p));
+                assertTrue(estCam2.isPointInFrontOfCamera(p));
             }
 
-            final Point3D estimatedCenter1 = estimatedCamera1.getCameraCenter();
-            final Point3D estimatedCenter2 = estimatedCamera2.getCameraCenter();
+            final var estimatedCenter1 = estCam1.getCameraCenter();
+            final var estimatedCenter2 = estCam2.getCameraCenter();
 
-            final PinholeCameraIntrinsicParameters estimatedIntrinsic1 =
-                    estimatedCamera1.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters estimatedIntrinsic2 =
-                    estimatedCamera2.getIntrinsicParameters();
+            final var estimatedIntrinsic1 = estCam1.getIntrinsicParameters();
+            final var estimatedIntrinsic2 = estCam2.getIntrinsicParameters();
 
-            final Rotation3D estimatedRotation1 = estimatedCamera1.getCameraRotation();
-            final Rotation3D estimatedRotation2 = estimatedCamera2.getCameraRotation();
+            final var estimatedRotation1 = estCam1.getCameraRotation();
+            final var estimatedRotation2 = estCam2.getCameraRotation();
 
-            final double estimatedBaseline = estimatedCenter1.distanceTo(estimatedCenter2);
+            final var estimatedBaseline = estimatedCenter1.distanceTo(estimatedCenter2);
 
             // check cameras are correct
             if (Math.abs(estimatedBaseline - baseline) > LARGE_ABSOLUTE_ERROR) {
@@ -1852,34 +1763,34 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
             }
             assertTrue(center2.equals(estimatedCenter2, LARGE_ABSOLUTE_ERROR));
 
-            assertEquals(estimatedIntrinsic1.getHorizontalFocalLength(),
-                    intrinsic.getHorizontalFocalLength(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(estimatedIntrinsic1.getVerticalFocalLength(),
-                    intrinsic.getVerticalFocalLength(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic1.getHorizontalFocalLength(), intrinsic.getHorizontalFocalLength(),
+                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic1.getVerticalFocalLength(), intrinsic.getVerticalFocalLength(),
+                    LARGE_ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic1.getSkewness(), intrinsic.getSkewness(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(estimatedIntrinsic1.getHorizontalPrincipalPoint(),
-                    intrinsic.getHorizontalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(estimatedIntrinsic1.getVerticalPrincipalPoint(),
-                    intrinsic.getVerticalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic1.getHorizontalPrincipalPoint(), intrinsic.getHorizontalPrincipalPoint(),
+                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic1.getVerticalPrincipalPoint(), intrinsic.getVerticalPrincipalPoint(),
+                    LARGE_ABSOLUTE_ERROR);
 
-            assertEquals(estimatedIntrinsic2.getHorizontalFocalLength(),
-                    intrinsic.getHorizontalFocalLength(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(estimatedIntrinsic2.getVerticalFocalLength(),
-                    intrinsic.getVerticalFocalLength(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic2.getHorizontalFocalLength(), intrinsic.getHorizontalFocalLength(),
+                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic2.getVerticalFocalLength(), intrinsic.getVerticalFocalLength(),
+                    LARGE_ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic2.getSkewness(), intrinsic.getSkewness(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(estimatedIntrinsic2.getHorizontalPrincipalPoint(),
-                    intrinsic.getHorizontalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(estimatedIntrinsic2.getVerticalPrincipalPoint(),
-                    intrinsic.getVerticalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic2.getHorizontalPrincipalPoint(), intrinsic.getHorizontalPrincipalPoint(),
+                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic2.getVerticalPrincipalPoint(), intrinsic.getVerticalPrincipalPoint(),
+                    LARGE_ABSOLUTE_ERROR);
 
-            assertTrue(estimatedRotation1.asInhomogeneousMatrix().equals(
-                    rotation1.asInhomogeneousMatrix(), ABSOLUTE_ERROR));
-            assertTrue(estimatedRotation2.asInhomogeneousMatrix().equals(
-                    rotation2.asInhomogeneousMatrix(), ABSOLUTE_ERROR));
+            assertTrue(estimatedRotation1.asInhomogeneousMatrix().equals(rotation1.asInhomogeneousMatrix(),
+                    ABSOLUTE_ERROR));
+            assertTrue(estimatedRotation2.asInhomogeneousMatrix().equals(rotation2.asInhomogeneousMatrix(),
+                    ABSOLUTE_ERROR));
 
             // check that points are correct
-            boolean validPoints = true;
-            for (int i = 0; i < numPoints; i++) {
+            var validPoints = true;
+            for (var i = 0; i < numPoints; i++) {
                 if (!points3D.get(i).equals(reconstructedPoints3D.get(i), LARGE_ABSOLUTE_ERROR)) {
                     validPoints = false;
                     break;
@@ -1905,75 +1816,67 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
     }
 
     @Test
-    public void testGeneralPointsDAQ() throws InvalidPairOfCamerasException, CameraException,
-            RobustEstimatorException, AlgebraException, com.irurueta.geometry.estimators.NotReadyException,
+    void testGeneralPointsDAQ() throws InvalidPairOfCamerasException, CameraException, RobustEstimatorException,
+            AlgebraException, com.irurueta.geometry.estimators.NotReadyException,
             com.irurueta.geometry.NotAvailableException, com.irurueta.geometry.estimators.LockedException {
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final KnownBaselineTwoViewsSparseReconstructorConfiguration configuration =
-                    new KnownBaselineTwoViewsSparseReconstructorConfiguration();
-            configuration.setInitialCamerasEstimatorMethod(
-                    InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC);
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var configuration = new KnownBaselineTwoViewsSparseReconstructorConfiguration();
+            configuration.setInitialCamerasEstimatorMethod(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC);
 
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
-            final double aspectRatio = configuration.getInitialCamerasAspectRatio();
-            final double skewness = 0.0;
-            final double principalPointX = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT_ESSENTIAL, MAX_PRINCIPAL_POINT_ESSENTIAL);
-            final double principalPointY = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT_ESSENTIAL, MAX_PRINCIPAL_POINT_ESSENTIAL);
+            final var randomizer = new UniformRandomizer();
+            final var focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
+            final var aspectRatio = configuration.getInitialCamerasAspectRatio();
+            final var skewness = 0.0;
+            final var principalPointX = randomizer.nextDouble(MIN_PRINCIPAL_POINT_ESSENTIAL,
+                    MAX_PRINCIPAL_POINT_ESSENTIAL);
+            final var principalPointY = randomizer.nextDouble(MIN_PRINCIPAL_POINT_ESSENTIAL,
+                    MAX_PRINCIPAL_POINT_ESSENTIAL);
 
             configuration.setPrincipalPointX(principalPointX);
             configuration.setPrincipalPointY(principalPointY);
 
-            final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength, focalLength,
-                            principalPointX, principalPointY, skewness);
+            final var intrinsic = new PinholeCameraIntrinsicParameters(focalLength, focalLength, principalPointX,
+                    principalPointY, skewness);
             intrinsic.setAspectRatioKeepingHorizontalFocalLength(aspectRatio);
 
-            final double alphaEuler1 = 0.0;
-            final double betaEuler1 = 0.0;
-            final double gammaEuler1 = 0.0;
-            final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+            final var alphaEuler1 = 0.0;
+            final var betaEuler1 = 0.0;
+            final var gammaEuler1 = 0.0;
+            final var alphaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var betaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var gammaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-            final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
+            final var cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION_ESSENTIAL,
+                    MAX_CAMERA_SEPARATION_ESSENTIAL);
 
-            final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
-            final Point3D center2 = new InhomogeneousPoint3D(
+            final var center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
+            final var center2 = new InhomogeneousPoint3D(
                     center1.getInhomX() + cameraSeparation,
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final double baseline = center1.distanceTo(center2);
+            final var baseline = center1.distanceTo(center2);
             configuration.setBaseline(baseline);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+            final var rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final var rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
+            final var camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final var camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
+            final var fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
 
             // 1st find an approximate central point by intersecting the axis
             // planes of both cameras
-            final Plane horizontalPlane1 = camera1.getHorizontalAxisPlane();
-            final Plane verticalPlane1 = camera1.getVerticalAxisPlane();
-            final Plane horizontalPlane2 = camera2.getHorizontalAxisPlane();
-            final Plane verticalPlane2 = camera2.getVerticalAxisPlane();
-            final Matrix planesIntersectionMatrix = new Matrix(
-                    Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
+            final var horizontalPlane1 = camera1.getHorizontalAxisPlane();
+            final var verticalPlane1 = camera1.getVerticalAxisPlane();
+            final var horizontalPlane2 = camera2.getHorizontalAxisPlane();
+            final var verticalPlane2 = camera2.getVerticalAxisPlane();
+            final var planesIntersectionMatrix = new Matrix(Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
             planesIntersectionMatrix.setElementAt(0, 0, verticalPlane1.getA());
             planesIntersectionMatrix.setElementAt(0, 1, verticalPlane1.getB());
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
@@ -1994,11 +1897,10 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
             planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
             planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
+            final var decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
-            final Matrix v = decomposer.getV();
-            final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
+            final var v = decomposer.getV();
+            final var centralCommonPoint = new HomogeneousPoint3D(
                     v.getElementAt(0, 3),
                     v.getElementAt(1, 3),
                     v.getElementAt(2, 3),
@@ -2008,20 +1910,20 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
             double lambdaY;
             double lambdaZ;
 
-            final int numPoints = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final var numPoints = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
 
             InhomogeneousPoint3D point3D;
-            final List<Point3D> points3D = new ArrayList<>();
+            final var points3D = new ArrayList<Point3D>();
             Point2D projectedPoint1;
             Point2D projectedPoint2;
-            final List<Point2D> projectedPoints1 = new ArrayList<>();
-            final List<Point2D> projectedPoints2 = new ArrayList<>();
+            final var projectedPoints1 = new ArrayList<Point2D>();
+            final var projectedPoints2 = new ArrayList<Point2D>();
             boolean leftFront;
             boolean rightFront;
-            boolean maxTriesReached = false;
-            for (int i = 0; i < numPoints; i++) {
+            var maxTriesReached = false;
+            for (var i = 0; i < numPoints; i++) {
                 // generate points and ensure they lie in front of both cameras
-                int numTry = 0;
+                var numTry = 0;
                 do {
                     lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
                     lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
@@ -2047,9 +1949,7 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
 
                 points3D.add(point3D);
 
-                // check that world point is in front of both cameras
-                assertTrue(leftFront);
-                assertTrue(rightFront);
+                // here world point is in front of both cameras
 
                 // project world point into both cameras
                 projectedPoint1 = new InhomogeneousPoint2D();
@@ -2061,211 +1961,200 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
                 projectedPoints2.add(projectedPoint2);
             }
 
-            final KnownBaselineTwoViewsSparseReconstructorListener listener =
-                    new KnownBaselineTwoViewsSparseReconstructorListener() {
-                        @Override
-                        public boolean hasMoreViewsAvailable(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            return mViewCount < 2;
+            final var listener = new KnownBaselineTwoViewsSparseReconstructorListener() {
+                @Override
+                public boolean hasMoreViewsAvailable(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    return viewCount < 2;
+                }
+
+                @Override
+                public void onRequestSamplesForCurrentView(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final int viewId, final List<Sample2D> samples) {
+
+                    samples.clear();
+
+                    Sample2D sample;
+                    if (viewCount == 0) {
+                        // first view
+                        for (var i = 0; i < numPoints; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints1.get(i));
+                            sample.setViewId(viewId);
+                            samples.add(sample);
                         }
-
-                        @Override
-                        public void onRequestSamplesForCurrentView(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId, final List<Sample2D> samples) {
-
-                            samples.clear();
-
-                            Sample2D sample;
-                            if (mViewCount == 0) {
-                                // first view
-                                for (int i = 0; i < numPoints; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints1.get(i));
-                                    sample.setViewId(viewId);
-                                    samples.add(sample);
-                                }
-                            } else {
-                                // second view
-                                for (int i = 0; i < numPoints; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints2.get(i));
-                                    sample.setViewId(viewId);
-                                    samples.add(sample);
-                                }
-                            }
+                    } else {
+                        // second view
+                        for (var i = 0; i < numPoints; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints2.get(i));
+                            sample.setViewId(viewId);
+                            samples.add(sample);
                         }
+                    }
+                }
 
-                        @Override
-                        public void onSamplesAccepted(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId, final List<Sample2D> samples) {
-                            mViewCount++;
-                        }
+                @Override
+                public void onSamplesAccepted(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final int viewId, final List<Sample2D> samples) {
+                    viewCount++;
+                }
 
-                        @Override
-                        public void onSamplesRejected(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId, final List<Sample2D> samples) {
-                        }
+                @Override
+                public void onSamplesRejected(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final int viewId, final List<Sample2D> samples) {
+                    // no action needed
+                }
 
-                        @Override
-                        public void onRequestMatches(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final List<Sample2D> samples1, final List<Sample2D> samples2,
-                                final int viewId1, final int viewId2, final List<MatchedSamples> matches) {
-                            matches.clear();
+                @Override
+                public void onRequestMatches(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final List<Sample2D> samples1, final List<Sample2D> samples2,
+                        final int viewId1, final int viewId2, final List<MatchedSamples> matches) {
+                    matches.clear();
 
-                            MatchedSamples match;
-                            for (int i = 0; i < numPoints; i++) {
-                                match = new MatchedSamples();
-                                match.setSamples(new Sample2D[]{
-                                        samples1.get(i), samples2.get(i)
-                                });
-                                match.setViewIds(new int[]{viewId1, viewId2});
-                                matches.add(match);
-                            }
-                        }
+                    MatchedSamples match;
+                    for (var i = 0; i < numPoints; i++) {
+                        match = new MatchedSamples();
+                        match.setSamples(new Sample2D[]{
+                                samples1.get(i), samples2.get(i)
+                        });
+                        match.setViewIds(new int[]{viewId1, viewId2});
+                        matches.add(match);
+                    }
+                }
 
-                        @Override
-                        public void onFundamentalMatrixEstimated(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final EstimatedFundamentalMatrix estimatedFundamentalMatrix) {
-                            mEstimatedFundamentalMatrix = estimatedFundamentalMatrix;
-                        }
+                @Override
+                public void onFundamentalMatrixEstimated(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final EstimatedFundamentalMatrix estimatedFundamentalMatrix) {
+                    KnownBaselineTwoViewsSparseReconstructorTest.this.estimatedFundamentalMatrix = estimatedFundamentalMatrix;
+                }
 
-                        @Override
-                        public void onCamerasEstimated(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId1, final int viewId2, final EstimatedCamera camera1,
-                                final EstimatedCamera camera2) {
-                            mEstimatedCamera1 = camera1;
-                            mEstimatedCamera2 = camera2;
-                        }
+                @Override
+                public void onCamerasEstimated(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final int viewId1, final int viewId2, final EstimatedCamera camera1,
+                        final EstimatedCamera camera2) {
+                    estimatedCamera1 = camera1;
+                    estimatedCamera2 = camera2;
+                }
 
-                        @Override
-                        public void onReconstructedPointsEstimated(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final List<MatchedSamples> matches,
-                                final List<ReconstructedPoint3D> points) {
-                            mReconstructedPoints = points;
-                        }
+                @Override
+                public void onReconstructedPointsEstimated(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final List<MatchedSamples> matches,
+                        final List<ReconstructedPoint3D> points) {
+                    reconstructedPoints = points;
+                }
 
-                        @Override
-                        public void onStart(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mStarted = true;
-                        }
+                @Override
+                public void onStart(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    started = true;
+                }
 
-                        @Override
-                        public void onFinish(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mFinished = true;
-                        }
+                @Override
+                public void onFinish(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    finished = true;
+                }
 
-                        @Override
-                        public void onCancel(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mCancelled = true;
-                        }
+                @Override
+                public void onCancel(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    cancelled = true;
+                }
 
-                        @Override
-                        public void onFail(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mFailed = true;
-                        }
-                    };
+                @Override
+                public void onFail(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    failed = true;
+                }
+            };
 
             if (maxTriesReached) {
                 continue;
             }
 
-            final KnownBaselineTwoViewsSparseReconstructor reconstructor =
-                    new KnownBaselineTwoViewsSparseReconstructor(configuration, listener);
+            final var reconstructor = new KnownBaselineTwoViewsSparseReconstructor(configuration, listener);
 
             // check initial values
             reset();
-            assertFalse(mStarted);
-            assertFalse(mFinished);
-            assertFalse(mCancelled);
-            assertFalse(mFailed);
+            assertFalse(started);
+            assertFalse(finished);
+            assertFalse(cancelled);
+            assertFalse(failed);
             assertFalse(reconstructor.isFinished());
 
             reconstructor.start();
 
             // check correctness
-            assertTrue(mStarted);
-            assertTrue(mFinished);
-            assertFalse(mCancelled);
-            assertFalse(mFailed);
+            assertTrue(started);
+            assertTrue(finished);
+            assertFalse(cancelled);
+            assertFalse(failed);
             assertTrue(reconstructor.isFinished());
 
             // check that estimated fundamental matrix is correct
             fundamentalMatrix.normalize();
-            mEstimatedFundamentalMatrix.getFundamentalMatrix().normalize();
+            estimatedFundamentalMatrix.getFundamentalMatrix().normalize();
 
             // matrices are equal up to scale
             if (!fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
                     && !fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                    ABSOLUTE_ERROR)) {
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
                     || fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                    ABSOLUTE_ERROR));
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR));
 
             // check that reconstructed points are in a metric stratum (up to a
             // certain scale, rotation and translation)
-            final PinholeCamera estimatedCamera1 = mEstimatedCamera1.getCamera();
-            final PinholeCamera estimatedCamera2 = mEstimatedCamera2.getCamera();
+            final var estCam1 = this.estimatedCamera1.getCamera();
+            final var estCam2 = this.estimatedCamera2.getCamera();
 
-            final List<Point3D> reconstructedPoints3D = new ArrayList<>();
-            for (int i = 0; i < points3D.size(); i++) {
-                reconstructedPoints3D.add(mReconstructedPoints.get(i).getPoint());
+            final var reconstructedPoints3D = new ArrayList<Point3D>();
+            for (var i = 0; i < points3D.size(); i++) {
+                reconstructedPoints3D.add(reconstructedPoints.get(i).getPoint());
             }
 
-            final MetricTransformation3DRobustEstimator transformationEstimator =
-                    MetricTransformation3DRobustEstimator.create(reconstructedPoints3D, points3D,
-                            RobustEstimatorMethod.LMEDS);
+            final var transformationEstimator = MetricTransformation3DRobustEstimator.create(reconstructedPoints3D,
+                    points3D, RobustEstimatorMethod.LMEDS);
 
-            final MetricTransformation3D transformation = transformationEstimator.estimate();
+            final var transformation = transformationEstimator.estimate();
 
-            final PinholeCamera transformedCamera1 = transformation.transformAndReturnNew(estimatedCamera1);
-            final PinholeCamera transformedCamera2 = transformation.transformAndReturnNew(estimatedCamera2);
+            final var transformedCamera1 = transformation.transformAndReturnNew(estCam1);
+            final var transformedCamera2 = transformation.transformAndReturnNew(estCam2);
 
             // check cameras intrinsics are correct (rotation, center and points
             // might contain large errors and for that reason we do not checked)
             transformedCamera1.decompose();
             transformedCamera2.decompose();
 
-            final PinholeCameraIntrinsicParameters transformedIntrinsic1 =
-                    transformedCamera1.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters transformedIntrinsic2 =
-                    transformedCamera2.getIntrinsicParameters();
+            final var transformedIntrinsic1 = transformedCamera1.getIntrinsicParameters();
+            final var transformedIntrinsic2 = transformedCamera2.getIntrinsicParameters();
 
-            assertEquals(transformedIntrinsic1.getHorizontalFocalLength(),
-                    intrinsic.getHorizontalFocalLength(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(transformedIntrinsic1.getVerticalFocalLength(),
-                    intrinsic.getVerticalFocalLength(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(transformedIntrinsic1.getHorizontalFocalLength(), intrinsic.getHorizontalFocalLength(),
+                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(transformedIntrinsic1.getVerticalFocalLength(), intrinsic.getVerticalFocalLength(),
+                    LARGE_ABSOLUTE_ERROR);
             assertEquals(transformedIntrinsic1.getSkewness(), intrinsic.getSkewness(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(transformedIntrinsic1.getHorizontalPrincipalPoint(),
-                    intrinsic.getHorizontalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(transformedIntrinsic1.getVerticalPrincipalPoint(),
-                    intrinsic.getVerticalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(transformedIntrinsic1.getHorizontalPrincipalPoint(), intrinsic.getHorizontalPrincipalPoint(),
+                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(transformedIntrinsic1.getVerticalPrincipalPoint(), intrinsic.getVerticalPrincipalPoint(),
+                    LARGE_ABSOLUTE_ERROR);
 
-            assertEquals(transformedIntrinsic2.getHorizontalFocalLength(),
-                    intrinsic.getHorizontalFocalLength(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(transformedIntrinsic2.getVerticalFocalLength(),
-                    intrinsic.getVerticalFocalLength(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(transformedIntrinsic2.getHorizontalFocalLength(), intrinsic.getHorizontalFocalLength(),
+                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(transformedIntrinsic2.getVerticalFocalLength(), intrinsic.getVerticalFocalLength(),
+                    LARGE_ABSOLUTE_ERROR);
             assertEquals(transformedIntrinsic2.getSkewness(), intrinsic.getSkewness(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(transformedIntrinsic2.getHorizontalPrincipalPoint(),
-                    intrinsic.getHorizontalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
-            assertEquals(transformedIntrinsic2.getVerticalPrincipalPoint(),
-                    intrinsic.getVerticalPrincipalPoint(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(transformedIntrinsic2.getHorizontalPrincipalPoint(), intrinsic.getHorizontalPrincipalPoint(),
+                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(transformedIntrinsic2.getVerticalPrincipalPoint(), intrinsic.getVerticalPrincipalPoint(),
+                    LARGE_ABSOLUTE_ERROR);
 
             // cancel
             assertFalse(reconstructor.isCancelled());
@@ -2281,74 +2170,65 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
     }
 
     @Test
-    public void testPlanarPointsEssential() throws InvalidPairOfCamerasException, CameraException,
-            AlgebraException, com.irurueta.geometry.estimators.NotReadyException,
-            com.irurueta.geometry.NotAvailableException {
+    void testPlanarPointsEssential() throws InvalidPairOfCamerasException, CameraException, AlgebraException,
+            com.irurueta.geometry.estimators.NotReadyException, com.irurueta.geometry.NotAvailableException {
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final KnownBaselineTwoViewsSparseReconstructorConfiguration configuration =
-                    new KnownBaselineTwoViewsSparseReconstructorConfiguration();
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var configuration = new KnownBaselineTwoViewsSparseReconstructorConfiguration();
             configuration.setInitialCamerasEstimatorMethod(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
 
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
-            final double aspectRatio = configuration.getInitialCamerasAspectRatio();
-            final double skewness = 0.0;
-            final double principalPointX = 0.0;
-            final double principalPointY = 0.0;
+            final var randomizer = new UniformRandomizer();
+            final var focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
+            final var aspectRatio = configuration.getInitialCamerasAspectRatio();
+            final var skewness = 0.0;
+            final var principalPointX = 0.0;
+            final var principalPointY = 0.0;
 
-            final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength, focalLength,
-                            principalPointX, principalPointY, skewness);
+            final var intrinsic = new PinholeCameraIntrinsicParameters(focalLength, focalLength, principalPointX,
+                    principalPointY, skewness);
             intrinsic.setAspectRatioKeepingHorizontalFocalLength(aspectRatio);
 
             configuration.setInitialIntrinsic1(intrinsic);
             configuration.setInitialIntrinsic2(intrinsic);
 
-            final double alphaEuler1 = 0.0;
-            final double betaEuler1 = 0.0;
-            final double gammaEuler1 = 0.0;
-            final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+            final var alphaEuler1 = 0.0;
+            final var betaEuler1 = 0.0;
+            final var gammaEuler1 = 0.0;
+            final var alphaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var betaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var gammaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
+            final var cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION_ESSENTIAL,
+                    MAX_CAMERA_SEPARATION_ESSENTIAL);
 
-            final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
-
-            final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
-            final Point3D center2 = new InhomogeneousPoint3D(
+            final var center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
+            final var center2 = new InhomogeneousPoint3D(
                     center1.getInhomX() + cameraSeparation,
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final double baseline = center1.distanceTo(center2);
+            final var baseline = center1.distanceTo(center2);
             configuration.setBaseline(baseline);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+            final var rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final var rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
+            final var camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final var camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
+            final var fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras and laying in
             // a plane
 
             // 1st find an approximate central point by intersecting the axis
             // planes of both cameras
-            final Plane horizontalPlane1 = camera1.getHorizontalAxisPlane();
-            final Plane verticalPlane1 = camera1.getVerticalAxisPlane();
-            final Plane horizontalPlane2 = camera2.getHorizontalAxisPlane();
-            final Plane verticalPlane2 = camera2.getVerticalAxisPlane();
-            final Matrix planesIntersectionMatrix = new Matrix(
-                    Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
+            final var horizontalPlane1 = camera1.getHorizontalAxisPlane();
+            final var verticalPlane1 = camera1.getVerticalAxisPlane();
+            final var horizontalPlane2 = camera2.getHorizontalAxisPlane();
+            final var verticalPlane2 = camera2.getVerticalAxisPlane();
+            final var planesIntersectionMatrix = new Matrix(Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
             planesIntersectionMatrix.setElementAt(0, 0, verticalPlane1.getA());
             planesIntersectionMatrix.setElementAt(0, 1, verticalPlane1.getB());
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
@@ -2369,49 +2249,49 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
             planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
             planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
+            final var decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
-            final Matrix v = decomposer.getV();
-            final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
+            final var v = decomposer.getV();
+            final var centralCommonPoint = new HomogeneousPoint3D(
                     v.getElementAt(0, 3),
                     v.getElementAt(1, 3),
                     v.getElementAt(2, 3),
                     v.getElementAt(3, 3));
 
-            final double[] principalAxis1 = camera1.getPrincipalAxisArray();
-            final double[] principalAxis2 = camera2.getPrincipalAxisArray();
-            final double[] avgPrincipalAxis = ArrayUtils.multiplyByScalarAndReturnNew(
+            final var principalAxis1 = camera1.getPrincipalAxisArray();
+            final var principalAxis2 = camera2.getPrincipalAxisArray();
+            final var avgPrincipalAxis = ArrayUtils.multiplyByScalarAndReturnNew(
                     ArrayUtils.sumAndReturnNew(principalAxis1, principalAxis2), 0.5);
 
-            final Plane plane = new Plane(centralCommonPoint, avgPrincipalAxis);
+            final var plane = new Plane(centralCommonPoint, avgPrincipalAxis);
             plane.normalize();
 
-            final double planeA = plane.getA();
-            final double planeB = plane.getB();
-            final double planeC = plane.getC();
-            final double planeD = plane.getD();
+            final var planeA = plane.getA();
+            final var planeB = plane.getB();
+            final var planeC = plane.getC();
+            final var planeD = plane.getD();
 
-            final int numPoints = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final var numPoints = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
 
             HomogeneousPoint3D point3D;
-            final List<HomogeneousPoint3D> points3D = new ArrayList<>();
+            final var points3D = new ArrayList<HomogeneousPoint3D>();
             Point2D projectedPoint1;
             Point2D projectedPoint2;
-            final List<Point2D> projectedPoints1 = new ArrayList<>();
-            final List<Point2D> projectedPoints2 = new ArrayList<>();
+            final var projectedPoints1 = new ArrayList<Point2D>();
+            final var projectedPoints2 = new ArrayList<Point2D>();
             boolean front1;
             boolean front2;
-            for (int i = 0; i < numPoints; i++) {
+            for (var i = 0; i < numPoints; i++) {
                 // generate points and ensure they lie in front of both cameras
-                int numTry = 0;
+                var numTry = 0;
                 do {
                     // get a random point belonging to the plane
                     // a*x + b*y + c*z + d*w = 0
                     // y = -(a*x + c*z + d*w)/b or x = -(b*y + c*z + d*w)/a
                     final double homX;
                     final double homY;
-                    final double homW = 1.0;
-                    final double homZ = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+                    final var homW = 1.0;
+                    final var homZ = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
                     if (Math.abs(planeB) > ABSOLUTE_ERROR) {
                         homX = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR, MAX_RANDOM_VALUE_PLANAR);
                         homY = -(planeA * homX + planeC * homZ + planeD * homW) / planeB;
@@ -2433,9 +2313,7 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
                 } while (!front1 || !front2);
                 points3D.add(point3D);
 
-                // check that 3D point is in front of both cameras
-                assertTrue(front1);
-                assertTrue(front2);
+                // here 3D point is in front of both cameras
 
                 // project 3D point into both cameras
                 projectedPoint1 = new InhomogeneousPoint2D();
@@ -2447,196 +2325,184 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
                 projectedPoints2.add(projectedPoint2);
             }
 
-            final KnownBaselineTwoViewsSparseReconstructorListener listener =
-                    new KnownBaselineTwoViewsSparseReconstructorListener() {
+            final var listener = new KnownBaselineTwoViewsSparseReconstructorListener() {
 
-                        @Override
-                        public boolean hasMoreViewsAvailable(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            return mViewCount < 2;
+                @Override
+                public boolean hasMoreViewsAvailable(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    return viewCount < 2;
+                }
+
+                @Override
+                public void onRequestSamplesForCurrentView(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor, final int viewId,
+                        final List<Sample2D> samples) {
+
+                    samples.clear();
+
+                    Sample2D sample;
+                    if (viewCount == 0) {
+                        // first view
+                        for (var i = 0; i < numPoints; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints1.get(i));
+                            sample.setViewId(viewId);
+                            samples.add(sample);
                         }
-
-                        @Override
-                        public void onRequestSamplesForCurrentView(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId, final List<Sample2D> samples) {
-
-                            samples.clear();
-
-                            Sample2D sample;
-                            if (mViewCount == 0) {
-                                // first view
-                                for (int i = 0; i < numPoints; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints1.get(i));
-                                    sample.setViewId(viewId);
-                                    samples.add(sample);
-                                }
-                            } else {
-                                // second view
-                                for (int i = 0; i < numPoints; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints2.get(i));
-                                    sample.setViewId(viewId);
-                                    samples.add(sample);
-                                }
-                            }
+                    } else {
+                        // second view
+                        for (var i = 0; i < numPoints; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints2.get(i));
+                            sample.setViewId(viewId);
+                            samples.add(sample);
                         }
+                    }
+                }
 
-                        @Override
-                        public void onSamplesAccepted(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId, final List<Sample2D> samples) {
-                            mViewCount++;
-                        }
+                @Override
+                public void onSamplesAccepted(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final int viewId, final List<Sample2D> samples) {
+                    viewCount++;
+                }
 
-                        @Override
-                        public void onSamplesRejected(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId, final List<Sample2D> samples) {
-                            mViewCount++;
-                        }
+                @Override
+                public void onSamplesRejected(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final int viewId, final List<Sample2D> samples) {
+                    viewCount++;
+                }
 
-                        @Override
-                        public void onRequestMatches(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final List<Sample2D> samples1, final List<Sample2D> samples2,
-                                final int viewId1, final int viewId2, final List<MatchedSamples> matches) {
-                            matches.clear();
+                @Override
+                public void onRequestMatches(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final List<Sample2D> samples1, final List<Sample2D> samples2,
+                        final int viewId1, final int viewId2, final List<MatchedSamples> matches) {
+                    matches.clear();
 
-                            MatchedSamples match;
-                            for (int i = 0; i < numPoints; i++) {
-                                match = new MatchedSamples();
-                                match.setSamples(new Sample2D[]{
-                                        samples1.get(i), samples2.get(i)
-                                });
-                                match.setViewIds(new int[]{viewId1, viewId2});
-                                matches.add(match);
-                            }
-                        }
+                    MatchedSamples match;
+                    for (var i = 0; i < numPoints; i++) {
+                        match = new MatchedSamples();
+                        match.setSamples(new Sample2D[]{
+                                samples1.get(i), samples2.get(i)
+                        });
+                        match.setViewIds(new int[]{viewId1, viewId2});
+                        matches.add(match);
+                    }
+                }
 
-                        @Override
-                        public void onFundamentalMatrixEstimated(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final EstimatedFundamentalMatrix estimatedFundamentalMatrix) {
-                            mEstimatedFundamentalMatrix = estimatedFundamentalMatrix;
-                        }
+                @Override
+                public void onFundamentalMatrixEstimated(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final EstimatedFundamentalMatrix estimatedFundamentalMatrix) {
+                    KnownBaselineTwoViewsSparseReconstructorTest.this.estimatedFundamentalMatrix = estimatedFundamentalMatrix;
+                }
 
-                        @Override
-                        public void onCamerasEstimated(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId1, final int viewId2, final EstimatedCamera camera1,
-                                final EstimatedCamera camera2) {
-                            mEstimatedCamera1 = camera1;
-                            mEstimatedCamera2 = camera2;
-                        }
+                @Override
+                public void onCamerasEstimated(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final int viewId1, final int viewId2, final EstimatedCamera camera1,
+                        final EstimatedCamera camera2) {
+                    estimatedCamera1 = camera1;
+                    estimatedCamera2 = camera2;
+                }
 
-                        @Override
-                        public void onReconstructedPointsEstimated(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final List<MatchedSamples> matches,
-                                final List<ReconstructedPoint3D> points) {
-                            mReconstructedPoints = points;
-                        }
+                @Override
+                public void onReconstructedPointsEstimated(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final List<MatchedSamples> matches,
+                        final List<ReconstructedPoint3D> points) {
+                    reconstructedPoints = points;
+                }
 
-                        @Override
-                        public void onStart(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mStarted = true;
-                        }
+                @Override
+                public void onStart(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    started = true;
+                }
 
-                        @Override
-                        public void onFinish(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mFinished = true;
-                        }
+                @Override
+                public void onFinish(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    finished = true;
+                }
 
-                        @Override
-                        public void onCancel(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mCancelled = true;
-                        }
+                @Override
+                public void onCancel(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    cancelled = true;
+                }
 
-                        @Override
-                        public void onFail(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mFailed = true;
-                        }
-                    };
+                @Override
+                public void onFail(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    failed = true;
+                }
+            };
 
-            final KnownBaselineTwoViewsSparseReconstructor reconstructor =
-                    new KnownBaselineTwoViewsSparseReconstructor(configuration, listener);
+            final var reconstructor = new KnownBaselineTwoViewsSparseReconstructor(configuration, listener);
 
             // check initial values
             reset();
-            assertFalse(mStarted);
-            assertFalse(mFinished);
-            assertFalse(mCancelled);
-            assertFalse(mFailed);
+            assertFalse(started);
+            assertFalse(finished);
+            assertFalse(cancelled);
+            assertFalse(failed);
             assertFalse(reconstructor.isFinished());
 
             reconstructor.start();
 
             // check correctness
-            if (!mFinished) {
+            if (!finished) {
                 continue;
             }
-            assertTrue(mStarted);
-            assertTrue(mFinished);
-            assertFalse(mCancelled);
-            assertFalse(mFailed);
+            assertTrue(started);
+            assertFalse(cancelled);
+            assertFalse(failed);
             assertTrue(reconstructor.isFinished());
 
             // check that estimated fundamental matrix is correct
             fundamentalMatrix.normalize();
-            mEstimatedFundamentalMatrix.getFundamentalMatrix().normalize();
+            estimatedFundamentalMatrix.getFundamentalMatrix().normalize();
 
             // matrices are equal up to scale
             if (!fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
                     && !fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                    ABSOLUTE_ERROR)) {
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
                     || fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                    ABSOLUTE_ERROR));
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR));
 
             // check that reconstructed points are in a metric stratum (up to a
             // certain scale)
-            final PinholeCamera estimatedCamera1 = mEstimatedCamera1.getCamera();
-            final PinholeCamera estimatedCamera2 = mEstimatedCamera2.getCamera();
+            final var estCam1 = this.estimatedCamera1.getCamera();
+            final var estCam2 = this.estimatedCamera2.getCamera();
 
-            estimatedCamera1.decompose();
-            estimatedCamera2.decompose();
+            estCam1.decompose();
+            estCam2.decompose();
 
-            final List<Point3D> reconstructedPoints3D = new ArrayList<>();
-            for (int i = 0; i < numPoints; i++) {
-                reconstructedPoints3D.add(mReconstructedPoints.get(i).getPoint());
+            final var reconstructedPoints3D = new ArrayList<Point3D>();
+            for (var i = 0; i < numPoints; i++) {
+                reconstructedPoints3D.add(reconstructedPoints.get(i).getPoint());
             }
 
             // check that all points are in front of both cameras
-            for (int i = 0; i < numPoints; i++) {
-                Point3D p = reconstructedPoints3D.get(i);
-                assertTrue(estimatedCamera1.isPointInFrontOfCamera(p));
-                assertTrue(estimatedCamera2.isPointInFrontOfCamera(p));
+            for (var i = 0; i < numPoints; i++) {
+                final var p = reconstructedPoints3D.get(i);
+                assertTrue(estCam1.isPointInFrontOfCamera(p));
+                assertTrue(estCam2.isPointInFrontOfCamera(p));
             }
 
-            final Point3D estimatedCenter1 = estimatedCamera1.getCameraCenter();
-            final Point3D estimatedCenter2 = estimatedCamera2.getCameraCenter();
+            final var estimatedCenter1 = estCam1.getCameraCenter();
+            final var estimatedCenter2 = estCam2.getCameraCenter();
 
-            final PinholeCameraIntrinsicParameters estimatedIntrinsic1 =
-                    estimatedCamera1.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters estimatedIntrinsic2 =
-                    estimatedCamera2.getIntrinsicParameters();
+            final var estimatedIntrinsic1 = estCam1.getIntrinsicParameters();
+            final var estimatedIntrinsic2 = estCam2.getIntrinsicParameters();
 
-            final Rotation3D estimatedRotation1 = estimatedCamera1.getCameraRotation();
-            final Rotation3D estimatedRotation2 = estimatedCamera2.getCameraRotation();
+            final var estimatedRotation1 = estCam1.getCameraRotation();
+            final var estimatedRotation2 = estCam2.getCameraRotation();
 
-            final double estimatedBaseline = estimatedCenter1.distanceTo(estimatedCenter2);
+            final var estimatedBaseline = estimatedCenter1.distanceTo(estimatedCenter2);
 
             // check cameras are correct
             if (Math.abs(estimatedBaseline - baseline) > LARGE_ABSOLUTE_ERROR) {
@@ -2650,39 +2516,39 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
             }
             assertTrue(center2.equals(estimatedCenter2, LARGE_ABSOLUTE_ERROR));
 
-            assertEquals(estimatedIntrinsic1.getHorizontalFocalLength(),
-                    intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(estimatedIntrinsic1.getVerticalFocalLength(),
-                    intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic1.getHorizontalFocalLength(), intrinsic.getHorizontalFocalLength(),
+                    ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic1.getVerticalFocalLength(), intrinsic.getVerticalFocalLength(),
+                    ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic1.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
-            assertEquals(estimatedIntrinsic1.getHorizontalPrincipalPoint(),
-                    intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
-            assertEquals(estimatedIntrinsic1.getVerticalPrincipalPoint(),
-                    intrinsic.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic1.getHorizontalPrincipalPoint(), intrinsic.getHorizontalPrincipalPoint(),
+                    ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic1.getVerticalPrincipalPoint(), intrinsic.getVerticalPrincipalPoint(),
+                    ABSOLUTE_ERROR);
 
-            assertEquals(estimatedIntrinsic2.getHorizontalFocalLength(),
-                    intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(estimatedIntrinsic2.getVerticalFocalLength(),
-                    intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic2.getHorizontalFocalLength(), intrinsic.getHorizontalFocalLength(),
+                    ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic2.getVerticalFocalLength(), intrinsic.getVerticalFocalLength(),
+                    ABSOLUTE_ERROR);
             assertEquals(estimatedIntrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
-            assertEquals(estimatedIntrinsic2.getHorizontalPrincipalPoint(),
-                    intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
-            assertEquals(estimatedIntrinsic2.getVerticalPrincipalPoint(),
-                    intrinsic.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic2.getHorizontalPrincipalPoint(), intrinsic.getHorizontalPrincipalPoint(),
+                    ABSOLUTE_ERROR);
+            assertEquals(estimatedIntrinsic2.getVerticalPrincipalPoint(), intrinsic.getVerticalPrincipalPoint(),
+                    ABSOLUTE_ERROR);
 
-            assertTrue(estimatedRotation1.asInhomogeneousMatrix().equals(
-                    rotation1.asInhomogeneousMatrix(), ABSOLUTE_ERROR));
+            assertTrue(estimatedRotation1.asInhomogeneousMatrix().equals(rotation1.asInhomogeneousMatrix(),
+                    ABSOLUTE_ERROR));
 
-            if (!estimatedRotation2.asInhomogeneousMatrix().equals(
-                    rotation2.asInhomogeneousMatrix(), LARGE_ABSOLUTE_ERROR)) {
+            if (!estimatedRotation2.asInhomogeneousMatrix().equals(rotation2.asInhomogeneousMatrix(),
+                    LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
-            assertTrue(estimatedRotation2.asInhomogeneousMatrix().equals(
-                    rotation2.asInhomogeneousMatrix(), ABSOLUTE_ERROR));
+            assertTrue(estimatedRotation2.asInhomogeneousMatrix().equals(rotation2.asInhomogeneousMatrix(),
+                    ABSOLUTE_ERROR));
 
             // check that points are correct
-            boolean validPoints = true;
-            for (int i = 0; i < numPoints; i++) {
+            var validPoints = true;
+            for (var i = 0; i < numPoints; i++) {
                 if (!points3D.get(i).equals(reconstructedPoints3D.get(i), LARGE_ABSOLUTE_ERROR)) {
                     validPoints = false;
                     break;
@@ -2708,76 +2574,63 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
     }
 
     @Test
-    public void testPlanarPointsDIAC() throws InvalidPairOfCamerasException,
-            CameraException, AlgebraException, com.irurueta.geometry.estimators.NotReadyException,
-            com.irurueta.geometry.NotAvailableException {
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final KnownBaselineTwoViewsSparseReconstructorConfiguration configuration =
-                    new KnownBaselineTwoViewsSparseReconstructorConfiguration();
-            configuration.setInitialCamerasEstimatorMethod(
-                    InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC);
+    void testPlanarPointsDIAC() throws InvalidPairOfCamerasException, CameraException, AlgebraException,
+            com.irurueta.geometry.estimators.NotReadyException, com.irurueta.geometry.NotAvailableException {
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var configuration = new KnownBaselineTwoViewsSparseReconstructorConfiguration();
+            configuration.setInitialCamerasEstimatorMethod(InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC);
 
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
-            final double aspectRatio = configuration.getInitialCamerasAspectRatio();
-            final double skewness = 0.0;
-            final double principalPointX = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT_DIAC, MAX_PRINCIPAL_POINT_DIAC);
-            final double principalPointY = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT_DIAC, MAX_PRINCIPAL_POINT_DIAC);
+            final var randomizer = new UniformRandomizer();
+            final var focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
+            final var aspectRatio = configuration.getInitialCamerasAspectRatio();
+            final var skewness = 0.0;
+            final var principalPointX = randomizer.nextDouble(MIN_PRINCIPAL_POINT_DIAC, MAX_PRINCIPAL_POINT_DIAC);
+            final var principalPointY = randomizer.nextDouble(MIN_PRINCIPAL_POINT_DIAC, MAX_PRINCIPAL_POINT_DIAC);
 
-            final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength, focalLength,
-                            principalPointX, principalPointY, skewness);
+            final var intrinsic = new PinholeCameraIntrinsicParameters(focalLength, focalLength, principalPointX,
+                    principalPointY, skewness);
             intrinsic.setAspectRatioKeepingHorizontalFocalLength(aspectRatio);
 
             configuration.setPrincipalPointX(principalPointX);
             configuration.setPrincipalPointY(principalPointY);
             configuration.setInitialCamerasAspectRatio(aspectRatio);
 
-            final double alphaEuler1 = 0.0;
-            final double betaEuler1 = 0.0;
-            final double gammaEuler1 = 0.0;
-            final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+            final var alphaEuler1 = 0.0;
+            final var betaEuler1 = 0.0;
+            final var gammaEuler1 = 0.0;
+            final var alphaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var betaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var gammaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-            final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
+            final var cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION_ESSENTIAL,
+                    MAX_CAMERA_SEPARATION_ESSENTIAL);
 
-            final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
-            final Point3D center2 = new InhomogeneousPoint3D(
-                    center1.getInhomX() + cameraSeparation,
-                    center1.getInhomY() + cameraSeparation,
-                    center1.getInhomZ() + cameraSeparation);
+            final var center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
+            final var center2 = new InhomogeneousPoint3D(center1.getInhomX() + cameraSeparation,
+                    center1.getInhomY() + cameraSeparation, center1.getInhomZ() + cameraSeparation);
 
-            final double baseline = center1.distanceTo(center2);
+            final var baseline = center1.distanceTo(center2);
             configuration.setBaseline(baseline);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+            final var rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final var rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
+            final var camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final var camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
+            final var fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras and laying in
             // a plane
 
             // 1st find an approximate central point by intersecting the axis
             // planes of both cameras
-            final Plane horizontalPlane1 = camera1.getHorizontalAxisPlane();
-            final Plane verticalPlane1 = camera1.getVerticalAxisPlane();
-            final Plane horizontalPlane2 = camera2.getHorizontalAxisPlane();
-            final Plane verticalPlane2 = camera2.getVerticalAxisPlane();
-            final Matrix planesIntersectionMatrix = new Matrix(
-                    Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
+            final var horizontalPlane1 = camera1.getHorizontalAxisPlane();
+            final var verticalPlane1 = camera1.getVerticalAxisPlane();
+            final var horizontalPlane2 = camera2.getHorizontalAxisPlane();
+            final var verticalPlane2 = camera2.getVerticalAxisPlane();
+            final var planesIntersectionMatrix = new Matrix(Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
             planesIntersectionMatrix.setElementAt(0, 0, verticalPlane1.getA());
             planesIntersectionMatrix.setElementAt(0, 1, verticalPlane1.getB());
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
@@ -2798,49 +2651,48 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
             planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
             planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
+            final var decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
-            final Matrix v = decomposer.getV();
-            final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
+            final var v = decomposer.getV();
+            final var centralCommonPoint = new HomogeneousPoint3D(
                     v.getElementAt(0, 3),
                     v.getElementAt(1, 3),
                     v.getElementAt(2, 3),
                     v.getElementAt(3, 3));
 
-            final double[] principalAxis1 = camera1.getPrincipalAxisArray();
-            final double[] principalAxis2 = camera2.getPrincipalAxisArray();
-            final double[] avgPrincipalAxis = ArrayUtils.multiplyByScalarAndReturnNew(
+            final var principalAxis1 = camera1.getPrincipalAxisArray();
+            final var principalAxis2 = camera2.getPrincipalAxisArray();
+            final var avgPrincipalAxis = ArrayUtils.multiplyByScalarAndReturnNew(
                     ArrayUtils.sumAndReturnNew(principalAxis1, principalAxis2), 0.5);
 
-            final Plane plane = new Plane(centralCommonPoint, avgPrincipalAxis);
+            final var plane = new Plane(centralCommonPoint, avgPrincipalAxis);
             plane.normalize();
 
-            final double planeA = plane.getA();
-            final double planeB = plane.getB();
-            final double planeC = plane.getC();
-            final double planeD = plane.getD();
+            final var planeA = plane.getA();
+            final var planeB = plane.getB();
+            final var planeC = plane.getC();
+            final var planeD = plane.getD();
 
-            final int numPoints = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final var numPoints = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
 
             HomogeneousPoint3D point3D;
             Point2D projectedPoint1;
             Point2D projectedPoint2;
-            final List<Point2D> projectedPoints1 = new ArrayList<>();
-            final List<Point2D> projectedPoints2 = new ArrayList<>();
+            final var projectedPoints1 = new ArrayList<Point2D>();
+            final var projectedPoints2 = new ArrayList<Point2D>();
             boolean front1;
             boolean front2;
-            for (int i = 0; i < numPoints; i++) {
+            for (var i = 0; i < numPoints; i++) {
                 // generate points and ensure they lie in front of both cameras
-                int numTry = 0;
+                var numTry = 0;
                 do {
                     // get a random point belonging to the plane
                     // a*x + b*y + c*z + d*w = 0
                     // y = -(a*x + c*z + d*w)/b or x = -(b*y + c*z + d*w)/a
                     final double homX;
                     final double homY;
-                    final double homW = 1.0;
-                    final double homZ = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+                    final var homW = 1.0;
+                    final var homZ = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
                     if (Math.abs(planeB) > ABSOLUTE_ERROR) {
                         homX = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR, MAX_RANDOM_VALUE_PLANAR);
                         homY = -(planeA * homX + planeC * homZ + planeD * homW) / planeB;
@@ -2861,9 +2713,7 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
                     numTry++;
                 } while (!front1 || !front2);
 
-                // check that 3D point is in front of both cameras
-                assertTrue(front1);
-                assertTrue(front2);
+                // here 3D point is in front of both cameras
 
                 // project 3D point into both cameras
                 projectedPoint1 = new InhomogeneousPoint2D();
@@ -2875,186 +2725,177 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
                 projectedPoints2.add(projectedPoint2);
             }
 
-            final KnownBaselineTwoViewsSparseReconstructorListener listener =
-                    new KnownBaselineTwoViewsSparseReconstructorListener() {
+            final var listener = new KnownBaselineTwoViewsSparseReconstructorListener() {
 
-                        @Override
-                        public boolean hasMoreViewsAvailable(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            return mViewCount < 2;
+                @Override
+                public boolean hasMoreViewsAvailable(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    return viewCount < 2;
+                }
+
+                @Override
+                public void onRequestSamplesForCurrentView(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        int viewId, List<Sample2D> samples) {
+
+                    samples.clear();
+
+                    Sample2D sample;
+                    if (viewCount == 0) {
+                        // first view
+                        for (var i = 0; i < numPoints; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints1.get(i));
+                            sample.setViewId(viewId);
+                            samples.add(sample);
                         }
-
-                        @Override
-                        public void onRequestSamplesForCurrentView(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                int viewId, List<Sample2D> samples) {
-
-                            samples.clear();
-
-                            Sample2D sample;
-                            if (mViewCount == 0) {
-                                // first view
-                                for (int i = 0; i < numPoints; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints1.get(i));
-                                    sample.setViewId(viewId);
-                                    samples.add(sample);
-                                }
-                            } else {
-                                // second view
-                                for (int i = 0; i < numPoints; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints2.get(i));
-                                    sample.setViewId(viewId);
-                                    samples.add(sample);
-                                }
-                            }
+                    } else {
+                        // second view
+                        for (var i = 0; i < numPoints; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints2.get(i));
+                            sample.setViewId(viewId);
+                            samples.add(sample);
                         }
+                    }
+                }
 
-                        @Override
-                        public void onSamplesAccepted(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId, final List<Sample2D> samples) {
-                            mViewCount++;
-                        }
+                @Override
+                public void onSamplesAccepted(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final int viewId, final List<Sample2D> samples) {
+                    viewCount++;
+                }
 
-                        @Override
-                        public void onSamplesRejected(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId, final List<Sample2D> samples) {
-                            mViewCount++;
-                        }
+                @Override
+                public void onSamplesRejected(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final int viewId, final List<Sample2D> samples) {
+                    viewCount++;
+                }
 
-                        @Override
-                        public void onRequestMatches(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final List<Sample2D> samples1, final List<Sample2D> samples2,
-                                final int viewId1, final int viewId2, final List<MatchedSamples> matches) {
-                            matches.clear();
+                @Override
+                public void onRequestMatches(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final List<Sample2D> samples1, final List<Sample2D> samples2,
+                        final int viewId1, final int viewId2, final List<MatchedSamples> matches) {
+                    matches.clear();
 
-                            MatchedSamples match;
-                            for (int i = 0; i < numPoints; i++) {
-                                match = new MatchedSamples();
-                                match.setSamples(new Sample2D[]{
-                                        samples1.get(i), samples2.get(i)
-                                });
-                                match.setViewIds(new int[]{viewId1, viewId2});
-                                matches.add(match);
-                            }
-                        }
+                    MatchedSamples match;
+                    for (var i = 0; i < numPoints; i++) {
+                        match = new MatchedSamples();
+                        match.setSamples(new Sample2D[]{
+                                samples1.get(i), samples2.get(i)
+                        });
+                        match.setViewIds(new int[]{viewId1, viewId2});
+                        matches.add(match);
+                    }
+                }
 
-                        @Override
-                        public void onFundamentalMatrixEstimated(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final EstimatedFundamentalMatrix estimatedFundamentalMatrix) {
-                            mEstimatedFundamentalMatrix = estimatedFundamentalMatrix;
-                        }
+                @Override
+                public void onFundamentalMatrixEstimated(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final EstimatedFundamentalMatrix estimatedFundamentalMatrix) {
+                    KnownBaselineTwoViewsSparseReconstructorTest.this.estimatedFundamentalMatrix =
+                            estimatedFundamentalMatrix;
+                }
 
-                        @Override
-                        public void onCamerasEstimated(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId1, final int viewId2, final EstimatedCamera camera1,
-                                final EstimatedCamera camera2) {
-                            mEstimatedCamera1 = camera1;
-                            mEstimatedCamera2 = camera2;
-                        }
+                @Override
+                public void onCamerasEstimated(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final int viewId1, final int viewId2, final EstimatedCamera camera1,
+                        final EstimatedCamera camera2) {
+                    estimatedCamera1 = camera1;
+                    estimatedCamera2 = camera2;
+                }
 
-                        @Override
-                        public void onReconstructedPointsEstimated(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final List<MatchedSamples> matches, final List<ReconstructedPoint3D> points) {
-                            mReconstructedPoints = points;
-                        }
+                @Override
+                public void onReconstructedPointsEstimated(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final List<MatchedSamples> matches, final List<ReconstructedPoint3D> points) {
+                    reconstructedPoints = points;
+                }
 
-                        @Override
-                        public void onStart(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mStarted = true;
-                        }
+                @Override
+                public void onStart(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    started = true;
+                }
 
-                        @Override
-                        public void onFinish(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mFinished = true;
-                        }
+                @Override
+                public void onFinish(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    finished = true;
+                }
 
-                        @Override
-                        public void onCancel(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mCancelled = true;
-                        }
+                @Override
+                public void onCancel(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    cancelled = true;
+                }
 
-                        @Override
-                        public void onFail(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mFailed = true;
-                        }
-                    };
+                @Override
+                public void onFail(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    failed = true;
+                }
+            };
 
-            final KnownBaselineTwoViewsSparseReconstructor reconstructor =
-                    new KnownBaselineTwoViewsSparseReconstructor(configuration, listener);
+            final var reconstructor = new KnownBaselineTwoViewsSparseReconstructor(configuration, listener);
 
             // check initial values
             reset();
-            assertFalse(mStarted);
-            assertFalse(mFinished);
-            assertFalse(mCancelled);
-            assertFalse(mFailed);
+            assertFalse(started);
+            assertFalse(finished);
+            assertFalse(cancelled);
+            assertFalse(failed);
             assertFalse(reconstructor.isFinished());
 
             reconstructor.start();
 
             // check correctness
-            if (!mFinished) {
+            if (!finished) {
                 continue;
             }
-            assertTrue(mStarted);
-            assertTrue(mFinished);
-            assertFalse(mCancelled);
-            assertFalse(mFailed);
+            assertTrue(started);
+            assertFalse(cancelled);
+            assertFalse(failed);
             assertTrue(reconstructor.isFinished());
 
             // check that estimated fundamental matrix is correct
             fundamentalMatrix.normalize();
-            mEstimatedFundamentalMatrix.getFundamentalMatrix().normalize();
+            estimatedFundamentalMatrix.getFundamentalMatrix().normalize();
 
             // matrices are equal up to scale
             if (!fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                    LARGE_ABSOLUTE_ERROR) && !fundamentalMatrix.getInternalMatrix().
-                            multiplyByScalarAndReturnNew(-1).equals(
-                                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                            LARGE_ABSOLUTE_ERROR)) {
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), LARGE_ABSOLUTE_ERROR)
+                    && !fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                    LARGE_ABSOLUTE_ERROR) || fundamentalMatrix.getInternalMatrix()
-                    .multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                            LARGE_ABSOLUTE_ERROR));
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), LARGE_ABSOLUTE_ERROR)
+                    || fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    LARGE_ABSOLUTE_ERROR));
 
             // check that reconstructed points are in a metric stratum (up to a
             // certain scale)
-            final PinholeCamera estimatedCamera1 = mEstimatedCamera1.getCamera();
-            final PinholeCamera estimatedCamera2 = mEstimatedCamera2.getCamera();
+            final var estCam1 = this.estimatedCamera1.getCamera();
+            final var estCam2 = this.estimatedCamera2.getCamera();
 
-            estimatedCamera1.decompose();
-            estimatedCamera2.decompose();
+            estCam1.decompose();
+            estCam2.decompose();
 
-            final List<Point3D> reconstructedPoints3D = new ArrayList<>();
-            for (int i = 0; i < numPoints; i++) {
-                reconstructedPoints3D.add(mReconstructedPoints.get(i).getPoint());
+            final var reconstructedPoints3D = new ArrayList<Point3D>();
+            for (var i = 0; i < numPoints; i++) {
+                reconstructedPoints3D.add(reconstructedPoints.get(i).getPoint());
             }
 
             // check that most of the points are in front of both cameras
-            int valid = 0;
-            int invalid = 0;
-            for (int i = 0; i < numPoints; i++) {
-                if (mReconstructedPoints.get(i).isInlier()) {
-                    final Point3D p = reconstructedPoints3D.get(i);
-                    assertTrue(estimatedCamera1.isPointInFrontOfCamera(p));
-                    assertTrue(estimatedCamera2.isPointInFrontOfCamera(p));
+            var valid = 0;
+            var invalid = 0;
+            for (var i = 0; i < numPoints; i++) {
+                if (reconstructedPoints.get(i).isInlier()) {
+                    final var p = reconstructedPoints3D.get(i);
+                    assertTrue(estCam1.isPointInFrontOfCamera(p));
+                    assertTrue(estCam2.isPointInFrontOfCamera(p));
                     valid++;
                 } else {
                     invalid++;
@@ -3065,12 +2906,12 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
                 continue;
             }
 
-            final Point3D estimatedCenter1 = estimatedCamera1.getCameraCenter();
-            final Point3D estimatedCenter2 = estimatedCamera2.getCameraCenter();
+            final var estimatedCenter1 = estCam1.getCameraCenter();
+            final var estimatedCenter2 = estCam2.getCameraCenter();
 
-            final Rotation3D estimatedRotation1 = estimatedCamera1.getCameraRotation();
+            final var estimatedRotation1 = estCam1.getCameraRotation();
 
-            final double estimatedBaseline = estimatedCenter1.distanceTo(estimatedCenter2);
+            final var estimatedBaseline = estimatedCenter1.distanceTo(estimatedCenter2);
 
             // check cameras are correct
             if (Math.abs(estimatedBaseline - baseline) > LARGE_ABSOLUTE_ERROR) {
@@ -3078,8 +2919,8 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
             }
             assertEquals(estimatedBaseline, baseline, LARGE_ABSOLUTE_ERROR);
 
-            assertTrue(estimatedRotation1.asInhomogeneousMatrix().equals(
-                    rotation1.asInhomogeneousMatrix(), ABSOLUTE_ERROR));
+            assertTrue(estimatedRotation1.asInhomogeneousMatrix().equals(rotation1.asInhomogeneousMatrix(),
+                    ABSOLUTE_ERROR));
 
             // cancel
             assertFalse(reconstructor.isCancelled());
@@ -3095,75 +2936,67 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
     }
 
     @Test
-    public void testPlanarPointsDAQAndEssentialZeroPrincipalPoint()
-            throws InvalidPairOfCamerasException, CameraException,
+    void testPlanarPointsDAQAndEssentialZeroPrincipalPoint() throws InvalidPairOfCamerasException, CameraException,
             AlgebraException, com.irurueta.geometry.estimators.NotReadyException,
             com.irurueta.geometry.NotAvailableException {
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final KnownBaselineTwoViewsSparseReconstructorConfiguration configuration =
-                    new KnownBaselineTwoViewsSparseReconstructorConfiguration();
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var configuration = new KnownBaselineTwoViewsSparseReconstructorConfiguration();
             configuration.setInitialCamerasEstimatorMethod(
                     InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC_AND_ESSENTIAL_MATRIX);
 
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
-            final double aspectRatio = configuration.getInitialCamerasAspectRatio();
-            final double skewness = 0.0;
-            final double principalPointX = 0.0;
-            final double principalPointY = 0.0;
+            final var randomizer = new UniformRandomizer();
+            final var focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
+            final var aspectRatio = configuration.getInitialCamerasAspectRatio();
+            final var skewness = 0.0;
+            final var principalPointX = 0.0;
+            final var principalPointY = 0.0;
 
             configuration.setPrincipalPointX(principalPointX);
             configuration.setPrincipalPointY(principalPointY);
 
-            final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength,
-                            focalLength, principalPointX, principalPointY, skewness);
+            final var intrinsic = new PinholeCameraIntrinsicParameters(focalLength, focalLength, principalPointX,
+                    principalPointY, skewness);
             intrinsic.setAspectRatioKeepingHorizontalFocalLength(aspectRatio);
 
-            final double alphaEuler1 = 0.0;
-            final double betaEuler1 = 0.0;
-            final double gammaEuler1 = 0.0;
-            final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+            final var alphaEuler1 = 0.0;
+            final var betaEuler1 = 0.0;
+            final var gammaEuler1 = 0.0;
+            final var alphaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var betaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var gammaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-            final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
+            final var cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION_ESSENTIAL,
+                    MAX_CAMERA_SEPARATION_ESSENTIAL);
 
-            final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
-            final Point3D center2 = new InhomogeneousPoint3D(
+            final var center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
+            final var center2 = new InhomogeneousPoint3D(
                     center1.getInhomX() + cameraSeparation,
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final double baseline = center1.distanceTo(center2);
+            final var baseline = center1.distanceTo(center2);
             configuration.setBaseline(baseline);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+            final var rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final var rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
+            final var camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final var camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
+            final var fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras and laying in
             // a plane
 
             // 1st find an approximate central point by intersecting the axis
             // planes of both cameras
-            final Plane horizontalPlane1 = camera1.getHorizontalAxisPlane();
-            final Plane verticalPlane1 = camera1.getVerticalAxisPlane();
-            final Plane horizontalPlane2 = camera2.getHorizontalAxisPlane();
-            final Plane verticalPlane2 = camera2.getVerticalAxisPlane();
-            final Matrix planesIntersectionMatrix = new Matrix(
-                    Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
+            final var horizontalPlane1 = camera1.getHorizontalAxisPlane();
+            final var verticalPlane1 = camera1.getVerticalAxisPlane();
+            final var horizontalPlane2 = camera2.getHorizontalAxisPlane();
+            final var verticalPlane2 = camera2.getVerticalAxisPlane();
+            final var planesIntersectionMatrix = new Matrix(Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
             planesIntersectionMatrix.setElementAt(0, 0, verticalPlane1.getA());
             planesIntersectionMatrix.setElementAt(0, 1, verticalPlane1.getB());
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
@@ -3184,49 +3017,49 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
             planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
             planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
+            final var decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
-            final Matrix v = decomposer.getV();
-            final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
+            final var v = decomposer.getV();
+            final var centralCommonPoint = new HomogeneousPoint3D(
                     v.getElementAt(0, 3),
                     v.getElementAt(1, 3),
                     v.getElementAt(2, 3),
                     v.getElementAt(3, 3));
 
-            final double[] principalAxis1 = camera1.getPrincipalAxisArray();
-            final double[] principalAxis2 = camera2.getPrincipalAxisArray();
-            final double[] avgPrincipalAxis = ArrayUtils.multiplyByScalarAndReturnNew(
+            final var principalAxis1 = camera1.getPrincipalAxisArray();
+            final var principalAxis2 = camera2.getPrincipalAxisArray();
+            final var avgPrincipalAxis = ArrayUtils.multiplyByScalarAndReturnNew(
                     ArrayUtils.sumAndReturnNew(principalAxis1, principalAxis2), 0.5);
 
-            final Plane plane = new Plane(centralCommonPoint, avgPrincipalAxis);
+            final var plane = new Plane(centralCommonPoint, avgPrincipalAxis);
             plane.normalize();
 
-            final double planeA = plane.getA();
-            final double planeB = plane.getB();
-            final double planeC = plane.getC();
-            final double planeD = plane.getD();
+            final var planeA = plane.getA();
+            final var planeB = plane.getB();
+            final var planeC = plane.getC();
+            final var planeD = plane.getD();
 
-            final int numPoints = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final var numPoints = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
 
             HomogeneousPoint3D point3D;
-            final List<HomogeneousPoint3D> points3D = new ArrayList<>();
+            final var points3D = new ArrayList<HomogeneousPoint3D>();
             Point2D projectedPoint1;
             Point2D projectedPoint2;
-            final List<Point2D> projectedPoints1 = new ArrayList<>();
-            final List<Point2D> projectedPoints2 = new ArrayList<>();
+            final var projectedPoints1 = new ArrayList<Point2D>();
+            final var projectedPoints2 = new ArrayList<Point2D>();
             boolean front1;
             boolean front2;
-            for (int i = 0; i < numPoints; i++) {
+            for (var i = 0; i < numPoints; i++) {
                 // generate points and ensure they lie in front of both cameras
-                int numTry = 0;
+                var numTry = 0;
                 do {
                     // get a random point belonging to the plane
                     // a*x + b*y + c*z + d*w = 0
                     // y = -(a*x + c*z + d*w)/b or x = -(b*y + c*z + d*w)/a
                     final double homX;
                     final double homY;
-                    final double homW = 1.0;
-                    final double homZ = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+                    final var homW = 1.0;
+                    final var homZ = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
                     if (Math.abs(planeB) > ABSOLUTE_ERROR) {
                         homX = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR, MAX_RANDOM_VALUE_PLANAR);
                         homY = -(planeA * homX + planeC * homZ + planeD * homW) / planeB;
@@ -3248,9 +3081,7 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
                 } while (!front1 || !front2);
                 points3D.add(point3D);
 
-                // check that 3D point is in front of both cameras
-                assertTrue(front1);
-                assertTrue(front2);
+                // here 3D point is in front of both cameras
 
                 // project 3D point into both cameras
                 projectedPoint1 = new InhomogeneousPoint2D();
@@ -3262,191 +3093,182 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
                 projectedPoints2.add(projectedPoint2);
             }
 
-            final KnownBaselineTwoViewsSparseReconstructorListener listener =
-                    new KnownBaselineTwoViewsSparseReconstructorListener() {
+            final var listener = new KnownBaselineTwoViewsSparseReconstructorListener() {
 
-                        @Override
-                        public boolean hasMoreViewsAvailable(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            return mViewCount < 2;
+                @Override
+                public boolean hasMoreViewsAvailable(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    return viewCount < 2;
+                }
+
+                @Override
+                public void onRequestSamplesForCurrentView(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        int viewId, final List<Sample2D> samples) {
+
+                    samples.clear();
+
+                    Sample2D sample;
+                    if (viewCount == 0) {
+                        // first view
+                        for (var i = 0; i < numPoints; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints1.get(i));
+                            sample.setViewId(viewId);
+                            samples.add(sample);
                         }
-
-                        @Override
-                        public void onRequestSamplesForCurrentView(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                int viewId, final List<Sample2D> samples) {
-
-                            samples.clear();
-
-                            Sample2D sample;
-                            if (mViewCount == 0) {
-                                // first view
-                                for (int i = 0; i < numPoints; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints1.get(i));
-                                    sample.setViewId(viewId);
-                                    samples.add(sample);
-                                }
-                            } else {
-                                // second view
-                                for (int i = 0; i < numPoints; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints2.get(i));
-                                    sample.setViewId(viewId);
-                                    samples.add(sample);
-                                }
-                            }
+                    } else {
+                        // second view
+                        for (var i = 0; i < numPoints; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints2.get(i));
+                            sample.setViewId(viewId);
+                            samples.add(sample);
                         }
+                    }
+                }
 
-                        @Override
-                        public void onSamplesAccepted(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId, final List<Sample2D> samples) {
-                            mViewCount++;
-                        }
+                @Override
+                public void onSamplesAccepted(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final int viewId, final List<Sample2D> samples) {
+                    viewCount++;
+                }
 
-                        @Override
-                        public void onSamplesRejected(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId, final List<Sample2D> samples) {
-                            mViewCount++;
-                        }
+                @Override
+                public void onSamplesRejected(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final int viewId, final List<Sample2D> samples) {
+                    viewCount++;
+                }
 
-                        @Override
-                        public void onRequestMatches(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final List<Sample2D> samples1, final List<Sample2D> samples2,
-                                final int viewId1, final int viewId2, final List<MatchedSamples> matches) {
-                            matches.clear();
+                @Override
+                public void onRequestMatches(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final List<Sample2D> samples1, final List<Sample2D> samples2,
+                        final int viewId1, final int viewId2, final List<MatchedSamples> matches) {
+                    matches.clear();
 
-                            MatchedSamples match;
-                            for (int i = 0; i < numPoints; i++) {
-                                match = new MatchedSamples();
-                                match.setSamples(new Sample2D[]{
-                                        samples1.get(i), samples2.get(i)
-                                });
-                                match.setViewIds(new int[]{viewId1, viewId2});
-                                matches.add(match);
-                            }
-                        }
+                    MatchedSamples match;
+                    for (var i = 0; i < numPoints; i++) {
+                        match = new MatchedSamples();
+                        match.setSamples(new Sample2D[]{
+                                samples1.get(i), samples2.get(i)
+                        });
+                        match.setViewIds(new int[]{viewId1, viewId2});
+                        matches.add(match);
+                    }
+                }
 
-                        @Override
-                        public void onFundamentalMatrixEstimated(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final EstimatedFundamentalMatrix estimatedFundamentalMatrix) {
-                            mEstimatedFundamentalMatrix = estimatedFundamentalMatrix;
-                        }
+                @Override
+                public void onFundamentalMatrixEstimated(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final EstimatedFundamentalMatrix estimatedFundamentalMatrix) {
+                    KnownBaselineTwoViewsSparseReconstructorTest.this.estimatedFundamentalMatrix =
+                            estimatedFundamentalMatrix;
+                }
 
-                        @Override
-                        public void onCamerasEstimated(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId1, final int viewId2, final EstimatedCamera camera1,
-                                final EstimatedCamera camera2) {
-                            mEstimatedCamera1 = camera1;
-                            mEstimatedCamera2 = camera2;
-                        }
+                @Override
+                public void onCamerasEstimated(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final int viewId1, final int viewId2, final EstimatedCamera camera1,
+                        final EstimatedCamera camera2) {
+                    estimatedCamera1 = camera1;
+                    estimatedCamera2 = camera2;
+                }
 
-                        @Override
-                        public void onReconstructedPointsEstimated(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final List<MatchedSamples> matches, final List<ReconstructedPoint3D> points) {
-                            mReconstructedPoints = points;
-                        }
+                @Override
+                public void onReconstructedPointsEstimated(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final List<MatchedSamples> matches, final List<ReconstructedPoint3D> points) {
+                    reconstructedPoints = points;
+                }
 
-                        @Override
-                        public void onStart(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mStarted = true;
-                        }
+                @Override
+                public void onStart(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    started = true;
+                }
 
-                        @Override
-                        public void onFinish(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mFinished = true;
-                        }
+                @Override
+                public void onFinish(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    finished = true;
+                }
 
-                        @Override
-                        public void onCancel(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mCancelled = true;
-                        }
+                @Override
+                public void onCancel(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    cancelled = true;
+                }
 
-                        @Override
-                        public void onFail(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mFailed = true;
-                        }
-                    };
+                @Override
+                public void onFail(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    failed = true;
+                }
+            };
 
-            final KnownBaselineTwoViewsSparseReconstructor reconstructor =
-                    new KnownBaselineTwoViewsSparseReconstructor(configuration, listener);
+            final var reconstructor = new KnownBaselineTwoViewsSparseReconstructor(configuration, listener);
 
             // check initial values
             reset();
-            assertFalse(mStarted);
-            assertFalse(mFinished);
-            assertFalse(mCancelled);
-            assertFalse(mFailed);
+            assertFalse(started);
+            assertFalse(finished);
+            assertFalse(cancelled);
+            assertFalse(failed);
             assertFalse(reconstructor.isFinished());
 
             reconstructor.start();
 
             // check correctness
-            if (!mFinished) {
+            if (!finished) {
                 continue;
             }
-            assertTrue(mStarted);
-            assertTrue(mFinished);
-            assertFalse(mCancelled);
-            assertFalse(mFailed);
+            assertTrue(started);
+            assertFalse(cancelled);
+            assertFalse(failed);
             assertTrue(reconstructor.isFinished());
 
             // check that estimated fundamental matrix is correct
             fundamentalMatrix.normalize();
-            mEstimatedFundamentalMatrix.getFundamentalMatrix().normalize();
+            estimatedFundamentalMatrix.getFundamentalMatrix().normalize();
 
             // matrices are equal up to scale
             if (!fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                    LARGE_ABSOLUTE_ERROR) && !fundamentalMatrix.getInternalMatrix()
-                    .multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                            LARGE_ABSOLUTE_ERROR)) {
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), LARGE_ABSOLUTE_ERROR)
+                    && !fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                    LARGE_ABSOLUTE_ERROR) || fundamentalMatrix.getInternalMatrix()
-                    .multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                            LARGE_ABSOLUTE_ERROR));
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), LARGE_ABSOLUTE_ERROR)
+                    || fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    LARGE_ABSOLUTE_ERROR));
 
             // check that reconstructed points are in a metric stratum (up to a
             // certain scale)
-            final PinholeCamera estimatedCamera1 = mEstimatedCamera1.getCamera();
-            final PinholeCamera estimatedCamera2 = mEstimatedCamera2.getCamera();
+            final var estCam1 = this.estimatedCamera1.getCamera();
+            final var estCam2 = this.estimatedCamera2.getCamera();
 
-            estimatedCamera1.decompose();
-            estimatedCamera2.decompose();
+            estCam1.decompose();
+            estCam2.decompose();
 
-            final List<Point3D> reconstructedPoints3D = new ArrayList<>();
-            for (int i = 0; i < numPoints; i++) {
-                reconstructedPoints3D.add(mReconstructedPoints.get(i).getPoint());
+            final var reconstructedPoints3D = new ArrayList<Point3D>();
+            for (var i = 0; i < numPoints; i++) {
+                reconstructedPoints3D.add(reconstructedPoints.get(i).getPoint());
             }
 
             // check that all points are in front of both cameras
-            for (int i = 0; i < numPoints; i++) {
-                final Point3D p = reconstructedPoints3D.get(i);
-                assertTrue(estimatedCamera1.isPointInFrontOfCamera(p));
-                assertTrue(estimatedCamera2.isPointInFrontOfCamera(p));
+            for (var i = 0; i < numPoints; i++) {
+                final var p = reconstructedPoints3D.get(i);
+                assertTrue(estCam1.isPointInFrontOfCamera(p));
+                assertTrue(estCam2.isPointInFrontOfCamera(p));
             }
 
-            final Point3D estimatedCenter1 = estimatedCamera1.getCameraCenter();
-            final Point3D estimatedCenter2 = estimatedCamera2.getCameraCenter();
+            final var estimatedCenter1 = estCam1.getCameraCenter();
+            final var estimatedCenter2 = estCam2.getCameraCenter();
 
-            final Rotation3D estimatedRotation1 = estimatedCamera1.getCameraRotation();
+            final var estimatedRotation1 = estCam1.getCameraRotation();
 
-            final double estimatedBaseline = estimatedCenter1.distanceTo(estimatedCenter2);
+            final var estimatedBaseline = estimatedCenter1.distanceTo(estimatedCenter2);
 
             // check cameras are correct
             if (Math.abs(estimatedBaseline - baseline) > LARGE_ABSOLUTE_ERROR) {
@@ -3456,12 +3278,12 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
 
             assertTrue(center1.equals(estimatedCenter1, ABSOLUTE_ERROR));
 
-            assertTrue(estimatedRotation1.asInhomogeneousMatrix().equals(
-                    rotation1.asInhomogeneousMatrix(), ABSOLUTE_ERROR));
+            assertTrue(estimatedRotation1.asInhomogeneousMatrix().equals(rotation1.asInhomogeneousMatrix(),
+                    ABSOLUTE_ERROR));
 
             // check that points are correct
-            boolean validPoints = true;
-            for (int i = 0; i < numPoints; i++) {
+            var validPoints = true;
+            for (var i = 0; i < numPoints; i++) {
                 if (!points3D.get(i).equals(reconstructedPoints3D.get(i), LARGE_ABSOLUTE_ERROR)) {
                     validPoints = false;
                     break;
@@ -3487,76 +3309,68 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
     }
 
     @Test
-    public void testPlanarPointsDAQAndEssential() throws InvalidPairOfCamerasException, CameraException,
-            AlgebraException, com.irurueta.geometry.estimators.NotReadyException,
-            com.irurueta.geometry.NotAvailableException {
+    void testPlanarPointsDAQAndEssential() throws InvalidPairOfCamerasException, CameraException, AlgebraException,
+            com.irurueta.geometry.estimators.NotReadyException, com.irurueta.geometry.NotAvailableException {
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final KnownBaselineTwoViewsSparseReconstructorConfiguration configuration =
-                    new KnownBaselineTwoViewsSparseReconstructorConfiguration();
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var configuration = new KnownBaselineTwoViewsSparseReconstructorConfiguration();
             configuration.setInitialCamerasEstimatorMethod(
                     InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC_AND_ESSENTIAL_MATRIX);
 
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
-            final double aspectRatio = configuration.getInitialCamerasAspectRatio();
-            final double skewness = 0.0;
-            final double principalPointX = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT_ESSENTIAL, MAX_PRINCIPAL_POINT_ESSENTIAL);
-            final double principalPointY = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT_ESSENTIAL, MAX_PRINCIPAL_POINT_ESSENTIAL);
+            final var randomizer = new UniformRandomizer();
+            final var focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
+            final var aspectRatio = configuration.getInitialCamerasAspectRatio();
+            final var skewness = 0.0;
+            final var principalPointX = randomizer.nextDouble(MIN_PRINCIPAL_POINT_ESSENTIAL,
+                    MAX_PRINCIPAL_POINT_ESSENTIAL);
+            final var principalPointY = randomizer.nextDouble(MIN_PRINCIPAL_POINT_ESSENTIAL,
+                    MAX_PRINCIPAL_POINT_ESSENTIAL);
 
             configuration.setPrincipalPointX(principalPointX);
             configuration.setPrincipalPointY(principalPointY);
 
-            final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength, focalLength,
-                            principalPointX, principalPointY, skewness);
+            final var intrinsic = new PinholeCameraIntrinsicParameters(focalLength, focalLength, principalPointX,
+                    principalPointY, skewness);
             intrinsic.setAspectRatioKeepingHorizontalFocalLength(aspectRatio);
 
-            final double alphaEuler1 = 0.0;
-            final double betaEuler1 = 0.0;
-            final double gammaEuler1 = 0.0;
-            final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+            final var alphaEuler1 = 0.0;
+            final var betaEuler1 = 0.0;
+            final var gammaEuler1 = 0.0;
+            final var alphaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var betaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var gammaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-            final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
+            final var cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION_ESSENTIAL,
+                    MAX_CAMERA_SEPARATION_ESSENTIAL);
 
-            final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
-            final Point3D center2 = new InhomogeneousPoint3D(
+            final var center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
+            final var center2 = new InhomogeneousPoint3D(
                     center1.getInhomX() + cameraSeparation,
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final double baseline = center1.distanceTo(center2);
+            final var baseline = center1.distanceTo(center2);
             configuration.setBaseline(baseline);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+            final var rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final var rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
+            final var camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final var camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
+            final var fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras and laying in
             // a plane
 
             // 1st find an approximate central point by intersecting the axis
             // planes of both cameras
-            final Plane horizontalPlane1 = camera1.getHorizontalAxisPlane();
-            final Plane verticalPlane1 = camera1.getVerticalAxisPlane();
-            final Plane horizontalPlane2 = camera2.getHorizontalAxisPlane();
-            final Plane verticalPlane2 = camera2.getVerticalAxisPlane();
-            final Matrix planesIntersectionMatrix = new Matrix(
-                    Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
+            final var horizontalPlane1 = camera1.getHorizontalAxisPlane();
+            final var verticalPlane1 = camera1.getVerticalAxisPlane();
+            final var horizontalPlane2 = camera2.getHorizontalAxisPlane();
+            final var verticalPlane2 = camera2.getVerticalAxisPlane();
+            final var planesIntersectionMatrix = new Matrix(Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
             planesIntersectionMatrix.setElementAt(0, 0, verticalPlane1.getA());
             planesIntersectionMatrix.setElementAt(0, 1, verticalPlane1.getB());
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
@@ -3577,50 +3391,50 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
             planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
             planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
+            final var decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
-            final Matrix v = decomposer.getV();
-            final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
+            final var v = decomposer.getV();
+            final var centralCommonPoint = new HomogeneousPoint3D(
                     v.getElementAt(0, 3),
                     v.getElementAt(1, 3),
                     v.getElementAt(2, 3),
                     v.getElementAt(3, 3));
 
-            final double[] principalAxis1 = camera1.getPrincipalAxisArray();
-            final double[] principalAxis2 = camera2.getPrincipalAxisArray();
-            final double[] avgPrincipalAxis = ArrayUtils.multiplyByScalarAndReturnNew(
+            final var principalAxis1 = camera1.getPrincipalAxisArray();
+            final var principalAxis2 = camera2.getPrincipalAxisArray();
+            final var avgPrincipalAxis = ArrayUtils.multiplyByScalarAndReturnNew(
                     ArrayUtils.sumAndReturnNew(principalAxis1, principalAxis2), 0.5);
 
-            final Plane plane = new Plane(centralCommonPoint, avgPrincipalAxis);
+            final var plane = new Plane(centralCommonPoint, avgPrincipalAxis);
             plane.normalize();
 
-            final double planeA = plane.getA();
-            final double planeB = plane.getB();
-            final double planeC = plane.getC();
-            final double planeD = plane.getD();
+            final var planeA = plane.getA();
+            final var planeB = plane.getB();
+            final var planeC = plane.getC();
+            final var planeD = plane.getD();
 
-            final int numPoints = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final var numPoints = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
 
             HomogeneousPoint3D point3D;
-            final List<HomogeneousPoint3D> points3D = new ArrayList<>();
+            final var points3D = new ArrayList<HomogeneousPoint3D>();
             Point2D projectedPoint1;
             Point2D projectedPoint2;
-            final List<Point2D> projectedPoints1 = new ArrayList<>();
-            final List<Point2D> projectedPoints2 = new ArrayList<>();
+            final var projectedPoints1 = new ArrayList<Point2D>();
+            final var projectedPoints2 = new ArrayList<Point2D>();
             boolean front1;
             boolean front2;
-            boolean failed = false;
-            for (int i = 0; i < numPoints; i++) {
+            var failedIter = false;
+            for (var i = 0; i < numPoints; i++) {
                 // generate points and ensure they lie in front of both cameras
-                int numTry = 0;
+                var numTry = 0;
                 do {
                     // get a random point belonging to the plane
                     // a*x + b*y + c*z + d*w = 0
                     // y = -(a*x + c*z + d*w)/b or x = -(b*y + c*z + d*w)/a
                     final double homX;
                     final double homY;
-                    final double homW = 1.0;
-                    final double homZ = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+                    final var homW = 1.0;
+                    final var homZ = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
                     if (Math.abs(planeB) > ABSOLUTE_ERROR) {
                         homX = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR, MAX_RANDOM_VALUE_PLANAR);
                         homY = -(planeA * homX + planeC * homZ + planeD * homW) / planeB;
@@ -3636,19 +3450,17 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
                     front1 = camera1.isPointInFrontOfCamera(point3D);
                     front2 = camera2.isPointInFrontOfCamera(point3D);
                     if (numTry > MAX_TRIES) {
-                        failed = true;
+                        failedIter = true;
                         break;
                     }
                     numTry++;
                 } while (!front1 || !front2);
-                if (failed) {
+                if (failedIter) {
                     break;
                 }
                 points3D.add(point3D);
 
-                // check that 3D point is in front of both cameras
-                assertTrue(front1);
-                assertTrue(front2);
+                // here 3D point is in front of both cameras
 
                 // project 3D point into both cameras
                 projectedPoint1 = new InhomogeneousPoint2D();
@@ -3660,195 +3472,186 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
                 projectedPoints2.add(projectedPoint2);
             }
 
-            if (failed) {
+            if (failedIter) {
                 continue;
             }
 
-            final KnownBaselineTwoViewsSparseReconstructorListener listener =
-                    new KnownBaselineTwoViewsSparseReconstructorListener() {
+            final var listener = new KnownBaselineTwoViewsSparseReconstructorListener() {
 
-                        @Override
-                        public boolean hasMoreViewsAvailable(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            return mViewCount < 2;
+                @Override
+                public boolean hasMoreViewsAvailable(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    return viewCount < 2;
+                }
+
+                @Override
+                public void onRequestSamplesForCurrentView(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final int viewId, final List<Sample2D> samples) {
+
+                    samples.clear();
+
+                    Sample2D sample;
+                    if (viewCount == 0) {
+                        // first view
+                        for (var i = 0; i < numPoints; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints1.get(i));
+                            sample.setViewId(viewId);
+                            samples.add(sample);
                         }
-
-                        @Override
-                        public void onRequestSamplesForCurrentView(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId, final List<Sample2D> samples) {
-
-                            samples.clear();
-
-                            Sample2D sample;
-                            if (mViewCount == 0) {
-                                // first view
-                                for (int i = 0; i < numPoints; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints1.get(i));
-                                    sample.setViewId(viewId);
-                                    samples.add(sample);
-                                }
-                            } else {
-                                // second view
-                                for (int i = 0; i < numPoints; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints2.get(i));
-                                    sample.setViewId(viewId);
-                                    samples.add(sample);
-                                }
-                            }
+                    } else {
+                        // second view
+                        for (var i = 0; i < numPoints; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints2.get(i));
+                            sample.setViewId(viewId);
+                            samples.add(sample);
                         }
+                    }
+                }
 
-                        @Override
-                        public void onSamplesAccepted(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId, final List<Sample2D> samples) {
-                            mViewCount++;
-                        }
+                @Override
+                public void onSamplesAccepted(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final int viewId, final List<Sample2D> samples) {
+                    viewCount++;
+                }
 
-                        @Override
-                        public void onSamplesRejected(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId, final List<Sample2D> samples) {
-                            mViewCount++;
-                        }
+                @Override
+                public void onSamplesRejected(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final int viewId, final List<Sample2D> samples) {
+                    viewCount++;
+                }
 
-                        @Override
-                        public void onRequestMatches(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final List<Sample2D> samples1, final List<Sample2D> samples2,
-                                final int viewId1, final int viewId2, final List<MatchedSamples> matches) {
-                            matches.clear();
+                @Override
+                public void onRequestMatches(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final List<Sample2D> samples1, final List<Sample2D> samples2,
+                        final int viewId1, final int viewId2, final List<MatchedSamples> matches) {
+                    matches.clear();
 
-                            MatchedSamples match;
-                            for (int i = 0; i < numPoints; i++) {
-                                match = new MatchedSamples();
-                                match.setSamples(new Sample2D[]{
-                                        samples1.get(i), samples2.get(i)
-                                });
-                                match.setViewIds(new int[]{viewId1, viewId2});
-                                matches.add(match);
-                            }
-                        }
+                    MatchedSamples match;
+                    for (var i = 0; i < numPoints; i++) {
+                        match = new MatchedSamples();
+                        match.setSamples(new Sample2D[]{
+                                samples1.get(i), samples2.get(i)
+                        });
+                        match.setViewIds(new int[]{viewId1, viewId2});
+                        matches.add(match);
+                    }
+                }
 
-                        @Override
-                        public void onFundamentalMatrixEstimated(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final EstimatedFundamentalMatrix estimatedFundamentalMatrix) {
-                            mEstimatedFundamentalMatrix = estimatedFundamentalMatrix;
-                        }
+                @Override
+                public void onFundamentalMatrixEstimated(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final EstimatedFundamentalMatrix estimatedFundamentalMatrix) {
+                    KnownBaselineTwoViewsSparseReconstructorTest.this.estimatedFundamentalMatrix =
+                            estimatedFundamentalMatrix;
+                }
 
-                        @Override
-                        public void onCamerasEstimated(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId1, final int viewId2, final EstimatedCamera camera1,
-                                final EstimatedCamera camera2) {
-                            mEstimatedCamera1 = camera1;
-                            mEstimatedCamera2 = camera2;
-                        }
+                @Override
+                public void onCamerasEstimated(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final int viewId1, final int viewId2, final EstimatedCamera camera1,
+                        final EstimatedCamera camera2) {
+                    estimatedCamera1 = camera1;
+                    estimatedCamera2 = camera2;
+                }
 
-                        @Override
-                        public void onReconstructedPointsEstimated(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final List<MatchedSamples> matches, final List<ReconstructedPoint3D> points) {
-                            mReconstructedPoints = points;
-                        }
+                @Override
+                public void onReconstructedPointsEstimated(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final List<MatchedSamples> matches, final List<ReconstructedPoint3D> points) {
+                    reconstructedPoints = points;
+                }
 
-                        @Override
-                        public void onStart(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mStarted = true;
-                        }
+                @Override
+                public void onStart(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    started = true;
+                }
 
-                        @Override
-                        public void onFinish(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mFinished = true;
-                        }
+                @Override
+                public void onFinish(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    finished = true;
+                }
 
-                        @Override
-                        public void onCancel(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mCancelled = true;
-                        }
+                @Override
+                public void onCancel(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    cancelled = true;
+                }
 
-                        @Override
-                        public void onFail(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mFailed = true;
-                        }
-                    };
+                @Override
+                public void onFail(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    KnownBaselineTwoViewsSparseReconstructorTest.this.failed = true;
+                }
+            };
 
-            final KnownBaselineTwoViewsSparseReconstructor reconstructor =
-                    new KnownBaselineTwoViewsSparseReconstructor(configuration, listener);
+            final var reconstructor = new KnownBaselineTwoViewsSparseReconstructor(configuration, listener);
 
             // check initial values
             reset();
-            assertFalse(mStarted);
-            assertFalse(mFinished);
-            assertFalse(mCancelled);
-            assertFalse(mFailed);
+            assertFalse(started);
+            assertFalse(finished);
+            assertFalse(cancelled);
+            assertFalse(this.failed);
             assertFalse(reconstructor.isFinished());
 
             reconstructor.start();
 
             // check correctness
-            if (!mFinished) {
+            if (!finished) {
                 continue;
             }
-            assertTrue(mStarted);
-            assertTrue(mFinished);
-            assertFalse(mCancelled);
-            assertFalse(mFailed);
+            assertTrue(started);
+            assertFalse(cancelled);
+            assertFalse(this.failed);
             assertTrue(reconstructor.isFinished());
 
             // check that estimated fundamental matrix is correct
             fundamentalMatrix.normalize();
-            mEstimatedFundamentalMatrix.getFundamentalMatrix().normalize();
+            estimatedFundamentalMatrix.getFundamentalMatrix().normalize();
 
             // matrices are equal up to scale
             if (!fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                    LARGE_ABSOLUTE_ERROR) && !fundamentalMatrix.getInternalMatrix()
-                    .multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                            LARGE_ABSOLUTE_ERROR)) {
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), LARGE_ABSOLUTE_ERROR)
+                    && !fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                    LARGE_ABSOLUTE_ERROR) || fundamentalMatrix.getInternalMatrix()
-                    .multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                            LARGE_ABSOLUTE_ERROR));
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), LARGE_ABSOLUTE_ERROR)
+                    || fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    LARGE_ABSOLUTE_ERROR));
 
             // check that reconstructed points are in a metric stratum (up to a
             // certain scale)
-            final PinholeCamera estimatedCamera1 = mEstimatedCamera1.getCamera();
-            final PinholeCamera estimatedCamera2 = mEstimatedCamera2.getCamera();
+            final var estCam1 = this.estimatedCamera1.getCamera();
+            final var estCam2 = this.estimatedCamera2.getCamera();
 
-            estimatedCamera1.decompose();
-            estimatedCamera2.decompose();
+            estCam1.decompose();
+            estCam2.decompose();
 
-            final List<Point3D> reconstructedPoints3D = new ArrayList<>();
-            for (int i = 0; i < numPoints; i++) {
-                reconstructedPoints3D.add(mReconstructedPoints.get(i).getPoint());
+            final var reconstructedPoints3D = new ArrayList<Point3D>();
+            for (var i = 0; i < numPoints; i++) {
+                reconstructedPoints3D.add(reconstructedPoints.get(i).getPoint());
             }
 
             // check that all points are in front of both cameras
-            for (int i = 0; i < numPoints; i++) {
-                Point3D p = reconstructedPoints3D.get(i);
-                assertTrue(estimatedCamera1.isPointInFrontOfCamera(p));
-                assertTrue(estimatedCamera2.isPointInFrontOfCamera(p));
+            for (var i = 0; i < numPoints; i++) {
+                final var p = reconstructedPoints3D.get(i);
+                assertTrue(estCam1.isPointInFrontOfCamera(p));
+                assertTrue(estCam2.isPointInFrontOfCamera(p));
             }
 
-            final Point3D estimatedCenter1 = estimatedCamera1.getCameraCenter();
-            final Point3D estimatedCenter2 = estimatedCamera2.getCameraCenter();
+            final var estimatedCenter1 = estCam1.getCameraCenter();
+            final var estimatedCenter2 = estCam2.getCameraCenter();
 
-            final Rotation3D estimatedRotation1 = estimatedCamera1.getCameraRotation();
+            final var estimatedRotation1 = estCam1.getCameraRotation();
 
-            final double estimatedBaseline = estimatedCenter1.distanceTo(estimatedCenter2);
+            final var estimatedBaseline = estimatedCenter1.distanceTo(estimatedCenter2);
 
             // check cameras are correct
             if (Math.abs(estimatedBaseline - baseline) > LARGE_ABSOLUTE_ERROR) {
@@ -3856,12 +3659,12 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
             }
             assertEquals(estimatedBaseline, baseline, LARGE_ABSOLUTE_ERROR);
 
-            assertTrue(estimatedRotation1.asInhomogeneousMatrix().equals(
-                    rotation1.asInhomogeneousMatrix(), ABSOLUTE_ERROR));
+            assertTrue(estimatedRotation1.asInhomogeneousMatrix().equals(rotation1.asInhomogeneousMatrix(),
+                    ABSOLUTE_ERROR));
 
             // check that points are correct
-            boolean validPoints = true;
-            for (int i = 0; i < numPoints; i++) {
+            var validPoints = true;
+            for (var i = 0; i < numPoints; i++) {
                 if (!points3D.get(i).equals(reconstructedPoints3D.get(i), LARGE_ABSOLUTE_ERROR)) {
                     validPoints = false;
                     break;
@@ -3887,76 +3690,67 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
     }
 
     @Test
-    public void testPlanarPointsDAQ() throws InvalidPairOfCamerasException, CameraException,
-            AlgebraException, com.irurueta.geometry.estimators.NotReadyException,
-            com.irurueta.geometry.NotAvailableException {
+    void testPlanarPointsDAQ() throws InvalidPairOfCamerasException, CameraException, AlgebraException,
+            com.irurueta.geometry.estimators.NotReadyException, com.irurueta.geometry.NotAvailableException {
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final KnownBaselineTwoViewsSparseReconstructorConfiguration configuration =
-                    new KnownBaselineTwoViewsSparseReconstructorConfiguration();
-            configuration.setInitialCamerasEstimatorMethod(
-                    InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC);
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var configuration = new KnownBaselineTwoViewsSparseReconstructorConfiguration();
+            configuration.setInitialCamerasEstimatorMethod(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC);
 
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
-            final double aspectRatio = configuration.getInitialCamerasAspectRatio();
-            final double skewness = 0.0;
-            final double principalPointX = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT_ESSENTIAL, MAX_PRINCIPAL_POINT_ESSENTIAL);
-            final double principalPointY = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT_ESSENTIAL, MAX_PRINCIPAL_POINT_ESSENTIAL);
+            final var randomizer = new UniformRandomizer();
+            final var focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
+            final var aspectRatio = configuration.getInitialCamerasAspectRatio();
+            final var skewness = 0.0;
+            final var principalPointX = randomizer.nextDouble(MIN_PRINCIPAL_POINT_ESSENTIAL,
+                    MAX_PRINCIPAL_POINT_ESSENTIAL);
+            final var principalPointY = randomizer.nextDouble(MIN_PRINCIPAL_POINT_ESSENTIAL,
+                    MAX_PRINCIPAL_POINT_ESSENTIAL);
 
             configuration.setPrincipalPointX(principalPointX);
             configuration.setPrincipalPointY(principalPointY);
 
-            final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength, focalLength,
-                            principalPointX, principalPointY, skewness);
+            final var intrinsic = new PinholeCameraIntrinsicParameters(focalLength, focalLength, principalPointX,
+                    principalPointY, skewness);
             intrinsic.setAspectRatioKeepingHorizontalFocalLength(aspectRatio);
 
-            final double alphaEuler1 = 0.0;
-            final double betaEuler1 = 0.0;
-            final double gammaEuler1 = 0.0;
-            final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+            final var alphaEuler1 = 0.0;
+            final var betaEuler1 = 0.0;
+            final var gammaEuler1 = 0.0;
+            final var alphaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var betaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var gammaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-            final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
+            final var cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION_ESSENTIAL,
+                    MAX_CAMERA_SEPARATION_ESSENTIAL);
 
-            final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
-            final Point3D center2 = new InhomogeneousPoint3D(
+            final var center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
+            final var center2 = new InhomogeneousPoint3D(
                     center1.getInhomX() + cameraSeparation,
                     center1.getInhomY() + cameraSeparation,
                     center1.getInhomZ() + cameraSeparation);
 
-            final double baseline = center1.distanceTo(center2);
+            final var baseline = center1.distanceTo(center2);
             configuration.setBaseline(baseline);
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+            final var rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final var rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
+            final var camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final var camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
+            final var fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras and laying in
             // a plane
 
             // 1st find an approximate central point by intersecting the axis
             // planes of both cameras
-            final Plane horizontalPlane1 = camera1.getHorizontalAxisPlane();
-            final Plane verticalPlane1 = camera1.getVerticalAxisPlane();
-            final Plane horizontalPlane2 = camera2.getHorizontalAxisPlane();
-            final Plane verticalPlane2 = camera2.getVerticalAxisPlane();
-            final Matrix planesIntersectionMatrix = new Matrix(
-                    Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
+            final var horizontalPlane1 = camera1.getHorizontalAxisPlane();
+            final var verticalPlane1 = camera1.getVerticalAxisPlane();
+            final var horizontalPlane2 = camera2.getHorizontalAxisPlane();
+            final var verticalPlane2 = camera2.getVerticalAxisPlane();
+            final var planesIntersectionMatrix = new Matrix(Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
             planesIntersectionMatrix.setElementAt(0, 0, verticalPlane1.getA());
             planesIntersectionMatrix.setElementAt(0, 1, verticalPlane1.getB());
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
@@ -3977,49 +3771,49 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
             planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
             planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
+            final var decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
-            final Matrix v = decomposer.getV();
-            final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
+            final var v = decomposer.getV();
+            final var centralCommonPoint = new HomogeneousPoint3D(
                     v.getElementAt(0, 3),
                     v.getElementAt(1, 3),
                     v.getElementAt(2, 3),
                     v.getElementAt(3, 3));
 
-            final double[] principalAxis1 = camera1.getPrincipalAxisArray();
-            final double[] principalAxis2 = camera2.getPrincipalAxisArray();
-            final double[] avgPrincipalAxis = ArrayUtils.multiplyByScalarAndReturnNew(
+            final var principalAxis1 = camera1.getPrincipalAxisArray();
+            final var principalAxis2 = camera2.getPrincipalAxisArray();
+            final var avgPrincipalAxis = ArrayUtils.multiplyByScalarAndReturnNew(
                     ArrayUtils.sumAndReturnNew(principalAxis1, principalAxis2), 0.5);
 
-            final Plane plane = new Plane(centralCommonPoint, avgPrincipalAxis);
+            final var plane = new Plane(centralCommonPoint, avgPrincipalAxis);
             plane.normalize();
 
-            final double planeA = plane.getA();
-            final double planeB = plane.getB();
-            final double planeC = plane.getC();
-            final double planeD = plane.getD();
+            final var planeA = plane.getA();
+            final var planeB = plane.getB();
+            final var planeC = plane.getC();
+            final var planeD = plane.getD();
 
-            final int numPoints = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final var numPoints = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
 
             HomogeneousPoint3D point3D;
             Point2D projectedPoint1;
             Point2D projectedPoint2;
-            final List<Point2D> projectedPoints1 = new ArrayList<>();
-            final List<Point2D> projectedPoints2 = new ArrayList<>();
+            final var projectedPoints1 = new ArrayList<Point2D>();
+            final var projectedPoints2 = new ArrayList<Point2D>();
             boolean front1;
             boolean front2;
-            boolean failed = false;
-            for (int i = 0; i < numPoints; i++) {
+            var failedIter = false;
+            for (var i = 0; i < numPoints; i++) {
                 // generate points and ensure they lie in front of both cameras
-                int numTry = 0;
+                var numTry = 0;
                 do {
                     // get a random point belonging to the plane
                     // a*x + b*y + c*z + d*w = 0
                     // y = -(a*x + c*z + d*w)/b or x = -(b*y + c*z + d*w)/a
                     final double homX;
                     final double homY;
-                    final double homW = 1.0;
-                    final double homZ = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+                    final var homW = 1.0;
+                    final var homZ = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
                     if (Math.abs(planeB) > ABSOLUTE_ERROR) {
                         homX = randomizer.nextDouble(MIN_RANDOM_VALUE_PLANAR, MAX_RANDOM_VALUE_PLANAR);
                         homY = -(planeA * homX + planeC * homZ + planeD * homW) / planeB;
@@ -4035,18 +3829,16 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
                     front1 = camera1.isPointInFrontOfCamera(point3D);
                     front2 = camera2.isPointInFrontOfCamera(point3D);
                     if (numTry > MAX_TRIES) {
-                        failed = true;
+                        failedIter = true;
                         break;
                     }
                     numTry++;
                 } while (!front1 || !front2);
-                if (failed) {
+                if (failedIter) {
                     break;
                 }
 
-                // check that 3D point is in front of both cameras
-                assertTrue(front1);
-                assertTrue(front2);
+                // here 3D point is in front of both cameras
 
                 // project 3D point into both cameras
                 projectedPoint1 = new InhomogeneousPoint2D();
@@ -4058,177 +3850,167 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
                 projectedPoints2.add(projectedPoint2);
             }
 
-            if (failed) {
+            if (failedIter) {
                 continue;
             }
 
-            final KnownBaselineTwoViewsSparseReconstructorListener listener =
-                    new KnownBaselineTwoViewsSparseReconstructorListener() {
+            final var listener = new KnownBaselineTwoViewsSparseReconstructorListener() {
 
-                        @Override
-                        public boolean hasMoreViewsAvailable(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            return mViewCount < 2;
+                @Override
+                public boolean hasMoreViewsAvailable(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    return viewCount < 2;
+                }
+
+                @Override
+                public void onRequestSamplesForCurrentView(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final int viewId, final List<Sample2D> samples) {
+
+                    samples.clear();
+
+                    Sample2D sample;
+                    if (viewCount == 0) {
+                        // first view
+                        for (var i = 0; i < numPoints; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints1.get(i));
+                            sample.setViewId(viewId);
+                            samples.add(sample);
                         }
-
-                        @Override
-                        public void onRequestSamplesForCurrentView(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId, final List<Sample2D> samples) {
-
-                            samples.clear();
-
-                            Sample2D sample;
-                            if (mViewCount == 0) {
-                                // first view
-                                for (int i = 0; i < numPoints; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints1.get(i));
-                                    sample.setViewId(viewId);
-                                    samples.add(sample);
-                                }
-                            } else {
-                                // second view
-                                for (int i = 0; i < numPoints; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints2.get(i));
-                                    sample.setViewId(viewId);
-                                    samples.add(sample);
-                                }
-                            }
+                    } else {
+                        // second view
+                        for (var i = 0; i < numPoints; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints2.get(i));
+                            sample.setViewId(viewId);
+                            samples.add(sample);
                         }
+                    }
+                }
 
-                        @Override
-                        public void onSamplesAccepted(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId, final List<Sample2D> samples) {
-                            mViewCount++;
-                        }
+                @Override
+                public void onSamplesAccepted(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final int viewId, final List<Sample2D> samples) {
+                    viewCount++;
+                }
 
-                        @Override
-                        public void onSamplesRejected(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId, final List<Sample2D> samples) {
-                            mViewCount++;
-                        }
+                @Override
+                public void onSamplesRejected(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final int viewId, final List<Sample2D> samples) {
+                    viewCount++;
+                }
 
-                        @Override
-                        public void onRequestMatches(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final List<Sample2D> samples1, final List<Sample2D> samples2,
-                                final int viewId1, final int viewId2, final List<MatchedSamples> matches) {
-                            matches.clear();
+                @Override
+                public void onRequestMatches(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final List<Sample2D> samples1, final List<Sample2D> samples2,
+                        final int viewId1, final int viewId2, final List<MatchedSamples> matches) {
+                    matches.clear();
 
-                            MatchedSamples match;
-                            for (int i = 0; i < numPoints; i++) {
-                                match = new MatchedSamples();
-                                match.setSamples(new Sample2D[]{
-                                        samples1.get(i), samples2.get(i)
-                                });
-                                match.setViewIds(new int[]{viewId1, viewId2});
-                                matches.add(match);
-                            }
-                        }
+                    MatchedSamples match;
+                    for (var i = 0; i < numPoints; i++) {
+                        match = new MatchedSamples();
+                        match.setSamples(new Sample2D[]{
+                                samples1.get(i), samples2.get(i)
+                        });
+                        match.setViewIds(new int[]{viewId1, viewId2});
+                        matches.add(match);
+                    }
+                }
 
-                        @Override
-                        public void onFundamentalMatrixEstimated(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final EstimatedFundamentalMatrix estimatedFundamentalMatrix) {
-                            mEstimatedFundamentalMatrix = estimatedFundamentalMatrix;
-                        }
+                @Override
+                public void onFundamentalMatrixEstimated(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final EstimatedFundamentalMatrix estimatedFundamentalMatrix) {
+                    KnownBaselineTwoViewsSparseReconstructorTest.this.estimatedFundamentalMatrix =
+                            estimatedFundamentalMatrix;
+                }
 
-                        @Override
-                        public void onCamerasEstimated(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final int viewId1, final int viewId2, final EstimatedCamera camera1,
-                                final EstimatedCamera camera2) {
-                            mEstimatedCamera1 = camera1;
-                            mEstimatedCamera2 = camera2;
-                        }
+                @Override
+                public void onCamerasEstimated(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final int viewId1, final int viewId2, final EstimatedCamera camera1,
+                        final EstimatedCamera camera2) {
+                    estimatedCamera1 = camera1;
+                    estimatedCamera2 = camera2;
+                }
 
-                        @Override
-                        public void onReconstructedPointsEstimated(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor,
-                                final List<MatchedSamples> matches,
-                                final List<ReconstructedPoint3D> points) {
-                            mReconstructedPoints = points;
-                        }
+                @Override
+                public void onReconstructedPointsEstimated(
+                        final KnownBaselineTwoViewsSparseReconstructor reconstructor,
+                        final List<MatchedSamples> matches, final List<ReconstructedPoint3D> points) {
+                    reconstructedPoints = points;
+                }
 
-                        @Override
-                        public void onStart(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mStarted = true;
-                        }
+                @Override
+                public void onStart(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    started = true;
+                }
 
-                        @Override
-                        public void onFinish(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mFinished = true;
-                        }
+                @Override
+                public void onFinish(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    finished = true;
+                }
 
-                        @Override
-                        public void onCancel(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mCancelled = true;
-                        }
+                @Override
+                public void onCancel(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    cancelled = true;
+                }
 
-                        @Override
-                        public void onFail(
-                                final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
-                            mFailed = true;
-                        }
-                    };
+                @Override
+                public void onFail(final KnownBaselineTwoViewsSparseReconstructor reconstructor) {
+                    KnownBaselineTwoViewsSparseReconstructorTest.this.failed = true;
+                }
+            };
 
-            final KnownBaselineTwoViewsSparseReconstructor reconstructor =
-                    new KnownBaselineTwoViewsSparseReconstructor(configuration, listener);
+            final var reconstructor = new KnownBaselineTwoViewsSparseReconstructor(configuration, listener);
 
             // check initial values
             reset();
-            assertFalse(mStarted);
-            assertFalse(mFinished);
-            assertFalse(mCancelled);
-            assertFalse(mFailed);
+            assertFalse(started);
+            assertFalse(finished);
+            assertFalse(cancelled);
+            assertFalse(this.failed);
             assertFalse(reconstructor.isFinished());
 
             reconstructor.start();
 
             // check correctness
-            if (!mFinished) {
+            if (!finished) {
                 continue;
             }
-            assertTrue(mStarted);
-            assertTrue(mFinished);
-            assertFalse(mCancelled);
-            assertFalse(mFailed);
+            assertTrue(started);
+            assertFalse(cancelled);
+            assertFalse(this.failed);
             assertTrue(reconstructor.isFinished());
 
             // check that estimated fundamental matrix is correct
             fundamentalMatrix.normalize();
-            mEstimatedFundamentalMatrix.getFundamentalMatrix().normalize();
+            estimatedFundamentalMatrix.getFundamentalMatrix().normalize();
 
             // matrices are equal up to scale
             if (!fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                    LARGE_ABSOLUTE_ERROR) && !fundamentalMatrix.getInternalMatrix()
-                    .multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                            LARGE_ABSOLUTE_ERROR)) {
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), LARGE_ABSOLUTE_ERROR)
+                    && !fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                    LARGE_ABSOLUTE_ERROR) || fundamentalMatrix.getInternalMatrix()
-                    .multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                            LARGE_ABSOLUTE_ERROR));
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), LARGE_ABSOLUTE_ERROR)
+                    || fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
+                    LARGE_ABSOLUTE_ERROR));
 
             // check that reconstructed points are in a metric stratum (up to a
             // certain scale)
-            final PinholeCamera estimatedCamera1 = mEstimatedCamera1.getCamera();
-            final PinholeCamera estimatedCamera2 = mEstimatedCamera2.getCamera();
+            final var estCam1 = this.estimatedCamera1.getCamera();
+            final var estCam2 = this.estimatedCamera2.getCamera();
 
-            estimatedCamera1.decompose();
-            estimatedCamera2.decompose();
+            estCam1.decompose();
+            estCam2.decompose();
 
             // cancel
             assertFalse(reconstructor.isCancelled());
@@ -4244,10 +4026,10 @@ public class KnownBaselineTwoViewsSparseReconstructorTest {
     }
 
     private void reset() {
-        mViewCount = 0;
-        mEstimatedFundamentalMatrix = null;
-        mEstimatedCamera1 = mEstimatedCamera2 = null;
-        mReconstructedPoints = null;
-        mStarted = mFinished = mCancelled = mFailed = false;
+        viewCount = 0;
+        estimatedFundamentalMatrix = null;
+        estimatedCamera1 = estimatedCamera2 = null;
+        reconstructedPoints = null;
+        started = finished = cancelled = failed = false;
     }
 }

@@ -18,8 +18,7 @@ package com.irurueta.ar.sfm;
 /**
  * Exception raised if initial cameras estimation fails.
  */
-public class InitialCamerasEstimationFailedException extends
-        StructureFromMotionException {
+public class InitialCamerasEstimationFailedException extends StructureFromMotionException {
 
     /**
      * Constructor.
@@ -43,8 +42,7 @@ public class InitialCamerasEstimationFailedException extends
      * @param message message describing the cause of the exception.
      * @param cause   instance containing the cause of the exception.
      */
-    public InitialCamerasEstimationFailedException(final String message,
-                                                   final Throwable cause) {
+    public InitialCamerasEstimationFailedException(final String message, final Throwable cause) {
         super(message, cause);
     }
 

@@ -15,15 +15,15 @@
  */
 package com.irurueta.ar.sfm;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class Point3DTriangulationExceptionTest {
+class Point3DTriangulationExceptionTest {
 
     @Test
-    public void testConstructor() {
-        Point3DTriangulationException ex = new Point3DTriangulationException();
+    void testConstructor() {
+        var ex = new Point3DTriangulationException();
         assertNotNull(ex);
 
         ex = new Point3DTriangulationException("message");
@@ -32,8 +32,7 @@ public class Point3DTriangulationExceptionTest {
         ex = new Point3DTriangulationException(new Exception());
         assertNotNull(ex);
 
-        ex = new Point3DTriangulationException("message",
-                new Exception());
+        ex = new Point3DTriangulationException("message", new Exception());
         assertNotNull(ex);
     }
 }

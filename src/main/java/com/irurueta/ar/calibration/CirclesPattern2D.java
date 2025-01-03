@@ -45,8 +45,7 @@ public class CirclesPattern2D extends Pattern2D implements Serializable {
     /**
      * Default number of points used by this 2D pattern.
      */
-    public static final int DEFAULT_NUMBER_OF_POINTS =
-            DEFAULT_COLS * DEFAULT_ROWS;
+    public static final int DEFAULT_NUMBER_OF_POINTS = DEFAULT_COLS * DEFAULT_ROWS;
 
     /**
      * Minimum number of columns.
@@ -62,25 +61,25 @@ public class CirclesPattern2D extends Pattern2D implements Serializable {
     /**
      * Point separation in the circles pattern.
      */
-    private double mPointSeparation;
+    private double pointSeparation;
 
     /**
      * Number of columns in the circles pattern.
      */
-    private int mCols;
+    private int cols;
 
     /**
      * Number of rows in the circles pattern.
      */
-    private int mRows;
+    private int rows;
 
     /**
      * Constructor.
      */
     public CirclesPattern2D() {
-        mPointSeparation = DEFAULT_POINT_SEPARATION;
-        mCols = DEFAULT_COLS;
-        mRows = DEFAULT_ROWS;
+        pointSeparation = DEFAULT_POINT_SEPARATION;
+        cols = DEFAULT_COLS;
+        rows = DEFAULT_ROWS;
     }
 
     /**
@@ -89,7 +88,7 @@ public class CirclesPattern2D extends Pattern2D implements Serializable {
      * @return point separation in the circles pattern.
      */
     public double getPointSeparation() {
-        return mPointSeparation;
+        return pointSeparation;
     }
 
     /**
@@ -103,7 +102,7 @@ public class CirclesPattern2D extends Pattern2D implements Serializable {
             throw new IllegalArgumentException();
         }
 
-        mPointSeparation = pointSeparation;
+        this.pointSeparation = pointSeparation;
     }
 
     /**
@@ -112,7 +111,7 @@ public class CirclesPattern2D extends Pattern2D implements Serializable {
      * @return number of columns in the circles pattern.
      */
     public int getCols() {
-        return mCols;
+        return cols;
     }
 
     /**
@@ -126,7 +125,7 @@ public class CirclesPattern2D extends Pattern2D implements Serializable {
             throw new IllegalArgumentException();
         }
 
-        mCols = cols;
+        this.cols = cols;
     }
 
     /**
@@ -135,7 +134,7 @@ public class CirclesPattern2D extends Pattern2D implements Serializable {
      * @return number of rows in the circles pattern.
      */
     public int getRows() {
-        return mRows;
+        return rows;
     }
 
     /**
@@ -149,7 +148,7 @@ public class CirclesPattern2D extends Pattern2D implements Serializable {
             throw new IllegalArgumentException();
         }
 
-        mRows = rows;
+        this.rows = rows;
     }
 
     /**
@@ -160,14 +159,14 @@ public class CirclesPattern2D extends Pattern2D implements Serializable {
      */
     @Override
     public List<Point2D> getIdealPoints() {
-        final List<Point2D> points = new ArrayList<>();
+        final var points = new ArrayList<Point2D>();
 
         double x;
         double y;
-        for (int i = 0; i < mRows; i++) {
-            for (int j = 0; j < mCols; j++) {
-                x = (2 * j + i % 2) * mPointSeparation;
-                y = i * mPointSeparation;
+        for (var i = 0; i < rows; i++) {
+            for (var j = 0; j < cols; j++) {
+                x = (2 * j + i % 2) * pointSeparation;
+                y = i * pointSeparation;
                 points.add(new InhomogeneousPoint2D(x, y));
             }
         }
@@ -181,7 +180,7 @@ public class CirclesPattern2D extends Pattern2D implements Serializable {
      */
     @Override
     public int getNumberOfPoints() {
-        return mRows * mCols;
+        return rows * cols;
     }
 
     /**

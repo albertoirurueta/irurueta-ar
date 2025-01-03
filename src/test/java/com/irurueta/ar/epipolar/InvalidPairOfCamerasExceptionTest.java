@@ -15,15 +15,15 @@
  */
 package com.irurueta.ar.epipolar;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class InvalidPairOfCamerasExceptionTest {
+class InvalidPairOfCamerasExceptionTest {
 
     @Test
-    public void testConstructor() {
-        InvalidPairOfCamerasException ex = new InvalidPairOfCamerasException();
+    void testConstructor() {
+        var ex = new InvalidPairOfCamerasException();
         assertNotNull(ex);
 
         ex = new InvalidPairOfCamerasException("message");
@@ -32,8 +32,7 @@ public class InvalidPairOfCamerasExceptionTest {
         ex = new InvalidPairOfCamerasException(new Exception());
         assertNotNull(ex);
 
-        ex = new InvalidPairOfCamerasException("message",
-                new Exception());
+        ex = new InvalidPairOfCamerasException("message", new Exception());
         assertNotNull(ex);
     }
 }

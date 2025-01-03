@@ -37,8 +37,7 @@ public interface InitialCamerasEstimatorListener {
      * @param estimatedLeftCamera  estimated camera on left view.
      * @param estimatedRightCamera estimated camera on right view.
      */
-    void onFinish(final InitialCamerasEstimator estimator,
-                  final PinholeCamera estimatedLeftCamera,
+    void onFinish(final InitialCamerasEstimator estimator, final PinholeCamera estimatedLeftCamera,
                   final PinholeCamera estimatedRightCamera);
 
     /**
@@ -47,6 +46,5 @@ public interface InitialCamerasEstimatorListener {
      * @param estimator estimator raising the event.
      * @param e         reason of estimation failure.
      */
-    void onFail(final InitialCamerasEstimator estimator,
-                final InitialCamerasEstimationFailedException e);
+    void onFail(final InitialCamerasEstimator estimator, final InitialCamerasEstimationFailedException e);
 }

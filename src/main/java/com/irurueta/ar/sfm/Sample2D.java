@@ -34,22 +34,22 @@ public class Sample2D implements Serializable {
      * ID to identify this instance. This is useful in case that this data is
      * stored in some sort of database and must be set externally.
      */
-    private String mId;
+    private String id;
 
     /**
      * ID of view where 2D point has been sampled.
      */
-    private int mViewId;
+    private int viewId;
 
     /**
      * 2D sampled point coordinates.
      */
-    private Point2D mPoint;
+    private Point2D point;
 
     /**
      * 3D reconstructed point.
      */
-    private ReconstructedPoint3D mReconstructedPoint;
+    private ReconstructedPoint3D reconstructedPoint;
 
     /**
      * Quality score of sampled point. The larger the value, the
@@ -58,7 +58,7 @@ public class Sample2D implements Serializable {
      * This value is typically obtained from algorithms determining quality of
      * points of interest.
      */
-    private double mQualityScore = DEFAULT_QUALITY_SCORE;
+    private double qualityScore = DEFAULT_QUALITY_SCORE;
 
     /**
      * Covariance of sampled points. This is obtained from the algorithms
@@ -67,12 +67,12 @@ public class Sample2D implements Serializable {
      * consider 1 pixel accuracy.
      * This might be null if covariance cannot be determined.
      */
-    private Matrix mCovariance;
+    private Matrix covariance;
 
     /**
      * Color data of sampled point (i.e. RGB or YUV values), if available.
      */
-    private PointColorData mColorData;
+    private PointColorData colorData;
 
     /**
      * Gets id to identify this instance. This is useful in case that this data
@@ -81,7 +81,7 @@ public class Sample2D implements Serializable {
      * @return id to identify this instance.
      */
     public String getId() {
-        return mId;
+        return id;
     }
 
     /**
@@ -91,7 +91,7 @@ public class Sample2D implements Serializable {
      * @param id id to identify this instance.
      */
     public void setId(final String id) {
-        mId = id;
+        this.id = id;
     }
 
     /**
@@ -100,7 +100,7 @@ public class Sample2D implements Serializable {
      * @return id of view where 2D point has been sampled.
      */
     public int getViewId() {
-        return mViewId;
+        return viewId;
     }
 
     /**
@@ -109,7 +109,7 @@ public class Sample2D implements Serializable {
      * @param viewId id of view where 2D point has been sampled.
      */
     public void setViewId(final int viewId) {
-        mViewId = viewId;
+        this.viewId = viewId;
     }
 
     /**
@@ -118,7 +118,7 @@ public class Sample2D implements Serializable {
      * @return 2D sampled point coordinates.
      */
     public Point2D getPoint() {
-        return mPoint;
+        return point;
     }
 
     /**
@@ -127,7 +127,7 @@ public class Sample2D implements Serializable {
      * @param point 2D sampled point coordinates.
      */
     public void setPoint(final Point2D point) {
-        mPoint = point;
+        this.point = point;
     }
 
     /**
@@ -136,7 +136,7 @@ public class Sample2D implements Serializable {
      * @return 3D reconstructed point.
      */
     public ReconstructedPoint3D getReconstructedPoint() {
-        return mReconstructedPoint;
+        return reconstructedPoint;
     }
 
     /**
@@ -145,7 +145,7 @@ public class Sample2D implements Serializable {
      * @param reconstructedPoint 3D reconstructed point.
      */
     public void setReconstructedPoint(final ReconstructedPoint3D reconstructedPoint) {
-        mReconstructedPoint = reconstructedPoint;
+        this.reconstructedPoint = reconstructedPoint;
     }
 
     /**
@@ -158,7 +158,7 @@ public class Sample2D implements Serializable {
      * @return quality score of sampled point.
      */
     public double getQualityScore() {
-        return mQualityScore;
+        return qualityScore;
     }
 
     /**
@@ -171,7 +171,7 @@ public class Sample2D implements Serializable {
      * @param qualityScore quality score of sampled point.
      */
     public void setQualityScore(final double qualityScore) {
-        mQualityScore = qualityScore;
+        this.qualityScore = qualityScore;
     }
 
     /**
@@ -184,7 +184,7 @@ public class Sample2D implements Serializable {
      * @return covariance of sampled points or null.
      */
     public Matrix getCovariance() {
-        return mCovariance;
+        return covariance;
     }
 
     /**
@@ -197,7 +197,7 @@ public class Sample2D implements Serializable {
      * @param covariance covariance of sampled points.
      */
     public void setCovariance(final Matrix covariance) {
-        mCovariance = covariance;
+        this.covariance = covariance;
     }
 
     /**
@@ -206,7 +206,7 @@ public class Sample2D implements Serializable {
      * @return color data of sampled point or null.
      */
     public PointColorData getColorData() {
-        return mColorData;
+        return colorData;
     }
 
     /**
@@ -215,6 +215,6 @@ public class Sample2D implements Serializable {
      * @param colorData color data of sampled point or null.
      */
     public void setColorData(final PointColorData colorData) {
-        mColorData = colorData;
+        this.colorData = colorData;
     }
 }

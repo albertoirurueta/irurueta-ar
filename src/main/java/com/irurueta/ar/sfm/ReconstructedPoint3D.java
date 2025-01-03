@@ -35,17 +35,17 @@ public class ReconstructedPoint3D implements Serializable {
      * ID to identify this instance. This is useful in case that this data is
      * stored in some sort of database and must be set externally.
      */
-    private String mId;
+    private String id;
 
     /**
      * Coordinates of reconstructed 3D point.
      */
-    private Point3D mPoint;
+    private Point3D point;
 
     /**
      * Indicates whether reconstructed point is an inlier or not.
      */
-    private boolean mInlier;
+    private boolean inlier;
 
     /**
      * Quality score of sampled point. The larger the value, the better the
@@ -53,18 +53,18 @@ public class ReconstructedPoint3D implements Serializable {
      * This value is typically obtained from algorithms determining point
      * correspondences.
      */
-    private double mQualityScore = DEFAULT_QUALITY_SCORE;
+    private double qualityScore = DEFAULT_QUALITY_SCORE;
 
     /**
      * Covariance of reconstructed point. This can be computed during point
      * triangularization.
      */
-    private Matrix mCovariance;
+    private Matrix covariance;
 
     /**
      * Color data of reconstructed point (i.e. RGB or YUV values), if available.
      */
-    private PointColorData mColorData;
+    private PointColorData colorData;
 
     /**
      * Gets id to identify this instance. This is useful in case that this data
@@ -73,7 +73,7 @@ public class ReconstructedPoint3D implements Serializable {
      * @return id to identify this instance.
      */
     public String getId() {
-        return mId;
+        return id;
     }
 
     /**
@@ -83,7 +83,7 @@ public class ReconstructedPoint3D implements Serializable {
      * @param id id to identify this instance.
      */
     public void setId(final String id) {
-        mId = id;
+        this.id = id;
     }
 
     /**
@@ -92,7 +92,7 @@ public class ReconstructedPoint3D implements Serializable {
      * @return coordinates of reconstructed 3D point.
      */
     public Point3D getPoint() {
-        return mPoint;
+        return point;
     }
 
     /**
@@ -101,7 +101,7 @@ public class ReconstructedPoint3D implements Serializable {
      * @param point coordinates of reconstructed 3D point.
      */
     public void setPoint(final Point3D point) {
-        mPoint = point;
+        this.point = point;
     }
 
     /**
@@ -110,7 +110,7 @@ public class ReconstructedPoint3D implements Serializable {
      * @return true if reconstructed point is an inlier, false otherwise.
      */
     public boolean isInlier() {
-        return mInlier;
+        return inlier;
     }
 
     /**
@@ -119,7 +119,7 @@ public class ReconstructedPoint3D implements Serializable {
      * @param inlier true if reconstructed point is an inlier, false otherwise.
      */
     public void setInlier(final boolean inlier) {
-        mInlier = inlier;
+        this.inlier = inlier;
     }
 
     /**
@@ -131,7 +131,7 @@ public class ReconstructedPoint3D implements Serializable {
      * @return quality score of sampled point.
      */
     public double getQualityScore() {
-        return mQualityScore;
+        return qualityScore;
     }
 
     /**
@@ -143,7 +143,7 @@ public class ReconstructedPoint3D implements Serializable {
      * @param qualityScore quality score of sampled point.
      */
     public void setQualityScore(final double qualityScore) {
-        mQualityScore = qualityScore;
+        this.qualityScore = qualityScore;
     }
 
     /**
@@ -154,7 +154,7 @@ public class ReconstructedPoint3D implements Serializable {
      * @return covariance of reconstructed point.
      */
     public Matrix getCovariance() {
-        return mCovariance;
+        return covariance;
     }
 
     /**
@@ -164,7 +164,7 @@ public class ReconstructedPoint3D implements Serializable {
      * @param covariance covariance of reconstructed point.
      */
     public void setCovariance(final Matrix covariance) {
-        mCovariance = covariance;
+        this.covariance = covariance;
     }
 
     /**
@@ -174,7 +174,7 @@ public class ReconstructedPoint3D implements Serializable {
      * @return color data of reconstructed point or null.
      */
     public PointColorData getColorData() {
-        return mColorData;
+        return colorData;
     }
 
     /**
@@ -184,6 +184,6 @@ public class ReconstructedPoint3D implements Serializable {
      * @param colorData color data of reconstructed point or null.
      */
     public void setColorData(final PointColorData colorData) {
-        mColorData = colorData;
+        this.colorData = colorData;
     }
 }

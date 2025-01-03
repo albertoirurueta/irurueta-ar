@@ -16,7 +16,6 @@
 package com.irurueta.ar.calibration.estimators;
 
 import com.irurueta.algebra.AlgebraException;
-import com.irurueta.algebra.Matrix;
 import com.irurueta.ar.calibration.Pattern2D;
 import com.irurueta.ar.calibration.Pattern2DType;
 import com.irurueta.geometry.*;
@@ -25,17 +24,15 @@ import com.irurueta.numerical.robust.RobustEstimatorException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import com.irurueta.statistics.GaussianRandomizer;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class CameraPoseEstimatorTest {
+class CameraPoseEstimatorTest {
 
     // use distance between 3cm and 20cm 10cm to the pattern
     private static final double MIN_RANDOM_VALUE = -0.2;
@@ -61,8 +58,8 @@ public class CameraPoseEstimatorTest {
     private static final int TIMES = 100;
 
     @Test
-    public void testConstructor() {
-        final CameraPoseEstimator estimator = new CameraPoseEstimator();
+    void testConstructor() {
+        final var estimator = new CameraPoseEstimator();
 
         // check correctness
         assertNull(estimator.getRotation());
@@ -71,62 +68,51 @@ public class CameraPoseEstimatorTest {
     }
 
     @Test
-    public void testEstimate() throws AlgebraException, GeometryException {
-        final Pattern2D pattern = Pattern2D.create(Pattern2DType.QR);
+    void testEstimate() throws AlgebraException, GeometryException {
+        final var pattern = Pattern2D.create(Pattern2DType.QR);
 
-        final List<Point2D> patternPoints = pattern.getIdealPoints();
+        final var patternPoints = pattern.getIdealPoints();
 
         // assume that pattern points are located on a 3D plane
         // (for instance Z = 0), but can be really any plane
-        final List<Point3D> points3D = new ArrayList<>();
-        for (final Point2D patternPoint : patternPoints) {
-            points3D.add(new HomogeneousPoint3D(patternPoint.getInhomX(),
-                    patternPoint.getInhomY(), 0.0, 1.0));
+        final var points3D = new ArrayList<Point3D>();
+        for (final var patternPoint : patternPoints) {
+            points3D.add(new HomogeneousPoint3D(patternPoint.getInhomX(), patternPoint.getInhomY(), 0.0, 1.0));
         }
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
             // create intrinsic parameters
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var randomizer = new UniformRandomizer();
+            final var focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-            final double skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
-            final double horizontalPrincipalPoint = 0.0;
-            final double verticalPrincipalPoint = 0.0;
+            final var skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final var horizontalPrincipalPoint = 0.0;
+            final var verticalPrincipalPoint = 0.0;
 
-            final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength,
-                            focalLength, horizontalPrincipalPoint,
-                            verticalPrincipalPoint, skewness);
+            final var intrinsic = new PinholeCameraIntrinsicParameters(focalLength, focalLength,
+                    horizontalPrincipalPoint, verticalPrincipalPoint, skewness);
 
             // create random camera
 
             // rotation
-            final double alphaEuler = randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES * Math.PI / 180.0,
-                    MAX_ANGLE_DEGREES * Math.PI / 180.0);
-            final double betaEuler = randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES * Math.PI / 180.0,
-                    MAX_ANGLE_DEGREES * Math.PI / 180.0);
-            final double gammaEuler = randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES * Math.PI / 180.0,
-                    MAX_ANGLE_DEGREES * Math.PI / 180.0);
+            final var alphaEuler = randomizer.nextDouble(
+                    MIN_ANGLE_DEGREES * Math.PI / 180.0, MAX_ANGLE_DEGREES * Math.PI / 180.0);
+            final var betaEuler = randomizer.nextDouble(
+                    MIN_ANGLE_DEGREES * Math.PI / 180.0, MAX_ANGLE_DEGREES * Math.PI / 180.0);
+            final var gammaEuler = randomizer.nextDouble(
+                    MIN_ANGLE_DEGREES * Math.PI / 180.0, MAX_ANGLE_DEGREES * Math.PI / 180.0);
 
-            final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler,
-                    betaEuler, gammaEuler);
+            final var rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
 
             // camera center
-            final double[] cameraCenterArray = new double[Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH];
-            randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE,
-                    MAX_RANDOM_VALUE);
-            final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(
-                    cameraCenterArray);
+            final var cameraCenterArray = new double[Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH];
+            randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+            final var cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
 
             // create camera with intrinsic parameters, rotation and camera
             // center
-            final PinholeCamera camera = new PinholeCamera(intrinsic, rotation,
-                    cameraCenter);
+            final var camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
             camera.normalize();
 
             // ensure that all 3D pattern points are in front of the camera
@@ -136,20 +122,17 @@ public class CameraPoseEstimatorTest {
             assertTrue(camera.isPointInFrontOfCamera(points3D.get(3)));
 
             // project 3D pattern points
-            final List<Point2D> projectedPatternPoints = camera.project(points3D);
+            final var projectedPatternPoints = camera.project(points3D);
 
             // estimate homography between 2D pattern points and projected
             // pattern points
-            final Transformation2D homography = new ProjectiveTransformation2D(
-                    patternPoints.get(0), patternPoints.get(1),
-                    patternPoints.get(2), patternPoints.get(3),
-                    projectedPatternPoints.get(0),
-                    projectedPatternPoints.get(1),
-                    projectedPatternPoints.get(2),
+            final var homography = new ProjectiveTransformation2D(
+                    patternPoints.get(0), patternPoints.get(1), patternPoints.get(2), patternPoints.get(3),
+                    projectedPatternPoints.get(0), projectedPatternPoints.get(1), projectedPatternPoints.get(2),
                     projectedPatternPoints.get(3));
 
             // estimate camera pose
-            final CameraPoseEstimator estimator = new CameraPoseEstimator();
+            final var estimator = new CameraPoseEstimator();
 
             // check default values
             assertNull(estimator.getRotation());
@@ -162,23 +145,22 @@ public class CameraPoseEstimatorTest {
             // check correctness
             assertNotNull(estimator.getRotation());
             // check that rotation is equal at matrix level (up to sign)
-            final Matrix rotMat1 = rotation.getInternalMatrix();
-            final Matrix rotMat2 = estimator.getRotation().asInhomogeneousMatrix();
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 3; j++) {
-                    assertEquals(Math.abs(rotMat1.getElementAt(i, j)),
-                            Math.abs(rotMat2.getElementAt(i, j)),
+            final var rotMat1 = rotation.getInternalMatrix();
+            final var rotMat2 = estimator.getRotation().asInhomogeneousMatrix();
+            for (var i = 0; i < 3; i++) {
+                for (var j = 0; j < 3; j++) {
+                    assertEquals(Math.abs(rotMat1.getElementAt(i, j)), Math.abs(rotMat2.getElementAt(i, j)),
                             VERY_LARGE_ABSOLUTE_ERROR);
                 }
             }
             assertNotNull(estimator.getCameraCenter());
 
-            final double inhomX1 = cameraCenter.getInhomX();
-            final double inhomY1 = cameraCenter.getInhomY();
-            final double inhomZ1 = cameraCenter.getInhomZ();
-            final double inhomX2 = estimator.getCameraCenter().getInhomX();
-            final double inhomY2 = estimator.getCameraCenter().getInhomY();
-            final double inhomZ2 = estimator.getCameraCenter().getInhomZ();
+            final var inhomX1 = cameraCenter.getInhomX();
+            final var inhomY1 = cameraCenter.getInhomY();
+            final var inhomZ1 = cameraCenter.getInhomZ();
+            final var inhomX2 = estimator.getCameraCenter().getInhomX();
+            final var inhomY2 = estimator.getCameraCenter().getInhomY();
+            final var inhomZ2 = estimator.getCameraCenter().getInhomZ();
 
             if (Math.abs(inhomX1 - inhomX2) > 2 * VERY_LARGE_ABSOLUTE_ERROR) {
                 continue;
@@ -199,7 +181,7 @@ public class CameraPoseEstimatorTest {
             assertTrue(estimator.getCamera().isPointInFrontOfCamera(points3D.get(2)));
             assertTrue(estimator.getCamera().isPointInFrontOfCamera(points3D.get(3)));
 
-            final double distance = cameraCenter.distanceTo(estimator.getCameraCenter());
+            final var distance = cameraCenter.distanceTo(estimator.getCameraCenter());
             if (distance > LARGE_ABSOLUTE_ERROR) {
                 continue;
             }
@@ -208,14 +190,11 @@ public class CameraPoseEstimatorTest {
             // project 3D points using estimated camera and check projection
             // error
             assertNotNull(estimator.getCamera());
-            final List<Point2D> projectedPatternPoints2 = estimator.getCamera().
-                    project(points3D);
-            assertEquals(projectedPatternPoints.size(),
-                    projectedPatternPoints2.size());
-            boolean failed = false;
-            for (int i = 0; i < projectedPatternPoints.size(); i++) {
-                final double projectionDistance = projectedPatternPoints.get(i).distanceTo(
-                        projectedPatternPoints2.get(i));
+            final var projectedPatternPoints2 = estimator.getCamera().project(points3D);
+            assertEquals(projectedPatternPoints.size(), projectedPatternPoints2.size());
+            var failed = false;
+            for (var i = 0; i < projectedPatternPoints.size(); i++) {
+                final var projectionDistance = projectedPatternPoints.get(i).distanceTo(projectedPatternPoints2.get(i));
                 if (projectionDistance > 4 * VERY_LARGE_ABSOLUTE_ERROR) {
                     failed = true;
                     break;
@@ -235,63 +214,52 @@ public class CameraPoseEstimatorTest {
     }
 
     @Test
-    public void testEstimateQRWithError() throws AlgebraException, GeometryException {
-        final Pattern2D pattern = Pattern2D.create(Pattern2DType.QR);
+    void testEstimateQRWithError() throws AlgebraException, GeometryException {
+        final var pattern = Pattern2D.create(Pattern2DType.QR);
 
-        final List<Point2D> patternPoints = pattern.getIdealPoints();
+        final var patternPoints = pattern.getIdealPoints();
 
         // assume that pattern points are located on a 3D plane
         // (for instance Z = 0), but can be really any plane
-        final List<Point3D> points3D = new ArrayList<>();
-        for (final Point2D patternPoint : patternPoints) {
-            points3D.add(new HomogeneousPoint3D(patternPoint.getInhomX(),
-                    patternPoint.getInhomY(), 0.0, 1.0));
+        final var points3D = new ArrayList<Point3D>();
+        for (final var patternPoint : patternPoints) {
+            points3D.add(new HomogeneousPoint3D(patternPoint.getInhomX(), patternPoint.getInhomY(), 0.0, 1.0));
         }
 
-        double avgDistanceError = 0.0;
-        double avgProjectionError = 0.0;
-        for (int t = 0; t < TIMES; t++) {
+        var avgDistanceError = 0.0;
+        var avgProjectionError = 0.0;
+        for (var t = 0; t < TIMES; t++) {
             // create intrinsic parameters
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var randomizer = new UniformRandomizer();
+            final var focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-            final double skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
-            final double horizontalPrincipalPoint = 0.0;
-            final double verticalPrincipalPoint = 0.0;
+            final var skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final var horizontalPrincipalPoint = 0.0;
+            final var verticalPrincipalPoint = 0.0;
 
-            final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength,
-                            focalLength, horizontalPrincipalPoint,
-                            verticalPrincipalPoint, skewness);
+            final var intrinsic = new PinholeCameraIntrinsicParameters(focalLength, focalLength,
+                    horizontalPrincipalPoint, verticalPrincipalPoint, skewness);
 
             // create random camera
 
             // rotation
-            final double alphaEuler = randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES * Math.PI / 180.0,
-                    MAX_ANGLE_DEGREES * Math.PI / 180.0);
-            final double betaEuler = randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES * Math.PI / 180.0,
-                    MAX_ANGLE_DEGREES * Math.PI / 180.0);
-            final double gammaEuler = randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES * Math.PI / 180.0,
-                    MAX_ANGLE_DEGREES * Math.PI / 180.0);
+            final var alphaEuler = randomizer.nextDouble(
+                    MIN_ANGLE_DEGREES * Math.PI / 180.0, MAX_ANGLE_DEGREES * Math.PI / 180.0);
+            final var betaEuler = randomizer.nextDouble(
+                    MIN_ANGLE_DEGREES * Math.PI / 180.0, MAX_ANGLE_DEGREES * Math.PI / 180.0);
+            final var gammaEuler = randomizer.nextDouble(
+                    MIN_ANGLE_DEGREES * Math.PI / 180.0, MAX_ANGLE_DEGREES * Math.PI / 180.0);
 
-            final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler,
-                    betaEuler, gammaEuler);
+            final var rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
 
             // camera center
-            final double[] cameraCenterArray = new double[Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH];
-            randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE,
-                    MAX_RANDOM_VALUE);
-            final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(
-                    cameraCenterArray);
+            final var cameraCenterArray = new double[Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH];
+            randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+            final var cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
 
             // create camera with intrinsic parameters, rotation and camera
             // center
-            final PinholeCamera camera = new PinholeCamera(intrinsic, rotation,
-                    cameraCenter);
+            final var camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
             camera.normalize();
 
             // ensure that all 3D pattern points are in front of the camera
@@ -301,18 +269,17 @@ public class CameraPoseEstimatorTest {
             assertTrue(camera.isPointInFrontOfCamera(points3D.get(3)));
 
             // project 3D pattern points
-            final List<Point2D> projectedPatternPoints = camera.project(points3D);
+            final var projectedPatternPoints = camera.project(points3D);
             // add error to projected pattern points
-            final GaussianRandomizer rnd = new GaussianRandomizer(
-                    new Random(), 0.0, STD_ERROR);
-            for (final Point2D p : projectedPatternPoints) {
+            final var rnd = new GaussianRandomizer(0.0, STD_ERROR);
+            for (final var p : projectedPatternPoints) {
                 p.setInhomogeneousCoordinates(p.getInhomX() + rnd.nextDouble(),
                         p.getInhomY() + rnd.nextDouble());
             }
 
             // estimate homography between 2D pattern points and projected
             // pattern points
-            final Transformation2D homography = new ProjectiveTransformation2D(
+            final var homography = new ProjectiveTransformation2D(
                     patternPoints.get(0), patternPoints.get(1),
                     patternPoints.get(2), patternPoints.get(3),
                     projectedPatternPoints.get(0),
@@ -321,7 +288,7 @@ public class CameraPoseEstimatorTest {
                     projectedPatternPoints.get(3));
 
             // estimate camera pose
-            final CameraPoseEstimator estimator = new CameraPoseEstimator();
+            final var estimator = new CameraPoseEstimator();
 
             // check default values
             assertNull(estimator.getRotation());
@@ -336,18 +303,16 @@ public class CameraPoseEstimatorTest {
             // check that rotation is equal at matrix level (up to sign)
             assertNotNull(estimator.getCameraCenter());
 
-            final double distance = cameraCenter.distanceTo(estimator.getCameraCenter());
+            final var distance = cameraCenter.distanceTo(estimator.getCameraCenter());
             avgDistanceError += distance;
 
             // project 3D points using estimated camera and check projection
             // error
             assertNotNull(estimator.getCamera());
-            final List<Point2D> projectedPatternPoints2 = estimator.getCamera().
-                    project(points3D);
-            assertEquals(projectedPatternPoints.size(),
-                    projectedPatternPoints2.size());
-            for (int i = 0; i < projectedPatternPoints.size(); i++) {
-                final double projectionDistance = projectedPatternPoints.get(i).distanceTo(
+            final var projectedPatternPoints2 = estimator.getCamera().project(points3D);
+            assertEquals(projectedPatternPoints.size(), projectedPatternPoints2.size());
+            for (var i = 0; i < projectedPatternPoints.size(); i++) {
+                final var projectionDistance = projectedPatternPoints.get(i).distanceTo(
                         projectedPatternPoints2.get(i));
                 avgProjectionError += projectionDistance;
             }
@@ -356,118 +321,97 @@ public class CameraPoseEstimatorTest {
         avgDistanceError /= TIMES;
         avgProjectionError /= TIMES;
 
-        String msg = "QR with Error - Average camera center error: " + avgDistanceError + "m";
-        Logger.getLogger(CameraPoseEstimatorTest.class.getName()).log(
-                Level.INFO, msg);
+        var msg = "QR with Error - Average camera center error: " + avgDistanceError + "m";
+        Logger.getLogger(CameraPoseEstimatorTest.class.getName()).log(Level.INFO, msg);
         msg = "QR with Error - Average projection error: " + avgProjectionError + "px";
-        Logger.getLogger(CameraPoseEstimatorTest.class.getName()).log(
-                Level.INFO, msg);
+        Logger.getLogger(CameraPoseEstimatorTest.class.getName()).log(Level.INFO, msg);
     }
 
     @Test
-    public void testEstimateCirclesWithError() throws AlgebraException,
-            GeometryException, RobustEstimatorException {
-        final Pattern2D pattern = Pattern2D.create(Pattern2DType.CIRCLES);
+    void testEstimateCirclesWithError() throws AlgebraException, GeometryException, RobustEstimatorException {
+        final var pattern = Pattern2D.create(Pattern2DType.CIRCLES);
 
-        final List<Point2D> patternPoints = pattern.getIdealPoints();
+        final var patternPoints = pattern.getIdealPoints();
 
         // assume that pattern points are located on a 3D plane
         // (for instance Z = 0), but can be really any plane
-        final List<Point3D> points3D = new ArrayList<>();
-        for (final Point2D patternPoint : patternPoints) {
-            points3D.add(new HomogeneousPoint3D(patternPoint.getInhomX(),
-                    patternPoint.getInhomY(), 0.0, 1.0));
+        final var points3D = new ArrayList<Point3D>();
+        for (final var patternPoint : patternPoints) {
+            points3D.add(new HomogeneousPoint3D(patternPoint.getInhomX(), patternPoint.getInhomY(), 0.0, 1.0));
         }
 
-        int numValid = 0;
-        double avgDistanceError = 0.0;
-        double avgProjectionError = 0.0;
-        for (int t = 0; t < TIMES; t++) {
+        var numValid = 0;
+        var avgDistanceError = 0.0;
+        var avgProjectionError = 0.0;
+        for (var t = 0; t < TIMES; t++) {
             // create intrinsic parameters
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var randomizer = new UniformRandomizer();
+            final var focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-            final double skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
-            final double horizontalPrincipalPoint = 0.0;
-            final double verticalPrincipalPoint = 0.0;
+            final var skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final var horizontalPrincipalPoint = 0.0;
+            final var verticalPrincipalPoint = 0.0;
 
-            final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength,
-                            focalLength, horizontalPrincipalPoint,
-                            verticalPrincipalPoint, skewness);
+            final var intrinsic = new PinholeCameraIntrinsicParameters(focalLength, focalLength,
+                    horizontalPrincipalPoint, verticalPrincipalPoint, skewness);
 
             // create random camera
 
             // rotation
-            final double alphaEuler = randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES * Math.PI / 180.0,
-                    MAX_ANGLE_DEGREES * Math.PI / 180.0);
-            final double betaEuler = randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES * Math.PI / 180.0,
-                    MAX_ANGLE_DEGREES * Math.PI / 180.0);
-            final double gammaEuler = randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES * Math.PI / 180.0,
-                    MAX_ANGLE_DEGREES * Math.PI / 180.0);
+            final var alphaEuler = randomizer.nextDouble(
+                    MIN_ANGLE_DEGREES * Math.PI / 180.0, MAX_ANGLE_DEGREES * Math.PI / 180.0);
+            final var betaEuler = randomizer.nextDouble(
+                    MIN_ANGLE_DEGREES * Math.PI / 180.0, MAX_ANGLE_DEGREES * Math.PI / 180.0);
+            final var gammaEuler = randomizer.nextDouble(
+                    MIN_ANGLE_DEGREES * Math.PI / 180.0, MAX_ANGLE_DEGREES * Math.PI / 180.0);
 
-            final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler,
-                    betaEuler, gammaEuler);
+            final var rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
 
             // camera center
-            final double[] cameraCenterArray = new double[Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH];
-            randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE,
-                    MAX_RANDOM_VALUE);
-            final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(
-                    cameraCenterArray);
+            final var cameraCenterArray = new double[Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH];
+            randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+            final var cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
 
             // create camera with intrinsic parameters, rotation and camera
             // center
-            final PinholeCamera camera = new PinholeCamera(intrinsic, rotation,
-                    cameraCenter);
+            final var camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
             camera.normalize();
 
             // ensure that all 3D pattern points are in front of the camera
             if (!camera.isPointInFrontOfCamera(points3D.get(0), ABSOLUTE_ERROR)) {
                 continue;
             }
-            assertTrue(camera.isPointInFrontOfCamera(points3D.get(0),
-                    ABSOLUTE_ERROR));
+            assertTrue(camera.isPointInFrontOfCamera(points3D.get(0), ABSOLUTE_ERROR));
             if (!camera.isPointInFrontOfCamera(points3D.get(1), ABSOLUTE_ERROR)) {
                 continue;
             }
-            assertTrue(camera.isPointInFrontOfCamera(points3D.get(1),
-                    ABSOLUTE_ERROR));
+            assertTrue(camera.isPointInFrontOfCamera(points3D.get(1), ABSOLUTE_ERROR));
             if (!camera.isPointInFrontOfCamera(points3D.get(2), ABSOLUTE_ERROR)) {
                 continue;
             }
-            assertTrue(camera.isPointInFrontOfCamera(points3D.get(2),
-                    ABSOLUTE_ERROR));
+            assertTrue(camera.isPointInFrontOfCamera(points3D.get(2), ABSOLUTE_ERROR));
             if (!camera.isPointInFrontOfCamera(points3D.get(3), ABSOLUTE_ERROR)) {
                 continue;
             }
-            assertTrue(camera.isPointInFrontOfCamera(points3D.get(3),
-                    ABSOLUTE_ERROR));
+            assertTrue(camera.isPointInFrontOfCamera(points3D.get(3), ABSOLUTE_ERROR));
 
             // project 3D pattern points
-            final List<Point2D> projectedPatternPoints = camera.project(points3D);
+            final var projectedPatternPoints = camera.project(points3D);
             // add error to projected pattern points
-            final GaussianRandomizer rnd = new GaussianRandomizer(
-                    new Random(), 0.0, STD_ERROR);
-            for (final Point2D p : projectedPatternPoints) {
+            final var rnd = new GaussianRandomizer(0.0, STD_ERROR);
+            for (final var p : projectedPatternPoints) {
                 p.setInhomogeneousCoordinates(p.getInhomX() + rnd.nextDouble(),
                         p.getInhomY() + rnd.nextDouble());
             }
 
             // estimate homography between 2D pattern points and projected
             // pattern points
-            final ProjectiveTransformation2DRobustEstimator homEstimator =
-                    ProjectiveTransformation2DRobustEstimator.createFromPoints(
-                            patternPoints, projectedPatternPoints,
-                            RobustEstimatorMethod.RANSAC);
-            final Transformation2D homography = homEstimator.estimate();
+            final var homEstimator = ProjectiveTransformation2DRobustEstimator.createFromPoints(
+                    patternPoints, projectedPatternPoints, RobustEstimatorMethod.RANSAC);
+            final var homography = homEstimator.estimate();
 
             // estimate camera pose
-            final CameraPoseEstimator estimator = new CameraPoseEstimator();
+            final var estimator = new CameraPoseEstimator();
 
             // check default values
             assertNull(estimator.getRotation());
@@ -482,19 +426,16 @@ public class CameraPoseEstimatorTest {
             // check that rotation is equal at matrix level (up to sign)
             assertNotNull(estimator.getCameraCenter());
 
-            final double distance = cameraCenter.distanceTo(estimator.getCameraCenter());
+            final var distance = cameraCenter.distanceTo(estimator.getCameraCenter());
             avgDistanceError += distance;
 
             // project 3D points using estimated camera and check projection
             // error
             assertNotNull(estimator.getCamera());
-            final List<Point2D> projectedPatternPoints2 = estimator.getCamera().
-                    project(points3D);
-            assertEquals(projectedPatternPoints.size(),
-                    projectedPatternPoints2.size());
-            for (int i = 0; i < projectedPatternPoints.size(); i++) {
-                final double projectionDistance = projectedPatternPoints.get(i).distanceTo(
-                        projectedPatternPoints2.get(i));
+            final var projectedPatternPoints2 = estimator.getCamera().project(points3D);
+            assertEquals(projectedPatternPoints.size(), projectedPatternPoints2.size());
+            for (var i = 0; i < projectedPatternPoints.size(); i++) {
+                final var projectionDistance = projectedPatternPoints.get(i).distanceTo(projectedPatternPoints2.get(i));
                 avgProjectionError += projectionDistance;
             }
 
@@ -507,11 +448,8 @@ public class CameraPoseEstimatorTest {
         avgProjectionError /= TIMES;
 
         String msg = "Circles with Error - Average camera center error: " + avgDistanceError + "m";
-        Logger.getLogger(CameraPoseEstimatorTest.class.getName()).log(
-                Level.INFO, msg);
+        Logger.getLogger(CameraPoseEstimatorTest.class.getName()).log(Level.INFO, msg);
         msg = "Circles with Error - Average projection error: " + avgProjectionError + "px";
-        Logger.getLogger(CameraPoseEstimatorTest.class.getName()).log(
-                Level.INFO, msg);
+        Logger.getLogger(CameraPoseEstimatorTest.class.getName()).log(Level.INFO, msg);
     }
-
 }

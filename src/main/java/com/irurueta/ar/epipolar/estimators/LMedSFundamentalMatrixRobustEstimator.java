@@ -32,8 +32,7 @@ import java.util.List;
  * Finds the best fundamental matrix for provided collections of matched 2D
  * points using LMedS algorithm.
  */
-public class LMedSFundamentalMatrixRobustEstimator extends
-        FundamentalMatrixRobustEstimator {
+public class LMedSFundamentalMatrixRobustEstimator extends FundamentalMatrixRobustEstimator {
 
     /**
      * Default value to be used for stop threshold. Stop threshold can be used
@@ -74,7 +73,7 @@ public class LMedSFundamentalMatrixRobustEstimator extends
      * lower than the one typically used in RANSAC, and yet the algorithm could
      * still produce even smaller thresholds in estimated results.
      */
-    private double mStopThreshold;
+    private double stopThreshold;
 
     /**
      * Constructor.
@@ -82,10 +81,9 @@ public class LMedSFundamentalMatrixRobustEstimator extends
      * @param fundMatrixEstimatorMethod method for non-robust fundamental matrix
      *                                  estimator.
      */
-    public LMedSFundamentalMatrixRobustEstimator(
-            final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod) {
+    public LMedSFundamentalMatrixRobustEstimator(final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod) {
         super(fundMatrixEstimatorMethod);
-        mStopThreshold = DEFAULT_STOP_THRESHOLD;
+        stopThreshold = DEFAULT_STOP_THRESHOLD;
     }
 
     /**
@@ -100,7 +98,7 @@ public class LMedSFundamentalMatrixRobustEstimator extends
             final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
             final FundamentalMatrixRobustEstimatorListener listener) {
         super(fundMatrixEstimatorMethod, listener);
-        mStopThreshold = DEFAULT_STOP_THRESHOLD;
+        stopThreshold = DEFAULT_STOP_THRESHOLD;
     }
 
     /**
@@ -117,7 +115,7 @@ public class LMedSFundamentalMatrixRobustEstimator extends
             final FundamentalMatrixEstimatorMethod fundMatrixEstimatorMethod,
             final List<Point2D> leftPoints, final List<Point2D> rightPoints) {
         super(fundMatrixEstimatorMethod, leftPoints, rightPoints);
-        mStopThreshold = DEFAULT_STOP_THRESHOLD;
+        stopThreshold = DEFAULT_STOP_THRESHOLD;
     }
 
     /**
@@ -137,7 +135,7 @@ public class LMedSFundamentalMatrixRobustEstimator extends
             final List<Point2D> leftPoints, final List<Point2D> rightPoints,
             final FundamentalMatrixRobustEstimatorListener listener) {
         super(fundMatrixEstimatorMethod, leftPoints, rightPoints, listener);
-        mStopThreshold = DEFAULT_STOP_THRESHOLD;
+        stopThreshold = DEFAULT_STOP_THRESHOLD;
     }
 
     /**
@@ -153,8 +151,7 @@ public class LMedSFundamentalMatrixRobustEstimator extends
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      */
-    public LMedSFundamentalMatrixRobustEstimator(
-            final FundamentalMatrixRobustEstimatorListener listener) {
+    public LMedSFundamentalMatrixRobustEstimator(final FundamentalMatrixRobustEstimatorListener listener) {
         this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, listener);
     }
 
@@ -166,10 +163,8 @@ public class LMedSFundamentalMatrixRobustEstimator extends
      * @throws IllegalArgumentException if provided list of points do not have
      *                                  the same length or their length is less than 7 points.
      */
-    public LMedSFundamentalMatrixRobustEstimator(final List<Point2D> leftPoints,
-                                                 final List<Point2D> rightPoints) {
-        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints,
-                rightPoints);
+    public LMedSFundamentalMatrixRobustEstimator(final List<Point2D> leftPoints, final List<Point2D> rightPoints) {
+        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints, rightPoints);
     }
 
     /**
@@ -182,11 +177,9 @@ public class LMedSFundamentalMatrixRobustEstimator extends
      * @throws IllegalArgumentException if provided list of points do not have
      *                                  the same length or their length is less than 7 points.
      */
-    public LMedSFundamentalMatrixRobustEstimator(final List<Point2D> leftPoints,
-                                                 final List<Point2D> rightPoints,
+    public LMedSFundamentalMatrixRobustEstimator(final List<Point2D> leftPoints, final List<Point2D> rightPoints,
                                                  final FundamentalMatrixRobustEstimatorListener listener) {
-        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints,
-                rightPoints, listener);
+        this(DEFAULT_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD, leftPoints, rightPoints, listener);
     }
 
     /**
@@ -209,7 +202,7 @@ public class LMedSFundamentalMatrixRobustEstimator extends
      * accuracy has been reached.
      */
     public double getStopThreshold() {
-        return mStopThreshold;
+        return stopThreshold;
     }
 
     /**
@@ -242,7 +235,7 @@ public class LMedSFundamentalMatrixRobustEstimator extends
             throw new IllegalArgumentException();
         }
 
-        mStopThreshold = stopThreshold;
+        this.stopThreshold = stopThreshold;
     }
 
     /**
@@ -258,8 +251,7 @@ public class LMedSFundamentalMatrixRobustEstimator extends
      *                                  (i.e. numerical instability, no solution available, etc).
      */
     @Override
-    public FundamentalMatrix estimate() throws LockedException,
-            NotReadyException, RobustEstimatorException {
+    public FundamentalMatrix estimate() throws LockedException, NotReadyException, RobustEstimatorException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -267,111 +259,97 @@ public class LMedSFundamentalMatrixRobustEstimator extends
             throw new NotReadyException();
         }
 
-        final LMedSRobustEstimator<FundamentalMatrix> innerEstimator =
-                new LMedSRobustEstimator<>(
-                        new LMedSRobustEstimatorListener<FundamentalMatrix>() {
+        final var innerEstimator = new LMedSRobustEstimator<FundamentalMatrix>(new LMedSRobustEstimatorListener<>() {
 
-                            // subset of left points
-                            private final List<Point2D> mSubsetLeftPoints = new ArrayList<>();
+            // subset of left points
+            private final List<Point2D> subsetLeftPoints = new ArrayList<>();
 
-                            // subset of right points
-                            private final List<Point2D> mSubsetRightPoints = new ArrayList<>();
+            // subset of right points
+            private final List<Point2D> subsetRightPoints = new ArrayList<>();
 
-                            @Override
-                            public int getTotalSamples() {
-                                return mLeftPoints.size();
-                            }
+            @Override
+            public int getTotalSamples() {
+                return leftPoints.size();
+            }
 
-                            @Override
-                            public int getSubsetSize() {
-                                return getMinRequiredPoints();
-                            }
+            @Override
+            public int getSubsetSize() {
+                return getMinRequiredPoints();
+            }
 
-                            @Override
-                            public void estimatePreliminarSolutions(
-                                    final int[] samplesIndices, final List<FundamentalMatrix> solutions) {
+            @Override
+            public void estimatePreliminarSolutions(
+                    final int[] samplesIndices, final List<FundamentalMatrix> solutions) {
 
-                                mSubsetLeftPoints.clear();
-                                mSubsetRightPoints.clear();
-                                for (final int samplesIndex : samplesIndices) {
-                                    mSubsetLeftPoints.add(mLeftPoints.get(samplesIndex));
-                                    mSubsetRightPoints.add(mRightPoints.get(samplesIndex));
-                                }
+                subsetLeftPoints.clear();
+                subsetRightPoints.clear();
+                for (final var samplesIndex : samplesIndices) {
+                    subsetLeftPoints.add(leftPoints.get(samplesIndex));
+                    subsetRightPoints.add(rightPoints.get(samplesIndex));
+                }
 
-                                nonRobustEstimate(solutions, mSubsetLeftPoints,
-                                        mSubsetRightPoints);
-                            }
+                nonRobustEstimate(solutions, subsetLeftPoints, subsetRightPoints);
+            }
 
-                            @Override
-                            public double computeResidual(
-                                    final FundamentalMatrix currentEstimation, final int i) {
-                                final Point2D leftPoint = mLeftPoints.get(i);
-                                final Point2D rightPoint = mRightPoints.get(i);
-                                return residual(currentEstimation, leftPoint, rightPoint);
-                            }
+            @Override
+            public double computeResidual(final FundamentalMatrix currentEstimation, final int i) {
+                final var leftPoint = leftPoints.get(i);
+                final var rightPoint = rightPoints.get(i);
+                return residual(currentEstimation, leftPoint, rightPoint);
+            }
 
-                            @Override
-                            public boolean isReady() {
-                                return LMedSFundamentalMatrixRobustEstimator.this.isReady();
-                            }
+            @Override
+            public boolean isReady() {
+                return LMedSFundamentalMatrixRobustEstimator.this.isReady();
+            }
 
-                            @Override
-                            public void onEstimateStart(
-                                    final RobustEstimator<FundamentalMatrix> estimator) {
-                                if (mListener != null) {
-                                    mListener.onEstimateStart(
-                                            LMedSFundamentalMatrixRobustEstimator.this);
-                                }
-                            }
+            @Override
+            public void onEstimateStart(final RobustEstimator<FundamentalMatrix> estimator) {
+                if (listener != null) {
+                    listener.onEstimateStart(LMedSFundamentalMatrixRobustEstimator.this);
+                }
+            }
 
-                            @Override
-                            public void onEstimateEnd(
-                                    final RobustEstimator<FundamentalMatrix> estimator) {
-                                if (mListener != null) {
-                                    mListener.onEstimateEnd(
-                                            LMedSFundamentalMatrixRobustEstimator.this);
-                                }
-                            }
+            @Override
+            public void onEstimateEnd(final RobustEstimator<FundamentalMatrix> estimator) {
+                if (listener != null) {
+                    listener.onEstimateEnd(LMedSFundamentalMatrixRobustEstimator.this);
+                }
+            }
 
-                            @Override
-                            public void onEstimateNextIteration(
-                                    final RobustEstimator<FundamentalMatrix> estimator,
-                                    final int iteration) {
-                                if (mListener != null) {
-                                    mListener.onEstimateNextIteration(
-                                            LMedSFundamentalMatrixRobustEstimator.this,
-                                            iteration);
-                                }
-                            }
+            @Override
+            public void onEstimateNextIteration(
+                    final RobustEstimator<FundamentalMatrix> estimator, final int iteration) {
+                if (listener != null) {
+                    listener.onEstimateNextIteration(LMedSFundamentalMatrixRobustEstimator.this, iteration);
+                }
+            }
 
-                            @Override
-                            public void onEstimateProgressChange(
-                                    final RobustEstimator<FundamentalMatrix> estimator,
-                                    final float progress) {
-                                if (mListener != null) {
-                                    mListener.onEstimateProgressChange(
-                                            LMedSFundamentalMatrixRobustEstimator.this,
-                                            progress);
-                                }
-                            }
-                        });
+            @Override
+            public void onEstimateProgressChange(
+                    final RobustEstimator<FundamentalMatrix> estimator, final float progress) {
+                if (listener != null) {
+                    listener.onEstimateProgressChange(LMedSFundamentalMatrixRobustEstimator.this, progress);
+                }
+            }
+        });
 
         try {
-            mLocked = true;
-            mInliersData = null;
-            innerEstimator.setConfidence(mConfidence);
-            innerEstimator.setMaxIterations(mMaxIterations);
-            innerEstimator.setProgressDelta(mProgressDelta);
-            innerEstimator.setStopThreshold(mStopThreshold);
-            FundamentalMatrix result = innerEstimator.estimate();
-            mInliersData = innerEstimator.getInliersData();
+            locked = true;
+            inliersData = null;
+            innerEstimator.setConfidence(confidence);
+            innerEstimator.setMaxIterations(maxIterations);
+            innerEstimator.setProgressDelta(progressDelta);
+            innerEstimator.setStopThreshold(stopThreshold);
+            final var result = innerEstimator.estimate();
+            inliersData = innerEstimator.getInliersData();
             return attemptRefine(result);
         } catch (final com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
         } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
         } finally {
-            mLocked = false;
+            locked = false;
         }
     }
 
@@ -398,8 +376,7 @@ public class LMedSFundamentalMatrixRobustEstimator extends
      */
     @Override
     protected double getRefinementStandardDeviation() {
-        final LMedSRobustEstimator.LMedSInliersData inliersData =
-                (LMedSRobustEstimator.LMedSInliersData) getInliersData();
+        final var inliersData = (LMedSRobustEstimator.LMedSInliersData) getInliersData();
         return inliersData.getEstimatedThreshold();
     }
 }

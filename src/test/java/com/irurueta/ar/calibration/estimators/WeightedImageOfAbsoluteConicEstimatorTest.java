@@ -25,17 +25,15 @@ import com.irurueta.geometry.estimators.ProjectiveTransformation2DRobustEstimato
 import com.irurueta.numerical.robust.RobustEstimatorException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsoluteConicEstimatorListener {
+class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsoluteConicEstimatorListener {
 
     private static final double MIN_FOCAL_LENGTH = 3.0;
     private static final double MAX_FOCAL_LENGTH = 10.0;
@@ -66,13 +64,12 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
     private int estimationProgressChange;
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         // test constructor without arguments
-        WeightedImageOfAbsoluteConicEstimator estimator = new WeightedImageOfAbsoluteConicEstimator();
+        var estimator = new WeightedImageOfAbsoluteConicEstimator();
 
         // check default values
-        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS,
-                estimator.isZeroSkewness());
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS, estimator.isZeroSkewness());
         assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_PRINCIPAL_POINT_AT_ORIGIN,
                 estimator.isPrincipalPointAtOrigin());
         assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN,
@@ -87,17 +84,14 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
         assertEquals(ImageOfAbsoluteConicEstimatorType.WEIGHTED_IAC_ESTIMATOR, estimator.getType());
         assertNull(estimator.getWeights());
         assertFalse(estimator.areWeightsAvailable());
-        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_MAX_HOMOGRAPHIES,
-                estimator.getMaxHomographies());
-        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_SORT_WEIGHTS,
-                estimator.isSortWeightsEnabled());
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_MAX_HOMOGRAPHIES, estimator.getMaxHomographies());
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_SORT_WEIGHTS, estimator.isSortWeightsEnabled());
 
         // test constructor with listener
         estimator = new WeightedImageOfAbsoluteConicEstimator(this);
 
         // check default values
-        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS,
-                estimator.isZeroSkewness());
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS, estimator.isZeroSkewness());
         assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_PRINCIPAL_POINT_AT_ORIGIN,
                 estimator.isPrincipalPointAtOrigin());
         assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN,
@@ -112,23 +106,20 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
         assertEquals(ImageOfAbsoluteConicEstimatorType.WEIGHTED_IAC_ESTIMATOR, estimator.getType());
         assertNull(estimator.getWeights());
         assertFalse(estimator.areWeightsAvailable());
-        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_MAX_HOMOGRAPHIES,
-                estimator.getMaxHomographies());
-        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_SORT_WEIGHTS,
-                estimator.isSortWeightsEnabled());
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_MAX_HOMOGRAPHIES, estimator.getMaxHomographies());
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_SORT_WEIGHTS, estimator.isSortWeightsEnabled());
 
         // test constructor with homographies
-        final List<Transformation2D> homographies = new ArrayList<>();
+        final var homographies = new ArrayList<Transformation2D>();
         homographies.add(new ProjectiveTransformation2D());
         homographies.add(new ProjectiveTransformation2D());
         homographies.add(new ProjectiveTransformation2D());
-        final double[] weights = new double[3];
+        final var weights = new double[3];
 
         estimator = new WeightedImageOfAbsoluteConicEstimator(homographies, weights);
 
         // check default values
-        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS,
-                estimator.isZeroSkewness());
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS, estimator.isZeroSkewness());
         assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_PRINCIPAL_POINT_AT_ORIGIN,
                 estimator.isPrincipalPointAtOrigin());
         assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN,
@@ -143,44 +134,27 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
         assertEquals(ImageOfAbsoluteConicEstimatorType.WEIGHTED_IAC_ESTIMATOR, estimator.getType());
         assertSame(weights, estimator.getWeights());
         assertTrue(estimator.areWeightsAvailable());
-        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_MAX_HOMOGRAPHIES,
-                estimator.getMaxHomographies());
-        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_SORT_WEIGHTS,
-                estimator.isSortWeightsEnabled());
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_MAX_HOMOGRAPHIES, estimator.getMaxHomographies());
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_SORT_WEIGHTS, estimator.isSortWeightsEnabled());
 
         // Force IllegalArgumentException
-        final List<Transformation2D> emptyHomographies = new ArrayList<>();
-        final double[] shortWeights = new double[1];
+        final var emptyHomographies = new ArrayList<Transformation2D>();
+        final var shortWeights = new double[1];
 
-        estimator = null;
-        try {
-            estimator = new WeightedImageOfAbsoluteConicEstimator(null, weights);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new WeightedImageOfAbsoluteConicEstimator(homographies, shortWeights);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new WeightedImageOfAbsoluteConicEstimator(emptyHomographies, weights);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new WeightedImageOfAbsoluteConicEstimator(homographies, shortWeights);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
+        assertThrows(IllegalArgumentException.class,
+                () -> new WeightedImageOfAbsoluteConicEstimator(null, weights));
+        assertThrows(IllegalArgumentException.class,
+                () -> new WeightedImageOfAbsoluteConicEstimator(homographies, shortWeights));
+        assertThrows(IllegalArgumentException.class,
+                () -> new WeightedImageOfAbsoluteConicEstimator(emptyHomographies, weights));
+        assertThrows(IllegalArgumentException.class,
+                () -> new WeightedImageOfAbsoluteConicEstimator(homographies, shortWeights));
 
         // test constructor with homographies and listener
         estimator = new WeightedImageOfAbsoluteConicEstimator(homographies, weights, this);
 
         // check default values
-        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS,
-                estimator.isZeroSkewness());
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS, estimator.isZeroSkewness());
         assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_PRINCIPAL_POINT_AT_ORIGIN,
                 estimator.isPrincipalPointAtOrigin());
         assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN,
@@ -192,67 +166,47 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
         assertSame(estimator.getHomographies(), homographies);
         assertEquals(1, estimator.getMinNumberOfRequiredHomographies());
         assertTrue(estimator.isReady());
-        assertEquals(ImageOfAbsoluteConicEstimatorType.WEIGHTED_IAC_ESTIMATOR,
-                estimator.getType());
+        assertEquals(ImageOfAbsoluteConicEstimatorType.WEIGHTED_IAC_ESTIMATOR, estimator.getType());
         assertSame(weights, estimator.getWeights());
         assertTrue(estimator.areWeightsAvailable());
-        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_MAX_HOMOGRAPHIES,
-                estimator.getMaxHomographies());
-        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_SORT_WEIGHTS,
-                estimator.isSortWeightsEnabled());
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_MAX_HOMOGRAPHIES, estimator.getMaxHomographies());
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_SORT_WEIGHTS, estimator.isSortWeightsEnabled());
 
         // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new WeightedImageOfAbsoluteConicEstimator(null, weights, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new WeightedImageOfAbsoluteConicEstimator(homographies, shortWeights, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new WeightedImageOfAbsoluteConicEstimator(emptyHomographies, weights, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new WeightedImageOfAbsoluteConicEstimator(homographies, shortWeights, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
+        assertThrows(IllegalArgumentException.class,
+                () -> new WeightedImageOfAbsoluteConicEstimator(null, weights, this));
+        assertThrows(IllegalArgumentException.class,
+                () -> new WeightedImageOfAbsoluteConicEstimator(homographies, shortWeights, this));
+        assertThrows(IllegalArgumentException.class,
+                () -> new WeightedImageOfAbsoluteConicEstimator(emptyHomographies, weights, this));
+        assertThrows(IllegalArgumentException.class,
+                () -> new WeightedImageOfAbsoluteConicEstimator(homographies, shortWeights, this));
     }
 
     @Test
-    public void testIsSetZeroSkewness() throws LockedException {
-        final WeightedImageOfAbsoluteConicEstimator estimator = new WeightedImageOfAbsoluteConicEstimator();
+    void testIsSetZeroSkewness() throws LockedException {
+        final var estimator = new WeightedImageOfAbsoluteConicEstimator();
 
         // check default value
-        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS,
-                estimator.isZeroSkewness());
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS, estimator.isZeroSkewness());
 
         // set new value
         estimator.setZeroSkewness(!WeightedImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS);
 
         // check correctness
-        assertEquals(!WeightedImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS,
-                estimator.isZeroSkewness());
+        assertEquals(!WeightedImageOfAbsoluteConicEstimator.DEFAULT_ZERO_SKEWNESS, estimator.isZeroSkewness());
     }
 
     @Test
-    public void testIsSetPrincipalPointAtOrigin() throws LockedException {
-        final WeightedImageOfAbsoluteConicEstimator estimator = new WeightedImageOfAbsoluteConicEstimator();
+    void testIsSetPrincipalPointAtOrigin() throws LockedException {
+        final var estimator = new WeightedImageOfAbsoluteConicEstimator();
 
         // check default value
         assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_PRINCIPAL_POINT_AT_ORIGIN,
                 estimator.isPrincipalPointAtOrigin());
 
         // set new value
-        estimator.setPrincipalPointAtOrigin(
-                !WeightedImageOfAbsoluteConicEstimator.DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
+        estimator.setPrincipalPointAtOrigin(!WeightedImageOfAbsoluteConicEstimator.DEFAULT_PRINCIPAL_POINT_AT_ORIGIN);
 
         // check correctness
         assertEquals(!WeightedImageOfAbsoluteConicEstimator.DEFAULT_PRINCIPAL_POINT_AT_ORIGIN,
@@ -260,8 +214,8 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
     }
 
     @Test
-    public void testIsFocalDistanceAspectRatioKnown() throws LockedException {
-        final WeightedImageOfAbsoluteConicEstimator estimator = new WeightedImageOfAbsoluteConicEstimator();
+    void testIsFocalDistanceAspectRatioKnown() throws LockedException {
+        final var estimator = new WeightedImageOfAbsoluteConicEstimator();
 
         // check default value
         assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN,
@@ -276,8 +230,8 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
     }
 
     @Test
-    public void testGetSetFocalDistanceAspectRatio() throws LockedException {
-        final WeightedImageOfAbsoluteConicEstimator estimator = new WeightedImageOfAbsoluteConicEstimator();
+    void testGetSetFocalDistanceAspectRatio() throws LockedException {
+        final var estimator = new WeightedImageOfAbsoluteConicEstimator();
 
         // check default value
         assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO,
@@ -290,16 +244,12 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
         assertEquals(0.5, estimator.getFocalDistanceAspectRatio(), 0.0);
 
         // Force IllegalArgumentException
-        try {
-            estimator.setFocalDistanceAspectRatio(0.0);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> estimator.setFocalDistanceAspectRatio(0.0));
     }
 
     @Test
-    public void testGetSetListener() throws LockedException {
-        final WeightedImageOfAbsoluteConicEstimator estimator = new WeightedImageOfAbsoluteConicEstimator();
+    void testGetSetListener() throws LockedException {
+        final var estimator = new WeightedImageOfAbsoluteConicEstimator();
 
         // check default value
         assertNull(estimator.getListener());
@@ -312,8 +262,8 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
     }
 
     @Test
-    public void testGetSetHomographiesAndWeightsAndIsReady() throws LockedException {
-        final WeightedImageOfAbsoluteConicEstimator estimator = new WeightedImageOfAbsoluteConicEstimator();
+    void testGetSetHomographiesAndWeightsAndIsReady() throws LockedException {
+        final var estimator = new WeightedImageOfAbsoluteConicEstimator();
 
         // check default value
         assertNull(estimator.getHomographies());
@@ -321,11 +271,11 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
         assertFalse(estimator.isReady());
 
         // set new value
-        final List<Transformation2D> homographies = new ArrayList<>();
+        final var homographies = new ArrayList<Transformation2D>();
         homographies.add(new ProjectiveTransformation2D());
         homographies.add(new ProjectiveTransformation2D());
         homographies.add(new ProjectiveTransformation2D());
-        final double[] weights = new double[3];
+        final var weights = new double[3];
 
         estimator.setHomographiesAndWeights(homographies, weights);
 
@@ -335,46 +285,28 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
         assertTrue(estimator.isReady());
 
         // Force IllegalArgumentException
-        final List<Transformation2D> emptyHomographies = new ArrayList<>();
-        final double[] shortWeights = new double[1];
-
-        try {
-            estimator.setHomographiesAndWeights(null, weights);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator.setHomographiesAndWeights(homographies, shortWeights);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator.setHomographiesAndWeights(emptyHomographies, weights);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator.setHomographiesAndWeights(homographies, shortWeights);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        final var emptyHomographies = new ArrayList<Transformation2D>();
+        final var shortWeights = new double[1];
+        assertThrows(IllegalArgumentException.class, () -> estimator.setHomographiesAndWeights(null,
+                weights));
+        assertThrows(IllegalArgumentException.class, () -> estimator.setHomographiesAndWeights(homographies,
+                shortWeights));
+        assertThrows(IllegalArgumentException.class, () -> estimator.setHomographiesAndWeights(emptyHomographies,
+                weights));
+        assertThrows(IllegalArgumentException.class, () -> estimator.setHomographiesAndWeights(homographies,
+                shortWeights));
 
         // setting only homographies always fails because weights must be
         // provided too
-        try {
-            estimator.setHomographies(homographies);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> estimator.setHomographies(homographies));
     }
 
     @Test
-    public void testGetSetMaxHomographies() throws LockedException {
-        final WeightedImageOfAbsoluteConicEstimator estimator = new WeightedImageOfAbsoluteConicEstimator();
+    void testGetSetMaxHomographies() throws LockedException {
+        final var estimator = new WeightedImageOfAbsoluteConicEstimator();
 
         // check default value
-        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_MAX_HOMOGRAPHIES,
-                estimator.getMaxHomographies());
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_MAX_HOMOGRAPHIES, estimator.getMaxHomographies());
 
         // set new value
         estimator.setMaxHomographies(estimator.getMinNumberOfRequiredHomographies());
@@ -383,90 +315,76 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
         assertEquals(1, estimator.getMaxHomographies());
 
         // Force IllegalArgumentException
-        try {
-            estimator.setMaxHomographies(
-                    estimator.getMinNumberOfRequiredHomographies() - 1);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        final var wrong = estimator.getMinNumberOfRequiredHomographies() - 1;
+        assertThrows(IllegalArgumentException.class, () -> estimator.setMaxHomographies(wrong));
     }
 
     @Test
-    public void testIsSetSortWeightsEnabled() throws LockedException {
-        final WeightedImageOfAbsoluteConicEstimator estimator = new WeightedImageOfAbsoluteConicEstimator();
+    void testIsSetSortWeightsEnabled() throws LockedException {
+        final var estimator = new WeightedImageOfAbsoluteConicEstimator();
 
         // check default value
-        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_SORT_WEIGHTS,
-                estimator.isSortWeightsEnabled());
+        assertEquals(WeightedImageOfAbsoluteConicEstimator.DEFAULT_SORT_WEIGHTS, estimator.isSortWeightsEnabled());
 
         // set new value
-        estimator.setSortWeightsEnabled(
-                !WeightedImageOfAbsoluteConicEstimator.DEFAULT_SORT_WEIGHTS);
+        estimator.setSortWeightsEnabled(!WeightedImageOfAbsoluteConicEstimator.DEFAULT_SORT_WEIGHTS);
 
         // check correctness
-        assertEquals(!WeightedImageOfAbsoluteConicEstimator.DEFAULT_SORT_WEIGHTS,
-                estimator.isSortWeightsEnabled());
+        assertEquals(!WeightedImageOfAbsoluteConicEstimator.DEFAULT_SORT_WEIGHTS, estimator.isSortWeightsEnabled());
     }
 
     @Test
-    public void testEstimateNoConstraints()
-            throws InvalidPinholeCameraIntrinsicParametersException, LockedException, NotReadyException,
-            RobustEstimatorException, ImageOfAbsoluteConicEstimatorException {
+    void testEstimateNoConstraints() throws InvalidPinholeCameraIntrinsicParametersException, LockedException,
+            NotReadyException, RobustEstimatorException, ImageOfAbsoluteConicEstimatorException {
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            boolean succeededAtLeastOnce = false;
-            int failed = 0;
-            int succeeded = 0;
-            int total = 0;
-            double avgHorizontalFocalDistanceError = 0.0;
-            double avgVerticalFocalDistanceError = 0.0;
-            double avgSkewnessError = 0.0;
-            double avgHorizontalPrincipalPointError = 0.0;
-            double avgVerticalPrincipalPointError = 0.0;
-            double minHorizontalFocalDistanceError = Double.MAX_VALUE;
-            double minVerticalFocalDistanceError = Double.MAX_VALUE;
-            double minSkewnessError = Double.MAX_VALUE;
-            double minHorizontalPrincipalPointError = Double.MAX_VALUE;
-            double minVerticalPrincipalPointError = Double.MAX_VALUE;
-            double maxHorizontalFocalDistanceError = -Double.MAX_VALUE;
-            double maxVerticalFocalDistanceError = -Double.MAX_VALUE;
-            double maxSkewnessError = -Double.MAX_VALUE;
-            double maxHorizontalPrincipalPointError = -Double.MAX_VALUE;
-            double maxVerticalPrincipalPointError = -Double.MAX_VALUE;
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            var succeededAtLeastOnce = false;
+            var failed = 0;
+            var succeeded = 0;
+            var total = 0;
+            var avgHorizontalFocalDistanceError = 0.0;
+            var avgVerticalFocalDistanceError = 0.0;
+            var avgSkewnessError = 0.0;
+            var avgHorizontalPrincipalPointError = 0.0;
+            var avgVerticalPrincipalPointError = 0.0;
+            var minHorizontalFocalDistanceError = Double.MAX_VALUE;
+            var minVerticalFocalDistanceError = Double.MAX_VALUE;
+            var minSkewnessError = Double.MAX_VALUE;
+            var minHorizontalPrincipalPointError = Double.MAX_VALUE;
+            var minVerticalPrincipalPointError = Double.MAX_VALUE;
+            var maxHorizontalFocalDistanceError = -Double.MAX_VALUE;
+            var maxVerticalFocalDistanceError = -Double.MAX_VALUE;
+            var maxSkewnessError = -Double.MAX_VALUE;
+            var maxHorizontalPrincipalPointError = -Double.MAX_VALUE;
+            var maxVerticalPrincipalPointError = -Double.MAX_VALUE;
             double horizontalFocalDistanceError;
             double verticalFocalDistanceError;
             double skewnessError;
             double horizontalPrincipalPointError;
             double verticalPrincipalPointError;
-            for (int j = 0; j < TIMES; j++) {
+            for (var j = 0; j < TIMES; j++) {
                 // create intrinsic parameters
-                final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-                final double horizontalFocalLength = randomizer.nextDouble(
-                        MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-                final double verticalFocalLength = randomizer.nextDouble(
-                        MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-                final double skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
-                final double horizontalPrincipalPoint = randomizer.nextDouble(
-                        MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-                final double verticalPrincipalPoint = randomizer.nextDouble(
-                        MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+                final var randomizer = new UniformRandomizer();
+                final var horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+                final var verticalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+                final var skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+                final var horizontalPrincipalPoint = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+                final var verticalPrincipalPoint = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
-                final PinholeCameraIntrinsicParameters intrinsic =
-                        new PinholeCameraIntrinsicParameters(horizontalFocalLength,
-                                verticalFocalLength, horizontalPrincipalPoint,
-                                verticalPrincipalPoint, skewness);
+                final var intrinsic = new PinholeCameraIntrinsicParameters(horizontalFocalLength, verticalFocalLength,
+                        horizontalPrincipalPoint, verticalPrincipalPoint, skewness);
 
-                final ImageOfAbsoluteConic iac = new ImageOfAbsoluteConic(intrinsic);
+                final var iac = new ImageOfAbsoluteConic(intrinsic);
 
                 // create pattern to estimate homography
-                final Pattern2D pattern = Pattern2D.create(Pattern2DType.CIRCLES);
-                final List<Point2D> patternPoints = pattern.getIdealPoints();
+                final var pattern = Pattern2D.create(Pattern2DType.CIRCLES);
+                final var patternPoints = pattern.getIdealPoints();
 
                 // assume that pattern points are located on a 3D plane
                 // (for instance Z = 0), but can be really any plane
-                final List<Point3D> points3D = new ArrayList<>();
-                for (final Point2D patternPoint : patternPoints) {
+                final var points3D = new ArrayList<Point3D>();
+                for (final var patternPoint : patternPoints) {
                     points3D.add(new HomogeneousPoint3D(patternPoint.getInhomX(),
                             patternPoint.getInhomY(), 0.0, 1.0));
                 }
@@ -474,48 +392,39 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
                 // create 3 random cameras having random rotation and translation but
                 // created intrinsic parameters in order to obtain 3 homographies to
                 // estimate the IAC
-                final List<Transformation2D> homographies = new ArrayList<>();
-                final double[] weights = new double[50];
+                final var homographies = new ArrayList<Transformation2D>();
+                final var weights = new double[50];
                 randomizer.fill(weights, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-                for (int i = 0; i < 50; i++) {
+                for (var i = 0; i < 50; i++) {
                     // rotation
-                    final double alphaEuler = randomizer.nextDouble(
-                            MIN_ANGLE_DEGREES * Math.PI / 180.0,
-                            MAX_ANGLE_DEGREES * Math.PI / 180.0);
-                    final double betaEuler = randomizer.nextDouble(
-                            MIN_ANGLE_DEGREES * Math.PI / 180.0,
-                            MAX_ANGLE_DEGREES * Math.PI / 180.0);
-                    final double gammaEuler = randomizer.nextDouble(
-                            MIN_ANGLE_DEGREES * Math.PI / 180.0,
-                            MAX_ANGLE_DEGREES * Math.PI / 180.0);
+                    final var alphaEuler = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                    final var betaEuler = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                    final var gammaEuler = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-                    final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler,
-                            betaEuler, gammaEuler);
+                    final var rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
 
                     // camera center
-                    final double[] cameraCenterArray = new double[INHOM_3D_COORDS];
+                    final var cameraCenterArray = new double[INHOM_3D_COORDS];
                     randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-                    final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
+                    final var cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
 
                     // create camera with intrinsic parameters, rotation and camera
                     // center
-                    final PinholeCamera camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
+                    final var camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
                     camera.normalize();
 
                     // project 3D pattern points in a plane
-                    final List<Point2D> projectedPatternPoints = camera.project(points3D);
+                    final var projectedPatternPoints = camera.project(points3D);
 
-                    final ProjectiveTransformation2DRobustEstimator homographyEstimator =
-                            ProjectiveTransformation2DRobustEstimator.createFromPoints(
-                                    patternPoints, projectedPatternPoints, RobustEstimatorMethod.RANSAC);
+                    final var homographyEstimator = ProjectiveTransformation2DRobustEstimator.createFromPoints(
+                            patternPoints, projectedPatternPoints, RobustEstimatorMethod.RANSAC);
 
-                    final ProjectiveTransformation2D homography = homographyEstimator.estimate();
+                    final var homography = homographyEstimator.estimate();
                     homographies.add(homography);
                 }
 
                 // Estimate  IAC
-                final WeightedImageOfAbsoluteConicEstimator estimator =
-                        new WeightedImageOfAbsoluteConicEstimator(homographies, weights, this);
+                final var estimator = new WeightedImageOfAbsoluteConicEstimator(homographies, weights, this);
                 estimator.setZeroSkewness(false);
                 estimator.setPrincipalPointAtOrigin(false);
                 estimator.setFocalDistanceAspectRatioKnown(false);
@@ -530,7 +439,7 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
                 assertEquals(0, estimationProgressChange);
 
                 // estimate
-                final ImageOfAbsoluteConic iac2 = estimator.estimate();
+                final var iac2 = estimator.estimate();
 
                 assertEquals(1, estimateStart);
                 assertEquals(1, estimateEnd);
@@ -551,28 +460,28 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
                 assertEquals(Math.abs(iac.getF()), Math.abs(iac2.getF()), VERY_LARGE_ABSOLUTE_ERROR);
 
                 try {
-                    final PinholeCameraIntrinsicParameters intrinsic2 = iac2.getIntrinsicParameters();
+                    final var intrinsic2 = iac2.getIntrinsicParameters();
 
-                    assertEquals(intrinsic.getHorizontalFocalLength(),
-                            intrinsic2.getHorizontalFocalLength(), VERY_LARGE_ABSOLUTE_ERROR);
+                    assertEquals(intrinsic.getHorizontalFocalLength(), intrinsic2.getHorizontalFocalLength(),
+                            VERY_LARGE_ABSOLUTE_ERROR);
                     assertEquals(intrinsic.getVerticalFocalLength(), intrinsic2.getVerticalFocalLength(),
                             VERY_LARGE_ABSOLUTE_ERROR);
                     assertEquals(intrinsic.getSkewness(), intrinsic2.getSkewness(),
                             VERY_LARGE_ABSOLUTE_ERROR);
-                    assertEquals(intrinsic.getHorizontalPrincipalPoint(),
-                            intrinsic2.getHorizontalPrincipalPoint(), VERY_LARGE_ABSOLUTE_ERROR);
-                    assertEquals(intrinsic.getVerticalPrincipalPoint(),
-                            intrinsic2.getVerticalPrincipalPoint(), VERY_LARGE_ABSOLUTE_ERROR);
+                    assertEquals(intrinsic.getHorizontalPrincipalPoint(), intrinsic2.getHorizontalPrincipalPoint(),
+                            VERY_LARGE_ABSOLUTE_ERROR);
+                    assertEquals(intrinsic.getVerticalPrincipalPoint(), intrinsic2.getVerticalPrincipalPoint(),
+                            VERY_LARGE_ABSOLUTE_ERROR);
 
-                    horizontalFocalDistanceError = Math.abs(intrinsic.getHorizontalFocalLength() -
-                            intrinsic2.getHorizontalFocalLength());
-                    verticalFocalDistanceError = Math.abs(intrinsic.getVerticalFocalLength() -
-                            intrinsic2.getVerticalFocalLength());
+                    horizontalFocalDistanceError = Math.abs(intrinsic.getHorizontalFocalLength()
+                            - intrinsic2.getHorizontalFocalLength());
+                    verticalFocalDistanceError = Math.abs(intrinsic.getVerticalFocalLength()
+                            - intrinsic2.getVerticalFocalLength());
                     skewnessError = Math.abs(intrinsic.getSkewness() - intrinsic2.getSkewness());
-                    horizontalPrincipalPointError = Math.abs(intrinsic.getHorizontalPrincipalPoint() -
-                            intrinsic2.getHorizontalPrincipalPoint());
-                    verticalPrincipalPointError = Math.abs(intrinsic.getVerticalPrincipalPoint() -
-                            intrinsic2.getVerticalPrincipalPoint());
+                    horizontalPrincipalPointError = Math.abs(intrinsic.getHorizontalPrincipalPoint()
+                            - intrinsic2.getHorizontalPrincipalPoint());
+                    verticalPrincipalPointError = Math.abs(intrinsic.getVerticalPrincipalPoint()
+                            - intrinsic2.getVerticalPrincipalPoint());
 
                     avgHorizontalFocalDistanceError += horizontalFocalDistanceError;
                     avgVerticalFocalDistanceError += verticalFocalDistanceError;
@@ -620,8 +529,8 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
                 total++;
             }
 
-            final double failedRatio = (double) failed / (double) total;
-            final double succeededRatio = (double) succeeded / (double) total;
+            final var failedRatio = (double) failed / (double) total;
+            final var succeededRatio = (double) succeeded / (double) total;
 
             avgHorizontalFocalDistanceError /= succeeded;
             avgVerticalFocalDistanceError /= succeeded;
@@ -643,34 +552,24 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
             assertEquals(0.0, avgHorizontalPrincipalPointError, LARGE_ABSOLUTE_ERROR);
             assertEquals(0.0, avgVerticalPrincipalPointError, LARGE_ABSOLUTE_ERROR);
 
-            final String msg = "No constraints - failed: " +
-                    failedRatio * 100.0 + "% succeeded: " + succeededRatio * 100.0 +
-                    "% avg horizontal focal distance error: " +
-                    avgHorizontalFocalDistanceError +
-                    " avg vertical focal distance error: " +
-                    avgVerticalFocalDistanceError + " avg skewness error: " +
-                    avgSkewnessError + " avg horizontal principal point error: " +
-                    avgHorizontalPrincipalPointError +
-                    " avg vertical principal point error: " +
-                    avgVerticalPrincipalPointError +
-                    " min horizontal focal distance error: " +
-                    minHorizontalFocalDistanceError +
-                    " min vertical focal distance error: " +
-                    minVerticalFocalDistanceError + " min skewness error: " +
-                    minSkewnessError + " min horizontal principal point error: " +
-                    minHorizontalPrincipalPointError +
-                    " min vertical principal point error: " +
-                    minVerticalPrincipalPointError +
-                    " max horizontal focal distance error: " +
-                    maxHorizontalFocalDistanceError +
-                    " max vertical focal distance error: " +
-                    maxVerticalFocalDistanceError + " max skewness error: " +
-                    maxSkewnessError + " max horizontal principal point error: " +
-                    maxHorizontalPrincipalPointError +
-                    " max vertical principal point error: " +
-                    maxVerticalPrincipalPointError;
-            Logger.getLogger(WeightedImageOfAbsoluteConicEstimatorTest.class.getName()).
-                    log(Level.INFO, msg);
+            final var msg = "No constraints - failed: " + failedRatio * 100.0
+                    + "% succeeded: " + succeededRatio * 100.0
+                    + "% avg horizontal focal distance error: " + avgHorizontalFocalDistanceError
+                    + " avg vertical focal distance error: " + avgVerticalFocalDistanceError
+                    + " avg skewness error: " + avgSkewnessError
+                    + " avg horizontal principal point error: " + avgHorizontalPrincipalPointError
+                    + " avg vertical principal point error: " + avgVerticalPrincipalPointError
+                    + " min horizontal focal distance error: " + minHorizontalFocalDistanceError
+                    + " min vertical focal distance error: " + minVerticalFocalDistanceError
+                    + " min skewness error: " + minSkewnessError
+                    + " min horizontal principal point error: " + minHorizontalPrincipalPointError
+                    + " min vertical principal point error: " + minVerticalPrincipalPointError
+                    + " max horizontal focal distance error: " + maxHorizontalFocalDistanceError
+                    + " max vertical focal distance error: " + maxVerticalFocalDistanceError
+                    + " max skewness error: " + maxSkewnessError
+                    + " max horizontal principal point error: " + maxHorizontalPrincipalPointError
+                    + " max vertical principal point error: " + maxVerticalPrincipalPointError;
+            Logger.getLogger(WeightedImageOfAbsoluteConicEstimatorTest.class.getName()).log(Level.INFO, msg);
 
             assertTrue(failedRatio < 0.75);
             assertTrue(succeededRatio >= 0.25);
@@ -684,109 +583,95 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
     }
 
     @Test
-    public void testEstimateZeroSkewness()
-            throws InvalidPinholeCameraIntrinsicParametersException, LockedException, NotReadyException,
-            RobustEstimatorException, ImageOfAbsoluteConicEstimatorException {
+    void testEstimateZeroSkewness() throws InvalidPinholeCameraIntrinsicParametersException, LockedException,
+            NotReadyException, RobustEstimatorException, ImageOfAbsoluteConicEstimatorException {
 
-        boolean succeededAtLeastOnce = false;
-        int failed = 0;
-        int succeeded = 0;
-        int total = 0;
-        double avgHorizontalFocalDistanceError = 0.0;
-        double avgVerticalFocalDistanceError = 0.0;
-        double avgSkewnessError = 0.0;
-        double avgHorizontalPrincipalPointError = 0.0;
-        double avgVerticalPrincipalPointError = 0.0;
-        double minHorizontalFocalDistanceError = Double.MAX_VALUE;
-        double minVerticalFocalDistanceError = Double.MAX_VALUE;
-        double minSkewnessError = Double.MAX_VALUE;
-        double minHorizontalPrincipalPointError = Double.MAX_VALUE;
-        double minVerticalPrincipalPointError = Double.MAX_VALUE;
-        double maxHorizontalFocalDistanceError = -Double.MAX_VALUE;
-        double maxVerticalFocalDistanceError = -Double.MAX_VALUE;
-        double maxSkewnessError = -Double.MAX_VALUE;
-        double maxHorizontalPrincipalPointError = -Double.MAX_VALUE;
-        double maxVerticalPrincipalPointError = -Double.MAX_VALUE;
-        double horizontalFocalDistanceError, verticalFocalDistanceError,
-                skewnessError, horizontalPrincipalPointError,
-                verticalPrincipalPointError;
-        for (int j = 0; j < TIMES; j++) {
+        var succeededAtLeastOnce = false;
+        var failed = 0;
+        var succeeded = 0;
+        var total = 0;
+        var avgHorizontalFocalDistanceError = 0.0;
+        var avgVerticalFocalDistanceError = 0.0;
+        var avgSkewnessError = 0.0;
+        var avgHorizontalPrincipalPointError = 0.0;
+        var avgVerticalPrincipalPointError = 0.0;
+        var minHorizontalFocalDistanceError = Double.MAX_VALUE;
+        var minVerticalFocalDistanceError = Double.MAX_VALUE;
+        var minSkewnessError = Double.MAX_VALUE;
+        var minHorizontalPrincipalPointError = Double.MAX_VALUE;
+        var minVerticalPrincipalPointError = Double.MAX_VALUE;
+        var maxHorizontalFocalDistanceError = -Double.MAX_VALUE;
+        var maxVerticalFocalDistanceError = -Double.MAX_VALUE;
+        var maxSkewnessError = -Double.MAX_VALUE;
+        var maxHorizontalPrincipalPointError = -Double.MAX_VALUE;
+        var maxVerticalPrincipalPointError = -Double.MAX_VALUE;
+        double horizontalFocalDistanceError;
+        double verticalFocalDistanceError;
+        double skewnessError;
+        double horizontalPrincipalPointError;
+        double verticalPrincipalPointError;
+        for (var j = 0; j < TIMES; j++) {
             // create intrinsic parameters
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double horizontalFocalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double skewness = 0.0;
-            final double horizontalPrincipalPoint = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double verticalPrincipalPoint = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var randomizer = new UniformRandomizer();
+            final var horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var verticalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var skewness = 0.0;
+            final var horizontalPrincipalPoint = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var verticalPrincipalPoint = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
-            final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength,
-                            verticalFocalLength, horizontalPrincipalPoint,
-                            verticalPrincipalPoint, skewness);
+            final var intrinsic = new PinholeCameraIntrinsicParameters(horizontalFocalLength, verticalFocalLength,
+                    horizontalPrincipalPoint, verticalPrincipalPoint, skewness);
 
-            final ImageOfAbsoluteConic iac = new ImageOfAbsoluteConic(intrinsic);
+            final var iac = new ImageOfAbsoluteConic(intrinsic);
 
             // create pattern to estimate homography
-            final Pattern2D pattern = Pattern2D.create(Pattern2DType.CIRCLES);
-            final List<Point2D> patternPoints = pattern.getIdealPoints();
+            final var pattern = Pattern2D.create(Pattern2DType.CIRCLES);
+            final var patternPoints = pattern.getIdealPoints();
 
             // assume that pattern points are located on a 3D plane
             // (for instance Z = 0), but can be really any plane
-            final List<Point3D> points3D = new ArrayList<>();
-            for (final Point2D patternPoint : patternPoints) {
-                points3D.add(new HomogeneousPoint3D(patternPoint.getInhomX(),
-                        patternPoint.getInhomY(), 0.0, 1.0));
+            final var points3D = new ArrayList<Point3D>();
+            for (final var patternPoint : patternPoints) {
+                points3D.add(new HomogeneousPoint3D(patternPoint.getInhomX(), patternPoint.getInhomY(), 0.0,
+                        1.0));
             }
 
             // create 3 random cameras having random rotation and translation but
             // created intrinsic parameters in order to obtain 3 homographies to
             // estimate the IAC
-            final List<Transformation2D> homographies = new ArrayList<>();
-            final double[] weights = new double[50];
+            final var homographies = new ArrayList<Transformation2D>();
+            final var weights = new double[50];
             randomizer.fill(weights, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-            for (int i = 0; i < 50; i++) {
+            for (var i = 0; i < 50; i++) {
                 // rotation
-                final double alphaEuler = randomizer.nextDouble(
-                        MIN_ANGLE_DEGREES * Math.PI / 180.0,
-                        MAX_ANGLE_DEGREES * Math.PI / 180.0);
-                final double betaEuler = randomizer.nextDouble(
-                        MIN_ANGLE_DEGREES * Math.PI / 180.0,
-                        MAX_ANGLE_DEGREES * Math.PI / 180.0);
-                final double gammaEuler = randomizer.nextDouble(
-                        MIN_ANGLE_DEGREES * Math.PI / 180.0,
-                        MAX_ANGLE_DEGREES * Math.PI / 180.0);
+                final var alphaEuler = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final var betaEuler = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final var gammaEuler = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-                final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler,
-                        betaEuler, gammaEuler);
+                final var rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
 
                 // camera center
-                final double[] cameraCenterArray = new double[INHOM_3D_COORDS];
+                final var cameraCenterArray = new double[INHOM_3D_COORDS];
                 randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-                final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
+                final var cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
 
                 // create camera with intrinsic parameters, rotation and camera
                 // center
-                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
+                final var camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
                 camera.normalize();
 
                 // project 3D pattern points in a plane
-                final List<Point2D> projectedPatternPoints = camera.project(points3D);
+                final var projectedPatternPoints = camera.project(points3D);
 
-                final ProjectiveTransformation2DRobustEstimator homographyEstimator =
-                        ProjectiveTransformation2DRobustEstimator.createFromPoints(
-                                patternPoints, projectedPatternPoints, RobustEstimatorMethod.RANSAC);
+                final var homographyEstimator = ProjectiveTransformation2DRobustEstimator.createFromPoints(
+                        patternPoints, projectedPatternPoints, RobustEstimatorMethod.RANSAC);
 
-                final ProjectiveTransformation2D homography = homographyEstimator.estimate();
+                final var homography = homographyEstimator.estimate();
                 homographies.add(homography);
             }
 
             // Estimate  IAC
-            final WeightedImageOfAbsoluteConicEstimator estimator =
-                    new WeightedImageOfAbsoluteConicEstimator(homographies, weights, this);
+            final var estimator = new WeightedImageOfAbsoluteConicEstimator(homographies, weights, this);
             estimator.setZeroSkewness(true);
             estimator.setPrincipalPointAtOrigin(false);
             estimator.setFocalDistanceAspectRatioKnown(false);
@@ -801,7 +686,7 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
             assertEquals(0, estimationProgressChange);
 
             // estimate
-            final ImageOfAbsoluteConic iac2 = estimator.estimate();
+            final var iac2 = estimator.estimate();
 
             assertEquals(1, estimateStart);
             assertEquals(1, estimateEnd);
@@ -823,7 +708,7 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
             assertEquals(Math.abs(iac.getF()), Math.abs(iac2.getF()), VERY_LARGE_ABSOLUTE_ERROR);
 
             try {
-                final PinholeCameraIntrinsicParameters intrinsic2 = iac2.getIntrinsicParameters();
+                final var intrinsic2 = iac2.getIntrinsicParameters();
 
                 assertEquals(intrinsic.getHorizontalFocalLength(), intrinsic2.getHorizontalFocalLength(),
                         VERY_LARGE_ABSOLUTE_ERROR);
@@ -831,20 +716,20 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
                         VERY_LARGE_ABSOLUTE_ERROR);
                 assertEquals(0.0, intrinsic.getSkewness(), 0.0);
                 assertEquals(0.0, intrinsic2.getSkewness(), 0.0);
-                assertEquals(intrinsic.getHorizontalPrincipalPoint(),
-                        intrinsic2.getHorizontalPrincipalPoint(), VERY_LARGE_ABSOLUTE_ERROR);
+                assertEquals(intrinsic.getHorizontalPrincipalPoint(), intrinsic2.getHorizontalPrincipalPoint(),
+                        VERY_LARGE_ABSOLUTE_ERROR);
                 assertEquals(intrinsic.getVerticalPrincipalPoint(), intrinsic2.getVerticalPrincipalPoint(),
                         VERY_LARGE_ABSOLUTE_ERROR);
 
-                horizontalFocalDistanceError = Math.abs(intrinsic.getHorizontalFocalLength() -
-                        intrinsic2.getHorizontalFocalLength());
-                verticalFocalDistanceError = Math.abs(intrinsic.getVerticalFocalLength() -
-                        intrinsic2.getVerticalFocalLength());
+                horizontalFocalDistanceError = Math.abs(intrinsic.getHorizontalFocalLength()
+                        - intrinsic2.getHorizontalFocalLength());
+                verticalFocalDistanceError = Math.abs(intrinsic.getVerticalFocalLength()
+                        - intrinsic2.getVerticalFocalLength());
                 skewnessError = Math.abs(intrinsic.getSkewness() - intrinsic2.getSkewness());
-                horizontalPrincipalPointError = Math.abs(intrinsic.getHorizontalPrincipalPoint() -
-                        intrinsic2.getHorizontalPrincipalPoint());
-                verticalPrincipalPointError = Math.abs(intrinsic.getVerticalPrincipalPoint() -
-                        intrinsic2.getVerticalPrincipalPoint());
+                horizontalPrincipalPointError = Math.abs(intrinsic.getHorizontalPrincipalPoint()
+                        - intrinsic2.getHorizontalPrincipalPoint());
+                verticalPrincipalPointError = Math.abs(intrinsic.getVerticalPrincipalPoint()
+                        - intrinsic2.getVerticalPrincipalPoint());
 
                 avgHorizontalFocalDistanceError += horizontalFocalDistanceError;
                 avgVerticalFocalDistanceError += verticalFocalDistanceError;
@@ -892,8 +777,8 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
             total++;
         }
 
-        final double failedRatio = (double) failed / (double) total;
-        final double succeededRatio = (double) succeeded / (double) total;
+        final var failedRatio = (double) failed / (double) total;
+        final var succeededRatio = (double) succeeded / (double) total;
 
         avgHorizontalFocalDistanceError /= succeeded;
         avgVerticalFocalDistanceError /= succeeded;
@@ -908,34 +793,24 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
         assertEquals(0.0, avgHorizontalPrincipalPointError, LARGE_ABSOLUTE_ERROR);
         assertEquals(0.0, avgVerticalPrincipalPointError, LARGE_ABSOLUTE_ERROR);
 
-        final String msg = "Zero skewness - failed: " +
-                failedRatio * 100.0 + "% succeeded: " + succeededRatio * 100.0 +
-                "% avg horizontal focal distance error: " +
-                avgHorizontalFocalDistanceError +
-                " avg vertical focal distance error: " +
-                avgVerticalFocalDistanceError + " avg skewness error: " +
-                avgSkewnessError + " avg horizontal principal point error: " +
-                avgHorizontalPrincipalPointError +
-                " avg vertical principal point error: " +
-                avgVerticalPrincipalPointError +
-                " min horizontal focal distance error: " +
-                minHorizontalFocalDistanceError +
-                " min vertical focal distance error: " +
-                minVerticalFocalDistanceError + " min skewness error: " +
-                minSkewnessError + " min horizontal principal point error: " +
-                minHorizontalPrincipalPointError +
-                " min vertical principal point error: " +
-                minVerticalPrincipalPointError +
-                " max horizontal focal distance error: " +
-                maxHorizontalFocalDistanceError +
-                " max vertical focal distance error: " +
-                maxVerticalFocalDistanceError + " max skewness error: " +
-                maxSkewnessError + " max horizontal principal point error: " +
-                maxHorizontalPrincipalPointError +
-                " max vertical principal point error: " +
-                maxVerticalPrincipalPointError;
-        Logger.getLogger(LMSEImageOfAbsoluteConicEstimatorTest.class.getName()).
-                log(Level.INFO, msg);
+        final var msg = "Zero skewness - failed: " + failedRatio * 100.0
+                + "% succeeded: " + succeededRatio * 100.0
+                + "% avg horizontal focal distance error: " + avgHorizontalFocalDistanceError
+                + " avg vertical focal distance error: " + avgVerticalFocalDistanceError
+                + " avg skewness error: " + avgSkewnessError
+                + " avg horizontal principal point error: " + avgHorizontalPrincipalPointError
+                + " avg vertical principal point error: " + avgVerticalPrincipalPointError
+                + " min horizontal focal distance error: " + minHorizontalFocalDistanceError
+                + " min vertical focal distance error: " + minVerticalFocalDistanceError
+                + " min skewness error: " + minSkewnessError
+                + " min horizontal principal point error: " + minHorizontalPrincipalPointError
+                + " min vertical principal point error: " + minVerticalPrincipalPointError
+                + " max horizontal focal distance error: " + maxHorizontalFocalDistanceError
+                + " max vertical focal distance error: " + maxVerticalFocalDistanceError
+                + " max skewness error: " + maxSkewnessError
+                + " max horizontal principal point error: " + maxHorizontalPrincipalPointError
+                + " max vertical principal point error: " + maxVerticalPrincipalPointError;
+        Logger.getLogger(LMSEImageOfAbsoluteConicEstimatorTest.class.getName()).log(Level.INFO, msg);
 
         assertTrue(failedRatio < 0.75);
         assertTrue(succeededRatio >= 0.25);
@@ -943,110 +818,95 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
     }
 
     @Test
-    public void testEstimatePrincipalPointAtOrigin()
-            throws InvalidPinholeCameraIntrinsicParametersException, LockedException, NotReadyException,
-            RobustEstimatorException, ImageOfAbsoluteConicEstimatorException {
+    void testEstimatePrincipalPointAtOrigin() throws InvalidPinholeCameraIntrinsicParametersException, LockedException,
+            NotReadyException, RobustEstimatorException, ImageOfAbsoluteConicEstimatorException {
 
-        boolean succeededAtLeastOnce = false;
-        int failed = 0;
-        int succeeded = 0;
-        int total = 0;
-        double avgHorizontalFocalDistanceError = 0.0;
-        double avgVerticalFocalDistanceError = 0.0;
-        double avgSkewnessError = 0.0;
-        double avgHorizontalPrincipalPointError = 0.0;
-        double avgVerticalPrincipalPointError = 0.0;
-        double minHorizontalFocalDistanceError = Double.MAX_VALUE;
-        double minVerticalFocalDistanceError = Double.MAX_VALUE;
-        double minSkewnessError = Double.MAX_VALUE;
-        double minHorizontalPrincipalPointError = Double.MAX_VALUE;
-        double minVerticalPrincipalPointError = Double.MAX_VALUE;
-        double maxHorizontalFocalDistanceError = -Double.MAX_VALUE;
-        double maxVerticalFocalDistanceError = -Double.MAX_VALUE;
-        double maxSkewnessError = -Double.MAX_VALUE;
-        double maxHorizontalPrincipalPointError = -Double.MAX_VALUE;
-        double maxVerticalPrincipalPointError = -Double.MAX_VALUE;
+        var succeededAtLeastOnce = false;
+        var failed = 0;
+        var succeeded = 0;
+        var total = 0;
+        var avgHorizontalFocalDistanceError = 0.0;
+        var avgVerticalFocalDistanceError = 0.0;
+        var avgSkewnessError = 0.0;
+        var avgHorizontalPrincipalPointError = 0.0;
+        var avgVerticalPrincipalPointError = 0.0;
+        var minHorizontalFocalDistanceError = Double.MAX_VALUE;
+        var minVerticalFocalDistanceError = Double.MAX_VALUE;
+        var minSkewnessError = Double.MAX_VALUE;
+        var minHorizontalPrincipalPointError = Double.MAX_VALUE;
+        var minVerticalPrincipalPointError = Double.MAX_VALUE;
+        var maxHorizontalFocalDistanceError = -Double.MAX_VALUE;
+        var maxVerticalFocalDistanceError = -Double.MAX_VALUE;
+        var maxSkewnessError = -Double.MAX_VALUE;
+        var maxHorizontalPrincipalPointError = -Double.MAX_VALUE;
+        var maxVerticalPrincipalPointError = -Double.MAX_VALUE;
         double horizontalFocalDistanceError;
         double verticalFocalDistanceError;
         double skewnessError;
         double horizontalPrincipalPointError;
         double verticalPrincipalPointError;
-        for (int j = 0; j < TIMES; j++) {
+        for (var j = 0; j < TIMES; j++) {
             // create intrinsic parameters
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double horizontalFocalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
-            final double horizontalPrincipalPoint = 0.0;
-            final double verticalPrincipalPoint = 0.0;
+            final var randomizer = new UniformRandomizer();
+            final var horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var verticalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final var horizontalPrincipalPoint = 0.0;
+            final var verticalPrincipalPoint = 0.0;
 
-            final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength,
-                            verticalFocalLength, horizontalPrincipalPoint,
-                            verticalPrincipalPoint, skewness);
+            final var intrinsic = new PinholeCameraIntrinsicParameters(horizontalFocalLength, verticalFocalLength,
+                    horizontalPrincipalPoint, verticalPrincipalPoint, skewness);
 
-            final ImageOfAbsoluteConic iac = new ImageOfAbsoluteConic(intrinsic);
+            final var iac = new ImageOfAbsoluteConic(intrinsic);
 
             // create pattern to estimate homography
-            final Pattern2D pattern = Pattern2D.create(Pattern2DType.CIRCLES);
-            final List<Point2D> patternPoints = pattern.getIdealPoints();
+            final var pattern = Pattern2D.create(Pattern2DType.CIRCLES);
+            final var patternPoints = pattern.getIdealPoints();
 
             // assume that pattern points are located on a 3D plane
             // (for instance Z = 0), but can be really any plane
-            final List<Point3D> points3D = new ArrayList<>();
-            for (final Point2D patternPoint : patternPoints) {
-                points3D.add(new HomogeneousPoint3D(patternPoint.getInhomX(),
-                        patternPoint.getInhomY(), 0.0, 1.0));
+            final var points3D = new ArrayList<Point3D>();
+            for (final var patternPoint : patternPoints) {
+                points3D.add(new HomogeneousPoint3D(patternPoint.getInhomX(), patternPoint.getInhomY(), 0.0,
+                        1.0));
             }
 
             // create 3 random cameras having random rotation and translation but
             // created intrinsic parameters in order to obtain 3 homographies to
             // estimate the IAC
-            final List<Transformation2D> homographies =
-                    new ArrayList<>();
-            final double[] weights = new double[50];
+            final var homographies = new ArrayList<Transformation2D>();
+            final var weights = new double[50];
             randomizer.fill(weights, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-            for (int i = 0; i < 50; i++) {
+            for (var i = 0; i < 50; i++) {
                 // rotation
-                final double alphaEuler = randomizer.nextDouble(
-                        MIN_ANGLE_DEGREES * Math.PI / 180.0,
-                        MAX_ANGLE_DEGREES * Math.PI / 180.0);
-                final double betaEuler = randomizer.nextDouble(
-                        MIN_ANGLE_DEGREES * Math.PI / 180.0,
-                        MAX_ANGLE_DEGREES * Math.PI / 180.0);
-                final double gammaEuler = randomizer.nextDouble(
-                        MIN_ANGLE_DEGREES * Math.PI / 180.0,
-                        MAX_ANGLE_DEGREES * Math.PI / 180.0);
+                final var alphaEuler = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final var betaEuler = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final var gammaEuler = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-                final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler,
-                        betaEuler, gammaEuler);
+                final var rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
 
                 // camera center
-                final double[] cameraCenterArray = new double[INHOM_3D_COORDS];
+                final var cameraCenterArray = new double[INHOM_3D_COORDS];
                 randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-                final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
+                final var cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
 
                 // create camera with intrinsic parameters, rotation and camera
                 // center
-                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
+                final var camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
                 camera.normalize();
 
                 // project 3D pattern points in a plane
-                final List<Point2D> projectedPatternPoints = camera.project(points3D);
+                final var projectedPatternPoints = camera.project(points3D);
 
-                final ProjectiveTransformation2DRobustEstimator homographyEstimator =
-                        ProjectiveTransformation2DRobustEstimator.createFromPoints(
-                                patternPoints, projectedPatternPoints, RobustEstimatorMethod.RANSAC);
+                final var homographyEstimator = ProjectiveTransformation2DRobustEstimator.createFromPoints(
+                        patternPoints, projectedPatternPoints, RobustEstimatorMethod.RANSAC);
 
-                final ProjectiveTransformation2D homography = homographyEstimator.estimate();
+                final var homography = homographyEstimator.estimate();
                 homographies.add(homography);
             }
 
             // Estimate  IAC
-            final WeightedImageOfAbsoluteConicEstimator estimator =
-                    new WeightedImageOfAbsoluteConicEstimator(homographies, weights, this);
+            final var estimator = new WeightedImageOfAbsoluteConicEstimator(homographies, weights, this);
             estimator.setZeroSkewness(false);
             estimator.setPrincipalPointAtOrigin(true);
             estimator.setFocalDistanceAspectRatioKnown(false);
@@ -1061,7 +921,7 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
             assertEquals(0, estimationProgressChange);
 
             // estimate
-            final ImageOfAbsoluteConic iac2 = estimator.estimate();
+            final var iac2 = estimator.estimate();
 
             assertEquals(1, estimateStart);
             assertEquals(1, estimateEnd);
@@ -1084,16 +944,16 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
             assertEquals(Math.abs(iac.getF()), Math.abs(iac2.getF()), VERY_LARGE_ABSOLUTE_ERROR);
 
             try {
-                final PinholeCameraIntrinsicParameters intrinsic2 = iac2.getIntrinsicParameters();
+                final var intrinsic2 = iac2.getIntrinsicParameters();
 
-                if (Math.abs(intrinsic.getHorizontalFocalLength() - intrinsic2.getHorizontalFocalLength()) >
-                        VERY_LARGE_ABSOLUTE_ERROR) {
+                if (Math.abs(intrinsic.getHorizontalFocalLength() - intrinsic2.getHorizontalFocalLength())
+                        > VERY_LARGE_ABSOLUTE_ERROR) {
                     continue;
                 }
                 assertEquals(intrinsic.getHorizontalFocalLength(), intrinsic2.getHorizontalFocalLength(),
                         VERY_LARGE_ABSOLUTE_ERROR);
-                if (Math.abs(intrinsic.getVerticalFocalLength() - intrinsic2.getVerticalFocalLength()) >
-                        VERY_LARGE_ABSOLUTE_ERROR) {
+                if (Math.abs(intrinsic.getVerticalFocalLength() - intrinsic2.getVerticalFocalLength())
+                        > VERY_LARGE_ABSOLUTE_ERROR) {
                     continue;
                 }
                 assertEquals(intrinsic.getVerticalFocalLength(), intrinsic2.getVerticalFocalLength(),
@@ -1107,15 +967,15 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
                 assertEquals(0.0, intrinsic.getVerticalPrincipalPoint(), 0.0);
                 assertEquals(0.0, intrinsic2.getVerticalPrincipalPoint(), 0.0);
 
-                horizontalFocalDistanceError = Math.abs(intrinsic.getHorizontalFocalLength() -
-                        intrinsic2.getHorizontalFocalLength());
-                verticalFocalDistanceError = Math.abs(intrinsic.getVerticalFocalLength() -
-                        intrinsic2.getVerticalFocalLength());
+                horizontalFocalDistanceError = Math.abs(intrinsic.getHorizontalFocalLength()
+                        - intrinsic2.getHorizontalFocalLength());
+                verticalFocalDistanceError = Math.abs(intrinsic.getVerticalFocalLength()
+                        - intrinsic2.getVerticalFocalLength());
                 skewnessError = Math.abs(intrinsic.getSkewness() - intrinsic2.getSkewness());
-                horizontalPrincipalPointError = Math.abs(intrinsic.getHorizontalPrincipalPoint() -
-                        intrinsic2.getHorizontalPrincipalPoint());
-                verticalPrincipalPointError = Math.abs(intrinsic.getVerticalPrincipalPoint() -
-                        intrinsic2.getVerticalPrincipalPoint());
+                horizontalPrincipalPointError = Math.abs(intrinsic.getHorizontalPrincipalPoint()
+                        - intrinsic2.getHorizontalPrincipalPoint());
+                verticalPrincipalPointError = Math.abs(intrinsic.getVerticalPrincipalPoint()
+                        - intrinsic2.getVerticalPrincipalPoint());
 
                 avgHorizontalFocalDistanceError += horizontalFocalDistanceError;
                 avgVerticalFocalDistanceError += verticalFocalDistanceError;
@@ -1163,8 +1023,8 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
             total++;
         }
 
-        final double failedRatio = (double) failed / (double) total;
-        final double succeededRatio = (double) succeeded / (double) total;
+        final var failedRatio = (double) failed / (double) total;
+        final var succeededRatio = (double) succeeded / (double) total;
 
         avgHorizontalFocalDistanceError /= succeeded;
         avgVerticalFocalDistanceError /= succeeded;
@@ -1179,34 +1039,24 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
         assertEquals(0.0, avgHorizontalPrincipalPointError, LARGE_ABSOLUTE_ERROR);
         assertEquals(0.0, avgVerticalPrincipalPointError, LARGE_ABSOLUTE_ERROR);
 
-        final String msg = "Principal point at origin - failed: " +
-                failedRatio * 100.0 + "% succeeded: " + succeededRatio * 100.0 +
-                "% avg horizontal focal distance error: " +
-                avgHorizontalFocalDistanceError +
-                " avg vertical focal distance error: " +
-                avgVerticalFocalDistanceError + " avg skewness error: " +
-                avgSkewnessError + " avg horizontal principal point error: " +
-                avgHorizontalPrincipalPointError +
-                " avg vertical principal point error: " +
-                avgVerticalPrincipalPointError +
-                " min horizontal focal distance error: " +
-                minHorizontalFocalDistanceError +
-                " min vertical focal distance error: " +
-                minVerticalFocalDistanceError + " min skewness error: " +
-                minSkewnessError + " min horizontal principal point error: " +
-                minHorizontalPrincipalPointError +
-                " min vertical principal point error: " +
-                minVerticalPrincipalPointError +
-                " max horizontal focal distance error: " +
-                maxHorizontalFocalDistanceError +
-                " max vertical focal distance error: " +
-                maxVerticalFocalDistanceError + " max skewness error: " +
-                maxSkewnessError + " max horizontal principal point error: " +
-                maxHorizontalPrincipalPointError +
-                " max vertical principal point error: " +
-                maxVerticalPrincipalPointError;
-        Logger.getLogger(LMSEImageOfAbsoluteConicEstimatorTest.class.getName()).
-                log(Level.INFO, msg);
+        final var msg = "Principal point at origin - failed: " + failedRatio * 100.0
+                + "% succeeded: " + succeededRatio * 100.0
+                + "% avg horizontal focal distance error: " + avgHorizontalFocalDistanceError
+                + " avg vertical focal distance error: " + avgVerticalFocalDistanceError
+                + " avg skewness error: " + avgSkewnessError
+                + " avg horizontal principal point error: " + avgHorizontalPrincipalPointError
+                + " avg vertical principal point error: " + avgVerticalPrincipalPointError
+                + " min horizontal focal distance error: " + minHorizontalFocalDistanceError
+                + " min vertical focal distance error: " + minVerticalFocalDistanceError
+                + " min skewness error: " + minSkewnessError
+                + " min horizontal principal point error: " + minHorizontalPrincipalPointError
+                + " min vertical principal point error: " + minVerticalPrincipalPointError
+                + " max horizontal focal distance error: " + maxHorizontalFocalDistanceError
+                + " max vertical focal distance error: " + maxVerticalFocalDistanceError
+                + " max skewness error: " + maxSkewnessError
+                + " max horizontal principal point error: " + maxHorizontalPrincipalPointError
+                + " max vertical principal point error: " + maxVerticalPrincipalPointError;
+        Logger.getLogger(LMSEImageOfAbsoluteConicEstimatorTest.class.getName()).log(Level.INFO, msg);
 
         assertTrue(failedRatio < 0.75);
         assertTrue(succeededRatio >= 0.25);
@@ -1214,106 +1064,95 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
     }
 
     @Test
-    public void testEstimateZeroSkewnessPrincipalPointAtOrigin()
-            throws InvalidPinholeCameraIntrinsicParametersException, LockedException, NotReadyException,
-            RobustEstimatorException, ImageOfAbsoluteConicEstimatorException {
+    void testEstimateZeroSkewnessPrincipalPointAtOrigin() throws InvalidPinholeCameraIntrinsicParametersException,
+            LockedException, NotReadyException, RobustEstimatorException, ImageOfAbsoluteConicEstimatorException {
 
-        boolean succeededAtLeastOnce = false;
-        int failed = 0;
-        int succeeded = 0;
-        int total = 0;
-        double avgHorizontalFocalDistanceError = 0.0;
-        double avgVerticalFocalDistanceError = 0.0;
-        double avgSkewnessError = 0.0;
-        double avgHorizontalPrincipalPointError = 0.0;
-        double avgVerticalPrincipalPointError = 0.0;
-        double minHorizontalFocalDistanceError = Double.MAX_VALUE;
-        double minVerticalFocalDistanceError = Double.MAX_VALUE;
-        double minSkewnessError = Double.MAX_VALUE;
-        double minHorizontalPrincipalPointError = Double.MAX_VALUE;
-        double minVerticalPrincipalPointError = Double.MAX_VALUE;
-        double maxHorizontalFocalDistanceError = -Double.MAX_VALUE;
-        double maxVerticalFocalDistanceError = -Double.MAX_VALUE;
-        double maxSkewnessError = -Double.MAX_VALUE;
-        double maxHorizontalPrincipalPointError = -Double.MAX_VALUE;
-        double maxVerticalPrincipalPointError = -Double.MAX_VALUE;
+        var succeededAtLeastOnce = false;
+        var failed = 0;
+        var succeeded = 0;
+        var total = 0;
+        var avgHorizontalFocalDistanceError = 0.0;
+        var avgVerticalFocalDistanceError = 0.0;
+        var avgSkewnessError = 0.0;
+        var avgHorizontalPrincipalPointError = 0.0;
+        var avgVerticalPrincipalPointError = 0.0;
+        var minHorizontalFocalDistanceError = Double.MAX_VALUE;
+        var minVerticalFocalDistanceError = Double.MAX_VALUE;
+        var minSkewnessError = Double.MAX_VALUE;
+        var minHorizontalPrincipalPointError = Double.MAX_VALUE;
+        var minVerticalPrincipalPointError = Double.MAX_VALUE;
+        var maxHorizontalFocalDistanceError = -Double.MAX_VALUE;
+        var maxVerticalFocalDistanceError = -Double.MAX_VALUE;
+        var maxSkewnessError = -Double.MAX_VALUE;
+        var maxHorizontalPrincipalPointError = -Double.MAX_VALUE;
+        var maxVerticalPrincipalPointError = -Double.MAX_VALUE;
         double horizontalFocalDistanceError;
         double verticalFocalDistanceError;
         double skewnessError;
         double horizontalPrincipalPointError;
         double verticalPrincipalPointError;
-        for (int j = 0; j < TIMES; j++) {
+        for (var j = 0; j < TIMES; j++) {
             // create intrinsic parameters
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double skewness = 0.0;
-            final double horizontalPrincipalPoint = 0.0;
-            final double verticalPrincipalPoint = 0.0;
+            final var randomizer = new UniformRandomizer();
+            final var horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var verticalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var skewness = 0.0;
+            final var horizontalPrincipalPoint = 0.0;
+            final var verticalPrincipalPoint = 0.0;
 
-            final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength,
-                            verticalFocalLength, horizontalPrincipalPoint,
-                            verticalPrincipalPoint, skewness);
+            final var intrinsic = new PinholeCameraIntrinsicParameters(horizontalFocalLength, verticalFocalLength,
+                    horizontalPrincipalPoint, verticalPrincipalPoint, skewness);
 
-            final ImageOfAbsoluteConic iac = new ImageOfAbsoluteConic(intrinsic);
+            final var iac = new ImageOfAbsoluteConic(intrinsic);
 
             // create pattern to estimate homography
-            final Pattern2D pattern = Pattern2D.create(Pattern2DType.CIRCLES);
-            final List<Point2D> patternPoints = pattern.getIdealPoints();
+            final var pattern = Pattern2D.create(Pattern2DType.CIRCLES);
+            final var patternPoints = pattern.getIdealPoints();
 
             // assume that pattern points are located on a 3D plane
             // (for instance Z = 0), but can be really any plane
-            final List<Point3D> points3D = new ArrayList<>();
-            for (final Point2D patternPoint : patternPoints) {
-                points3D.add(new HomogeneousPoint3D(patternPoint.getInhomX(),
-                        patternPoint.getInhomY(), 0.0, 1.0));
+            final var points3D = new ArrayList<Point3D>();
+            for (final var patternPoint : patternPoints) {
+                points3D.add(new HomogeneousPoint3D(patternPoint.getInhomX(), patternPoint.getInhomY(), 0.0,
+                        1.0));
             }
 
             // create 3 random cameras having random rotation and translation but
             // created intrinsic parameters in order to obtain 3 homographies to
             // estimate the IAC
-            final List<Transformation2D> homographies = new ArrayList<>();
-            final double[] weights = new double[50];
+            final var homographies = new ArrayList<Transformation2D>();
+            final var weights = new double[50];
             randomizer.fill(weights, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-            for (int i = 0; i < 50; i++) {
+            for (var i = 0; i < 50; i++) {
                 // rotation
-                final double alphaEuler = randomizer.nextDouble(
-                        MIN_ANGLE_DEGREES * Math.PI / 180.0,
-                        MAX_ANGLE_DEGREES * Math.PI / 180.0);
-                final double betaEuler = randomizer.nextDouble(
-                        MIN_ANGLE_DEGREES * Math.PI / 180.0,
-                        MAX_ANGLE_DEGREES * Math.PI / 180.0);
-                final double gammaEuler = randomizer.nextDouble(
-                        MIN_ANGLE_DEGREES * Math.PI / 180.0,
-                        MAX_ANGLE_DEGREES * Math.PI / 180.0);
+                final var alphaEuler = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final var betaEuler = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final var gammaEuler = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-                final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
+                final var rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
 
                 // camera center
-                final double[] cameraCenterArray = new double[INHOM_3D_COORDS];
+                final var cameraCenterArray = new double[INHOM_3D_COORDS];
                 randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-                final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
+                final var cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
 
                 // create camera with intrinsic parameters, rotation and camera
                 // center
-                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
+                final var camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
                 camera.normalize();
 
                 // project 3D pattern points in a plane
-                final List<Point2D> projectedPatternPoints = camera.project(points3D);
+                final var projectedPatternPoints = camera.project(points3D);
 
-                final ProjectiveTransformation2DRobustEstimator homographyEstimator =
-                        ProjectiveTransformation2DRobustEstimator.createFromPoints(
-                                patternPoints, projectedPatternPoints, RobustEstimatorMethod.RANSAC);
+                final var homographyEstimator = ProjectiveTransformation2DRobustEstimator.createFromPoints(
+                        patternPoints, projectedPatternPoints, RobustEstimatorMethod.RANSAC);
 
-                final ProjectiveTransformation2D homography = homographyEstimator.estimate();
+                final var homography = homographyEstimator.estimate();
                 homographies.add(homography);
             }
 
             // Estimate  IAC
-            final WeightedImageOfAbsoluteConicEstimator estimator =
-                    new WeightedImageOfAbsoluteConicEstimator(homographies, weights, this);
+            final var estimator = new WeightedImageOfAbsoluteConicEstimator(homographies, weights, this);
             estimator.setZeroSkewness(true);
             estimator.setPrincipalPointAtOrigin(true);
             estimator.setFocalDistanceAspectRatioKnown(false);
@@ -1328,7 +1167,7 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
             assertEquals(0, estimationProgressChange);
 
             // estimate
-            final ImageOfAbsoluteConic iac2 = estimator.estimate();
+            final var iac2 = estimator.estimate();
 
             assertEquals(1, estimateStart);
             assertEquals(1, estimateEnd);
@@ -1352,7 +1191,7 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
             assertEquals(Math.abs(iac.getF()), Math.abs(iac2.getF()), VERY_LARGE_ABSOLUTE_ERROR);
 
             try {
-                final PinholeCameraIntrinsicParameters intrinsic2 = iac2.getIntrinsicParameters();
+                final var intrinsic2 = iac2.getIntrinsicParameters();
 
                 assertEquals(intrinsic.getHorizontalFocalLength(), intrinsic2.getHorizontalFocalLength(),
                         ULTRA_LARGE_ABSOLUTE_ERROR);
@@ -1365,15 +1204,15 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
                 assertEquals(0.0, intrinsic.getVerticalPrincipalPoint(), 0.0);
                 assertEquals(0.0, intrinsic2.getVerticalPrincipalPoint(), 0.0);
 
-                horizontalFocalDistanceError = Math.abs(intrinsic.getHorizontalFocalLength() -
-                        intrinsic2.getHorizontalFocalLength());
-                verticalFocalDistanceError = Math.abs(intrinsic.getVerticalFocalLength() -
-                        intrinsic2.getVerticalFocalLength());
+                horizontalFocalDistanceError = Math.abs(intrinsic.getHorizontalFocalLength()
+                        - intrinsic2.getHorizontalFocalLength());
+                verticalFocalDistanceError = Math.abs(intrinsic.getVerticalFocalLength()
+                        - intrinsic2.getVerticalFocalLength());
                 skewnessError = Math.abs(intrinsic.getSkewness() - intrinsic2.getSkewness());
-                horizontalPrincipalPointError = Math.abs(intrinsic.getHorizontalPrincipalPoint() -
-                        intrinsic2.getHorizontalPrincipalPoint());
-                verticalPrincipalPointError = Math.abs(intrinsic.getVerticalPrincipalPoint() -
-                        intrinsic2.getVerticalPrincipalPoint());
+                horizontalPrincipalPointError = Math.abs(intrinsic.getHorizontalPrincipalPoint()
+                        - intrinsic2.getHorizontalPrincipalPoint());
+                verticalPrincipalPointError = Math.abs(intrinsic.getVerticalPrincipalPoint()
+                        - intrinsic2.getVerticalPrincipalPoint());
 
                 avgHorizontalFocalDistanceError += horizontalFocalDistanceError;
                 avgVerticalFocalDistanceError += verticalFocalDistanceError;
@@ -1421,8 +1260,8 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
             total++;
         }
 
-        final double failedRatio = (double) failed / (double) total;
-        final double succeededRatio = (double) succeeded / (double) total;
+        final var failedRatio = (double) failed / (double) total;
+        final var succeededRatio = (double) succeeded / (double) total;
 
         avgHorizontalFocalDistanceError /= succeeded;
         avgVerticalFocalDistanceError /= succeeded;
@@ -1437,34 +1276,24 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
         assertEquals(0.0, avgHorizontalPrincipalPointError, LARGE_ABSOLUTE_ERROR);
         assertEquals(0.0, avgVerticalPrincipalPointError, LARGE_ABSOLUTE_ERROR);
 
-        final String msg = "No skewness and Principal point at origin - failed: " +
-                failedRatio * 100.0 + "% succeeded: " + succeededRatio * 100.0 +
-                "% avg horizontal focal distance error: " +
-                avgHorizontalFocalDistanceError +
-                " avg vertical focal distance error: " +
-                avgVerticalFocalDistanceError + " avg skewness error: " +
-                avgSkewnessError + " avg horizontal principal point error: " +
-                avgHorizontalPrincipalPointError +
-                " avg vertical principal point error: " +
-                avgVerticalPrincipalPointError +
-                " min horizontal focal distance error: " +
-                minHorizontalFocalDistanceError +
-                " min vertical focal distance error: " +
-                minVerticalFocalDistanceError + " min skewness error: " +
-                minSkewnessError + " min horizontal principal point error: " +
-                minHorizontalPrincipalPointError +
-                " min vertical principal point error: " +
-                minVerticalPrincipalPointError +
-                " max horizontal focal distance error: " +
-                maxHorizontalFocalDistanceError +
-                " max vertical focal distance error: " +
-                maxVerticalFocalDistanceError + " max skewness error: " +
-                maxSkewnessError + " max horizontal principal point error: " +
-                maxHorizontalPrincipalPointError +
-                " max vertical principal point error: " +
-                maxVerticalPrincipalPointError;
-        Logger.getLogger(LMSEImageOfAbsoluteConicEstimatorTest.class.getName()).
-                log(Level.INFO, msg);
+        final var msg = "No skewness and Principal point at origin - failed: " + failedRatio * 100.0
+                + "% succeeded: " + succeededRatio * 100.0
+                + "% avg horizontal focal distance error: " + avgHorizontalFocalDistanceError
+                + " avg vertical focal distance error: " + avgVerticalFocalDistanceError
+                + " avg skewness error: " + avgSkewnessError
+                + " avg horizontal principal point error: " + avgHorizontalPrincipalPointError
+                + " avg vertical principal point error: " + avgVerticalPrincipalPointError
+                + " min horizontal focal distance error: " + minHorizontalFocalDistanceError
+                + " min vertical focal distance error: " + minVerticalFocalDistanceError
+                + " min skewness error: " + minSkewnessError
+                + " min horizontal principal point error: " + minHorizontalPrincipalPointError
+                + " min vertical principal point error: " + minVerticalPrincipalPointError
+                + " max horizontal focal distance error: " + maxHorizontalFocalDistanceError
+                + " max vertical focal distance error: " + maxVerticalFocalDistanceError
+                + " max skewness error: " + maxSkewnessError
+                + " max horizontal principal point error: " + maxHorizontalPrincipalPointError
+                + " max vertical principal point error: " + maxVerticalPrincipalPointError;
+        Logger.getLogger(LMSEImageOfAbsoluteConicEstimatorTest.class.getName()).log(Level.INFO, msg);
 
         assertTrue(failedRatio < 0.75);
         assertTrue(succeededRatio >= 0.25);
@@ -1472,108 +1301,94 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
     }
 
     @Test
-    public void testEstimateZeroSkewnessAspectRatioKnown()
-            throws InvalidPinholeCameraIntrinsicParametersException, LockedException, NotReadyException,
-            RobustEstimatorException, ImageOfAbsoluteConicEstimatorException {
+    void testEstimateZeroSkewnessAspectRatioKnown() throws InvalidPinholeCameraIntrinsicParametersException,
+            LockedException, NotReadyException, RobustEstimatorException, ImageOfAbsoluteConicEstimatorException {
 
-        boolean succeededAtLeastOnce = false;
-        int failed = 0;
-        int succeeded = 0;
-        int total = 0;
-        double avgHorizontalFocalDistanceError = 0.0;
-        double avgVerticalFocalDistanceError = 0.0;
-        double avgSkewnessError = 0.0;
-        double avgHorizontalPrincipalPointError = 0.0;
-        double avgVerticalPrincipalPointError = 0.0;
-        double minHorizontalFocalDistanceError = Double.MAX_VALUE;
-        double minVerticalFocalDistanceError = Double.MAX_VALUE;
-        double minSkewnessError = Double.MAX_VALUE;
-        double minHorizontalPrincipalPointError = Double.MAX_VALUE;
-        double minVerticalPrincipalPointError = Double.MAX_VALUE;
-        double maxHorizontalFocalDistanceError = -Double.MAX_VALUE;
-        double maxVerticalFocalDistanceError = -Double.MAX_VALUE;
-        double maxSkewnessError = -Double.MAX_VALUE;
-        double maxHorizontalPrincipalPointError = -Double.MAX_VALUE;
-        double maxVerticalPrincipalPointError = -Double.MAX_VALUE;
+        var succeededAtLeastOnce = false;
+        var failed = 0;
+        var succeeded = 0;
+        var total = 0;
+        var avgHorizontalFocalDistanceError = 0.0;
+        var avgVerticalFocalDistanceError = 0.0;
+        var avgSkewnessError = 0.0;
+        var avgHorizontalPrincipalPointError = 0.0;
+        var avgVerticalPrincipalPointError = 0.0;
+        var minHorizontalFocalDistanceError = Double.MAX_VALUE;
+        var minVerticalFocalDistanceError = Double.MAX_VALUE;
+        var minSkewnessError = Double.MAX_VALUE;
+        var minHorizontalPrincipalPointError = Double.MAX_VALUE;
+        var minVerticalPrincipalPointError = Double.MAX_VALUE;
+        var maxHorizontalFocalDistanceError = -Double.MAX_VALUE;
+        var maxVerticalFocalDistanceError = -Double.MAX_VALUE;
+        var maxSkewnessError = -Double.MAX_VALUE;
+        var maxHorizontalPrincipalPointError = -Double.MAX_VALUE;
+        var maxVerticalPrincipalPointError = -Double.MAX_VALUE;
         double horizontalFocalDistanceError;
         double verticalFocalDistanceError;
         double skewnessError;
         double horizontalPrincipalPointError;
         double verticalPrincipalPointError;
-        for (int j = 0; j < TIMES; j++) {
+        for (var j = 0; j < TIMES; j++) {
             // create intrinsic parameters
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double skewness = 0.0;
-            final double horizontalPrincipalPoint = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double verticalPrincipalPoint = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var randomizer = new UniformRandomizer();
+            final var focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var skewness = 0.0;
+            final var horizontalPrincipalPoint = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var verticalPrincipalPoint = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
-            final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength,
-                            focalLength, horizontalPrincipalPoint,
-                            verticalPrincipalPoint, skewness);
+            final var intrinsic = new PinholeCameraIntrinsicParameters(focalLength, focalLength,
+                    horizontalPrincipalPoint, verticalPrincipalPoint, skewness);
 
-            final ImageOfAbsoluteConic iac = new ImageOfAbsoluteConic(intrinsic);
+            final var iac = new ImageOfAbsoluteConic(intrinsic);
 
             // create pattern to estimate homography
-            final Pattern2D pattern = Pattern2D.create(Pattern2DType.CIRCLES);
-            final List<Point2D> patternPoints = pattern.getIdealPoints();
+            final var pattern = Pattern2D.create(Pattern2DType.CIRCLES);
+            final var patternPoints = pattern.getIdealPoints();
 
             // assume that pattern points are located on a 3D plane
             // (for instance Z = 0), but can be really any plane
-            final List<Point3D> points3D = new ArrayList<>();
-            for (final Point2D patternPoint : patternPoints) {
-                points3D.add(new HomogeneousPoint3D(patternPoint.getInhomX(),
-                        patternPoint.getInhomY(), 0.0, 1.0));
+            final var points3D = new ArrayList<Point3D>();
+            for (final var patternPoint : patternPoints) {
+                points3D.add(new HomogeneousPoint3D(patternPoint.getInhomX(), patternPoint.getInhomY(), 0.0,
+                        1.0));
             }
 
             // create 3 random cameras having random rotation and translation but
             // created intrinsic parameters in order to obtain 3 homographies to
             // estimate the IAC
-            final List<Transformation2D> homographies = new ArrayList<>();
-            final double[] weights = new double[50];
+            final var homographies = new ArrayList<Transformation2D>();
+            final var weights = new double[50];
             randomizer.fill(weights, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-            for (int i = 0; i < 50; i++) {
+            for (var i = 0; i < 50; i++) {
                 // rotation
-                final double alphaEuler = randomizer.nextDouble(
-                        MIN_ANGLE_DEGREES * Math.PI / 180.0,
-                        MAX_ANGLE_DEGREES * Math.PI / 180.0);
-                final double betaEuler = randomizer.nextDouble(
-                        MIN_ANGLE_DEGREES * Math.PI / 180.0,
-                        MAX_ANGLE_DEGREES * Math.PI / 180.0);
-                final double gammaEuler = randomizer.nextDouble(
-                        MIN_ANGLE_DEGREES * Math.PI / 180.0,
-                        MAX_ANGLE_DEGREES * Math.PI / 180.0);
+                final var alphaEuler = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final var betaEuler = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final var gammaEuler = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-                final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
+                final var rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
 
                 // camera center
-                final double[] cameraCenterArray = new double[INHOM_3D_COORDS];
+                final var cameraCenterArray = new double[INHOM_3D_COORDS];
                 randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-                final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
+                final var cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
 
                 // create camera with intrinsic parameters, rotation and camera
                 // center
-                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
+                final var camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
                 camera.normalize();
 
                 // project 3D pattern points in a plane
-                final List<Point2D> projectedPatternPoints = camera.project(points3D);
+                final var projectedPatternPoints = camera.project(points3D);
 
-                final ProjectiveTransformation2DRobustEstimator homographyEstimator =
-                        ProjectiveTransformation2DRobustEstimator.
-                                createFromPoints(patternPoints, projectedPatternPoints,
-                                        RobustEstimatorMethod.RANSAC);
+                final var homographyEstimator = ProjectiveTransformation2DRobustEstimator.createFromPoints(
+                        patternPoints, projectedPatternPoints, RobustEstimatorMethod.RANSAC);
 
-                final ProjectiveTransformation2D homography = homographyEstimator.estimate();
+                final var homography = homographyEstimator.estimate();
                 homographies.add(homography);
             }
 
             // Estimate  IAC
-            final WeightedImageOfAbsoluteConicEstimator estimator =
-                    new WeightedImageOfAbsoluteConicEstimator(homographies, weights, this);
+            final var estimator = new WeightedImageOfAbsoluteConicEstimator(homographies, weights, this);
             estimator.setZeroSkewness(true);
             estimator.setPrincipalPointAtOrigin(false);
             estimator.setFocalDistanceAspectRatioKnown(true);
@@ -1589,7 +1404,7 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
             assertEquals(0, estimationProgressChange);
 
             // estimate
-            final ImageOfAbsoluteConic iac2 = estimator.estimate();
+            final var iac2 = estimator.estimate();
 
             assertEquals(1, estimateStart);
             assertEquals(1, estimateEnd);
@@ -1611,7 +1426,7 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
             assertEquals(Math.abs(iac.getF()), Math.abs(iac2.getF()), VERY_LARGE_ABSOLUTE_ERROR);
 
             try {
-                final PinholeCameraIntrinsicParameters intrinsic2 = iac2.getIntrinsicParameters();
+                final var intrinsic2 = iac2.getIntrinsicParameters();
 
                 assertEquals(intrinsic.getHorizontalFocalLength(), intrinsic2.getHorizontalFocalLength(),
                         2.0 * VERY_LARGE_ABSOLUTE_ERROR);
@@ -1619,20 +1434,20 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
                         2.0 * VERY_LARGE_ABSOLUTE_ERROR);
                 assertEquals(0.0, intrinsic.getSkewness(), 0.0);
                 assertEquals(0.0, intrinsic2.getSkewness(), 0.0);
-                assertEquals(intrinsic.getHorizontalPrincipalPoint(),
-                        intrinsic2.getHorizontalPrincipalPoint(), VERY_LARGE_ABSOLUTE_ERROR);
+                assertEquals(intrinsic.getHorizontalPrincipalPoint(), intrinsic2.getHorizontalPrincipalPoint(),
+                        VERY_LARGE_ABSOLUTE_ERROR);
                 assertEquals(intrinsic.getVerticalPrincipalPoint(), intrinsic2.getVerticalPrincipalPoint(),
                         VERY_LARGE_ABSOLUTE_ERROR);
 
-                horizontalFocalDistanceError = Math.abs(intrinsic.getHorizontalFocalLength() -
-                        intrinsic2.getHorizontalFocalLength());
-                verticalFocalDistanceError = Math.abs(intrinsic.getVerticalFocalLength() -
-                        intrinsic2.getVerticalFocalLength());
+                horizontalFocalDistanceError = Math.abs(intrinsic.getHorizontalFocalLength()
+                        - intrinsic2.getHorizontalFocalLength());
+                verticalFocalDistanceError = Math.abs(intrinsic.getVerticalFocalLength()
+                        - intrinsic2.getVerticalFocalLength());
                 skewnessError = Math.abs(intrinsic.getSkewness() - intrinsic2.getSkewness());
-                horizontalPrincipalPointError = Math.abs(intrinsic.getHorizontalPrincipalPoint() -
-                        intrinsic2.getHorizontalPrincipalPoint());
-                verticalPrincipalPointError = Math.abs(intrinsic.getVerticalPrincipalPoint() -
-                        intrinsic2.getVerticalPrincipalPoint());
+                horizontalPrincipalPointError = Math.abs(intrinsic.getHorizontalPrincipalPoint()
+                        - intrinsic2.getHorizontalPrincipalPoint());
+                verticalPrincipalPointError = Math.abs(intrinsic.getVerticalPrincipalPoint()
+                        - intrinsic2.getVerticalPrincipalPoint());
 
                 avgHorizontalFocalDistanceError += horizontalFocalDistanceError;
                 avgVerticalFocalDistanceError += verticalFocalDistanceError;
@@ -1680,8 +1495,8 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
             total++;
         }
 
-        final double failedRatio = (double) failed / (double) total;
-        final double succeededRatio = (double) succeeded / (double) total;
+        final var failedRatio = (double) failed / (double) total;
+        final var succeededRatio = (double) succeeded / (double) total;
 
         avgHorizontalFocalDistanceError /= succeeded;
         avgVerticalFocalDistanceError /= succeeded;
@@ -1696,32 +1511,23 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
         assertEquals(0.0, avgHorizontalPrincipalPointError, LARGE_ABSOLUTE_ERROR);
         assertEquals(0.0, avgVerticalPrincipalPointError, LARGE_ABSOLUTE_ERROR);
 
-        final String msg = "Zero skewness, aspect ratio known - failed: " +
-                failedRatio * 100.0 + "% succeeded: " + succeededRatio * 100.0 +
-                "% avg horizontal focal distance error: " +
-                avgHorizontalFocalDistanceError +
-                " avg vertical focal distance error: " +
-                avgVerticalFocalDistanceError + " avg skewness error: " +
-                avgSkewnessError + " avg horizontal principal point error: " +
-                avgHorizontalPrincipalPointError +
-                " avg vertical principal point error: " +
-                avgVerticalPrincipalPointError +
-                " min horizontal focal distance error: " +
-                minHorizontalFocalDistanceError +
-                " min vertical focal distance error: " +
-                minVerticalFocalDistanceError + " min skewness error: " +
-                minSkewnessError + " min horizontal principal point error: " +
-                minHorizontalPrincipalPointError +
-                " min vertical principal point error: " +
-                minVerticalPrincipalPointError +
-                " max horizontal focal distance error: " +
-                maxHorizontalFocalDistanceError +
-                " max vertical focal distance error: " +
-                maxVerticalFocalDistanceError + " max skewness error: " +
-                maxSkewnessError + " max horizontal principal point error: " +
-                maxHorizontalPrincipalPointError +
-                " max vertical principal point error: " +
-                maxVerticalPrincipalPointError;
+        final var msg = "Zero skewness, aspect ratio known - failed: " + failedRatio * 100.0
+                + "% succeeded: " + succeededRatio * 100.0
+                + "% avg horizontal focal distance error: " + avgHorizontalFocalDistanceError
+                + " avg vertical focal distance error: " + avgVerticalFocalDistanceError
+                + " avg skewness error: " + avgSkewnessError
+                + " avg horizontal principal point error: " + avgHorizontalPrincipalPointError
+                + " avg vertical principal point error: " + avgVerticalPrincipalPointError
+                + " min horizontal focal distance error: " + minHorizontalFocalDistanceError
+                + " min vertical focal distance error: " + minVerticalFocalDistanceError
+                + " min skewness error: " + minSkewnessError
+                + " min horizontal principal point error: " + minHorizontalPrincipalPointError
+                + " min vertical principal point error: " + minVerticalPrincipalPointError
+                + " max horizontal focal distance error: " + maxHorizontalFocalDistanceError
+                + " max vertical focal distance error: " + maxVerticalFocalDistanceError
+                + " max skewness error: " + maxSkewnessError
+                + " max horizontal principal point error: " + maxHorizontalPrincipalPointError
+                + " max vertical principal point error: " + maxVerticalPrincipalPointError;
         Logger.getLogger(LMSEImageOfAbsoluteConicEstimatorTest.class.getName()).log(Level.INFO, msg);
 
         assertTrue(failedRatio < 0.75);
@@ -1730,106 +1536,95 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
     }
 
     @Test
-    public void testEstimateZeroSkewnessPrincipalPointAtOriginAspectRatioKnown()
-            throws InvalidPinholeCameraIntrinsicParametersException,
-            LockedException, NotReadyException, RobustEstimatorException,
-            ImageOfAbsoluteConicEstimatorException {
+    void testEstimateZeroSkewnessPrincipalPointAtOriginAspectRatioKnown()
+            throws InvalidPinholeCameraIntrinsicParametersException, LockedException, NotReadyException,
+            RobustEstimatorException, ImageOfAbsoluteConicEstimatorException {
 
-        boolean succeededAtLeastOnce = false;
-        int failed = 0;
-        int succeeded = 0;
-        int total = 0;
-        double avgHorizontalFocalDistanceError = 0.0;
-        double avgVerticalFocalDistanceError = 0.0;
-        double avgSkewnessError = 0.0;
-        double avgHorizontalPrincipalPointError = 0.0;
-        double avgVerticalPrincipalPointError = 0.0;
-        double minHorizontalFocalDistanceError = Double.MAX_VALUE;
-        double minVerticalFocalDistanceError = Double.MAX_VALUE;
-        double minSkewnessError = Double.MAX_VALUE;
-        double minHorizontalPrincipalPointError = Double.MAX_VALUE;
-        double minVerticalPrincipalPointError = Double.MAX_VALUE;
-        double maxHorizontalFocalDistanceError = -Double.MAX_VALUE;
-        double maxVerticalFocalDistanceError = -Double.MAX_VALUE;
-        double maxSkewnessError = -Double.MAX_VALUE;
-        double maxHorizontalPrincipalPointError = -Double.MAX_VALUE;
-        double maxVerticalPrincipalPointError = -Double.MAX_VALUE;
+        var succeededAtLeastOnce = false;
+        var failed = 0;
+        var succeeded = 0;
+        var total = 0;
+        var avgHorizontalFocalDistanceError = 0.0;
+        var avgVerticalFocalDistanceError = 0.0;
+        var avgSkewnessError = 0.0;
+        var avgHorizontalPrincipalPointError = 0.0;
+        var avgVerticalPrincipalPointError = 0.0;
+        var minHorizontalFocalDistanceError = Double.MAX_VALUE;
+        var minVerticalFocalDistanceError = Double.MAX_VALUE;
+        var minSkewnessError = Double.MAX_VALUE;
+        var minHorizontalPrincipalPointError = Double.MAX_VALUE;
+        var minVerticalPrincipalPointError = Double.MAX_VALUE;
+        var maxHorizontalFocalDistanceError = -Double.MAX_VALUE;
+        var maxVerticalFocalDistanceError = -Double.MAX_VALUE;
+        var maxSkewnessError = -Double.MAX_VALUE;
+        var maxHorizontalPrincipalPointError = -Double.MAX_VALUE;
+        var maxVerticalPrincipalPointError = -Double.MAX_VALUE;
         double horizontalFocalDistanceError;
         double verticalFocalDistanceError;
         double skewnessError;
         double horizontalPrincipalPointError;
         double verticalPrincipalPointError;
-        for (int j = 0; j < TIMES; j++) {
+        for (var j = 0; j < TIMES; j++) {
             // create intrinsic parameters
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double skewness = 0.0;
-            final double horizontalPrincipalPoint = 0.0;
-            final double verticalPrincipalPoint = 0.0;
+            final var randomizer = new UniformRandomizer();
+            final var focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var skewness = 0.0;
+            final var horizontalPrincipalPoint = 0.0;
+            final var verticalPrincipalPoint = 0.0;
 
-            final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength,
-                            focalLength, horizontalPrincipalPoint,
-                            verticalPrincipalPoint, skewness);
+            final var intrinsic = new PinholeCameraIntrinsicParameters(focalLength, focalLength,
+                    horizontalPrincipalPoint, verticalPrincipalPoint, skewness);
 
-            final ImageOfAbsoluteConic iac = new ImageOfAbsoluteConic(intrinsic);
+            final var iac = new ImageOfAbsoluteConic(intrinsic);
 
             // create pattern to estimate homography
-            final Pattern2D pattern = Pattern2D.create(Pattern2DType.CIRCLES);
-            final List<Point2D> patternPoints = pattern.getIdealPoints();
+            final var pattern = Pattern2D.create(Pattern2DType.CIRCLES);
+            final var patternPoints = pattern.getIdealPoints();
 
             // assume that pattern points are located on a 3D plane
             // (for instance Z = 0), but can be really any plane
-            final List<Point3D> points3D = new ArrayList<>();
-            for (final Point2D patternPoint : patternPoints) {
-                points3D.add(new HomogeneousPoint3D(patternPoint.getInhomX(),
-                        patternPoint.getInhomY(), 0.0, 1.0));
+            final var points3D = new ArrayList<Point3D>();
+            for (final var patternPoint : patternPoints) {
+                points3D.add(new HomogeneousPoint3D(patternPoint.getInhomX(), patternPoint.getInhomY(), 0.0,
+                        1.0));
             }
 
             // create 3 random cameras having random rotation and translation but
             // created intrinsic parameters in order to obtain 3 homographies to
             // estimate the IAC
-            final List<Transformation2D> homographies = new ArrayList<>();
-            final double[] weights = new double[50];
+            final var homographies = new ArrayList<Transformation2D>();
+            final var weights = new double[50];
             randomizer.fill(weights, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-            for (int i = 0; i < 50; i++) {
+            for (var i = 0; i < 50; i++) {
                 // rotation
-                final double alphaEuler = randomizer.nextDouble(
-                        MIN_ANGLE_DEGREES * Math.PI / 180.0,
-                        MAX_ANGLE_DEGREES * Math.PI / 180.0);
-                final double betaEuler = randomizer.nextDouble(
-                        MIN_ANGLE_DEGREES * Math.PI / 180.0,
-                        MAX_ANGLE_DEGREES * Math.PI / 180.0);
-                final double gammaEuler = randomizer.nextDouble(
-                        MIN_ANGLE_DEGREES * Math.PI / 180.0,
-                        MAX_ANGLE_DEGREES * Math.PI / 180.0);
+                final var alphaEuler = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final var betaEuler = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final var gammaEuler = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-                final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
+                final var rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
 
                 // camera center
-                final double[] cameraCenterArray = new double[INHOM_3D_COORDS];
+                final var cameraCenterArray = new double[INHOM_3D_COORDS];
                 randomizer.fill(cameraCenterArray, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-                final InhomogeneousPoint3D cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
+                final var cameraCenter = new InhomogeneousPoint3D(cameraCenterArray);
 
                 // create camera with intrinsic parameters, rotation and camera
                 // center
-                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
+                final var camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
                 camera.normalize();
 
                 // project 3D pattern points in a plane
-                final List<Point2D> projectedPatternPoints = camera.project(points3D);
+                final var projectedPatternPoints = camera.project(points3D);
 
-                final ProjectiveTransformation2DRobustEstimator homographyEstimator =
-                        ProjectiveTransformation2DRobustEstimator.createFromPoints(
-                                patternPoints, projectedPatternPoints, RobustEstimatorMethod.RANSAC);
+                final var homographyEstimator = ProjectiveTransformation2DRobustEstimator.createFromPoints(
+                        patternPoints, projectedPatternPoints, RobustEstimatorMethod.RANSAC);
 
-                final ProjectiveTransformation2D homography = homographyEstimator.estimate();
+                final var homography = homographyEstimator.estimate();
                 homographies.add(homography);
             }
 
             // Estimate IAC
-            final WeightedImageOfAbsoluteConicEstimator estimator =
-                    new WeightedImageOfAbsoluteConicEstimator(homographies, weights, this);
+            final var estimator = new WeightedImageOfAbsoluteConicEstimator(homographies, weights, this);
             estimator.setZeroSkewness(true);
             estimator.setPrincipalPointAtOrigin(true);
             estimator.setFocalDistanceAspectRatioKnown(true);
@@ -1845,7 +1640,7 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
             assertEquals(0, estimationProgressChange);
 
             // estimate
-            final ImageOfAbsoluteConic iac2 = estimator.estimate();
+            final var iac2 = estimator.estimate();
 
             assertEquals(1, estimateStart);
             assertEquals(1, estimateEnd);
@@ -1869,10 +1664,10 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
             assertEquals(Math.abs(iac.getF()), Math.abs(iac2.getF()), VERY_LARGE_ABSOLUTE_ERROR);
 
             try {
-                final PinholeCameraIntrinsicParameters intrinsic2 = iac2.getIntrinsicParameters();
+                final var intrinsic2 = iac2.getIntrinsicParameters();
 
-                if (Math.abs(intrinsic.getHorizontalFocalLength() -
-                        intrinsic2.getHorizontalFocalLength()) > ULTRA_LARGE_ABSOLUTE_ERROR) {
+                if (Math.abs(intrinsic.getHorizontalFocalLength() - intrinsic2.getHorizontalFocalLength())
+                        > ULTRA_LARGE_ABSOLUTE_ERROR) {
                     continue;
                 }
                 assertEquals(intrinsic.getHorizontalFocalLength(), intrinsic2.getHorizontalFocalLength(),
@@ -1886,15 +1681,15 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
                 assertEquals(0.0, intrinsic.getVerticalPrincipalPoint(), 0.0);
                 assertEquals(0.0, intrinsic2.getVerticalPrincipalPoint(), 0.0);
 
-                horizontalFocalDistanceError = Math.abs(intrinsic.getHorizontalFocalLength() -
-                        intrinsic2.getHorizontalFocalLength());
-                verticalFocalDistanceError = Math.abs(intrinsic.getVerticalFocalLength() -
-                        intrinsic2.getVerticalFocalLength());
+                horizontalFocalDistanceError = Math.abs(intrinsic.getHorizontalFocalLength()
+                        - intrinsic2.getHorizontalFocalLength());
+                verticalFocalDistanceError = Math.abs(intrinsic.getVerticalFocalLength()
+                        - intrinsic2.getVerticalFocalLength());
                 skewnessError = Math.abs(intrinsic.getSkewness() - intrinsic2.getSkewness());
-                horizontalPrincipalPointError = Math.abs(intrinsic.getHorizontalPrincipalPoint() -
-                        intrinsic2.getHorizontalPrincipalPoint());
-                verticalPrincipalPointError = Math.abs(intrinsic.getVerticalPrincipalPoint() -
-                        intrinsic2.getVerticalPrincipalPoint());
+                horizontalPrincipalPointError = Math.abs(intrinsic.getHorizontalPrincipalPoint()
+                        - intrinsic2.getHorizontalPrincipalPoint());
+                verticalPrincipalPointError = Math.abs(intrinsic.getVerticalPrincipalPoint()
+                        - intrinsic2.getVerticalPrincipalPoint());
 
                 avgHorizontalFocalDistanceError += horizontalFocalDistanceError;
                 avgVerticalFocalDistanceError += verticalFocalDistanceError;
@@ -1942,8 +1737,8 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
             total++;
         }
 
-        final double failedRatio = (double) failed / (double) total;
-        final double succeededRatio = (double) succeeded / (double) total;
+        final var failedRatio = (double) failed / (double) total;
+        final var succeededRatio = (double) succeeded / (double) total;
 
         avgHorizontalFocalDistanceError /= succeeded;
         avgVerticalFocalDistanceError /= succeeded;
@@ -1958,32 +1753,23 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
         assertEquals(0.0, avgHorizontalPrincipalPointError, VERY_LARGE_ABSOLUTE_ERROR);
         assertEquals(0.0, avgVerticalPrincipalPointError, VERY_LARGE_ABSOLUTE_ERROR);
 
-        final String msg = "No skewness, Principal point at origin, aspect ratio known - failed: " +
-                failedRatio * 100.0 + "% succeeded: " + succeededRatio * 100.0 +
-                "% avg horizontal focal distance error: " +
-                avgHorizontalFocalDistanceError +
-                " avg vertical focal distance error: " +
-                avgVerticalFocalDistanceError + " avg skewness error: " +
-                avgSkewnessError + " avg horizontal principal point error: " +
-                avgHorizontalPrincipalPointError +
-                " avg vertical principal point error: " +
-                avgVerticalPrincipalPointError +
-                " min horizontal focal distance error: " +
-                minHorizontalFocalDistanceError +
-                " min vertical focal distance error: " +
-                minVerticalFocalDistanceError + " min skewness error: " +
-                minSkewnessError + " min horizontal principal point error: " +
-                minHorizontalPrincipalPointError +
-                " min vertical principal point error: " +
-                minVerticalPrincipalPointError +
-                " max horizontal focal distance error: " +
-                maxHorizontalFocalDistanceError +
-                " max vertical focal distance error: " +
-                maxVerticalFocalDistanceError + " max skewness error: " +
-                maxSkewnessError + " max horizontal principal point error: " +
-                maxHorizontalPrincipalPointError +
-                " max vertical principal point error: " +
-                maxVerticalPrincipalPointError;
+        final var msg = "No skewness, Principal point at origin, aspect ratio known - failed: " + failedRatio * 100.0
+                + "% succeeded: " + succeededRatio * 100.0
+                + "% avg horizontal focal distance error: " + avgHorizontalFocalDistanceError
+                + " avg vertical focal distance error: " + avgVerticalFocalDistanceError
+                + " avg skewness error: " + avgSkewnessError
+                + " avg horizontal principal point error: " + avgHorizontalPrincipalPointError
+                + " avg vertical principal point error: " + avgVerticalPrincipalPointError
+                + " min horizontal focal distance error: " + minHorizontalFocalDistanceError
+                + " min vertical focal distance error: " + minVerticalFocalDistanceError
+                + " min skewness error: " + minSkewnessError
+                + " min horizontal principal point error: " + minHorizontalPrincipalPointError
+                + " min vertical principal point error: " + minVerticalPrincipalPointError
+                + " max horizontal focal distance error: " + maxHorizontalFocalDistanceError
+                + " max vertical focal distance error: " + maxVerticalFocalDistanceError
+                + " max skewness error: " + maxSkewnessError
+                + " max horizontal principal point error: " + maxHorizontalPrincipalPointError
+                + " max vertical principal point error: " + maxVerticalPrincipalPointError;
         Logger.getLogger(LMSEImageOfAbsoluteConicEstimatorTest.class.getName()).log(Level.INFO, msg);
 
         assertTrue(failedRatio < 0.75);
@@ -1992,13 +1778,12 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
     }
 
     @Test
-    public void testEstimateRealData() throws CoincidentPointsException,
-            InvalidPinholeCameraIntrinsicParametersException, LockedException, NotReadyException,
-            ImageOfAbsoluteConicEstimatorException {
+    void testEstimateRealData() throws CoincidentPointsException, InvalidPinholeCameraIntrinsicParametersException,
+            LockedException, NotReadyException, ImageOfAbsoluteConicEstimatorException {
         // For a QR pattern, assuming zero skewness, equal focal lengths and
         // principal point at origin on a nexus 5 device
-        final Pattern2D pattern = Pattern2D.create(Pattern2DType.QR);
-        final List<Point2D> patternPoints = pattern.getIdealPoints();
+        final var pattern = Pattern2D.create(Pattern2DType.QR);
+        final var patternPoints = pattern.getIdealPoints();
         
         /*
         Sampled data (before and after centering coordinates and setting correct y-axis
@@ -2008,7 +1793,7 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
         Point[2] = 1037.5, 854.0 | 269.5, 170.0
         Point[3] = 999.0, 1074.0 | 231.0, -50.0        
         */
-        final List<Point2D> sampledPoints1 = new ArrayList<>();
+        final var sampledPoints1 = new ArrayList<Point2D>();
         sampledPoints1.add(new InhomogeneousPoint2D(6.5, -60.5));
         sampledPoints1.add(new InhomogeneousPoint2D(23.5, 184.0));
         sampledPoints1.add(new InhomogeneousPoint2D(269.5, 170.0));
@@ -2022,7 +1807,7 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
         Point[2] = 585.0, 451.5 | -183.0, 572.5
         Point[3] = 592.0, 653.5 | -176.0, 370.5
         */
-        final List<Point2D> sampledPoints2 = new ArrayList<>();
+        final var sampledPoints2 = new ArrayList<Point2D>();
         sampledPoints2.add(new InhomogeneousPoint2D(-385.5, 322.5));
         sampledPoints2.add(new InhomogeneousPoint2D(-417.0, 550.5));
         sampledPoints2.add(new InhomogeneousPoint2D(-183.0, 572.5));
@@ -2036,7 +1821,7 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
         Point[2] = 1241.0, 316.5 | 473.0, 707.5
         Point[3] = 1185.5, 498.5 | 417.5, 525.5
         */
-        final List<Point2D> sampledPoints3 = new ArrayList<>();
+        final var sampledPoints3 = new ArrayList<Point2D>();
         sampledPoints3.add(new InhomogeneousPoint2D(220.0, 537.5));
         sampledPoints3.add(new InhomogeneousPoint2D(260.5, 745.5));
         sampledPoints3.add(new InhomogeneousPoint2D(473.0, 707.5));
@@ -2050,7 +1835,7 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
         Point[2] = 792.0, 1117.5 | 24.0, -93.5
         Point[3] = 798.5, 1347.0 | 30.5, -323.0
         */
-        final List<Point2D> sampledPoints4 = new ArrayList<>();
+        final var sampledPoints4 = new ArrayList<Point2D>();
         sampledPoints4.add(new InhomogeneousPoint2D(-192.0, -380.4166259765625));
         sampledPoints4.add(new InhomogeneousPoint2D(-223.5, -127.5));
         sampledPoints4.add(new InhomogeneousPoint2D(24.0, -93.5));
@@ -2064,75 +1849,64 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
         Point[2] = 1170.5, 1391.0 | 402.5, -367.0
         Point[3] = 1126.5, 1600.5 | 358.5, -576.5 
         */
-        final List<Point2D> sampledPoints5 = new ArrayList<>();
+        final var sampledPoints5 = new ArrayList<Point2D>();
         sampledPoints5.add(new InhomogeneousPoint2D(145.5, -572.0));
         sampledPoints5.add(new InhomogeneousPoint2D(171.5, -336.699951171875));
         sampledPoints5.add(new InhomogeneousPoint2D(402.5, -367.0));
         sampledPoints5.add(new InhomogeneousPoint2D(358.5, -576.5));
 
         //obtain homographies
-        final ProjectiveTransformation2D homography1 = new ProjectiveTransformation2D(
-                patternPoints.get(0), patternPoints.get(1),
-                patternPoints.get(2), patternPoints.get(3),
-                sampledPoints1.get(0), sampledPoints1.get(1),
+        final var homography1 = new ProjectiveTransformation2D(patternPoints.get(0), patternPoints.get(1),
+                patternPoints.get(2), patternPoints.get(3), sampledPoints1.get(0), sampledPoints1.get(1),
                 sampledPoints1.get(2), sampledPoints1.get(3));
 
-        final ProjectiveTransformation2D homography2 = new ProjectiveTransformation2D(
-                patternPoints.get(0), patternPoints.get(1),
-                patternPoints.get(2), patternPoints.get(3),
-                sampledPoints2.get(0), sampledPoints2.get(1),
+        final var homography2 = new ProjectiveTransformation2D(patternPoints.get(0), patternPoints.get(1),
+                patternPoints.get(2), patternPoints.get(3), sampledPoints2.get(0), sampledPoints2.get(1),
                 sampledPoints2.get(2), sampledPoints2.get(3));
 
-        final ProjectiveTransformation2D homography3 = new ProjectiveTransformation2D(
-                patternPoints.get(0), patternPoints.get(1),
-                patternPoints.get(2), patternPoints.get(3),
-                sampledPoints3.get(0), sampledPoints3.get(1),
+        final var homography3 = new ProjectiveTransformation2D(patternPoints.get(0), patternPoints.get(1),
+                patternPoints.get(2), patternPoints.get(3), sampledPoints3.get(0), sampledPoints3.get(1),
                 sampledPoints3.get(2), sampledPoints3.get(3));
 
-        final ProjectiveTransformation2D homography4 = new ProjectiveTransformation2D(
-                patternPoints.get(0), patternPoints.get(1),
-                patternPoints.get(2), patternPoints.get(3),
-                sampledPoints4.get(0), sampledPoints4.get(1),
+        final var homography4 = new ProjectiveTransformation2D(patternPoints.get(0), patternPoints.get(1),
+                patternPoints.get(2), patternPoints.get(3), sampledPoints4.get(0), sampledPoints4.get(1),
                 sampledPoints4.get(2), sampledPoints4.get(3));
 
-        final ProjectiveTransformation2D homography5 = new ProjectiveTransformation2D(
-                patternPoints.get(0), patternPoints.get(1),
-                patternPoints.get(2), patternPoints.get(3),
-                sampledPoints5.get(0), sampledPoints5.get(1),
+        final var homography5 = new ProjectiveTransformation2D(patternPoints.get(0), patternPoints.get(1),
+                patternPoints.get(2), patternPoints.get(3), sampledPoints5.get(0), sampledPoints5.get(1),
                 sampledPoints5.get(2), sampledPoints5.get(3));
 
-        final List<Transformation2D> homographies = new ArrayList<>();
+        final var homographies = new ArrayList<Transformation2D>();
         homographies.add(homography1);
         homographies.add(homography2);
         homographies.add(homography3);
         homographies.add(homography4);
         homographies.add(homography5);
 
-        final double[] weights = new double[]{0.001, 1.0, 0.1, 0.003, 0.002};
+        final var weights = new double[]{0.001, 1.0, 0.1, 0.003, 0.002};
 
         // estimate IAC
-        final WeightedImageOfAbsoluteConicEstimator estimator =
-                new WeightedImageOfAbsoluteConicEstimator(homographies, weights);
+        final var estimator = new WeightedImageOfAbsoluteConicEstimator(homographies, weights);
 
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
         assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
 
-        final ImageOfAbsoluteConic iac = estimator.estimate();
+        final var iac = estimator.estimate();
 
         assertNotNull(iac);
 
         // obtain intrinsic parameters
-        final PinholeCameraIntrinsicParameters intrinsic = iac.getIntrinsicParameters();
+        final var intrinsic = iac.getIntrinsicParameters();
 
         assertNotNull(intrinsic);
 
-        final double horizontalFocalLength = intrinsic.getHorizontalFocalLength();
-        final double verticalFocalLength = intrinsic.getVerticalFocalLength();
-        final double skewness = intrinsic.getSkewness();
-        final double horizontalPrincipalPoint = intrinsic.getHorizontalPrincipalPoint();
-        final double verticalPrincipalPoint = intrinsic.getVerticalPrincipalPoint();
+        final var horizontalFocalLength = intrinsic.getHorizontalFocalLength();
+        final var verticalFocalLength = intrinsic.getVerticalFocalLength();
+        final var skewness = intrinsic.getSkewness();
+        final var horizontalPrincipalPoint = intrinsic.getHorizontalPrincipalPoint();
+        final var verticalPrincipalPoint = intrinsic.getVerticalPrincipalPoint();
         assertTrue(horizontalFocalLength > 0);
         assertTrue(verticalFocalLength > 0);
         assertEquals(horizontalFocalLength, verticalFocalLength, ABSOLUTE_ERROR);
@@ -2140,7 +1914,7 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
         assertEquals(0.0, horizontalPrincipalPoint, 0.0);
         assertEquals(0.0, verticalPrincipalPoint, 0.0);
 
-        final String msg = "Real data focal length: " + horizontalFocalLength;
+        final var msg = "Real data focal length: " + horizontalFocalLength;
         Logger.getLogger(WeightedImageOfAbsoluteConicEstimatorTest.class.getName()).log(Level.INFO, msg);
     }
 
@@ -2157,8 +1931,7 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
     }
 
     @Override
-    public void onEstimationProgressChange(
-            final ImageOfAbsoluteConicEstimator estimator, final float progress) {
+    public void onEstimationProgressChange(final ImageOfAbsoluteConicEstimator estimator, final float progress) {
         estimationProgressChange++;
         testLocked((WeightedImageOfAbsoluteConicEstimator) estimator);
     }
@@ -2168,39 +1941,12 @@ public class WeightedImageOfAbsoluteConicEstimatorTest implements ImageOfAbsolut
     }
 
     private void testLocked(final WeightedImageOfAbsoluteConicEstimator estimator) {
-        try {
-            estimator.setZeroSkewness(true);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            estimator.setPrincipalPointAtOrigin(true);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            estimator.setListener(this);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            estimator.setHomographies(null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator.setHomographiesAndWeights(null, null);
-        } catch (final LockedException ignore) {
-        }
-        try {
-            estimator.setMaxHomographies(1);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            estimator.setSortWeightsEnabled(true);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
+        assertThrows(LockedException.class, () -> estimator.setZeroSkewness(true));
+        assertThrows(LockedException.class, () -> estimator.setPrincipalPointAtOrigin(true));
+        assertThrows(LockedException.class, () -> estimator.setListener(this));
+        assertThrows(IllegalArgumentException.class, () -> estimator.setHomographies(null));
+        assertThrows(LockedException.class, () -> estimator.setHomographiesAndWeights(null, null));
+        assertThrows(LockedException.class, () -> estimator.setMaxHomographies(1));
+        assertThrows(LockedException.class, () -> estimator.setSortWeightsEnabled(true));
     }
 }

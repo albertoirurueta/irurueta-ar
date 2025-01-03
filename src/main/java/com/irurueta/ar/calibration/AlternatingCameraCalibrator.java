@@ -78,59 +78,57 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
      * Default robust estimator method to be used for radial distortion
      * estimation.
      */
-    public static final RobustEstimatorMethod DEFAULT_RADIAL_DISTORTION_METHOD =
-            RobustEstimatorMethod.PROSAC;
+    public static final RobustEstimatorMethod DEFAULT_RADIAL_DISTORTION_METHOD = RobustEstimatorMethod.PROSAC;
 
     /**
      * Maximum number of times to do an alternating iteration to refine the
      * results.
      */
-    private int mMaxIterations;
+    private int maxIterations;
 
     /**
      * Default threshold to determine that convergence of the result has been
      * reached.
      */
-    private double mConvergenceThreshold;
+    private double convergenceThreshold;
 
     /**
      * Robust estimator method to be used for radial distortion estimation.
      */
-    private RobustEstimatorMethod mDistortionMethod;
+    private RobustEstimatorMethod distortionMethod;
 
     /**
      * Robust estimator of radial distortion.
      */
-    private RadialDistortionRobustEstimator mDistortionEstimator;
+    private RadialDistortionRobustEstimator distortionEstimator;
 
     /**
      * Listener for robust estimator of radial distortion.
      */
-    private RadialDistortionRobustEstimatorListener
-            mDistortionEstimatorListener;
+    private RadialDistortionRobustEstimatorListener distortionEstimatorListener;
 
     /**
      * Indicates progress of radial distortion estimation.
      */
-    private float mRadialDistortionProgress;
+    private float radialDistortionProgress;
 
     /**
      * Overall progress taking into account current number of iteration.
      */
-    private float mIterProgress;
+    private float iterProgress;
 
     /**
      * Previously notified progress.
      */
-    private float mPreviousNotifiedProgress;
+    private float previousNotifiedProgress;
 
     /**
      * Constructor.
      */
     public AlternatingCameraCalibrator() {
         super();
-        mMaxIterations = DEFAULT_MAX_ITERATIONS;
-        mConvergenceThreshold = DEFAULT_CONVERGENCE_THRESHOLD;
+        maxIterations = DEFAULT_MAX_ITERATIONS;
+        convergenceThreshold = DEFAULT_CONVERGENCE_THRESHOLD;
 
         internalSetDistortionMethod(DEFAULT_RADIAL_DISTORTION_METHOD);
     }
@@ -142,11 +140,10 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
      * @param samples samples of the pattern taken with the camera to calibrate.
      * @throws IllegalArgumentException if not enough samples are provided.
      */
-    public AlternatingCameraCalibrator(final Pattern2D pattern,
-                                       final List<CameraCalibratorSample> samples) {
+    public AlternatingCameraCalibrator(final Pattern2D pattern, final List<CameraCalibratorSample> samples) {
         super(pattern, samples);
-        mMaxIterations = DEFAULT_MAX_ITERATIONS;
-        mConvergenceThreshold = DEFAULT_CONVERGENCE_THRESHOLD;
+        maxIterations = DEFAULT_MAX_ITERATIONS;
+        convergenceThreshold = DEFAULT_CONVERGENCE_THRESHOLD;
 
         internalSetDistortionMethod(DEFAULT_RADIAL_DISTORTION_METHOD);
     }
@@ -160,12 +157,11 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
      * @throws IllegalArgumentException if not enough samples are provided or if
      *                                  both samples and quality scores do not have the same size.
      */
-    public AlternatingCameraCalibrator(final Pattern2D pattern,
-                                       final List<CameraCalibratorSample> samples,
-                                       final double[] samplesQualityScores) {
+    public AlternatingCameraCalibrator(
+            final Pattern2D pattern, final List<CameraCalibratorSample> samples, final double[] samplesQualityScores) {
         super(pattern, samples, samplesQualityScores);
-        mMaxIterations = DEFAULT_MAX_ITERATIONS;
-        mConvergenceThreshold = DEFAULT_CONVERGENCE_THRESHOLD;
+        maxIterations = DEFAULT_MAX_ITERATIONS;
+        convergenceThreshold = DEFAULT_CONVERGENCE_THRESHOLD;
 
         internalSetDistortionMethod(DEFAULT_RADIAL_DISTORTION_METHOD);
     }
@@ -177,7 +173,7 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
      * @return maximum number of times to do an alternating iteration.
      */
     public int getMaxIterations() {
-        return mMaxIterations;
+        return maxIterations;
     }
 
     /**
@@ -197,7 +193,7 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
             throw new IllegalArgumentException();
         }
 
-        mMaxIterations = maxIterations;
+        this.maxIterations = maxIterations;
     }
 
     /**
@@ -208,7 +204,7 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
      * reached.
      */
     public double getConvergenceThreshold() {
-        return mConvergenceThreshold;
+        return convergenceThreshold;
     }
 
     /**
@@ -220,8 +216,7 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
      * @throws LockedException          if this instance is locked.
      * @throws IllegalArgumentException if provided value is negative.
      */
-    public void setConvergenceThreshold(final double convergenceThreshold)
-            throws LockedException {
+    public void setConvergenceThreshold(final double convergenceThreshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -229,7 +224,7 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
             throw new IllegalArgumentException();
         }
 
-        mConvergenceThreshold = convergenceThreshold;
+        this.convergenceThreshold = convergenceThreshold;
     }
 
     /**
@@ -240,7 +235,7 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
      * estimation.
      */
     public RobustEstimatorMethod getDistortionMethod() {
-        return mDistortionMethod;
+        return distortionMethod;
     }
 
     /**
@@ -251,9 +246,7 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
      *                         radial distortion estimation.
      * @throws LockedException if this instance is locked.
      */
-    public void setDistortionMethod(
-            final RobustEstimatorMethod distortionMethod)
-            throws LockedException {
+    public void setDistortionMethod(final RobustEstimatorMethod distortionMethod) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -269,7 +262,7 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
      * @return radial distortion estimator.
      */
     public RadialDistortionRobustEstimator getDistortionEstimator() {
-        return mDistortionEstimator;
+        return distortionEstimator;
     }
 
     /**
@@ -280,24 +273,13 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
      * @return threshold to robustly estimate radial distortion.
      */
     public double getDistortionEstimatorThreshold() {
-        switch (mDistortionEstimator.getMethod()) {
-            case LMEDS:
-                return ((LMedSRadialDistortionRobustEstimator) mDistortionEstimator).
-                        getStopThreshold();
-            case MSAC:
-                return ((MSACRadialDistortionRobustEstimator) mDistortionEstimator).
-                        getThreshold();
-            case PROSAC:
-                return ((PROSACRadialDistortionRobustEstimator) mDistortionEstimator).
-                        getThreshold();
-            case PROMEDS:
-                return ((PROMedSRadialDistortionRobustEstimator) mDistortionEstimator).
-                        getStopThreshold();
-            case RANSAC:
-            default:
-                return ((RANSACRadialDistortionRobustEstimator) mDistortionEstimator).
-                        getThreshold();
-        }
+        return switch (distortionEstimator.getMethod()) {
+            case LMEDS -> ((LMedSRadialDistortionRobustEstimator) distortionEstimator).getStopThreshold();
+            case MSAC -> ((MSACRadialDistortionRobustEstimator) distortionEstimator).getThreshold();
+            case PROSAC -> ((PROSACRadialDistortionRobustEstimator) distortionEstimator).getThreshold();
+            case PROMEDS -> ((PROMedSRadialDistortionRobustEstimator) distortionEstimator).getStopThreshold();
+            default -> ((RANSACRadialDistortionRobustEstimator) distortionEstimator).getThreshold();
+        };
     }
 
     /**
@@ -310,33 +292,31 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
      * @throws LockedException          if this instance is locked.
      * @throws IllegalArgumentException if provided value is zero or negative.
      */
-    public void setDistortionEstimatorThreshold(
-            final double distortionEstimatorThreshold) throws LockedException {
+    public void setDistortionEstimatorThreshold(final double distortionEstimatorThreshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
 
-        switch (mDistortionEstimator.getMethod()) {
+        switch (distortionEstimator.getMethod()) {
             case LMEDS:
-                ((LMedSRadialDistortionRobustEstimator) mDistortionEstimator).
-                        setStopThreshold(distortionEstimatorThreshold);
+                ((LMedSRadialDistortionRobustEstimator) distortionEstimator)
+                        .setStopThreshold(distortionEstimatorThreshold);
                 break;
             case MSAC:
-                ((MSACRadialDistortionRobustEstimator) mDistortionEstimator).
-                        setThreshold(distortionEstimatorThreshold);
+                ((MSACRadialDistortionRobustEstimator) distortionEstimator).setThreshold(distortionEstimatorThreshold);
                 break;
             case PROSAC:
-                ((PROSACRadialDistortionRobustEstimator) mDistortionEstimator).
-                        setThreshold(distortionEstimatorThreshold);
+                ((PROSACRadialDistortionRobustEstimator) distortionEstimator)
+                        .setThreshold(distortionEstimatorThreshold);
                 break;
             case PROMEDS:
-                ((PROMedSRadialDistortionRobustEstimator) mDistortionEstimator).
-                        setStopThreshold(distortionEstimatorThreshold);
+                ((PROMedSRadialDistortionRobustEstimator) distortionEstimator)
+                        .setStopThreshold(distortionEstimatorThreshold);
                 break;
             case RANSAC:
             default:
-                ((RANSACRadialDistortionRobustEstimator) mDistortionEstimator).
-                        setThreshold(distortionEstimatorThreshold);
+                ((RANSACRadialDistortionRobustEstimator) distortionEstimator)
+                        .setThreshold(distortionEstimatorThreshold);
                 break;
         }
     }
@@ -357,7 +337,7 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
      * @return confidence to robustly estimate homographies.
      */
     public double getDistortionEstimatorConfidence() {
-        return mDistortionEstimator.getConfidence();
+        return distortionEstimator.getConfidence();
     }
 
     /**
@@ -379,13 +359,12 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
      * @throws IllegalArgumentException if provided value is not between 0.0 and
      *                                  1.0.
      */
-    public void setDistortionEstimatorConfidence(
-            final double distortionEstimatorConfidence) throws LockedException {
+    public void setDistortionEstimatorConfidence(final double distortionEstimatorConfidence) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
 
-        mDistortionEstimator.setConfidence(distortionEstimatorConfidence);
+        distortionEstimator.setConfidence(distortionEstimatorConfidence);
     }
 
     /**
@@ -400,7 +379,7 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
      * homographies.
      */
     public int getDistortionEstimatorMaxIterations() {
-        return mDistortionEstimator.getMaxIterations();
+        return distortionEstimator.getMaxIterations();
     }
 
     /**
@@ -416,13 +395,12 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
      * @throws LockedException          if this instance is locked.
      * @throws IllegalArgumentException if provided value is negative or zero.
      */
-    public void setDistortionEstimatorMaxIterations(
-            final int distortionEstimatorMaxIterations) throws LockedException {
+    public void setDistortionEstimatorMaxIterations(final int distortionEstimatorMaxIterations) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
 
-        mDistortionEstimator.setMaxIterations(distortionEstimatorMaxIterations);
+        distortionEstimator.setMaxIterations(distortionEstimatorMaxIterations);
     }
 
     /**
@@ -440,8 +418,7 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
      *                              start camera calibration.
      */
     @Override
-    public void calibrate() throws CalibrationException, LockedException,
-            NotReadyException {
+    public void calibrate() throws CalibrationException, LockedException, NotReadyException {
 
         if (isLocked()) {
             throw new LockedException();
@@ -450,73 +427,70 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
             throw new NotReadyException();
         }
 
-        mLocked = true;
+        locked = true;
 
-        mHomographyQualityScoresRequired =
-                (mDistortionEstimator.getMethod() == RobustEstimatorMethod.PROSAC ||
-                        mDistortionEstimator.getMethod() == RobustEstimatorMethod.PROMEDS);
+        homographyQualityScoresRequired = (distortionEstimator.getMethod() == RobustEstimatorMethod.PROSAC
+                || distortionEstimator.getMethod() == RobustEstimatorMethod.PROMEDS);
 
-        if (mListener != null) {
-            mListener.onCalibrateStart(this);
+        if (listener != null) {
+            listener.onCalibrateStart(this);
         }
 
         reset();
-        mRadialDistortionProgress = mIterProgress = mPreviousNotifiedProgress =
-                0.0f;
+        radialDistortionProgress = iterProgress = previousNotifiedProgress = 0.0f;
 
-        final List<Point2D> idealFallbackPatternMarkers = mPattern.getIdealPoints();
+        final var idealFallbackPatternMarkers = pattern.getIdealPoints();
 
         try {
             double errorDiff;
             double previousError;
-            double currentError = Double.MAX_VALUE;
-            double bestError = Double.MAX_VALUE;
+            var currentError = Double.MAX_VALUE;
+            var bestError = Double.MAX_VALUE;
             PinholeCameraIntrinsicParameters bestIntrinsic = null;
             RadialDistortion bestDistortion = null;
 
             // iterate until error converges
-            int iter = 0;
+            var iter = 0;
             do {
                 previousError = currentError;
 
                 // estimate intrinsic parameters
                 estimateIntrinsicParameters(idealFallbackPatternMarkers);
 
-                if (!mEstimateRadialDistortion) {
+                if (!estimateRadialDistortion) {
                     break;
                 }
 
                 // estimate radial distortion using estimated intrinsic
                 // parameters and camera poses and obtain average re-projection
                 // error
-                currentError = estimateRadialDistortion(
-                        idealFallbackPatternMarkers);
+                currentError = estimateRadialDistortion(idealFallbackPatternMarkers);
 
                 if (currentError < bestError) {
                     bestError = currentError;
-                    bestIntrinsic = mIntrinsic;
-                    bestDistortion = mDistortion;
+                    bestIntrinsic = intrinsic;
+                    bestDistortion = distortion;
                 }
 
                 errorDiff = Math.abs(previousError - currentError);
                 iter++;
-                mIterProgress = (float) iter / (float) mMaxIterations;
+                iterProgress = (float) iter / (float) maxIterations;
                 notifyProgress();
 
-            } while (errorDiff > mConvergenceThreshold && iter < mMaxIterations);
+            } while (errorDiff > convergenceThreshold && iter < maxIterations);
 
             if (bestIntrinsic != null) {
-                mIntrinsic = bestIntrinsic;
+                intrinsic = bestIntrinsic;
             }
             if (bestDistortion != null) {
-                mDistortion = bestDistortion;
+                distortion = bestDistortion;
             }
 
-            if (mListener != null) {
-                mListener.onCalibrateEnd(this);
+            if (listener != null) {
+                listener.onCalibrateEnd(this);
             }
         } finally {
-            mLocked = false;
+            locked = false;
         }
     }
 
@@ -534,57 +508,54 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
      * their corresponding distortion.
      * @throws CalibrationException if anything fails.
      */
-    protected double estimateRadialDistortion(
-            final List<Point2D> idealFallbackPatternMarkers)
+    protected double estimateRadialDistortion(final List<Point2D> idealFallbackPatternMarkers)
             throws CalibrationException {
 
-        mRadialDistortionProgress = 0.0f;
+        radialDistortionProgress = 0.0f;
 
-        if (mListener != null) {
-            mListener.onRadialDistortionEstimationStarts(this);
+        if (listener != null) {
+            listener.onRadialDistortionEstimationStarts(this);
         }
 
-        final List<Point2D> distortedPoints = new ArrayList<>();
-        final List<Point2D> undistortedPoints = new ArrayList<>();
+        final var distortedPoints = new ArrayList<Point2D>();
+        final var undistortedPoints = new ArrayList<Point2D>();
         // compute total points for samples where homography could be estimated
-        int totalPoints = 0;
-        for (final CameraCalibratorSample sample : mSamples) {
+        var totalPoints = 0;
+        for (final var sample : samples) {
             if (sample.getHomography() != null) {
                 totalPoints += sample.getSampledMarkers().size();
             }
         }
 
         double[] qualityScores = null;
-        if (mDistortionMethod == RobustEstimatorMethod.PROSAC ||
-                mDistortionMethod == RobustEstimatorMethod.PROMEDS) {
+        if (distortionMethod == RobustEstimatorMethod.PROSAC || distortionMethod == RobustEstimatorMethod.PROMEDS) {
             qualityScores = new double[totalPoints];
         }
 
         // estimate camera pose for each sample
-        int pointCounter = 0;
-        int sampleCounter = 0;
-        for (final CameraCalibratorSample sample : mSamples) {
+        var pointCounter = 0;
+        var sampleCounter = 0;
+        for (final var sample : samples) {
             if (sample.getHomography() == null) {
                 // homography computation failed, so we cannot compute camera
                 // pose for this sample, or use this sample for radial distortion
                 // estimation
                 continue;
             }
-            sample.computeCameraPose(mIntrinsic);
+            sample.computeCameraPose(intrinsic);
 
             // transform ideal pattern markers using estimated homography
             final List<Point2D> idealPatternMarkers;
             if (sample.getPattern() != null) {
                 // use points generated by pattern in sample
-                idealPatternMarkers = sample.getPattern().
-                        getIdealPoints();
+                idealPatternMarkers = sample.getPattern().getIdealPoints();
             } else {
                 // use fallback pattern points
                 idealPatternMarkers = idealFallbackPatternMarkers;
             }
 
-            final List<Point2D> transformedIdealPatternMarkers =
-                    sample.getHomography().transformPointsAndReturnNew(idealPatternMarkers);
+            final var transformedIdealPatternMarkers = sample.getHomography()
+                    .transformPointsAndReturnNew(idealPatternMarkers);
 
             // transformedIdealPatternMarkers are considered the undistorted
             // points, because camera follows a pure pinhole model without
@@ -603,18 +574,17 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
             distortedPoints.addAll(sample.getSampledMarkers());
             undistortedPoints.addAll(transformedIdealPatternMarkers);
 
-            final int markersSize = transformedIdealPatternMarkers.size();
+            final var markersSize = transformedIdealPatternMarkers.size();
 
             // if distortion estimator requires quality scores, set them
-            if (qualityScores != null &&
-                    (mDistortionMethod == RobustEstimatorMethod.PROSAC ||
-                            mDistortionMethod == RobustEstimatorMethod.PROMEDS)) {
+            if (qualityScores != null && (distortionMethod == RobustEstimatorMethod.PROSAC
+                    || distortionMethod == RobustEstimatorMethod.PROMEDS)) {
 
-                final double sampleQuality = mHomographyQualityScores[sampleCounter];
+                final var sampleQuality = homographyQualityScores[sampleCounter];
 
                 // assign to all points (markers) in the sample the same sample
                 // quality
-                for (int i = pointCounter; i < pointCounter + markersSize; i++) {
+                for (var i = pointCounter; i < pointCounter + markersSize; i++) {
                     qualityScores[i] = sampleQuality;
                 }
 
@@ -624,22 +594,21 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
         }
 
         // estimate radial distortion
-        double avgError = 0.0;
+        var avgError = 0.0;
         try {
-            mDistortionEstimator.setIntrinsic(mIntrinsic);
-            mDistortionEstimator.setPoints(distortedPoints, undistortedPoints);
-            mDistortionEstimator.setQualityScores(qualityScores);
+            distortionEstimator.setIntrinsic(intrinsic);
+            distortionEstimator.setPoints(distortedPoints, undistortedPoints);
+            distortionEstimator.setQualityScores(qualityScores);
 
-            final RadialDistortion distortion = mDistortionEstimator.estimate();
+            final var distortion = distortionEstimator.estimate();
 
             // add distortion to undistorted points (which are ideal pattern
             // markers with homography applied)
-            final List<Point2D> distortedPoints2 = distortion.distort(
-                    undistortedPoints);
+            final var distortedPoints2 = distortion.distort(undistortedPoints);
 
             // set undistorted points obtained after un-distorting sampled points
             // to refine homography on next iteration
-            for (final CameraCalibratorSample sample : mSamples) {
+            for (final var sample : samples) {
                 if (sample.getHomography() == null) {
                     continue;
                 }
@@ -647,8 +616,7 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
                 // undo distortion of distorted (sampled) points using estimated
                 // distortion
 
-                final List<Point2D> undistortedPoints2 = distortion.undistort(
-                        sample.getSampledMarkers());
+                final var undistortedPoints2 = distortion.undistort(sample.getSampledMarkers());
 
                 sample.setUndistortedMarkers(undistortedPoints2);
             }
@@ -660,13 +628,12 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
             Point2D distortedPoint1;
             Point2D distortedPoint2;
             totalPoints = distortedPoints.size();
-            int inlierCount = 0;
-            for (int i = 0; i < totalPoints; i++) {
+            var inlierCount = 0;
+            for (var i = 0; i < totalPoints; i++) {
                 distortedPoint1 = distortedPoints.get(i);
                 distortedPoint2 = distortedPoints2.get(i);
 
-                final double distance = distortedPoint1.distanceTo(
-                        distortedPoint2);
+                final var distance = distortedPoint1.distanceTo(distortedPoint2);
                 if (distance < getDistortionEstimatorThreshold()) {
                     avgError += distance;
                     inlierCount++;
@@ -679,14 +646,14 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
 
             avgError /= inlierCount;
 
-            mDistortion = distortion;
+            this.distortion = distortion;
 
         } catch (final GeometryException | NumericalException | DistortionException e) {
             throw new CalibrationException(e);
         }
 
-        if (mListener != null) {
-            mListener.onRadialDistortionEstimationEnds(this, mDistortion);
+        if (listener != null) {
+            listener.onRadialDistortionEstimationEnds(this, distortion);
         }
 
         return avgError;
@@ -707,23 +674,21 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
      */
     @Override
     protected void notifyProgress() {
-        final float lambda = 1.0f / mMaxIterations;
-        final float partial = 0.5f * mIntrinsicProgress +
-                0.5f * mRadialDistortionProgress;
+        final var lambda = 1.0f / maxIterations;
+        final var partial = 0.5f * intrinsicProgress + 0.5f * radialDistortionProgress;
 
         final float progress;
-        if (!mEstimateRadialDistortion) {
+        if (!estimateRadialDistortion) {
             // we do not iterate if there is no need to
             // estimate radial distortion
             progress = partial;
         } else {
-            progress = mIterProgress + lambda * partial;
+            progress = iterProgress + lambda * partial;
         }
 
-        if (mListener != null &&
-                (progress - mPreviousNotifiedProgress) > mProgressDelta) {
-            mListener.onCalibrateProgressChange(this, progress);
-            mPreviousNotifiedProgress = progress;
+        if (listener != null && (progress - previousNotifiedProgress) > progressDelta) {
+            listener.onCalibrateProgressChange(this, progress);
+            previousNotifiedProgress = progress;
         }
     }
 
@@ -731,46 +696,41 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
      * Refreshes listener of distortion estimator
      */
     protected void refreshDistortionEstimatorListener() {
-        if (mDistortionEstimatorListener == null) {
-            mDistortionEstimatorListener = new RadialDistortionRobustEstimatorListener() {
+        if (distortionEstimatorListener == null) {
+            distortionEstimatorListener = new RadialDistortionRobustEstimatorListener() {
 
                 @Override
-                public void onEstimateStart(
-                        final RadialDistortionRobustEstimator estimator) {
-                    mRadialDistortionProgress = 0.0f;
+                public void onEstimateStart(final RadialDistortionRobustEstimator estimator) {
+                    radialDistortionProgress = 0.0f;
                     notifyProgress();
                 }
 
                 @Override
-                public void onEstimateEnd(
-                        final RadialDistortionRobustEstimator estimator) {
-                    mRadialDistortionProgress = 1.0f;
+                public void onEstimateEnd(final RadialDistortionRobustEstimator estimator) {
+                    radialDistortionProgress = 1.0f;
                     notifyProgress();
                 }
 
                 @Override
                 public void onEstimateNextIteration(
-                        final RadialDistortionRobustEstimator estimator,
-                        final int iteration) {
+                        final RadialDistortionRobustEstimator estimator, final int iteration) {
                     // not needed
                 }
 
                 @Override
                 public void onEstimateProgressChange(
-                        final RadialDistortionRobustEstimator estimator,
-                        final float progress) {
-                    mRadialDistortionProgress = progress;
+                        final RadialDistortionRobustEstimator estimator, final float progress) {
+                    radialDistortionProgress = progress;
                     notifyProgress();
                 }
             };
         }
 
         try {
-            mDistortionEstimator.setListener(mDistortionEstimatorListener);
+            distortionEstimator.setListener(distortionEstimatorListener);
         } catch (final LockedException e) {
-            Logger.getLogger(AlternatingCameraCalibrator.class.getName()).log(
-                    Level.WARNING, "Could not set radial distortion estimator listener",
-                    e);
+            Logger.getLogger(AlternatingCameraCalibrator.class.getName()).log(Level.WARNING,
+                    "Could not set radial distortion estimator listener", e);
         }
     }
 
@@ -782,22 +742,20 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
      * @param distortionMethod robust estimator method to be used for
      *                         radial distortion estimation.
      */
-    private void internalSetDistortionMethod(
-            final RobustEstimatorMethod distortionMethod) {
+    private void internalSetDistortionMethod(final RobustEstimatorMethod distortionMethod) {
         // if method changes, recreate estimator
-        if (distortionMethod != mDistortionMethod) {
-            boolean previousAvailable = mDistortionMethod != null;
-            double threshold = 0.0;
-            double confidence = 0.0;
-            int maxIterations = 0;
+        if (distortionMethod != this.distortionMethod) {
+            var previousAvailable = this.distortionMethod != null;
+            var threshold = 0.0;
+            var confidence = 0.0;
+            var maxIters = 0;
             if (previousAvailable) {
                 threshold = getDistortionEstimatorThreshold();
                 confidence = getDistortionEstimatorConfidence();
-                maxIterations = getDistortionEstimatorMaxIterations();
+                maxIters = getDistortionEstimatorMaxIterations();
             }
 
-            mDistortionEstimator = RadialDistortionRobustEstimator.create(
-                    distortionMethod);
+            distortionEstimator = RadialDistortionRobustEstimator.create(distortionMethod);
 
             // configure new estimator
             refreshDistortionEstimatorListener();
@@ -805,16 +763,14 @@ public class AlternatingCameraCalibrator extends CameraCalibrator {
                 try {
                     setDistortionEstimatorThreshold(threshold);
                     setDistortionEstimatorConfidence(confidence);
-                    setDistortionEstimatorMaxIterations(maxIterations);
+                    setDistortionEstimatorMaxIterations(maxIters);
                 } catch (final LockedException e) {
-                    Logger.getLogger(
-                            AlternatingCameraCalibrator.class.getName()).log(
-                            Level.WARNING, "Could not reconfigure distortion estimator",
-                            e);
+                    Logger.getLogger(AlternatingCameraCalibrator.class.getName()).log(Level.WARNING,
+                            "Could not reconfigure distortion estimator", e);
                 }
             }
         }
 
-        mDistortionMethod = distortionMethod;
+        this.distortionMethod = distortionMethod;
     }
 }

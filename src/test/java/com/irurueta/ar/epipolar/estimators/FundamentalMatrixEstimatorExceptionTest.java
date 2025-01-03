@@ -15,26 +15,24 @@
  */
 package com.irurueta.ar.epipolar.estimators;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class FundamentalMatrixEstimatorExceptionTest {
+class FundamentalMatrixEstimatorExceptionTest {
 
     @Test
-    public void testConstructor() {
-        FundamentalMatrixEstimatorException ex = new FundamentalMatrixEstimatorException();
+    void testConstructor() {
+        var ex = new FundamentalMatrixEstimatorException();
         assertNotNull(ex);
 
         ex = new FundamentalMatrixEstimatorException("message");
         assertNotNull(ex);
 
-        ex = new FundamentalMatrixEstimatorException(
-                new Exception());
+        ex = new FundamentalMatrixEstimatorException(new Exception());
         assertNotNull(ex);
 
-        ex = new FundamentalMatrixEstimatorException("message",
-                new Exception());
+        ex = new FundamentalMatrixEstimatorException("message", new Exception());
         assertNotNull(ex);
     }
 }

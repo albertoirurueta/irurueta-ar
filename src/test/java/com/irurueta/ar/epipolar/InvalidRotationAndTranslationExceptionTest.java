@@ -15,27 +15,24 @@
  */
 package com.irurueta.ar.epipolar;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class InvalidRotationAndTranslationExceptionTest {
+class InvalidRotationAndTranslationExceptionTest {
 
     @Test
-    public void testConstructor() {
-        InvalidRotationAndTranslationException ex = new InvalidRotationAndTranslationException();
+    void testConstructor() {
+        var ex = new InvalidRotationAndTranslationException();
         assertNotNull(ex);
 
-        ex = new InvalidRotationAndTranslationException(
-                "message");
+        ex = new InvalidRotationAndTranslationException("message");
         assertNotNull(ex);
 
-        ex = new InvalidRotationAndTranslationException(
-                new Exception());
+        ex = new InvalidRotationAndTranslationException(new Exception());
         assertNotNull(ex);
 
-        ex = new InvalidRotationAndTranslationException("message",
-                new Exception());
+        ex = new InvalidRotationAndTranslationException("message", new Exception());
         assertNotNull(ex);
     }
 }

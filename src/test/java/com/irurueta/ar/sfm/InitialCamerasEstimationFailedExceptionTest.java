@@ -15,24 +15,21 @@
  */
 package com.irurueta.ar.sfm;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class InitialCamerasEstimationFailedExceptionTest {
+class InitialCamerasEstimationFailedExceptionTest {
 
     @Test
-    public void testConstructor() {
-        InitialCamerasEstimationFailedException ex =
-                new InitialCamerasEstimationFailedException();
+    void testConstructor() {
+        var ex = new InitialCamerasEstimationFailedException();
         assertNotNull(ex);
 
-        ex = new InitialCamerasEstimationFailedException(
-                "message");
+        ex = new InitialCamerasEstimationFailedException("message");
         assertNotNull(ex);
 
-        ex = new InitialCamerasEstimationFailedException(
-                "message", new Exception());
+        ex = new InitialCamerasEstimationFailedException("message", new Exception());
         assertNotNull(ex);
 
         ex = new InitialCamerasEstimationFailedException(

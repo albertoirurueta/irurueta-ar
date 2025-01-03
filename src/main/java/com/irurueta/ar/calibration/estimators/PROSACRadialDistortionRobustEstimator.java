@@ -35,8 +35,7 @@ import java.util.logging.Logger;
  * Finds the best radial distortion for provided collections of 2D points using
  * PROSAC algorithm.
  */
-public class PROSACRadialDistortionRobustEstimator extends
-        RadialDistortionRobustEstimator {
+public class PROSACRadialDistortionRobustEstimator extends RadialDistortionRobustEstimator {
 
     /**
      * Constant defining default threshold to determine whether points are
@@ -58,20 +57,20 @@ public class PROSACRadialDistortionRobustEstimator extends
      * The threshold refers to the amount of error (i.e. distance) a possible
      * solution has on a matched pair of points.
      */
-    private double mThreshold;
+    private double threshold;
 
     /**
      * Quality scores corresponding to each provided point.
      * The larger the score value the better the quality of the sample.
      */
-    private double[] mQualityScores;
+    private double[] qualityScores;
 
     /**
      * Constructor.
      */
     public PROSACRadialDistortionRobustEstimator() {
         super();
-        mThreshold = DEFAULT_THRESHOLD;
+        threshold = DEFAULT_THRESHOLD;
     }
 
     /**
@@ -80,10 +79,9 @@ public class PROSACRadialDistortionRobustEstimator extends
      * @param listener listener to be notified of events such as when
      *                 estimation starts, ends or its progress significantly changes.
      */
-    public PROSACRadialDistortionRobustEstimator(
-            final RadialDistortionRobustEstimatorListener listener) {
+    public PROSACRadialDistortionRobustEstimator(final RadialDistortionRobustEstimatorListener listener) {
         super(listener);
-        mThreshold = DEFAULT_THRESHOLD;
+        threshold = DEFAULT_THRESHOLD;
     }
 
     /**
@@ -95,10 +93,10 @@ public class PROSACRadialDistortionRobustEstimator extends
      * @throws IllegalArgumentException if provided lists of points don't have
      *                                  the same size or their size is smaller than MIN_NUMBER_OF_POINTS.
      */
-    public PROSACRadialDistortionRobustEstimator(final List<Point2D> distortedPoints,
-                                                 final List<Point2D> undistortedPoints) {
+    public PROSACRadialDistortionRobustEstimator(
+            final List<Point2D> distortedPoints, final List<Point2D> undistortedPoints) {
         super(distortedPoints, undistortedPoints);
-        mThreshold = DEFAULT_THRESHOLD;
+        threshold = DEFAULT_THRESHOLD;
     }
 
     /**
@@ -116,7 +114,7 @@ public class PROSACRadialDistortionRobustEstimator extends
                                                  final List<Point2D> undistortedPoints,
                                                  final RadialDistortionRobustEstimatorListener listener) {
         super(distortedPoints, undistortedPoints, listener);
-        mThreshold = DEFAULT_THRESHOLD;
+        threshold = DEFAULT_THRESHOLD;
     }
 
     /**
@@ -135,7 +133,7 @@ public class PROSACRadialDistortionRobustEstimator extends
                                                  final List<Point2D> undistortedPoints,
                                                  final Point2D distortionCenter) {
         super(distortedPoints, undistortedPoints, distortionCenter);
-        mThreshold = DEFAULT_THRESHOLD;
+        threshold = DEFAULT_THRESHOLD;
     }
 
     /**
@@ -157,7 +155,7 @@ public class PROSACRadialDistortionRobustEstimator extends
                                                  final Point2D distortionCenter,
                                                  final RadialDistortionRobustEstimatorListener listener) {
         super(distortedPoints, undistortedPoints, distortionCenter, listener);
-        mThreshold = DEFAULT_THRESHOLD;
+        threshold = DEFAULT_THRESHOLD;
     }
 
     /**
@@ -181,8 +179,8 @@ public class PROSACRadialDistortionRobustEstimator extends
      * @throws IllegalArgumentException if provided quality scores length is
      *                                  smaller than required size (i.e. 2 points).
      */
-    public PROSACRadialDistortionRobustEstimator(final double[] qualityScores,
-                                                 final RadialDistortionRobustEstimatorListener listener) {
+    public PROSACRadialDistortionRobustEstimator(
+            final double[] qualityScores, final RadialDistortionRobustEstimatorListener listener) {
         this(listener);
         internalSetQualityScores(qualityScores);
     }
@@ -283,7 +281,7 @@ public class PROSACRadialDistortionRobustEstimator extends
      * testing possible estimation solutions.
      */
     public double getThreshold() {
-        return mThreshold;
+        return threshold;
     }
 
     /**
@@ -305,7 +303,7 @@ public class PROSACRadialDistortionRobustEstimator extends
         if (threshold <= MIN_THRESHOLD) {
             throw new IllegalArgumentException();
         }
-        mThreshold = threshold;
+        this.threshold = threshold;
     }
 
     /**
@@ -316,7 +314,7 @@ public class PROSACRadialDistortionRobustEstimator extends
      */
     @Override
     public double[] getQualityScores() {
-        return mQualityScores;
+        return qualityScores;
     }
 
     /**
@@ -347,8 +345,7 @@ public class PROSACRadialDistortionRobustEstimator extends
      */
     @Override
     public boolean isReady() {
-        return super.isReady() && mQualityScores != null &&
-                mQualityScores.length == mDistortedPoints.size();
+        return super.isReady() && qualityScores != null && qualityScores.length == distortedPoints.size();
     }
 
     /**
@@ -365,8 +362,7 @@ public class PROSACRadialDistortionRobustEstimator extends
      */
     @SuppressWarnings("DuplicatedCode")
     @Override
-    public RadialDistortion estimate() throws LockedException,
-            NotReadyException, RobustEstimatorException {
+    public RadialDistortion estimate() throws LockedException, NotReadyException, RobustEstimatorException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -374,148 +370,128 @@ public class PROSACRadialDistortionRobustEstimator extends
             throw new NotReadyException();
         }
 
-        final PROSACRobustEstimator<RadialDistortion> innerEstimator =
-                new PROSACRobustEstimator<>(
-                        new PROSACRobustEstimatorListener<RadialDistortion>() {
+        final var innerEstimator = new PROSACRobustEstimator<RadialDistortion>(new PROSACRobustEstimatorListener<>() {
 
-                            // point to be reused when computing residuals
-                            private final Point2D mTestPoint = Point2D.create(
-                                    CoordinatesType.INHOMOGENEOUS_COORDINATES);
+            // point to be reused when computing residuals
+            private final Point2D testPoint = Point2D.create(CoordinatesType.INHOMOGENEOUS_COORDINATES);
 
-                            // non-robust radial distortion estimator
-                            private final LMSERadialDistortionEstimator mRadialDistortionEstimator =
-                                    new LMSERadialDistortionEstimator();
+            // non-robust radial distortion estimator
+            private final LMSERadialDistortionEstimator radialDistortionEstimator = new LMSERadialDistortionEstimator();
 
-                            // subset of distorted (i.e. measured) points
-                            private final List<Point2D> mSubsetDistorted = new ArrayList<>();
+            // subset of distorted (i.e. measured) points
+            private final List<Point2D> subsetDistorted = new ArrayList<>();
 
-                            // subset of undistorted (i.e. ideal) points
-                            private final List<Point2D> mSubsetUndistorted = new ArrayList<>();
+            // subset of undistorted (i.e. ideal) points
+            private final List<Point2D> subsetUndistorted = new ArrayList<>();
 
-                            @Override
-                            public double getThreshold() {
-                                return mThreshold;
-                            }
+            @Override
+            public double getThreshold() {
+                return threshold;
+            }
 
-                            @Override
-                            public int getTotalSamples() {
-                                return mDistortedPoints.size();
-                            }
+            @Override
+            public int getTotalSamples() {
+                return distortedPoints.size();
+            }
 
-                            @Override
-                            public int getSubsetSize() {
-                                return RadialDistortionRobustEstimator.MIN_NUMBER_OF_POINTS;
-                            }
+            @Override
+            public int getSubsetSize() {
+                return RadialDistortionRobustEstimator.MIN_NUMBER_OF_POINTS;
+            }
 
-                            @Override
-                            public void estimatePreliminarSolutions(
-                                    final int[] samplesIndices, final List<RadialDistortion> solutions) {
-                                mSubsetDistorted.clear();
-                                mSubsetDistorted.add(mDistortedPoints.get(samplesIndices[0]));
-                                mSubsetDistorted.add(mDistortedPoints.get(samplesIndices[1]));
+            @Override
+            public void estimatePreliminarSolutions(
+                    final int[] samplesIndices, final List<RadialDistortion> solutions) {
+                subsetDistorted.clear();
+                subsetDistorted.add(distortedPoints.get(samplesIndices[0]));
+                subsetDistorted.add(distortedPoints.get(samplesIndices[1]));
 
-                                mSubsetUndistorted.clear();
-                                mSubsetUndistorted.add(mUndistortedPoints.get(samplesIndices[0]));
-                                mSubsetUndistorted.add(mUndistortedPoints.get(samplesIndices[1]));
+                subsetUndistorted.clear();
+                subsetUndistorted.add(undistortedPoints.get(samplesIndices[0]));
+                subsetUndistorted.add(undistortedPoints.get(samplesIndices[1]));
 
-                                try {
-                                    mRadialDistortionEstimator.setPoints(mDistortedPoints,
-                                            mUndistortedPoints);
-                                    mRadialDistortionEstimator.setPoints(mSubsetDistorted,
-                                            mSubsetUndistorted);
+                try {
+                    radialDistortionEstimator.setPoints(distortedPoints, undistortedPoints);
+                    radialDistortionEstimator.setPoints(subsetDistorted, subsetUndistorted);
 
-                                    final RadialDistortion distortion = mRadialDistortionEstimator.
-                                            estimate();
-                                    solutions.add(distortion);
-                                } catch (final Exception e) {
-                                    // if anything fails, no solution is added
-                                }
-                            }
+                    final var distortion = radialDistortionEstimator.estimate();
+                    solutions.add(distortion);
+                } catch (final Exception e) {
+                    // if anything fails, no solution is added
+                }
+            }
 
-                            @Override
-                            public double computeResidual(final RadialDistortion currentEstimation,
-                                                          final int i) {
-                                final Point2D distortedPoint = mDistortedPoints.get(i);
-                                final Point2D undistortedPoint = mUndistortedPoints.get(i);
+            @Override
+            public double computeResidual(final RadialDistortion currentEstimation, final int i) {
+                final var distortedPoint = distortedPoints.get(i);
+                final var undistortedPoint = undistortedPoints.get(i);
 
-                                currentEstimation.distort(undistortedPoint, mTestPoint);
+                currentEstimation.distort(undistortedPoint, testPoint);
 
-                                return mTestPoint.distanceTo(distortedPoint);
-                            }
+                return testPoint.distanceTo(distortedPoint);
+            }
 
-                            @Override
-                            public boolean isReady() {
-                                return PROSACRadialDistortionRobustEstimator.this.isReady();
-                            }
+            @Override
+            public boolean isReady() {
+                return PROSACRadialDistortionRobustEstimator.this.isReady();
+            }
 
-                            @Override
-                            public void onEstimateStart(
-                                    final RobustEstimator<RadialDistortion> estimator) {
-                                try {
-                                    mRadialDistortionEstimator.setLMSESolutionAllowed(false);
-                                    mRadialDistortionEstimator.setIntrinsic(getIntrinsic());
-                                } catch (final Exception e) {
-                                    Logger.getLogger(
-                                            PROSACRadialDistortionRobustEstimator.class.getName()).
-                                            log(Level.WARNING,
-                                                    "Could not set intrinsic parameters on radial distortion estimator", e);
-                                }
+            @Override
+            public void onEstimateStart(final RobustEstimator<RadialDistortion> estimator) {
+                try {
+                    radialDistortionEstimator.setLMSESolutionAllowed(false);
+                    radialDistortionEstimator.setIntrinsic(getIntrinsic());
+                } catch (final Exception e) {
+                    Logger.getLogger(PROSACRadialDistortionRobustEstimator.class.getName()).log(Level.WARNING,
+                            "Could not set intrinsic parameters on radial distortion estimator", e);
+                }
 
-                                if (mListener != null) {
-                                    mListener.onEstimateStart(
-                                            PROSACRadialDistortionRobustEstimator.this);
-                                }
-                            }
+                if (listener != null) {
+                    listener.onEstimateStart(PROSACRadialDistortionRobustEstimator.this);
+                }
+            }
 
-                            @Override
-                            public void onEstimateEnd(
-                                    final RobustEstimator<RadialDistortion> estimator) {
-                                if (mListener != null) {
-                                    mListener.onEstimateEnd(
-                                            PROSACRadialDistortionRobustEstimator.this);
-                                }
-                            }
+            @Override
+            public void onEstimateEnd(final RobustEstimator<RadialDistortion> estimator) {
+                if (listener != null) {
+                    listener.onEstimateEnd(PROSACRadialDistortionRobustEstimator.this);
+                }
+            }
 
-                            @Override
-                            public void onEstimateNextIteration(
-                                    final RobustEstimator<RadialDistortion> estimator,
-                                    final int iteration) {
-                                if (mListener != null) {
-                                    mListener.onEstimateNextIteration(
-                                            PROSACRadialDistortionRobustEstimator.this,
-                                            iteration);
-                                }
-                            }
+            @Override
+            public void onEstimateNextIteration(
+                    final RobustEstimator<RadialDistortion> estimator, final int iteration) {
+                if (listener != null) {
+                    listener.onEstimateNextIteration(PROSACRadialDistortionRobustEstimator.this, iteration);
+                }
+            }
 
-                            @Override
-                            public void onEstimateProgressChange(
-                                    final RobustEstimator<RadialDistortion> estimator,
-                                    final float progress) {
-                                if (mListener != null) {
-                                    mListener.onEstimateProgressChange(
-                                            PROSACRadialDistortionRobustEstimator.this,
-                                            progress);
-                                }
-                            }
+            @Override
+            public void onEstimateProgressChange(
+                    final RobustEstimator<RadialDistortion> estimator, final float progress) {
+                if (listener != null) {
+                    listener.onEstimateProgressChange(PROSACRadialDistortionRobustEstimator.this, progress);
+                }
+            }
 
-                            @Override
-                            public double[] getQualityScores() {
-                                return mQualityScores;
-                            }
-                        });
+            @Override
+            public double[] getQualityScores() {
+                return qualityScores;
+            }
+        });
 
         try {
-            mLocked = true;
-            innerEstimator.setConfidence(mConfidence);
-            innerEstimator.setMaxIterations(mMaxIterations);
-            innerEstimator.setProgressDelta(mProgressDelta);
+            locked = true;
+            innerEstimator.setConfidence(confidence);
+            innerEstimator.setMaxIterations(maxIterations);
+            innerEstimator.setProgressDelta(progressDelta);
             return innerEstimator.estimate();
         } catch (final com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
         } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
         } finally {
-            mLocked = false;
+            locked = false;
         }
     }
 
@@ -543,6 +519,6 @@ public class PROSACRadialDistortionRobustEstimator extends
             throw new IllegalArgumentException();
         }
 
-        mQualityScores = qualityScores;
+        this.qualityScores = qualityScores;
     }
 }

@@ -15,17 +15,14 @@
  */
 package com.irurueta.ar.sfm;
 
-import com.irurueta.ar.calibration.DualAbsoluteQuadric;
 import com.irurueta.ar.calibration.estimators.DualAbsoluteQuadricEstimator;
 import com.irurueta.ar.calibration.estimators.LMSEDualAbsoluteQuadricEstimator;
 import com.irurueta.ar.epipolar.FundamentalMatrix;
 import com.irurueta.geometry.PinholeCamera;
-import com.irurueta.geometry.ProjectiveTransformation3D;
 import com.irurueta.geometry.estimators.LockedException;
 import com.irurueta.geometry.estimators.NotReadyException;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Estimates an initial pair of cameras in the metric stratum (up to an
@@ -34,16 +31,14 @@ import java.util.List;
  * cameras.
  * Aspect ratio can be configured but by default it is assumed to be 1.0.
  */
-public class DualAbsoluteQuadricInitialCamerasEstimator extends
-        InitialCamerasEstimator {
+public class DualAbsoluteQuadricInitialCamerasEstimator extends InitialCamerasEstimator {
 
     /**
      * Aspect ratio of intrinsic parameters of cameras.
      * Typically, this value is 1.0 if vertical coordinates increase upwards,
      * or -1.0 if it is the opposite.
      */
-    private double mAspectRatio = DualAbsoluteQuadricEstimator.
-            DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO;
+    private double aspectRatio = DualAbsoluteQuadricEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO;
 
     /**
      * Constructor.
@@ -57,8 +52,7 @@ public class DualAbsoluteQuadricInitialCamerasEstimator extends
      *
      * @param fundamentalMatrix fundamental matrix relating two views.
      */
-    public DualAbsoluteQuadricInitialCamerasEstimator(
-            final FundamentalMatrix fundamentalMatrix) {
+    public DualAbsoluteQuadricInitialCamerasEstimator(final FundamentalMatrix fundamentalMatrix) {
         super(fundamentalMatrix);
     }
 
@@ -67,8 +61,7 @@ public class DualAbsoluteQuadricInitialCamerasEstimator extends
      *
      * @param listener listener to handle events raised by this instance.
      */
-    public DualAbsoluteQuadricInitialCamerasEstimator(
-            final InitialCamerasEstimatorListener listener) {
+    public DualAbsoluteQuadricInitialCamerasEstimator(final InitialCamerasEstimatorListener listener) {
         super(listener);
     }
 
@@ -79,8 +72,7 @@ public class DualAbsoluteQuadricInitialCamerasEstimator extends
      * @param listener          listener to handle events raised by this instance.
      */
     public DualAbsoluteQuadricInitialCamerasEstimator(
-            final FundamentalMatrix fundamentalMatrix,
-            final InitialCamerasEstimatorListener listener) {
+            final FundamentalMatrix fundamentalMatrix, final InitialCamerasEstimatorListener listener) {
         super(fundamentalMatrix, listener);
     }
 
@@ -101,7 +93,7 @@ public class DualAbsoluteQuadricInitialCamerasEstimator extends
      */
     @Override
     public boolean isReady() {
-        return mFundamentalMatrix != null;
+        return fundamentalMatrix != null;
     }
 
     /**
@@ -114,8 +106,7 @@ public class DualAbsoluteQuadricInitialCamerasEstimator extends
      *                                                 instabilities.
      */
     @Override
-    public void estimate() throws LockedException, NotReadyException,
-            InitialCamerasEstimationFailedException {
+    public void estimate() throws LockedException, NotReadyException, InitialCamerasEstimationFailedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -125,33 +116,32 @@ public class DualAbsoluteQuadricInitialCamerasEstimator extends
         }
 
         try {
-            mLocked = true;
+            locked = true;
 
-            if (mListener != null) {
-                mListener.onStart(this);
+            if (listener != null) {
+                listener.onStart(this);
             }
 
-            if (mEstimatedLeftCamera == null) {
-                mEstimatedLeftCamera = new PinholeCamera();
+            if (estimatedLeftCamera == null) {
+                estimatedLeftCamera = new PinholeCamera();
             }
-            if (mEstimatedRightCamera == null) {
-                mEstimatedRightCamera = new PinholeCamera();
+            if (estimatedRightCamera == null) {
+                estimatedRightCamera = new PinholeCamera();
             }
 
-            generateInitialMetricCamerasUsingDAQ(mFundamentalMatrix,
-                    mAspectRatio, mEstimatedLeftCamera, mEstimatedRightCamera);
+            generateInitialMetricCamerasUsingDAQ(fundamentalMatrix, aspectRatio, estimatedLeftCamera,
+                    estimatedRightCamera);
 
-            if (mListener != null) {
-                mListener.onFinish(this, mEstimatedLeftCamera,
-                        mEstimatedRightCamera);
+            if (listener != null) {
+                listener.onFinish(this, estimatedLeftCamera, estimatedRightCamera);
             }
         } catch (final InitialCamerasEstimationFailedException e) {
-            if (mListener != null) {
-                mListener.onFail(this, e);
+            if (listener != null) {
+                listener.onFail(this, e);
             }
             throw e;
         } finally {
-            mLocked = false;
+            locked = false;
         }
     }
 
@@ -163,7 +153,7 @@ public class DualAbsoluteQuadricInitialCamerasEstimator extends
      * @return aspect ratio of intrinsic parameters of cameras.
      */
     public double getAspectRatio() {
-        return mAspectRatio;
+        return aspectRatio;
     }
 
     /**
@@ -178,7 +168,7 @@ public class DualAbsoluteQuadricInitialCamerasEstimator extends
         if (isLocked()) {
             throw new LockedException();
         }
-        mAspectRatio = aspectRatio;
+        this.aspectRatio = aspectRatio;
     }
 
     /**
@@ -197,8 +187,7 @@ public class DualAbsoluteQuadricInitialCamerasEstimator extends
             final PinholeCamera rightCamera)
             throws InitialCamerasEstimationFailedException {
         generateInitialMetricCamerasUsingDAQ(fundamentalMatrix,
-                DualAbsoluteQuadricEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, leftCamera, rightCamera);
+                DualAbsoluteQuadricEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, leftCamera, rightCamera);
     }
 
     /**
@@ -223,16 +212,14 @@ public class DualAbsoluteQuadricInitialCamerasEstimator extends
 
         try {
             // generate arbitrary projective cameras
-            fundamentalMatrix.generateCamerasInArbitraryProjectiveSpace(
-                    leftCamera, rightCamera);
+            fundamentalMatrix.generateCamerasInArbitraryProjectiveSpace(leftCamera, rightCamera);
 
-            final List<PinholeCamera> cameras = new ArrayList<>();
+            final var cameras = new ArrayList<PinholeCamera>();
             cameras.add(leftCamera);
             cameras.add(rightCamera);
 
             // estimate dual absolute quadric
-            final LMSEDualAbsoluteQuadricEstimator daqEstimator =
-                    new LMSEDualAbsoluteQuadricEstimator(cameras);
+            final var daqEstimator = new LMSEDualAbsoluteQuadricEstimator(cameras);
             daqEstimator.setLMSESolutionAllowed(false);
             daqEstimator.setZeroSkewness(true);
             daqEstimator.setPrincipalPointAtOrigin(true);
@@ -240,9 +227,8 @@ public class DualAbsoluteQuadricInitialCamerasEstimator extends
             daqEstimator.setFocalDistanceAspectRatio(aspectRatio);
             daqEstimator.setSingularityEnforced(true);
 
-            final DualAbsoluteQuadric daq = daqEstimator.estimate();
-            final ProjectiveTransformation3D transformation =
-                    daq.getMetricToProjectiveTransformation();
+            final var daq = daqEstimator.estimate();
+            final var transformation = daq.getMetricToProjectiveTransformation();
             // inverse transformation to upgrade cameras from projective to
             // metric stratum
             transformation.inverse();

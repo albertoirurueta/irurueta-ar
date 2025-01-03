@@ -19,17 +19,17 @@ import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
 import com.irurueta.ar.SerializationHelper;
 import com.irurueta.geometry.Point3D;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class ReconstructedPoint3DTest {
+class ReconstructedPoint3DTest {
 
     @Test
-    public void testConstructor() {
-        final ReconstructedPoint3D rp = new ReconstructedPoint3D();
+    void testConstructor() {
+        final var rp = new ReconstructedPoint3D();
 
         // check default values
         assertNull(rp.getId());
@@ -40,8 +40,8 @@ public class ReconstructedPoint3DTest {
     }
 
     @Test
-    public void testGetSetId() {
-        final ReconstructedPoint3D rp = new ReconstructedPoint3D();
+    void testGetSetId() {
+        final var rp = new ReconstructedPoint3D();
 
         // check default value
         assertNull(rp.getId());
@@ -54,14 +54,14 @@ public class ReconstructedPoint3DTest {
     }
 
     @Test
-    public void testGetSetPoint() {
-        final ReconstructedPoint3D rp = new ReconstructedPoint3D();
+    void testGetSetPoint() {
+        final var rp = new ReconstructedPoint3D();
 
         // check default value
         assertNull(rp.getPoint());
 
         // set new value
-        final Point3D p = Point3D.create();
+        final var p = Point3D.create();
         rp.setPoint(p);
 
         // check correctness
@@ -69,8 +69,8 @@ public class ReconstructedPoint3DTest {
     }
 
     @Test
-    public void testGetSetQualityScore() {
-        final ReconstructedPoint3D rp = new ReconstructedPoint3D();
+    void testGetSetQualityScore() {
+        final var rp = new ReconstructedPoint3D();
 
         // check default value
         assertEquals(ReconstructedPoint3D.DEFAULT_QUALITY_SCORE, rp.getQualityScore(), 0.0);
@@ -83,14 +83,14 @@ public class ReconstructedPoint3DTest {
     }
 
     @Test
-    public void testGetSetCovariance() throws WrongSizeException {
-        final ReconstructedPoint3D rp = new ReconstructedPoint3D();
+    void testGetSetCovariance() throws WrongSizeException {
+        final var rp = new ReconstructedPoint3D();
 
         // check default value
         assertNull(rp.getCovariance());
 
         // set new value
-        final Matrix cov = new Matrix(3, 3);
+        final var cov = new Matrix(3, 3);
         rp.setCovariance(cov);
 
         // check correctness
@@ -98,14 +98,14 @@ public class ReconstructedPoint3DTest {
     }
 
     @Test
-    public void testGetSetColorData() {
-        final ReconstructedPoint3D rp = new ReconstructedPoint3D();
+    void testGetSetColorData() {
+        final var rp = new ReconstructedPoint3D();
 
         // check default value
         assertNull(rp.getColorData());
 
         // set new value
-        final PointColorData data = new CustomPointColorData();
+        final var data = new CustomPointColorData();
         rp.setColorData(data);
 
         // check correctness
@@ -113,17 +113,17 @@ public class ReconstructedPoint3DTest {
     }
 
     @Test
-    public void testSerializeDeserialize() throws WrongSizeException, IOException, ClassNotFoundException {
-        final ReconstructedPoint3D rp1 = new ReconstructedPoint3D();
+    void testSerializeDeserialize() throws WrongSizeException, IOException, ClassNotFoundException {
+        final var rp1 = new ReconstructedPoint3D();
 
         // set values
         rp1.setId("id");
-        final Point3D p = Point3D.create();
+        final var p = Point3D.create();
         rp1.setPoint(p);
         rp1.setQualityScore(5.0);
-        final Matrix cov = new Matrix(3, 3);
+        final var cov = new Matrix(3, 3);
         rp1.setCovariance(cov);
-        final PointColorData data = new CustomPointColorData();
+        final var data = new CustomPointColorData();
         rp1.setColorData(data);
 
         // check
@@ -133,8 +133,8 @@ public class ReconstructedPoint3DTest {
         assertSame(cov, rp1.getCovariance());
 
         // serialize and deserialize
-        final byte[] bytes = SerializationHelper.serialize(rp1);
-        final ReconstructedPoint3D rp2 = SerializationHelper.deserialize(bytes);
+        final var bytes = SerializationHelper.serialize(rp1);
+        final var rp2 = SerializationHelper.<ReconstructedPoint3D>deserialize(bytes);
 
         // check
         assertEquals(rp1.getId(), rp2.getId());
@@ -147,6 +147,7 @@ public class ReconstructedPoint3DTest {
 
         @Override
         public void average(final PointColorData other, final PointColorData result) {
+            // no action needed
         }
     }
 }

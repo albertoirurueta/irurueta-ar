@@ -19,12 +19,10 @@ package com.irurueta.ar.sfm;
 import com.irurueta.ar.slam.AbsoluteOrientationBaseSlamEstimator;
 import com.irurueta.ar.slam.BaseCalibrationData;
 import com.irurueta.geometry.MetricTransformation3D;
-import com.irurueta.geometry.PinholeCamera;
 import com.irurueta.geometry.Point3D;
 import com.irurueta.geometry.Rotation3D;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Base class in charge of estimating cameras and 3D reconstructed points from sparse
@@ -51,12 +49,12 @@ public abstract class BaseAbsoluteOrientationSlamSparseReconstructor<
     /**
      * First sample of orientation received.
      */
-    private Rotation3D mFirstOrientation;
+    private Rotation3D firstOrientation;
 
     /**
      * Inverse of first orientation.
      */
-    private Rotation3D mInvFirstOrientation;
+    private Rotation3D invFirstOrientation;
 
     /**
      * Constructor.
@@ -66,8 +64,7 @@ public abstract class BaseAbsoluteOrientationSlamSparseReconstructor<
      * @throws NullPointerException if listener or configuration is not
      *                              provided.
      */
-    protected BaseAbsoluteOrientationSlamSparseReconstructor(
-            final C configuration, final L listener) {
+    protected BaseAbsoluteOrientationSlamSparseReconstructor(final C configuration, final L listener) {
         super(configuration, listener);
     }
 
@@ -79,15 +76,14 @@ public abstract class BaseAbsoluteOrientationSlamSparseReconstructor<
      *                    expressed in nanoseconds.
      * @param orientation new orientation.
      */
-    public void updateOrientationSample(final long timestamp,
-                                        final Rotation3D orientation) {
-        if (mSlamEstimator != null) {
-            mSlamEstimator.updateOrientationSample(timestamp, orientation);
+    public void updateOrientationSample(final long timestamp, final Rotation3D orientation) {
+        if (slamEstimator != null) {
+            slamEstimator.updateOrientationSample(timestamp, orientation);
         }
-        if (mFirstOrientation == null) {
+        if (firstOrientation == null) {
             // make a copy of orientation
-            mFirstOrientation = orientation.toQuaternion();
-            mInvFirstOrientation = mFirstOrientation.inverseRotationAndReturnNew();
+            firstOrientation = orientation.toQuaternion();
+            invFirstOrientation = firstOrientation.inverseRotationAndReturnNew();
         }
     }
 
@@ -101,8 +97,8 @@ public abstract class BaseAbsoluteOrientationSlamSparseReconstructor<
     protected boolean updateScaleAndOrientation(final boolean isInitialPairOfViews) {
 
         try {
-            final PinholeCamera metricCamera1 = mPreviousMetricEstimatedCamera.getCamera();
-            final PinholeCamera metricCamera2 = mCurrentMetricEstimatedCamera.getCamera();
+            final var metricCamera1 = previousMetricEstimatedCamera.getCamera();
+            final var metricCamera2 = currentMetricEstimatedCamera.getCamera();
 
             double slamPosX;
             double slamPosY;
@@ -110,24 +106,24 @@ public abstract class BaseAbsoluteOrientationSlamSparseReconstructor<
             double scale;
             if (isInitialPairOfViews) {
                 // obtain baseline (camera separation from slam estimator data
-                slamPosX = mSlamEstimator.getStatePositionX();
-                slamPosY = mSlamEstimator.getStatePositionY();
-                slamPosZ = mSlamEstimator.getStatePositionZ();
+                slamPosX = slamEstimator.getStatePositionX();
+                slamPosY = slamEstimator.getStatePositionY();
+                slamPosZ = slamEstimator.getStatePositionZ();
 
-                mSlamPosition.setInhomogeneousCoordinates(slamPosX, slamPosY, slamPosZ);
+                slamPosition.setInhomogeneousCoordinates(slamPosX, slamPosY, slamPosZ);
 
                 metricCamera1.decompose(false, true);
                 metricCamera2.decompose(false, true);
 
-                final Point3D center1 = metricCamera1.getCameraCenter();
-                final Point3D center2 = metricCamera2.getCameraCenter();
+                final var center1 = metricCamera1.getCameraCenter();
+                final var center2 = metricCamera2.getCameraCenter();
 
-                final double baseline = center1.distanceTo(mSlamPosition);
-                final double estimatedBaseline = center1.distanceTo(center2);
+                final var baseline = center1.distanceTo(slamPosition);
+                final var estimatedBaseline = center1.distanceTo(center2);
 
-                scale = mCurrentScale = baseline / estimatedBaseline;
+                scale = currentScale = baseline / estimatedBaseline;
             } else {
-                scale = mCurrentScale;
+                scale = currentScale;
             }
 
             // R1' = R1*Rdiff
@@ -159,86 +155,78 @@ public abstract class BaseAbsoluteOrientationSlamSparseReconstructor<
             // T = [s*R1'^T 0]
             //     [0       1]
 
-            final MetricTransformation3D scaleAndOrientationTransformation =
-                    new MetricTransformation3D(scale);
-            scaleAndOrientationTransformation.setRotation(mInvFirstOrientation);
+            final var scaleAndOrientationTransformation = new MetricTransformation3D(scale);
+            scaleAndOrientationTransformation.setRotation(invFirstOrientation);
 
             // update scale of cameras
-            final PinholeCamera euclideanCamera1 = scaleAndOrientationTransformation.transformAndReturnNew(
-                    metricCamera1);
-            final PinholeCamera euclideanCamera2 = scaleAndOrientationTransformation.transformAndReturnNew(
-                    metricCamera2);
+            final var euclideanCamera1 = scaleAndOrientationTransformation.transformAndReturnNew(metricCamera1);
+            final var euclideanCamera2 = scaleAndOrientationTransformation.transformAndReturnNew(metricCamera2);
 
             euclideanCamera2.decompose(false, true);
-            mSlamEstimator.correctWithPositionMeasure(euclideanCamera2.getCameraCenter(),
-                    mConfiguration.getCameraPositionCovariance());
+            slamEstimator.correctWithPositionMeasure(euclideanCamera2.getCameraCenter(),
+                    configuration.getCameraPositionCovariance());
 
             if (!isInitialPairOfViews) {
-                slamPosX = mSlamEstimator.getStatePositionX();
-                slamPosY = mSlamEstimator.getStatePositionY();
-                slamPosZ = mSlamEstimator.getStatePositionZ();
-                mSlamPosition.setInhomogeneousCoordinates(slamPosX, slamPosY, slamPosZ);
+                slamPosX = slamEstimator.getStatePositionX();
+                slamPosY = slamEstimator.getStatePositionY();
+                slamPosZ = slamEstimator.getStatePositionZ();
+                slamPosition.setInhomogeneousCoordinates(slamPosX, slamPosY, slamPosZ);
 
                 // adjust scale of current camera
-                final Point3D euclideanCenter2 = euclideanCamera2.getCameraCenter();
+                final var euclideanCenter2 = euclideanCamera2.getCameraCenter();
 
-                final double euclideanPosX = euclideanCenter2.getInhomX();
-                final double euclideanPosY = euclideanCenter2.getInhomY();
-                final double euclideanPosZ = euclideanCenter2.getInhomZ();
+                final var euclideanPosX = euclideanCenter2.getInhomX();
+                final var euclideanPosY = euclideanCenter2.getInhomY();
+                final var euclideanPosZ = euclideanCenter2.getInhomZ();
 
-                final double scaleVariationX = euclideanPosX / slamPosX;
-                final double scaleVariationY = euclideanPosY / slamPosY;
-                final double scaleVariationZ = euclideanPosZ / slamPosZ;
+                final var scaleVariationX = euclideanPosX / slamPosX;
+                final var scaleVariationY = euclideanPosY / slamPosY;
+                final var scaleVariationZ = euclideanPosZ / slamPosZ;
 
-                final double scaleVariation = (scaleVariationX + scaleVariationY + scaleVariationZ) / 3.0;
+                final var scaleVariation = (scaleVariationX + scaleVariationY + scaleVariationZ) / 3.0;
                 scale *= scaleVariation;
-                mCurrentScale = scale;
-                scaleAndOrientationTransformation.setScale(mCurrentScale);
+                currentScale = scale;
+                scaleAndOrientationTransformation.setScale(currentScale);
 
                 // update camera
                 scaleAndOrientationTransformation.transform(metricCamera2, euclideanCamera2);
             }
-            final double sqrScale = scale * scale;
+            final var sqrScale = scale * scale;
 
-            mPreviousEuclideanEstimatedCamera = new EstimatedCamera();
-            mPreviousEuclideanEstimatedCamera.setCamera(euclideanCamera1);
-            mPreviousEuclideanEstimatedCamera.setViewId(mPreviousMetricEstimatedCamera.getViewId());
-            mPreviousEuclideanEstimatedCamera.setQualityScore(
-                    mPreviousMetricEstimatedCamera.getQualityScore());
-            if (mPreviousMetricEstimatedCamera.getCovariance() != null) {
-                mPreviousEuclideanEstimatedCamera.setCovariance(
-                        mPreviousMetricEstimatedCamera.getCovariance()
-                                .multiplyByScalarAndReturnNew(sqrScale));
+            previousEuclideanEstimatedCamera = new EstimatedCamera();
+            previousEuclideanEstimatedCamera.setCamera(euclideanCamera1);
+            previousEuclideanEstimatedCamera.setViewId(previousMetricEstimatedCamera.getViewId());
+            previousEuclideanEstimatedCamera.setQualityScore(previousMetricEstimatedCamera.getQualityScore());
+            if (previousMetricEstimatedCamera.getCovariance() != null) {
+                previousEuclideanEstimatedCamera.setCovariance(previousMetricEstimatedCamera.getCovariance()
+                        .multiplyByScalarAndReturnNew(sqrScale));
             }
 
-            mCurrentEuclideanEstimatedCamera = new EstimatedCamera();
-            mCurrentEuclideanEstimatedCamera.setCamera(euclideanCamera2);
-            mCurrentEuclideanEstimatedCamera.setViewId(mCurrentMetricEstimatedCamera.getViewId());
-            mCurrentEuclideanEstimatedCamera.setQualityScore(
-                    mCurrentMetricEstimatedCamera.getQualityScore());
-            if (mCurrentMetricEstimatedCamera.getCovariance() != null) {
-                mCurrentEuclideanEstimatedCamera.setCovariance(
-                        mCurrentMetricEstimatedCamera.getCovariance()
-                                .multiplyByScalarAndReturnNew(sqrScale));
+            currentEuclideanEstimatedCamera = new EstimatedCamera();
+            currentEuclideanEstimatedCamera.setCamera(euclideanCamera2);
+            currentEuclideanEstimatedCamera.setViewId(currentMetricEstimatedCamera.getViewId());
+            currentEuclideanEstimatedCamera.setQualityScore(currentMetricEstimatedCamera.getQualityScore());
+            if (currentMetricEstimatedCamera.getCovariance() != null) {
+                currentEuclideanEstimatedCamera.setCovariance(currentMetricEstimatedCamera.getCovariance()
+                        .multiplyByScalarAndReturnNew(sqrScale));
             }
 
             // update scale of reconstructed points
-            final int numPoints = mActiveMetricReconstructedPoints.size();
-            final List<Point3D> metricReconstructedPoints3D = new ArrayList<>();
-            for (final ReconstructedPoint3D reconstructedPoint : mActiveMetricReconstructedPoints) {
+            final var numPoints = activeMetricReconstructedPoints.size();
+            final var metricReconstructedPoints3D = new ArrayList<Point3D>();
+            for (final var reconstructedPoint : activeMetricReconstructedPoints) {
                 metricReconstructedPoints3D.add(reconstructedPoint.getPoint());
             }
 
-            final List<Point3D> euclideanReconstructedPoints3D =
-                    scaleAndOrientationTransformation.transformPointsAndReturnNew(
-                            metricReconstructedPoints3D);
+            final var euclideanReconstructedPoints3D = scaleAndOrientationTransformation.transformPointsAndReturnNew(
+                    metricReconstructedPoints3D);
 
             // set scaled points into result
-            mActiveEuclideanReconstructedPoints = new ArrayList<>();
+            activeEuclideanReconstructedPoints = new ArrayList<>();
             ReconstructedPoint3D euclideanPoint;
             ReconstructedPoint3D metricPoint;
-            for (int i = 0; i < numPoints; i++) {
-                metricPoint = mActiveMetricReconstructedPoints.get(i);
+            for (var i = 0; i < numPoints; i++) {
+                metricPoint = activeMetricReconstructedPoints.get(i);
 
                 euclideanPoint = new ReconstructedPoint3D();
                 euclideanPoint.setId(metricPoint.getId());
@@ -246,20 +234,19 @@ public abstract class BaseAbsoluteOrientationSlamSparseReconstructor<
                 euclideanPoint.setInlier(metricPoint.isInlier());
                 euclideanPoint.setQualityScore(metricPoint.getQualityScore());
                 if (metricPoint.getCovariance() != null) {
-                    euclideanPoint.setCovariance(metricPoint.getCovariance()
-                            .multiplyByScalarAndReturnNew(sqrScale));
+                    euclideanPoint.setCovariance(metricPoint.getCovariance().multiplyByScalarAndReturnNew(sqrScale));
                 }
                 euclideanPoint.setColorData(metricPoint.getColorData());
 
-                mActiveEuclideanReconstructedPoints.add(euclideanPoint);
+                activeEuclideanReconstructedPoints.add(euclideanPoint);
             }
 
             return true;
 
         } catch (final Exception e) {
-            mFailed = true;
+            failed = true;
             //noinspection unchecked
-            mListener.onFail((R) this);
+            listener.onFail((R) this);
 
             return false;
         }

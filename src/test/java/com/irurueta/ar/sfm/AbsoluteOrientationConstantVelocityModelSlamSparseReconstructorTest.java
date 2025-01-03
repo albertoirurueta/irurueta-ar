@@ -21,22 +21,20 @@ import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.SingularValueDecomposer;
 import com.irurueta.ar.epipolar.FundamentalMatrix;
 import com.irurueta.ar.epipolar.InvalidPairOfCamerasException;
-import com.irurueta.ar.slam.AbsoluteOrientationConstantVelocityModelSlamCalibrationData;
 import com.irurueta.ar.slam.AbsoluteOrientationConstantVelocityModelSlamCalibrator;
 import com.irurueta.ar.slam.AbsoluteOrientationConstantVelocityModelSlamEstimator;
 import com.irurueta.geometry.*;
 import com.irurueta.statistics.GaussianRandomizer;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest {
+class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest {
 
     private static final double MIN_FOCAL_LENGTH_ESSENTIAL = 750.0;
     private static final double MAX_FOCAL_LENGTH_ESSENTIAL = 1500.0;
@@ -79,175 +77,178 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest
 
     private static final int N_SENSOR_SAMPLES = 50;
 
-    private int mViewCount = 0;
-    private EstimatedFundamentalMatrix mEstimatedFundamentalMatrix;
-    private EstimatedFundamentalMatrix mEstimatedFundamentalMatrix2;
-    private EstimatedCamera mEstimatedMetricCamera1;
-    private EstimatedCamera mEstimatedMetricCamera2;
-    private EstimatedCamera mEstimatedMetricCamera3;
-    private EstimatedCamera mEstimatedEuclideanCamera1;
-    private EstimatedCamera mEstimatedEuclideanCamera2;
-    private EstimatedCamera mEstimatedEuclideanCamera3;
-    private List<ReconstructedPoint3D> mMetricReconstructedPoints;
-    private List<ReconstructedPoint3D> mEuclideanReconstructedPoints;
+    private int viewCount = 0;
+    private EstimatedFundamentalMatrix estimatedFundamentalMatrix;
+    private EstimatedFundamentalMatrix estimatedFundamentalMatrix2;
+    private EstimatedCamera estimatedMetricCamera1;
+    private EstimatedCamera estimatedMetricCamera2;
+    private EstimatedCamera emEstimatedMetricCamera3;
+    private EstimatedCamera estimatedEuclideanCamera1;
+    private EstimatedCamera estimatedEuclideanCamera2;
+    private EstimatedCamera estimatedEuclideanCamera3;
+    private List<ReconstructedPoint3D> metricReconstructedPoints;
+    private List<ReconstructedPoint3D> euclideanReconstructedPoints;
 
-    private double mScale;
-    private double mScale2;
+    private double scale;
+    private double scale2;
 
-    private boolean mStarted;
-    private boolean mFinished;
-    private boolean mFailed;
-    private boolean mCancelled;
+    private boolean started;
+    private boolean finished;
+    private boolean failed;
+    private boolean cancelled;
 
-    private long mTimestamp;
+    private long timestamp;
 
-    private int mSlamDataAvailable;
-    private int mSlamCameraEstimated;
+    private int slamDataAvailable;
+    private int slamCameraEstimated;
 
-    private PinholeCamera mSlamCamera;
-    private Matrix mSlamCovariance;
+    private PinholeCamera slamCamera;
+    private Matrix slamCovariance;
 
-    @Before
-    public void setUp() {
-        mViewCount = 0;
-        mEstimatedFundamentalMatrix = mEstimatedFundamentalMatrix2 = null;
-        mEstimatedMetricCamera1 = mEstimatedMetricCamera2 =
-                mEstimatedMetricCamera3 = null;
-        mEstimatedEuclideanCamera1 = mEstimatedEuclideanCamera2 =
-                mEstimatedEuclideanCamera3 = null;
-        mMetricReconstructedPoints = null;
-        mEuclideanReconstructedPoints = null;
-        mStarted = mFinished = mFailed = mCancelled = false;
-        mTimestamp = 0;
-        mSlamDataAvailable = 0;
-        mSlamCameraEstimated = 0;
-        mSlamCamera = null;
-        mSlamCovariance = null;
+    @BeforeEach
+    void setUp() {
+        viewCount = 0;
+        estimatedFundamentalMatrix = estimatedFundamentalMatrix2 = null;
+        estimatedMetricCamera1 = estimatedMetricCamera2 = emEstimatedMetricCamera3 = null;
+        estimatedEuclideanCamera1 = estimatedEuclideanCamera2 = estimatedEuclideanCamera3 = null;
+        metricReconstructedPoints = null;
+        euclideanReconstructedPoints = null;
+        started = finished = failed = cancelled = false;
+        timestamp = 0;
+        slamDataAvailable = 0;
+        slamCameraEstimated = 0;
+        slamCamera = null;
+        slamCovariance = null;
     }
 
     @Test
-    public void testConstructor() {
-        assertEquals(2,
-                AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor.MIN_NUMBER_OF_VIEWS);
+    void testConstructor() {
+        assertEquals(2, AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor.MIN_NUMBER_OF_VIEWS);
 
-        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorConfiguration configuration =
-                new AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorConfiguration();
-        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorListener listener =
-                new AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorListener() {
-                    @Override
-                    public void onSlamDataAvailable(
-                            final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                            final double positionX, final double positionY, final double positionZ,
-                            final double velocityX, final double velocityY, final double velocityZ,
-                            final double accelerationX, final double accelerationY, final double accelerationZ,
-                            final double quaternionA, final double quaternionB, final double quaternionC,
-                            final double quaternionD, final double angularSpeedX, final double angularSpeedY,
-                            final double angularSpeedZ, final Matrix covariance) {
-                    }
+        final var configuration = new AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorConfiguration();
+        final var listener = new AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorListener() {
+            @Override
+            public void onSlamDataAvailable(
+                    final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                    final double positionX, final double positionY, final double positionZ,
+                    final double velocityX, final double velocityY, final double velocityZ,
+                    final double accelerationX, final double accelerationY, final double accelerationZ,
+                    final double quaternionA, final double quaternionB, final double quaternionC,
+                    final double quaternionD, final double angularSpeedX, final double angularSpeedY,
+                    final double angularSpeedZ, final Matrix covariance) {
+                // no action needed
+            }
 
-                    @Override
-                    public void onSlamCameraEstimated(
-                            final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                            final PinholeCamera camera) {
-                    }
+            @Override
+            public void onSlamCameraEstimated(
+                    final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                    final PinholeCamera camera) {
+                // no action needed
+            }
 
-                    @Override
-                    public boolean hasMoreViewsAvailable(
-                            final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
-                        return false;
-                    }
+            @Override
+            public boolean hasMoreViewsAvailable(
+                    final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
+                return false;
+            }
 
-                    @Override
-                    public void onRequestSamples(
-                            final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                            final int previousViewId, final int currentViewId,
-                            final List<Sample2D> previousViewTrackedSamples,
-                            final List<Sample2D> currentViewTrackedSamples,
-                            final List<Sample2D> currentViewNewlySpawnedSamples) {
-                    }
+            @Override
+            public void onRequestSamples(
+                    final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                    final int previousViewId, final int currentViewId,
+                    final List<Sample2D> previousViewTrackedSamples,
+                    final List<Sample2D> currentViewTrackedSamples,
+                    final List<Sample2D> currentViewNewlySpawnedSamples) {
+                // no action needed
+            }
 
-                    @Override
-                    public void onSamplesAccepted(
-                            final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                            final int viewId, final List<Sample2D> previousViewTrackedSamples,
-                            final List<Sample2D> currentViewTrackedSamples) {
-                    }
+            @Override
+            public void onSamplesAccepted(
+                    final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                    final int viewId, final List<Sample2D> previousViewTrackedSamples,
+                    final List<Sample2D> currentViewTrackedSamples) {
+                // no action needed
+            }
 
-                    @Override
-                    public void onSamplesRejected(
-                            final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                            final int viewId, final List<Sample2D> previousViewTrackedSamples,
-                            final List<Sample2D> currentViewTrackedSamples) {
-                    }
+            @Override
+            public void onSamplesRejected(
+                    final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                    final int viewId, final List<Sample2D> previousViewTrackedSamples,
+                    final List<Sample2D> currentViewTrackedSamples) {
+                // no action needed
+            }
 
-                    @Override
-                    public void onRequestMatches(
-                            final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                            final List<Sample2D> allPreviousViewSamples,
-                            final List<Sample2D> previousViewTrackedSamples,
-                            final List<Sample2D> currentViewTrackedSamples, final int previousViewId,
-                            final int currentViewId, final List<MatchedSamples> matches) {
-                    }
+            @Override
+            public void onRequestMatches(
+                    final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                    final List<Sample2D> allPreviousViewSamples,
+                    final List<Sample2D> previousViewTrackedSamples,
+                    final List<Sample2D> currentViewTrackedSamples, final int previousViewId,
+                    final int currentViewId, final List<MatchedSamples> matches) {
+                // no action needed
+            }
 
-                    @Override
-                    public void onFundamentalMatrixEstimated(
-                            final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                            final EstimatedFundamentalMatrix estimatedFundamentalMatrix) {
-                    }
+            @Override
+            public void onFundamentalMatrixEstimated(
+                    final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                    final EstimatedFundamentalMatrix estimatedFundamentalMatrix) {
+                // no action needed
+            }
 
-                    @Override
-                    public void onMetricCameraEstimated(
-                            final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                            final int previousViewId, final int currentViewId,
-                            final EstimatedCamera previousCamera,
-                            final EstimatedCamera currentCamera) {
-                    }
+            @Override
+            public void onMetricCameraEstimated(
+                    final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                    final int previousViewId, final int currentViewId, final EstimatedCamera previousCamera,
+                    final EstimatedCamera currentCamera) {
+                // no action needed
+            }
 
-                    @Override
-                    public void onMetricReconstructedPointsEstimated(
-                            final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                            final List<MatchedSamples> matches,
-                            final List<ReconstructedPoint3D> points) {
-                    }
+            @Override
+            public void onMetricReconstructedPointsEstimated(
+                    final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                    final List<MatchedSamples> matches, final List<ReconstructedPoint3D> points) {
+                // no action needed
+            }
 
-                    @Override
-                    public void onEuclideanCameraEstimated(
-                            final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                            final int previousViewId, final int currentViewId, final double scale,
-                            final EstimatedCamera previousCamera,
-                            final EstimatedCamera currentCamera) {
-                    }
+            @Override
+            public void onEuclideanCameraEstimated(
+                    final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                    final int previousViewId, final int currentViewId, final double scale,
+                    final EstimatedCamera previousCamera,
+                    final EstimatedCamera currentCamera) {
+                // no action needed
+            }
 
-                    @Override
-                    public void onEuclideanReconstructedPointsEstimated(
-                            final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                            final double scale, final List<ReconstructedPoint3D> points) {
-                    }
+            @Override
+            public void onEuclideanReconstructedPointsEstimated(
+                    final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                    final double scale, final List<ReconstructedPoint3D> points) {
+                // no action needed
+            }
 
-                    @Override
-                    public void onStart(
-                            final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
-                    }
+            @Override
+            public void onStart(final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
+                // no action needed
+            }
 
-                    @Override
-                    public void onFinish(
-                            final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
-                    }
+            @Override
+            public void onFinish(final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
+                // no action needed
+            }
 
-                    @Override
-                    public void onCancel(
-                            final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
-                    }
+            @Override
+            public void onCancel(final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
+                // no action needed
+            }
 
-                    @Override
-                    public void onFail(
-                            final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
-                    }
-                };
+            @Override
+            public void onFail(final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
+                // no action needed
+            }
+        };
 
         // constructor with listener
-        AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor =
-                new AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor(listener);
+        var reconstructor = new AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor(listener);
 
         // check default values
         assertNotNull(reconstructor.getConfiguration());
@@ -273,8 +274,7 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest
         assertFalse(reconstructor.isAdditionalView());
 
         // constructor with configuration and listener
-        reconstructor = new AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor(configuration,
-                listener);
+        reconstructor = new AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor(configuration, listener);
 
         // check default values
         assertSame(configuration, reconstructor.getConfiguration());
@@ -301,92 +301,75 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest
     }
 
     @Test
-    public void testGeneralPointsEssentialWithConstantAccelerationAndRotationWithoutNoiseTwoViews()
+    void testGeneralPointsEssentialWithConstantAccelerationAndRotationWithoutNoiseTwoViews()
             throws InvalidPairOfCamerasException, AlgebraException, CameraException,
-            com.irurueta.geometry.estimators.NotReadyException,
-            com.irurueta.geometry.NotAvailableException, RotationException {
+            com.irurueta.geometry.estimators.NotReadyException, com.irurueta.geometry.NotAvailableException,
+            RotationException {
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
-                    new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var noiseRandomizer = new GaussianRandomizer(0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
 
-            final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorConfiguration configuration =
+            final var configuration =
                     new AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorConfiguration();
-            configuration.setInitialCamerasEstimatorMethod(
-                    InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
+            configuration.setInitialCamerasEstimatorMethod(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
 
-            final float accelerationOffsetX = 0.0f;
-            final float accelerationOffsetY = 0.0f;
-            final float accelerationOffsetZ = 0.0f;
+            final var accelerationOffsetX = 0.0f;
+            final var accelerationOffsetY = 0.0f;
+            final var accelerationOffsetZ = 0.0f;
 
-            final float angularOffsetX = 0.0f;
-            final float angularOffsetY = 0.0f;
-            final float angularOffsetZ = 0.0f;
+            final var angularOffsetX = 0.0f;
+            final var angularOffsetY = 0.0f;
+            final var angularOffsetZ = 0.0f;
 
-            final AbsoluteOrientationConstantVelocityModelSlamCalibrator calibrator = createFinishedCalibrator(
-                    accelerationOffsetX, accelerationOffsetY,
-                    accelerationOffsetZ, angularOffsetX, angularOffsetY,
-                    angularOffsetZ, noiseRandomizer);
-            final AbsoluteOrientationConstantVelocityModelSlamCalibrationData calibrationData
-                    = calibrator.getCalibrationData();
+            final var calibrator = createFinishedCalibrator(accelerationOffsetX, accelerationOffsetY,
+                    accelerationOffsetZ, angularOffsetX, angularOffsetY, angularOffsetZ, noiseRandomizer);
+            final var calibrationData = calibrator.getCalibrationData();
             configuration.setCalibrationData(calibrationData);
 
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH_ESSENTIAL,
-                    MAX_FOCAL_LENGTH_ESSENTIAL);
-            final double aspectRatio = configuration.getInitialCamerasAspectRatio();
-            final double skewness = 0.0;
-            final double principalPoint = 0.0;
+            final var randomizer = new UniformRandomizer();
+            final var focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
+            final var aspectRatio = configuration.getInitialCamerasAspectRatio();
+            final var skewness = 0.0;
+            final var principalPoint = 0.0;
 
-            final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength, focalLength,
-                            principalPoint, principalPoint, skewness);
+            final var intrinsic = new PinholeCameraIntrinsicParameters(focalLength, focalLength, principalPoint,
+                    principalPoint, skewness);
             intrinsic.setAspectRatioKeepingHorizontalFocalLength(aspectRatio);
 
             configuration.setInitialIntrinsic1(intrinsic);
             configuration.setInitialIntrinsic2(intrinsic);
 
-            final double alphaEuler1 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double betaEuler1 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double gammaEuler1 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+            final var alphaEuler1 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var betaEuler1 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var gammaEuler1 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var alphaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var betaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var gammaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
-            final AxisRotation3D axisRotation2 = new AxisRotation3D(
-                    rotation1.inverseRotationAndReturnNew().combineAndReturnNew(rotation2));
+            final var rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final var rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+            final var axisRotation2 = new AxisRotation3D(rotation1.inverseRotationAndReturnNew().combineAndReturnNew(rotation2));
 
-            final double axisX = axisRotation2.getAxisX();
-            final double axisY = axisRotation2.getAxisY();
-            final double axisZ = axisRotation2.getAxisZ();
-            final double angle = axisRotation2.getRotationAngle();
+            final var axisX = axisRotation2.getAxisX();
+            final var axisY = axisRotation2.getAxisY();
+            final var axisZ = axisRotation2.getAxisZ();
+            final var angle = axisRotation2.getRotationAngle();
 
-            final AxisRotation3D diffRotation = new AxisRotation3D(axisX, axisY,
-                    axisZ, angle / N_SENSOR_SAMPLES);
-            final Quaternion diffQuaternion = new Quaternion(diffRotation);
+            final var diffRotation = new AxisRotation3D(axisX, axisY, axisZ, angle / N_SENSOR_SAMPLES);
+            final var diffQuaternion = new Quaternion(diffRotation);
 
             // angular speeds (roll, pitch, yaw) on x, y, z axes
-            final double[] angularSpeeds = diffQuaternion.toEulerAngles();
-            final double angularSpeedX = angularSpeeds[0];
-            final double angularSpeedY = angularSpeeds[1];
-            final double angularSpeedZ = angularSpeeds[2];
-            final Quaternion diffRotation2 = new Quaternion(angularSpeedX, angularSpeedY, angularSpeedZ);
+            final var angularSpeeds = diffQuaternion.toEulerAngles();
+            final var angularSpeedX = angularSpeeds[0];
+            final var angularSpeedY = angularSpeeds[1];
+            final var angularSpeedZ = angularSpeeds[2];
+            final var diffRotation2 = new Quaternion(angularSpeedX, angularSpeedY, angularSpeedZ);
 
             // number of samples (50 samples * 0.02 s/sample = 1 second)
-            final MatrixRotation3D rotation2b = new MatrixRotation3D(rotation1);
-            final MatrixRotation3D rotation2c = new MatrixRotation3D(rotation1);
-            for (int s = 0; s < N_SENSOR_SAMPLES; s++) {
+            final var rotation2b = new MatrixRotation3D(rotation1);
+            final var rotation2c = new MatrixRotation3D(rotation1);
+            for (var s = 0; s < N_SENSOR_SAMPLES; s++) {
                 rotation2b.combine(diffRotation);
                 rotation2c.combine(diffRotation2);
             }
@@ -396,12 +379,10 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest
             assertTrue(rotation2.equals(rotation2b, ABSOLUTE_ERROR));
             assertTrue(rotation2.equals(rotation2c, ABSOLUTE_ERROR));
 
-            final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
+            final var cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION_ESSENTIAL,
                     MAX_CAMERA_SEPARATION_ESSENTIAL);
 
-            final EuclideanTransformation3D rotationTransformation =
-                    new EuclideanTransformation3D(rotation1);
+            final var rotationTransformation = new EuclideanTransformation3D(rotation1);
             Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
             Point3D center2 = new InhomogeneousPoint3D(
                     center1.getInhomX() + cameraSeparation,
@@ -410,29 +391,30 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest
             center1 = rotationTransformation.transformAndReturnNew(center1);
             center2 = rotationTransformation.transformAndReturnNew(center2);
 
-            final double baseline = center1.distanceTo(center2);
+            final var baseline = center1.distanceTo(center2);
 
-            final double accelerationX, accelerationY, accelerationZ;
+            final double accelerationX;
+            final double accelerationY;
+            final double accelerationZ;
 
             // s = 0.5*a*t^2 --> a = 2*s/t^2
             // assuming t = 1 second (50 samples * 0.02 s/sample = 1 second)
             accelerationX = accelerationY = accelerationZ = 2 * cameraSeparation;
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
+            final var camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final var camera2 = new PinholeCamera(intrinsic, rotation2, center2);
 
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
+            final var fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
 
             // 1st find an approximate central point by intersecting the axis
             // planes of both cameras
-            final Plane horizontalPlane1 = camera1.getHorizontalAxisPlane();
-            final Plane verticalPlane1 = camera1.getVerticalAxisPlane();
-            final Plane horizontalPlane2 = camera2.getHorizontalAxisPlane();
-            final Plane verticalPlane2 = camera2.getVerticalAxisPlane();
-            final Matrix planesIntersectionMatrix = new Matrix(
-                    Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
+            final var horizontalPlane1 = camera1.getHorizontalAxisPlane();
+            final var verticalPlane1 = camera1.getVerticalAxisPlane();
+            final var horizontalPlane2 = camera2.getHorizontalAxisPlane();
+            final var verticalPlane2 = camera2.getVerticalAxisPlane();
+            final var planesIntersectionMatrix = new Matrix(Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
             planesIntersectionMatrix.setElementAt(0, 0, verticalPlane1.getA());
             planesIntersectionMatrix.setElementAt(0, 1, verticalPlane1.getB());
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
@@ -453,11 +435,10 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest
             planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
             planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
+            final var decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
-            final Matrix v = decomposer.getV();
-            final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
+            final var v = decomposer.getV();
+            final var centralCommonPoint = new HomogeneousPoint3D(
                     v.getElementAt(0, 3),
                     v.getElementAt(1, 3),
                     v.getElementAt(2, 3),
@@ -467,698 +448,28 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest
             double lambdaY;
             double lambdaZ;
 
-            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
+            final var numPoints1 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final var numPoints2 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
 
             InhomogeneousPoint3D point3D;
-            final List<InhomogeneousPoint3D> points3D1 = new ArrayList<>();
+            final var points3D1 = new ArrayList<InhomogeneousPoint3D>();
             Point2D projectedPoint1;
             Point2D projectedPoint2;
-            final List<Point2D> projectedPoints1 = new ArrayList<>();
-            final List<Point2D> projectedPoints2 = new ArrayList<>();
+            final var projectedPoints1 = new ArrayList<Point2D>();
+            final var projectedPoints2 = new ArrayList<Point2D>();
             boolean front1;
             boolean front2;
-            boolean maxTriesReached = false;
-            for (int i = 0; i < numPoints1; i++) {
+            var maxTriesReached = false;
+            for (var i = 0; i < numPoints1; i++) {
                 // generate points and ensure they lie in front of both cameras
-                int numTry = 0;
+                var numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-
-                    point3D = new InhomogeneousPoint3D(
-                            centralCommonPoint.getInhomX() + lambdaX,
-                            centralCommonPoint.getInhomY() + lambdaY,
-                            centralCommonPoint.getInhomZ() + lambdaZ);
-
-                    front1 = camera1.isPointInFrontOfCamera(point3D);
-                    front2 = camera2.isPointInFrontOfCamera(point3D);
-                    if (numTry > MAX_TRIES) {
-                        maxTriesReached = true;
-                        break;
-                    }
-                    numTry++;
-                } while (!front1 || !front2);
-
-                if (maxTriesReached) break;
-
-                points3D1.add(point3D);
-
-                // check that 3D point is in front of both cameras
-                assertTrue(front1);
-                assertTrue(front2);
-
-                // project 3D point into both cameras
-                projectedPoint1 = new InhomogeneousPoint2D();
-                camera1.project(point3D, projectedPoint1);
-                projectedPoints1.add(projectedPoint1);
-
-                projectedPoint2 = new InhomogeneousPoint2D();
-                camera2.project(point3D, projectedPoint2);
-                projectedPoints2.add(projectedPoint2);
-            }
-
-            if (maxTriesReached) {
-                continue;
-            }
-
-            Point2D projectedPoint2b;
-            final List<Point2D> projectedPoints2b = new ArrayList<>();
-            for (int i = 0; i < numPoints2; i++) {
-                // generate points and ensure they lie in front of both cameras
-                int numTry = 0;
-                do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-
-                    point3D = new InhomogeneousPoint3D(
-                            centralCommonPoint.getInhomX() + lambdaX,
-                            centralCommonPoint.getInhomY() + lambdaY,
-                            centralCommonPoint.getInhomZ() + lambdaZ);
-
-                    front2 = camera2.isPointInFrontOfCamera(point3D);
-                    if (numTry > MAX_TRIES) {
-                        maxTriesReached = true;
-                        break;
-                    }
-                    numTry++;
-                } while (!front2);
-
-                if (maxTriesReached) {
-                    break;
-                }
-
-                points3D1.add(point3D);
-
-                // check that 3D point is in front of both cameras
-                assertTrue(front2);
-
-                projectedPoint2b = new InhomogeneousPoint2D();
-                camera2.project(point3D, projectedPoint2b);
-                projectedPoints2b.add(projectedPoint2b);
-            }
-
-            if (maxTriesReached) {
-                continue;
-            }
-
-            final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorListener listener =
-                    new AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorListener() {
-                        @Override
-                        public void onSlamDataAvailable(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final double positionX, final double positionY, final double positionZ,
-                                final double velocityX, final double velocityY, final double velocityZ,
-                                final double accelerationX, final double accelerationY, final double accelerationZ,
-                                final double quaternionA, final double quaternionB, final double quaternionC,
-                                final double quaternionD, final double angularSpeedX, final double angularSpeedY,
-                                final double angularSpeedZ, final Matrix covariance) {
-                            mSlamDataAvailable++;
-                            mSlamCovariance = covariance;
-                        }
-
-                        @Override
-                        public void onSlamCameraEstimated(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final PinholeCamera camera) {
-                            mSlamCameraEstimated++;
-                            mSlamCamera = camera;
-                        }
-
-                        @Override
-                        public boolean hasMoreViewsAvailable(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
-                            return mViewCount < 2;
-                        }
-
-                        @Override
-                        public void onRequestSamples(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final int previousViewId, final int currentViewId,
-                                final List<Sample2D> previousViewTrackedSamples,
-                                final List<Sample2D> currentViewTrackedSamples,
-                                final List<Sample2D> currentViewNewlySpawnedSamples) {
-
-                            previousViewTrackedSamples.clear();
-                            currentViewTrackedSamples.clear();
-                            currentViewNewlySpawnedSamples.clear();
-
-                            Sample2D sample;
-                            if (mViewCount == 0) {
-                                // first view
-                                for (int i = 0; i < numPoints1; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints1.get(i));
-                                    sample.setViewId(currentViewId);
-                                    currentViewTrackedSamples.add(sample);
-                                }
-                            } else {
-                                // second view
-                                for (int i = 0; i < numPoints1; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints1.get(i));
-                                    sample.setViewId(previousViewId);
-                                    previousViewTrackedSamples.add(sample);
-                                }
-
-                                for (int i = 0; i < numPoints1; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints2.get(i));
-                                    sample.setViewId(currentViewId);
-                                    currentViewTrackedSamples.add(sample);
-                                }
-
-                                // spawned samples
-                                for (int i = 0; i < numPoints2; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints2b.get(i));
-                                    sample.setViewId(currentViewId);
-                                    currentViewNewlySpawnedSamples.add(sample);
-                                }
-
-                                // assume the following accelerator and gyroscope samples
-                                // are obtained during a period of 1 second between 1st
-                                // and 2nd view (50 samples * 0.02 s/sample = 1 second)
-                                mTimestamp = 0;
-                                final Quaternion orientation = new Quaternion(rotation1);
-                                for (int s = 0; s < N_SENSOR_SAMPLES; s++) {
-                                    reconstructor.updateAccelerometerSample(mTimestamp,
-                                            (float) accelerationX, (float) accelerationY,
-                                            (float) accelerationZ);
-                                    reconstructor.updateGyroscopeSample(mTimestamp,
-                                            (float) angularSpeedX, (float) angularSpeedY,
-                                            (float) angularSpeedZ);
-                                    reconstructor.updateOrientationSample(mTimestamp,
-                                            orientation);
-                                    // update orientation
-                                    orientation.combine(diffQuaternion);
-                                    mTimestamp += DELTA_NANOS;
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onSamplesAccepted(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final int viewId, final List<Sample2D> previousViewTrackedSamples,
-                                final List<Sample2D> currentViewTrackedSamples) {
-                            mViewCount++;
-                        }
-
-                        @Override
-                        public void onSamplesRejected(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final int viewId, final List<Sample2D> previousViewTrackedSamples,
-                                final List<Sample2D> currentViewTrackedSamples) {
-                            mViewCount++;
-                        }
-
-                        @Override
-                        public void onRequestMatches(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final List<Sample2D> allPreviousViewSamples,
-                                final List<Sample2D> previousViewTrackedSamples,
-                                final List<Sample2D> currentViewTrackedSamples,
-                                final int previousViewId, final int currentViewId,
-                                final List<MatchedSamples> matches) {
-                            matches.clear();
-
-                            MatchedSamples match;
-                            for (int i = 0; i < numPoints1; i++) {
-                                match = new MatchedSamples();
-                                match.setSamples(new Sample2D[]{
-                                        previousViewTrackedSamples.get(i), currentViewTrackedSamples.get(i)
-                                });
-                                match.setViewIds(new int[]{previousViewId, currentViewId});
-                                matches.add(match);
-                            }
-                        }
-
-                        @Override
-                        public void onFundamentalMatrixEstimated(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final EstimatedFundamentalMatrix estimatedFundamentalMatrix) {
-                            mEstimatedFundamentalMatrix = estimatedFundamentalMatrix;
-                        }
-
-                        @Override
-                        public void onMetricCameraEstimated(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final int previousViewId, final int currentViewId,
-                                final EstimatedCamera previousCamera,
-                                final EstimatedCamera currentCamera) {
-                            mEstimatedMetricCamera1 = previousCamera;
-                            mEstimatedMetricCamera2 = currentCamera;
-                        }
-
-                        @Override
-                        public void onMetricReconstructedPointsEstimated(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final List<MatchedSamples> matches,
-                                final List<ReconstructedPoint3D> points) {
-                            mMetricReconstructedPoints = points;
-                        }
-
-                        @Override
-                        public void onEuclideanCameraEstimated(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final int previousViewId, final int currentViewId, final double scale,
-                                final EstimatedCamera previousCamera,
-                                final EstimatedCamera currentCamera) {
-                            mEstimatedEuclideanCamera1 = previousCamera;
-                            mEstimatedEuclideanCamera2 = currentCamera;
-                            mScale = scale;
-                        }
-
-                        @Override
-                        public void onEuclideanReconstructedPointsEstimated(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final double scale, final List<ReconstructedPoint3D> points) {
-                            mEuclideanReconstructedPoints = points;
-                            mScale = scale;
-                        }
-
-                        @Override
-                        public void onStart(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
-                            mStarted = true;
-                        }
-
-                        @Override
-                        public void onFinish(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
-                            mFinished = true;
-                        }
-
-                        @Override
-                        public void onCancel(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
-                            mCancelled = true;
-                        }
-
-                        @Override
-                        public void onFail(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
-                            mFailed = true;
-                        }
-                    };
-
-            final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor =
-                    new AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor(configuration, listener);
-
-            // check initial values
-            reset();
-            assertFalse(mStarted);
-            assertFalse(mFinished);
-            assertFalse(mCancelled);
-            assertFalse(mFailed);
-            assertFalse(reconstructor.isFinished());
-
-            reconstructor.start();
-
-            // check correctness
-            assertTrue(mStarted);
-            assertTrue(mFinished);
-            assertFalse(mCancelled);
-            assertFalse(mFailed);
-            assertTrue(reconstructor.isFinished());
-            assertTrue(mSlamDataAvailable > 0);
-            assertTrue(mSlamCameraEstimated > 0);
-            assertNotNull(mSlamCamera);
-            assertNotNull(mSlamCovariance);
-            assertFalse(reconstructor.isFirstView());
-            assertFalse(reconstructor.isSecondView());
-            assertTrue(reconstructor.isAdditionalView());
-            assertTrue(reconstructor.getViewCount() > 0);
-            assertNotNull(reconstructor.getCurrentEstimatedFundamentalMatrix());
-            assertSame(mEstimatedFundamentalMatrix, reconstructor.getCurrentEstimatedFundamentalMatrix());
-            assertNotNull(reconstructor.getCurrentMetricEstimatedCamera());
-            assertSame(mEstimatedMetricCamera2, reconstructor.getCurrentMetricEstimatedCamera());
-            assertNotNull(reconstructor.getPreviousMetricEstimatedCamera());
-            assertSame(mEstimatedMetricCamera1, reconstructor.getPreviousMetricEstimatedCamera());
-            assertNotNull(reconstructor.getCurrentEuclideanEstimatedCamera());
-            assertSame(mEstimatedEuclideanCamera2, reconstructor.getCurrentEuclideanEstimatedCamera());
-            assertNotNull(reconstructor.getPreviousEuclideanEstimatedCamera());
-            assertSame(mEstimatedEuclideanCamera1, reconstructor.getPreviousEuclideanEstimatedCamera());
-            assertNotNull(reconstructor.getActiveMetricReconstructedPoints());
-            assertSame(mMetricReconstructedPoints, reconstructor.getActiveMetricReconstructedPoints());
-            assertNotNull(reconstructor.getActiveEuclideanReconstructedPoints());
-            assertSame(mEuclideanReconstructedPoints, reconstructor.getActiveEuclideanReconstructedPoints());
-            assertEquals(mScale, reconstructor.getCurrentScale(), 0.0);
-            assertNotNull(reconstructor.getPreviousViewTrackedSamples());
-            assertNotNull(reconstructor.getCurrentViewTrackedSamples());
-            assertNotNull(reconstructor.getCurrentViewNewlySpawnedSamples());
-
-            // check that estimated fundamental matrix is correct
-            fundamentalMatrix.normalize();
-            mEstimatedFundamentalMatrix.getFundamentalMatrix().normalize();
-
-            // matrices are equal up to scale
-            if (!fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                    ABSOLUTE_ERROR) && !fundamentalMatrix.getInternalMatrix()
-                    .multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                            ABSOLUTE_ERROR)) {
-                continue;
-            }
-            assertTrue(fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                    ABSOLUTE_ERROR) || fundamentalMatrix.getInternalMatrix()
-                    .multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                            ABSOLUTE_ERROR));
-
-            // check that reconstructed points are in a metric stratum (up to a
-            // certain scale)
-            final PinholeCamera estimatedMetricCamera1 = mEstimatedMetricCamera1.getCamera();
-            final PinholeCamera estimatedMetricCamera2 = mEstimatedMetricCamera2.getCamera();
-            assertNotSame(mEstimatedMetricCamera1, mEstimatedEuclideanCamera1);
-            assertNotSame(mEstimatedMetricCamera2, mEstimatedEuclideanCamera2);
-
-            final PinholeCamera estimatedEuclideanCamera1 = mEstimatedEuclideanCamera1.getCamera();
-            final PinholeCamera estimatedEuclideanCamera2 = mEstimatedEuclideanCamera2.getCamera();
-
-            estimatedMetricCamera1.decompose();
-            estimatedMetricCamera2.decompose();
-
-            estimatedEuclideanCamera1.decompose();
-            estimatedEuclideanCamera2.decompose();
-
-            assertNotSame(mMetricReconstructedPoints, mEuclideanReconstructedPoints);
-
-            final List<Point3D> metricReconstructedPoints3D = new ArrayList<>();
-            final List<Point3D> euclideanReconstructedPoints3D = new ArrayList<>();
-            for (int i = 0; i < numPoints1; i++) {
-                metricReconstructedPoints3D.add(mMetricReconstructedPoints.get(i).getPoint());
-                euclideanReconstructedPoints3D.add(mEuclideanReconstructedPoints.get(i).getPoint());
-            }
-
-            // check that all points are in front of both cameras
-            for (int i = 0; i < numPoints1; i++) {
-                final Point3D p = metricReconstructedPoints3D.get(i);
-                final Point3D pe = euclideanReconstructedPoints3D.get(i);
-
-                assertTrue(estimatedMetricCamera1.isPointInFrontOfCamera(p));
-                assertTrue(estimatedMetricCamera2.isPointInFrontOfCamera(p));
-
-                assertTrue(estimatedEuclideanCamera1.isPointInFrontOfCamera(pe));
-                assertTrue(estimatedEuclideanCamera2.isPointInFrontOfCamera(pe));
-            }
-
-            final PinholeCameraIntrinsicParameters euclideanIntrinsic1 =
-                    estimatedEuclideanCamera1.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters euclideanIntrinsic2 =
-                    estimatedEuclideanCamera2.getIntrinsicParameters();
-
-            final Rotation3D euclideanRotation1 = estimatedEuclideanCamera1.getCameraRotation();
-            final Rotation3D euclideanRotation2 = estimatedEuclideanCamera2.getCameraRotation();
-
-            assertEquals(euclideanIntrinsic1.getHorizontalFocalLength(),
-                    intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic1.getVerticalFocalLength(),
-                    intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic1.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic1.getHorizontalPrincipalPoint(),
-                    intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic1.getVerticalPrincipalPoint(),
-                    intrinsic.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
-
-            assertEquals(euclideanIntrinsic2.getHorizontalFocalLength(),
-                    intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic2.getVerticalFocalLength(),
-                    intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic2.getHorizontalPrincipalPoint(),
-                    intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic2.getVerticalPrincipalPoint(),
-                    intrinsic.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
-
-            assertTrue(euclideanRotation1.asInhomogeneousMatrix().equals(
-                    rotation1.asInhomogeneousMatrix(), ABSOLUTE_ERROR));
-            assertTrue(euclideanRotation2.asInhomogeneousMatrix().equals(
-                    rotation2.asInhomogeneousMatrix(), ABSOLUTE_ERROR));
-
-            // check that points are correct (after scale correction)
-
-            final MetricTransformation3D scaleAndOrientationTransformation
-                    = new MetricTransformation3D(mScale);
-            scaleAndOrientationTransformation.setRotation(rotation1.inverseRotationAndReturnNew());
-
-            int numValidPoints = 0;
-            for (int i = 0; i < numPoints1; i++) {
-                final Point3D point = points3D1.get(i);
-                final Point3D euclideanPoint = euclideanReconstructedPoints3D.get(i);
-
-                // check metric points
-                final Point3D rescaledPoint = Point3D.create();
-                scaleAndOrientationTransformation.transform(metricReconstructedPoints3D.get(i),
-                        rescaledPoint);
-
-                // Euclidean and rescaled points match
-                assertTrue(euclideanPoint.equals(rescaledPoint, LARGE_ABSOLUTE_ERROR));
-
-                rescaledPoint.setInhomogeneousCoordinates(
-                        rescaledPoint.getInhomX() * baseline / mScale,
-                        rescaledPoint.getInhomY() * baseline / mScale,
-                        rescaledPoint.getInhomZ() * baseline / mScale);
-                if (point.equals(rescaledPoint, LARGE_ABSOLUTE_ERROR)) {
-                    numValidPoints++;
-                }
-            }
-
-            if (numValidPoints == 0) {
-                continue;
-            }
-
-            // cancel
-            assertFalse(reconstructor.isCancelled());
-
-            reconstructor.cancel();
-
-            assertTrue(reconstructor.isCancelled());
-
-            numValid++;
-            break;
-        }
-
-        assertTrue(numValid > 0);
-    }
-
-    @Test
-    public void testGeneralPointsEssentialWithConstantAccelerationAndRotationWithNoiseTwoViews()
-            throws InvalidPairOfCamerasException, AlgebraException, CameraException,
-            com.irurueta.geometry.estimators.NotReadyException,
-            com.irurueta.geometry.NotAvailableException, RotationException {
-
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer offsetRandomizer = new UniformRandomizer(
-                    new Random());
-            final GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
-                    new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
-
-            final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorConfiguration configuration =
-                    new AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorConfiguration();
-            configuration.setInitialCamerasEstimatorMethod(
-                    InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
-
-            final float accelerationOffsetX = offsetRandomizer.nextFloat(
-                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-            final float accelerationOffsetY = offsetRandomizer.nextFloat(
-                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-            final float accelerationOffsetZ = offsetRandomizer.nextFloat(
-                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-
-            final float angularOffsetX = offsetRandomizer.nextFloat(
-                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-            final float angularOffsetY = offsetRandomizer.nextFloat(
-                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-            final float angularOffsetZ = offsetRandomizer.nextFloat(
-                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-
-            final AbsoluteOrientationConstantVelocityModelSlamCalibrator calibrator = createFinishedCalibrator(
-                    accelerationOffsetX, accelerationOffsetY, accelerationOffsetZ,
-                    angularOffsetX, angularOffsetY, angularOffsetZ, noiseRandomizer);
-            final AbsoluteOrientationConstantVelocityModelSlamCalibrationData calibrationData
-                    = calibrator.getCalibrationData();
-            configuration.setCalibrationData(calibrationData);
-
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH_ESSENTIAL,
-                    MAX_FOCAL_LENGTH_ESSENTIAL);
-            final double aspectRatio = configuration.getInitialCamerasAspectRatio();
-            final double skewness = 0.0;
-            final double principalPoint = 0.0;
-
-            final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength, focalLength,
-                            principalPoint, principalPoint, skewness);
-            intrinsic.setAspectRatioKeepingHorizontalFocalLength(aspectRatio);
-
-            configuration.setInitialIntrinsic1(intrinsic);
-            configuration.setInitialIntrinsic2(intrinsic);
-
-            final double alphaEuler1 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double betaEuler1 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double gammaEuler1 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
-            final AxisRotation3D axisRotation2 = new AxisRotation3D(
-                    rotation1.inverseRotationAndReturnNew().combineAndReturnNew(rotation2));
-
-            final double axisX = axisRotation2.getAxisX();
-            final double axisY = axisRotation2.getAxisY();
-            final double axisZ = axisRotation2.getAxisZ();
-            final double angle = axisRotation2.getRotationAngle();
-
-            final AxisRotation3D diffRotation = new AxisRotation3D(axisX, axisY,
-                    axisZ, angle / N_SENSOR_SAMPLES);
-            final Quaternion diffQuaternion = new Quaternion(diffRotation);
-
-            // angular speeds (roll, pitch, yaw) on x, y, z axes
-            final double[] angularSpeeds = diffQuaternion.toEulerAngles();
-            final double angularSpeedX = angularSpeeds[0];
-            final double angularSpeedY = angularSpeeds[1];
-            final double angularSpeedZ = angularSpeeds[2];
-            final Quaternion diffRotation2 = new Quaternion(angularSpeedX,
-                    angularSpeedY, angularSpeedZ);
-
-            // number of samples (50 samples * 0.02 s/sample = 1 second)
-            final MatrixRotation3D rotation2b = new MatrixRotation3D(rotation1);
-            final MatrixRotation3D rotation2c = new MatrixRotation3D(rotation1);
-            for (int s = 0; s < N_SENSOR_SAMPLES; s++) {
-                rotation2b.combine(diffRotation);
-                rotation2c.combine(diffRotation2);
-            }
-
-            // check that rotations created by composing sensor samples are
-            // equal to the original one
-            assertTrue(rotation2.equals(rotation2b, ABSOLUTE_ERROR));
-            assertTrue(rotation2.equals(rotation2c, ABSOLUTE_ERROR));
-
-            final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
-
-            final EuclideanTransformation3D rotationTransformation =
-                    new EuclideanTransformation3D(rotation1);
-            Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
-            Point3D center2 = new InhomogeneousPoint3D(
-                    center1.getInhomX() + cameraSeparation,
-                    center1.getInhomY() + cameraSeparation,
-                    center1.getInhomZ() + cameraSeparation);
-            center1 = rotationTransformation.transformAndReturnNew(center1);
-            center2 = rotationTransformation.transformAndReturnNew(center2);
-
-            final double baseline = center1.distanceTo(center2);
-
-            final double accelerationX, accelerationY, accelerationZ;
-
-            // s = 0.5*a*t^2 --> a = 2*s/t^2
-            // assuming t = 1 second (50 samples * 0.02 s/sample = 1 second)
-            accelerationX = accelerationY = accelerationZ = 2 * cameraSeparation;
-
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
-
-            final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
-
-            // create 3D points laying in front of both cameras
-
-            // 1st find an approximate central point by intersecting the axis
-            // planes of both cameras
-            final Plane horizontalPlane1 = camera1.getHorizontalAxisPlane();
-            final Plane verticalPlane1 = camera1.getVerticalAxisPlane();
-            final Plane horizontalPlane2 = camera2.getHorizontalAxisPlane();
-            final Plane verticalPlane2 = camera2.getVerticalAxisPlane();
-            final Matrix planesIntersectionMatrix = new Matrix(
-                    Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
-            planesIntersectionMatrix.setElementAt(0, 0, verticalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(0, 1, verticalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
-
-            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
-            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
-            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
-            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
-
-            planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
-
-            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
-            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
-            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
-            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
-
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
-            decomposer.decompose();
-            final Matrix v = decomposer.getV();
-            final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
-                    v.getElementAt(0, 3),
-                    v.getElementAt(1, 3),
-                    v.getElementAt(2, 3),
-                    v.getElementAt(3, 3));
-
-            double lambdaX;
-            double lambdaY;
-            double lambdaZ;
-
-            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS,
-                    MAX_NUM_POINTS);
-
-            InhomogeneousPoint3D point3D;
-            final List<InhomogeneousPoint3D> points3D1 = new ArrayList<>();
-            Point2D projectedPoint1;
-            Point2D projectedPoint2;
-            final List<Point2D> projectedPoints1 = new ArrayList<>();
-            final List<Point2D> projectedPoints2 = new ArrayList<>();
-            boolean front1;
-            boolean front2;
-            boolean maxTriesReached = false;
-            for (int i = 0; i < numPoints1; i++) {
-                // generate points and ensure they lie in front of both cameras
-                int numTry = 0;
-                do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-
-                    point3D = new InhomogeneousPoint3D(
-                            centralCommonPoint.getInhomX() + lambdaX,
-                            centralCommonPoint.getInhomY() + lambdaY,
-                            centralCommonPoint.getInhomZ() + lambdaZ);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+
+                    point3D = new InhomogeneousPoint3D(centralCommonPoint.getInhomX() + lambdaX,
+                            centralCommonPoint.getInhomY() + lambdaY, centralCommonPoint.getInhomZ() + lambdaZ);
 
                     front1 = camera1.isPointInFrontOfCamera(point3D);
                     front2 = camera2.isPointInFrontOfCamera(point3D);
@@ -1194,22 +505,632 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest
             }
 
             Point2D projectedPoint2b;
-            final List<Point2D> projectedPoints2b = new ArrayList<>();
-            for (int i = 0; i < numPoints2; i++) {
+            final var projectedPoints2b = new ArrayList<Point2D>();
+            for (var i = 0; i < numPoints2; i++) {
                 // generate points and ensure they lie in front of both cameras
-                int numTry = 0;
+                var numTry = 0;
                 do {
-                    lambdaX = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaY = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
-                    lambdaZ = randomizer.nextDouble(
-                            MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
-                    point3D = new InhomogeneousPoint3D(
-                            centralCommonPoint.getInhomX() + lambdaX,
-                            centralCommonPoint.getInhomY() + lambdaY,
-                            centralCommonPoint.getInhomZ() + lambdaZ);
+                    point3D = new InhomogeneousPoint3D(centralCommonPoint.getInhomX() + lambdaX,
+                            centralCommonPoint.getInhomY() + lambdaY, centralCommonPoint.getInhomZ() + lambdaZ);
+
+                    front2 = camera2.isPointInFrontOfCamera(point3D);
+                    if (numTry > MAX_TRIES) {
+                        maxTriesReached = true;
+                        break;
+                    }
+                    numTry++;
+                } while (!front2);
+
+                if (maxTriesReached) {
+                    break;
+                }
+
+                points3D1.add(point3D);
+
+                // check that 3D point is in front of both cameras
+                assertTrue(front2);
+
+                projectedPoint2b = new InhomogeneousPoint2D();
+                camera2.project(point3D, projectedPoint2b);
+                projectedPoints2b.add(projectedPoint2b);
+            }
+
+            if (maxTriesReached) {
+                continue;
+            }
+
+            final var listener = new AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorListener() {
+                @Override
+                public void onSlamDataAvailable(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final double positionX, final double positionY, final double positionZ,
+                        final double velocityX, final double velocityY, final double velocityZ,
+                        final double accelerationX, final double accelerationY, final double accelerationZ,
+                        final double quaternionA, final double quaternionB, final double quaternionC,
+                        final double quaternionD, final double angularSpeedX, final double angularSpeedY,
+                        final double angularSpeedZ, final Matrix covariance) {
+                    slamDataAvailable++;
+                    slamCovariance = covariance;
+                }
+
+                @Override
+                public void onSlamCameraEstimated(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final PinholeCamera camera) {
+                    slamCameraEstimated++;
+                    slamCamera = camera;
+                }
+
+                @Override
+                public boolean hasMoreViewsAvailable(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
+                    return viewCount < 2;
+                }
+
+                @Override
+                public void onRequestSamples(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final int previousViewId, final int currentViewId,
+                        final List<Sample2D> previousViewTrackedSamples,
+                        final List<Sample2D> currentViewTrackedSamples,
+                        final List<Sample2D> currentViewNewlySpawnedSamples) {
+
+                    previousViewTrackedSamples.clear();
+                    currentViewTrackedSamples.clear();
+                    currentViewNewlySpawnedSamples.clear();
+
+                    Sample2D sample;
+                    if (viewCount == 0) {
+                        // first view
+                        for (var i = 0; i < numPoints1; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints1.get(i));
+                            sample.setViewId(currentViewId);
+                            currentViewTrackedSamples.add(sample);
+                        }
+                    } else {
+                        // second view
+                        for (var i = 0; i < numPoints1; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints1.get(i));
+                            sample.setViewId(previousViewId);
+                            previousViewTrackedSamples.add(sample);
+                        }
+
+                        for (var i = 0; i < numPoints1; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints2.get(i));
+                            sample.setViewId(currentViewId);
+                            currentViewTrackedSamples.add(sample);
+                        }
+
+                        // spawned samples
+                        for (var i = 0; i < numPoints2; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints2b.get(i));
+                            sample.setViewId(currentViewId);
+                            currentViewNewlySpawnedSamples.add(sample);
+                        }
+
+                        // assume the following accelerator and gyroscope samples
+                        // are obtained during a period of 1 second between 1st
+                        // and 2nd view (50 samples * 0.02 s/sample = 1 second)
+                        timestamp = 0;
+                        final var orientation = new Quaternion(rotation1);
+                        for (var s = 0; s < N_SENSOR_SAMPLES; s++) {
+                            reconstructor.updateAccelerometerSample(timestamp, (float) accelerationX,
+                                    (float) accelerationY, (float) accelerationZ);
+                            reconstructor.updateGyroscopeSample(timestamp, (float) angularSpeedX,
+                                    (float) angularSpeedY, (float) angularSpeedZ);
+                            reconstructor.updateOrientationSample(timestamp, orientation);
+                            // update orientation
+                            orientation.combine(diffQuaternion);
+                            timestamp += DELTA_NANOS;
+                        }
+                    }
+                }
+
+                @Override
+                public void onSamplesAccepted(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final int viewId, final List<Sample2D> previousViewTrackedSamples,
+                        final List<Sample2D> currentViewTrackedSamples) {
+                    viewCount++;
+                }
+
+                @Override
+                public void onSamplesRejected(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final int viewId, final List<Sample2D> previousViewTrackedSamples,
+                        final List<Sample2D> currentViewTrackedSamples) {
+                    viewCount++;
+                }
+
+                @Override
+                public void onRequestMatches(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final List<Sample2D> allPreviousViewSamples,
+                        final List<Sample2D> previousViewTrackedSamples,
+                        final List<Sample2D> currentViewTrackedSamples,
+                        final int previousViewId, final int currentViewId,
+                        final List<MatchedSamples> matches) {
+                    matches.clear();
+
+                    MatchedSamples match;
+                    for (var i = 0; i < numPoints1; i++) {
+                        match = new MatchedSamples();
+                        match.setSamples(new Sample2D[]{previousViewTrackedSamples.get(i),
+                                currentViewTrackedSamples.get(i)
+                        });
+                        match.setViewIds(new int[]{previousViewId, currentViewId});
+                        matches.add(match);
+                    }
+                }
+
+                @Override
+                public void onFundamentalMatrixEstimated(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final EstimatedFundamentalMatrix estimatedFundamentalMatrix) {
+                    AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest.this
+                            .estimatedFundamentalMatrix = estimatedFundamentalMatrix;
+                }
+
+                @Override
+                public void onMetricCameraEstimated(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final int previousViewId, final int currentViewId,
+                        final EstimatedCamera previousCamera,
+                        final EstimatedCamera currentCamera) {
+                    estimatedMetricCamera1 = previousCamera;
+                    estimatedMetricCamera2 = currentCamera;
+                }
+
+                @Override
+                public void onMetricReconstructedPointsEstimated(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final List<MatchedSamples> matches, final List<ReconstructedPoint3D> points) {
+                    metricReconstructedPoints = points;
+                }
+
+                @Override
+                public void onEuclideanCameraEstimated(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final int previousViewId, final int currentViewId, final double scale,
+                        final EstimatedCamera previousCamera, final EstimatedCamera currentCamera) {
+                    estimatedEuclideanCamera1 = previousCamera;
+                    estimatedEuclideanCamera2 = currentCamera;
+                    AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest.this.scale = scale;
+                }
+
+                @Override
+                public void onEuclideanReconstructedPointsEstimated(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final double scale, final List<ReconstructedPoint3D> points) {
+                    euclideanReconstructedPoints = points;
+                    AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest.this.scale = scale;
+                }
+
+                @Override
+                public void onStart(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
+                    started = true;
+                }
+
+                @Override
+                public void onFinish(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
+                    finished = true;
+                }
+
+                @Override
+                public void onCancel(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
+                    cancelled = true;
+                }
+
+                @Override
+                public void onFail(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
+                    failed = true;
+                }
+            };
+
+            final var reconstructor = new AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor(
+                    configuration, listener);
+
+            // check initial values
+            reset();
+            assertFalse(started);
+            assertFalse(finished);
+            assertFalse(cancelled);
+            assertFalse(failed);
+            assertFalse(reconstructor.isFinished());
+
+            reconstructor.start();
+
+            // check correctness
+            assertTrue(started);
+            assertTrue(finished);
+            assertFalse(cancelled);
+            assertFalse(failed);
+            assertTrue(reconstructor.isFinished());
+            assertTrue(slamDataAvailable > 0);
+            assertTrue(slamCameraEstimated > 0);
+            assertNotNull(slamCamera);
+            assertNotNull(slamCovariance);
+            assertFalse(reconstructor.isFirstView());
+            assertFalse(reconstructor.isSecondView());
+            assertTrue(reconstructor.isAdditionalView());
+            assertTrue(reconstructor.getViewCount() > 0);
+            assertNotNull(reconstructor.getCurrentEstimatedFundamentalMatrix());
+            assertSame(estimatedFundamentalMatrix, reconstructor.getCurrentEstimatedFundamentalMatrix());
+            assertNotNull(reconstructor.getCurrentMetricEstimatedCamera());
+            assertSame(estimatedMetricCamera2, reconstructor.getCurrentMetricEstimatedCamera());
+            assertNotNull(reconstructor.getPreviousMetricEstimatedCamera());
+            assertSame(estimatedMetricCamera1, reconstructor.getPreviousMetricEstimatedCamera());
+            assertNotNull(reconstructor.getCurrentEuclideanEstimatedCamera());
+            assertSame(estimatedEuclideanCamera2, reconstructor.getCurrentEuclideanEstimatedCamera());
+            assertNotNull(reconstructor.getPreviousEuclideanEstimatedCamera());
+            assertSame(estimatedEuclideanCamera1, reconstructor.getPreviousEuclideanEstimatedCamera());
+            assertNotNull(reconstructor.getActiveMetricReconstructedPoints());
+            assertSame(metricReconstructedPoints, reconstructor.getActiveMetricReconstructedPoints());
+            assertNotNull(reconstructor.getActiveEuclideanReconstructedPoints());
+            assertSame(euclideanReconstructedPoints, reconstructor.getActiveEuclideanReconstructedPoints());
+            assertEquals(scale, reconstructor.getCurrentScale(), 0.0);
+            assertNotNull(reconstructor.getPreviousViewTrackedSamples());
+            assertNotNull(reconstructor.getCurrentViewTrackedSamples());
+            assertNotNull(reconstructor.getCurrentViewNewlySpawnedSamples());
+
+            // check that estimated fundamental matrix is correct
+            fundamentalMatrix.normalize();
+            estimatedFundamentalMatrix.getFundamentalMatrix().normalize();
+
+            // matrices are equal up to scale
+            if (!fundamentalMatrix.getInternalMatrix().equals(
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    && !fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(fundamentalMatrix.getInternalMatrix().equals(
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    || fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR));
+
+            // check that reconstructed points are in a metric stratum (up to a
+            // certain scale)
+            final var estMetricCam1 = this.estimatedMetricCamera1.getCamera();
+            final var estMetricCam2 = this.estimatedMetricCamera2.getCamera();
+            assertNotSame(this.estimatedMetricCamera1, estimatedEuclideanCamera1);
+            assertNotSame(this.estimatedMetricCamera2, estimatedEuclideanCamera2);
+
+            final var estEuclideanCam1 = this.estimatedEuclideanCamera1.getCamera();
+            final var estEuclideanCam2 = this.estimatedEuclideanCamera2.getCamera();
+
+            estMetricCam1.decompose();
+            estMetricCam2.decompose();
+
+            estEuclideanCam1.decompose();
+            estEuclideanCam2.decompose();
+
+            assertNotSame(metricReconstructedPoints, euclideanReconstructedPoints);
+
+            final var metricReconstructedPoints3D = new ArrayList<Point3D>();
+            final var euclideanReconstructedPoints3D = new ArrayList<Point3D>();
+            for (var i = 0; i < numPoints1; i++) {
+                metricReconstructedPoints3D.add(metricReconstructedPoints.get(i).getPoint());
+                euclideanReconstructedPoints3D.add(euclideanReconstructedPoints.get(i).getPoint());
+            }
+
+            // check that all points are in front of both cameras
+            for (var i = 0; i < numPoints1; i++) {
+                final var p = metricReconstructedPoints3D.get(i);
+                final var pe = euclideanReconstructedPoints3D.get(i);
+
+                assertTrue(estMetricCam1.isPointInFrontOfCamera(p));
+                assertTrue(estMetricCam2.isPointInFrontOfCamera(p));
+
+                assertTrue(estEuclideanCam1.isPointInFrontOfCamera(pe));
+                assertTrue(estEuclideanCam2.isPointInFrontOfCamera(pe));
+            }
+
+            final var euclideanIntrinsic1 = estEuclideanCam1.getIntrinsicParameters();
+            final var euclideanIntrinsic2 = estEuclideanCam2.getIntrinsicParameters();
+
+            final var euclideanRotation1 = estEuclideanCam1.getCameraRotation();
+            final var euclideanRotation2 = estEuclideanCam2.getCameraRotation();
+
+            assertEquals(euclideanIntrinsic1.getHorizontalFocalLength(), intrinsic.getHorizontalFocalLength(),
+                    ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getVerticalFocalLength(), intrinsic.getVerticalFocalLength(),
+                    ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getHorizontalPrincipalPoint(), intrinsic.getHorizontalPrincipalPoint(),
+                    ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getVerticalPrincipalPoint(), intrinsic.getVerticalPrincipalPoint(),
+                    ABSOLUTE_ERROR);
+
+            assertEquals(euclideanIntrinsic2.getHorizontalFocalLength(), intrinsic.getHorizontalFocalLength(),
+                    ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getVerticalFocalLength(), intrinsic.getVerticalFocalLength(),
+                    ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getHorizontalPrincipalPoint(), intrinsic.getHorizontalPrincipalPoint(),
+                    ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getVerticalPrincipalPoint(), intrinsic.getVerticalPrincipalPoint(),
+                    ABSOLUTE_ERROR);
+
+            assertTrue(euclideanRotation1.asInhomogeneousMatrix().equals(rotation1.asInhomogeneousMatrix(),
+                    ABSOLUTE_ERROR));
+            assertTrue(euclideanRotation2.asInhomogeneousMatrix().equals(rotation2.asInhomogeneousMatrix(),
+                    ABSOLUTE_ERROR));
+
+            // check that points are correct (after scale correction)
+
+            final var scaleAndOrientationTransformation = new MetricTransformation3D(scale);
+            scaleAndOrientationTransformation.setRotation(rotation1.inverseRotationAndReturnNew());
+
+            var numValidPoints = 0;
+            for (var i = 0; i < numPoints1; i++) {
+                final var point = points3D1.get(i);
+                final var euclideanPoint = euclideanReconstructedPoints3D.get(i);
+
+                // check metric points
+                final var rescaledPoint = Point3D.create();
+                scaleAndOrientationTransformation.transform(metricReconstructedPoints3D.get(i), rescaledPoint);
+
+                // Euclidean and rescaled points match
+                assertTrue(euclideanPoint.equals(rescaledPoint, LARGE_ABSOLUTE_ERROR));
+
+                rescaledPoint.setInhomogeneousCoordinates(
+                        rescaledPoint.getInhomX() * baseline / scale,
+                        rescaledPoint.getInhomY() * baseline / scale,
+                        rescaledPoint.getInhomZ() * baseline / scale);
+                if (point.equals(rescaledPoint, LARGE_ABSOLUTE_ERROR)) {
+                    numValidPoints++;
+                }
+            }
+
+            if (numValidPoints == 0) {
+                continue;
+            }
+
+            // cancel
+            assertFalse(reconstructor.isCancelled());
+
+            reconstructor.cancel();
+
+            assertTrue(reconstructor.isCancelled());
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    void testGeneralPointsEssentialWithConstantAccelerationAndRotationWithNoiseTwoViews()
+            throws InvalidPairOfCamerasException, AlgebraException, CameraException,
+            com.irurueta.geometry.estimators.NotReadyException, com.irurueta.geometry.NotAvailableException,
+            RotationException {
+
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var offsetRandomizer = new UniformRandomizer();
+            final var noiseRandomizer = new GaussianRandomizer(0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
+
+            final var configuration =
+                    new AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorConfiguration();
+            configuration.setInitialCamerasEstimatorMethod(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
+
+            final var accelerationOffsetX = offsetRandomizer.nextFloat(MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
+            final var accelerationOffsetY = offsetRandomizer.nextFloat(MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
+            final var accelerationOffsetZ = offsetRandomizer.nextFloat(MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
+
+            final var angularOffsetX = offsetRandomizer.nextFloat(MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
+            final var angularOffsetY = offsetRandomizer.nextFloat(MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
+            final var angularOffsetZ = offsetRandomizer.nextFloat(MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
+
+            final var calibrator = createFinishedCalibrator(accelerationOffsetX, accelerationOffsetY,
+                    accelerationOffsetZ, angularOffsetX, angularOffsetY, angularOffsetZ, noiseRandomizer);
+            final var calibrationData = calibrator.getCalibrationData();
+            configuration.setCalibrationData(calibrationData);
+
+            final var randomizer = new UniformRandomizer();
+            final var focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
+            final var aspectRatio = configuration.getInitialCamerasAspectRatio();
+            final var skewness = 0.0;
+            final var principalPoint = 0.0;
+
+            final var intrinsic = new PinholeCameraIntrinsicParameters(focalLength, focalLength, principalPoint,
+                    principalPoint, skewness);
+            intrinsic.setAspectRatioKeepingHorizontalFocalLength(aspectRatio);
+
+            configuration.setInitialIntrinsic1(intrinsic);
+            configuration.setInitialIntrinsic2(intrinsic);
+
+            final var alphaEuler1 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var betaEuler1 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var gammaEuler1 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var alphaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var betaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var gammaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+
+            final var rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final var rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+            final var axisRotation2 = new AxisRotation3D(rotation1.inverseRotationAndReturnNew().combineAndReturnNew(
+                    rotation2));
+
+            final var axisX = axisRotation2.getAxisX();
+            final var axisY = axisRotation2.getAxisY();
+            final var axisZ = axisRotation2.getAxisZ();
+            final var angle = axisRotation2.getRotationAngle();
+
+            final var diffRotation = new AxisRotation3D(axisX, axisY, axisZ, angle / N_SENSOR_SAMPLES);
+            final var diffQuaternion = new Quaternion(diffRotation);
+
+            // angular speeds (roll, pitch, yaw) on x, y, z axes
+            final var angularSpeeds = diffQuaternion.toEulerAngles();
+            final var angularSpeedX = angularSpeeds[0];
+            final var angularSpeedY = angularSpeeds[1];
+            final var angularSpeedZ = angularSpeeds[2];
+            final var diffRotation2 = new Quaternion(angularSpeedX, angularSpeedY, angularSpeedZ);
+
+            // number of samples (50 samples * 0.02 s/sample = 1 second)
+            final var rotation2b = new MatrixRotation3D(rotation1);
+            final var rotation2c = new MatrixRotation3D(rotation1);
+            for (var s = 0; s < N_SENSOR_SAMPLES; s++) {
+                rotation2b.combine(diffRotation);
+                rotation2c.combine(diffRotation2);
+            }
+
+            // check that rotations created by composing sensor samples are
+            // equal to the original one
+            assertTrue(rotation2.equals(rotation2b, ABSOLUTE_ERROR));
+            assertTrue(rotation2.equals(rotation2c, ABSOLUTE_ERROR));
+
+            final var cameraSeparation = randomizer.nextDouble(
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
+
+            final var rotationTransformation = new EuclideanTransformation3D(rotation1);
+            Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
+            Point3D center2 = new InhomogeneousPoint3D(
+                    center1.getInhomX() + cameraSeparation,
+                    center1.getInhomY() + cameraSeparation,
+                    center1.getInhomZ() + cameraSeparation);
+            center1 = rotationTransformation.transformAndReturnNew(center1);
+            center2 = rotationTransformation.transformAndReturnNew(center2);
+
+            final var baseline = center1.distanceTo(center2);
+
+            final double accelerationX;
+            final double accelerationY;
+            final double accelerationZ;
+
+            // s = 0.5*a*t^2 --> a = 2*s/t^2
+            // assuming t = 1 second (50 samples * 0.02 s/sample = 1 second)
+            accelerationX = accelerationY = accelerationZ = 2 * cameraSeparation;
+
+            final var camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final var camera2 = new PinholeCamera(intrinsic, rotation2, center2);
+
+            final var fundamentalMatrix = new FundamentalMatrix(camera1, camera2);
+
+            // create 3D points laying in front of both cameras
+
+            // 1st find an approximate central point by intersecting the axis
+            // planes of both cameras
+            final var horizontalPlane1 = camera1.getHorizontalAxisPlane();
+            final var verticalPlane1 = camera1.getVerticalAxisPlane();
+            final var horizontalPlane2 = camera2.getHorizontalAxisPlane();
+            final var verticalPlane2 = camera2.getVerticalAxisPlane();
+            final var planesIntersectionMatrix = new Matrix(Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
+            planesIntersectionMatrix.setElementAt(0, 0, verticalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(0, 1, verticalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(0, 3, verticalPlane1.getD());
+
+            planesIntersectionMatrix.setElementAt(1, 0, horizontalPlane1.getA());
+            planesIntersectionMatrix.setElementAt(1, 1, horizontalPlane1.getB());
+            planesIntersectionMatrix.setElementAt(1, 2, horizontalPlane1.getC());
+            planesIntersectionMatrix.setElementAt(1, 3, horizontalPlane1.getD());
+
+            planesIntersectionMatrix.setElementAt(2, 0, verticalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(2, 1, verticalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(2, 2, verticalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(2, 3, verticalPlane2.getD());
+
+            planesIntersectionMatrix.setElementAt(3, 0, horizontalPlane2.getA());
+            planesIntersectionMatrix.setElementAt(3, 1, horizontalPlane2.getB());
+            planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
+            planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
+
+            final var decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
+            decomposer.decompose();
+            final var v = decomposer.getV();
+            final var centralCommonPoint = new HomogeneousPoint3D(
+                    v.getElementAt(0, 3),
+                    v.getElementAt(1, 3),
+                    v.getElementAt(2, 3),
+                    v.getElementAt(3, 3));
+
+            double lambdaX;
+            double lambdaY;
+            double lambdaZ;
+
+            final var numPoints1 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final var numPoints2 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+
+            InhomogeneousPoint3D point3D;
+            final var points3D1 = new ArrayList<InhomogeneousPoint3D>();
+            Point2D projectedPoint1;
+            Point2D projectedPoint2;
+            final var projectedPoints1 = new ArrayList<Point2D>();
+            final var projectedPoints2 = new ArrayList<Point2D>();
+            boolean front1;
+            boolean front2;
+            var maxTriesReached = false;
+            for (var i = 0; i < numPoints1; i++) {
+                // generate points and ensure they lie in front of both cameras
+                var numTry = 0;
+                do {
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+
+                    point3D = new InhomogeneousPoint3D(centralCommonPoint.getInhomX() + lambdaX,
+                            centralCommonPoint.getInhomY() + lambdaY, centralCommonPoint.getInhomZ() + lambdaZ);
+
+                    front1 = camera1.isPointInFrontOfCamera(point3D);
+                    front2 = camera2.isPointInFrontOfCamera(point3D);
+                    if (numTry > MAX_TRIES) {
+                        maxTriesReached = true;
+                        break;
+                    }
+                    numTry++;
+                } while (!front1 || !front2);
+
+                if (maxTriesReached) {
+                    break;
+                }
+
+                points3D1.add(point3D);
+
+                // check that 3D point is in front of both cameras
+                assertTrue(front1);
+                assertTrue(front2);
+
+                // project 3D point into both cameras
+                projectedPoint1 = new InhomogeneousPoint2D();
+                camera1.project(point3D, projectedPoint1);
+                projectedPoints1.add(projectedPoint1);
+
+                projectedPoint2 = new InhomogeneousPoint2D();
+                camera2.project(point3D, projectedPoint2);
+                projectedPoints2.add(projectedPoint2);
+            }
+
+            if (maxTriesReached) {
+                continue;
+            }
+
+            Point2D projectedPoint2b;
+            final var projectedPoints2b = new ArrayList<Point2D>();
+            for (var i = 0; i < numPoints2; i++) {
+                // generate points and ensure they lie in front of both cameras
+                var numTry = 0;
+                do {
+                    lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+                    lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
+
+                    point3D = new InhomogeneousPoint3D(centralCommonPoint.getInhomX() + lambdaX,
+                            centralCommonPoint.getInhomY() + lambdaY, centralCommonPoint.getInhomZ() + lambdaZ);
 
                     front2 = camera2.isPointInFrontOfCamera(point3D);
                     if (numTry > MAX_TRIES) {
@@ -1235,410 +1156,391 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest
                 continue;
             }
 
-            final GaussianRandomizer accelerationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ACCELERATION_NOISE_STANDARD_DEVIATION);
-            final GaussianRandomizer angularSpeedRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
+            final var accelerationRandomizer = new GaussianRandomizer(0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
+            final var angularSpeedRandomizer = new GaussianRandomizer(0.0,
+                    ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
 
-            final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorListener listener =
-                    new AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorListener() {
-                        @Override
-                        public void onSlamDataAvailable(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final double positionX, final double positionY, final double positionZ,
-                                final double velocityX, final double velocityY, final double velocityZ,
-                                final double accelerationX, final double accelerationY, final double accelerationZ,
-                                final double quaternionA, final double quaternionB, final double quaternionC,
-                                final double quaternionD, final double angularSpeedX, final double angularSpeedY,
-                                final double angularSpeedZ, final Matrix covariance) {
-                            mSlamDataAvailable++;
-                            mSlamCovariance = covariance;
+            final var listener = new AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorListener() {
+                @Override
+                public void onSlamDataAvailable(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final double positionX, final double positionY, final double positionZ,
+                        final double velocityX, final double velocityY, final double velocityZ,
+                        final double accelerationX, final double accelerationY, final double accelerationZ,
+                        final double quaternionA, final double quaternionB, final double quaternionC,
+                        final double quaternionD, final double angularSpeedX, final double angularSpeedY,
+                        final double angularSpeedZ, final Matrix covariance) {
+                    slamDataAvailable++;
+                    slamCovariance = covariance;
+                }
+
+                @Override
+                public void onSlamCameraEstimated(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final PinholeCamera camera) {
+                    slamCameraEstimated++;
+                    slamCamera = camera;
+                }
+
+                @Override
+                public boolean hasMoreViewsAvailable(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
+                    return viewCount < 2;
+                }
+
+                @Override
+                public void onRequestSamples(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final int previousViewId, final int currentViewId,
+                        final List<Sample2D> previousViewTrackedSamples,
+                        final List<Sample2D> currentViewTrackedSamples,
+                        final List<Sample2D> currentViewNewlySpawnedSamples) {
+
+                    previousViewTrackedSamples.clear();
+                    currentViewTrackedSamples.clear();
+                    currentViewNewlySpawnedSamples.clear();
+
+                    Sample2D sample;
+                    if (viewCount == 0) {
+                        // first view
+                        for (var i = 0; i < numPoints1; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints1.get(i));
+                            sample.setViewId(currentViewId);
+                            currentViewTrackedSamples.add(sample);
+                        }
+                    } else {
+                        // second view
+                        for (var i = 0; i < numPoints1; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints1.get(i));
+                            sample.setViewId(previousViewId);
+                            previousViewTrackedSamples.add(sample);
                         }
 
-                        @Override
-                        public void onSlamCameraEstimated(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final PinholeCamera camera) {
-                            mSlamCameraEstimated++;
-                            mSlamCamera = camera;
+                        for (var i = 0; i < numPoints1; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints2.get(i));
+                            sample.setViewId(currentViewId);
+                            currentViewTrackedSamples.add(sample);
                         }
 
-                        @Override
-                        public boolean hasMoreViewsAvailable(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
-                            return mViewCount < 2;
+                        // spawned samples
+                        for (var i = 0; i < numPoints2; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints2b.get(i));
+                            sample.setViewId(currentViewId);
+                            currentViewNewlySpawnedSamples.add(sample);
                         }
 
-                        @Override
-                        public void onRequestSamples(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final int previousViewId, final int currentViewId,
-                                final List<Sample2D> previousViewTrackedSamples,
-                                final List<Sample2D> currentViewTrackedSamples,
-                                final List<Sample2D> currentViewNewlySpawnedSamples) {
+                        // assume the following accelerator and gyroscope samples
+                        // are obtained during a period of 1 second between 1st
+                        // and 2nd view (50 samples * 0.02 s/sample = 1 second)
+                        timestamp = 0;
+                        float noiseAccelerationX;
+                        float noiseAccelerationY;
+                        float noiseAccelerationZ;
+                        float noiseAngularSpeedX;
+                        float noiseAngularSpeedY;
+                        float noiseAngularSpeedZ;
 
-                            previousViewTrackedSamples.clear();
-                            currentViewTrackedSamples.clear();
-                            currentViewNewlySpawnedSamples.clear();
+                        float accelerationWithNoiseX;
+                        float accelerationWithNoiseY;
+                        float accelerationWithNoiseZ;
+                        float angularSpeedWithNoiseX;
+                        float angularSpeedWithNoiseY;
+                        float angularSpeedWithNoiseZ;
 
-                            Sample2D sample;
-                            if (mViewCount == 0) {
-                                // first view
-                                for (int i = 0; i < numPoints1; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints1.get(i));
-                                    sample.setViewId(currentViewId);
-                                    currentViewTrackedSamples.add(sample);
-                                }
-                            } else {
-                                // second view
-                                for (int i = 0; i < numPoints1; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints1.get(i));
-                                    sample.setViewId(previousViewId);
-                                    previousViewTrackedSamples.add(sample);
-                                }
+                        final var accelerationWithNoise = new float[3];
+                        final var angularSpeedWithNoise = new float[3];
 
-                                for (int i = 0; i < numPoints1; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints2.get(i));
-                                    sample.setViewId(currentViewId);
-                                    currentViewTrackedSamples.add(sample);
-                                }
+                        final var orientation = new Quaternion(rotation1);
+                        for (var s = 0; s < N_SENSOR_SAMPLES; s++) {
+                            noiseAccelerationX = accelerationRandomizer.nextFloat();
+                            noiseAccelerationY = accelerationRandomizer.nextFloat();
+                            noiseAccelerationZ = accelerationRandomizer.nextFloat();
 
-                                // spawned samples
-                                for (int i = 0; i < numPoints2; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints2b.get(i));
-                                    sample.setViewId(currentViewId);
-                                    currentViewNewlySpawnedSamples.add(sample);
-                                }
+                            noiseAngularSpeedX = angularSpeedRandomizer.nextFloat();
+                            noiseAngularSpeedY = angularSpeedRandomizer.nextFloat();
+                            noiseAngularSpeedZ = angularSpeedRandomizer.nextFloat();
 
-                                // assume the following accelerator and gyroscope samples
-                                // are obtained during a period of 1 second between 1st
-                                // and 2nd view (50 samples * 0.02 s/sample = 1 second)
-                                mTimestamp = 0;
-                                float noiseAccelerationX;
-                                float noiseAccelerationY;
-                                float noiseAccelerationZ;
-                                float noiseAngularSpeedX;
-                                float noiseAngularSpeedY;
-                                float noiseAngularSpeedZ;
+                            accelerationWithNoiseX = (float) accelerationX + noiseAccelerationX;
+                            accelerationWithNoiseY = (float) accelerationY + noiseAccelerationY;
+                            accelerationWithNoiseZ = (float) accelerationZ + noiseAccelerationZ;
+                            accelerationWithNoise[0] = accelerationWithNoiseX;
+                            accelerationWithNoise[1] = accelerationWithNoiseY;
+                            accelerationWithNoise[2] = accelerationWithNoiseZ;
 
-                                float accelerationWithNoiseX;
-                                float accelerationWithNoiseY;
-                                float accelerationWithNoiseZ;
-                                float angularSpeedWithNoiseX;
-                                float angularSpeedWithNoiseY;
-                                float angularSpeedWithNoiseZ;
+                            angularSpeedWithNoiseX = (float) angularSpeedX + noiseAngularSpeedX;
+                            angularSpeedWithNoiseY = (float) angularSpeedY + noiseAngularSpeedY;
+                            angularSpeedWithNoiseZ = (float) angularSpeedZ + noiseAngularSpeedZ;
+                            angularSpeedWithNoise[0] = angularSpeedWithNoiseX;
+                            angularSpeedWithNoise[1] = angularSpeedWithNoiseY;
+                            angularSpeedWithNoise[2] = angularSpeedWithNoiseZ;
 
-                                final float[] accelerationWithNoise = new float[3];
-                                final float[] angularSpeedWithNoise = new float[3];
-
-                                final Quaternion orientation = new Quaternion(rotation1);
-                                for (int s = 0; s < N_SENSOR_SAMPLES; s++) {
-                                    noiseAccelerationX = accelerationRandomizer.nextFloat();
-                                    noiseAccelerationY = accelerationRandomizer.nextFloat();
-                                    noiseAccelerationZ = accelerationRandomizer.nextFloat();
-
-                                    noiseAngularSpeedX = angularSpeedRandomizer.nextFloat();
-                                    noiseAngularSpeedY = angularSpeedRandomizer.nextFloat();
-                                    noiseAngularSpeedZ = angularSpeedRandomizer.nextFloat();
-
-                                    accelerationWithNoiseX = (float) accelerationX + noiseAccelerationX;
-                                    accelerationWithNoiseY = (float) accelerationY + noiseAccelerationY;
-                                    accelerationWithNoiseZ = (float) accelerationZ + noiseAccelerationZ;
-                                    accelerationWithNoise[0] = accelerationWithNoiseX;
-                                    accelerationWithNoise[1] = accelerationWithNoiseY;
-                                    accelerationWithNoise[2] = accelerationWithNoiseZ;
-
-                                    angularSpeedWithNoiseX = (float) angularSpeedX + noiseAngularSpeedX;
-                                    angularSpeedWithNoiseY = (float) angularSpeedY + noiseAngularSpeedY;
-                                    angularSpeedWithNoiseZ = (float) angularSpeedZ + noiseAngularSpeedZ;
-                                    angularSpeedWithNoise[0] = angularSpeedWithNoiseX;
-                                    angularSpeedWithNoise[1] = angularSpeedWithNoiseY;
-                                    angularSpeedWithNoise[2] = angularSpeedWithNoiseZ;
-
-                                    reconstructor.updateAccelerometerSample(mTimestamp,
-                                            accelerationWithNoise);
-                                    reconstructor.updateGyroscopeSample(mTimestamp,
-                                            angularSpeedWithNoise);
-                                    reconstructor.updateOrientationSample(mTimestamp, orientation);
-                                    // update orientation
-                                    orientation.combine(diffQuaternion);
-                                    mTimestamp += DELTA_NANOS;
-                                }
-                            }
+                            reconstructor.updateAccelerometerSample(timestamp, accelerationWithNoise);
+                            reconstructor.updateGyroscopeSample(timestamp, angularSpeedWithNoise);
+                            reconstructor.updateOrientationSample(timestamp, orientation);
+                            // update orientation
+                            orientation.combine(diffQuaternion);
+                            timestamp += DELTA_NANOS;
                         }
+                    }
+                }
 
-                        @Override
-                        public void onSamplesAccepted(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final int viewId, final List<Sample2D> previousViewTrackedSamples,
-                                final List<Sample2D> currentViewTrackedSamples) {
-                            mViewCount++;
-                        }
+                @Override
+                public void onSamplesAccepted(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final int viewId, final List<Sample2D> previousViewTrackedSamples,
+                        final List<Sample2D> currentViewTrackedSamples) {
+                    viewCount++;
+                }
 
-                        @Override
-                        public void onSamplesRejected(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final int viewId, final List<Sample2D> previousViewTrackedSamples,
-                                final List<Sample2D> currentViewTrackedSamples) {
-                            mViewCount++;
-                        }
+                @Override
+                public void onSamplesRejected(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final int viewId, final List<Sample2D> previousViewTrackedSamples,
+                        final List<Sample2D> currentViewTrackedSamples) {
+                    viewCount++;
+                }
 
-                        @Override
-                        public void onRequestMatches(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final List<Sample2D> allPreviousViewSamples,
-                                final List<Sample2D> previousViewTrackedSamples,
-                                final List<Sample2D> currentViewTrackedSamples,
-                                final int previousViewId, final int currentViewId,
-                                final List<MatchedSamples> matches) {
-                            matches.clear();
+                @Override
+                public void onRequestMatches(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final List<Sample2D> allPreviousViewSamples,
+                        final List<Sample2D> previousViewTrackedSamples,
+                        final List<Sample2D> currentViewTrackedSamples,
+                        final int previousViewId, final int currentViewId,
+                        final List<MatchedSamples> matches) {
+                    matches.clear();
 
-                            MatchedSamples match;
-                            for (int i = 0; i < numPoints1; i++) {
-                                match = new MatchedSamples();
-                                match.setSamples(new Sample2D[]{
-                                        previousViewTrackedSamples.get(i), currentViewTrackedSamples.get(i)
-                                });
-                                match.setViewIds(new int[]{previousViewId, currentViewId});
-                                matches.add(match);
-                            }
-                        }
+                    MatchedSamples match;
+                    for (var i = 0; i < numPoints1; i++) {
+                        match = new MatchedSamples();
+                        match.setSamples(new Sample2D[]{
+                                previousViewTrackedSamples.get(i), currentViewTrackedSamples.get(i)
+                        });
+                        match.setViewIds(new int[]{previousViewId, currentViewId});
+                        matches.add(match);
+                    }
+                }
 
-                        @Override
-                        public void onFundamentalMatrixEstimated(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final EstimatedFundamentalMatrix estimatedFundamentalMatrix) {
-                            mEstimatedFundamentalMatrix = estimatedFundamentalMatrix;
-                        }
+                @Override
+                public void onFundamentalMatrixEstimated(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final EstimatedFundamentalMatrix estimatedFundamentalMatrix) {
+                    AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest.this
+                            .estimatedFundamentalMatrix = estimatedFundamentalMatrix;
+                }
 
-                        @Override
-                        public void onMetricCameraEstimated(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final int previousViewId, final int currentViewId,
-                                final EstimatedCamera previousCamera,
-                                final EstimatedCamera currentCamera) {
-                            mEstimatedMetricCamera1 = previousCamera;
-                            mEstimatedMetricCamera2 = currentCamera;
-                        }
+                @Override
+                public void onMetricCameraEstimated(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final int previousViewId, final int currentViewId,
+                        final EstimatedCamera previousCamera, final EstimatedCamera currentCamera) {
+                    estimatedMetricCamera1 = previousCamera;
+                    estimatedMetricCamera2 = currentCamera;
+                }
 
-                        @Override
-                        public void onMetricReconstructedPointsEstimated(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final List<MatchedSamples> matches,
-                                final List<ReconstructedPoint3D> points) {
-                            mMetricReconstructedPoints = points;
-                        }
+                @Override
+                public void onMetricReconstructedPointsEstimated(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final List<MatchedSamples> matches, final List<ReconstructedPoint3D> points) {
+                    metricReconstructedPoints = points;
+                }
 
-                        @Override
-                        public void onEuclideanCameraEstimated(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final int previousViewId, final int currentViewId, final double scale,
-                                final EstimatedCamera previousCamera,
-                                final EstimatedCamera currentCamera) {
-                            mEstimatedEuclideanCamera1 = previousCamera;
-                            mEstimatedEuclideanCamera2 = currentCamera;
-                            mScale = scale;
-                        }
+                @Override
+                public void onEuclideanCameraEstimated(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final int previousViewId, final int currentViewId, final double scale,
+                        final EstimatedCamera previousCamera, final EstimatedCamera currentCamera) {
+                    estimatedEuclideanCamera1 = previousCamera;
+                    estimatedEuclideanCamera2 = currentCamera;
+                    AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest.this.scale = scale;
+                }
 
-                        @Override
-                        public void onEuclideanReconstructedPointsEstimated(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final double scale, final List<ReconstructedPoint3D> points) {
-                            mEuclideanReconstructedPoints = points;
-                            mScale = scale;
-                        }
+                @Override
+                public void onEuclideanReconstructedPointsEstimated(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final double scale, final List<ReconstructedPoint3D> points) {
+                    euclideanReconstructedPoints = points;
+                    AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest.this.scale = scale;
+                }
 
-                        @Override
-                        public void onStart(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
-                            mStarted = true;
-                        }
+                @Override
+                public void onStart(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
+                    started = true;
+                }
 
-                        @Override
-                        public void onFinish(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
-                            mFinished = true;
-                        }
+                @Override
+                public void onFinish(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
+                    finished = true;
+                }
 
-                        @Override
-                        public void onCancel(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
-                            mCancelled = true;
-                        }
+                @Override
+                public void onCancel(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
+                    cancelled = true;
+                }
 
-                        @Override
-                        public void onFail(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
-                            mFailed = true;
-                        }
-                    };
+                @Override
+                public void onFail(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
+                    failed = true;
+                }
+            };
 
-            final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor =
-                    new AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor(configuration, listener);
+            final var reconstructor = new AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor(
+                    configuration, listener);
 
             // check initial values
             reset();
-            assertFalse(mStarted);
-            assertFalse(mFinished);
-            assertFalse(mCancelled);
-            assertFalse(mFailed);
+            assertFalse(started);
+            assertFalse(finished);
+            assertFalse(cancelled);
+            assertFalse(failed);
             assertFalse(reconstructor.isFinished());
 
             reconstructor.start();
 
             // check correctness
-            assertTrue(mStarted);
-            assertTrue(mFinished);
-            assertFalse(mCancelled);
-            assertFalse(mFailed);
+            assertTrue(started);
+            assertTrue(finished);
+            assertFalse(cancelled);
+            assertFalse(failed);
             assertTrue(reconstructor.isFinished());
-            assertTrue(mSlamDataAvailable > 0);
-            assertTrue(mSlamCameraEstimated > 0);
-            assertNotNull(mSlamCamera);
-            assertNotNull(mSlamCovariance);
+            assertTrue(slamDataAvailable > 0);
+            assertTrue(slamCameraEstimated > 0);
+            assertNotNull(slamCamera);
+            assertNotNull(slamCovariance);
             assertFalse(reconstructor.isFirstView());
             assertFalse(reconstructor.isSecondView());
             assertTrue(reconstructor.isAdditionalView());
             assertTrue(reconstructor.getViewCount() > 0);
             assertNotNull(reconstructor.getCurrentEstimatedFundamentalMatrix());
-            assertSame(mEstimatedFundamentalMatrix,
-                    reconstructor.getCurrentEstimatedFundamentalMatrix());
+            assertSame(estimatedFundamentalMatrix, reconstructor.getCurrentEstimatedFundamentalMatrix());
             assertNotNull(reconstructor.getCurrentMetricEstimatedCamera());
-            assertSame(mEstimatedMetricCamera2, reconstructor.getCurrentMetricEstimatedCamera());
+            assertSame(estimatedMetricCamera2, reconstructor.getCurrentMetricEstimatedCamera());
             assertNotNull(reconstructor.getPreviousMetricEstimatedCamera());
-            assertSame(mEstimatedMetricCamera1, reconstructor.getPreviousMetricEstimatedCamera());
+            assertSame(estimatedMetricCamera1, reconstructor.getPreviousMetricEstimatedCamera());
             assertNotNull(reconstructor.getCurrentEuclideanEstimatedCamera());
-            assertSame(mEstimatedEuclideanCamera2, reconstructor.getCurrentEuclideanEstimatedCamera());
+            assertSame(estimatedEuclideanCamera2, reconstructor.getCurrentEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getPreviousEuclideanEstimatedCamera());
-            assertSame(mEstimatedEuclideanCamera1, reconstructor.getPreviousEuclideanEstimatedCamera());
+            assertSame(estimatedEuclideanCamera1, reconstructor.getPreviousEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getActiveMetricReconstructedPoints());
-            assertSame(mMetricReconstructedPoints, reconstructor.getActiveMetricReconstructedPoints());
+            assertSame(metricReconstructedPoints, reconstructor.getActiveMetricReconstructedPoints());
             assertNotNull(reconstructor.getActiveEuclideanReconstructedPoints());
-            assertSame(mEuclideanReconstructedPoints,
-                    reconstructor.getActiveEuclideanReconstructedPoints());
-            assertEquals(mScale, reconstructor.getCurrentScale(), 0.0);
+            assertSame(euclideanReconstructedPoints, reconstructor.getActiveEuclideanReconstructedPoints());
+            assertEquals(scale, reconstructor.getCurrentScale(), 0.0);
             assertNotNull(reconstructor.getPreviousViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewNewlySpawnedSamples());
 
             // check that estimated fundamental matrix is correct
             fundamentalMatrix.normalize();
-            mEstimatedFundamentalMatrix.getFundamentalMatrix().normalize();
+            estimatedFundamentalMatrix.getFundamentalMatrix().normalize();
 
             // matrices are equal up to scale
             if (!fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                    ABSOLUTE_ERROR) && !fundamentalMatrix.getInternalMatrix()
-                    .multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                            ABSOLUTE_ERROR)) {
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    && !fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                    ABSOLUTE_ERROR) || fundamentalMatrix.getInternalMatrix()
-                    .multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                            ABSOLUTE_ERROR));
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    || fundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR));
 
             // check that reconstructed points are in a metric stratum (up to a
             // certain scale)
-            final PinholeCamera estimatedMetricCamera1 = mEstimatedMetricCamera1.getCamera();
-            final PinholeCamera estimatedMetricCamera2 = mEstimatedMetricCamera2.getCamera();
-            assertNotSame(mEstimatedMetricCamera1, mEstimatedEuclideanCamera1);
-            assertNotSame(mEstimatedMetricCamera2, mEstimatedEuclideanCamera2);
+            final var estMetricCam1 = this.estimatedMetricCamera1.getCamera();
+            final var estMetricCam2 = this.estimatedMetricCamera2.getCamera();
+            assertNotSame(this.estimatedMetricCamera1, estimatedEuclideanCamera1);
+            assertNotSame(this.estimatedMetricCamera2, estimatedEuclideanCamera2);
 
-            final PinholeCamera estimatedEuclideanCamera1 = mEstimatedEuclideanCamera1.getCamera();
-            final PinholeCamera estimatedEuclideanCamera2 = mEstimatedEuclideanCamera2.getCamera();
+            final var estEuclideanCam1 = this.estimatedEuclideanCamera1.getCamera();
+            final var estEuclideanCam2 = this.estimatedEuclideanCamera2.getCamera();
 
-            estimatedMetricCamera1.decompose();
-            estimatedMetricCamera2.decompose();
+            estMetricCam1.decompose();
+            estMetricCam2.decompose();
 
-            estimatedEuclideanCamera1.decompose();
-            estimatedEuclideanCamera2.decompose();
+            estEuclideanCam1.decompose();
+            estEuclideanCam2.decompose();
 
-            assertNotSame(mMetricReconstructedPoints, mEuclideanReconstructedPoints);
+            assertNotSame(metricReconstructedPoints, euclideanReconstructedPoints);
 
-            final List<Point3D> metricReconstructedPoints3D = new ArrayList<>();
-            final List<Point3D> euclideanReconstructedPoints3D = new ArrayList<>();
-            for (int i = 0; i < numPoints1; i++) {
-                metricReconstructedPoints3D.add(mMetricReconstructedPoints.get(i).getPoint());
-                euclideanReconstructedPoints3D.add(mEuclideanReconstructedPoints.get(i).getPoint());
+            final var metricReconstructedPoints3D = new ArrayList<Point3D>();
+            final var euclideanReconstructedPoints3D = new ArrayList<Point3D>();
+            for (var i = 0; i < numPoints1; i++) {
+                metricReconstructedPoints3D.add(metricReconstructedPoints.get(i).getPoint());
+                euclideanReconstructedPoints3D.add(euclideanReconstructedPoints.get(i).getPoint());
             }
 
             // check that all points are in front of both cameras
-            for (int i = 0; i < numPoints1; i++) {
-                final Point3D p = metricReconstructedPoints3D.get(i);
-                final Point3D pe = euclideanReconstructedPoints3D.get(i);
+            for (var i = 0; i < numPoints1; i++) {
+                final var p = metricReconstructedPoints3D.get(i);
+                final var pe = euclideanReconstructedPoints3D.get(i);
 
-                assertTrue(estimatedMetricCamera1.isPointInFrontOfCamera(p));
-                assertTrue(estimatedMetricCamera2.isPointInFrontOfCamera(p));
+                assertTrue(estMetricCam1.isPointInFrontOfCamera(p));
+                assertTrue(estMetricCam2.isPointInFrontOfCamera(p));
 
-                assertTrue(estimatedEuclideanCamera1.isPointInFrontOfCamera(pe));
-                assertTrue(estimatedEuclideanCamera2.isPointInFrontOfCamera(pe));
+                assertTrue(estEuclideanCam1.isPointInFrontOfCamera(pe));
+                assertTrue(estEuclideanCam2.isPointInFrontOfCamera(pe));
             }
 
-            final PinholeCameraIntrinsicParameters euclideanIntrinsic1 =
-                    estimatedEuclideanCamera1.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters euclideanIntrinsic2 =
-                    estimatedEuclideanCamera2.getIntrinsicParameters();
+            final var euclideanIntrinsic1 = estEuclideanCam1.getIntrinsicParameters();
+            final var euclideanIntrinsic2 = estEuclideanCam2.getIntrinsicParameters();
 
-            final Rotation3D euclideanRotation1 = estimatedEuclideanCamera1.getCameraRotation();
-            final Rotation3D euclideanRotation2 = estimatedEuclideanCamera2.getCameraRotation();
+            final var euclideanRotation1 = estEuclideanCam1.getCameraRotation();
+            final var euclideanRotation2 = estEuclideanCam2.getCameraRotation();
 
-            assertEquals(euclideanIntrinsic1.getHorizontalFocalLength(),
-                    intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic1.getVerticalFocalLength(),
-                    intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getHorizontalFocalLength(), intrinsic.getHorizontalFocalLength(),
+                    ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getVerticalFocalLength(), intrinsic.getVerticalFocalLength(),
+                    ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic1.getHorizontalPrincipalPoint(),
-                    intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic1.getVerticalPrincipalPoint(),
-                    intrinsic.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getHorizontalPrincipalPoint(), intrinsic.getHorizontalPrincipalPoint(),
+                    ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getVerticalPrincipalPoint(), intrinsic.getVerticalPrincipalPoint(),
+                    ABSOLUTE_ERROR);
 
-            assertEquals(euclideanIntrinsic2.getHorizontalFocalLength(),
-                    intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic2.getVerticalFocalLength(),
-                    intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getHorizontalFocalLength(), intrinsic.getHorizontalFocalLength(),
+                    ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getVerticalFocalLength(), intrinsic.getVerticalFocalLength(),
+                    ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic2.getHorizontalPrincipalPoint(),
-                    intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic2.getVerticalPrincipalPoint(),
-                    intrinsic.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getHorizontalPrincipalPoint(), intrinsic.getHorizontalPrincipalPoint(),
+                    ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getVerticalPrincipalPoint(), intrinsic.getVerticalPrincipalPoint(),
+                    ABSOLUTE_ERROR);
 
-            assertTrue(euclideanRotation1.asInhomogeneousMatrix().equals(
-                    rotation1.asInhomogeneousMatrix(), ABSOLUTE_ERROR));
-            assertTrue(euclideanRotation2.asInhomogeneousMatrix().equals(
-                    rotation2.asInhomogeneousMatrix(), ABSOLUTE_ERROR));
+            assertTrue(euclideanRotation1.asInhomogeneousMatrix().equals(rotation1.asInhomogeneousMatrix(),
+                    ABSOLUTE_ERROR));
+            assertTrue(euclideanRotation2.asInhomogeneousMatrix().equals(rotation2.asInhomogeneousMatrix(),
+                    ABSOLUTE_ERROR));
 
             // check that points are correct (after scale correction)
-            final MetricTransformation3D scaleAndOrientationTransformation
-                    = new MetricTransformation3D(mScale);
+            final var scaleAndOrientationTransformation = new MetricTransformation3D(scale);
             scaleAndOrientationTransformation.setRotation(rotation1.inverseRotationAndReturnNew());
 
-            int numValidPoints = 0;
-            for (int i = 0; i < numPoints1; i++) {
-                final Point3D point = points3D1.get(i);
-                final Point3D euclideanPoint = euclideanReconstructedPoints3D.get(i);
+            var numValidPoints = 0;
+            for (var i = 0; i < numPoints1; i++) {
+                final var point = points3D1.get(i);
+                final var euclideanPoint = euclideanReconstructedPoints3D.get(i);
 
                 // check metric points
-                final Point3D rescaledPoint = Point3D.create();
-                scaleAndOrientationTransformation.transform(metricReconstructedPoints3D.get(i),
-                        rescaledPoint);
+                final var rescaledPoint = Point3D.create();
+                scaleAndOrientationTransformation.transform(metricReconstructedPoints3D.get(i), rescaledPoint);
 
                 // Euclidean and rescaled points match
                 assertTrue(euclideanPoint.equals(rescaledPoint, LARGE_ABSOLUTE_ERROR));
 
-                rescaledPoint.setInhomogeneousCoordinates(
-                        rescaledPoint.getInhomX() * baseline / mScale,
-                        rescaledPoint.getInhomY() * baseline / mScale,
-                        rescaledPoint.getInhomZ() * baseline / mScale);
+                rescaledPoint.setInhomogeneousCoordinates(rescaledPoint.getInhomX() * baseline / scale,
+                        rescaledPoint.getInhomY() * baseline / scale,
+                        rescaledPoint.getInhomZ() * baseline / scale);
                 if (point.equals(rescaledPoint, LARGE_ABSOLUTE_ERROR)) {
                     numValidPoints++;
                 }
@@ -1663,46 +1565,40 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest
     }
 
     @Test
-    public void testGeneralPointsEssentialWithConstantAccelerationAndRotationWithoutNoiseThreeViews()
+    void testGeneralPointsEssentialWithConstantAccelerationAndRotationWithoutNoiseThreeViews()
             throws InvalidPairOfCamerasException, AlgebraException, CameraException,
-            com.irurueta.geometry.estimators.NotReadyException,
-            com.irurueta.geometry.NotAvailableException, RotationException {
+            com.irurueta.geometry.estimators.NotReadyException, com.irurueta.geometry.NotAvailableException,
+            RotationException {
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
-                    new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var noiseRandomizer = new GaussianRandomizer(0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
 
-            final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorConfiguration configuration =
+            final var configuration =
                     new AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorConfiguration();
-            configuration.setInitialCamerasEstimatorMethod(
-                    InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
+            configuration.setInitialCamerasEstimatorMethod(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
 
-            final float accelerationOffsetX = 0.0f;
-            final float accelerationOffsetY = 0.0f;
-            final float accelerationOffsetZ = 0.0f;
+            final var accelerationOffsetX = 0.0f;
+            final var accelerationOffsetY = 0.0f;
+            final var accelerationOffsetZ = 0.0f;
 
-            final float angularOffsetX = 0.0f;
-            final float angularOffsetY = 0.0f;
-            final float angularOffsetZ = 0.0f;
+            final var angularOffsetX = 0.0f;
+            final var angularOffsetY = 0.0f;
+            final var angularOffsetZ = 0.0f;
 
-            final AbsoluteOrientationConstantVelocityModelSlamCalibrator calibrator = createFinishedCalibrator(
-                    accelerationOffsetX, accelerationOffsetY, accelerationOffsetZ,
-                    angularOffsetX, angularOffsetY, angularOffsetZ, noiseRandomizer);
-            final AbsoluteOrientationConstantVelocityModelSlamCalibrationData calibrationData
-                    = calibrator.getCalibrationData();
+            final var calibrator = createFinishedCalibrator(accelerationOffsetX, accelerationOffsetY,
+                    accelerationOffsetZ, angularOffsetX, angularOffsetY, angularOffsetZ, noiseRandomizer);
+            final var calibrationData = calibrator.getCalibrationData();
             configuration.setCalibrationData(calibrationData);
 
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH_ESSENTIAL,
-                    MAX_FOCAL_LENGTH_ESSENTIAL);
-            final double aspectRatio = configuration.getInitialCamerasAspectRatio();
-            final double skewness = 0.0;
-            final double principalPoint = 0.0;
+            final var randomizer = new UniformRandomizer();
+            final var focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
+            final var aspectRatio = configuration.getInitialCamerasAspectRatio();
+            final var skewness = 0.0;
+            final var principalPoint = 0.0;
 
-            final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength, focalLength,
-                            principalPoint, principalPoint, skewness);
+            final var intrinsic = new PinholeCameraIntrinsicParameters(focalLength, focalLength, principalPoint,
+                    principalPoint, skewness);
             intrinsic.setAspectRatioKeepingHorizontalFocalLength(aspectRatio);
 
             configuration.setInitialIntrinsic1(intrinsic);
@@ -1713,56 +1609,42 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest
             configuration.setUseDAQForAdditionalCamerasIntrinics(false);
             configuration.setUseDIACForAdditionalCamerasIntrinsics(false);
 
-            final double alphaEuler1 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double betaEuler1 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double gammaEuler1 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double alphaEuler3 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double betaEuler3 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double gammaEuler3 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+            final var alphaEuler1 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var betaEuler1 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var gammaEuler1 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var alphaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var betaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var gammaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var alphaEuler3 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var betaEuler3 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var gammaEuler3 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
-            final AxisRotation3D axisRotation2 = new AxisRotation3D(
-                    rotation1.inverseRotationAndReturnNew().combineAndReturnNew(rotation2));
+            final var rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final var rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+            final var axisRotation2 = new AxisRotation3D(rotation1.inverseRotationAndReturnNew().combineAndReturnNew(
+                    rotation2));
 
-            final MatrixRotation3D rotation3 = new MatrixRotation3D(alphaEuler3,
-                    betaEuler3, gammaEuler3);
+            final var rotation3 = new MatrixRotation3D(alphaEuler3, betaEuler3, gammaEuler3);
 
-            final double axis2X = axisRotation2.getAxisX();
-            final double axis2Y = axisRotation2.getAxisY();
-            final double axis2Z = axisRotation2.getAxisZ();
-            final double angle2 = axisRotation2.getRotationAngle();
+            final var axis2X = axisRotation2.getAxisX();
+            final var axis2Y = axisRotation2.getAxisY();
+            final var axis2Z = axisRotation2.getAxisZ();
+            final var angle2 = axisRotation2.getRotationAngle();
 
-            AxisRotation3D diffRotation = new AxisRotation3D(axis2X, axis2Y,
-                    axis2Z, angle2 / N_SENSOR_SAMPLES);
-            Quaternion diffQuaternion = new Quaternion(diffRotation);
+            var diffRotation = new AxisRotation3D(axis2X, axis2Y, axis2Z, angle2 / N_SENSOR_SAMPLES);
+            var diffQuaternion = new Quaternion(diffRotation);
 
             // angular speeds (roll, pitch, yaw) on x, y, z axes
-            double[] angularSpeeds = diffQuaternion.toEulerAngles();
-            final double angularSpeed2X = angularSpeeds[0];
-            final double angularSpeed2Y = angularSpeeds[1];
-            final double angularSpeed2Z = angularSpeeds[2];
-            final Quaternion diffRotation2 = new Quaternion(angularSpeed2X,
-                    angularSpeed2Y, angularSpeed2Z);
+            var angularSpeeds = diffQuaternion.toEulerAngles();
+            final var angularSpeed2X = angularSpeeds[0];
+            final var angularSpeed2Y = angularSpeeds[1];
+            final var angularSpeed2Z = angularSpeeds[2];
+            final var diffRotation2 = new Quaternion(angularSpeed2X, angularSpeed2Y, angularSpeed2Z);
 
             // number of samples (50 samples * 0.02 s/sample = 1 second)
-            final MatrixRotation3D rotation2b = new MatrixRotation3D(rotation1);
-            final MatrixRotation3D rotation2c = new MatrixRotation3D(rotation1);
-            for (int s = 0; s < N_SENSOR_SAMPLES; s++) {
+            final var rotation2b = new MatrixRotation3D(rotation1);
+            final var rotation2c = new MatrixRotation3D(rotation1);
+            for (var s = 0; s < N_SENSOR_SAMPLES; s++) {
                 rotation2b.combine(diffRotation);
                 rotation2c.combine(diffRotation2);
             }
@@ -1772,29 +1654,28 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest
             assertTrue(rotation2.equals(rotation2b, ABSOLUTE_ERROR));
             assertTrue(rotation2.equals(rotation2c, ABSOLUTE_ERROR));
 
-            final AxisRotation3D accumDiffRotation = rotation2.inverseRotationAndReturnNew().
-                    combineAndReturnNew(rotation3).toAxisRotation();
-            final double axis3X = accumDiffRotation.getAxisX();
-            final double axis3Y = accumDiffRotation.getAxisY();
-            final double axis3Z = accumDiffRotation.getAxisZ();
-            final double angle3 = accumDiffRotation.getRotationAngle();
+            final var accumDiffRotation = rotation2.inverseRotationAndReturnNew().combineAndReturnNew(rotation3)
+                    .toAxisRotation();
+            final var axis3X = accumDiffRotation.getAxisX();
+            final var axis3Y = accumDiffRotation.getAxisY();
+            final var axis3Z = accumDiffRotation.getAxisZ();
+            final var angle3 = accumDiffRotation.getRotationAngle();
 
             diffRotation = new AxisRotation3D(axis3X, axis3Y, axis3Z, angle3 / N_SENSOR_SAMPLES);
             diffQuaternion = new Quaternion(diffRotation);
 
             // angular speeds (roll, pitch, yaw) on x, y, z axes
             angularSpeeds = diffQuaternion.toEulerAngles();
-            final double angularSpeed3X = angularSpeeds[0];
-            final double angularSpeed3Y = angularSpeeds[1];
-            final double angularSpeed3Z = angularSpeeds[2];
-            final Quaternion diffRotation3 =
-                    new Quaternion(angularSpeed3X, angularSpeed3Y, angularSpeed3Z);
+            final var angularSpeed3X = angularSpeeds[0];
+            final var angularSpeed3Y = angularSpeeds[1];
+            final var angularSpeed3Z = angularSpeeds[2];
+            final var diffRotation3 = new Quaternion(angularSpeed3X, angularSpeed3Y, angularSpeed3Z);
 
             // number of samples (50 samples * 0.02 s/sample = 1 second), starting from
             // previously sampled rotation
-            final MatrixRotation3D rotation3b = new MatrixRotation3D(rotation2b);
-            final MatrixRotation3D rotation3c = new MatrixRotation3D(rotation2c);
-            for (int s = 0; s < N_SENSOR_SAMPLES; s++) {
+            final var rotation3b = new MatrixRotation3D(rotation2b);
+            final var rotation3c = new MatrixRotation3D(rotation2c);
+            for (var s = 0; s < N_SENSOR_SAMPLES; s++) {
                 rotation3b.combine(diffRotation);
                 rotation3c.combine(diffRotation3);
             }
@@ -1804,15 +1685,12 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest
             assertTrue(rotation3.equals(rotation3b, ABSOLUTE_ERROR));
             assertTrue(rotation3.equals(rotation3c, ABSOLUTE_ERROR));
 
-            final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
-            final double cameraSeparation2 = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
+            final var cameraSeparation = randomizer.nextDouble(
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
+            final var cameraSeparation2 = randomizer.nextDouble(
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
 
-            final EuclideanTransformation3D rotationTransformation =
-                    new EuclideanTransformation3D(rotation1);
+            final var rotationTransformation = new EuclideanTransformation3D(rotation1);
             Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
             Point3D center2 = new InhomogeneousPoint3D(
                     center1.getInhomX() + cameraSeparation,
@@ -1826,32 +1704,35 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest
             center2 = rotationTransformation.transformAndReturnNew(center2);
             center3 = rotationTransformation.transformAndReturnNew(center3);
 
-            final double baseline = center1.distanceTo(center2);
+            final var baseline = center1.distanceTo(center2);
 
-            final double accelerationX, accelerationY, accelerationZ;
-            final double accelerationX2, accelerationY2, accelerationZ2;
+            final double accelerationX;
+            final double accelerationY;
+            final double accelerationZ;
+            final double accelerationX2;
+            final double accelerationY2;
+            final double accelerationZ2;
 
             // s = 0.5*a*t^2 --> a = 2*s/t^2
             // assuming t = 1 second (50 samples * 0.02 s/sample = 1 second)
             accelerationX = accelerationY = accelerationZ = 2 * cameraSeparation;
             accelerationX2 = accelerationY2 = accelerationZ2 = 2 * cameraSeparation2;
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
-            final PinholeCamera camera3 = new PinholeCamera(intrinsic, rotation3, center3);
+            final var camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final var camera2 = new PinholeCamera(intrinsic, rotation2, center2);
+            final var camera3 = new PinholeCamera(intrinsic, rotation3, center3);
 
-            final FundamentalMatrix fundamentalMatrix1 = new FundamentalMatrix(camera1, camera2);
+            final var fundamentalMatrix1 = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
 
             // 1st find an approximate central point by intersecting the axis
             // planes of both cameras
-            final Plane horizontalPlane1 = camera1.getHorizontalAxisPlane();
-            final Plane verticalPlane1 = camera1.getVerticalAxisPlane();
-            final Plane horizontalPlane2 = camera2.getHorizontalAxisPlane();
-            final Plane verticalPlane2 = camera2.getVerticalAxisPlane();
-            final Matrix planesIntersectionMatrix = new Matrix(
-                    Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
+            final var horizontalPlane1 = camera1.getHorizontalAxisPlane();
+            final var verticalPlane1 = camera1.getVerticalAxisPlane();
+            final var horizontalPlane2 = camera2.getHorizontalAxisPlane();
+            final var verticalPlane2 = camera2.getVerticalAxisPlane();
+            final var planesIntersectionMatrix = new Matrix(Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
             planesIntersectionMatrix.setElementAt(0, 0, verticalPlane1.getA());
             planesIntersectionMatrix.setElementAt(0, 1, verticalPlane1.getB());
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
@@ -1872,11 +1753,10 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest
             planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
             planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
+            final var decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
-            final Matrix v = decomposer.getV();
-            final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
+            final var v = decomposer.getV();
+            final var centralCommonPoint = new HomogeneousPoint3D(
                     v.getElementAt(0, 3),
                     v.getElementAt(1, 3),
                     v.getElementAt(2, 3),
@@ -1886,24 +1766,24 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest
             double lambdaY;
             double lambdaZ;
 
-            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
-            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
-            final int start = randomizer.nextInt(0, numPoints1 - MIN_TRACKED_POINTS);
+            final var numPoints1 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final var numPoints2 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final var start = randomizer.nextInt(0, numPoints1 - MIN_TRACKED_POINTS);
 
             InhomogeneousPoint3D point3D;
-            final List<InhomogeneousPoint3D> points3D1 = new ArrayList<>();
+            final var points3D1 = new ArrayList<InhomogeneousPoint3D>();
             Point2D projectedPoint1;
             Point2D projectedPoint2;
             Point2D projectedPoint3;
-            final List<Point2D> projectedPoints1 = new ArrayList<>();
-            final List<Point2D> projectedPoints2 = new ArrayList<>();
-            final List<Point2D> projectedPoints3 = new ArrayList<>();
+            final var projectedPoints1 = new ArrayList<Point2D>();
+            final var projectedPoints2 = new ArrayList<Point2D>();
+            final var projectedPoints3 = new ArrayList<Point2D>();
             boolean front1;
             boolean front2;
-            boolean maxTriesReached = false;
-            for (int i = 0; i < numPoints1; i++) {
+            var maxTriesReached = false;
+            for (var i = 0; i < numPoints1; i++) {
                 // generate points and ensure they lie in front of both cameras
-                int numTry = 0;
+                var numTry = 0;
                 do {
                     lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
                     lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
@@ -1923,7 +1803,9 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest
                     numTry++;
                 } while (!front1 || !front2);
 
-                if (maxTriesReached) break;
+                if (maxTriesReached) {
+                    break;
+                }
 
                 points3D1.add(point3D);
 
@@ -1949,23 +1831,21 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest
                 continue;
             }
 
-            final List<InhomogeneousPoint3D> points3D2 = new ArrayList<>();
+            final var points3D2 = new ArrayList<InhomogeneousPoint3D>();
             Point2D projectedPoint2b;
             Point2D projectedPoint3b;
-            final List<Point2D> projectedPoints2b = new ArrayList<>();
-            final List<Point2D> projectedPoints3b = new ArrayList<>();
-            for (int i = 0; i < numPoints2; i++) {
+            final var projectedPoints2b = new ArrayList<Point2D>();
+            final var projectedPoints3b = new ArrayList<Point2D>();
+            for (var i = 0; i < numPoints2; i++) {
                 // generate points and ensure they lie in front of both cameras
-                int numTry = 0;
+                var numTry = 0;
                 do {
                     lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
                     lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
                     lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
-                    point3D = new InhomogeneousPoint3D(
-                            centralCommonPoint.getInhomX() + lambdaX,
-                            centralCommonPoint.getInhomY() + lambdaY,
-                            centralCommonPoint.getInhomZ() + lambdaZ);
+                    point3D = new InhomogeneousPoint3D(centralCommonPoint.getInhomX() + lambdaX,
+                            centralCommonPoint.getInhomY() + lambdaY, centralCommonPoint.getInhomZ() + lambdaZ);
 
                     front2 = camera2.isPointInFrontOfCamera(point3D);
                     if (numTry > MAX_TRIES) {
@@ -1997,550 +1877,523 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest
                 continue;
             }
 
-            final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorListener listener =
-                    new AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorListener() {
-                        @Override
-                        public void onSlamDataAvailable(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final double positionX, final double positionY, final double positionZ,
-                                final double velocityX, final double velocityY, final double velocityZ,
-                                final double accelerationX, final double accelerationY, final double accelerationZ,
-                                final double quaternionA, final double quaternionB, final double quaternionC,
-                                final double quaternionD, final double angularSpeedX, final double angularSpeedY,
-                                final double angularSpeedZ, final Matrix covariance) {
-                            mSlamDataAvailable++;
-                            mSlamCovariance = covariance;
+            final var listener = new AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorListener() {
+                @Override
+                public void onSlamDataAvailable(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final double positionX, final double positionY, final double positionZ,
+                        final double velocityX, final double velocityY, final double velocityZ,
+                        final double accelerationX, final double accelerationY, final double accelerationZ,
+                        final double quaternionA, final double quaternionB, final double quaternionC,
+                        final double quaternionD, final double angularSpeedX, final double angularSpeedY,
+                        final double angularSpeedZ, final Matrix covariance) {
+                    slamDataAvailable++;
+                    slamCovariance = covariance;
+                }
+
+                @Override
+                public void onSlamCameraEstimated(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final PinholeCamera camera) {
+                    slamCameraEstimated++;
+                    slamCamera = camera;
+                }
+
+                @Override
+                public boolean hasMoreViewsAvailable(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
+                    return viewCount < 3;
+                }
+
+                @Override
+                public void onRequestSamples(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final int previousViewId, final int currentViewId,
+                        final List<Sample2D> previousViewTrackedSamples,
+                        final List<Sample2D> currentViewTrackedSamples,
+                        final List<Sample2D> currentViewNewlySpawnedSamples) {
+
+                    previousViewTrackedSamples.clear();
+                    currentViewTrackedSamples.clear();
+                    currentViewNewlySpawnedSamples.clear();
+
+                    Sample2D sample;
+                    if (viewCount == 0) {
+                        // first view
+                        for (var i = 0; i < numPoints1; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints1.get(i));
+                            sample.setViewId(currentViewId);
+                            currentViewTrackedSamples.add(sample);
+                        }
+                    } else if (estimatedFundamentalMatrix == null) {
+                        // second view
+                        for (var i = 0; i < numPoints1; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints1.get(i));
+                            sample.setViewId(previousViewId);
+                            previousViewTrackedSamples.add(sample);
                         }
 
-                        @Override
-                        public void onSlamCameraEstimated(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final PinholeCamera camera) {
-                            mSlamCameraEstimated++;
-                            mSlamCamera = camera;
+                        for (var i = 0; i < numPoints1; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints2.get(i));
+                            sample.setViewId(currentViewId);
+                            currentViewTrackedSamples.add(sample);
                         }
 
-                        @Override
-                        public boolean hasMoreViewsAvailable(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
-                            return mViewCount < 3;
+                        // spawned samples
+                        for (var i = 0; i < numPoints2; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints2b.get(i));
+                            sample.setViewId(currentViewId);
+                            currentViewNewlySpawnedSamples.add(sample);
                         }
 
-                        @Override
-                        public void onRequestSamples(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final int previousViewId, final int currentViewId,
-                                final List<Sample2D> previousViewTrackedSamples,
-                                final List<Sample2D> currentViewTrackedSamples,
-                                final List<Sample2D> currentViewNewlySpawnedSamples) {
-
-                            previousViewTrackedSamples.clear();
-                            currentViewTrackedSamples.clear();
-                            currentViewNewlySpawnedSamples.clear();
-
-                            Sample2D sample;
-                            if (mViewCount == 0) {
-                                // first view
-                                for (int i = 0; i < numPoints1; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints1.get(i));
-                                    sample.setViewId(currentViewId);
-                                    currentViewTrackedSamples.add(sample);
-                                }
-                            } else if (mEstimatedFundamentalMatrix == null) {
-                                // second view
-                                for (int i = 0; i < numPoints1; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints1.get(i));
-                                    sample.setViewId(previousViewId);
-                                    previousViewTrackedSamples.add(sample);
-                                }
-
-                                for (int i = 0; i < numPoints1; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints2.get(i));
-                                    sample.setViewId(currentViewId);
-                                    currentViewTrackedSamples.add(sample);
-                                }
-
-                                // spawned samples
-                                for (int i = 0; i < numPoints2; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints2b.get(i));
-                                    sample.setViewId(currentViewId);
-                                    currentViewNewlySpawnedSamples.add(sample);
-                                }
-
-                                // assume the following accelerator and gyroscope samples
-                                // are obtained during a period of 1 second between 1st
-                                // and 2nd view (50 samples * 0.02 s/sample = 1 second)
-                                mTimestamp = 0;
-                                final Quaternion orientation = new Quaternion(rotation1);
-                                for (int s = 0; s < N_SENSOR_SAMPLES; s++) {
-                                    reconstructor.updateAccelerometerSample(mTimestamp,
-                                            (float) accelerationX, (float) accelerationY,
-                                            (float) accelerationZ);
-                                    reconstructor.updateGyroscopeSample(mTimestamp,
-                                            (float) angularSpeed2X, (float) angularSpeed2Y,
-                                            (float) angularSpeed2Z);
-                                    reconstructor.updateOrientationSample(mTimestamp,
-                                            orientation);
-                                    // update orientation
-                                    orientation.combine(diffRotation2);
-                                    mTimestamp += DELTA_NANOS;
-                                }
-
-                            } else {
-                                // third view
-                                for (int i = start; i < numPoints1; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints2.get(i));
-                                    sample.setViewId(previousViewId);
-                                    previousViewTrackedSamples.add(sample);
-                                }
-
-                                for (int i = 0; i < numPoints2; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints2b.get(i));
-                                    sample.setViewId(previousViewId);
-                                    previousViewTrackedSamples.add(sample);
-                                }
-
-
-                                for (int i = start; i < numPoints1; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints3.get(i));
-                                    sample.setViewId(currentViewId);
-                                    currentViewTrackedSamples.add(sample);
-                                }
-
-                                for (int i = 0; i < numPoints2; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints3b.get(i));
-                                    sample.setViewId(currentViewId);
-                                    currentViewTrackedSamples.add(sample);
-                                }
-
-                                // assume the following accelerator and gyroscope samples
-                                // are obtained during a period of 1 second between 2nd
-                                // and 3rd view (50 samples * 0.02 s/sample = 1 second)
-                                final Quaternion orientation = new Quaternion(rotation2);
-                                for (int s = 0; s < N_SENSOR_SAMPLES; s++) {
-                                    reconstructor.updateAccelerometerSample(mTimestamp,
-                                            (float) accelerationX2, (float) accelerationY2,
-                                            (float) accelerationZ2);
-                                    reconstructor.updateGyroscopeSample(mTimestamp,
-                                            (float) angularSpeed3X, (float) angularSpeed3Y,
-                                            (float) angularSpeed3Z);
-                                    reconstructor.updateOrientationSample(mTimestamp,
-                                            orientation);
-                                    // update orientation
-                                    orientation.combine(diffRotation3);
-                                    mTimestamp += DELTA_NANOS;
-                                }
-                            }
+                        // assume the following accelerator and gyroscope samples
+                        // are obtained during a period of 1 second between 1st
+                        // and 2nd view (50 samples * 0.02 s/sample = 1 second)
+                        timestamp = 0;
+                        final var orientation = new Quaternion(rotation1);
+                        for (var s = 0; s < N_SENSOR_SAMPLES; s++) {
+                            reconstructor.updateAccelerometerSample(timestamp, (float) accelerationX,
+                                    (float) accelerationY, (float) accelerationZ);
+                            reconstructor.updateGyroscopeSample(timestamp, (float) angularSpeed2X,
+                                    (float) angularSpeed2Y, (float) angularSpeed2Z);
+                            reconstructor.updateOrientationSample(timestamp, orientation);
+                            // update orientation
+                            orientation.combine(diffRotation2);
+                            timestamp += DELTA_NANOS;
                         }
 
-                        @Override
-                        public void onSamplesAccepted(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final int viewId, final List<Sample2D> previousViewTrackedSamples,
-                                final List<Sample2D> currentViewTrackedSamples) {
-                            mViewCount++;
+                    } else {
+                        // third view
+                        for (var i = start; i < numPoints1; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints2.get(i));
+                            sample.setViewId(previousViewId);
+                            previousViewTrackedSamples.add(sample);
                         }
 
-                        @Override
-                        public void onSamplesRejected(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final int viewId, final List<Sample2D> previousViewTrackedSamples,
-                                final List<Sample2D> currentViewTrackedSamples) {
-                            mViewCount++;
+                        for (var i = 0; i < numPoints2; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints2b.get(i));
+                            sample.setViewId(previousViewId);
+                            previousViewTrackedSamples.add(sample);
                         }
 
-                        @Override
-                        public void onRequestMatches(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final List<Sample2D> allPreviousViewSamples,
-                                final List<Sample2D> previousViewTrackedSamples,
-                                final List<Sample2D> currentViewTrackedSamples,
-                                final int previousViewId, final int currentViewId,
-                                final List<MatchedSamples> matches) {
-                            matches.clear();
 
-                            int numCameras = 0;
-                            if (mEstimatedMetricCamera1 != null &&
-                                    (mEstimatedMetricCamera1.getViewId() == previousViewId ||
-                                            mEstimatedMetricCamera1.getViewId() == currentViewId)) {
-                                numCameras++;
-                            }
-                            if (mEstimatedMetricCamera2 != null &&
-                                    (mEstimatedMetricCamera2.getViewId() == previousViewId ||
-                                            mEstimatedMetricCamera2.getViewId() == currentViewId)) {
-                                numCameras++;
-                            }
-
-                            EstimatedCamera[] estimatedCameras = null;
-                            if (numCameras > 0) {
-                                estimatedCameras = new EstimatedCamera[numCameras];
-
-
-                                int pos = 0;
-                                if (mEstimatedMetricCamera1 != null &&
-                                        (mEstimatedMetricCamera1.getViewId() == previousViewId ||
-                                                mEstimatedMetricCamera1.getViewId() == currentViewId)) {
-                                    estimatedCameras[pos] = mEstimatedMetricCamera1;
-                                    pos++;
-                                }
-                                if (mEstimatedMetricCamera2 != null &&
-                                        (mEstimatedMetricCamera2.getViewId() == previousViewId ||
-                                                mEstimatedMetricCamera2.getViewId() == currentViewId)) {
-                                    estimatedCameras[pos] = mEstimatedMetricCamera2;
-                                }
-                            }
-
-                            final List<Point2D> allPreviousPoints = new ArrayList<>();
-                            for (final Sample2D sample : allPreviousViewSamples) {
-                                allPreviousPoints.add(sample.getPoint());
-                            }
-                            final KDTree2D tree = new KDTree2D(allPreviousPoints);
-
-                            // search previous view tracked samples within tree
-                            final int numTrackedSamples = previousViewTrackedSamples.size();
-                            Point2D point;
-                            Point2D nearestPoint;
-                            int nearestIndex;
-                            MatchedSamples match;
-                            for (int i = 0; i < numTrackedSamples; i++) {
-                                final Sample2D previousSample = previousViewTrackedSamples.get(i);
-                                point = previousSample.getPoint();
-                                nearestIndex = tree.nearestIndex(point);
-                                nearestPoint = allPreviousPoints.get(nearestIndex);
-                                final Sample2D nearestSample = allPreviousViewSamples.get(nearestIndex);
-
-                                if (point.distanceTo(nearestPoint) > NEAREST_THRESHOLD) {
-                                    continue;
-                                }
-
-                                final Sample2D currentSample = currentViewTrackedSamples.get(i);
-
-                                match = new MatchedSamples();
-                                match.setSamples(new Sample2D[]{
-                                        previousSample, currentSample
-                                });
-                                match.setViewIds(new int[]{previousViewId, currentViewId});
-
-                                match.setReconstructedPoint(nearestSample.getReconstructedPoint());
-
-                                if (estimatedCameras != null) {
-                                    match.setCameras(estimatedCameras);
-                                }
-
-                                matches.add(match);
-                            }
+                        for (var i = start; i < numPoints1; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints3.get(i));
+                            sample.setViewId(currentViewId);
+                            currentViewTrackedSamples.add(sample);
                         }
 
-                        @Override
-                        public void onFundamentalMatrixEstimated(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final EstimatedFundamentalMatrix estimatedFundamentalMatrix) {
-                            if (mEstimatedFundamentalMatrix == null) {
-                                mEstimatedFundamentalMatrix = estimatedFundamentalMatrix;
-                            } else if (mEstimatedFundamentalMatrix2 == null) {
-                                mEstimatedFundamentalMatrix2 = estimatedFundamentalMatrix;
-                            }
+                        for (var i = 0; i < numPoints2; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints3b.get(i));
+                            sample.setViewId(currentViewId);
+                            currentViewTrackedSamples.add(sample);
                         }
 
-                        @Override
-                        public void onMetricCameraEstimated(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final int previousViewId, final int currentViewId,
-                                final EstimatedCamera previousCamera,
-                                final EstimatedCamera currentCamera) {
-                            if (mEstimatedMetricCamera2 == null) {
-                                mEstimatedMetricCamera1 = previousCamera;
-                                mEstimatedMetricCamera2 = currentCamera;
-                            } else if (mEstimatedMetricCamera3 == null) {
-                                mEstimatedMetricCamera2 = previousCamera;
-                                mEstimatedMetricCamera3 = currentCamera;
-                            }
+                        // assume the following accelerator and gyroscope samples
+                        // are obtained during a period of 1 second between 2nd
+                        // and 3rd view (50 samples * 0.02 s/sample = 1 second)
+                        final var orientation = new Quaternion(rotation2);
+                        for (var s = 0; s < N_SENSOR_SAMPLES; s++) {
+                            reconstructor.updateAccelerometerSample(timestamp, (float) accelerationX2,
+                                    (float) accelerationY2, (float) accelerationZ2);
+                            reconstructor.updateGyroscopeSample(timestamp, (float) angularSpeed3X,
+                                    (float) angularSpeed3Y, (float) angularSpeed3Z);
+                            reconstructor.updateOrientationSample(timestamp, orientation);
+                            // update orientation
+                            orientation.combine(diffRotation3);
+                            timestamp += DELTA_NANOS;
+                        }
+                    }
+                }
+
+                @Override
+                public void onSamplesAccepted(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final int viewId, final List<Sample2D> previousViewTrackedSamples,
+                        final List<Sample2D> currentViewTrackedSamples) {
+                    viewCount++;
+                }
+
+                @Override
+                public void onSamplesRejected(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final int viewId, final List<Sample2D> previousViewTrackedSamples,
+                        final List<Sample2D> currentViewTrackedSamples) {
+                    viewCount++;
+                }
+
+                @Override
+                public void onRequestMatches(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final List<Sample2D> allPreviousViewSamples,
+                        final List<Sample2D> previousViewTrackedSamples,
+                        final List<Sample2D> currentViewTrackedSamples,
+                        final int previousViewId, final int currentViewId,
+                        final List<MatchedSamples> matches) {
+                    matches.clear();
+
+                    int numCameras = 0;
+                    if (estimatedMetricCamera1 != null && (estimatedMetricCamera1.getViewId() == previousViewId
+                            || estimatedMetricCamera1.getViewId() == currentViewId)) {
+                        numCameras++;
+                    }
+                    if (estimatedMetricCamera2 != null && (estimatedMetricCamera2.getViewId() == previousViewId
+                            || estimatedMetricCamera2.getViewId() == currentViewId)) {
+                        numCameras++;
+                    }
+
+                    EstimatedCamera[] estimatedCameras = null;
+                    if (numCameras > 0) {
+                        estimatedCameras = new EstimatedCamera[numCameras];
+
+                        var pos = 0;
+                        if (estimatedMetricCamera1 != null && (estimatedMetricCamera1.getViewId() == previousViewId
+                                || estimatedMetricCamera1.getViewId() == currentViewId)) {
+                            estimatedCameras[pos] = estimatedMetricCamera1;
+                            pos++;
+                        }
+                        if (estimatedMetricCamera2 != null && (estimatedMetricCamera2.getViewId() == previousViewId
+                                || estimatedMetricCamera2.getViewId() == currentViewId)) {
+                            estimatedCameras[pos] = estimatedMetricCamera2;
+                        }
+                    }
+
+                    final var allPreviousPoints = new ArrayList<Point2D>();
+                    for (final var sample : allPreviousViewSamples) {
+                        allPreviousPoints.add(sample.getPoint());
+                    }
+                    final var tree = new KDTree2D(allPreviousPoints);
+
+                    // search previous view tracked samples within tree
+                    final var numTrackedSamples = previousViewTrackedSamples.size();
+                    Point2D point;
+                    Point2D nearestPoint;
+                    int nearestIndex;
+                    MatchedSamples match;
+                    for (var i = 0; i < numTrackedSamples; i++) {
+                        final var previousSample = previousViewTrackedSamples.get(i);
+                        point = previousSample.getPoint();
+                        nearestIndex = tree.nearestIndex(point);
+                        nearestPoint = allPreviousPoints.get(nearestIndex);
+                        final var nearestSample = allPreviousViewSamples.get(nearestIndex);
+
+                        if (point.distanceTo(nearestPoint) > NEAREST_THRESHOLD) {
+                            continue;
                         }
 
-                        @Override
-                        public void onMetricReconstructedPointsEstimated(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final List<MatchedSamples> matches,
-                                final List<ReconstructedPoint3D> points) {
-                            mMetricReconstructedPoints = points;
+                        final var currentSample = currentViewTrackedSamples.get(i);
+
+                        match = new MatchedSamples();
+                        match.setSamples(new Sample2D[]{previousSample, currentSample});
+                        match.setViewIds(new int[]{previousViewId, currentViewId});
+
+                        match.setReconstructedPoint(nearestSample.getReconstructedPoint());
+
+                        if (estimatedCameras != null) {
+                            match.setCameras(estimatedCameras);
                         }
 
-                        @Override
-                        public void onEuclideanCameraEstimated(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final int previousViewId, final int currentViewId, final double scale,
-                                final EstimatedCamera previousCamera,
-                                final EstimatedCamera currentCamera) {
-                            if (mEstimatedEuclideanCamera2 == null) {
-                                mEstimatedEuclideanCamera1 = previousCamera;
-                                mEstimatedEuclideanCamera2 = currentCamera;
-                                mScale = scale;
-                            } else if (mEstimatedEuclideanCamera3 == null) {
-                                mEstimatedEuclideanCamera2 = previousCamera;
-                                mEstimatedEuclideanCamera3 = currentCamera;
-                                mScale2 = scale;
-                            }
-                        }
+                        matches.add(match);
+                    }
+                }
 
-                        @Override
-                        public void onEuclideanReconstructedPointsEstimated(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final double scale, final List<ReconstructedPoint3D> points) {
-                            if (mEuclideanReconstructedPoints == null) {
-                                mScale = scale;
-                            } else {
-                                mScale2 = scale;
-                            }
+                @Override
+                public void onFundamentalMatrixEstimated(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final EstimatedFundamentalMatrix estimatedFundamentalMatrix) {
+                    if (AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest.this
+                            .estimatedFundamentalMatrix == null) {
+                        AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest.this
+                                .estimatedFundamentalMatrix = estimatedFundamentalMatrix;
+                    } else if (estimatedFundamentalMatrix2 == null) {
+                        estimatedFundamentalMatrix2 = estimatedFundamentalMatrix;
+                    }
+                }
 
-                            mEuclideanReconstructedPoints = points;
-                        }
+                @Override
+                public void onMetricCameraEstimated(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final int previousViewId, final int currentViewId,
+                        final EstimatedCamera previousCamera, final EstimatedCamera currentCamera) {
+                    if (estimatedMetricCamera2 == null) {
+                        estimatedMetricCamera1 = previousCamera;
+                        estimatedMetricCamera2 = currentCamera;
+                    } else if (emEstimatedMetricCamera3 == null) {
+                        estimatedMetricCamera2 = previousCamera;
+                        emEstimatedMetricCamera3 = currentCamera;
+                    }
+                }
 
-                        @Override
-                        public void onStart(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
-                            mStarted = true;
-                        }
+                @Override
+                public void onMetricReconstructedPointsEstimated(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final List<MatchedSamples> matches, final List<ReconstructedPoint3D> points) {
+                    metricReconstructedPoints = points;
+                }
 
-                        @Override
-                        public void onFinish(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
-                            mFinished = true;
-                        }
+                @Override
+                public void onEuclideanCameraEstimated(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final int previousViewId, final int currentViewId, final double scale,
+                        final EstimatedCamera previousCamera, final EstimatedCamera currentCamera) {
+                    if (estimatedEuclideanCamera2 == null) {
+                        estimatedEuclideanCamera1 = previousCamera;
+                        estimatedEuclideanCamera2 = currentCamera;
+                        AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest.this.scale = scale;
+                    } else if (estimatedEuclideanCamera3 == null) {
+                        estimatedEuclideanCamera2 = previousCamera;
+                        estimatedEuclideanCamera3 = currentCamera;
+                        scale2 = scale;
+                    }
+                }
 
-                        @Override
-                        public void onCancel(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
-                            mCancelled = true;
-                        }
+                @Override
+                public void onEuclideanReconstructedPointsEstimated(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final double scale, final List<ReconstructedPoint3D> points) {
+                    if (euclideanReconstructedPoints == null) {
+                        AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest.this.scale = scale;
+                    } else {
+                        scale2 = scale;
+                    }
 
-                        @Override
-                        public void onFail(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
-                            mFailed = true;
-                        }
-                    };
+                    euclideanReconstructedPoints = points;
+                }
 
-            final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor =
-                    new AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor(configuration, listener);
+                @Override
+                public void onStart(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
+                    started = true;
+                }
+
+                @Override
+                public void onFinish(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
+                    finished = true;
+                }
+
+                @Override
+                public void onCancel(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
+                    cancelled = true;
+                }
+
+                @Override
+                public void onFail(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
+                    failed = true;
+                }
+            };
+
+            final var reconstructor = new AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor(
+                    configuration, listener);
 
             // check initial values
             reset();
-            assertFalse(mStarted);
-            assertFalse(mFinished);
-            assertFalse(mCancelled);
-            assertFalse(mFailed);
+            assertFalse(started);
+            assertFalse(finished);
+            assertFalse(cancelled);
+            assertFalse(failed);
             assertFalse(reconstructor.isFinished());
 
             reconstructor.start();
 
             // check correctness
-            assertTrue(mStarted);
-            assertTrue(mFinished);
-            assertFalse(mCancelled);
-            assertFalse(mFailed);
+            assertTrue(started);
+            assertTrue(finished);
+            assertFalse(cancelled);
+            assertFalse(failed);
             assertTrue(reconstructor.isFinished());
-            assertTrue(mSlamDataAvailable > 0);
-            assertTrue(mSlamCameraEstimated > 0);
-            assertNotNull(mSlamCamera);
-            assertNotNull(mSlamCovariance);
+            assertTrue(slamDataAvailable > 0);
+            assertTrue(slamCameraEstimated > 0);
+            assertNotNull(slamCamera);
+            assertNotNull(slamCovariance);
             assertFalse(reconstructor.isFirstView());
             assertFalse(reconstructor.isSecondView());
             assertTrue(reconstructor.isAdditionalView());
             assertTrue(reconstructor.isAdditionalView());
             assertTrue(reconstructor.getViewCount() > 0);
             assertNotNull(reconstructor.getCurrentEstimatedFundamentalMatrix());
-            assertSame(mEstimatedFundamentalMatrix,
-                    reconstructor.getCurrentEstimatedFundamentalMatrix());
+            assertSame(estimatedFundamentalMatrix, reconstructor.getCurrentEstimatedFundamentalMatrix());
             assertNotNull(reconstructor.getCurrentMetricEstimatedCamera());
-            if (reconstructor.getCurrentMetricEstimatedCamera() != mEstimatedMetricCamera3) {
+            if (reconstructor.getCurrentMetricEstimatedCamera() != emEstimatedMetricCamera3) {
                 continue;
             }
-            assertSame(mEstimatedMetricCamera3, reconstructor.getCurrentMetricEstimatedCamera());
+            assertSame(emEstimatedMetricCamera3, reconstructor.getCurrentMetricEstimatedCamera());
             assertNotNull(reconstructor.getPreviousMetricEstimatedCamera());
-            assertSame(mEstimatedMetricCamera2, reconstructor.getPreviousMetricEstimatedCamera());
+            assertSame(estimatedMetricCamera2, reconstructor.getPreviousMetricEstimatedCamera());
             assertNotNull(reconstructor.getCurrentEuclideanEstimatedCamera());
-            assertSame(mEstimatedEuclideanCamera3, reconstructor.getCurrentEuclideanEstimatedCamera());
+            assertSame(estimatedEuclideanCamera3, reconstructor.getCurrentEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getPreviousEuclideanEstimatedCamera());
-            assertSame(mEstimatedEuclideanCamera2, reconstructor.getPreviousEuclideanEstimatedCamera());
+            assertSame(estimatedEuclideanCamera2, reconstructor.getPreviousEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getActiveMetricReconstructedPoints());
-            assertSame(mMetricReconstructedPoints, reconstructor.getActiveMetricReconstructedPoints());
+            assertSame(metricReconstructedPoints, reconstructor.getActiveMetricReconstructedPoints());
             assertNotNull(reconstructor.getActiveEuclideanReconstructedPoints());
-            assertSame(mEuclideanReconstructedPoints,
-                    reconstructor.getActiveEuclideanReconstructedPoints());
-            assertEquals(mScale2, reconstructor.getCurrentScale(), 0.0);
+            assertSame(euclideanReconstructedPoints, reconstructor.getActiveEuclideanReconstructedPoints());
+            assertEquals(scale2, reconstructor.getCurrentScale(), 0.0);
             assertNotNull(reconstructor.getPreviousViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewNewlySpawnedSamples());
 
             // check that estimated fundamental matrix is correct
             fundamentalMatrix1.normalize();
-            mEstimatedFundamentalMatrix.getFundamentalMatrix().normalize();
+            estimatedFundamentalMatrix.getFundamentalMatrix().normalize();
 
-            assertNull(mEstimatedFundamentalMatrix2);
+            assertNull(estimatedFundamentalMatrix2);
 
             // matrices are equal up to scale
             if (!fundamentalMatrix1.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                    ABSOLUTE_ERROR) && !fundamentalMatrix1.getInternalMatrix()
-                    .multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                            ABSOLUTE_ERROR)) {
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    && !fundamentalMatrix1.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix1.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                    ABSOLUTE_ERROR) || fundamentalMatrix1.getInternalMatrix()
-                    .multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                            ABSOLUTE_ERROR));
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    || fundamentalMatrix1.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR));
 
             // check that reconstructed points are in a metric stratum (up to a
             // certain scale)
-            final PinholeCamera estimatedMetricCamera1 = mEstimatedMetricCamera1.getCamera();
-            final PinholeCamera estimatedMetricCamera2 = mEstimatedMetricCamera2.getCamera();
-            final PinholeCamera estimatedMetricCamera3 = mEstimatedMetricCamera3.getCamera();
-            assertNotSame(mEstimatedMetricCamera1, mEstimatedEuclideanCamera1);
-            assertNotSame(mEstimatedMetricCamera2, mEstimatedEuclideanCamera2);
-            assertNotSame(mEstimatedMetricCamera3, mEstimatedEuclideanCamera3);
+            final var estMetricCam1 = this.estimatedMetricCamera1.getCamera();
+            final var estMetricCam2 = this.estimatedMetricCamera2.getCamera();
+            final var estMetricCam3 = emEstimatedMetricCamera3.getCamera();
+            assertNotSame(this.estimatedMetricCamera1, estimatedEuclideanCamera1);
+            assertNotSame(this.estimatedMetricCamera2, estimatedEuclideanCamera2);
+            assertNotSame(emEstimatedMetricCamera3, estimatedEuclideanCamera3);
 
-            final PinholeCamera estimatedEuclideanCamera1 = mEstimatedEuclideanCamera1.getCamera();
-            final PinholeCamera estimatedEuclideanCamera2 = mEstimatedEuclideanCamera2.getCamera();
-            final PinholeCamera estimatedEuclideanCamera3 = mEstimatedEuclideanCamera3.getCamera();
+            final var estEuclideanCam1 = this.estimatedEuclideanCamera1.getCamera();
+            final var estEuclideanCam2 = this.estimatedEuclideanCamera2.getCamera();
+            final var estEuclideanCam3 = this.estimatedEuclideanCamera3.getCamera();
 
-            estimatedMetricCamera1.decompose();
-            estimatedMetricCamera2.decompose();
-            estimatedMetricCamera3.decompose();
+            estMetricCam1.decompose();
+            estMetricCam2.decompose();
+            estMetricCam3.decompose();
 
-            estimatedEuclideanCamera1.decompose();
-            estimatedEuclideanCamera2.decompose();
-            estimatedEuclideanCamera3.decompose();
+            estEuclideanCam1.decompose();
+            estEuclideanCam2.decompose();
+            estEuclideanCam3.decompose();
 
-            assertNotSame(mMetricReconstructedPoints, mEuclideanReconstructedPoints);
+            assertNotSame(metricReconstructedPoints, euclideanReconstructedPoints);
 
-            final int numReconstructedPoints = numPoints1 - start + numPoints2;
+            final var numReconstructedPoints = numPoints1 - start + numPoints2;
 
-            if (mMetricReconstructedPoints.size() != numReconstructedPoints) {
+            if (metricReconstructedPoints.size() != numReconstructedPoints) {
                 continue;
             }
 
-            final List<Point3D> metricReconstructedPoints3D = new ArrayList<>();
-            final List<Point3D> euclideanReconstructedPoints3D = new ArrayList<>();
-            for (int i = 0; i < numReconstructedPoints; i++) {
-                metricReconstructedPoints3D.add(mMetricReconstructedPoints.get(i).getPoint());
-                euclideanReconstructedPoints3D.add(mEuclideanReconstructedPoints.get(i).getPoint());
+            final var metricReconstructedPoints3D = new ArrayList<Point3D>();
+            final var euclideanReconstructedPoints3D = new ArrayList<Point3D>();
+            for (var i = 0; i < numReconstructedPoints; i++) {
+                metricReconstructedPoints3D.add(metricReconstructedPoints.get(i).getPoint());
+                euclideanReconstructedPoints3D.add(euclideanReconstructedPoints.get(i).getPoint());
             }
 
             // check that all points are in front of both cameras
-            for (int i = 0; i < numReconstructedPoints; i++) {
-                final Point3D p = metricReconstructedPoints3D.get(i);
-                final Point3D pe = euclideanReconstructedPoints3D.get(i);
+            for (var i = 0; i < numReconstructedPoints; i++) {
+                final var p = metricReconstructedPoints3D.get(i);
+                final var pe = euclideanReconstructedPoints3D.get(i);
 
-                assertTrue(estimatedMetricCamera1.isPointInFrontOfCamera(p));
-                assertTrue(estimatedMetricCamera2.isPointInFrontOfCamera(p));
+                assertTrue(estMetricCam1.isPointInFrontOfCamera(p));
+                assertTrue(estMetricCam2.isPointInFrontOfCamera(p));
 
-                assertTrue(estimatedEuclideanCamera1.isPointInFrontOfCamera(pe));
-                assertTrue(estimatedEuclideanCamera2.isPointInFrontOfCamera(pe));
+                assertTrue(estEuclideanCam1.isPointInFrontOfCamera(pe));
+                assertTrue(estEuclideanCam2.isPointInFrontOfCamera(pe));
             }
 
-            final PinholeCameraIntrinsicParameters euclideanIntrinsic1 =
-                    estimatedEuclideanCamera1.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters euclideanIntrinsic2 =
-                    estimatedEuclideanCamera2.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters euclideanIntrinsic3 =
-                    estimatedEuclideanCamera3.getIntrinsicParameters();
+            final var euclideanIntrinsic1 = estEuclideanCam1.getIntrinsicParameters();
+            final var euclideanIntrinsic2 = estEuclideanCam2.getIntrinsicParameters();
+            final var euclideanIntrinsic3 = estEuclideanCam3.getIntrinsicParameters();
 
-            final Rotation3D euclideanRotation1 = estimatedEuclideanCamera1.getCameraRotation();
-            final Rotation3D euclideanRotation2 = estimatedEuclideanCamera2.getCameraRotation();
-            final Rotation3D euclideanRotation3 = estimatedEuclideanCamera3.getCameraRotation();
+            final var euclideanRotation1 = estEuclideanCam1.getCameraRotation();
+            final var euclideanRotation2 = estEuclideanCam2.getCameraRotation();
+            final var euclideanRotation3 = estEuclideanCam3.getCameraRotation();
 
-            assertEquals(euclideanIntrinsic1.getHorizontalFocalLength(),
-                    intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic1.getVerticalFocalLength(),
-                    intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getHorizontalFocalLength(), intrinsic.getHorizontalFocalLength(),
+                    ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getVerticalFocalLength(), intrinsic.getVerticalFocalLength(),
+                    ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic1.getHorizontalPrincipalPoint(),
-                    intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic1.getVerticalPrincipalPoint(),
-                    intrinsic.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getHorizontalPrincipalPoint(), intrinsic.getHorizontalPrincipalPoint(),
+                    ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getVerticalPrincipalPoint(), intrinsic.getVerticalPrincipalPoint(),
+                    ABSOLUTE_ERROR);
 
-            assertEquals(euclideanIntrinsic2.getHorizontalFocalLength(),
-                    intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic2.getVerticalFocalLength(),
-                    intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getHorizontalFocalLength(), intrinsic.getHorizontalFocalLength(),
+                    ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getVerticalFocalLength(), intrinsic.getVerticalFocalLength(),
+                    ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic2.getHorizontalPrincipalPoint(),
-                    intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic2.getVerticalPrincipalPoint(),
-                    intrinsic.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getHorizontalPrincipalPoint(), intrinsic.getHorizontalPrincipalPoint(),
+                    ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getVerticalPrincipalPoint(), intrinsic.getVerticalPrincipalPoint(),
+                    ABSOLUTE_ERROR);
 
-            assertEquals(euclideanIntrinsic3.getHorizontalFocalLength(),
-                    intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic3.getVerticalFocalLength(),
-                    intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic3.getHorizontalFocalLength(), intrinsic.getHorizontalFocalLength(),
+                    ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic3.getVerticalFocalLength(), intrinsic.getVerticalFocalLength(),
+                    ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic3.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic3.getHorizontalPrincipalPoint(),
-                    intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic3.getVerticalPrincipalPoint(),
-                    intrinsic.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic3.getHorizontalPrincipalPoint(), intrinsic.getHorizontalPrincipalPoint(),
+                    ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic3.getVerticalPrincipalPoint(), intrinsic.getVerticalPrincipalPoint(),
+                    ABSOLUTE_ERROR);
 
-            assertTrue(euclideanRotation1.asInhomogeneousMatrix().equals(
-                    rotation1.asInhomogeneousMatrix(), ABSOLUTE_ERROR));
-            assertTrue(euclideanRotation2.asInhomogeneousMatrix().equals(
-                    rotation2.asInhomogeneousMatrix(), ABSOLUTE_ERROR));
-            assertTrue(euclideanRotation3.asInhomogeneousMatrix().equals(
-                    rotation3.asInhomogeneousMatrix(), ABSOLUTE_ERROR));
+            assertTrue(euclideanRotation1.asInhomogeneousMatrix().equals(rotation1.asInhomogeneousMatrix(),
+                    ABSOLUTE_ERROR));
+            assertTrue(euclideanRotation2.asInhomogeneousMatrix().equals(rotation2.asInhomogeneousMatrix(),
+                    ABSOLUTE_ERROR));
+            assertTrue(euclideanRotation3.asInhomogeneousMatrix().equals(rotation3.asInhomogeneousMatrix(),
+                    ABSOLUTE_ERROR));
 
             // check that points are correct (after scale correction)
 
-            final MetricTransformation3D scaleAndOrientationTransformation
-                    = new MetricTransformation3D(mScale2);
+            final var scaleAndOrientationTransformation = new MetricTransformation3D(scale2);
             scaleAndOrientationTransformation.setRotation(rotation1.inverseRotationAndReturnNew());
 
-
-            int numValidPoints = 0;
-            for (int i = start; i < numPoints1; i++) {
-                final Point3D point = points3D1.get(i);
-                final Point3D euclideanPoint = euclideanReconstructedPoints3D.get(i - start);
+            var numValidPoints = 0;
+            for (var i = start; i < numPoints1; i++) {
+                final var point = points3D1.get(i);
+                final var euclideanPoint = euclideanReconstructedPoints3D.get(i - start);
 
                 // check metric points
-                final Point3D rescaledPoint = Point3D.create();
-                scaleAndOrientationTransformation.transform(metricReconstructedPoints3D.get(i - start),
-                        rescaledPoint);
+                final var rescaledPoint = Point3D.create();
+                scaleAndOrientationTransformation.transform(metricReconstructedPoints3D.get(i - start), rescaledPoint);
 
                 assertTrue(euclideanPoint.equals(rescaledPoint, LARGE_ABSOLUTE_ERROR));
 
                 rescaledPoint.setInhomogeneousCoordinates(
-                        rescaledPoint.getInhomX() * baseline / mScale2,
-                        rescaledPoint.getInhomY() * baseline / mScale2,
-                        rescaledPoint.getInhomZ() * baseline / mScale2);
+                        rescaledPoint.getInhomX() * baseline / scale2,
+                        rescaledPoint.getInhomY() * baseline / scale2,
+                        rescaledPoint.getInhomZ() * baseline / scale2);
                 if (point.equals(rescaledPoint, LARGE_ABSOLUTE_ERROR)) {
                     numValidPoints++;
                 }
             }
 
-            for (int i = 0; i < numPoints2; i++) {
-                final Point3D point = points3D2.get(i);
-                final Point3D euclideanPoint = euclideanReconstructedPoints3D.get(i + numPoints1 - start);
+            for (var i = 0; i < numPoints2; i++) {
+                final var point = points3D2.get(i);
+                final var euclideanPoint = euclideanReconstructedPoints3D.get(i + numPoints1 - start);
 
                 // check metric points
-                final Point3D rescaledPoint = Point3D.create();
+                final var rescaledPoint = Point3D.create();
                 scaleAndOrientationTransformation.transform(
                         metricReconstructedPoints3D.get(i + numPoints1 - start), rescaledPoint);
 
                 assertTrue(euclideanPoint.equals(rescaledPoint, LARGE_ABSOLUTE_ERROR));
 
                 rescaledPoint.setInhomogeneousCoordinates(
-                        rescaledPoint.getInhomX() * baseline / mScale2,
-                        rescaledPoint.getInhomY() * baseline / mScale2,
-                        rescaledPoint.getInhomZ() * baseline / mScale2);
+                        rescaledPoint.getInhomX() * baseline / scale2,
+                        rescaledPoint.getInhomY() * baseline / scale2,
+                        rescaledPoint.getInhomZ() * baseline / scale2);
                 if (point.equals(rescaledPoint, LARGE_ABSOLUTE_ERROR)) {
                     numValidPoints++;
                 }
@@ -2565,54 +2418,41 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest
     }
 
     @Test
-    public void testGeneralPointsEssentialWithConstantAccelerationAndRotationWithNoiseThreeViews()
+    void testGeneralPointsEssentialWithConstantAccelerationAndRotationWithNoiseThreeViews()
             throws InvalidPairOfCamerasException, AlgebraException, CameraException,
-            com.irurueta.geometry.estimators.NotReadyException,
-            com.irurueta.geometry.NotAvailableException, RotationException {
+            com.irurueta.geometry.estimators.NotReadyException, com.irurueta.geometry.NotAvailableException,
+            RotationException {
 
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer offsetRandomizer = new UniformRandomizer(
-                    new Random());
-            final GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
-                    new Random(), 0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var offsetRandomizer = new UniformRandomizer();
+            final var noiseRandomizer = new GaussianRandomizer(0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
 
-            final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorConfiguration configuration =
+            final var configuration =
                     new AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorConfiguration();
-            configuration.setInitialCamerasEstimatorMethod(
-                    InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
+            configuration.setInitialCamerasEstimatorMethod(InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX);
 
-            final float accelerationOffsetX = offsetRandomizer.nextFloat(
-                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-            final float accelerationOffsetY = offsetRandomizer.nextFloat(
-                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-            final float accelerationOffsetZ = offsetRandomizer.nextFloat(
-                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
+            final var accelerationOffsetX = offsetRandomizer.nextFloat(MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
+            final var accelerationOffsetY = offsetRandomizer.nextFloat(MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
+            final var accelerationOffsetZ = offsetRandomizer.nextFloat(MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
 
-            final float angularOffsetX = offsetRandomizer.nextFloat(
-                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-            final float angularOffsetY = offsetRandomizer.nextFloat(
-                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
-            final float angularOffsetZ = offsetRandomizer.nextFloat(
-                    MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
+            final var angularOffsetX = offsetRandomizer.nextFloat(MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
+            final var angularOffsetY = offsetRandomizer.nextFloat(MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
+            final var angularOffsetZ = offsetRandomizer.nextFloat(MIN_CALIBRATION_OFFSET, MAX_CALIBRATION_OFFSET);
 
-            final AbsoluteOrientationConstantVelocityModelSlamCalibrator calibrator = createFinishedCalibrator(
-                    accelerationOffsetX, accelerationOffsetY, accelerationOffsetZ,
-                    angularOffsetX, angularOffsetY, angularOffsetZ, noiseRandomizer);
-            final AbsoluteOrientationConstantVelocityModelSlamCalibrationData calibrationData
-                    = calibrator.getCalibrationData();
+            final var calibrator = createFinishedCalibrator(accelerationOffsetX, accelerationOffsetY,
+                    accelerationOffsetZ, angularOffsetX, angularOffsetY, angularOffsetZ, noiseRandomizer);
+            final var calibrationData = calibrator.getCalibrationData();
             configuration.setCalibrationData(calibrationData);
 
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH_ESSENTIAL,
-                    MAX_FOCAL_LENGTH_ESSENTIAL);
-            final double aspectRatio = configuration.getInitialCamerasAspectRatio();
-            final double skewness = 0.0;
-            final double principalPoint = 0.0;
+            final var randomizer = new UniformRandomizer();
+            final var focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH_ESSENTIAL, MAX_FOCAL_LENGTH_ESSENTIAL);
+            final var aspectRatio = configuration.getInitialCamerasAspectRatio();
+            final var skewness = 0.0;
+            final var principalPoint = 0.0;
 
-            final PinholeCameraIntrinsicParameters intrinsic =
-                    new PinholeCameraIntrinsicParameters(focalLength, focalLength,
-                            principalPoint, principalPoint, skewness);
+            final var intrinsic = new PinholeCameraIntrinsicParameters(focalLength, focalLength, principalPoint,
+                    principalPoint, skewness);
             intrinsic.setAspectRatioKeepingHorizontalFocalLength(aspectRatio);
 
             configuration.setInitialIntrinsic1(intrinsic);
@@ -2623,56 +2463,42 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest
             configuration.setUseDAQForAdditionalCamerasIntrinics(false);
             configuration.setUseDIACForAdditionalCamerasIntrinsics(false);
 
-            final double alphaEuler1 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double betaEuler1 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double gammaEuler1 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double alphaEuler3 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double betaEuler3 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double gammaEuler3 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+            final var alphaEuler1 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var betaEuler1 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var gammaEuler1 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var alphaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var betaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var gammaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var alphaEuler3 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var betaEuler3 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var gammaEuler3 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-            final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1,
-                    betaEuler1, gammaEuler1);
-            final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2,
-                    betaEuler2, gammaEuler2);
-            final AxisRotation3D axisRotation2 = new AxisRotation3D(
-                    rotation1.inverseRotationAndReturnNew().combineAndReturnNew(rotation2));
+            final var rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final var rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+            final var axisRotation2 = new AxisRotation3D(rotation1.inverseRotationAndReturnNew().combineAndReturnNew(
+                    rotation2));
 
-            final MatrixRotation3D rotation3 = new MatrixRotation3D(alphaEuler3,
-                    betaEuler3, gammaEuler3);
+            final var rotation3 = new MatrixRotation3D(alphaEuler3, betaEuler3, gammaEuler3);
 
-            final double axis2X = axisRotation2.getAxisX();
-            final double axis2Y = axisRotation2.getAxisY();
-            final double axis2Z = axisRotation2.getAxisZ();
-            final double angle2 = axisRotation2.getRotationAngle();
+            final var axis2X = axisRotation2.getAxisX();
+            final var axis2Y = axisRotation2.getAxisY();
+            final var axis2Z = axisRotation2.getAxisZ();
+            final var angle2 = axisRotation2.getRotationAngle();
 
-            AxisRotation3D diffRotation = new AxisRotation3D(axis2X, axis2Y,
-                    axis2Z, angle2 / N_SENSOR_SAMPLES);
-            Quaternion diffQuaternion = new Quaternion(diffRotation);
+            var diffRotation = new AxisRotation3D(axis2X, axis2Y, axis2Z, angle2 / N_SENSOR_SAMPLES);
+            var diffQuaternion = new Quaternion(diffRotation);
 
             // angular speeds (roll, pitch, yaw) on x, y, z axes
-            double[] angularSpeeds = diffQuaternion.toEulerAngles();
-            final double angularSpeed2X = angularSpeeds[0];
-            final double angularSpeed2Y = angularSpeeds[1];
-            final double angularSpeed2Z = angularSpeeds[2];
-            final Quaternion diffRotation2 = new Quaternion(angularSpeed2X,
-                    angularSpeed2Y, angularSpeed2Z);
+            var angularSpeeds = diffQuaternion.toEulerAngles();
+            final var angularSpeed2X = angularSpeeds[0];
+            final var angularSpeed2Y = angularSpeeds[1];
+            final var angularSpeed2Z = angularSpeeds[2];
+            final var diffRotation2 = new Quaternion(angularSpeed2X, angularSpeed2Y, angularSpeed2Z);
 
             // number of samples (50 samples * 0.02 s/sample = 1 second)
-            final MatrixRotation3D rotation2b = new MatrixRotation3D(rotation1);
-            final MatrixRotation3D rotation2c = new MatrixRotation3D(rotation1);
-            for (int s = 0; s < N_SENSOR_SAMPLES; s++) {
+            final var rotation2b = new MatrixRotation3D(rotation1);
+            final var rotation2c = new MatrixRotation3D(rotation1);
+            for (var s = 0; s < N_SENSOR_SAMPLES; s++) {
                 rotation2b.combine(diffRotation);
                 rotation2c.combine(diffRotation2);
             }
@@ -2682,29 +2508,28 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest
             assertTrue(rotation2.equals(rotation2b, ABSOLUTE_ERROR));
             assertTrue(rotation2.equals(rotation2c, ABSOLUTE_ERROR));
 
-            final AxisRotation3D accumDiffRotation = rotation2.inverseRotationAndReturnNew().
-                    combineAndReturnNew(rotation3).toAxisRotation();
-            final double axis3X = accumDiffRotation.getAxisX();
-            final double axis3Y = accumDiffRotation.getAxisY();
-            final double axis3Z = accumDiffRotation.getAxisZ();
-            final double angle3 = accumDiffRotation.getRotationAngle();
+            final var accumDiffRotation = rotation2.inverseRotationAndReturnNew().combineAndReturnNew(rotation3)
+                    .toAxisRotation();
+            final var axis3X = accumDiffRotation.getAxisX();
+            final var axis3Y = accumDiffRotation.getAxisY();
+            final var axis3Z = accumDiffRotation.getAxisZ();
+            final var angle3 = accumDiffRotation.getRotationAngle();
 
             diffRotation = new AxisRotation3D(axis3X, axis3Y, axis3Z, angle3 / N_SENSOR_SAMPLES);
             diffQuaternion = new Quaternion(diffRotation);
 
             // angular speeds (roll, pitch, yaw) on x, y, z axes
             angularSpeeds = diffQuaternion.toEulerAngles();
-            final double angularSpeed3X = angularSpeeds[0];
-            final double angularSpeed3Y = angularSpeeds[1];
-            final double angularSpeed3Z = angularSpeeds[2];
-            final Quaternion diffRotation3 =
-                    new Quaternion(angularSpeed3X, angularSpeed3Y, angularSpeed3Z);
+            final var angularSpeed3X = angularSpeeds[0];
+            final var angularSpeed3Y = angularSpeeds[1];
+            final var angularSpeed3Z = angularSpeeds[2];
+            final var diffRotation3 = new Quaternion(angularSpeed3X, angularSpeed3Y, angularSpeed3Z);
 
             // number of samples (50 samples * 0.02 s/sample = 1 second), starting from
             // previously sampled rotation
-            final MatrixRotation3D rotation3b = new MatrixRotation3D(rotation2b);
-            final MatrixRotation3D rotation3c = new MatrixRotation3D(rotation2c);
-            for (int s = 0; s < N_SENSOR_SAMPLES; s++) {
+            final var rotation3b = new MatrixRotation3D(rotation2b);
+            final var rotation3c = new MatrixRotation3D(rotation2c);
+            for (var s = 0; s < N_SENSOR_SAMPLES; s++) {
                 rotation3b.combine(diffRotation);
                 rotation3c.combine(diffRotation3);
             }
@@ -2714,15 +2539,12 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest
             assertTrue(rotation3.equals(rotation3b, ABSOLUTE_ERROR));
             assertTrue(rotation3.equals(rotation3c, ABSOLUTE_ERROR));
 
-            final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
-            final double cameraSeparation2 = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION_ESSENTIAL,
-                    MAX_CAMERA_SEPARATION_ESSENTIAL);
+            final var cameraSeparation = randomizer.nextDouble(
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
+            final var cameraSeparation2 = randomizer.nextDouble(
+                    MIN_CAMERA_SEPARATION_ESSENTIAL, MAX_CAMERA_SEPARATION_ESSENTIAL);
 
-            final EuclideanTransformation3D rotationTransformation =
-                    new EuclideanTransformation3D(rotation1);
+            final var rotationTransformation = new EuclideanTransformation3D(rotation1);
             Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
             Point3D center2 = new InhomogeneousPoint3D(
                     center1.getInhomX() + cameraSeparation,
@@ -2736,32 +2558,35 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest
             center2 = rotationTransformation.transformAndReturnNew(center2);
             center3 = rotationTransformation.transformAndReturnNew(center3);
 
-            final double baseline = center1.distanceTo(center2);
+            final var baseline = center1.distanceTo(center2);
 
-            final double accelerationX, accelerationY, accelerationZ;
-            final double accelerationX2, accelerationY2, accelerationZ2;
+            final double accelerationX;
+            final double accelerationY;
+            final double accelerationZ;
+            final double accelerationX2;
+            final double accelerationY2;
+            final double accelerationZ2;
 
             // s = 0.5*a*t^2 --> a = 2*s/t^2
             // assuming t = 1 second (50 samples * 0.02 s/sample = 1 second)
             accelerationX = accelerationY = accelerationZ = 2 * cameraSeparation;
             accelerationX2 = accelerationY2 = accelerationZ2 = 2 * cameraSeparation2;
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic, rotation1, center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic, rotation2, center2);
-            final PinholeCamera camera3 = new PinholeCamera(intrinsic, rotation3, center3);
+            final var camera1 = new PinholeCamera(intrinsic, rotation1, center1);
+            final var camera2 = new PinholeCamera(intrinsic, rotation2, center2);
+            final var camera3 = new PinholeCamera(intrinsic, rotation3, center3);
 
-            final FundamentalMatrix fundamentalMatrix1 = new FundamentalMatrix(camera1, camera2);
+            final var fundamentalMatrix1 = new FundamentalMatrix(camera1, camera2);
 
             // create 3D points laying in front of both cameras
 
             // 1st find an approximate central point by intersecting the axis
             // planes of both cameras
-            final Plane horizontalPlane1 = camera1.getHorizontalAxisPlane();
-            final Plane verticalPlane1 = camera1.getVerticalAxisPlane();
-            final Plane horizontalPlane2 = camera2.getHorizontalAxisPlane();
-            final Plane verticalPlane2 = camera2.getVerticalAxisPlane();
-            final Matrix planesIntersectionMatrix = new Matrix(
-                    Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
+            final var horizontalPlane1 = camera1.getHorizontalAxisPlane();
+            final var verticalPlane1 = camera1.getVerticalAxisPlane();
+            final var horizontalPlane2 = camera2.getHorizontalAxisPlane();
+            final var verticalPlane2 = camera2.getVerticalAxisPlane();
+            final var planesIntersectionMatrix = new Matrix(Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
             planesIntersectionMatrix.setElementAt(0, 0, verticalPlane1.getA());
             planesIntersectionMatrix.setElementAt(0, 1, verticalPlane1.getB());
             planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
@@ -2782,11 +2607,10 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest
             planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
             planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    planesIntersectionMatrix);
+            final var decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
             decomposer.decompose();
-            final Matrix v = decomposer.getV();
-            final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
+            final var v = decomposer.getV();
+            final var centralCommonPoint = new HomogeneousPoint3D(
                     v.getElementAt(0, 3),
                     v.getElementAt(1, 3),
                     v.getElementAt(2, 3),
@@ -2796,33 +2620,31 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest
             double lambdaY;
             double lambdaZ;
 
-            final int numPoints1 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
-            final int numPoints2 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
-            final int start = randomizer.nextInt(0, numPoints1 - MIN_TRACKED_POINTS);
+            final var numPoints1 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final var numPoints2 = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final var start = randomizer.nextInt(0, numPoints1 - MIN_TRACKED_POINTS);
 
             InhomogeneousPoint3D point3D;
-            final List<InhomogeneousPoint3D> points3D1 = new ArrayList<>();
+            final var points3D1 = new ArrayList<InhomogeneousPoint3D>();
             Point2D projectedPoint1;
             Point2D projectedPoint2;
             Point2D projectedPoint3;
-            final List<Point2D> projectedPoints1 = new ArrayList<>();
-            final List<Point2D> projectedPoints2 = new ArrayList<>();
-            final List<Point2D> projectedPoints3 = new ArrayList<>();
+            final var projectedPoints1 = new ArrayList<Point2D>();
+            final var projectedPoints2 = new ArrayList<Point2D>();
+            final var projectedPoints3 = new ArrayList<Point2D>();
             boolean front1;
             boolean front2;
-            boolean maxTriesReached = false;
-            for (int i = 0; i < numPoints1; i++) {
+            var maxTriesReached = false;
+            for (var i = 0; i < numPoints1; i++) {
                 // generate points and ensure they lie in front of both cameras
-                int numTry = 0;
+                var numTry = 0;
                 do {
                     lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
                     lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
                     lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
-                    point3D = new InhomogeneousPoint3D(
-                            centralCommonPoint.getInhomX() + lambdaX,
-                            centralCommonPoint.getInhomY() + lambdaY,
-                            centralCommonPoint.getInhomZ() + lambdaZ);
+                    point3D = new InhomogeneousPoint3D(centralCommonPoint.getInhomX() + lambdaX,
+                            centralCommonPoint.getInhomY() + lambdaY, centralCommonPoint.getInhomZ() + lambdaZ);
 
                     front1 = camera1.isPointInFrontOfCamera(point3D);
                     front2 = camera2.isPointInFrontOfCamera(point3D);
@@ -2861,23 +2683,21 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest
                 continue;
             }
 
-            final List<InhomogeneousPoint3D> points3D2 = new ArrayList<>();
+            final var points3D2 = new ArrayList<InhomogeneousPoint3D>();
             Point2D projectedPoint2b;
             Point2D projectedPoint3b;
-            final List<Point2D> projectedPoints2b = new ArrayList<>();
-            final List<Point2D> projectedPoints3b = new ArrayList<>();
-            for (int i = 0; i < numPoints2; i++) {
+            final var projectedPoints2b = new ArrayList<Point2D>();
+            final var projectedPoints3b = new ArrayList<Point2D>();
+            for (var i = 0; i < numPoints2; i++) {
                 // generate points and ensure they lie in front of both cameras
-                int numTry = 0;
+                var numTry = 0;
                 do {
                     lambdaX = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
                     lambdaY = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
                     lambdaZ = randomizer.nextDouble(MIN_LAMBDA_ESSENTIAL, MAX_LAMBDA_ESSENTIAL);
 
-                    point3D = new InhomogeneousPoint3D(
-                            centralCommonPoint.getInhomX() + lambdaX,
-                            centralCommonPoint.getInhomY() + lambdaY,
-                            centralCommonPoint.getInhomZ() + lambdaZ);
+                    point3D = new InhomogeneousPoint3D(centralCommonPoint.getInhomX() + lambdaX,
+                            centralCommonPoint.getInhomY() + lambdaY, centralCommonPoint.getInhomZ() + lambdaZ);
 
                     front2 = camera2.isPointInFrontOfCamera(point3D);
                     if (numTry > MAX_TRIES) {
@@ -2909,629 +2729,598 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest
                 continue;
             }
 
-            final GaussianRandomizer accelerationRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ACCELERATION_NOISE_STANDARD_DEVIATION);
-            final GaussianRandomizer angularSpeedRandomizer =
-                    new GaussianRandomizer(new Random(), 0.0,
-                            ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
+            final var accelerationRandomizer = new GaussianRandomizer(0.0, ACCELERATION_NOISE_STANDARD_DEVIATION);
+            final var angularSpeedRandomizer = new GaussianRandomizer(0.0,
+                    ANGULAR_SPEED_NOISE_STANDARD_DEVIATION);
 
-            final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorListener listener =
-                    new AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorListener() {
-                        @Override
-                        public void onSlamDataAvailable(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final double positionX, final double positionY, final double positionZ,
-                                final double velocityX, final double velocityY, final double velocityZ,
-                                final double accelerationX, final double accelerationY, final double accelerationZ,
-                                final double quaternionA, final double quaternionB, final double quaternionC,
-                                final double quaternionD, final double angularSpeedX, final double angularSpeedY,
-                                final double angularSpeedZ, final Matrix covariance) {
-                            mSlamDataAvailable++;
-                            mSlamCovariance = covariance;
+            final var listener = new AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorListener() {
+                @Override
+                public void onSlamDataAvailable(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final double positionX, final double positionY, final double positionZ,
+                        final double velocityX, final double velocityY, final double velocityZ,
+                        final double accelerationX, final double accelerationY, final double accelerationZ,
+                        final double quaternionA, final double quaternionB, final double quaternionC,
+                        final double quaternionD, final double angularSpeedX, final double angularSpeedY,
+                        final double angularSpeedZ, final Matrix covariance) {
+                    slamDataAvailable++;
+                    slamCovariance = covariance;
+                }
+
+                @Override
+                public void onSlamCameraEstimated(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final PinholeCamera camera) {
+                    slamCameraEstimated++;
+                    slamCamera = camera;
+                }
+
+                @Override
+                public boolean hasMoreViewsAvailable(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
+                    return viewCount < 3;
+                }
+
+                @Override
+                public void onRequestSamples(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final int previousViewId, final int currentViewId,
+                        final List<Sample2D> previousViewTrackedSamples,
+                        final List<Sample2D> currentViewTrackedSamples,
+                        final List<Sample2D> currentViewNewlySpawnedSamples) {
+
+                    previousViewTrackedSamples.clear();
+                    currentViewTrackedSamples.clear();
+                    currentViewNewlySpawnedSamples.clear();
+
+                    Sample2D sample;
+                    if (viewCount == 0) {
+                        // first view
+                        for (var i = 0; i < numPoints1; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints1.get(i));
+                            sample.setViewId(currentViewId);
+                            currentViewTrackedSamples.add(sample);
+                        }
+                    } else if (estimatedFundamentalMatrix == null) {
+                        // second view
+                        for (var i = 0; i < numPoints1; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints1.get(i));
+                            sample.setViewId(previousViewId);
+                            previousViewTrackedSamples.add(sample);
                         }
 
-                        @Override
-                        public void onSlamCameraEstimated(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final PinholeCamera camera) {
-                            mSlamCameraEstimated++;
-                            mSlamCamera = camera;
+                        for (var i = 0; i < numPoints1; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints2.get(i));
+                            sample.setViewId(currentViewId);
+                            currentViewTrackedSamples.add(sample);
                         }
 
-                        @Override
-                        public boolean hasMoreViewsAvailable(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
-                            return mViewCount < 3;
+                        // spawned samples
+                        for (var i = 0; i < numPoints2; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints2b.get(i));
+                            sample.setViewId(currentViewId);
+                            currentViewNewlySpawnedSamples.add(sample);
                         }
 
-                        @Override
-                        public void onRequestSamples(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final int previousViewId, final int currentViewId,
-                                final List<Sample2D> previousViewTrackedSamples,
-                                final List<Sample2D> currentViewTrackedSamples,
-                                final List<Sample2D> currentViewNewlySpawnedSamples) {
+                        // assume the following accelerator and gyroscope samples
+                        // are obtained during a period of 1 second between 1st
+                        // and 2nd view (50 samples * 0.02 s/sample = 1 second)
+                        timestamp = 0;
+                        float noiseAccelerationX;
+                        float noiseAccelerationY;
+                        float noiseAccelerationZ;
+                        float noiseAngularSpeedX;
+                        float noiseAngularSpeedY;
+                        float noiseAngularSpeedZ;
+                        float accelerationWithNoiseX;
+                        float accelerationWithNoiseY;
+                        float accelerationWithNoiseZ;
+                        float angularSpeedWithNoiseX;
+                        float angularSpeedWithNoiseY;
+                        float angularSpeedWithNoiseZ;
 
-                            previousViewTrackedSamples.clear();
-                            currentViewTrackedSamples.clear();
-                            currentViewNewlySpawnedSamples.clear();
+                        final var accelerationWithNoise = new float[3];
+                        final var angularSpeedWithNoise = new float[3];
 
-                            Sample2D sample;
-                            if (mViewCount == 0) {
-                                // first view
-                                for (int i = 0; i < numPoints1; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints1.get(i));
-                                    sample.setViewId(currentViewId);
-                                    currentViewTrackedSamples.add(sample);
-                                }
-                            } else if (mEstimatedFundamentalMatrix == null) {
-                                // second view
-                                for (int i = 0; i < numPoints1; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints1.get(i));
-                                    sample.setViewId(previousViewId);
-                                    previousViewTrackedSamples.add(sample);
-                                }
+                        final var orientation = new Quaternion(rotation1);
+                        for (var s = 0; s < N_SENSOR_SAMPLES; s++) {
+                            noiseAccelerationX = accelerationRandomizer.nextFloat();
+                            noiseAccelerationY = accelerationRandomizer.nextFloat();
+                            noiseAccelerationZ = accelerationRandomizer.nextFloat();
 
-                                for (int i = 0; i < numPoints1; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints2.get(i));
-                                    sample.setViewId(currentViewId);
-                                    currentViewTrackedSamples.add(sample);
-                                }
+                            noiseAngularSpeedX = angularSpeedRandomizer.nextFloat();
+                            noiseAngularSpeedY = angularSpeedRandomizer.nextFloat();
+                            noiseAngularSpeedZ = angularSpeedRandomizer.nextFloat();
 
-                                // spawned samples
-                                for (int i = 0; i < numPoints2; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints2b.get(i));
-                                    sample.setViewId(currentViewId);
-                                    currentViewNewlySpawnedSamples.add(sample);
-                                }
+                            accelerationWithNoiseX = (float) accelerationX + noiseAccelerationX;
+                            accelerationWithNoiseY = (float) accelerationY + noiseAccelerationY;
+                            accelerationWithNoiseZ = (float) accelerationZ + noiseAccelerationZ;
+                            accelerationWithNoise[0] = accelerationWithNoiseX;
+                            accelerationWithNoise[1] = accelerationWithNoiseY;
+                            accelerationWithNoise[2] = accelerationWithNoiseZ;
 
-                                // assume the following accelerator and gyroscope samples
-                                // are obtained during a period of 1 second between 1st
-                                // and 2nd view (50 samples * 0.02 s/sample = 1 second)
-                                mTimestamp = 0;
-                                float noiseAccelerationX;
-                                float noiseAccelerationY;
-                                float noiseAccelerationZ;
-                                float noiseAngularSpeedX;
-                                float noiseAngularSpeedY;
-                                float noiseAngularSpeedZ;
-                                float accelerationWithNoiseX;
-                                float accelerationWithNoiseY;
-                                float accelerationWithNoiseZ;
-                                float angularSpeedWithNoiseX;
-                                float angularSpeedWithNoiseY;
-                                float angularSpeedWithNoiseZ;
+                            angularSpeedWithNoiseX = (float) angularSpeed2X + noiseAngularSpeedX;
+                            angularSpeedWithNoiseY = (float) angularSpeed2Y + noiseAngularSpeedY;
+                            angularSpeedWithNoiseZ = (float) angularSpeed2Z + noiseAngularSpeedZ;
+                            angularSpeedWithNoise[0] = angularSpeedWithNoiseX;
+                            angularSpeedWithNoise[1] = angularSpeedWithNoiseY;
+                            angularSpeedWithNoise[2] = angularSpeedWithNoiseZ;
 
-                                final float[] accelerationWithNoise = new float[3];
-                                final float[] angularSpeedWithNoise = new float[3];
-
-                                final Quaternion orientation = new Quaternion(rotation1);
-                                for (int s = 0; s < N_SENSOR_SAMPLES; s++) {
-                                    noiseAccelerationX = accelerationRandomizer.nextFloat();
-                                    noiseAccelerationY = accelerationRandomizer.nextFloat();
-                                    noiseAccelerationZ = accelerationRandomizer.nextFloat();
-
-                                    noiseAngularSpeedX = angularSpeedRandomizer.nextFloat();
-                                    noiseAngularSpeedY = angularSpeedRandomizer.nextFloat();
-                                    noiseAngularSpeedZ = angularSpeedRandomizer.nextFloat();
-
-                                    accelerationWithNoiseX = (float) accelerationX + noiseAccelerationX;
-                                    accelerationWithNoiseY = (float) accelerationY + noiseAccelerationY;
-                                    accelerationWithNoiseZ = (float) accelerationZ + noiseAccelerationZ;
-                                    accelerationWithNoise[0] = accelerationWithNoiseX;
-                                    accelerationWithNoise[1] = accelerationWithNoiseY;
-                                    accelerationWithNoise[2] = accelerationWithNoiseZ;
-
-                                    angularSpeedWithNoiseX = (float) angularSpeed2X + noiseAngularSpeedX;
-                                    angularSpeedWithNoiseY = (float) angularSpeed2Y + noiseAngularSpeedY;
-                                    angularSpeedWithNoiseZ = (float) angularSpeed2Z + noiseAngularSpeedZ;
-                                    angularSpeedWithNoise[0] = angularSpeedWithNoiseX;
-                                    angularSpeedWithNoise[1] = angularSpeedWithNoiseY;
-                                    angularSpeedWithNoise[2] = angularSpeedWithNoiseZ;
-
-                                    reconstructor.updateAccelerometerSample(mTimestamp,
-                                            accelerationWithNoise);
-                                    reconstructor.updateGyroscopeSample(mTimestamp,
-                                            angularSpeedWithNoise);
-                                    reconstructor.updateOrientationSample(mTimestamp, orientation);
-                                    // update orientation
-                                    orientation.combine(diffRotation2);
-                                    mTimestamp += DELTA_NANOS;
-                                }
-
-                            } else {
-                                // third view
-                                for (int i = start; i < numPoints1; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints2.get(i));
-                                    sample.setViewId(previousViewId);
-                                    previousViewTrackedSamples.add(sample);
-                                }
-
-                                for (int i = 0; i < numPoints2; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints2b.get(i));
-                                    sample.setViewId(previousViewId);
-                                    previousViewTrackedSamples.add(sample);
-                                }
-
-
-                                for (int i = start; i < numPoints1; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints3.get(i));
-                                    sample.setViewId(currentViewId);
-                                    currentViewTrackedSamples.add(sample);
-                                }
-
-                                for (int i = 0; i < numPoints2; i++) {
-                                    sample = new Sample2D();
-                                    sample.setPoint(projectedPoints3b.get(i));
-                                    sample.setViewId(currentViewId);
-                                    currentViewTrackedSamples.add(sample);
-                                }
-
-                                // assume the following accelerator and gyroscope samples
-                                // are obtained during a period of 1 second between 2nd
-                                // and 3rd view (50 samples * 0.02 s/sample = 1 second)
-                                float noiseAccelerationX;
-                                float noiseAccelerationY;
-                                float noiseAccelerationZ;
-                                float noiseAngularSpeedX;
-                                float noiseAngularSpeedY;
-                                float noiseAngularSpeedZ;
-
-                                float accelerationWithNoiseX;
-                                float accelerationWithNoiseY;
-                                float accelerationWithNoiseZ;
-                                float angularSpeedWithNoiseX;
-                                float angularSpeedWithNoiseY;
-                                float angularSpeedWithNoiseZ;
-
-                                final float[] accelerationWithNoise = new float[3];
-                                final float[] angularSpeedWithNoise = new float[3];
-
-                                final Quaternion orientation = new Quaternion(rotation2);
-                                for (int s = 0; s < N_SENSOR_SAMPLES; s++) {
-                                    noiseAccelerationX = accelerationRandomizer.nextFloat();
-                                    noiseAccelerationY = accelerationRandomizer.nextFloat();
-                                    noiseAccelerationZ = accelerationRandomizer.nextFloat();
-
-                                    noiseAngularSpeedX = angularSpeedRandomizer.nextFloat();
-                                    noiseAngularSpeedY = angularSpeedRandomizer.nextFloat();
-                                    noiseAngularSpeedZ = angularSpeedRandomizer.nextFloat();
-
-                                    accelerationWithNoiseX = (float) accelerationX2 + noiseAccelerationX;
-                                    accelerationWithNoiseY = (float) accelerationY2 + noiseAccelerationY;
-                                    accelerationWithNoiseZ = (float) accelerationZ2 + noiseAccelerationZ;
-                                    accelerationWithNoise[0] = accelerationWithNoiseX;
-                                    accelerationWithNoise[1] = accelerationWithNoiseY;
-                                    accelerationWithNoise[2] = accelerationWithNoiseZ;
-
-                                    angularSpeedWithNoiseX = (float) angularSpeed3X + noiseAngularSpeedX;
-                                    angularSpeedWithNoiseY = (float) angularSpeed3Y + noiseAngularSpeedY;
-                                    angularSpeedWithNoiseZ = (float) angularSpeed3Z + noiseAngularSpeedZ;
-                                    angularSpeedWithNoise[0] = angularSpeedWithNoiseX;
-                                    angularSpeedWithNoise[1] = angularSpeedWithNoiseY;
-                                    angularSpeedWithNoise[2] = angularSpeedWithNoiseZ;
-
-                                    reconstructor.updateAccelerometerSample(mTimestamp,
-                                            accelerationWithNoise);
-                                    reconstructor.updateGyroscopeSample(mTimestamp,
-                                            angularSpeedWithNoise);
-                                    reconstructor.updateOrientationSample(mTimestamp, orientation);
-                                    // update orientation
-                                    orientation.combine(diffRotation3);
-                                    mTimestamp += DELTA_NANOS;
-                                }
-                            }
+                            reconstructor.updateAccelerometerSample(timestamp, accelerationWithNoise);
+                            reconstructor.updateGyroscopeSample(timestamp, angularSpeedWithNoise);
+                            reconstructor.updateOrientationSample(timestamp, orientation);
+                            // update orientation
+                            orientation.combine(diffRotation2);
+                            timestamp += DELTA_NANOS;
                         }
 
-                        @Override
-                        public void onSamplesAccepted(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final int viewId, final List<Sample2D> previousViewTrackedSamples,
-                                final List<Sample2D> currentViewTrackedSamples) {
-                            mViewCount++;
+                    } else {
+                        // third view
+                        for (var i = start; i < numPoints1; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints2.get(i));
+                            sample.setViewId(previousViewId);
+                            previousViewTrackedSamples.add(sample);
                         }
 
-                        @Override
-                        public void onSamplesRejected(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final int viewId, final List<Sample2D> previousViewTrackedSamples,
-                                final List<Sample2D> currentViewTrackedSamples) {
-                            mViewCount++;
+                        for (var i = 0; i < numPoints2; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints2b.get(i));
+                            sample.setViewId(previousViewId);
+                            previousViewTrackedSamples.add(sample);
                         }
 
-                        @Override
-                        public void onRequestMatches(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final List<Sample2D> allPreviousViewSamples,
-                                final List<Sample2D> previousViewTrackedSamples,
-                                final List<Sample2D> currentViewTrackedSamples,
-                                final int previousViewId, final int currentViewId,
-                                final List<MatchedSamples> matches) {
-                            matches.clear();
 
-                            int numCameras = 0;
-                            if (mEstimatedMetricCamera1 != null &&
-                                    (mEstimatedMetricCamera1.getViewId() == previousViewId ||
-                                            mEstimatedMetricCamera1.getViewId() == currentViewId)) {
-                                numCameras++;
-                            }
-                            if (mEstimatedMetricCamera2 != null &&
-                                    (mEstimatedMetricCamera2.getViewId() == previousViewId ||
-                                            mEstimatedMetricCamera2.getViewId() == currentViewId)) {
-                                numCameras++;
-                            }
-
-                            EstimatedCamera[] estimatedCameras = null;
-                            if (numCameras > 0) {
-                                estimatedCameras = new EstimatedCamera[numCameras];
-
-                                int pos = 0;
-                                if (mEstimatedMetricCamera1 != null &&
-                                        (mEstimatedMetricCamera1.getViewId() == previousViewId ||
-                                                mEstimatedMetricCamera1.getViewId() == currentViewId)) {
-                                    estimatedCameras[pos] = mEstimatedMetricCamera1;
-                                    pos++;
-                                }
-                                if (mEstimatedMetricCamera2 != null &&
-                                        (mEstimatedMetricCamera2.getViewId() == previousViewId ||
-                                                mEstimatedMetricCamera2.getViewId() == currentViewId)) {
-                                    estimatedCameras[pos] = mEstimatedMetricCamera2;
-                                }
-                            }
-
-                            final List<Point2D> allPreviousPoints = new ArrayList<>();
-                            for (final Sample2D sample : allPreviousViewSamples) {
-                                allPreviousPoints.add(sample.getPoint());
-                            }
-                            final KDTree2D tree = new KDTree2D(allPreviousPoints);
-
-                            // search previous view tracked samples within tree
-                            final int numTrackedSamples = previousViewTrackedSamples.size();
-                            Point2D point;
-                            Point2D nearestPoint;
-                            int nearestIndex;
-                            MatchedSamples match;
-                            for (int i = 0; i < numTrackedSamples; i++) {
-                                final Sample2D previousSample = previousViewTrackedSamples.get(i);
-                                point = previousSample.getPoint();
-                                nearestIndex = tree.nearestIndex(point);
-                                nearestPoint = allPreviousPoints.get(nearestIndex);
-                                final Sample2D nearestSample = allPreviousViewSamples.get(nearestIndex);
-
-                                if (point.distanceTo(nearestPoint) > NEAREST_THRESHOLD) {
-                                    continue;
-                                }
-
-                                final Sample2D currentSample = currentViewTrackedSamples.get(i);
-
-                                match = new MatchedSamples();
-                                match.setSamples(new Sample2D[]{
-                                        previousSample, currentSample
-                                });
-                                match.setViewIds(new int[]{previousViewId, currentViewId});
-
-                                match.setReconstructedPoint(nearestSample.getReconstructedPoint());
-
-                                if (estimatedCameras != null) {
-                                    match.setCameras(estimatedCameras);
-                                }
-
-                                matches.add(match);
-                            }
+                        for (var i = start; i < numPoints1; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints3.get(i));
+                            sample.setViewId(currentViewId);
+                            currentViewTrackedSamples.add(sample);
                         }
 
-                        @Override
-                        public void onFundamentalMatrixEstimated(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final EstimatedFundamentalMatrix estimatedFundamentalMatrix) {
-                            if (mEstimatedFundamentalMatrix == null) {
-                                mEstimatedFundamentalMatrix = estimatedFundamentalMatrix;
-                            } else if (mEstimatedFundamentalMatrix2 == null) {
-                                mEstimatedFundamentalMatrix2 = estimatedFundamentalMatrix;
-                            }
+                        for (var i = 0; i < numPoints2; i++) {
+                            sample = new Sample2D();
+                            sample.setPoint(projectedPoints3b.get(i));
+                            sample.setViewId(currentViewId);
+                            currentViewTrackedSamples.add(sample);
                         }
 
-                        @Override
-                        public void onMetricCameraEstimated(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final int previousViewId, final int currentViewId,
-                                final EstimatedCamera previousCamera,
-                                final EstimatedCamera currentCamera) {
-                            if (mEstimatedMetricCamera2 == null) {
-                                mEstimatedMetricCamera1 = previousCamera;
-                                mEstimatedMetricCamera2 = currentCamera;
-                            } else if (mEstimatedMetricCamera3 == null) {
-                                mEstimatedMetricCamera2 = previousCamera;
-                                mEstimatedMetricCamera3 = currentCamera;
-                            }
+                        // assume the following accelerator and gyroscope samples
+                        // are obtained during a period of 1 second between 2nd
+                        // and 3rd view (50 samples * 0.02 s/sample = 1 second)
+                        float noiseAccelerationX;
+                        float noiseAccelerationY;
+                        float noiseAccelerationZ;
+                        float noiseAngularSpeedX;
+                        float noiseAngularSpeedY;
+                        float noiseAngularSpeedZ;
+
+                        float accelerationWithNoiseX;
+                        float accelerationWithNoiseY;
+                        float accelerationWithNoiseZ;
+                        float angularSpeedWithNoiseX;
+                        float angularSpeedWithNoiseY;
+                        float angularSpeedWithNoiseZ;
+
+                        final var accelerationWithNoise = new float[3];
+                        final var angularSpeedWithNoise = new float[3];
+
+                        final var orientation = new Quaternion(rotation2);
+                        for (var s = 0; s < N_SENSOR_SAMPLES; s++) {
+                            noiseAccelerationX = accelerationRandomizer.nextFloat();
+                            noiseAccelerationY = accelerationRandomizer.nextFloat();
+                            noiseAccelerationZ = accelerationRandomizer.nextFloat();
+
+                            noiseAngularSpeedX = angularSpeedRandomizer.nextFloat();
+                            noiseAngularSpeedY = angularSpeedRandomizer.nextFloat();
+                            noiseAngularSpeedZ = angularSpeedRandomizer.nextFloat();
+
+                            accelerationWithNoiseX = (float) accelerationX2 + noiseAccelerationX;
+                            accelerationWithNoiseY = (float) accelerationY2 + noiseAccelerationY;
+                            accelerationWithNoiseZ = (float) accelerationZ2 + noiseAccelerationZ;
+                            accelerationWithNoise[0] = accelerationWithNoiseX;
+                            accelerationWithNoise[1] = accelerationWithNoiseY;
+                            accelerationWithNoise[2] = accelerationWithNoiseZ;
+
+                            angularSpeedWithNoiseX = (float) angularSpeed3X + noiseAngularSpeedX;
+                            angularSpeedWithNoiseY = (float) angularSpeed3Y + noiseAngularSpeedY;
+                            angularSpeedWithNoiseZ = (float) angularSpeed3Z + noiseAngularSpeedZ;
+                            angularSpeedWithNoise[0] = angularSpeedWithNoiseX;
+                            angularSpeedWithNoise[1] = angularSpeedWithNoiseY;
+                            angularSpeedWithNoise[2] = angularSpeedWithNoiseZ;
+
+                            reconstructor.updateAccelerometerSample(timestamp, accelerationWithNoise);
+                            reconstructor.updateGyroscopeSample(timestamp, angularSpeedWithNoise);
+                            reconstructor.updateOrientationSample(timestamp, orientation);
+                            // update orientation
+                            orientation.combine(diffRotation3);
+                            timestamp += DELTA_NANOS;
+                        }
+                    }
+                }
+
+                @Override
+                public void onSamplesAccepted(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final int viewId, final List<Sample2D> previousViewTrackedSamples,
+                        final List<Sample2D> currentViewTrackedSamples) {
+                    viewCount++;
+                }
+
+                @Override
+                public void onSamplesRejected(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final int viewId, final List<Sample2D> previousViewTrackedSamples,
+                        final List<Sample2D> currentViewTrackedSamples) {
+                    viewCount++;
+                }
+
+                @Override
+                public void onRequestMatches(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final List<Sample2D> allPreviousViewSamples,
+                        final List<Sample2D> previousViewTrackedSamples,
+                        final List<Sample2D> currentViewTrackedSamples,
+                        final int previousViewId, final int currentViewId,
+                        final List<MatchedSamples> matches) {
+                    matches.clear();
+
+                    var numCameras = 0;
+                    if (estimatedMetricCamera1 != null && (estimatedMetricCamera1.getViewId() == previousViewId
+                            || estimatedMetricCamera1.getViewId() == currentViewId)) {
+                        numCameras++;
+                    }
+                    if (estimatedMetricCamera2 != null && (estimatedMetricCamera2.getViewId() == previousViewId
+                            || estimatedMetricCamera2.getViewId() == currentViewId)) {
+                        numCameras++;
+                    }
+
+                    EstimatedCamera[] estimatedCameras = null;
+                    if (numCameras > 0) {
+                        estimatedCameras = new EstimatedCamera[numCameras];
+
+                        int pos = 0;
+                        if (estimatedMetricCamera1 != null && (estimatedMetricCamera1.getViewId() == previousViewId
+                                || estimatedMetricCamera1.getViewId() == currentViewId)) {
+                            estimatedCameras[pos] = estimatedMetricCamera1;
+                            pos++;
+                        }
+                        if (estimatedMetricCamera2 != null && (estimatedMetricCamera2.getViewId() == previousViewId
+                                || estimatedMetricCamera2.getViewId() == currentViewId)) {
+                            estimatedCameras[pos] = estimatedMetricCamera2;
+                        }
+                    }
+
+                    final var allPreviousPoints = new ArrayList<Point2D>();
+                    for (final var sample : allPreviousViewSamples) {
+                        allPreviousPoints.add(sample.getPoint());
+                    }
+                    final var tree = new KDTree2D(allPreviousPoints);
+
+                    // search previous view tracked samples within tree
+                    final var numTrackedSamples = previousViewTrackedSamples.size();
+                    Point2D point;
+                    Point2D nearestPoint;
+                    int nearestIndex;
+                    MatchedSamples match;
+                    for (var i = 0; i < numTrackedSamples; i++) {
+                        final var previousSample = previousViewTrackedSamples.get(i);
+                        point = previousSample.getPoint();
+                        nearestIndex = tree.nearestIndex(point);
+                        nearestPoint = allPreviousPoints.get(nearestIndex);
+                        final var nearestSample = allPreviousViewSamples.get(nearestIndex);
+
+                        if (point.distanceTo(nearestPoint) > NEAREST_THRESHOLD) {
+                            continue;
                         }
 
-                        @Override
-                        public void onMetricReconstructedPointsEstimated(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final List<MatchedSamples> matches,
-                                final List<ReconstructedPoint3D> points) {
-                            mMetricReconstructedPoints = points;
+                        final var currentSample = currentViewTrackedSamples.get(i);
+
+                        match = new MatchedSamples();
+                        match.setSamples(new Sample2D[]{previousSample, currentSample});
+                        match.setViewIds(new int[]{previousViewId, currentViewId});
+
+                        match.setReconstructedPoint(nearestSample.getReconstructedPoint());
+
+                        if (estimatedCameras != null) {
+                            match.setCameras(estimatedCameras);
                         }
 
-                        @Override
-                        public void onEuclideanCameraEstimated(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final int previousViewId, final int currentViewId, final double scale,
-                                final EstimatedCamera previousCamera,
-                                final EstimatedCamera currentCamera) {
-                            if (mEstimatedEuclideanCamera2 == null) {
-                                mEstimatedEuclideanCamera1 = previousCamera;
-                                mEstimatedEuclideanCamera2 = currentCamera;
-                                mScale = scale;
-                            } else if (mEstimatedEuclideanCamera3 == null) {
-                                mEstimatedEuclideanCamera2 = previousCamera;
-                                mEstimatedEuclideanCamera3 = currentCamera;
-                                mScale2 = scale;
-                            }
-                        }
+                        matches.add(match);
+                    }
+                }
 
-                        @Override
-                        public void onEuclideanReconstructedPointsEstimated(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
-                                final double scale, final List<ReconstructedPoint3D> points) {
-                            if (mEuclideanReconstructedPoints == null) {
-                                mScale = scale;
-                            } else {
-                                mScale2 = scale;
-                            }
+                @Override
+                public void onFundamentalMatrixEstimated(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final EstimatedFundamentalMatrix estimatedFundamentalMatrix) {
+                    if (AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest.this
+                            .estimatedFundamentalMatrix == null) {
+                        AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest.this
+                                .estimatedFundamentalMatrix = estimatedFundamentalMatrix;
+                    } else if (estimatedFundamentalMatrix2 == null) {
+                        estimatedFundamentalMatrix2 = estimatedFundamentalMatrix;
+                    }
+                }
 
-                            mEuclideanReconstructedPoints = points;
-                        }
+                @Override
+                public void onMetricCameraEstimated(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final int previousViewId, final int currentViewId, final EstimatedCamera previousCamera,
+                        final EstimatedCamera currentCamera) {
+                    if (estimatedMetricCamera2 == null) {
+                        estimatedMetricCamera1 = previousCamera;
+                        estimatedMetricCamera2 = currentCamera;
+                    } else if (emEstimatedMetricCamera3 == null) {
+                        estimatedMetricCamera2 = previousCamera;
+                        emEstimatedMetricCamera3 = currentCamera;
+                    }
+                }
 
-                        @Override
-                        public void onStart(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
-                            mStarted = true;
-                        }
+                @Override
+                public void onMetricReconstructedPointsEstimated(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final List<MatchedSamples> matches, final List<ReconstructedPoint3D> points) {
+                    metricReconstructedPoints = points;
+                }
 
-                        @Override
-                        public void onFinish(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
-                            mFinished = true;
-                        }
+                @Override
+                public void onEuclideanCameraEstimated(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final int previousViewId, final int currentViewId, final double scale,
+                        final EstimatedCamera previousCamera, final EstimatedCamera currentCamera) {
+                    if (estimatedEuclideanCamera2 == null) {
+                        estimatedEuclideanCamera1 = previousCamera;
+                        estimatedEuclideanCamera2 = currentCamera;
+                        AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest.this.scale = scale;
+                    } else if (estimatedEuclideanCamera3 == null) {
+                        estimatedEuclideanCamera2 = previousCamera;
+                        estimatedEuclideanCamera3 = currentCamera;
+                        scale2 = scale;
+                    }
+                }
 
-                        @Override
-                        public void onCancel(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
-                            mCancelled = true;
-                        }
+                @Override
+                public void onEuclideanReconstructedPointsEstimated(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor,
+                        final double scale, final List<ReconstructedPoint3D> points) {
+                    if (euclideanReconstructedPoints == null) {
+                        AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest.this.scale = scale;
+                    } else {
+                        scale2 = scale;
+                    }
 
-                        @Override
-                        public void onFail(
-                                final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
-                            mFailed = true;
-                        }
-                    };
+                    euclideanReconstructedPoints = points;
+                }
 
-            final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor =
-                    new AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor(configuration, listener);
+                @Override
+                public void onStart(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
+                    started = true;
+                }
+
+                @Override
+                public void onFinish(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
+                    finished = true;
+                }
+
+                @Override
+                public void onCancel(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
+                    cancelled = true;
+                }
+
+                @Override
+                public void onFail(
+                        final AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor reconstructor) {
+                    failed = true;
+                }
+            };
+
+            final var reconstructor = new AbsoluteOrientationConstantVelocityModelSlamSparseReconstructor(
+                    configuration, listener);
 
             // check initial values
             reset();
-            assertFalse(mStarted);
-            assertFalse(mFinished);
-            assertFalse(mCancelled);
-            assertFalse(mFailed);
+            assertFalse(started);
+            assertFalse(finished);
+            assertFalse(cancelled);
+            assertFalse(failed);
             assertFalse(reconstructor.isFinished());
 
             reconstructor.start();
 
             // check correctness
-            assertTrue(mStarted);
-            assertTrue(mFinished);
-            assertFalse(mCancelled);
-            assertFalse(mFailed);
+            assertTrue(started);
+            assertTrue(finished);
+            assertFalse(cancelled);
+            assertFalse(failed);
             assertTrue(reconstructor.isFinished());
-            assertTrue(mSlamDataAvailable > 0);
-            assertTrue(mSlamCameraEstimated > 0);
-            assertNotNull(mSlamCamera);
-            assertNotNull(mSlamCovariance);
+            assertTrue(slamDataAvailable > 0);
+            assertTrue(slamCameraEstimated > 0);
+            assertNotNull(slamCamera);
+            assertNotNull(slamCovariance);
             assertFalse(reconstructor.isFirstView());
             assertFalse(reconstructor.isSecondView());
             assertTrue(reconstructor.isAdditionalView());
             assertTrue(reconstructor.isAdditionalView());
             assertTrue(reconstructor.getViewCount() > 0);
             assertNotNull(reconstructor.getCurrentEstimatedFundamentalMatrix());
-            assertSame(mEstimatedFundamentalMatrix,
-                    reconstructor.getCurrentEstimatedFundamentalMatrix());
+            assertSame(estimatedFundamentalMatrix, reconstructor.getCurrentEstimatedFundamentalMatrix());
             assertNotNull(reconstructor.getCurrentMetricEstimatedCamera());
-            if (mEstimatedMetricCamera3 == null) {
+            if (emEstimatedMetricCamera3 == null) {
                 continue;
             }
-            assertSame(mEstimatedMetricCamera3, reconstructor.getCurrentMetricEstimatedCamera());
+            assertSame(emEstimatedMetricCamera3, reconstructor.getCurrentMetricEstimatedCamera());
             assertNotNull(reconstructor.getPreviousMetricEstimatedCamera());
-            assertSame(mEstimatedMetricCamera2, reconstructor.getPreviousMetricEstimatedCamera());
+            assertSame(estimatedMetricCamera2, reconstructor.getPreviousMetricEstimatedCamera());
             assertNotNull(reconstructor.getCurrentEuclideanEstimatedCamera());
-            assertSame(mEstimatedEuclideanCamera3, reconstructor.getCurrentEuclideanEstimatedCamera());
+            assertSame(estimatedEuclideanCamera3, reconstructor.getCurrentEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getPreviousEuclideanEstimatedCamera());
-            assertSame(mEstimatedEuclideanCamera2, reconstructor.getPreviousEuclideanEstimatedCamera());
+            assertSame(estimatedEuclideanCamera2, reconstructor.getPreviousEuclideanEstimatedCamera());
             assertNotNull(reconstructor.getActiveMetricReconstructedPoints());
-            assertSame(mMetricReconstructedPoints, reconstructor.getActiveMetricReconstructedPoints());
+            assertSame(metricReconstructedPoints, reconstructor.getActiveMetricReconstructedPoints());
             assertNotNull(reconstructor.getActiveEuclideanReconstructedPoints());
-            assertSame(mEuclideanReconstructedPoints,
-                    reconstructor.getActiveEuclideanReconstructedPoints());
-            assertEquals(mScale2, reconstructor.getCurrentScale(), 0.0);
+            assertSame(euclideanReconstructedPoints, reconstructor.getActiveEuclideanReconstructedPoints());
+            assertEquals(scale2, reconstructor.getCurrentScale(), 0.0);
             assertNotNull(reconstructor.getPreviousViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewTrackedSamples());
             assertNotNull(reconstructor.getCurrentViewNewlySpawnedSamples());
 
             // check that estimated fundamental matrix is correct
             fundamentalMatrix1.normalize();
-            mEstimatedFundamentalMatrix.getFundamentalMatrix().normalize();
+            estimatedFundamentalMatrix.getFundamentalMatrix().normalize();
 
-            assertNull(mEstimatedFundamentalMatrix2);
+            assertNull(estimatedFundamentalMatrix2);
 
             // matrices are equal up to scale
             if (!fundamentalMatrix1.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                    ABSOLUTE_ERROR) && !fundamentalMatrix1.getInternalMatrix()
-                    .multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                            ABSOLUTE_ERROR)) {
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    && !fundamentalMatrix1.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(fundamentalMatrix1.getInternalMatrix().equals(
-                    mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                    ABSOLUTE_ERROR) || fundamentalMatrix1.getInternalMatrix()
-                    .multiplyByScalarAndReturnNew(-1).equals(
-                            mEstimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(),
-                            ABSOLUTE_ERROR));
+                    estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR)
+                    || fundamentalMatrix1.getInternalMatrix().multiplyByScalarAndReturnNew(-1).equals(
+                            estimatedFundamentalMatrix.getFundamentalMatrix().getInternalMatrix(), ABSOLUTE_ERROR));
 
             // check that reconstructed points are in a metric stratum (up to a
             // certain scale)
-            final PinholeCamera estimatedMetricCamera1 = mEstimatedMetricCamera1.getCamera();
-            final PinholeCamera estimatedMetricCamera2 = mEstimatedMetricCamera2.getCamera();
-            final PinholeCamera estimatedMetricCamera3 = mEstimatedMetricCamera3.getCamera();
-            assertNotSame(mEstimatedMetricCamera1, mEstimatedEuclideanCamera1);
-            assertNotSame(mEstimatedMetricCamera2, mEstimatedEuclideanCamera2);
-            assertNotSame(mEstimatedMetricCamera3, mEstimatedEuclideanCamera3);
+            final var estMetricCam1 = this.estimatedMetricCamera1.getCamera();
+            final var estMetricCam2 = this.estimatedMetricCamera2.getCamera();
+            final var estMetricCam3 = emEstimatedMetricCamera3.getCamera();
+            assertNotSame(this.estimatedMetricCamera1, estimatedEuclideanCamera1);
+            assertNotSame(this.estimatedMetricCamera2, estimatedEuclideanCamera2);
+            assertNotSame(emEstimatedMetricCamera3, estimatedEuclideanCamera3);
 
-            final PinholeCamera estimatedEuclideanCamera1 = mEstimatedEuclideanCamera1.getCamera();
-            final PinholeCamera estimatedEuclideanCamera2 = mEstimatedEuclideanCamera2.getCamera();
-            final PinholeCamera estimatedEuclideanCamera3 = mEstimatedEuclideanCamera3.getCamera();
+            final var estEuclideanCam1 = this.estimatedEuclideanCamera1.getCamera();
+            final var estEuclideanCam2 = this.estimatedEuclideanCamera2.getCamera();
+            final var estEuclideanCam3 = this.estimatedEuclideanCamera3.getCamera();
 
-            estimatedMetricCamera1.decompose();
-            estimatedMetricCamera2.decompose();
-            estimatedMetricCamera3.decompose();
+            estMetricCam1.decompose();
+            estMetricCam2.decompose();
+            estMetricCam3.decompose();
 
-            estimatedEuclideanCamera1.decompose();
-            estimatedEuclideanCamera2.decompose();
-            estimatedEuclideanCamera3.decompose();
+            estEuclideanCam1.decompose();
+            estEuclideanCam2.decompose();
+            estEuclideanCam3.decompose();
 
-            assertNotSame(mMetricReconstructedPoints, mEuclideanReconstructedPoints);
+            assertNotSame(metricReconstructedPoints, euclideanReconstructedPoints);
 
-            final int numReconstructedPoints = numPoints1 - start + numPoints2;
+            final var numReconstructedPoints = numPoints1 - start + numPoints2;
 
-            if (mMetricReconstructedPoints.size() != numReconstructedPoints) {
+            if (metricReconstructedPoints.size() != numReconstructedPoints) {
                 continue;
             }
 
-            final List<Point3D> metricReconstructedPoints3D = new ArrayList<>();
-            final List<Point3D> euclideanReconstructedPoints3D = new ArrayList<>();
-            for (int i = 0; i < numReconstructedPoints; i++) {
-                metricReconstructedPoints3D.add(
-                        mMetricReconstructedPoints.get(i).getPoint());
-                euclideanReconstructedPoints3D.add(
-                        mEuclideanReconstructedPoints.get(i).getPoint());
+            final var metricReconstructedPoints3D = new ArrayList<Point3D>();
+            final var euclideanReconstructedPoints3D = new ArrayList<Point3D>();
+            for (var i = 0; i < numReconstructedPoints; i++) {
+                metricReconstructedPoints3D.add(metricReconstructedPoints.get(i).getPoint());
+                euclideanReconstructedPoints3D.add(euclideanReconstructedPoints.get(i).getPoint());
             }
 
             // check that all points are in front of both cameras
-            for (int i = 0; i < numReconstructedPoints; i++) {
-                final Point3D p = metricReconstructedPoints3D.get(i);
-                final Point3D pe = euclideanReconstructedPoints3D.get(i);
+            for (var i = 0; i < numReconstructedPoints; i++) {
+                final var p = metricReconstructedPoints3D.get(i);
+                final var pe = euclideanReconstructedPoints3D.get(i);
 
-                assertTrue(estimatedMetricCamera1.isPointInFrontOfCamera(p));
-                assertTrue(estimatedMetricCamera2.isPointInFrontOfCamera(p));
+                assertTrue(estMetricCam1.isPointInFrontOfCamera(p));
+                assertTrue(estMetricCam2.isPointInFrontOfCamera(p));
 
-                assertTrue(estimatedEuclideanCamera1.isPointInFrontOfCamera(pe));
-                assertTrue(estimatedEuclideanCamera2.isPointInFrontOfCamera(pe));
+                assertTrue(estEuclideanCam1.isPointInFrontOfCamera(pe));
+                assertTrue(estEuclideanCam2.isPointInFrontOfCamera(pe));
             }
 
-            final PinholeCameraIntrinsicParameters euclideanIntrinsic1 =
-                    estimatedEuclideanCamera1.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters euclideanIntrinsic2 =
-                    estimatedEuclideanCamera2.getIntrinsicParameters();
-            final PinholeCameraIntrinsicParameters euclideanIntrinsic3 =
-                    estimatedEuclideanCamera3.getIntrinsicParameters();
+            final var euclideanIntrinsic1 = estEuclideanCam1.getIntrinsicParameters();
+            final var euclideanIntrinsic2 = estEuclideanCam2.getIntrinsicParameters();
+            final var euclideanIntrinsic3 = estEuclideanCam3.getIntrinsicParameters();
 
-            final Rotation3D euclideanRotation1 = estimatedEuclideanCamera1.getCameraRotation();
-            final Rotation3D euclideanRotation2 = estimatedEuclideanCamera2.getCameraRotation();
-            final Rotation3D euclideanRotation3 = estimatedEuclideanCamera3.getCameraRotation();
+            final var euclideanRotation1 = estEuclideanCam1.getCameraRotation();
+            final var euclideanRotation2 = estEuclideanCam2.getCameraRotation();
+            final var euclideanRotation3 = estEuclideanCam3.getCameraRotation();
 
-            assertEquals(euclideanIntrinsic1.getHorizontalFocalLength(),
-                    intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic1.getVerticalFocalLength(),
-                    intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getHorizontalFocalLength(), intrinsic.getHorizontalFocalLength(),
+                    ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getVerticalFocalLength(), intrinsic.getVerticalFocalLength(),
+                    ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic1.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic1.getHorizontalPrincipalPoint(),
-                    intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic1.getVerticalPrincipalPoint(),
-                    intrinsic.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getHorizontalPrincipalPoint(), intrinsic.getHorizontalPrincipalPoint(),
+                    ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic1.getVerticalPrincipalPoint(), intrinsic.getVerticalPrincipalPoint(),
+                    ABSOLUTE_ERROR);
 
-            assertEquals(euclideanIntrinsic2.getHorizontalFocalLength(),
-                    intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic2.getVerticalFocalLength(),
-                    intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getHorizontalFocalLength(), intrinsic.getHorizontalFocalLength(),
+                    ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getVerticalFocalLength(), intrinsic.getVerticalFocalLength(),
+                    ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic2.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic2.getHorizontalPrincipalPoint(),
-                    intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic2.getVerticalPrincipalPoint(),
-                    intrinsic.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getHorizontalPrincipalPoint(), intrinsic.getHorizontalPrincipalPoint(),
+                    ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic2.getVerticalPrincipalPoint(), intrinsic.getVerticalPrincipalPoint(),
+                    ABSOLUTE_ERROR);
 
-            assertEquals(euclideanIntrinsic3.getHorizontalFocalLength(),
-                    intrinsic.getHorizontalFocalLength(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic3.getVerticalFocalLength(),
-                    intrinsic.getVerticalFocalLength(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic3.getHorizontalFocalLength(), intrinsic.getHorizontalFocalLength(),
+                    ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic3.getVerticalFocalLength(), intrinsic.getVerticalFocalLength(),
+                    ABSOLUTE_ERROR);
             assertEquals(euclideanIntrinsic3.getSkewness(), intrinsic.getSkewness(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic3.getHorizontalPrincipalPoint(),
-                    intrinsic.getHorizontalPrincipalPoint(), ABSOLUTE_ERROR);
-            assertEquals(euclideanIntrinsic3.getVerticalPrincipalPoint(),
-                    intrinsic.getVerticalPrincipalPoint(), ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic3.getHorizontalPrincipalPoint(), intrinsic.getHorizontalPrincipalPoint(),
+                    ABSOLUTE_ERROR);
+            assertEquals(euclideanIntrinsic3.getVerticalPrincipalPoint(), intrinsic.getVerticalPrincipalPoint(),
+                    ABSOLUTE_ERROR);
 
-            assertTrue(euclideanRotation1.asInhomogeneousMatrix().equals(
-                    rotation1.asInhomogeneousMatrix(), ABSOLUTE_ERROR));
-            assertTrue(euclideanRotation2.asInhomogeneousMatrix().equals(
-                    rotation2.asInhomogeneousMatrix(), ABSOLUTE_ERROR));
-            assertTrue(euclideanRotation3.asInhomogeneousMatrix().equals(
-                    rotation3.asInhomogeneousMatrix(), ABSOLUTE_ERROR));
+            assertTrue(euclideanRotation1.asInhomogeneousMatrix().equals(rotation1.asInhomogeneousMatrix(),
+                    ABSOLUTE_ERROR));
+            assertTrue(euclideanRotation2.asInhomogeneousMatrix().equals(rotation2.asInhomogeneousMatrix(),
+                    ABSOLUTE_ERROR));
+            assertTrue(euclideanRotation3.asInhomogeneousMatrix().equals(rotation3.asInhomogeneousMatrix(),
+                    ABSOLUTE_ERROR));
 
             // check that points are correct (after scale correction)
 
-            final MetricTransformation3D scaleAndOrientationTransformation
-                    = new MetricTransformation3D(mScale2);
+            final var scaleAndOrientationTransformation = new MetricTransformation3D(scale2);
             scaleAndOrientationTransformation.setRotation(rotation1.inverseRotationAndReturnNew());
 
-
-            int numValidPoints = 0;
-            for (int i = start; i < numPoints1; i++) {
-                final Point3D point = points3D1.get(i);
-                final Point3D euclideanPoint = euclideanReconstructedPoints3D.get(i - start);
+            var numValidPoints = 0;
+            for (var i = start; i < numPoints1; i++) {
+                final var point = points3D1.get(i);
+                final var euclideanPoint = euclideanReconstructedPoints3D.get(i - start);
 
                 // check metric points
-                final Point3D rescaledPoint = Point3D.create();
-                scaleAndOrientationTransformation.transform(metricReconstructedPoints3D.get(i - start),
-                        rescaledPoint);
+                final var rescaledPoint = Point3D.create();
+                scaleAndOrientationTransformation.transform(metricReconstructedPoints3D.get(i - start), rescaledPoint);
 
                 assertTrue(euclideanPoint.equals(rescaledPoint, LARGE_ABSOLUTE_ERROR));
 
-                rescaledPoint.setInhomogeneousCoordinates(
-                        rescaledPoint.getInhomX() * baseline / mScale2,
-                        rescaledPoint.getInhomY() * baseline / mScale2,
-                        rescaledPoint.getInhomZ() * baseline / mScale2);
+                rescaledPoint.setInhomogeneousCoordinates(rescaledPoint.getInhomX() * baseline / scale2,
+                        rescaledPoint.getInhomY() * baseline / scale2,
+                        rescaledPoint.getInhomZ() * baseline / scale2);
                 if (point.equals(rescaledPoint, LARGE_ABSOLUTE_ERROR)) {
                     numValidPoints++;
                 }
             }
 
-            for (int i = 0; i < numPoints2; i++) {
-                final Point3D point = points3D2.get(i);
-                final Point3D euclideanPoint = euclideanReconstructedPoints3D.get(i + numPoints1 - start);
+            for (var i = 0; i < numPoints2; i++) {
+                final var point = points3D2.get(i);
+                final var euclideanPoint = euclideanReconstructedPoints3D.get(i + numPoints1 - start);
 
                 // check metric points
-                final Point3D rescaledPoint = Point3D.create();
+                final var rescaledPoint = Point3D.create();
                 scaleAndOrientationTransformation.transform(metricReconstructedPoints3D.get(i + numPoints1 - start),
                         rescaledPoint);
 
                 assertTrue(euclideanPoint.equals(rescaledPoint, LARGE_ABSOLUTE_ERROR));
 
-                rescaledPoint.setInhomogeneousCoordinates(
-                        rescaledPoint.getInhomX() * baseline / mScale2,
-                        rescaledPoint.getInhomY() * baseline / mScale2,
-                        rescaledPoint.getInhomZ() * baseline / mScale2);
+                rescaledPoint.setInhomogeneousCoordinates(rescaledPoint.getInhomX() * baseline / scale2,
+                        rescaledPoint.getInhomY() * baseline / scale2,
+                        rescaledPoint.getInhomZ() * baseline / scale2);
                 if (point.equals(rescaledPoint, LARGE_ABSOLUTE_ERROR)) {
                     numValidPoints++;
                 }
@@ -3556,34 +3345,30 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest
     }
 
     private void reset() {
-        mViewCount = 0;
-        mEstimatedFundamentalMatrix = mEstimatedFundamentalMatrix2 = null;
-        mEstimatedMetricCamera1 = mEstimatedMetricCamera2 =
-                mEstimatedMetricCamera3 = null;
-        mEstimatedEuclideanCamera1 = mEstimatedEuclideanCamera2 =
-                mEstimatedEuclideanCamera3 = null;
-        mMetricReconstructedPoints = null;
-        mEuclideanReconstructedPoints = null;
-        mStarted = mFinished = mFailed = mCancelled = false;
-        mScale = 0.0;
-        mTimestamp = 0;
-        mSlamDataAvailable = 0;
-        mSlamCameraEstimated = 0;
-        mSlamCamera = null;
-        mSlamCovariance = null;
+        viewCount = 0;
+        estimatedFundamentalMatrix = estimatedFundamentalMatrix2 = null;
+        estimatedMetricCamera1 = estimatedMetricCamera2 = emEstimatedMetricCamera3 = null;
+        estimatedEuclideanCamera1 = estimatedEuclideanCamera2 = estimatedEuclideanCamera3 = null;
+        metricReconstructedPoints = null;
+        euclideanReconstructedPoints = null;
+        started = finished = failed = cancelled = false;
+        scale = 0.0;
+        timestamp = 0;
+        slamDataAvailable = 0;
+        slamCameraEstimated = 0;
+        slamCamera = null;
+        slamCovariance = null;
     }
 
-    private AbsoluteOrientationConstantVelocityModelSlamCalibrator createFinishedCalibrator(
-            final float accelerationOffsetX, final float accelerationOffsetY,
-            final float accelerationOffsetZ, final float angularOffsetX,
-            final float angularOffsetY, final float angularOffsetZ,
+    private static AbsoluteOrientationConstantVelocityModelSlamCalibrator createFinishedCalibrator(
+            final float accelerationOffsetX, final float accelerationOffsetY, final float accelerationOffsetZ,
+            final float angularOffsetX, final float angularOffsetY, final float angularOffsetZ,
             final GaussianRandomizer noiseRandomizer) {
-        final AbsoluteOrientationConstantVelocityModelSlamCalibrator calibrator =
-                AbsoluteOrientationConstantVelocityModelSlamEstimator.createCalibrator();
+        final var calibrator = AbsoluteOrientationConstantVelocityModelSlamEstimator.createCalibrator();
         calibrator.setConvergenceThreshold(ABSOLUTE_ERROR);
         calibrator.setMaxNumSamples(MAX_CALIBRATION_SAMPLES);
 
-        long timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
+        var timestamp = System.currentTimeMillis() * MILLIS_TO_NANOS;
 
         float accelerationNoiseX;
         float accelerationNoiseY;
@@ -3598,9 +3383,9 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest
         double angularX;
         double angularY;
         double angularZ;
-        final Quaternion orientation = new Quaternion();
+        final var orientation = new Quaternion();
 
-        for (int i = 0; i < MAX_CALIBRATION_SAMPLES; i++) {
+        for (var i = 0; i < MAX_CALIBRATION_SAMPLES; i++) {
             accelerationNoiseX = noiseRandomizer.nextFloat();
             accelerationNoiseY = noiseRandomizer.nextFloat();
             accelerationNoiseZ = noiseRandomizer.nextFloat();
@@ -3617,10 +3402,9 @@ public class AbsoluteOrientationConstantVelocityModelSlamSparseReconstructorTest
             angularY = angularOffsetY + angularNoiseY;
             angularZ = angularOffsetZ + angularNoiseZ;
 
-            calibrator.updateAccelerometerSample(timestamp, (float) accelerationX,
-                    (float) accelerationY, (float) accelerationZ);
-            calibrator.updateGyroscopeSample(timestamp, (float) angularX, (float) angularY,
-                    (float) angularZ);
+            calibrator.updateAccelerometerSample(timestamp, (float) accelerationX, (float) accelerationY,
+                    (float) accelerationZ);
+            calibrator.updateGyroscopeSample(timestamp, (float) angularX, (float) angularY, (float) angularZ);
             calibrator.updateOrientationSample(timestamp, orientation);
 
             if (calibrator.isFinished()) {

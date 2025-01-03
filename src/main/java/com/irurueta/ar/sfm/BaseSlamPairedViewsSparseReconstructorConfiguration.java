@@ -62,7 +62,7 @@ public class BaseSlamPairedViewsSparseReconstructorConfiguration<C extends BaseC
      * motion (e.g. acceleration and rotation).
      * If this is null, no calibration data will be used.
      */
-    private C mCalibrationData;
+    private C calibrationData;
 
     /**
      * Matrix containing covariance of measured camera positions.
@@ -72,19 +72,19 @@ public class BaseSlamPairedViewsSparseReconstructorConfiguration<C extends BaseC
      * of images, pictures quality, gyroscope and accelerometer accuracy.
      * This matrix must be a 3x3 symmetric positive definite matrix.
      */
-    private Matrix mCameraPositionCovariance;
+    private Matrix cameraPositionCovariance;
 
     /**
      * Indicates whether new available SLAM state is notified each time that a whole set of IMU
      * (Inertial Measurement Unit) data is received.
      */
-    private boolean mNotifyAvailableSlamData = DEFAULT_NOTIFY_SLAM_DATA_AVAILABLE;
+    private boolean notifyAvailableSlamData = DEFAULT_NOTIFY_SLAM_DATA_AVAILABLE;
 
     /**
      * Indicates whether any new camera that can be estimated by means of SLAM using IMU data, will be
      * notified each time that accelerometer, gyroscope and orientation data is received.
      */
-    private boolean mNotifyEstimatedSlamCamera = DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA;
+    private boolean notifyEstimatedSlamCamera = DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA;
 
     /**
      * Constructor.
@@ -92,9 +92,9 @@ public class BaseSlamPairedViewsSparseReconstructorConfiguration<C extends BaseC
     public BaseSlamPairedViewsSparseReconstructorConfiguration() {
         // initialize default covariance
         try {
-            mCameraPositionCovariance = Matrix.identity(Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
+            cameraPositionCovariance = Matrix.identity(Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
                     Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH);
-            mCameraPositionCovariance.multiplyByScalar(DEFAULT_CAMERA_POSITION_VARIANCE);
+            cameraPositionCovariance.multiplyByScalar(DEFAULT_CAMERA_POSITION_VARIANCE);
         } catch (final AlgebraException ignore) {
             // never happens
         }
@@ -111,7 +111,7 @@ public class BaseSlamPairedViewsSparseReconstructorConfiguration<C extends BaseC
      * @return calibration data or null.
      */
     public C getCalibrationData() {
-        return mCalibrationData;
+        return calibrationData;
     }
 
     /**
@@ -126,7 +126,7 @@ public class BaseSlamPairedViewsSparseReconstructorConfiguration<C extends BaseC
      * @return this instance so that method can be easily chained.
      */
     public T setCalibrationData(final C calibrationData) {
-        mCalibrationData = calibrationData;
+        this.calibrationData = calibrationData;
 
         //noinspection unchecked
         return (T) this;
@@ -143,7 +143,7 @@ public class BaseSlamPairedViewsSparseReconstructorConfiguration<C extends BaseC
      * @return covariance of measured camera positions.
      */
     public Matrix getCameraPositionCovariance() {
-        return mCameraPositionCovariance;
+        return cameraPositionCovariance;
     }
 
     /**
@@ -164,7 +164,7 @@ public class BaseSlamPairedViewsSparseReconstructorConfiguration<C extends BaseC
             throw new IllegalArgumentException();
         }
 
-        mCameraPositionCovariance = cameraPositionCovariance;
+        this.cameraPositionCovariance = cameraPositionCovariance;
 
         //noinspection unchecked
         return (T) this;
@@ -180,9 +180,9 @@ public class BaseSlamPairedViewsSparseReconstructorConfiguration<C extends BaseC
      */
     public T setCameraPositionVariance(final double variance) {
         try {
-            mCameraPositionCovariance = Matrix.identity(Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
+            cameraPositionCovariance = Matrix.identity(Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
                     Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH);
-            mCameraPositionCovariance.multiplyByScalar(variance);
+            cameraPositionCovariance.multiplyByScalar(variance);
         } catch (final AlgebraException ignore) {
             // never happens
         }
@@ -200,7 +200,7 @@ public class BaseSlamPairedViewsSparseReconstructorConfiguration<C extends BaseC
      * of IMU data is received.
      */
     public boolean isNotifyAvailableSlamDataEnabled() {
-        return mNotifyAvailableSlamData;
+        return notifyAvailableSlamData;
     }
 
     /**
@@ -214,7 +214,7 @@ public class BaseSlamPairedViewsSparseReconstructorConfiguration<C extends BaseC
      * @return this instance so that method can be easily chained.
      */
     public T setNotifyAvailableSlamDataEnabled(final boolean notifyAvailableSlamData) {
-        mNotifyAvailableSlamData = notifyAvailableSlamData;
+        this.notifyAvailableSlamData = notifyAvailableSlamData;
 
         //noinspection unchecked
         return (T) this;
@@ -228,7 +228,7 @@ public class BaseSlamPairedViewsSparseReconstructorConfiguration<C extends BaseC
      * @return true if any newly estimated camera is notified, false otherwise.
      */
     public boolean isNotifyEstimatedSlamCameraEnabled() {
-        return mNotifyEstimatedSlamCamera;
+        return notifyEstimatedSlamCamera;
     }
 
     /**
@@ -241,7 +241,7 @@ public class BaseSlamPairedViewsSparseReconstructorConfiguration<C extends BaseC
      * @return this instance so that method can be easily chained.
      */
     public T setNotifyEstimatedSlamCameraEnabled(final boolean notifyEstimatedSlamCamera) {
-        mNotifyEstimatedSlamCamera = notifyEstimatedSlamCamera;
+        this.notifyEstimatedSlamCamera = notifyEstimatedSlamCamera;
 
         //noinspection unchecked
         return (T) this;

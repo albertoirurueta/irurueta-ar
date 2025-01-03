@@ -19,14 +19,12 @@ import com.irurueta.ar.calibration.ImageOfAbsoluteConic;
 import com.irurueta.geometry.HomogeneousPoint3D;
 import com.irurueta.geometry.MatrixRotation3D;
 import com.irurueta.geometry.PinholeCamera;
-import com.irurueta.geometry.PinholeCameraIntrinsicParameters;
 import com.irurueta.geometry.ProjectiveTransformation2D;
 import com.irurueta.geometry.Transformation2D;
 import com.irurueta.geometry.estimators.LockedException;
 import com.irurueta.geometry.estimators.NotReadyException;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This class estimate intrinsic and extrinsic (rotation and camera center)
@@ -46,22 +44,22 @@ public class SingleHomographyPinholeCameraEstimator {
     /**
      * Aspect ratio of intrinsic parameters.
      */
-    private double mFocalDistanceAspectRatio = DEFAULT_ASPECT_RATIO;
+    private double focalDistanceAspectRatio = DEFAULT_ASPECT_RATIO;
 
     /**
      * Homography relating two views.
      */
-    private Transformation2D mHomography;
+    private Transformation2D homography;
 
     /**
      * True when estimation is in progress.
      */
-    private boolean mLocked = false;
+    private boolean locked = false;
 
     /**
      * Listener to be notified of events such as when estimation starts or ends.
      */
-    private SingleHomographyPinholeCameraEstimatorListener mListener;
+    private SingleHomographyPinholeCameraEstimatorListener listener;
 
     /**
      * Constructor.
@@ -75,9 +73,8 @@ public class SingleHomographyPinholeCameraEstimator {
      * @param listener listener to be notified of events such as when estimation
      *                 starts or ends.
      */
-    public SingleHomographyPinholeCameraEstimator(
-            final SingleHomographyPinholeCameraEstimatorListener listener) {
-        mListener = listener;
+    public SingleHomographyPinholeCameraEstimator(final SingleHomographyPinholeCameraEstimatorListener listener) {
+        this.listener = listener;
     }
 
     /**
@@ -98,10 +95,9 @@ public class SingleHomographyPinholeCameraEstimator {
      *                   starts or ends.
      */
     public SingleHomographyPinholeCameraEstimator(
-            final Transformation2D homography,
-            final SingleHomographyPinholeCameraEstimatorListener listener) {
+            final Transformation2D homography, final SingleHomographyPinholeCameraEstimatorListener listener) {
         internalSetHomography(homography);
-        mListener = listener;
+        this.listener = listener;
     }
 
     /**
@@ -110,7 +106,7 @@ public class SingleHomographyPinholeCameraEstimator {
      * @return aspect ratio of intrinsic parameters.
      */
     public double getFocalDistanceAspectRatio() {
-        return mFocalDistanceAspectRatio;
+        return focalDistanceAspectRatio;
     }
 
     /**
@@ -119,12 +115,11 @@ public class SingleHomographyPinholeCameraEstimator {
      * @param focalDistanceAspectRatio aspect ratio of intrinsic parameters.
      * @throws LockedException if estimator is locked.
      */
-    public void setFocalDistanceAspectRatio(final double focalDistanceAspectRatio)
-            throws LockedException {
-        if (mLocked) {
+    public void setFocalDistanceAspectRatio(final double focalDistanceAspectRatio) throws LockedException {
+        if (locked) {
             throw new LockedException();
         }
-        mFocalDistanceAspectRatio = focalDistanceAspectRatio;
+        this.focalDistanceAspectRatio = focalDistanceAspectRatio;
     }
 
     /**
@@ -133,7 +128,7 @@ public class SingleHomographyPinholeCameraEstimator {
      * @return homography relating two views.
      */
     public Transformation2D getHomography() {
-        return mHomography;
+        return homography;
     }
 
     /**
@@ -142,12 +137,11 @@ public class SingleHomographyPinholeCameraEstimator {
      * @param homography homography relating two views.
      * @throws LockedException if estimator is locked.
      */
-    public void setHomography(final Transformation2D homography)
-            throws LockedException {
-        if (mLocked) {
+    public void setHomography(final Transformation2D homography) throws LockedException {
+        if (locked) {
             throw new LockedException();
         }
-        mHomography = homography;
+        this.homography = homography;
     }
 
     /**
@@ -157,7 +151,7 @@ public class SingleHomographyPinholeCameraEstimator {
      * otherwise.
      */
     public boolean isReady() {
-        return mHomography != null;
+        return homography != null;
     }
 
     /**
@@ -167,7 +161,7 @@ public class SingleHomographyPinholeCameraEstimator {
      * @return listener to be notified of events.
      */
     public SingleHomographyPinholeCameraEstimatorListener getListener() {
-        return mListener;
+        return listener;
     }
 
     /**
@@ -177,13 +171,11 @@ public class SingleHomographyPinholeCameraEstimator {
      * @param listener listener to be notified of events.
      * @throws LockedException if estimator is locked.
      */
-    public void setListener(
-            final SingleHomographyPinholeCameraEstimatorListener listener)
-            throws LockedException {
-        if (mLocked) {
+    public void setListener(final SingleHomographyPinholeCameraEstimatorListener listener) throws LockedException {
+        if (locked) {
             throw new LockedException();
         }
-        mListener = listener;
+        this.listener = listener;
     }
 
     /**
@@ -192,7 +184,7 @@ public class SingleHomographyPinholeCameraEstimator {
      * @return true if instance is locked, false otherwise.
      */
     public boolean isLocked() {
-        return mLocked;
+        return locked;
     }
 
     /**
@@ -206,7 +198,7 @@ public class SingleHomographyPinholeCameraEstimator {
      */
     public PinholeCamera estimate() throws LockedException, NotReadyException,
             SingleHomographyPinholeCameraEstimatorException {
-        final PinholeCamera result = new PinholeCamera();
+        final var result = new PinholeCamera();
         estimate(result);
         return result;
     }
@@ -220,9 +212,9 @@ public class SingleHomographyPinholeCameraEstimator {
      * @throws SingleHomographyPinholeCameraEstimatorException if estimation
      *                                                         fails.
      */
-    public void estimate(PinholeCamera result) throws LockedException,
-            NotReadyException, SingleHomographyPinholeCameraEstimatorException {
-        if (mLocked) {
+    public void estimate(PinholeCamera result) throws LockedException, NotReadyException,
+            SingleHomographyPinholeCameraEstimatorException {
+        if (locked) {
             throw new LockedException();
         }
 
@@ -231,45 +223,39 @@ public class SingleHomographyPinholeCameraEstimator {
         }
 
         try {
-            mLocked = true;
+            locked = true;
 
-            if (mListener != null) {
-                mListener.onEstimateStart(this);
+            if (listener != null) {
+                listener.onEstimateStart(this);
             }
 
             // estimate intrinsic parameters
-            final List<Transformation2D> homographies =
-                    new ArrayList<>();
-            homographies.add(mHomography);
+            final var homographies = new ArrayList<Transformation2D>();
+            homographies.add(homography);
             // also add its inverse
-            homographies.add(
-                    ((ProjectiveTransformation2D) mHomography).inverseAndReturnNew());
-            final LMSEImageOfAbsoluteConicEstimator intrinsicEstimator =
-                    new LMSEImageOfAbsoluteConicEstimator(homographies);
+            homographies.add(((ProjectiveTransformation2D) homography).inverseAndReturnNew());
+            final var intrinsicEstimator = new LMSEImageOfAbsoluteConicEstimator(homographies);
             intrinsicEstimator.setPrincipalPointAtOrigin(true);
             intrinsicEstimator.setFocalDistanceAspectRatioKnown(true);
-            intrinsicEstimator.setFocalDistanceAspectRatio(
-                    mFocalDistanceAspectRatio);
+            intrinsicEstimator.setFocalDistanceAspectRatio(focalDistanceAspectRatio);
             ImageOfAbsoluteConic iac = intrinsicEstimator.estimate();
             iac.normalize();
 
-            final PinholeCameraIntrinsicParameters intrinsic =
-                    iac.getIntrinsicParameters();
+            final var intrinsic = iac.getIntrinsicParameters();
 
             // estimate camera pose
-            final MatrixRotation3D rotation = new MatrixRotation3D();
-            final HomogeneousPoint3D center = new HomogeneousPoint3D();
-            CameraPoseEstimator.estimate(intrinsic, mHomography, rotation,
-                    center, result);
+            final var rotation = new MatrixRotation3D();
+            final var center = new HomogeneousPoint3D();
+            CameraPoseEstimator.estimate(intrinsic, homography, rotation, center, result);
 
-            if (mListener != null) {
-                mListener.onEstimateEnd(this);
+            if (listener != null) {
+                listener.onEstimateEnd(this);
             }
 
         } catch (final Exception e) {
             throw new SingleHomographyPinholeCameraEstimatorException(e);
         } finally {
-            mLocked = false;
+            locked = false;
         }
     }
 
@@ -283,6 +269,6 @@ public class SingleHomographyPinholeCameraEstimator {
         if (homography == null) {
             throw new NullPointerException();
         }
-        mHomography = homography;
+        this.homography = homography;
     }
 }

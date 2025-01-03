@@ -21,15 +21,13 @@ import com.irurueta.geometry.*;
 import com.irurueta.geometry.estimators.LockedException;
 import com.irurueta.geometry.estimators.NotReadyException;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class SevenPointsFundamentalMatrixEstimatorTest implements FundamentalMatrixEstimatorListener {
+class SevenPointsFundamentalMatrixEstimatorTest implements FundamentalMatrixEstimatorListener {
 
     private static final int MIN_POINTS = 7;
     private static final int MAX_POINTS = 500;
@@ -63,9 +61,9 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements FundamentalMat
     private int estimateEnd;
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         // test constructor without arguments
-        SevenPointsFundamentalMatrixEstimator estimator = new SevenPointsFundamentalMatrixEstimator();
+        var estimator = new SevenPointsFundamentalMatrixEstimator();
 
         // check correctness
         assertEquals(SevenPointsFundamentalMatrixEstimator.DEFAULT_ALLOW_LMSE_SOLUTION,
@@ -73,21 +71,19 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements FundamentalMat
         assertEquals(SevenPointsFundamentalMatrixEstimator.DEFAULT_NORMALIZE_POINT_CORRESPONDENCES,
                 estimator.arePointsNormalized());
         assertFalse(estimator.isReady());
-        assertEquals(FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM,
-                estimator.getMethod());
-        assertEquals(SevenPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS,
-                estimator.getMinRequiredPoints());
+        assertEquals(FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM, estimator.getMethod());
+        assertEquals(SevenPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS, estimator.getMinRequiredPoints());
         assertNull(estimator.getLeftPoints());
         assertNull(estimator.getRightPoints());
         assertNull(estimator.getListener());
         assertFalse(estimator.isLocked());
 
         // test constructor with points
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final int nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
-        final List<Point2D> leftPoints = new ArrayList<>();
-        final List<Point2D> rightPoints = new ArrayList<>();
-        for (int i = 0; i < nPoints; i++) {
+        final var randomizer = new UniformRandomizer();
+        final var nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
+        final var leftPoints = new ArrayList<Point2D>();
+        final var rightPoints = new ArrayList<Point2D>();
+        for (var i = 0; i < nPoints; i++) {
             leftPoints.add(Point2D.create());
             rightPoints.add(Point2D.create());
         }
@@ -100,43 +96,31 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements FundamentalMat
         assertEquals(SevenPointsFundamentalMatrixEstimator.DEFAULT_NORMALIZE_POINT_CORRESPONDENCES,
                 estimator.arePointsNormalized());
         assertTrue(estimator.isReady());
-        assertEquals(FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM,
-                estimator.getMethod());
-        assertEquals(SevenPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS,
-                estimator.getMinRequiredPoints());
+        assertEquals(FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM, estimator.getMethod());
+        assertEquals(SevenPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS, estimator.getMinRequiredPoints());
         assertSame(leftPoints, estimator.getLeftPoints());
         assertSame(rightPoints, estimator.getRightPoints());
         assertNull(estimator.getListener());
         assertFalse(estimator.isLocked());
 
         // Force IllegalArgumentException
-        final List<Point2D> emptyPoints = new ArrayList<>();
-        estimator = null;
-        try {
-            estimator = new SevenPointsFundamentalMatrixEstimator(emptyPoints, rightPoints);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new SevenPointsFundamentalMatrixEstimator(leftPoints, emptyPoints);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
+        final var emptyPoints = new ArrayList<Point2D>();
+        assertThrows(IllegalArgumentException.class,
+                () -> new SevenPointsFundamentalMatrixEstimator(emptyPoints, rightPoints));
+        assertThrows(IllegalArgumentException.class,
+                () -> new SevenPointsFundamentalMatrixEstimator(leftPoints, emptyPoints));
     }
 
     @Test
-    public void testIsSetLMSESolutionAllowed() throws LockedException {
-        final SevenPointsFundamentalMatrixEstimator estimator =
-                new SevenPointsFundamentalMatrixEstimator();
+    void testIsSetLMSESolutionAllowed() throws LockedException {
+        final var estimator = new SevenPointsFundamentalMatrixEstimator();
 
         // check default value
         assertEquals(SevenPointsFundamentalMatrixEstimator.DEFAULT_ALLOW_LMSE_SOLUTION,
                 estimator.isLMSESolutionAllowed());
 
         // set new value
-        estimator.setLMSESolutionAllowed(
-                !SevenPointsFundamentalMatrixEstimator.DEFAULT_ALLOW_LMSE_SOLUTION);
+        estimator.setLMSESolutionAllowed(!SevenPointsFundamentalMatrixEstimator.DEFAULT_ALLOW_LMSE_SOLUTION);
 
         // check correctness
         assertEquals(!SevenPointsFundamentalMatrixEstimator.DEFAULT_ALLOW_LMSE_SOLUTION,
@@ -144,17 +128,15 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements FundamentalMat
     }
 
     @Test
-    public void testAreSetPointsNormalized() throws LockedException {
-        final SevenPointsFundamentalMatrixEstimator estimator =
-                new SevenPointsFundamentalMatrixEstimator();
+    void testAreSetPointsNormalized() throws LockedException {
+        final var estimator = new SevenPointsFundamentalMatrixEstimator();
 
         // check default value
         assertEquals(SevenPointsFundamentalMatrixEstimator.DEFAULT_NORMALIZE_POINT_CORRESPONDENCES,
                 estimator.arePointsNormalized());
 
         // set new value
-        estimator.setPointsNormalized(
-                !SevenPointsFundamentalMatrixEstimator.DEFAULT_NORMALIZE_POINT_CORRESPONDENCES);
+        estimator.setPointsNormalized(!SevenPointsFundamentalMatrixEstimator.DEFAULT_NORMALIZE_POINT_CORRESPONDENCES);
 
         // check correctness
         assertEquals(!SevenPointsFundamentalMatrixEstimator.DEFAULT_NORMALIZE_POINT_CORRESPONDENCES,
@@ -162,20 +144,19 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements FundamentalMat
     }
 
     @Test
-    public void testGetSetPoints() throws LockedException {
-        final SevenPointsFundamentalMatrixEstimator estimator =
-                new SevenPointsFundamentalMatrixEstimator();
+    void testGetSetPoints() throws LockedException {
+        final var estimator = new SevenPointsFundamentalMatrixEstimator();
 
         // check default value
         assertNull(estimator.getLeftPoints());
         assertNull(estimator.getRightPoints());
 
         // set new values
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final int nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
-        final List<Point2D> leftPoints = new ArrayList<>();
-        final List<Point2D> rightPoints = new ArrayList<>();
-        for (int i = 0; i < nPoints; i++) {
+        final var randomizer = new UniformRandomizer();
+        final var nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
+        final var leftPoints = new ArrayList<Point2D>();
+        final var rightPoints = new ArrayList<Point2D>();
+        for (var i = 0; i < nPoints; i++) {
             leftPoints.add(Point2D.create());
             rightPoints.add(Point2D.create());
         }
@@ -187,23 +168,14 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements FundamentalMat
         assertSame(rightPoints, estimator.getRightPoints());
 
         // Force IllegalArgumentException
-        final List<Point2D> emptyPoints = new ArrayList<>();
-        try {
-            estimator.setPoints(emptyPoints, rightPoints);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator.setPoints(leftPoints, emptyPoints);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        final var emptyPoints = new ArrayList<Point2D>();
+        assertThrows(IllegalArgumentException.class, () -> estimator.setPoints(emptyPoints, rightPoints));
+        assertThrows(IllegalArgumentException.class, () -> estimator.setPoints(leftPoints, emptyPoints));
     }
 
     @Test
-    public void testGetSetListener() throws LockedException {
-        final SevenPointsFundamentalMatrixEstimator estimator =
-                new SevenPointsFundamentalMatrixEstimator();
+    void testGetSetListener() throws LockedException {
+        final var estimator = new SevenPointsFundamentalMatrixEstimator();
 
         // check default value
         assertNull(estimator.getListener());
@@ -216,91 +188,71 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements FundamentalMat
     }
 
     @Test
-    public void testEstimateAllNoLMSENoNormalization() throws LockedException, NotReadyException,
+    void testEstimateAllNoLMSENoNormalization() throws LockedException, NotReadyException,
             FundamentalMatrixEstimatorException, InvalidFundamentalMatrixException, NotAvailableException {
 
         SevenPointsFundamentalMatrixEstimator estimator;
 
         double leftEpipoleError;
         double rightEpipoleError;
-        double avgLeftEpipoleError = 0.0;
-        double avgRightEpipoleError = 0.0;
-        int numValid = 0;
-        for (int j = 0; j < TIMES; j++) {
+        var avgLeftEpipoleError = 0.0;
+        var avgRightEpipoleError = 0.0;
+        var numValid = 0;
+        for (var j = 0; j < TIMES; j++) {
             // randomly create two pinhole cameras
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double alphaEuler1 = 0.0;
-            final double betaEuler1 = 0.0;
-            final double gammaEuler1 = 0.0;
-            final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+            final var randomizer = new UniformRandomizer();
+            final var alphaEuler1 = 0.0;
+            final var betaEuler1 = 0.0;
+            final var gammaEuler1 = 0.0;
+            final var alphaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var betaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var gammaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-            final double horizontalFocalLength1 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength1 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double horizontalFocalLength2 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength2 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var horizontalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var verticalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var horizontalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var verticalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
-            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final var skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final var skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
 
-            final double horizontalPrincipalPoint1 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double verticalPrincipalPoint1 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double horizontalPrincipalPoint2 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double verticalPrincipalPoint2 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var horizontalPrincipalPoint1 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var verticalPrincipalPoint1 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var horizontalPrincipalPoint2 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var verticalPrincipalPoint2 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
-            final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
+            final var cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
-            final int nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
+            final var nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
 
-            final Point3D center1 = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+            final var center1 = new InhomogeneousPoint3D(randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            final Point3D center2 = new InhomogeneousPoint3D(
-                    center1.getInhomX() + cameraSeparation,
-                    center1.getInhomY() + cameraSeparation,
-                    center1.getInhomZ() + cameraSeparation);
+            final var center2 = new InhomogeneousPoint3D(center1.getInhomX() + cameraSeparation,
+                    center1.getInhomY() + cameraSeparation, center1.getInhomZ() + cameraSeparation);
 
-            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
-            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+            final var rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final var rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-            final PinholeCameraIntrinsicParameters intrinsic1 =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
-                            verticalFocalLength1, horizontalPrincipalPoint1,
-                            verticalPrincipalPoint1, skewness1);
-            final PinholeCameraIntrinsicParameters intrinsic2 =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength2,
-                            verticalFocalLength2, horizontalPrincipalPoint2,
-                            verticalPrincipalPoint2, skewness2);
+            final var intrinsic1 = new PinholeCameraIntrinsicParameters(horizontalFocalLength1, verticalFocalLength1,
+                    horizontalPrincipalPoint1, verticalPrincipalPoint1, skewness1);
+            final var intrinsic2 = new PinholeCameraIntrinsicParameters(horizontalFocalLength2, verticalFocalLength2,
+                    horizontalPrincipalPoint2, verticalPrincipalPoint2, skewness2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
+            final var camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
+            final var camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
 
             // generate a random list of 3D points
-            final List<Point3D> points3D = new ArrayList<>();
-            for (int i = 0; i < nPoints; i++) {
-                points3D.add(new InhomogeneousPoint3D(
-                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+            final var points3D = new ArrayList<Point3D>();
+            for (var i = 0; i < nPoints; i++) {
+                points3D.add(new InhomogeneousPoint3D(randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE)));
             }
 
             // project 3D points with both cameras
-            final List<Point2D> leftPoints = camera1.project(points3D);
-            final List<Point2D> rightPoints = camera2.project(points3D);
+            final var leftPoints = camera1.project(points3D);
+            final var rightPoints = camera2.project(points3D);
 
             // estimate fundamental matrix
             estimator = new SevenPointsFundamentalMatrixEstimator(leftPoints, rightPoints);
@@ -315,7 +267,7 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements FundamentalMat
             assertEquals(0, estimateEnd);
 
             // estimate all
-            final List<FundamentalMatrix> fundMatrixList = estimator.estimateAll();
+            final var fundMatrixList = estimator.estimateAll();
 
             assertFalse(estimator.isLocked());
             assertEquals(1, estimateStart);
@@ -325,11 +277,7 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements FundamentalMat
             if (fundMatrixList.size() > 1) {
                 // we have more than one solution, so estimate method should
                 // fail!
-                try {
-                    estimator.estimate();
-                    fail("FundamentalMatrixEstimatorException expected but not thrown");
-                } catch (FundamentalMatrixEstimatorException ignore) {
-                }
+                assertThrows(FundamentalMatrixEstimatorException.class, estimator::estimate);
 
                 assertEquals(1, estimateStart);
                 assertEquals(1, estimateEnd);
@@ -338,17 +286,18 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements FundamentalMat
 
             // check correctness
             // (at least one of the fundamental matrix solutions must be valid)
-            boolean epipoleLeftCorrect, epipoleRightCorrect;
-            for (final FundamentalMatrix fundMatrix : fundMatrixList) {
+            boolean epipoleLeftCorrect;
+            boolean epipoleRightCorrect;
+            for (final var fundMatrix : fundMatrixList) {
 
                 // compute epipoles
-                final Point2D epipole1a = camera1.project(center2);
-                final Point2D epipole2a = camera2.project(center1);
+                final var epipole1a = camera1.project(center2);
+                final var epipole2a = camera2.project(center1);
 
                 fundMatrix.computeEpipoles();
 
-                final Point2D epipole1b = fundMatrix.getLeftEpipole();
-                final Point2D epipole2b = fundMatrix.getRightEpipole();
+                final var epipole1b = fundMatrix.getLeftEpipole();
+                final var epipole2b = fundMatrix.getRightEpipole();
 
                 // check correctness of epipoles
                 leftEpipoleError = epipole1a.distanceTo(epipole1b);
@@ -360,17 +309,17 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements FundamentalMat
                 if (epipoleLeftCorrect && epipoleRightCorrect) {
                     // check that all points lie within their corresponding epipolar
                     // lines
-                    for (int i = 0; i < nPoints; i++) {
-                        final Point2D leftPoint = leftPoints.get(i);
-                        final Point2D rightPoint = rightPoints.get(i);
-                        final Point3D point3D = points3D.get(i);
+                    for (var i = 0; i < nPoints; i++) {
+                        final var leftPoint = leftPoints.get(i);
+                        final var rightPoint = rightPoints.get(i);
+                        final var point3D = points3D.get(i);
 
                         // obtain epipolar line on left view using 2D point on
                         // right view
-                        final Line2D line1 = fundMatrix.getLeftEpipolarLine(rightPoint);
+                        final var line1 = fundMatrix.getLeftEpipolarLine(rightPoint);
                         // obtain epipolar line on right view using 2D point on
                         // left view
-                        final Line2D line2 = fundMatrix.getRightEpipolarLine(leftPoint);
+                        final var line2 = fundMatrix.getRightEpipolarLine(leftPoint);
 
                         // check that 2D point on left view belongs to left
                         // epipolar line
@@ -389,17 +338,15 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements FundamentalMat
                         assertTrue(line2.isLocus(rightPoint, ULTRA_LARGE_ABSOLUTE_ERROR));
 
                         // obtain epipolar planes
-                        final Plane epipolarPlane1 = camera1.backProject(line1);
-                        final Plane epipolarPlane2 = camera2.backProject(line2);
+                        final var epipolarPlane1 = camera1.backProject(line1);
+                        final var epipolarPlane2 = camera2.backProject(line2);
 
                         // check that both planes are the same
-                        if (!epipolarPlane1.equals(epipolarPlane2,
-                                2.0 * ULTRA_LARGE_ABSOLUTE_ERROR)) {
+                        if (!epipolarPlane1.equals(epipolarPlane2, 2.0 * ULTRA_LARGE_ABSOLUTE_ERROR)) {
                             validPoints = false;
                             break;
                         }
-                        assertTrue(epipolarPlane1.equals(epipolarPlane2,
-                                2.0 * ULTRA_LARGE_ABSOLUTE_ERROR));
+                        assertTrue(epipolarPlane1.equals(epipolarPlane2, 2.0 * ULTRA_LARGE_ABSOLUTE_ERROR));
 
                         // check that point3D and camera centers belong to
                         // epipolar plane
@@ -455,98 +402,73 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements FundamentalMat
 
         // Force NotReadyException
         estimator = new SevenPointsFundamentalMatrixEstimator();
-        try {
-            estimator.estimate();
-            fail("NotReadyException expected but not thrown");
-        } catch (final NotReadyException ignore) {
-        }
+        assertThrows(NotReadyException.class, estimator::estimate);
     }
 
     @Test
-    public void testEstimateAllNoLMSENormalization() throws LockedException, NotReadyException,
-            FundamentalMatrixEstimatorException, InvalidFundamentalMatrixException,
-            NotAvailableException {
+    void testEstimateAllNoLMSENormalization() throws LockedException, NotReadyException,
+            FundamentalMatrixEstimatorException, InvalidFundamentalMatrixException, NotAvailableException {
 
         SevenPointsFundamentalMatrixEstimator estimator;
 
         double leftEpipoleError;
         double rightEpipoleError;
-        int numValid = 0;
-        for (int j = 0; j < TIMES; j++) {
+        var numValid = 0;
+        for (var j = 0; j < TIMES; j++) {
             // randomly create two pinhole cameras
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double alphaEuler1 = 0.0;
-            final double betaEuler1 = 0.0;
-            final double gammaEuler1 = 0.0;
-            final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+            final var randomizer = new UniformRandomizer();
+            final var alphaEuler1 = 0.0;
+            final var betaEuler1 = 0.0;
+            final var gammaEuler1 = 0.0;
+            final var alphaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var betaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var gammaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-            final double horizontalFocalLength1 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength1 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double horizontalFocalLength2 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength2 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var horizontalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var verticalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var horizontalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var verticalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
-            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final var skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final var skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
 
-            final double horizontalPrincipalPoint1 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double verticalPrincipalPoint1 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double horizontalPrincipalPoint2 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double verticalPrincipalPoint2 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var horizontalPrincipalPoint1 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var verticalPrincipalPoint1 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var horizontalPrincipalPoint2 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var verticalPrincipalPoint2 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
-            final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
+            final var cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
-            final int nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
+            final var nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
 
-            final Point3D center1 = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+            final var center1 = new InhomogeneousPoint3D(randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            final Point3D center2 = new InhomogeneousPoint3D(
-                    center1.getInhomX() + cameraSeparation,
-                    center1.getInhomY() + cameraSeparation,
-                    center1.getInhomZ() + cameraSeparation);
+            final var center2 = new InhomogeneousPoint3D(center1.getInhomX() + cameraSeparation,
+                    center1.getInhomY() + cameraSeparation, center1.getInhomZ() + cameraSeparation);
 
-            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
-            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+            final var rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final var rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-            final PinholeCameraIntrinsicParameters intrinsic1 =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
-                            verticalFocalLength1, horizontalPrincipalPoint1,
-                            verticalPrincipalPoint1, skewness1);
-            final PinholeCameraIntrinsicParameters intrinsic2 =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength2,
-                            verticalFocalLength2, horizontalPrincipalPoint2,
-                            verticalPrincipalPoint2, skewness2);
+            final var intrinsic1 = new PinholeCameraIntrinsicParameters(horizontalFocalLength1, verticalFocalLength1,
+                    horizontalPrincipalPoint1, verticalPrincipalPoint1, skewness1);
+            final var intrinsic2 = new PinholeCameraIntrinsicParameters(horizontalFocalLength2, verticalFocalLength2,
+                    horizontalPrincipalPoint2, verticalPrincipalPoint2, skewness2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
+            final var camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
+            final var camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
 
             // generate a random list of 3D points
-            final List<Point3D> points3D = new ArrayList<>();
-            for (int i = 0; i < nPoints; i++) {
-                points3D.add(new InhomogeneousPoint3D(
-                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+            final var points3D = new ArrayList<Point3D>();
+            for (var i = 0; i < nPoints; i++) {
+                points3D.add(new InhomogeneousPoint3D(randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE)));
             }
 
             // project 3D points with both cameras
-            final List<Point2D> leftPoints = camera1.project(points3D);
-            final List<Point2D> rightPoints = camera2.project(points3D);
+            final var leftPoints = camera1.project(points3D);
+            final var rightPoints = camera2.project(points3D);
 
             // estimate fundamental matrix
             estimator = new SevenPointsFundamentalMatrixEstimator(leftPoints, rightPoints);
@@ -561,7 +483,7 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements FundamentalMat
             assertEquals(0, estimateEnd);
 
             // estimate all
-            final List<FundamentalMatrix> fundMatrixList = estimator.estimateAll();
+            final var fundMatrixList = estimator.estimateAll();
 
             assertFalse(estimator.isLocked());
             assertEquals(1, estimateStart);
@@ -571,11 +493,7 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements FundamentalMat
             if (fundMatrixList.size() > 1) {
                 // we have more than one solution, so estimate method should
                 // fail!
-                try {
-                    estimator.estimate();
-                    fail("FundamentalMatrixEstimatorException expected but not thrown");
-                } catch (final FundamentalMatrixEstimatorException ignore) {
-                }
+                assertThrows(FundamentalMatrixEstimatorException.class, estimator::estimate);
 
                 assertEquals(1, estimateStart);
                 assertEquals(1, estimateEnd);
@@ -586,15 +504,15 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements FundamentalMat
             // (at least one of the fundamental matrix solutions must be valid)
             boolean epipoleLeftCorrect;
             boolean epipoleRightCorrect;
-            for (final FundamentalMatrix fundMatrix : fundMatrixList) {
+            for (final var fundMatrix : fundMatrixList) {
                 // compute epipoles
-                final Point2D epipole1a = camera1.project(center2);
-                final Point2D epipole2a = camera2.project(center1);
+                final var epipole1a = camera1.project(center2);
+                final var epipole2a = camera2.project(center1);
 
                 fundMatrix.computeEpipoles();
 
-                final Point2D epipole1b = fundMatrix.getLeftEpipole();
-                final Point2D epipole2b = fundMatrix.getRightEpipole();
+                final var epipole1b = fundMatrix.getLeftEpipole();
+                final var epipole2b = fundMatrix.getRightEpipole();
 
                 // check correctness of epipoles
                 leftEpipoleError = epipole1a.distanceTo(epipole1b);
@@ -605,17 +523,17 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements FundamentalMat
                 if (epipoleLeftCorrect && epipoleRightCorrect) {
                     // check that all points lie within their corresponding epipolar
                     // lines
-                    for (int i = 0; i < nPoints; i++) {
-                        final Point2D leftPoint = leftPoints.get(i);
-                        final Point2D rightPoint = rightPoints.get(i);
-                        final Point3D point3D = points3D.get(i);
+                    for (var i = 0; i < nPoints; i++) {
+                        final var leftPoint = leftPoints.get(i);
+                        final var rightPoint = rightPoints.get(i);
+                        final var point3D = points3D.get(i);
 
                         // obtain epipolar line on left view using 2D point on
                         // right view
-                        final Line2D line1 = fundMatrix.getLeftEpipolarLine(rightPoint);
+                        final var line1 = fundMatrix.getLeftEpipolarLine(rightPoint);
                         // obtain epipolar line on right view using 2D point on
                         // left view
-                        final Line2D line2 = fundMatrix.getRightEpipolarLine(leftPoint);
+                        final var line2 = fundMatrix.getRightEpipolarLine(leftPoint);
 
                         // check that 2D point on left view belongs to left
                         // epipolar line
@@ -625,8 +543,8 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements FundamentalMat
                         assertTrue(line2.isLocus(rightPoint, ULTRA_LARGE_ABSOLUTE_ERROR));
 
                         // obtain epipolar planes
-                        final Plane epipolarPlane1 = camera1.backProject(line1);
-                        final Plane epipolarPlane2 = camera2.backProject(line2);
+                        final var epipolarPlane1 = camera1.backProject(line1);
+                        final var epipolarPlane2 = camera2.backProject(line2);
 
                         // check that both planes are the same
                         assertTrue(epipolarPlane1.equals(epipolarPlane2, VERY_LARGE_ABSOLUTE_ERROR));
@@ -657,99 +575,75 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements FundamentalMat
 
         // Force NotReadyException
         estimator = new SevenPointsFundamentalMatrixEstimator();
-        try {
-            estimator.estimate();
-            fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) {
-        }
+        assertThrows(NotReadyException.class, estimator::estimate);
     }
 
     @Test
-    public void testEstimateAllLMSENoNormalization() throws LockedException, NotReadyException,
+    void testEstimateAllLMSENoNormalization() throws LockedException, NotReadyException,
             FundamentalMatrixEstimatorException, InvalidFundamentalMatrixException, NotAvailableException {
 
         SevenPointsFundamentalMatrixEstimator estimator;
 
         double leftEpipoleError;
         double rightEpipoleError;
-        double avgLeftEpipoleError = 0.0;
-        double avgRightEpipoleError = 0.0;
-        int numValid = 0;
-        for (int j = 0; j < TIMES; j++) {
+        var avgLeftEpipoleError = 0.0;
+        var avgRightEpipoleError = 0.0;
+        var numValid = 0;
+        for (var j = 0; j < TIMES; j++) {
             // randomly create two pinhole cameras
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double alphaEuler1 = 0.0;
-            final double betaEuler1 = 0.0;
-            final double gammaEuler1 = 0.0;
-            final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+            final var randomizer = new UniformRandomizer();
+            final var alphaEuler1 = 0.0;
+            final var betaEuler1 = 0.0;
+            final var gammaEuler1 = 0.0;
+            final var alphaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var betaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var gammaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-            final double horizontalFocalLength1 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength1 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double horizontalFocalLength2 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength2 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var horizontalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var verticalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var horizontalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var verticalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
-            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final var skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final var skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
 
-            final double horizontalPrincipalPoint1 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double verticalPrincipalPoint1 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double horizontalPrincipalPoint2 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double verticalPrincipalPoint2 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var horizontalPrincipalPoint1 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var verticalPrincipalPoint1 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var horizontalPrincipalPoint2 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var verticalPrincipalPoint2 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
-            final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
+            final var cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
-            final int nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
+            final var nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
 
-            final Point3D center1 = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+            final var center1 = new InhomogeneousPoint3D(randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            final Point3D center2 = new InhomogeneousPoint3D(
-                    center1.getInhomX() + cameraSeparation,
-                    center1.getInhomY() + cameraSeparation,
-                    center1.getInhomZ() + cameraSeparation);
+            final var center2 = new InhomogeneousPoint3D(center1.getInhomX() + cameraSeparation,
+                    center1.getInhomY() + cameraSeparation, center1.getInhomZ() + cameraSeparation);
 
-            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
-            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+            final var rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final var rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-            final PinholeCameraIntrinsicParameters intrinsic1 =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
-                            verticalFocalLength1, horizontalPrincipalPoint1,
-                            verticalPrincipalPoint1, skewness1);
-            final PinholeCameraIntrinsicParameters intrinsic2 =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength2,
-                            verticalFocalLength2, horizontalPrincipalPoint2,
-                            verticalPrincipalPoint2, skewness2);
+            final var intrinsic1 = new PinholeCameraIntrinsicParameters(horizontalFocalLength1, verticalFocalLength1,
+                    horizontalPrincipalPoint1, verticalPrincipalPoint1, skewness1);
+            final var intrinsic2 = new PinholeCameraIntrinsicParameters(horizontalFocalLength2, verticalFocalLength2,
+                    horizontalPrincipalPoint2, verticalPrincipalPoint2, skewness2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
+            final var camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
+            final var camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
 
             // generate a random list of 3D points
-            final List<Point3D> points3D = new ArrayList<>();
-            for (int i = 0; i < nPoints; i++) {
-                points3D.add(new InhomogeneousPoint3D(
-                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+            final var points3D = new ArrayList<Point3D>();
+            for (var i = 0; i < nPoints; i++) {
+                points3D.add(new InhomogeneousPoint3D(randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE)));
             }
 
             // project 3D points with both cameras
-            final List<Point2D> leftPoints = camera1.project(points3D);
-            final List<Point2D> rightPoints = camera2.project(points3D);
+            final var leftPoints = camera1.project(points3D);
+            final var rightPoints = camera2.project(points3D);
 
             // estimate fundamental matrix
             estimator = new SevenPointsFundamentalMatrixEstimator(leftPoints, rightPoints);
@@ -764,7 +658,7 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements FundamentalMat
             assertEquals(0, estimateEnd);
 
             // estimate all
-            final List<FundamentalMatrix> fundMatrixList = estimator.estimateAll();
+            final var fundMatrixList = estimator.estimateAll();
 
             assertFalse(estimator.isLocked());
             assertEquals(1, estimateStart);
@@ -774,11 +668,7 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements FundamentalMat
             if (fundMatrixList.size() > 1) {
                 // we have more than one solution, so estimate method should
                 // fail!
-                try {
-                    estimator.estimate();
-                    fail("FundamentalMatrixEstimatorException expected but not thrown");
-                } catch (final FundamentalMatrixEstimatorException ignore) {
-                }
+                assertThrows(FundamentalMatrixEstimatorException.class, estimator::estimate);
 
                 assertEquals(1, estimateStart);
                 assertEquals(1, estimateEnd);
@@ -789,16 +679,16 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements FundamentalMat
             // (at least one of the fundamental matrix solutions must be valid)
             boolean epipoleLeftCorrect;
             boolean epipoleRightCorrect;
-            for (final FundamentalMatrix fundMatrix : fundMatrixList) {
+            for (final var fundMatrix : fundMatrixList) {
 
                 // compute epipoles
-                final Point2D epipole1a = camera1.project(center2);
-                final Point2D epipole2a = camera2.project(center1);
+                final var epipole1a = camera1.project(center2);
+                final var epipole2a = camera2.project(center1);
 
                 fundMatrix.computeEpipoles();
 
-                final Point2D epipole1b = fundMatrix.getLeftEpipole();
-                final Point2D epipole2b = fundMatrix.getRightEpipole();
+                final var epipole1b = fundMatrix.getLeftEpipole();
+                final var epipole2b = fundMatrix.getRightEpipole();
 
                 // check correctness of epipoles
                 leftEpipoleError = epipole1a.distanceTo(epipole1b);
@@ -809,18 +699,18 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements FundamentalMat
                 if (epipoleLeftCorrect && epipoleRightCorrect) {
                     // check that all points lie within their corresponding
                     // epipolar lines
-                    boolean failed = false;
-                    for (int i = 0; i < nPoints; i++) {
-                        final Point2D leftPoint = leftPoints.get(i);
-                        final Point2D rightPoint = rightPoints.get(i);
-                        final Point3D point3D = points3D.get(i);
+                    var failed = false;
+                    for (var i = 0; i < nPoints; i++) {
+                        final var leftPoint = leftPoints.get(i);
+                        final var rightPoint = rightPoints.get(i);
+                        final var point3D = points3D.get(i);
 
                         // obtain epipolar line on left view using 2D point on
                         // right view
-                        final Line2D line1 = fundMatrix.getLeftEpipolarLine(rightPoint);
+                        final var line1 = fundMatrix.getLeftEpipolarLine(rightPoint);
                         // obtain epipolar line on right view using 2D point on
                         // left view
-                        final Line2D line2 = fundMatrix.getRightEpipolarLine(leftPoint);
+                        final var line2 = fundMatrix.getRightEpipolarLine(leftPoint);
 
                         // check that 2D point on left view belongs to left
                         // epipolar line
@@ -838,8 +728,8 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements FundamentalMat
                         assertTrue(line2.isLocus(rightPoint, ULTRA_LARGE_ABSOLUTE_ERROR));
 
                         // obtain epipolar planes
-                        final Plane epipolarPlane1 = camera1.backProject(line1);
-                        final Plane epipolarPlane2 = camera2.backProject(line2);
+                        final var epipolarPlane1 = camera1.backProject(line1);
+                        final var epipolarPlane2 = camera2.backProject(line2);
 
                         // check that both planes are the same
                         if (!epipolarPlane1.equals(epipolarPlane2, ULTRA_LARGE_ABSOLUTE_ERROR)) {
@@ -906,99 +796,75 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements FundamentalMat
 
         // Force NotReadyException
         estimator = new SevenPointsFundamentalMatrixEstimator();
-        try {
-            estimator.estimate();
-            fail("NotReadyException expected but not thrown");
-        } catch (final NotReadyException ignore) {
-        }
+        assertThrows(NotReadyException.class, estimator::estimate);
     }
 
     @Test
-    public void testEstimateAllLMSENormalization() throws LockedException, NotReadyException,
+    void testEstimateAllLMSENormalization() throws LockedException, NotReadyException,
             FundamentalMatrixEstimatorException, InvalidFundamentalMatrixException, NotAvailableException {
 
         SevenPointsFundamentalMatrixEstimator estimator;
 
         double leftEpipoleError;
         double rightEpipoleError;
-        double avgLeftEpipoleError = 0.0;
-        double avgRightEpipoleError = 0.0;
-        int numValid = 0;
-        for (int j = 0; j < TIMES; j++) {
+        var avgLeftEpipoleError = 0.0;
+        var avgRightEpipoleError = 0.0;
+        var numValid = 0;
+        for (var j = 0; j < TIMES; j++) {
             // randomly create two pinhole cameras
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double alphaEuler1 = 0.0;
-            final double betaEuler1 = 0.0;
-            final double gammaEuler1 = 0.0;
-            final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-            final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                    MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+            final var randomizer = new UniformRandomizer();
+            final var alphaEuler1 = 0.0;
+            final var betaEuler1 = 0.0;
+            final var gammaEuler1 = 0.0;
+            final var alphaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var betaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final var gammaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-            final double horizontalFocalLength1 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength1 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double horizontalFocalLength2 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-            final double verticalFocalLength2 = randomizer.nextDouble(
-                    MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var horizontalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var verticalFocalLength1 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var horizontalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+            final var verticalFocalLength2 = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
 
-            final double skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
-            final double skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final var skewness1 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+            final var skewness2 = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
 
-            final double horizontalPrincipalPoint1 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double verticalPrincipalPoint1 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double horizontalPrincipalPoint2 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-            final double verticalPrincipalPoint2 = randomizer.nextDouble(
-                    MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var horizontalPrincipalPoint1 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var verticalPrincipalPoint1 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var horizontalPrincipalPoint2 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+            final var verticalPrincipalPoint2 = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
-            final double cameraSeparation = randomizer.nextDouble(
-                    MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
+            final var cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
-            final int nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
+            final var nPoints = randomizer.nextInt(MIN_POINTS, MAX_POINTS);
 
-            final Point3D center1 = new InhomogeneousPoint3D(
-                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+            final var center1 = new InhomogeneousPoint3D(randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            final Point3D center2 = new InhomogeneousPoint3D(
-                    center1.getInhomX() + cameraSeparation,
-                    center1.getInhomY() + cameraSeparation,
-                    center1.getInhomZ() + cameraSeparation);
+            final var center2 = new InhomogeneousPoint3D(center1.getInhomX() + cameraSeparation,
+                    center1.getInhomY() + cameraSeparation, center1.getInhomZ() + cameraSeparation);
 
-            final Rotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
-            final Rotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+            final var rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+            final var rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
-            final PinholeCameraIntrinsicParameters intrinsic1 =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength1,
-                            verticalFocalLength1, horizontalPrincipalPoint1,
-                            verticalPrincipalPoint1, skewness1);
-            final PinholeCameraIntrinsicParameters intrinsic2 =
-                    new PinholeCameraIntrinsicParameters(horizontalFocalLength2,
-                            verticalFocalLength2, horizontalPrincipalPoint2,
-                            verticalPrincipalPoint2, skewness2);
+            final var intrinsic1 = new PinholeCameraIntrinsicParameters(horizontalFocalLength1, verticalFocalLength1,
+                    horizontalPrincipalPoint1, verticalPrincipalPoint1, skewness1);
+            final var intrinsic2 = new PinholeCameraIntrinsicParameters(horizontalFocalLength2, verticalFocalLength2,
+                    horizontalPrincipalPoint2, verticalPrincipalPoint2, skewness2);
 
-            final PinholeCamera camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
-            final PinholeCamera camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
+            final var camera1 = new PinholeCamera(intrinsic1, rotation1, center1);
+            final var camera2 = new PinholeCamera(intrinsic2, rotation2, center2);
 
             // generate a random list of 3D points
-            final List<Point3D> points3D = new ArrayList<>();
-            for (int i = 0; i < nPoints; i++) {
-                points3D.add(new InhomogeneousPoint3D(
-                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+            final var points3D = new ArrayList<Point3D>();
+            for (var i = 0; i < nPoints; i++) {
+                points3D.add(new InhomogeneousPoint3D(randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE)));
             }
 
             // project 3D points with both cameras
-            final List<Point2D> leftPoints = camera1.project(points3D);
-            final List<Point2D> rightPoints = camera2.project(points3D);
+            final var leftPoints = camera1.project(points3D);
+            final var rightPoints = camera2.project(points3D);
 
             // estimate fundamental matrix
             estimator = new SevenPointsFundamentalMatrixEstimator(leftPoints, rightPoints);
@@ -1013,7 +879,7 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements FundamentalMat
             assertEquals(0, estimateEnd);
 
             // estimate all
-            final List<FundamentalMatrix> fundMatrixList = estimator.estimateAll();
+            final var fundMatrixList = estimator.estimateAll();
 
             assertFalse(estimator.isLocked());
             assertEquals(1, estimateStart);
@@ -1023,11 +889,7 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements FundamentalMat
             if (fundMatrixList.size() > 1) {
                 // we have more than one solution, so estimate method should
                 // fail!
-                try {
-                    estimator.estimate();
-                    fail("FundamentalMatrixEstimatorException expected but not thrown");
-                } catch (final FundamentalMatrixEstimatorException ignore) {
-                }
+                assertThrows(FundamentalMatrixEstimatorException.class, estimator::estimate);
 
                 assertEquals(1, estimateStart);
                 assertEquals(1, estimateEnd);
@@ -1038,16 +900,16 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements FundamentalMat
             // (at least one of the fundamental matrix solutions must be valid)
             boolean epipoleLeftCorrect;
             boolean epipoleRightCorrect;
-            for (final FundamentalMatrix fundMatrix : fundMatrixList) {
+            for (final var fundMatrix : fundMatrixList) {
 
                 // compute epipoles
-                final Point2D epipole1a = camera1.project(center2);
-                final Point2D epipole2a = camera2.project(center1);
+                final var epipole1a = camera1.project(center2);
+                final var epipole2a = camera2.project(center1);
 
                 fundMatrix.computeEpipoles();
 
-                final Point2D epipole1b = fundMatrix.getLeftEpipole();
-                final Point2D epipole2b = fundMatrix.getRightEpipole();
+                final var epipole1b = fundMatrix.getLeftEpipole();
+                final var epipole2b = fundMatrix.getRightEpipole();
 
                 // check correctness of epipoles
                 leftEpipoleError = epipole1a.distanceTo(epipole1b);
@@ -1058,18 +920,18 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements FundamentalMat
                 if (epipoleLeftCorrect && epipoleRightCorrect) {
                     // check that all points lie within their corresponding
                     // epipolar lines
-                    boolean failed = false;
-                    for (int i = 0; i < nPoints; i++) {
-                        final Point2D leftPoint = leftPoints.get(i);
-                        final Point2D rightPoint = rightPoints.get(i);
-                        final Point3D point3D = points3D.get(i);
+                    var failed = false;
+                    for (var i = 0; i < nPoints; i++) {
+                        final var leftPoint = leftPoints.get(i);
+                        final var rightPoint = rightPoints.get(i);
+                        final var point3D = points3D.get(i);
 
                         // obtain epipolar line on left view using 2D point on
                         // right view
-                        final Line2D line1 = fundMatrix.getLeftEpipolarLine(rightPoint);
+                        final var line1 = fundMatrix.getLeftEpipolarLine(rightPoint);
                         // obtain epipolar line on right view using 2D point on
                         // left view
-                        final Line2D line2 = fundMatrix.getRightEpipolarLine(leftPoint);
+                        final var line2 = fundMatrix.getRightEpipolarLine(leftPoint);
 
                         // check that 2D point on left view belongs to left
                         // epipolar line
@@ -1087,8 +949,8 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements FundamentalMat
                         assertTrue(line2.isLocus(rightPoint, ULTRA_LARGE_ABSOLUTE_ERROR));
 
                         // obtain epipolar planes
-                        final Plane epipolarPlane1 = camera1.backProject(line1);
-                        final Plane epipolarPlane2 = camera2.backProject(line2);
+                        final var epipolarPlane1 = camera1.backProject(line1);
+                        final var epipolarPlane2 = camera2.backProject(line2);
 
                         // check that both planes are the same
                         if (!epipolarPlane1.equals(epipolarPlane2, VERY_LARGE_ABSOLUTE_ERROR)) {
@@ -1154,11 +1016,7 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements FundamentalMat
 
         // Force NotReadyException
         estimator = new SevenPointsFundamentalMatrixEstimator();
-        try {
-            estimator.estimate();
-            fail("NotReadyException expected but not thrown");
-        } catch (final NotReadyException ignore) {
-        }
+        assertThrows(NotReadyException.class, estimator::estimate);
     }
 
     @Override
@@ -1168,8 +1026,7 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements FundamentalMat
     }
 
     @Override
-    public void onEstimateEnd(final FundamentalMatrixEstimator estimator,
-                              final FundamentalMatrix fundamentalMatrix) {
+    public void onEstimateEnd(final FundamentalMatrixEstimator estimator, final FundamentalMatrix fundamentalMatrix) {
         estimateEnd++;
         testLocked((SevenPointsFundamentalMatrixEstimator) estimator);
     }
@@ -1180,32 +1037,10 @@ public class SevenPointsFundamentalMatrixEstimatorTest implements FundamentalMat
 
     private void testLocked(final SevenPointsFundamentalMatrixEstimator estimator) {
         assertTrue(estimator.isLocked());
-        try {
-            estimator.setLMSESolutionAllowed(true);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            estimator.setPointsNormalized(true);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            estimator.setPoints(null, null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            estimator.setListener(this);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            estimator.estimate();
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        } catch (final FundamentalMatrixEstimatorException | NotReadyException e) {
-            fail("LockedException expected but not thrown");
-        }
+        assertThrows(LockedException.class, () -> estimator.setLMSESolutionAllowed(true));
+        assertThrows(LockedException.class, () -> estimator.setPointsNormalized(true));
+        assertThrows(LockedException.class, () -> estimator.setPoints(null, null));
+        assertThrows(LockedException.class, () -> estimator.setListener(this));
+        assertThrows(LockedException.class, estimator::estimate);
     }
 }

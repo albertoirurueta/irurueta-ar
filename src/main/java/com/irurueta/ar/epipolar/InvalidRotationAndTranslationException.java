@@ -43,8 +43,7 @@ public class InvalidRotationAndTranslationException extends EpipolarException {
      * @param message message describing the cause of the exception.
      * @param cause   instance containing the cause of the exception.
      */
-    public InvalidRotationAndTranslationException(final String message,
-                                                  final Throwable cause) {
+    public InvalidRotationAndTranslationException(final String message, final Throwable cause) {
         super(message, cause);
     }
 

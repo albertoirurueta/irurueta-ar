@@ -15,26 +15,24 @@
  */
 package com.irurueta.ar.sfm;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class CancelledReconstructionExceptionTest {
+class CancelledReconstructionExceptionTest {
 
     @Test
-    public void testConstructor() {
-        CancelledReconstructionException ex = new CancelledReconstructionException();
+    void testConstructor() {
+        var ex = new CancelledReconstructionException();
         assertNotNull(ex);
 
         ex = new CancelledReconstructionException("message");
         assertNotNull(ex);
 
-        ex = new CancelledReconstructionException("message",
-                new Exception());
+        ex = new CancelledReconstructionException("message", new Exception());
         assertNotNull(ex);
 
-        ex = new CancelledReconstructionException(
-                new Exception());
+        ex = new CancelledReconstructionException(new Exception());
         assertNotNull(ex);
     }
 }

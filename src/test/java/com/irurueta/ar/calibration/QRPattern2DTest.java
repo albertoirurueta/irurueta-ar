@@ -16,21 +16,18 @@
 package com.irurueta.ar.calibration;
 
 import com.irurueta.ar.SerializationHelper;
-import com.irurueta.geometry.Point2D;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class QRPattern2DTest {
+class QRPattern2DTest {
 
     public static final double ABSOLUTE_ERROR = 1e-6;
 
     @Test
-    public void testConstants() {
+    void testConstants() {
         assertEquals(4, QRPattern2D.NUMBER_OF_POINTS);
         assertEquals(2, QRPattern2D.QR_VERSION);
         assertEquals(25, QRPattern2D.NUMBER_OF_MODULES);
@@ -40,8 +37,8 @@ public class QRPattern2DTest {
     }
 
     @Test
-    public void testConstructor() {
-        final QRPattern2D pattern = new QRPattern2D();
+    void testConstructor() {
+        final var pattern = new QRPattern2D();
 
         // check default values
         assertEquals(QRPattern2D.DEFAULT_QR_CODE_WIDTH, pattern.getCodeWidth(), 0.0);
@@ -51,8 +48,8 @@ public class QRPattern2DTest {
     }
 
     @Test
-    public void testGetSetCodeWidth() {
-        final QRPattern2D pattern = new QRPattern2D();
+    void testGetSetCodeWidth() {
+        final var pattern = new QRPattern2D();
 
         // check default value
         assertEquals(QRPattern2D.DEFAULT_QR_CODE_WIDTH, pattern.getCodeWidth(), 0.0);
@@ -64,16 +61,12 @@ public class QRPattern2DTest {
         assertEquals(5.0, pattern.getCodeWidth(), 0.0);
 
         // Force IllegalArgumentException
-        try {
-            pattern.setCodeWidth(0.0);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> pattern.setCodeWidth(0.0));
     }
 
     @Test
-    public void testGetSetCodeHeight() {
-        final QRPattern2D pattern = new QRPattern2D();
+    void testGetSetCodeHeight() {
+        final var pattern = new QRPattern2D();
 
         // check default value
         assertEquals(QRPattern2D.DEFAULT_QR_CODE_HEIGHT, pattern.getCodeHeight(), 0.0);
@@ -85,19 +78,15 @@ public class QRPattern2DTest {
         assertEquals(10.0, pattern.getCodeHeight(), 0.0);
 
         // Force IllegalArgumentException
-        try {
-            pattern.setCodeHeight(0.0);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> pattern.setCodeHeight(0.0));
     }
 
     @Test
-    public void testGetIdealPoints() {
-        final QRPattern2D pattern = new QRPattern2D();
+    void testGetIdealPoints() {
+        final var pattern = new QRPattern2D();
 
         // check correctness
-        final List<Point2D> points = pattern.getIdealPoints();
+        final var points = pattern.getIdealPoints();
 
         // check correctness
         assertEquals(4, points.size());
@@ -128,8 +117,8 @@ public class QRPattern2DTest {
     }
 
     @Test
-    public void testSerializeDeserialize() throws IOException, ClassNotFoundException {
-        final QRPattern2D pattern1 = new QRPattern2D();
+    void testSerializeDeserialize() throws IOException, ClassNotFoundException {
+        final var pattern1 = new QRPattern2D();
 
         // set new values
         pattern1.setCodeWidth(1.0);
@@ -140,8 +129,8 @@ public class QRPattern2DTest {
         assertEquals(2.0, pattern1.getCodeHeight(), 0.0);
 
         // serialize and deserialize
-        final byte[] bytes = SerializationHelper.serialize(pattern1);
-        final QRPattern2D pattern2 = SerializationHelper.deserialize(bytes);
+        final var bytes = SerializationHelper.serialize(pattern1);
+        final var pattern2 = SerializationHelper.<QRPattern2D>deserialize(bytes);
 
         // check
         assertEquals(pattern1.getCodeWidth(), pattern2.getCodeWidth(), 0.0);

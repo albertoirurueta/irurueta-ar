@@ -21,6 +21,5 @@ package com.irurueta.ar.sfm;
  * estimation.
  */
 public interface SlamTwoViewsSparseReconstructorListener extends
-        BaseSlamTwoViewsSparseReconstructorListener<
-                SlamTwoViewsSparseReconstructor> {
+        BaseSlamTwoViewsSparseReconstructorListener<SlamTwoViewsSparseReconstructor> {
 }

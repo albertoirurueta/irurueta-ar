@@ -37,8 +37,7 @@ public abstract class RadialDistortionRobustEstimator {
     /**
      * Default robust estimator method when none is provided.
      */
-    public static final RobustEstimatorMethod DEFAULT_ROBUST_METHOD =
-            RobustEstimatorMethod.PROMEDS;
+    public static final RobustEstimatorMethod DEFAULT_ROBUST_METHOD = RobustEstimatorMethod.PROMEDS;
 
     /**
      * Default amount of progress variation before notifying a change in
@@ -112,55 +111,55 @@ public abstract class RadialDistortionRobustEstimator {
     /**
      * List of distorted points (aka measured points).
      */
-    protected List<Point2D> mDistortedPoints;
+    protected List<Point2D> distortedPoints;
 
     /**
      * List of undistorted points (aka ideal points).
      */
-    protected List<Point2D> mUndistortedPoints;
+    protected List<Point2D> undistortedPoints;
 
     /**
      * Distortion center.
      */
-    protected Point2D mDistortionCenter;
+    protected Point2D distortionCenter;
 
     /**
      * Horizontal focal length expressed in pixels.
      */
-    protected double mHorizontalFocalLength;
+    protected double horizontalFocalLength;
 
     /**
      * Vertical focal length expressed in pixels.
      */
-    protected double mVerticalFocalLength;
+    protected double verticalFocalLength;
 
     /**
      * Skew in pixels.
      */
-    protected double mSkew;
+    protected double skew;
 
     /**
      * Number of radial distortion parameters to estimate.
      */
-    protected int mNumKParams;
+    protected int numKParams;
 
     /**
      * Listener to be notified of events such as when estimation starts, ends
      * or its progress significantly changes.
      */
-    protected RadialDistortionRobustEstimatorListener mListener;
+    protected RadialDistortionRobustEstimatorListener listener;
 
     /**
      * Indicates if this estimator is locked because an estimation is being
      * computed.
      */
-    protected volatile boolean mLocked;
+    protected volatile boolean locked;
 
     /**
      * Amount of progress variation before notifying a progress change during
      * estimation.
      */
-    protected float mProgressDelta;
+    protected float progressDelta;
 
     /**
      * Amount of confidence expressed as a value between 0.0 and 1.0 (which is
@@ -168,25 +167,25 @@ public abstract class RadialDistortionRobustEstimator {
      * that the estimated result is correct. Usually this value will be close
      * to 1.0, but not exactly 1.0.
      */
-    protected double mConfidence;
+    protected double confidence;
 
     /**
      * Maximum allowed number of iterations. When the maximum number of
      * iterations is exceeded, result will not be available, however an
      * approximate result will be available for retrieval.
      */
-    protected int mMaxIterations;
+    protected int maxIterations;
 
     /**
      * Constructor.
      */
     protected RadialDistortionRobustEstimator() {
-        mProgressDelta = DEFAULT_PROGRESS_DELTA;
-        mConfidence = DEFAULT_CONFIDENCE;
-        mMaxIterations = DEFAULT_MAX_ITERATIONS;
-        mHorizontalFocalLength = mVerticalFocalLength = DEFAULT_FOCAL_LENGTH;
-        mSkew = DEFAULT_SKEW;
-        mNumKParams = DEFAULT_NUM_K_PARAMS;
+        progressDelta = DEFAULT_PROGRESS_DELTA;
+        confidence = DEFAULT_CONFIDENCE;
+        maxIterations = DEFAULT_MAX_ITERATIONS;
+        horizontalFocalLength = verticalFocalLength = DEFAULT_FOCAL_LENGTH;
+        skew = DEFAULT_SKEW;
+        numKParams = DEFAULT_NUM_K_PARAMS;
     }
 
     /**
@@ -195,10 +194,9 @@ public abstract class RadialDistortionRobustEstimator {
      * @param listener listener to be notified of events such as when
      *                 estimation starts, ends or its progress significantly changes.
      */
-    protected RadialDistortionRobustEstimator(
-            final RadialDistortionRobustEstimatorListener listener) {
+    protected RadialDistortionRobustEstimator(final RadialDistortionRobustEstimatorListener listener) {
         this();
-        mListener = listener;
+        this.listener = listener;
     }
 
     /**
@@ -211,8 +209,7 @@ public abstract class RadialDistortionRobustEstimator {
      *                                  the same size or their size is smaller than MIN_NUMBER_OF_POINTS.
      */
     protected RadialDistortionRobustEstimator(
-            final List<Point2D> distortedPoints,
-            final List<Point2D> undistortedPoints) {
+            final List<Point2D> distortedPoints, final List<Point2D> undistortedPoints) {
         this();
         internalSetPoints(distortedPoints, undistortedPoints);
     }
@@ -253,7 +250,7 @@ public abstract class RadialDistortionRobustEstimator {
             final List<Point2D> undistortedPoints,
             final Point2D distortionCenter) {
         this(distortedPoints, undistortedPoints);
-        mDistortionCenter = distortionCenter;
+        this.distortionCenter = distortionCenter;
     }
 
     /**
@@ -276,7 +273,7 @@ public abstract class RadialDistortionRobustEstimator {
             final Point2D distortionCenter,
             final RadialDistortionRobustEstimatorListener listener) {
         this(distortedPoints, undistortedPoints, listener);
-        mDistortionCenter = distortionCenter;
+        this.distortionCenter = distortionCenter;
     }
 
     /**
@@ -286,7 +283,7 @@ public abstract class RadialDistortionRobustEstimator {
      * @return listener to be notified of events.
      */
     public RadialDistortionRobustEstimatorListener getListener() {
-        return mListener;
+        return listener;
     }
 
     /**
@@ -296,12 +293,11 @@ public abstract class RadialDistortionRobustEstimator {
      * @param listener listener to be notified of events.
      * @throws LockedException if robust estimator is locked.
      */
-    public void setListener(final RadialDistortionRobustEstimatorListener listener)
-            throws LockedException {
+    public void setListener(final RadialDistortionRobustEstimatorListener listener) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mListener = listener;
+        this.listener = listener;
     }
 
     /**
@@ -311,7 +307,7 @@ public abstract class RadialDistortionRobustEstimator {
      * @return true if available, false otherwise.
      */
     public boolean isListenerAvailable() {
-        return mListener != null;
+        return listener != null;
     }
 
     /**
@@ -320,7 +316,7 @@ public abstract class RadialDistortionRobustEstimator {
      * @return true if locked, false otherwise.
      */
     public boolean isLocked() {
-        return mLocked;
+        return locked;
     }
 
     /**
@@ -331,7 +327,7 @@ public abstract class RadialDistortionRobustEstimator {
      * during estimation.
      */
     public float getProgressDelta() {
-        return mProgressDelta;
+        return progressDelta;
     }
 
     /**
@@ -349,11 +345,10 @@ public abstract class RadialDistortionRobustEstimator {
         if (isLocked()) {
             throw new LockedException();
         }
-        if (progressDelta < MIN_PROGRESS_DELTA ||
-                progressDelta > MAX_PROGRESS_DELTA) {
+        if (progressDelta < MIN_PROGRESS_DELTA || progressDelta > MAX_PROGRESS_DELTA) {
             throw new IllegalArgumentException();
         }
-        mProgressDelta = progressDelta;
+        this.progressDelta = progressDelta;
     }
 
     /**
@@ -365,7 +360,7 @@ public abstract class RadialDistortionRobustEstimator {
      * @return amount of confidence as a value between 0.0 and 1.0.
      */
     public double getConfidence() {
-        return mConfidence;
+        return confidence;
     }
 
     /**
@@ -387,7 +382,7 @@ public abstract class RadialDistortionRobustEstimator {
         if (confidence < MIN_CONFIDENCE || confidence > MAX_CONFIDENCE) {
             throw new IllegalArgumentException();
         }
-        mConfidence = confidence;
+        this.confidence = confidence;
     }
 
     /**
@@ -398,7 +393,7 @@ public abstract class RadialDistortionRobustEstimator {
      * @return maximum allowed number of iterations.
      */
     public int getMaxIterations() {
-        return mMaxIterations;
+        return maxIterations;
     }
 
     /**
@@ -418,7 +413,7 @@ public abstract class RadialDistortionRobustEstimator {
         if (maxIterations < MIN_ITERATIONS) {
             throw new IllegalArgumentException();
         }
-        mMaxIterations = maxIterations;
+        this.maxIterations = maxIterations;
     }
 
     /**
@@ -431,8 +426,8 @@ public abstract class RadialDistortionRobustEstimator {
      * @throws IllegalArgumentException if provided lists of points don't have
      *                                  the same size.
      */
-    public void setPoints(final List<Point2D> distortedPoints,
-                          final List<Point2D> undistortedPoints) throws LockedException {
+    public void setPoints(final List<Point2D> distortedPoints, final List<Point2D> undistortedPoints)
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -447,7 +442,7 @@ public abstract class RadialDistortionRobustEstimator {
      * @return list of distorted points.
      */
     public List<Point2D> getDistortedPoints() {
-        return mDistortedPoints;
+        return distortedPoints;
     }
 
     /**
@@ -456,7 +451,7 @@ public abstract class RadialDistortionRobustEstimator {
      * @return list of undistorted points.
      */
     public List<Point2D> getUndistortedPoints() {
-        return mUndistortedPoints;
+        return undistortedPoints;
     }
 
     /**
@@ -467,7 +462,7 @@ public abstract class RadialDistortionRobustEstimator {
      * @return distortion center or null.
      */
     public Point2D getDistortionCenter() {
-        return mDistortionCenter;
+        return distortionCenter;
     }
 
     /**
@@ -479,13 +474,12 @@ public abstract class RadialDistortionRobustEstimator {
      *                         coordinates.
      * @throws LockedException if estimator is locked.
      */
-    public void setDistortionCenter(final Point2D distortionCenter)
-            throws LockedException {
+    public void setDistortionCenter(final Point2D distortionCenter) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
 
-        mDistortionCenter = distortionCenter;
+        this.distortionCenter = distortionCenter;
     }
 
     /**
@@ -494,7 +488,7 @@ public abstract class RadialDistortionRobustEstimator {
      * @return horizontal focal length expressed in pixels.
      */
     public double getHorizontalFocalLength() {
-        return mHorizontalFocalLength;
+        return horizontalFocalLength;
     }
 
     /**
@@ -503,13 +497,12 @@ public abstract class RadialDistortionRobustEstimator {
      * @param horizontalFocalLength horizontal focal length expressed in pixels.
      * @throws LockedException if estimator is locked.
      */
-    public void setHorizontalFocalLength(final double horizontalFocalLength)
-            throws LockedException {
+    public void setHorizontalFocalLength(final double horizontalFocalLength) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
 
-        mHorizontalFocalLength = horizontalFocalLength;
+        this.horizontalFocalLength = horizontalFocalLength;
     }
 
     /**
@@ -518,7 +511,7 @@ public abstract class RadialDistortionRobustEstimator {
      * @return vertical focal length expressed in pixels.
      */
     public double getVerticalFocalLength() {
-        return mVerticalFocalLength;
+        return verticalFocalLength;
     }
 
     /**
@@ -527,13 +520,12 @@ public abstract class RadialDistortionRobustEstimator {
      * @param verticalFocalLength vertical focal length expressed in pixels.
      * @throws LockedException if estimator is locked.
      */
-    public void setVerticalFocalLength(final double verticalFocalLength)
-            throws LockedException {
+    public void setVerticalFocalLength(final double verticalFocalLength) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
 
-        mVerticalFocalLength = verticalFocalLength;
+        this.verticalFocalLength = verticalFocalLength;
     }
 
     /**
@@ -542,7 +534,7 @@ public abstract class RadialDistortionRobustEstimator {
      * @return skew expressed in pixels.
      */
     public double getSkew() {
-        return mSkew;
+        return skew;
     }
 
     /**
@@ -556,7 +548,7 @@ public abstract class RadialDistortionRobustEstimator {
             throw new LockedException();
         }
 
-        mSkew = skew;
+        this.skew = skew;
     }
 
     /**
@@ -565,11 +557,11 @@ public abstract class RadialDistortionRobustEstimator {
      * @return pinhole camera intrinsic parameters associated to this estimator.
      */
     public PinholeCameraIntrinsicParameters getIntrinsic() {
-        return new PinholeCameraIntrinsicParameters(mHorizontalFocalLength,
-                mVerticalFocalLength,
-                mDistortionCenter != null ? mDistortionCenter.getInhomX() : 0.0,
-                mDistortionCenter != null ? mDistortionCenter.getInhomY() : 0.0,
-                mSkew);
+        return new PinholeCameraIntrinsicParameters(horizontalFocalLength,
+                verticalFocalLength,
+                distortionCenter != null ? distortionCenter.getInhomX() : 0.0,
+                distortionCenter != null ? distortionCenter.getInhomY() : 0.0,
+                skew);
     }
 
     /**
@@ -581,9 +573,8 @@ public abstract class RadialDistortionRobustEstimator {
      */
     public void setIntrinsic(final PinholeCameraIntrinsicParameters intrinsic)
             throws LockedException {
-        setIntrinsic(
-                new InhomogeneousPoint2D(intrinsic.getHorizontalPrincipalPoint(),
-                        intrinsic.getVerticalPrincipalPoint()),
+        setIntrinsic(new InhomogeneousPoint2D(
+                intrinsic.getHorizontalPrincipalPoint(), intrinsic.getVerticalPrincipalPoint()),
                 intrinsic.getHorizontalFocalLength(),
                 intrinsic.getVerticalFocalLength(),
                 intrinsic.getSkewness());
@@ -598,18 +589,17 @@ public abstract class RadialDistortionRobustEstimator {
      * @param skew                  skew in pixels.
      * @throws LockedException if estimator is locked.
      */
-    public void setIntrinsic(final Point2D distortionCenter,
-                             final double horizontalFocalLength,
-                             final double verticalFocalLength,
-                             final double skew) throws LockedException {
+    public void setIntrinsic(
+            final Point2D distortionCenter, final double horizontalFocalLength, final double verticalFocalLength,
+            final double skew) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
 
-        mDistortionCenter = distortionCenter;
-        mHorizontalFocalLength = horizontalFocalLength;
-        mVerticalFocalLength = verticalFocalLength;
-        mSkew = skew;
+        this.distortionCenter = distortionCenter;
+        this.horizontalFocalLength = horizontalFocalLength;
+        this.verticalFocalLength = verticalFocalLength;
+        this.skew = skew;
     }
 
     /**
@@ -618,7 +608,7 @@ public abstract class RadialDistortionRobustEstimator {
      * @return number of radial distortion parameters to estimate.
      */
     public int getNumKParams() {
-        return mNumKParams;
+        return numKParams;
     }
 
     /**
@@ -636,7 +626,7 @@ public abstract class RadialDistortionRobustEstimator {
             throw new IllegalArgumentException();
         }
 
-        mNumKParams = numKParams;
+        this.numKParams = numKParams;
     }
 
     /**
@@ -646,7 +636,7 @@ public abstract class RadialDistortionRobustEstimator {
      * @return true if available, false otherwise.
      */
     public boolean arePointsAvailable() {
-        return mDistortedPoints != null && mUndistortedPoints != null;
+        return distortedPoints != null && undistortedPoints != null;
     }
 
     /**
@@ -657,8 +647,7 @@ public abstract class RadialDistortionRobustEstimator {
      * @return true if estimator is ready, false otherwise.
      */
     public boolean isReady() {
-        return arePointsAvailable() &&
-                areValidPoints(mDistortedPoints, mUndistortedPoints);
+        return arePointsAvailable() && areValidPoints(distortedPoints, undistortedPoints);
     }
 
     /**
@@ -700,8 +689,7 @@ public abstract class RadialDistortionRobustEstimator {
      * @throws RobustEstimatorException if estimation fails for any reason
      *                                  (i.e. numerical instability, no solution available, etc).
      */
-    public abstract RadialDistortion estimate() throws LockedException,
-            NotReadyException, RobustEstimatorException;
+    public abstract RadialDistortion estimate() throws LockedException, NotReadyException, RobustEstimatorException;
 
     /**
      * Returns method being used for robust estimation.
@@ -719,19 +707,13 @@ public abstract class RadialDistortionRobustEstimator {
      */
     public static RadialDistortionRobustEstimator create(
             final RobustEstimatorMethod method) {
-        switch (method) {
-            case LMEDS:
-                return new LMedSRadialDistortionRobustEstimator();
-            case MSAC:
-                return new MSACRadialDistortionRobustEstimator();
-            case PROSAC:
-                return new PROSACRadialDistortionRobustEstimator();
-            case PROMEDS:
-                return new PROMedSRadialDistortionRobustEstimator();
-            case RANSAC:
-            default:
-                return new RANSACRadialDistortionRobustEstimator();
-        }
+        return switch (method) {
+            case LMEDS -> new LMedSRadialDistortionRobustEstimator();
+            case MSAC -> new MSACRadialDistortionRobustEstimator();
+            case PROSAC -> new PROSACRadialDistortionRobustEstimator();
+            case PROMEDS -> new PROMedSRadialDistortionRobustEstimator();
+            default -> new RANSACRadialDistortionRobustEstimator();
+        };
     }
 
     /**
@@ -753,69 +735,50 @@ public abstract class RadialDistortionRobustEstimator {
      *                                  the same size.
      */
     public static RadialDistortionRobustEstimator create(
-            final List<Point2D> distortedPoints, final List<Point2D> undistortedPoints,
-            final double[] qualityScores, final Point2D distortionCenter,
-            final RobustEstimatorMethod method) {
-        switch (method) {
-            case LMEDS:
-                return new LMedSRadialDistortionRobustEstimator(distortedPoints,
-                        undistortedPoints, distortionCenter);
-            case MSAC:
-                return new MSACRadialDistortionRobustEstimator(distortedPoints,
-                        undistortedPoints, distortionCenter);
-            case PROSAC:
-                return new PROSACRadialDistortionRobustEstimator(
-                        distortedPoints, undistortedPoints, qualityScores,
-                        distortionCenter);
-            case PROMEDS:
-                return new PROMedSRadialDistortionRobustEstimator(
-                        distortedPoints, undistortedPoints, qualityScores,
-                        distortionCenter);
-            case RANSAC:
-            default:
-                return new RANSACRadialDistortionRobustEstimator(
-                        distortedPoints, undistortedPoints, distortionCenter);
-        }
-    }
-
-    /**
-     * Creates a radial distortion robust estimator using provided distorted and
-     * undistorted points, as well as the distortion center. If no distortion
-     * center is provided, it is assumed to be at the origin of coordinates.
-     *
-     * @param distortedPoints   list of distorted points. Distorted points are
-     *                          obtained after radial distortion is applied to an undistorted point.
-     * @param undistortedPoints list of undistorted points.
-     * @param distortionCenter  Distortion center. This is usually equal to the
-     *                          principal point of an estimated camera. If not set it is assumed to be at
-     *                          the origin of coordinates (0,0).
-     * @param method            method of a robust estimator algorithm to estimate the best
-     *                          radial distortion.
-     * @return an instance of a radial distortion robust estimator.
-     * @throws IllegalArgumentException if provided lists of points don't have
-     *                                  the same size.
-     */
-    public static RadialDistortionRobustEstimator create(
-            final List<Point2D> distortedPoints, final List<Point2D> undistortedPoints,
+            final List<Point2D> distortedPoints, final List<Point2D> undistortedPoints, final double[] qualityScores,
             final Point2D distortionCenter, final RobustEstimatorMethod method) {
-        switch (method) {
-            case LMEDS:
-                return new LMedSRadialDistortionRobustEstimator(distortedPoints,
-                        undistortedPoints, distortionCenter);
-            case MSAC:
-                return new MSACRadialDistortionRobustEstimator(distortedPoints,
-                        undistortedPoints, distortionCenter);
-            case PROSAC:
-                return new PROSACRadialDistortionRobustEstimator(
-                        distortedPoints, undistortedPoints, distortionCenter);
-            case PROMEDS:
-                return new PROMedSRadialDistortionRobustEstimator(
-                        distortedPoints, undistortedPoints, distortionCenter);
-            case RANSAC:
-            default:
-                return new RANSACRadialDistortionRobustEstimator(
-                        distortedPoints, undistortedPoints, distortionCenter);
-        }
+        return switch (method) {
+            case LMEDS -> new LMedSRadialDistortionRobustEstimator(distortedPoints, undistortedPoints,
+                    distortionCenter);
+            case MSAC -> new MSACRadialDistortionRobustEstimator(distortedPoints, undistortedPoints, distortionCenter);
+            case PROSAC -> new PROSACRadialDistortionRobustEstimator(distortedPoints, undistortedPoints, qualityScores,
+                    distortionCenter);
+            case PROMEDS -> new PROMedSRadialDistortionRobustEstimator(distortedPoints, undistortedPoints,
+                    qualityScores, distortionCenter);
+            default -> new RANSACRadialDistortionRobustEstimator(distortedPoints, undistortedPoints, distortionCenter);
+        };
+    }
+
+    /**
+     * Creates a radial distortion robust estimator using provided distorted and
+     * undistorted points, as well as the distortion center. If no distortion
+     * center is provided, it is assumed to be at the origin of coordinates.
+     *
+     * @param distortedPoints   list of distorted points. Distorted points are
+     *                          obtained after radial distortion is applied to an undistorted point.
+     * @param undistortedPoints list of undistorted points.
+     * @param distortionCenter  Distortion center. This is usually equal to the
+     *                          principal point of an estimated camera. If not set it is assumed to be at
+     *                          the origin of coordinates (0,0).
+     * @param method            method of a robust estimator algorithm to estimate the best
+     *                          radial distortion.
+     * @return an instance of a radial distortion robust estimator.
+     * @throws IllegalArgumentException if provided lists of points don't have
+     *                                  the same size.
+     */
+    public static RadialDistortionRobustEstimator create(
+            final List<Point2D> distortedPoints, final List<Point2D> undistortedPoints, final Point2D distortionCenter,
+            final RobustEstimatorMethod method) {
+        return switch (method) {
+            case LMEDS -> new LMedSRadialDistortionRobustEstimator(distortedPoints, undistortedPoints,
+                    distortionCenter);
+            case MSAC -> new MSACRadialDistortionRobustEstimator(distortedPoints, undistortedPoints, distortionCenter);
+            case PROSAC -> new PROSACRadialDistortionRobustEstimator(distortedPoints, undistortedPoints,
+                    distortionCenter);
+            case PROMEDS -> new PROMedSRadialDistortionRobustEstimator(distortedPoints, undistortedPoints,
+                    distortionCenter);
+            default -> new RANSACRadialDistortionRobustEstimator(distortedPoints, undistortedPoints, distortionCenter);
+        };
     }
 
     /**
@@ -834,10 +797,9 @@ public abstract class RadialDistortionRobustEstimator {
      *                                  the same size.
      */
     public static RadialDistortionRobustEstimator create(
-            final List<Point2D> distortedPoints, final List<Point2D> undistortedPoints,
-            final double[] qualityScores, final RobustEstimatorMethod method) {
-        return create(distortedPoints, undistortedPoints, qualityScores, null,
-                method);
+            final List<Point2D> distortedPoints, final List<Point2D> undistortedPoints, final double[] qualityScores,
+            final RobustEstimatorMethod method) {
+        return create(distortedPoints, undistortedPoints, qualityScores, null, method);
     }
 
     /**
@@ -857,8 +819,7 @@ public abstract class RadialDistortionRobustEstimator {
     public static RadialDistortionRobustEstimator create(
             final List<Point2D> distortedPoints, final List<Point2D> undistortedPoints,
             final RobustEstimatorMethod method) {
-        return create(distortedPoints, undistortedPoints, (Point2D) null,
-                method);
+        return create(distortedPoints, undistortedPoints, (Point2D) null, method);
     }
 
     /**
@@ -885,10 +846,8 @@ public abstract class RadialDistortionRobustEstimator {
      *                                  the same size.
      */
     public static RadialDistortionRobustEstimator create(
-            final List<Point2D> distortedPoints, final List<Point2D> undistortedPoints,
-            final double[] qualityScores) {
-        return create(distortedPoints, undistortedPoints, qualityScores,
-                DEFAULT_ROBUST_METHOD);
+            final List<Point2D> distortedPoints, final List<Point2D> undistortedPoints, final double[] qualityScores) {
+        return create(distortedPoints, undistortedPoints, qualityScores, DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -905,8 +864,7 @@ public abstract class RadialDistortionRobustEstimator {
      */
     public static RadialDistortionRobustEstimator create(
             final List<Point2D> distortedPoints, final List<Point2D> undistortedPoints) {
-        return create(distortedPoints, undistortedPoints,
-                DEFAULT_ROBUST_METHOD);
+        return create(distortedPoints, undistortedPoints, DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -927,10 +885,9 @@ public abstract class RadialDistortionRobustEstimator {
      *                                  the same size.
      */
     public static RadialDistortionRobustEstimator create(
-            final List<Point2D> distortedPoints, final List<Point2D> undistortedPoints,
-            final double[] qualityScores, final Point2D distortionCenter) {
-        return create(distortedPoints, undistortedPoints, qualityScores,
-                distortionCenter, DEFAULT_ROBUST_METHOD);
+            final List<Point2D> distortedPoints, final List<Point2D> undistortedPoints, final double[] qualityScores,
+            final Point2D distortionCenter) {
+        return create(distortedPoints, undistortedPoints, qualityScores, distortionCenter, DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -952,8 +909,7 @@ public abstract class RadialDistortionRobustEstimator {
     public static RadialDistortionRobustEstimator create(
             final List<Point2D> distortedPoints, final List<Point2D> undistortedPoints,
             final Point2D distortionCenter) {
-        return create(distortedPoints, undistortedPoints, distortionCenter,
-                DEFAULT_ROBUST_METHOD);
+        return create(distortedPoints, undistortedPoints, distortionCenter, DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -967,13 +923,11 @@ public abstract class RadialDistortionRobustEstimator {
      * @param undistortedPoints list of undistorted points.
      * @return true if lists of points are valid, false otherwise.
      */
-    public static boolean areValidPoints(final List<Point2D> distortedPoints,
-                                         final List<Point2D> undistortedPoints) {
+    public static boolean areValidPoints(final List<Point2D> distortedPoints, final List<Point2D> undistortedPoints) {
         if (distortedPoints == null || undistortedPoints == null) {
             return false;
         }
-        return distortedPoints.size() == undistortedPoints.size() &&
-                distortedPoints.size() >= MIN_NUMBER_OF_POINTS;
+        return distortedPoints.size() == undistortedPoints.size() && distortedPoints.size() >= MIN_NUMBER_OF_POINTS;
     }
 
     /**
@@ -986,8 +940,7 @@ public abstract class RadialDistortionRobustEstimator {
      * @throws IllegalArgumentException if provided lists of points don't have
      *                                  the same size.
      */
-    private void internalSetPoints(final List<Point2D> distortedPoints,
-                                   final List<Point2D> undistortedPoints) {
+    private void internalSetPoints(final List<Point2D> distortedPoints, final List<Point2D> undistortedPoints) {
 
         if (distortedPoints == null || undistortedPoints == null) {
             throw new IllegalArgumentException();
@@ -997,7 +950,7 @@ public abstract class RadialDistortionRobustEstimator {
             throw new IllegalArgumentException();
         }
 
-        mDistortedPoints = distortedPoints;
-        mUndistortedPoints = undistortedPoints;
+        this.distortedPoints = distortedPoints;
+        this.undistortedPoints = undistortedPoints;
     }
 }

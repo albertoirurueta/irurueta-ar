@@ -17,18 +17,17 @@ package com.irurueta.ar.calibration.estimators;
 
 import com.irurueta.geometry.Point2D;
 import com.irurueta.geometry.estimators.LockedException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class RadialDistortionEstimatorTest {
+class RadialDistortionEstimatorTest {
 
     @Test
-    public void testCreate() {
-        RadialDistortionEstimator estimator = RadialDistortionEstimator.create();
+    void testCreate() {
+        var estimator = RadialDistortionEstimator.create();
 
         // check correctness
         assertNull(estimator.getListener());
@@ -40,8 +39,7 @@ public class RadialDistortionEstimatorTest {
         assertEquals(RadialDistortionEstimatorType.LMSE_RADIAL_DISTORTION_ESTIMATOR, estimator.getType());
 
         // test with type
-        estimator = RadialDistortionEstimator.create(
-                RadialDistortionEstimatorType.LMSE_RADIAL_DISTORTION_ESTIMATOR);
+        estimator = RadialDistortionEstimator.create(RadialDistortionEstimatorType.LMSE_RADIAL_DISTORTION_ESTIMATOR);
 
         // check correctness
         assertNull(estimator.getListener());
@@ -50,8 +48,7 @@ public class RadialDistortionEstimatorTest {
         assertNull(estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
         assertFalse(estimator.isReady());
-        assertEquals(RadialDistortionEstimatorType.LMSE_RADIAL_DISTORTION_ESTIMATOR,
-                estimator.getType());
+        assertEquals(RadialDistortionEstimatorType.LMSE_RADIAL_DISTORTION_ESTIMATOR, estimator.getType());
 
         estimator = RadialDistortionEstimator.create(
                 RadialDistortionEstimatorType.WEIGHTED_RADIAL_DISTORTION_ESTIMATOR);
@@ -63,22 +60,21 @@ public class RadialDistortionEstimatorTest {
         assertNull(estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
         assertFalse(estimator.isReady());
-        assertEquals(RadialDistortionEstimatorType.WEIGHTED_RADIAL_DISTORTION_ESTIMATOR,
-                estimator.getType());
+        assertEquals(RadialDistortionEstimatorType.WEIGHTED_RADIAL_DISTORTION_ESTIMATOR, estimator.getType());
     }
 
     @Test
-    public void testGetSetDistortedUndistortedPoints() throws LockedException {
-        final RadialDistortionEstimator estimator = RadialDistortionEstimator.create();
+    void testGetSetDistortedUndistortedPoints() throws LockedException {
+        final var estimator = RadialDistortionEstimator.create();
 
         // check default values
         assertNull(estimator.getDistortedPoints());
         assertNull(estimator.getUndistortedPoints());
 
         // set new value
-        final List<Point2D> distortedPoints = new ArrayList<>();
-        final List<Point2D> undistortedPoints = new ArrayList<>();
-        for (int i = 0; i < estimator.getMinNumberOfMatchedPoints(); i++) {
+        final var distortedPoints = new ArrayList<Point2D>();
+        final var undistortedPoints = new ArrayList<Point2D>();
+        for (var i = 0; i < estimator.getMinNumberOfMatchedPoints(); i++) {
             distortedPoints.add(Point2D.create());
             undistortedPoints.add(Point2D.create());
         }
@@ -90,38 +86,22 @@ public class RadialDistortionEstimatorTest {
         assertSame(undistortedPoints, estimator.getUndistortedPoints());
 
         // Force IllegalArgumentException
-        final List<Point2D> emptyPoints = new ArrayList<>();
-        try {
-            estimator.setPoints(emptyPoints, undistortedPoints);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator.setPoints(emptyPoints, emptyPoints);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator.setPoints(null, undistortedPoints);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator.setPoints(distortedPoints, null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        final var emptyPoints = new ArrayList<Point2D>();
+        assertThrows(IllegalArgumentException.class, () -> estimator.setPoints(emptyPoints, undistortedPoints));
+        assertThrows(IllegalArgumentException.class, () -> estimator.setPoints(emptyPoints, emptyPoints));
+        assertThrows(IllegalArgumentException.class, () -> estimator.setPoints(null, undistortedPoints));
+        assertThrows(IllegalArgumentException.class, () -> estimator.setPoints(distortedPoints, null));
     }
 
     @Test
-    public void testGetSetDistortionCenter() throws LockedException {
-        final RadialDistortionEstimator estimator = RadialDistortionEstimator.create();
+    void testGetSetDistortionCenter() throws LockedException {
+        final var estimator = RadialDistortionEstimator.create();
 
         // check default value
         assertNull(estimator.getDistortionCenter());
 
         // set new value
-        final Point2D center = Point2D.create();
+        final var center = Point2D.create();
         estimator.setDistortionCenter(center);
 
         // check correctness
@@ -129,16 +109,16 @@ public class RadialDistortionEstimatorTest {
     }
 
     @Test
-    public void testAreValidLists() {
-        final RadialDistortionEstimator estimator = RadialDistortionEstimator.create();
+    void testAreValidLists() {
+        final var estimator = RadialDistortionEstimator.create();
 
-        final List<Point2D> distortedPoints = new ArrayList<>();
-        final List<Point2D> undistortedPoints = new ArrayList<>();
-        for (int i = 0; i < estimator.getMinNumberOfMatchedPoints(); i++) {
+        final var distortedPoints = new ArrayList<Point2D>();
+        final var undistortedPoints = new ArrayList<Point2D>();
+        for (var i = 0; i < estimator.getMinNumberOfMatchedPoints(); i++) {
             distortedPoints.add(Point2D.create());
             undistortedPoints.add(Point2D.create());
         }
-        final List<Point2D> emptyPoints = new ArrayList<>();
+        final var emptyPoints = new ArrayList<Point2D>();
 
         assertTrue(estimator.areValidPoints(distortedPoints, undistortedPoints));
         assertFalse(estimator.areValidPoints(emptyPoints, undistortedPoints));

@@ -44,8 +44,7 @@ import java.util.List;
  * the estimated cameras.
  */
 @SuppressWarnings("DuplicatedCode")
-public class EssentialMatrixInitialCamerasEstimator
-        extends InitialCamerasEstimator {
+public class EssentialMatrixInitialCamerasEstimator extends InitialCamerasEstimator {
 
     /**
      * Indicates whether matched 2D points must be triangulated by default.
@@ -61,51 +60,50 @@ public class EssentialMatrixInitialCamerasEstimator
     /**
      * Intrinsic parameters to be used for estimated left camera.
      */
-    private PinholeCameraIntrinsicParameters mLeftIntrinsic;
+    private PinholeCameraIntrinsicParameters leftIntrinsic;
 
     /**
      * Intrinsic parameters to be used for estimated right camera.
      */
-    private PinholeCameraIntrinsicParameters mRightIntrinsic;
+    private PinholeCameraIntrinsicParameters rightIntrinsic;
 
     /**
      * Matched 2D points on left view.
      */
-    private List<Point2D> mLeftPoints;
+    private List<Point2D> leftPoints;
 
     /**
      * Matched 2D points on right view.
      */
-    private List<Point2D> mRightPoints;
+    private List<Point2D> rightPoints;
 
     /**
      * Type of corrector to use to triangulate matched points or null if no
      * corrector needs to be used.
      */
-    private CorrectorType mCorrectorType = Corrector.DEFAULT_TYPE;
+    private CorrectorType correctorType = Corrector.DEFAULT_TYPE;
 
     /**
      * Indicates whether matched 2D points need to be triangulated.
      */
-    private boolean mTriangulatePoints = DEFAULT_TRIANGULATE_POINTS;
+    private boolean triangulatePoints = DEFAULT_TRIANGULATE_POINTS;
 
     /**
      * Marks which of the triangulated points are marked as valid (lie in front
      * of both of the estimated cameras) and which ones aren't.
      */
-    private boolean mMarkValidTriangulatedPoints =
-            DEFAULT_MARK_VALID_TRIANGULATED_POINTS;
+    private boolean markValidTriangulatedPoints = DEFAULT_MARK_VALID_TRIANGULATED_POINTS;
 
     /**
      * Contains triangulated points.
      */
-    private List<Point3D> mTriangulatedPoints;
+    private List<Point3D> triangulatedPoints;
 
     /**
      * Contains booleans indicating whether triangulated points are valid (i.e.
      * lie in front of both estimated cameras) or not.
      */
-    private BitSet mValidTriangulatedPoints;
+    private BitSet validTriangulatedPoints;
 
     /**
      * Constructor.
@@ -119,8 +117,7 @@ public class EssentialMatrixInitialCamerasEstimator
      *
      * @param fundamentalMatrix fundamental matrix relating two views.
      */
-    public EssentialMatrixInitialCamerasEstimator(
-            final FundamentalMatrix fundamentalMatrix) {
+    public EssentialMatrixInitialCamerasEstimator(final FundamentalMatrix fundamentalMatrix) {
         super(fundamentalMatrix);
     }
 
@@ -136,8 +133,8 @@ public class EssentialMatrixInitialCamerasEstimator
             final PinholeCameraIntrinsicParameters leftIntrinsic,
             final PinholeCameraIntrinsicParameters rightIntrinsic) {
         super();
-        mLeftIntrinsic = leftIntrinsic;
-        mRightIntrinsic = rightIntrinsic;
+        this.leftIntrinsic = leftIntrinsic;
+        this.rightIntrinsic = rightIntrinsic;
     }
 
     /**
@@ -154,8 +151,8 @@ public class EssentialMatrixInitialCamerasEstimator
             final PinholeCameraIntrinsicParameters leftIntrinsic,
             final PinholeCameraIntrinsicParameters rightIntrinsic) {
         super(fundamentalMatrix);
-        mLeftIntrinsic = leftIntrinsic;
-        mRightIntrinsic = rightIntrinsic;
+        this.leftIntrinsic = leftIntrinsic;
+        this.rightIntrinsic = rightIntrinsic;
     }
 
     /**
@@ -166,8 +163,7 @@ public class EssentialMatrixInitialCamerasEstimator
      * @throws IllegalArgumentException if provided lists don't have the same
      *                                  size.
      */
-    public EssentialMatrixInitialCamerasEstimator(final List<Point2D> leftPoints,
-                                                  final List<Point2D> rightPoints) {
+    public EssentialMatrixInitialCamerasEstimator(final List<Point2D> leftPoints, final List<Point2D> rightPoints) {
         super();
         internalSetLeftAndRightPoints(leftPoints, rightPoints);
     }
@@ -235,8 +231,7 @@ public class EssentialMatrixInitialCamerasEstimator
      *
      * @param listener listener to handle events raised by this instance.
      */
-    public EssentialMatrixInitialCamerasEstimator(
-            final InitialCamerasEstimatorListener listener) {
+    public EssentialMatrixInitialCamerasEstimator(final InitialCamerasEstimatorListener listener) {
         super(listener);
     }
 
@@ -247,8 +242,7 @@ public class EssentialMatrixInitialCamerasEstimator
      * @param listener          listener to handle events raised by this instance.
      */
     public EssentialMatrixInitialCamerasEstimator(
-            final FundamentalMatrix fundamentalMatrix,
-            final InitialCamerasEstimatorListener listener) {
+            final FundamentalMatrix fundamentalMatrix, final InitialCamerasEstimatorListener listener) {
         super(fundamentalMatrix, listener);
     }
 
@@ -266,8 +260,8 @@ public class EssentialMatrixInitialCamerasEstimator
             final PinholeCameraIntrinsicParameters rightIntrinsic,
             final InitialCamerasEstimatorListener listener) {
         super(listener);
-        mLeftIntrinsic = leftIntrinsic;
-        mRightIntrinsic = rightIntrinsic;
+        this.leftIntrinsic = leftIntrinsic;
+        this.rightIntrinsic = rightIntrinsic;
     }
 
     /**
@@ -286,8 +280,8 @@ public class EssentialMatrixInitialCamerasEstimator
             final PinholeCameraIntrinsicParameters rightIntrinsic,
             final InitialCamerasEstimatorListener listener) {
         super(fundamentalMatrix, listener);
-        mLeftIntrinsic = leftIntrinsic;
-        mRightIntrinsic = rightIntrinsic;
+        this.leftIntrinsic = leftIntrinsic;
+        this.rightIntrinsic = rightIntrinsic;
     }
 
     /**
@@ -391,10 +385,8 @@ public class EssentialMatrixInitialCamerasEstimator
      */
     @Override
     public boolean isReady() {
-        return mFundamentalMatrix != null && mLeftIntrinsic != null &&
-                mRightIntrinsic != null && mLeftPoints != null &&
-                mRightPoints != null &&
-                mLeftPoints.size() == mRightPoints.size();
+        return fundamentalMatrix != null && leftIntrinsic != null && rightIntrinsic != null && leftPoints != null
+                && rightPoints != null && leftPoints.size() == rightPoints.size();
     }
 
     /**
@@ -407,8 +399,7 @@ public class EssentialMatrixInitialCamerasEstimator
      *                                                 instabilities.
      */
     @Override
-    public void estimate() throws LockedException, NotReadyException,
-            InitialCamerasEstimationFailedException {
+    public void estimate() throws LockedException, NotReadyException, InitialCamerasEstimationFailedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -418,48 +409,46 @@ public class EssentialMatrixInitialCamerasEstimator
         }
 
         try {
-            mLocked = true;
+            locked = true;
 
-            if (mListener != null) {
-                mListener.onStart(this);
+            if (listener != null) {
+                listener.onStart(this);
             }
 
-            if (mTriangulatePoints) {
-                mTriangulatedPoints = new ArrayList<>();
+            if (triangulatePoints) {
+                triangulatedPoints = new ArrayList<>();
             } else {
-                mTriangulatedPoints = null;
+                triangulatedPoints = null;
             }
 
-            final int nPoints = mLeftPoints.size();
-            if (mMarkValidTriangulatedPoints) {
-                mValidTriangulatedPoints = new BitSet(nPoints);
+            final var nPoints = leftPoints.size();
+            if (markValidTriangulatedPoints) {
+                validTriangulatedPoints = new BitSet(nPoints);
             } else {
-                mValidTriangulatedPoints = null;
+                validTriangulatedPoints = null;
             }
 
-            if (mEstimatedLeftCamera == null) {
-                mEstimatedLeftCamera = new PinholeCamera();
+            if (estimatedLeftCamera == null) {
+                estimatedLeftCamera = new PinholeCamera();
             }
-            if (mEstimatedRightCamera == null) {
-                mEstimatedRightCamera = new PinholeCamera();
+            if (estimatedRightCamera == null) {
+                estimatedRightCamera = new PinholeCamera();
             }
 
-            generateInitialMetricCamerasFromEssentialMatrix(mFundamentalMatrix,
-                    mLeftIntrinsic, mRightIntrinsic, mLeftPoints, mRightPoints,
-                    mCorrectorType, mEstimatedLeftCamera, mEstimatedRightCamera,
-                    mTriangulatedPoints, mValidTriangulatedPoints);
+            generateInitialMetricCamerasFromEssentialMatrix(fundamentalMatrix, leftIntrinsic, rightIntrinsic,
+                    leftPoints, rightPoints, correctorType, estimatedLeftCamera, estimatedRightCamera,
+                    triangulatedPoints, validTriangulatedPoints);
 
-            if (mListener != null) {
-                mListener.onFinish(this, mEstimatedLeftCamera,
-                        mEstimatedRightCamera);
+            if (listener != null) {
+                listener.onFinish(this, estimatedLeftCamera, estimatedRightCamera);
             }
         } catch (final InitialCamerasEstimationFailedException e) {
-            if (mListener != null) {
-                mListener.onFail(this, e);
+            if (listener != null) {
+                listener.onFail(this, e);
             }
             throw e;
         } finally {
-            mLocked = false;
+            locked = false;
         }
     }
 
@@ -469,7 +458,7 @@ public class EssentialMatrixInitialCamerasEstimator
      * @return intrinsic parameters to be used for estimated left camera.
      */
     public PinholeCameraIntrinsicParameters getLeftIntrinsic() {
-        return mLeftIntrinsic;
+        return leftIntrinsic;
     }
 
     /**
@@ -480,12 +469,11 @@ public class EssentialMatrixInitialCamerasEstimator
      * @throws LockedException if estimator is locked.
      */
     public void setLeftIntrinsic(
-            final PinholeCameraIntrinsicParameters leftIntrinsic)
-            throws LockedException {
+            final PinholeCameraIntrinsicParameters leftIntrinsic) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mLeftIntrinsic = leftIntrinsic;
+        this.leftIntrinsic = leftIntrinsic;
     }
 
     /**
@@ -494,7 +482,7 @@ public class EssentialMatrixInitialCamerasEstimator
      * @return intrinsic parameters to be used for estimated right camera.
      */
     public PinholeCameraIntrinsicParameters getRightIntrinsic() {
-        return mRightIntrinsic;
+        return rightIntrinsic;
     }
 
     /**
@@ -505,12 +493,11 @@ public class EssentialMatrixInitialCamerasEstimator
      * @throws LockedException if estimator is locked.
      */
     public void setRightIntrinsic(
-            final PinholeCameraIntrinsicParameters rightIntrinsic)
-            throws LockedException {
+            final PinholeCameraIntrinsicParameters rightIntrinsic) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mRightIntrinsic = rightIntrinsic;
+        this.rightIntrinsic = rightIntrinsic;
     }
 
     /**
@@ -525,13 +512,12 @@ public class EssentialMatrixInitialCamerasEstimator
      */
     public void setLeftAndRightIntrinsics(
             final PinholeCameraIntrinsicParameters leftIntrinsic,
-            final PinholeCameraIntrinsicParameters rightIntrinsic)
-            throws LockedException {
+            final PinholeCameraIntrinsicParameters rightIntrinsic) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mLeftIntrinsic = leftIntrinsic;
-        mRightIntrinsic = rightIntrinsic;
+        this.leftIntrinsic = leftIntrinsic;
+        this.rightIntrinsic = rightIntrinsic;
     }
 
     /**
@@ -541,12 +527,11 @@ public class EssentialMatrixInitialCamerasEstimator
      * @param intrinsic intrinsic parameters to be used for both cameras.
      * @throws LockedException if estimator is locked.
      */
-    public void setIntrinsicsForBoth(final PinholeCameraIntrinsicParameters intrinsic)
-            throws LockedException {
+    public void setIntrinsicsForBoth(final PinholeCameraIntrinsicParameters intrinsic) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mLeftIntrinsic = mRightIntrinsic = intrinsic;
+        leftIntrinsic = rightIntrinsic = intrinsic;
     }
 
     /**
@@ -555,7 +540,7 @@ public class EssentialMatrixInitialCamerasEstimator
      * @return matched 2D points on left view.
      */
     public List<Point2D> getLeftPoints() {
-        return mLeftPoints;
+        return leftPoints;
     }
 
     /**
@@ -568,7 +553,7 @@ public class EssentialMatrixInitialCamerasEstimator
         if (isLocked()) {
             throw new LockedException();
         }
-        mLeftPoints = leftPoints;
+        this.leftPoints = leftPoints;
     }
 
     /**
@@ -577,7 +562,7 @@ public class EssentialMatrixInitialCamerasEstimator
      * @return matched 2D points on right view.
      */
     public List<Point2D> getRightPoints() {
-        return mRightPoints;
+        return rightPoints;
     }
 
     /**
@@ -586,12 +571,11 @@ public class EssentialMatrixInitialCamerasEstimator
      * @param rightPoints matched 2D points on right view.
      * @throws LockedException if estimator is locked.
      */
-    public void setRightPoints(final List<Point2D> rightPoints)
-            throws LockedException {
+    public void setRightPoints(final List<Point2D> rightPoints) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mRightPoints = rightPoints;
+        this.rightPoints = rightPoints;
     }
 
     /**
@@ -604,8 +588,7 @@ public class EssentialMatrixInitialCamerasEstimator
      *                                  size.
      */
     public void setLeftAndRightPoints(
-            final List<Point2D> leftPoints,
-            final List<Point2D> rightPoints) throws LockedException {
+            final List<Point2D> leftPoints, final List<Point2D> rightPoints) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -619,7 +602,7 @@ public class EssentialMatrixInitialCamerasEstimator
      * @return type of corrector to use.
      */
     public CorrectorType getCorrectorType() {
-        return mCorrectorType;
+        return correctorType;
     }
 
     /**
@@ -629,12 +612,11 @@ public class EssentialMatrixInitialCamerasEstimator
      * @param correctorType type of corrector to use.
      * @throws LockedException if estimator is locked.
      */
-    public void setCorrectorType(final CorrectorType correctorType)
-            throws LockedException {
+    public void setCorrectorType(final CorrectorType correctorType) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mCorrectorType = correctorType;
+        this.correctorType = correctorType;
     }
 
     /**
@@ -643,7 +625,7 @@ public class EssentialMatrixInitialCamerasEstimator
      * @return true if 2D points need to be triangulated, false otherwise.
      */
     public boolean arePointsTriangulated() {
-        return mTriangulatePoints;
+        return triangulatePoints;
     }
 
     /**
@@ -653,12 +635,11 @@ public class EssentialMatrixInitialCamerasEstimator
      *                          otherwise.
      * @throws LockedException if estimator is locked.
      */
-    public void setPointsTriangulated(final boolean triangulatePoints)
-            throws LockedException {
+    public void setPointsTriangulated(final boolean triangulatePoints) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mTriangulatePoints = triangulatePoints;
+        this.triangulatePoints = triangulatePoints;
     }
 
     /**
@@ -669,7 +650,7 @@ public class EssentialMatrixInitialCamerasEstimator
      * otherwise.
      */
     public boolean areValidTriangulatedPointsMarked() {
-        return mMarkValidTriangulatedPoints;
+        return markValidTriangulatedPoints;
     }
 
     /**
@@ -680,12 +661,11 @@ public class EssentialMatrixInitialCamerasEstimator
      *                                    triangulated points, false otherwise.
      * @throws LockedException if estimator is locked.
      */
-    public void setValidTriangulatedPointsMarked(
-            final boolean markValidTriangulatedPoints) throws LockedException {
+    public void setValidTriangulatedPointsMarked(final boolean markValidTriangulatedPoints) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mMarkValidTriangulatedPoints = markValidTriangulatedPoints;
+        this.markValidTriangulatedPoints = markValidTriangulatedPoints;
     }
 
     /**
@@ -694,7 +674,7 @@ public class EssentialMatrixInitialCamerasEstimator
      * @return triangulated points or null.
      */
     public List<Point3D> getTriangulatedPoints() {
-        return mTriangulatedPoints;
+        return triangulatedPoints;
     }
 
     /**
@@ -705,7 +685,7 @@ public class EssentialMatrixInitialCamerasEstimator
      * available.
      */
     public BitSet getValidTriangulatedPoints() {
-        return mValidTriangulatedPoints;
+        return validTriangulatedPoints;
     }
 
     /**
@@ -909,8 +889,7 @@ public class EssentialMatrixInitialCamerasEstimator
         final Point2D translation1;
         final Point2D translation2;
         try {
-            final EssentialMatrix essential = new EssentialMatrix(fundamentalMatrix,
-                    leftIntrinsic, rightIntrinsic);
+            final var essential = new EssentialMatrix(fundamentalMatrix, leftIntrinsic, rightIntrinsic);
 
             essential.computePossibleRotationAndTranslations();
 
@@ -922,8 +901,7 @@ public class EssentialMatrixInitialCamerasEstimator
 
             if (correctorType != null) {
                 // use corrector
-                final Corrector corrector = Corrector.create(leftPoints, rightPoints,
-                        fundamentalMatrix, correctorType);
+                final var corrector = Corrector.create(leftPoints, rightPoints, fundamentalMatrix, correctorType);
                 corrector.correct();
 
                 correctedLeftPoints = corrector.getLeftCorrectedPoints();
@@ -945,17 +923,15 @@ public class EssentialMatrixInitialCamerasEstimator
         }
         int numValidTriangulatedPoints;
 
-        final int numPoints = correctedLeftPoints.size();
-        boolean skip = false;
+        final var numPoints = correctedLeftPoints.size();
+        var skip = false;
 
         // obtain 1st pair of possible cameras and their corresponding
         // triangulated points
         try {
-            numValidTriangulatedPoints =
-                    computeCamerasAndTriangulation(rotation1, translation1,
-                            leftIntrinsic, rightIntrinsic, correctedLeftPoints,
-                            correctedRightPoints, leftCamera, rightCamera,
-                            triangulatedPoints, validTriangulatedPoints);
+            numValidTriangulatedPoints = computeCamerasAndTriangulation(rotation1, translation1,
+                    leftIntrinsic, rightIntrinsic, correctedLeftPoints, correctedRightPoints, leftCamera, rightCamera,
+                    triangulatedPoints, validTriangulatedPoints);
         } catch (final Exception e) {
             numValidTriangulatedPoints = 0;
         }
@@ -966,8 +942,8 @@ public class EssentialMatrixInitialCamerasEstimator
             skip = true;
         }
 
-        final PinholeCamera attemptLeftCamera = new PinholeCamera();
-        final PinholeCamera attemptRightCamera = new PinholeCamera();
+        final var attemptLeftCamera = new PinholeCamera();
+        final var attemptRightCamera = new PinholeCamera();
         List<Point3D> attemptTriangulatedPoints = null;
         if (triangulatedPoints != null) {
             attemptTriangulatedPoints = new ArrayList<>();
@@ -982,12 +958,9 @@ public class EssentialMatrixInitialCamerasEstimator
             // obtain 2nd pair of possible cameras and their corresponding
             // triangulated points
             try {
-                attemptNumValidTriangulatedPoints =
-                        computeCamerasAndTriangulation(rotation1, translation2,
-                                leftIntrinsic, rightIntrinsic, correctedLeftPoints,
-                                correctedRightPoints, attemptLeftCamera,
-                                attemptRightCamera, attemptTriangulatedPoints,
-                                attemptValidTriangulatedPoints);
+                attemptNumValidTriangulatedPoints = computeCamerasAndTriangulation(rotation1, translation2,
+                        leftIntrinsic, rightIntrinsic, correctedLeftPoints, correctedRightPoints, attemptLeftCamera,
+                        attemptRightCamera, attemptTriangulatedPoints, attemptValidTriangulatedPoints);
             } catch (final Exception e) {
                 attemptNumValidTriangulatedPoints = 0;
             }
@@ -1002,10 +975,8 @@ public class EssentialMatrixInitialCamerasEstimator
                 // a better solution containing more valid points has been found
 
                 // keep better solution
-                updateBestSolutionData(leftCamera, rightCamera,
-                        triangulatedPoints, validTriangulatedPoints,
-                        attemptLeftCamera, attemptRightCamera,
-                        attemptTriangulatedPoints,
+                updateBestSolutionData(leftCamera, rightCamera, triangulatedPoints, validTriangulatedPoints,
+                        attemptLeftCamera, attemptRightCamera, attemptTriangulatedPoints,
                         attemptValidTriangulatedPoints);
                 numValidTriangulatedPoints = attemptNumValidTriangulatedPoints;
             }
@@ -1015,12 +986,9 @@ public class EssentialMatrixInitialCamerasEstimator
             // obtain 3rd pair of possible cameras and their corresponding
             // triangulated points
             try {
-                attemptNumValidTriangulatedPoints =
-                        computeCamerasAndTriangulation(rotation2, translation1,
-                                leftIntrinsic, rightIntrinsic, correctedLeftPoints,
-                                correctedRightPoints, attemptLeftCamera,
-                                attemptRightCamera, attemptTriangulatedPoints,
-                                attemptValidTriangulatedPoints);
+                attemptNumValidTriangulatedPoints = computeCamerasAndTriangulation(rotation2, translation1,
+                        leftIntrinsic, rightIntrinsic, correctedLeftPoints, correctedRightPoints, attemptLeftCamera,
+                        attemptRightCamera, attemptTriangulatedPoints, attemptValidTriangulatedPoints);
             } catch (final Exception e) {
                 attemptNumValidTriangulatedPoints = 0;
             }
@@ -1035,10 +1003,8 @@ public class EssentialMatrixInitialCamerasEstimator
                 // a better solution containing more valid points has been found
 
                 // keep better solution
-                updateBestSolutionData(leftCamera, rightCamera,
-                        triangulatedPoints, validTriangulatedPoints,
-                        attemptLeftCamera, attemptRightCamera,
-                        attemptTriangulatedPoints,
+                updateBestSolutionData(leftCamera, rightCamera, triangulatedPoints, validTriangulatedPoints,
+                        attemptLeftCamera, attemptRightCamera, attemptTriangulatedPoints,
                         attemptValidTriangulatedPoints);
                 numValidTriangulatedPoints = attemptNumValidTriangulatedPoints;
             }
@@ -1048,12 +1014,9 @@ public class EssentialMatrixInitialCamerasEstimator
             // obtain 4th pair of possible cameras and their corresponding
             // triangulated points
             try {
-                attemptNumValidTriangulatedPoints =
-                        computeCamerasAndTriangulation(rotation2, translation2,
-                                leftIntrinsic, rightIntrinsic, correctedLeftPoints,
-                                correctedRightPoints, attemptLeftCamera,
-                                attemptRightCamera, attemptTriangulatedPoints,
-                                attemptValidTriangulatedPoints);
+                attemptNumValidTriangulatedPoints = computeCamerasAndTriangulation(rotation2, translation2,
+                        leftIntrinsic, rightIntrinsic, correctedLeftPoints, correctedRightPoints, attemptLeftCamera,
+                        attemptRightCamera, attemptTriangulatedPoints, attemptValidTriangulatedPoints);
             } catch (final Exception e) {
                 attemptNumValidTriangulatedPoints = 0;
             }
@@ -1062,18 +1025,15 @@ public class EssentialMatrixInitialCamerasEstimator
                 // a better solution containing more valid points has been found
 
                 // keep better solution
-                updateBestSolutionData(leftCamera, rightCamera,
-                        triangulatedPoints, validTriangulatedPoints,
-                        attemptLeftCamera, attemptRightCamera,
-                        attemptTriangulatedPoints,
+                updateBestSolutionData(leftCamera, rightCamera, triangulatedPoints, validTriangulatedPoints,
+                        attemptLeftCamera, attemptRightCamera, attemptTriangulatedPoints,
                         attemptValidTriangulatedPoints);
                 numValidTriangulatedPoints = attemptNumValidTriangulatedPoints;
             }
         }
 
         if (numValidTriangulatedPoints == 0) {
-            throw new InitialCamerasEstimationFailedException(
-                    "no valid points found");
+            throw new InitialCamerasEstimationFailedException("no valid points found");
         }
 
         return numValidTriangulatedPoints;
@@ -1089,14 +1049,12 @@ public class EssentialMatrixInitialCamerasEstimator
      * @throws IllegalArgumentException if provided lists don't have the same
      *                                  size.
      */
-    private void internalSetLeftAndRightPoints(final List<Point2D> leftPoints,
-                                               final List<Point2D> rightPoints) {
-        if (leftPoints == null || rightPoints == null ||
-                leftPoints.size() != rightPoints.size()) {
+    private void internalSetLeftAndRightPoints(final List<Point2D> leftPoints, final List<Point2D> rightPoints) {
+        if (leftPoints == null || rightPoints == null || leftPoints.size() != rightPoints.size()) {
             throw new IllegalArgumentException();
         }
-        mLeftPoints = leftPoints;
-        mRightPoints = rightPoints;
+        this.leftPoints = leftPoints;
+        this.rightPoints = rightPoints;
     }
 
     /**
@@ -1134,15 +1092,12 @@ public class EssentialMatrixInitialCamerasEstimator
 
         try {
             leftCamera.setInternalMatrix(attemptLeftCamera.getInternalMatrix());
-            rightCamera.setInternalMatrix(
-                    attemptRightCamera.getInternalMatrix());
-            if (triangulatedPoints != null &&
-                    attemptTriangulatedPoints != null) {
+            rightCamera.setInternalMatrix(attemptRightCamera.getInternalMatrix());
+            if (triangulatedPoints != null && attemptTriangulatedPoints != null) {
                 triangulatedPoints.clear();
                 triangulatedPoints.addAll(attemptTriangulatedPoints);
             }
-            if (validTriangulatedPoints != null &&
-                    attemptValidTriangulatedPoints != null) {
+            if (validTriangulatedPoints != null && attemptValidTriangulatedPoints != null) {
                 validTriangulatedPoints.clear();
                 validTriangulatedPoints.or(attemptValidTriangulatedPoints);
             }
@@ -1198,9 +1153,8 @@ public class EssentialMatrixInitialCamerasEstimator
             final PinholeCamera estimatedLeftCamera,
             final PinholeCamera estimatedRightCamera,
             final List<Point3D> triangulatedPoints,
-            final BitSet validTriangulatedPoints) throws WrongSizeException,
-            CameraException, LockedException, NotReadyException,
-            Point3DTriangulationException {
+            final BitSet validTriangulatedPoints) throws WrongSizeException, CameraException, LockedException,
+            NotReadyException, Point3DTriangulationException {
 
         if (triangulatedPoints != null) {
             triangulatedPoints.clear();
@@ -1208,17 +1162,17 @@ public class EssentialMatrixInitialCamerasEstimator
         if (validTriangulatedPoints != null) {
             validTriangulatedPoints.clear();
         }
-        int numValidTriangulatedPoints = 0;
+        var numValidTriangulatedPoints = 0;
 
-        final Matrix leftIntrinsicMatrix = leftIntrinsic.getInternalMatrix();
-        final Matrix rightIntrinsicMatrix = rightIntrinsic.getInternalMatrix();
+        final var leftIntrinsicMatrix = leftIntrinsic.getInternalMatrix();
+        final var rightIntrinsicMatrix = rightIntrinsic.getInternalMatrix();
 
-        final Matrix rotationMatrix = rotation.asInhomogeneousMatrix();
+        final var rotationMatrix = rotation.asInhomogeneousMatrix();
 
         // 1st camera
 
         // set camera as a canonical matrix
-        final Matrix tmp = Matrix.identity(PinholeCamera.PINHOLE_CAMERA_MATRIX_ROWS,
+        final var tmp = Matrix.identity(PinholeCamera.PINHOLE_CAMERA_MATRIX_ROWS,
                 PinholeCamera.PINHOLE_CAMERA_MATRIX_COLS);
 
         // add intrinsic parameters
@@ -1232,8 +1186,7 @@ public class EssentialMatrixInitialCamerasEstimator
         // 2nd camera
 
         // set left 3x3 minor containing rotation
-        tmp.setSubmatrix(0, 0, 2, 2,
-                rotationMatrix);
+        tmp.setSubmatrix(0, 0, 2, 2, rotationMatrix);
 
         // set last column containing translation
         translation.normalize();
@@ -1250,18 +1203,17 @@ public class EssentialMatrixInitialCamerasEstimator
         estimatedRightCamera.fixCameraSign();
 
         // set cameras on triangulator
-        final SinglePoint3DTriangulator triangulator = SinglePoint3DTriangulator.
-                create();
+        final var triangulator = SinglePoint3DTriangulator.create();
 
-        final int numPoints = leftPoints.size();
+        final var numPoints = leftPoints.size();
         Point2D leftPoint;
         Point2D rightPoint;
-        final List<Point2D> points = new ArrayList<>();
-        final List<PinholeCamera> cameras = new ArrayList<>();
+        final var points = new ArrayList<Point2D>();
+        final var cameras = new ArrayList<PinholeCamera>();
         Point3D triangulatedPoint;
         boolean frontLeft;
         boolean frontRight;
-        for (int i = 0; i < numPoints; i++) {
+        for (var i = 0; i < numPoints; i++) {
             leftPoint = leftPoints.get(i);
             rightPoint = rightPoints.get(i);
 
@@ -1280,10 +1232,8 @@ public class EssentialMatrixInitialCamerasEstimator
             }
 
             // check that triangulated point is in front of both cameras
-            frontLeft = estimatedLeftCamera.isPointInFrontOfCamera(
-                    triangulatedPoint);
-            frontRight = estimatedRightCamera.isPointInFrontOfCamera(
-                    triangulatedPoint);
+            frontLeft = estimatedLeftCamera.isPointInFrontOfCamera(triangulatedPoint);
+            frontRight = estimatedRightCamera.isPointInFrontOfCamera(triangulatedPoint);
 
             if (frontLeft && frontRight) {
                 // point is valid because it is in front of both cameras

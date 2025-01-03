@@ -18,41 +18,37 @@ package com.irurueta.ar.calibration.estimators;
 import com.irurueta.geometry.PinholeCamera;
 import com.irurueta.geometry.estimators.LockedException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class DualAbsoluteQuadricRobustEstimatorTest implements
-        DualAbsoluteQuadricRobustEstimatorListener {
+class DualAbsoluteQuadricRobustEstimatorTest implements DualAbsoluteQuadricRobustEstimatorListener {
 
     @Test
-    public void testCreateWithMethod() {
+    void testCreateWithMethod() {
         // create with LMedS method
-        DualAbsoluteQuadricRobustEstimator estimator = DualAbsoluteQuadricRobustEstimator.create(
-                RobustEstimatorMethod.LMEDS);
+        var estimator = DualAbsoluteQuadricRobustEstimator.create(RobustEstimatorMethod.LMEDS);
 
         // check correctness
-        assertTrue(estimator instanceof LMedSDualAbsoluteQuadricRobustEstimator);
+        assertInstanceOf(LMedSDualAbsoluteQuadricRobustEstimator.class, estimator);
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
         assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                estimator.getDeterminantThreshold(), 0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD, estimator.getDeterminantThreshold(),
+                0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                estimator.getProgressDelta(), 0.0);
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE,
-                estimator.getConfidence(), 0.0);
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS,
-                estimator.getMaxIterations());
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA, estimator.getProgressDelta(),
+                0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE, estimator.getConfidence(), 0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertNull(estimator.getCameras());
         assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
@@ -64,24 +60,22 @@ public class DualAbsoluteQuadricRobustEstimatorTest implements
         estimator = DualAbsoluteQuadricRobustEstimator.create(RobustEstimatorMethod.MSAC);
 
         // check correctness
-        assertTrue(estimator instanceof MSACDualAbsoluteQuadricRobustEstimator);
+        assertInstanceOf(MSACDualAbsoluteQuadricRobustEstimator.class, estimator);
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
         assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                estimator.getDeterminantThreshold(), 0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD, estimator.getDeterminantThreshold(),
+                0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                estimator.getProgressDelta(), 0.0);
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE,
-                estimator.getConfidence(), 0.0);
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS,
-                estimator.getMaxIterations());
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA, estimator.getProgressDelta(),
+                0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE, estimator.getConfidence(), 0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertNull(estimator.getCameras());
         assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
@@ -93,25 +87,22 @@ public class DualAbsoluteQuadricRobustEstimatorTest implements
         estimator = DualAbsoluteQuadricRobustEstimator.create(RobustEstimatorMethod.PROSAC);
 
         // check correctness
-        assertTrue(estimator instanceof
-                PROSACDualAbsoluteQuadricRobustEstimator);
+        assertInstanceOf(PROSACDualAbsoluteQuadricRobustEstimator.class, estimator);
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
         assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                estimator.getDeterminantThreshold(), 0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD, estimator.getDeterminantThreshold(),
+                0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                estimator.getProgressDelta(), 0.0);
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE,
-                estimator.getConfidence(), 0.0);
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS,
-                estimator.getMaxIterations());
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA, estimator.getProgressDelta(),
+                0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE, estimator.getConfidence(), 0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertNull(estimator.getCameras());
         assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
@@ -123,25 +114,22 @@ public class DualAbsoluteQuadricRobustEstimatorTest implements
         estimator = DualAbsoluteQuadricRobustEstimator.create(RobustEstimatorMethod.PROMEDS);
 
         // check correctness
-        assertTrue(estimator instanceof
-                PROMedSDualAbsoluteQuadricRobustEstimator);
+        assertInstanceOf(PROMedSDualAbsoluteQuadricRobustEstimator.class, estimator);
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
         assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                estimator.getDeterminantThreshold(), 0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD, estimator.getDeterminantThreshold(),
+                0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                estimator.getProgressDelta(), 0.0);
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE,
-                estimator.getConfidence(), 0.0);
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS,
-                estimator.getMaxIterations());
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA, estimator.getProgressDelta(),
+                0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE, estimator.getConfidence(), 0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertNull(estimator.getCameras());
         assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
@@ -153,25 +141,22 @@ public class DualAbsoluteQuadricRobustEstimatorTest implements
         estimator = DualAbsoluteQuadricRobustEstimator.create(RobustEstimatorMethod.RANSAC);
 
         // check correctness
-        assertTrue(estimator instanceof
-                RANSACDualAbsoluteQuadricRobustEstimator);
+        assertInstanceOf(RANSACDualAbsoluteQuadricRobustEstimator.class, estimator);
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
         assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                estimator.getDeterminantThreshold(), 0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD, estimator.getDeterminantThreshold(),
+                0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                estimator.getProgressDelta(), 0.0);
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE,
-                estimator.getConfidence(), 0.0);
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS,
-                estimator.getMaxIterations());
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA, estimator.getProgressDelta(),
+                0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE, estimator.getConfidence(), 0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertNull(estimator.getCameras());
         assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
@@ -181,37 +166,34 @@ public class DualAbsoluteQuadricRobustEstimatorTest implements
     }
 
     @Test
-    public void testCreateWithCamerasQualityScoresAndMethod() {
-        final List<PinholeCamera> cameras = new ArrayList<>();
+    void testCreateWithCamerasQualityScoresAndMethod() {
+        final var cameras = new ArrayList<PinholeCamera>();
         cameras.add(new PinholeCamera());
         cameras.add(new PinholeCamera());
 
-        final double[] qualityScores = new double[cameras.size()];
+        final var qualityScores = new double[cameras.size()];
 
         // create with LMedS method
-        DualAbsoluteQuadricRobustEstimator estimator = DualAbsoluteQuadricRobustEstimator.create(cameras,
-                qualityScores, RobustEstimatorMethod.LMEDS);
+        var estimator = DualAbsoluteQuadricRobustEstimator.create(cameras, qualityScores, RobustEstimatorMethod.LMEDS);
 
         // check correctness
-        assertTrue(estimator instanceof LMedSDualAbsoluteQuadricRobustEstimator);
+        assertInstanceOf(LMedSDualAbsoluteQuadricRobustEstimator.class, estimator);
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
         assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                estimator.getDeterminantThreshold(), 0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD, estimator.getDeterminantThreshold(),
+                0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                estimator.getProgressDelta(), 0.0);
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE,
-                estimator.getConfidence(), 0.0);
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS,
-                estimator.getMaxIterations());
-        assertSame(estimator.getCameras(), cameras);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA, estimator.getProgressDelta(),
+                0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE, estimator.getConfidence(), 0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
+        assertSame(cameras, estimator.getCameras());
         assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
         assertTrue(estimator.isReady());
@@ -219,39 +201,29 @@ public class DualAbsoluteQuadricRobustEstimatorTest implements
         assertEquals(RobustEstimatorMethod.LMEDS, estimator.getMethod());
 
         // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = DualAbsoluteQuadricRobustEstimator.create(
-                    new ArrayList<PinholeCamera>(), new double[1],
-                    RobustEstimatorMethod.LMEDS);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
+        assertThrows(IllegalArgumentException.class, () -> DualAbsoluteQuadricRobustEstimator.create(
+                Collections.emptyList(), new double[1], RobustEstimatorMethod.LMEDS));
 
         // create with MSAC method
-        estimator = DualAbsoluteQuadricRobustEstimator.create(cameras, qualityScores,
-                RobustEstimatorMethod.MSAC);
+        estimator = DualAbsoluteQuadricRobustEstimator.create(cameras, qualityScores, RobustEstimatorMethod.MSAC);
 
         // check correctness
-        assertTrue(estimator instanceof MSACDualAbsoluteQuadricRobustEstimator);
+        assertInstanceOf(MSACDualAbsoluteQuadricRobustEstimator.class, estimator);
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
         assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                estimator.getDeterminantThreshold(), 0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD, estimator.getDeterminantThreshold(),
+                0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                estimator.getProgressDelta(), 0.0);
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE,
-                estimator.getConfidence(), 0.0);
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS,
-                estimator.getMaxIterations());
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA, estimator.getProgressDelta(),
+                0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE, estimator.getConfidence(), 0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertSame(estimator.getCameras(), cameras);
         assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
@@ -260,87 +232,63 @@ public class DualAbsoluteQuadricRobustEstimatorTest implements
         assertEquals(RobustEstimatorMethod.MSAC, estimator.getMethod());
 
         // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = DualAbsoluteQuadricRobustEstimator.create(
-                    new ArrayList<PinholeCamera>(), new double[1],
-                    RobustEstimatorMethod.MSAC);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
+        assertThrows(IllegalArgumentException.class, () -> DualAbsoluteQuadricRobustEstimator.create(
+                Collections.emptyList(), new double[1], RobustEstimatorMethod.MSAC));
 
         // create with PROSAC method
-        estimator = DualAbsoluteQuadricRobustEstimator.create(cameras, qualityScores,
-                RobustEstimatorMethod.PROSAC);
+        estimator = DualAbsoluteQuadricRobustEstimator.create(cameras, qualityScores, RobustEstimatorMethod.PROSAC);
 
         // check correctness
-        assertTrue(estimator instanceof PROSACDualAbsoluteQuadricRobustEstimator);
+        assertInstanceOf(PROSACDualAbsoluteQuadricRobustEstimator.class, estimator);
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
         assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                estimator.getDeterminantThreshold(), 0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD, estimator.getDeterminantThreshold(),
+                0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                estimator.getProgressDelta(), 0.0);
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE,
-                estimator.getConfidence(), 0.0);
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS,
-                estimator.getMaxIterations());
-        assertSame(estimator.getCameras(), cameras);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA, estimator.getProgressDelta(),
+                0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE, estimator.getConfidence(), 0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
+        assertSame(cameras, estimator.getCameras());
         assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
         assertTrue(estimator.isReady());
-        assertSame(estimator.getQualityScores(), qualityScores);
+        assertSame(qualityScores, estimator.getQualityScores());
         assertEquals(RobustEstimatorMethod.PROSAC, estimator.getMethod());
 
         // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = DualAbsoluteQuadricRobustEstimator.create(cameras,
-                    new double[1],
-                    RobustEstimatorMethod.PROSAC);
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = DualAbsoluteQuadricRobustEstimator.create(
-                    new ArrayList<PinholeCamera>(), new double[1],
-                    RobustEstimatorMethod.PROSAC);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
+        assertThrows(IllegalArgumentException.class, () -> DualAbsoluteQuadricRobustEstimator.create(cameras,
+                new double[1], RobustEstimatorMethod.PROSAC));
+        assertThrows(IllegalArgumentException.class, () -> DualAbsoluteQuadricRobustEstimator.create(
+                Collections.emptyList(), new double[1], RobustEstimatorMethod.PROSAC));
 
         // create with PROMedS method
-        estimator = DualAbsoluteQuadricRobustEstimator.create(cameras, qualityScores,
-                RobustEstimatorMethod.PROMEDS);
+        estimator = DualAbsoluteQuadricRobustEstimator.create(cameras, qualityScores, RobustEstimatorMethod.PROMEDS);
 
         // check correctness
-        assertTrue(estimator instanceof PROMedSDualAbsoluteQuadricRobustEstimator);
+        assertInstanceOf(PROMedSDualAbsoluteQuadricRobustEstimator.class, estimator);
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
         assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                estimator.getDeterminantThreshold(), 0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD, estimator.getDeterminantThreshold(),
+                0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                estimator.getProgressDelta(), 0.0);
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE,
-                estimator.getConfidence(), 0.0);
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS,
-                estimator.getMaxIterations());
-        assertSame(estimator.getCameras(), cameras);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA, estimator.getProgressDelta(),
+                0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE, estimator.getConfidence(), 0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
+        assertSame(cameras, estimator.getCameras());
         assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
         assertTrue(estimator.isReady());
@@ -348,45 +296,33 @@ public class DualAbsoluteQuadricRobustEstimatorTest implements
         assertEquals(RobustEstimatorMethod.PROMEDS, estimator.getMethod());
 
         // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = DualAbsoluteQuadricRobustEstimator.create(cameras,
-                    new double[1], RobustEstimatorMethod.PROMEDS);
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = DualAbsoluteQuadricRobustEstimator.create(
-                    new ArrayList<PinholeCamera>(), new double[1],
-                    RobustEstimatorMethod.PROMEDS);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
+        assertThrows(IllegalArgumentException.class, () -> DualAbsoluteQuadricRobustEstimator.create(cameras,
+                new double[1], RobustEstimatorMethod.PROMEDS));
+        assertThrows(IllegalArgumentException.class, () -> DualAbsoluteQuadricRobustEstimator.create(
+                Collections.emptyList(), new double[1], RobustEstimatorMethod.PROMEDS));
 
         // create with RANSAC method
         estimator = DualAbsoluteQuadricRobustEstimator.create(cameras,
                 qualityScores, RobustEstimatorMethod.RANSAC);
 
         // check correctness
-        assertTrue(estimator instanceof RANSACDualAbsoluteQuadricRobustEstimator);
+        assertInstanceOf(RANSACDualAbsoluteQuadricRobustEstimator.class, estimator);
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
         assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                estimator.getDeterminantThreshold(), 0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD, estimator.getDeterminantThreshold(),
+                0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                estimator.getProgressDelta(), 0.0);
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE,
-                estimator.getConfidence(), 0.0);
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS,
-                estimator.getMaxIterations());
-        assertSame(estimator.getCameras(), cameras);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA, estimator.getProgressDelta(),
+                0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE, estimator.getConfidence(), 0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
+        assertSame(cameras, estimator.getCameras());
         assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
         assertTrue(estimator.isReady());
@@ -394,47 +330,37 @@ public class DualAbsoluteQuadricRobustEstimatorTest implements
         assertEquals(RobustEstimatorMethod.RANSAC, estimator.getMethod());
 
         // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = DualAbsoluteQuadricRobustEstimator.create(
-                    new ArrayList<PinholeCamera>(), new double[1],
-                    RobustEstimatorMethod.RANSAC);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
+        assertThrows(IllegalArgumentException.class, () -> DualAbsoluteQuadricRobustEstimator.create(
+                Collections.emptyList(), new double[1], RobustEstimatorMethod.RANSAC));
     }
 
     @Test
-    public void testCreateWithCamerasAndMethod() {
-        final List<PinholeCamera> cameras = new ArrayList<>();
+    void testCreateWithCamerasAndMethod() {
+        final var cameras = new ArrayList<PinholeCamera>();
         cameras.add(new PinholeCamera());
         cameras.add(new PinholeCamera());
 
         // create with LMedS method
-        DualAbsoluteQuadricRobustEstimator estimator = DualAbsoluteQuadricRobustEstimator.create(cameras,
-                RobustEstimatorMethod.LMEDS);
+        var estimator = DualAbsoluteQuadricRobustEstimator.create(cameras, RobustEstimatorMethod.LMEDS);
 
         // check correctness
-        assertTrue(estimator instanceof LMedSDualAbsoluteQuadricRobustEstimator);
+        assertInstanceOf(LMedSDualAbsoluteQuadricRobustEstimator.class, estimator);
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
         assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                estimator.getDeterminantThreshold(), 0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD, estimator.getDeterminantThreshold(),
+                0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                estimator.getProgressDelta(), 0.0);
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE,
-                estimator.getConfidence(), 0.0);
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS,
-                estimator.getMaxIterations());
-        assertSame(estimator.getCameras(), cameras);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA, estimator.getProgressDelta(),
+                0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE, estimator.getConfidence(), 0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
+        assertSame(cameras, estimator.getCameras());
         assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
         assertTrue(estimator.isReady());
@@ -442,38 +368,29 @@ public class DualAbsoluteQuadricRobustEstimatorTest implements
         assertEquals(RobustEstimatorMethod.LMEDS, estimator.getMethod());
 
         // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = DualAbsoluteQuadricRobustEstimator.create(
-                    new ArrayList<PinholeCamera>(),
-                    RobustEstimatorMethod.LMEDS);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
+        assertThrows(IllegalArgumentException.class, () -> DualAbsoluteQuadricRobustEstimator.create(
+                Collections.emptyList(), RobustEstimatorMethod.LMEDS));
 
         // create with MSAC method
         estimator = DualAbsoluteQuadricRobustEstimator.create(cameras, RobustEstimatorMethod.MSAC);
 
         // check correctness
-        assertTrue(estimator instanceof MSACDualAbsoluteQuadricRobustEstimator);
+        assertInstanceOf(MSACDualAbsoluteQuadricRobustEstimator.class, estimator);
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
         assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                estimator.getDeterminantThreshold(), 0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD, estimator.getDeterminantThreshold(),
+                0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                estimator.getProgressDelta(), 0.0);
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE,
-                estimator.getConfidence(), 0.0);
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS,
-                estimator.getMaxIterations());
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA, estimator.getProgressDelta(),
+                0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE, estimator.getConfidence(), 0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertSame(estimator.getCameras(), cameras);
         assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
@@ -482,39 +399,29 @@ public class DualAbsoluteQuadricRobustEstimatorTest implements
         assertEquals(RobustEstimatorMethod.MSAC, estimator.getMethod());
 
         // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = DualAbsoluteQuadricRobustEstimator.create(
-                    new ArrayList<PinholeCamera>(),
-                    RobustEstimatorMethod.MSAC);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
+        assertThrows(IllegalArgumentException.class, () -> DualAbsoluteQuadricRobustEstimator.create(
+                Collections.emptyList(), RobustEstimatorMethod.MSAC));
 
         // create with PROSAC method
-        estimator = DualAbsoluteQuadricRobustEstimator.create(cameras,
-                RobustEstimatorMethod.PROSAC);
+        estimator = DualAbsoluteQuadricRobustEstimator.create(cameras, RobustEstimatorMethod.PROSAC);
 
         // check correctness
-        assertTrue(estimator instanceof PROSACDualAbsoluteQuadricRobustEstimator);
+        assertInstanceOf(PROSACDualAbsoluteQuadricRobustEstimator.class, estimator);
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
         assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                estimator.getDeterminantThreshold(), 0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD, estimator.getDeterminantThreshold(),
+                0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                estimator.getProgressDelta(), 0.0);
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE,
-                estimator.getConfidence(), 0.0);
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS,
-                estimator.getMaxIterations());
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA, estimator.getProgressDelta(),
+                0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE, estimator.getConfidence(), 0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertSame(cameras, estimator.getCameras());
         assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
@@ -523,38 +430,29 @@ public class DualAbsoluteQuadricRobustEstimatorTest implements
         assertEquals(RobustEstimatorMethod.PROSAC, estimator.getMethod());
 
         // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = DualAbsoluteQuadricRobustEstimator.create(
-                    new ArrayList<PinholeCamera>(),
-                    RobustEstimatorMethod.PROSAC);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
+        assertThrows(IllegalArgumentException.class, () -> DualAbsoluteQuadricRobustEstimator.create(
+                Collections.emptyList(), RobustEstimatorMethod.PROSAC));
 
         // create with PROMedS method
         estimator = DualAbsoluteQuadricRobustEstimator.create(cameras, RobustEstimatorMethod.PROMEDS);
 
         // check correctness
-        assertTrue(estimator instanceof PROMedSDualAbsoluteQuadricRobustEstimator);
+        assertInstanceOf(PROMedSDualAbsoluteQuadricRobustEstimator.class, estimator);
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
         assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                estimator.getDeterminantThreshold(), 0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD, estimator.getDeterminantThreshold(),
+                0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                estimator.getProgressDelta(), 0.0);
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE,
-                estimator.getConfidence(), 0.0);
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS,
-                estimator.getMaxIterations());
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA, estimator.getProgressDelta(),
+                0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE, estimator.getConfidence(), 0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertSame(cameras, estimator.getCameras());
         assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
@@ -563,38 +461,29 @@ public class DualAbsoluteQuadricRobustEstimatorTest implements
         assertEquals(RobustEstimatorMethod.PROMEDS, estimator.getMethod());
 
         // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = DualAbsoluteQuadricRobustEstimator.create(
-                    new ArrayList<PinholeCamera>(),
-                    RobustEstimatorMethod.PROMEDS);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
+        assertThrows(IllegalArgumentException.class, () -> DualAbsoluteQuadricRobustEstimator.create(
+                Collections.emptyList(), RobustEstimatorMethod.PROMEDS));
 
         // create with RANSAC method
         estimator = DualAbsoluteQuadricRobustEstimator.create(cameras, RobustEstimatorMethod.RANSAC);
 
         // check correctness
-        assertTrue(estimator instanceof RANSACDualAbsoluteQuadricRobustEstimator);
+        assertInstanceOf(RANSACDualAbsoluteQuadricRobustEstimator.class, estimator);
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
         assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                estimator.getDeterminantThreshold(), 0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD, estimator.getDeterminantThreshold(),
+                0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                estimator.getProgressDelta(), 0.0);
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE,
-                estimator.getConfidence(), 0.0);
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS,
-                estimator.getMaxIterations());
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA, estimator.getProgressDelta(),
+                0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE, estimator.getConfidence(), 0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertSame(cameras, estimator.getCameras());
         assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
@@ -603,40 +492,31 @@ public class DualAbsoluteQuadricRobustEstimatorTest implements
         assertEquals(RobustEstimatorMethod.RANSAC, estimator.getMethod());
 
         // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = DualAbsoluteQuadricRobustEstimator.create(
-                    new ArrayList<PinholeCamera>(),
-                    RobustEstimatorMethod.RANSAC);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
+        assertThrows(IllegalArgumentException.class, () -> DualAbsoluteQuadricRobustEstimator.create(
+                Collections.emptyList(), RobustEstimatorMethod.RANSAC));
     }
 
     @Test
-    public void testCreateDefaultMethod() {
-        final DualAbsoluteQuadricRobustEstimator estimator = DualAbsoluteQuadricRobustEstimator.create();
+    void testCreateDefaultMethod() {
+        final var estimator = DualAbsoluteQuadricRobustEstimator.create();
 
         // check correctness
-        assertTrue(estimator instanceof LMedSDualAbsoluteQuadricRobustEstimator);
+        assertInstanceOf(LMedSDualAbsoluteQuadricRobustEstimator.class, estimator);
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
         assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                estimator.getDeterminantThreshold(), 0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD, estimator.getDeterminantThreshold(),
+                0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                estimator.getProgressDelta(), 0.0);
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE,
-                estimator.getConfidence(), 0.0);
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS,
-                estimator.getMaxIterations());
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA, estimator.getProgressDelta(),
+                0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE, estimator.getConfidence(), 0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertNull(estimator.getCameras());
         assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
@@ -646,36 +526,33 @@ public class DualAbsoluteQuadricRobustEstimatorTest implements
     }
 
     @Test
-    public void testCreateWithCamerasQualityScoresAndDefaultMethod() {
-        final List<PinholeCamera> cameras = new ArrayList<>();
+    void testCreateWithCamerasQualityScoresAndDefaultMethod() {
+        final var cameras = new ArrayList<PinholeCamera>();
         cameras.add(new PinholeCamera());
         cameras.add(new PinholeCamera());
 
-        final double[] qualityScores = new double[cameras.size()];
+        final var qualityScores = new double[cameras.size()];
 
-        DualAbsoluteQuadricRobustEstimator estimator = DualAbsoluteQuadricRobustEstimator.create(cameras,
-                qualityScores);
+        var estimator = DualAbsoluteQuadricRobustEstimator.create(cameras, qualityScores);
 
         // check correctness
-        assertTrue(estimator instanceof LMedSDualAbsoluteQuadricRobustEstimator);
+        assertInstanceOf(LMedSDualAbsoluteQuadricRobustEstimator.class, estimator);
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
         assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                estimator.getDeterminantThreshold(), 0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD, estimator.getDeterminantThreshold(),
+                0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                estimator.getProgressDelta(), 0.0);
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE,
-                estimator.getConfidence(), 0.0);
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS,
-                estimator.getMaxIterations());
-        assertSame(estimator.getCameras(), cameras);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA, estimator.getProgressDelta(),
+                0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE, estimator.getConfidence(), 0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
+        assertSame(cameras, estimator.getCameras());
         assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
         assertTrue(estimator.isReady());
@@ -683,51 +560,38 @@ public class DualAbsoluteQuadricRobustEstimatorTest implements
         assertEquals(RobustEstimatorMethod.LMEDS, estimator.getMethod());
 
         // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = DualAbsoluteQuadricRobustEstimator.create(cameras,
-                    new double[1], RobustEstimatorMethod.PROSAC);
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = DualAbsoluteQuadricRobustEstimator.create(
-                    new ArrayList<PinholeCamera>(), new double[1],
-                    RobustEstimatorMethod.PROSAC);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
+        assertThrows(IllegalArgumentException.class, () -> DualAbsoluteQuadricRobustEstimator.create(cameras,
+                new double[1], RobustEstimatorMethod.PROSAC));
+        assertThrows(IllegalArgumentException.class, () -> DualAbsoluteQuadricRobustEstimator.create(
+                Collections.emptyList(), new double[1], RobustEstimatorMethod.PROSAC));
     }
 
     @Test
-    public void testCreateWithCamerasAndDefaultMethod() {
-        final List<PinholeCamera> cameras = new ArrayList<>();
+    void testCreateWithCamerasAndDefaultMethod() {
+        final var cameras = new ArrayList<PinholeCamera>();
         cameras.add(new PinholeCamera());
         cameras.add(new PinholeCamera());
 
-        DualAbsoluteQuadricRobustEstimator estimator = DualAbsoluteQuadricRobustEstimator.create(cameras);
+        var estimator = DualAbsoluteQuadricRobustEstimator.create(cameras);
 
         // check correctness
-        assertTrue(estimator instanceof
-                LMedSDualAbsoluteQuadricRobustEstimator);
+        assertInstanceOf(LMedSDualAbsoluteQuadricRobustEstimator.class, estimator);
         assertTrue(estimator.isZeroSkewness());
         assertTrue(estimator.isPrincipalPointAtOrigin());
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
         assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
         assertTrue(estimator.isSingularityEnforced());
         assertTrue(estimator.isEnforcedSingularityValidated());
-        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                estimator.getDeterminantThreshold(), 0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD, estimator.getDeterminantThreshold(),
+                0.0);
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                estimator.getProgressDelta(), 0.0);
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE,
-                estimator.getConfidence(), 0.0);
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS,
-                estimator.getMaxIterations());
-        assertSame(estimator.getCameras(), cameras);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA, estimator.getProgressDelta(),
+                0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE, estimator.getConfidence(), 0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
+        assertSame(cameras, estimator.getCameras());
         assertEquals(2, estimator.getMinNumberOfRequiredCameras());
         assertTrue(estimator.areValidConstraints());
         assertTrue(estimator.isReady());
@@ -735,20 +599,13 @@ public class DualAbsoluteQuadricRobustEstimatorTest implements
         assertEquals(RobustEstimatorMethod.LMEDS, estimator.getMethod());
 
         // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = DualAbsoluteQuadricRobustEstimator.create(
-                    new ArrayList<PinholeCamera>(),
-                    RobustEstimatorMethod.PROSAC);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
+        assertThrows(IllegalArgumentException.class, () -> DualAbsoluteQuadricRobustEstimator.create(
+                Collections.emptyList(), RobustEstimatorMethod.PROSAC));
     }
 
     @Test
-    public void testIsSetZeroSkewness() throws LockedException {
-        final DualAbsoluteQuadricRobustEstimator estimator = DualAbsoluteQuadricRobustEstimator.create();
+    void testIsSetZeroSkewness() throws LockedException {
+        final var estimator = DualAbsoluteQuadricRobustEstimator.create();
 
         // check default value
         assertTrue(estimator.isZeroSkewness());
@@ -761,8 +618,8 @@ public class DualAbsoluteQuadricRobustEstimatorTest implements
     }
 
     @Test
-    public void testIsSetPrincipalPointAtOrigin() throws LockedException {
-        final DualAbsoluteQuadricRobustEstimator estimator = DualAbsoluteQuadricRobustEstimator.create();
+    void testIsSetPrincipalPointAtOrigin() throws LockedException {
+        final var estimator = DualAbsoluteQuadricRobustEstimator.create();
 
         // check default value
         assertTrue(estimator.isPrincipalPointAtOrigin());
@@ -775,8 +632,8 @@ public class DualAbsoluteQuadricRobustEstimatorTest implements
     }
 
     @Test
-    public void testIsFocalDistanceAspectRatioKnown() throws LockedException {
-        final DualAbsoluteQuadricRobustEstimator estimator = DualAbsoluteQuadricRobustEstimator.create();
+    void testIsFocalDistanceAspectRatioKnown() throws LockedException {
+        final var estimator = DualAbsoluteQuadricRobustEstimator.create();
 
         // check default value
         assertTrue(estimator.isFocalDistanceAspectRatioKnown());
@@ -789,8 +646,8 @@ public class DualAbsoluteQuadricRobustEstimatorTest implements
     }
 
     @Test
-    public void testGetSetFocalDistanceAspectRatio() throws LockedException {
-        final DualAbsoluteQuadricRobustEstimator estimator = DualAbsoluteQuadricRobustEstimator.create();
+    void testGetSetFocalDistanceAspectRatio() throws LockedException {
+        final var estimator = DualAbsoluteQuadricRobustEstimator.create();
 
         // check default value
         assertEquals(1.0, estimator.getFocalDistanceAspectRatio(), 0.0);
@@ -803,8 +660,8 @@ public class DualAbsoluteQuadricRobustEstimatorTest implements
     }
 
     @Test
-    public void testIsSetSingularityEnforced() throws LockedException {
-        final DualAbsoluteQuadricRobustEstimator estimator = DualAbsoluteQuadricRobustEstimator.create();
+    void testIsSetSingularityEnforced() throws LockedException {
+        final var estimator = DualAbsoluteQuadricRobustEstimator.create();
 
         // check default value
         assertTrue(estimator.isSingularityEnforced());
@@ -817,8 +674,8 @@ public class DualAbsoluteQuadricRobustEstimatorTest implements
     }
 
     @Test
-    public void testIsSetEnforcedSingularityValidated() throws LockedException {
-        final DualAbsoluteQuadricRobustEstimator estimator = DualAbsoluteQuadricRobustEstimator.create();
+    void testIsSetEnforcedSingularityValidated() throws LockedException {
+        final var estimator = DualAbsoluteQuadricRobustEstimator.create();
 
         // check default value
         assertTrue(estimator.isEnforcedSingularityValidated());
@@ -831,12 +688,12 @@ public class DualAbsoluteQuadricRobustEstimatorTest implements
     }
 
     @Test
-    public void testGetSetDeterminantThreshold() throws LockedException {
-        final DualAbsoluteQuadricRobustEstimator estimator = DualAbsoluteQuadricRobustEstimator.create();
+    void testGetSetDeterminantThreshold() throws LockedException {
+        final var estimator = DualAbsoluteQuadricRobustEstimator.create();
 
         // check default value
-        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD,
-                estimator.getDeterminantThreshold(), 0.0);
+        assertEquals(DualAbsoluteQuadricEstimator.DEFAULT_DETERMINANT_THRESHOLD, estimator.getDeterminantThreshold(),
+                0.0);
 
         // set new value
         estimator.setDeterminantThreshold(1e-3);
@@ -846,9 +703,8 @@ public class DualAbsoluteQuadricRobustEstimatorTest implements
     }
 
     @Test
-    public void testGetSetListenerAndIsListenerAvailable()
-            throws LockedException {
-        final DualAbsoluteQuadricRobustEstimator estimator = DualAbsoluteQuadricRobustEstimator.create();
+    void testGetSetListenerAndIsListenerAvailable() throws LockedException {
+        final var estimator = DualAbsoluteQuadricRobustEstimator.create();
 
         // check default value
         assertNull(estimator.getListener());
@@ -863,12 +719,12 @@ public class DualAbsoluteQuadricRobustEstimatorTest implements
     }
 
     @Test
-    public void testGetSetProgressDelta() throws LockedException {
-        final DualAbsoluteQuadricRobustEstimator estimator = DualAbsoluteQuadricRobustEstimator.create();
+    void testGetSetProgressDelta() throws LockedException {
+        final var estimator = DualAbsoluteQuadricRobustEstimator.create();
 
         // check default value
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                estimator.getProgressDelta(), 0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_PROGRESS_DELTA, estimator.getProgressDelta(),
+                0.0);
 
         // set new value
         estimator.setProgressDelta(0.1f);
@@ -877,25 +733,16 @@ public class DualAbsoluteQuadricRobustEstimatorTest implements
         assertEquals(0.1f, estimator.getProgressDelta(), 0.0);
 
         // Force IllegalArgumentException
-        try {
-            estimator.setProgressDelta(-1.0f);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator.setProgressDelta(2.0f);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> estimator.setProgressDelta(-1.0f));
+        assertThrows(IllegalArgumentException.class, () -> estimator.setProgressDelta(2.0f));
     }
 
     @Test
-    public void testGetSetConfidence() throws LockedException {
-        final DualAbsoluteQuadricRobustEstimator estimator = DualAbsoluteQuadricRobustEstimator.create();
+    void testGetSetConfidence() throws LockedException {
+        final var estimator = DualAbsoluteQuadricRobustEstimator.create();
 
         // check default value
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE,
-                estimator.getConfidence(), 0.0);
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_CONFIDENCE, estimator.getConfidence(), 0.0);
 
         // set new value
         estimator.setConfidence(0.8);
@@ -904,25 +751,16 @@ public class DualAbsoluteQuadricRobustEstimatorTest implements
         assertEquals(0.8, estimator.getConfidence(), 0.0);
 
         // Force IllegalArgumentException
-        try {
-            estimator.setConfidence(-1.0);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator.setConfidence(2.0);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> estimator.setConfidence(-1.0));
+        assertThrows(IllegalArgumentException.class, () -> estimator.setConfidence(2.0));
     }
 
     @Test
-    public void testGetSetMaxIterations() throws LockedException {
-        final DualAbsoluteQuadricRobustEstimator estimator = DualAbsoluteQuadricRobustEstimator.create();
+    void testGetSetMaxIterations() throws LockedException {
+        final var estimator = DualAbsoluteQuadricRobustEstimator.create();
 
         // check default value
-        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS,
-                estimator.getMaxIterations());
+        assertEquals(DualAbsoluteQuadricRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
 
         // set new value
         estimator.setMaxIterations(100);
@@ -931,22 +769,18 @@ public class DualAbsoluteQuadricRobustEstimatorTest implements
         assertEquals(100, estimator.getMaxIterations());
 
         // Force IllegalArgumentException
-        try {
-            estimator.setMaxIterations(0);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> estimator.setMaxIterations(0));
     }
 
     @Test
-    public void testGetSetCameras() throws LockedException {
-        final DualAbsoluteQuadricRobustEstimator estimator = DualAbsoluteQuadricRobustEstimator.create();
+    void testGetSetCameras() throws LockedException {
+        final var estimator = DualAbsoluteQuadricRobustEstimator.create();
 
         // initial value
         assertNull(estimator.getCameras());
 
         // set new value
-        final List<PinholeCamera> cameras = new ArrayList<>();
+        final var cameras = new ArrayList<PinholeCamera>();
         cameras.add(new PinholeCamera());
         cameras.add(new PinholeCamera());
         estimator.setCameras(cameras);
@@ -955,21 +789,13 @@ public class DualAbsoluteQuadricRobustEstimatorTest implements
         assertSame(cameras, estimator.getCameras());
 
         // Force IllegalArgumentException
-        try {
-            estimator.setCameras(null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator.setCameras(new ArrayList<PinholeCamera>());
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> estimator.setCameras(null));
+        assertThrows(IllegalArgumentException.class, () -> estimator.setCameras(Collections.emptyList()));
     }
 
     @Test
-    public void testGetMinNumberOfRequiredCameras() throws LockedException {
-        final DualAbsoluteQuadricRobustEstimator estimator = DualAbsoluteQuadricRobustEstimator.create();
+    void testGetMinNumberOfRequiredCameras() throws LockedException {
+        final var estimator = DualAbsoluteQuadricRobustEstimator.create();
 
         // check default value
         assertEquals(2, estimator.getMinNumberOfRequiredCameras());
@@ -1009,8 +835,8 @@ public class DualAbsoluteQuadricRobustEstimatorTest implements
     }
 
     @Test
-    public void testAreValidConstraints() throws LockedException {
-        final DualAbsoluteQuadricRobustEstimator estimator = DualAbsoluteQuadricRobustEstimator.create();
+    void testAreValidConstraints() throws LockedException {
+        final var estimator = DualAbsoluteQuadricRobustEstimator.create();
 
         // check default value
         assertTrue(estimator.areValidConstraints());
@@ -1043,15 +869,15 @@ public class DualAbsoluteQuadricRobustEstimatorTest implements
     }
 
     @Test
-    public void testIsReady() throws LockedException {
-        final DualAbsoluteQuadricRobustEstimator estimator = DualAbsoluteQuadricRobustEstimator.create();
+    void testIsReady() throws LockedException {
+        final var estimator = DualAbsoluteQuadricRobustEstimator.create();
 
         // check default value
         assertNull(estimator.getCameras());
         assertTrue(estimator.areValidConstraints());
         assertFalse(estimator.isReady());
 
-        final List<PinholeCamera> cameras = new ArrayList<>();
+        final var cameras = new ArrayList<PinholeCamera>();
         cameras.add(new PinholeCamera());
         cameras.add(new PinholeCamera());
 
@@ -1083,21 +909,22 @@ public class DualAbsoluteQuadricRobustEstimatorTest implements
 
 
     @Override
-    public void onEstimateStart(
-            final DualAbsoluteQuadricRobustEstimator estimator) {
+    public void onEstimateStart(final DualAbsoluteQuadricRobustEstimator estimator) {
+        // no action needed
     }
 
     @Override
     public void onEstimateEnd(final DualAbsoluteQuadricRobustEstimator estimator) {
+        // no action needed
     }
 
     @Override
-    public void onEstimateNextIteration(
-            final DualAbsoluteQuadricRobustEstimator estimator, final int iteration) {
+    public void onEstimateNextIteration(final DualAbsoluteQuadricRobustEstimator estimator, final int iteration) {
+        // no action needed
     }
 
     @Override
-    public void onEstimateProgressChange(
-            final DualAbsoluteQuadricRobustEstimator estimator, final float progress) {
+    public void onEstimateProgressChange(final DualAbsoluteQuadricRobustEstimator estimator, final float progress) {
+        // no action needed
     }
 }

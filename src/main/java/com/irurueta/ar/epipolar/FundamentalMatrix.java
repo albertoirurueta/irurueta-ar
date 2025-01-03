@@ -28,7 +28,6 @@ import com.irurueta.geometry.Line2D;
 import com.irurueta.geometry.NotAvailableException;
 import com.irurueta.geometry.PinholeCamera;
 import com.irurueta.geometry.Point2D;
-import com.irurueta.geometry.Point3D;
 import com.irurueta.geometry.Transformation2D;
 import com.irurueta.geometry.estimators.NotReadyException;
 
@@ -61,26 +60,26 @@ public class FundamentalMatrix implements Serializable {
      * Contains the internal representation of the fundamental matrix, which is
      * a 3x3 matrix having rank 2 defined up to scale.
      */
-    protected Matrix mInternalMatrix;
+    protected Matrix internalMatrix;
 
     /**
      * Indicates whether fundamental matrix has been normalized. Normalization
      * can be used to increase the accuracy of estimations, since fundamental
      * matrix is defined up to scale.
      */
-    protected boolean mNormalized;
+    protected boolean normalized;
 
     /**
      * Epipole for left view. Corresponds to the projection of the center of the
      * right camera on the left view.
      */
-    protected Point2D mLeftEpipole;
+    protected Point2D leftEpipole;
 
     /**
      * Epipole for right view. Corresponds to the projection of the center of
      * the left camera on the right view.
      */
-    protected Point2D mRightEpipole;
+    protected Point2D rightEpipole;
 
     /**
      * Constructor.
@@ -95,8 +94,7 @@ public class FundamentalMatrix implements Serializable {
      * @throws InvalidFundamentalMatrixException if provided matrix is not 3x3
      *                                           or does not have rank 2.
      */
-    public FundamentalMatrix(final Matrix internalMatrix)
-            throws InvalidFundamentalMatrixException {
+    public FundamentalMatrix(final Matrix internalMatrix) throws InvalidFundamentalMatrixException {
         internalSetInternalMatrix(internalMatrix);
     }
 
@@ -109,8 +107,8 @@ public class FundamentalMatrix implements Serializable {
      *                                       valid epipolar geometry (i.e. they are planed in a degenerate
      *                                       configuration).
      */
-    public FundamentalMatrix(final PinholeCamera leftCamera,
-                             final PinholeCamera rightCamera) throws InvalidPairOfCamerasException {
+    public FundamentalMatrix(final PinholeCamera leftCamera, final PinholeCamera rightCamera)
+            throws InvalidPairOfCamerasException {
         internalSetFromPairOfCameras(leftCamera, rightCamera);
     }
 
@@ -138,7 +136,7 @@ public class FundamentalMatrix implements Serializable {
         if (!isInternalMatrixAvailable()) {
             throw new NotAvailableException();
         }
-        return new Matrix(mInternalMatrix);
+        return new Matrix(internalMatrix);
     }
 
     /**
@@ -149,8 +147,7 @@ public class FundamentalMatrix implements Serializable {
      * @throws InvalidFundamentalMatrixException if provided matrix is not 3x3
      *                                           or does not have rank 2.
      */
-    public void setInternalMatrix(final Matrix internalMatrix)
-            throws InvalidFundamentalMatrixException {
+    public void setInternalMatrix(final Matrix internalMatrix) throws InvalidFundamentalMatrixException {
         internalSetInternalMatrix(internalMatrix);
     }
 
@@ -163,17 +160,16 @@ public class FundamentalMatrix implements Serializable {
      * @throws InvalidFundamentalMatrixException if provided matrix is not 3x3
      *                                           or does not have rank 2.
      */
-    private void internalSetInternalMatrix(final Matrix internalMatrix)
-            throws InvalidFundamentalMatrixException {
+    private void internalSetInternalMatrix(final Matrix internalMatrix) throws InvalidFundamentalMatrixException {
         if (!isValidInternalMatrix(internalMatrix)) {
             throw new InvalidFundamentalMatrixException();
         }
 
         // because provided matrix is valid, we proceed to setting it
 
-        mInternalMatrix = new Matrix(internalMatrix);
-        mNormalized = false;
-        mLeftEpipole = mRightEpipole = null;
+        this.internalMatrix = new Matrix(internalMatrix);
+        normalized = false;
+        leftEpipole = rightEpipole = null;
     }
 
     /**
@@ -189,8 +185,8 @@ public class FundamentalMatrix implements Serializable {
             return false;
         }
 
-        if (internalMatrix.getColumns() != FUNDAMENTAL_MATRIX_COLS ||
-                internalMatrix.getRows() != FUNDAMENTAL_MATRIX_ROWS) {
+        if (internalMatrix.getColumns() != FUNDAMENTAL_MATRIX_COLS
+                || internalMatrix.getRows() != FUNDAMENTAL_MATRIX_ROWS) {
             return false;
         }
 
@@ -216,9 +212,8 @@ public class FundamentalMatrix implements Serializable {
      *                                       valid epipolar geometry (i.e. they are planed in a degenerate
      *                                       configuration).
      */
-    public void setFromPairOfCameras(
-            final PinholeCamera leftCamera,
-            final PinholeCamera rightCamera) throws InvalidPairOfCamerasException {
+    public void setFromPairOfCameras(final PinholeCamera leftCamera, final PinholeCamera rightCamera)
+            throws InvalidPairOfCamerasException {
         internalSetFromPairOfCameras(leftCamera, rightCamera);
     }
 
@@ -231,9 +226,8 @@ public class FundamentalMatrix implements Serializable {
      *                                       valid epipolar geometry (i.e. they are planed in a degenerate
      *                                       configuration).
      */
-    private void internalSetFromPairOfCameras(
-            final PinholeCamera leftCamera,
-            final PinholeCamera rightCamera) throws InvalidPairOfCamerasException {
+    private void internalSetFromPairOfCameras(final PinholeCamera leftCamera, final PinholeCamera rightCamera)
+            throws InvalidPairOfCamerasException {
         try {
             // normalize cameras to increase accuracy of results and fix their
             // signs if needed
@@ -255,28 +249,24 @@ public class FundamentalMatrix implements Serializable {
                 rightCamera.decompose(false, true);
             }
 
-            final Point3D rightCameraCenter = rightCamera.getCameraCenter();
-            final Point2D leftEpipole = leftCamera.project(rightCameraCenter);
+            final var rightCameraCenter = rightCamera.getCameraCenter();
+            final var lEpipole = leftCamera.project(rightCameraCenter);
             // normalize to increase accuracy
-            leftEpipole.normalize();
+            lEpipole.normalize();
 
             // compute skew matrix of left epipole
-            final Matrix skewLeftEpipoleMatrix = Utils.skewMatrix(
-                    leftEpipole.asArray());
+            final var skewLeftEpipoleMatrix = Utils.skewMatrix(lEpipole.asArray());
             // transSkewLeftEpipoleMatrix = skewLeftEpipoleMatrix
             skewLeftEpipoleMatrix.transpose();
 
             // compute transposed of internal left pinhole camera
-            Matrix transLeftCameraMatrix = leftCamera.getInternalMatrix().
-                    transposeAndReturnNew();
+            var transLeftCameraMatrix = leftCamera.getInternalMatrix().transposeAndReturnNew();
 
             // compute transposed of internal right pinhole camera
-            Matrix transRightCameraMatrix = rightCamera.getInternalMatrix().
-                    transposeAndReturnNew();
+            var transRightCameraMatrix = rightCamera.getInternalMatrix().transposeAndReturnNew();
 
             // compute pseudo-inverse of transposed right pinhole camera
-            Matrix pseudoTransRightCameraMatrix = Utils.pseudoInverse(
-                    transRightCameraMatrix);
+            var pseudoTransRightCameraMatrix = Utils.pseudoInverse(transRightCameraMatrix);
 
             // compute pseudoTransRightCameraMatrix * transLeftCameraMatrix *
             // transSkewLeftEpipoleMatrix
@@ -290,9 +280,9 @@ public class FundamentalMatrix implements Serializable {
                 throw new InvalidPairOfCamerasException();
             }
 
-            mInternalMatrix = pseudoTransRightCameraMatrix;
-            mNormalized = false;
-            mLeftEpipole = mRightEpipole = null;
+            internalMatrix = pseudoTransRightCameraMatrix;
+            normalized = false;
+            leftEpipole = rightEpipole = null;
         } catch (final InvalidPairOfCamerasException e) {
             throw e;
         } catch (final AlgebraException | GeometryException e) {
@@ -308,8 +298,8 @@ public class FundamentalMatrix implements Serializable {
      * @throws InvalidFundamentalMatrixException if resulting fundamental matrix
      *                                           is invalid, typically because of numerical instabilities.
      */
-    public void setFromHomography(final Transformation2D homography,
-                                  final Point2D rightEpipole) throws InvalidFundamentalMatrixException {
+    public void setFromHomography(final Transformation2D homography, final Point2D rightEpipole)
+            throws InvalidFundamentalMatrixException {
         internalSetFromHomography(homography, rightEpipole);
     }
 
@@ -323,8 +313,7 @@ public class FundamentalMatrix implements Serializable {
      *                                           is invalid, typically because of numerical instabilities.
      */
     private void internalSetFromHomography(
-            final Transformation2D homography,
-            final Point2D rightEpipole) throws InvalidFundamentalMatrixException {
+            final Transformation2D homography, final Point2D rightEpipole) throws InvalidFundamentalMatrixException {
 
         rightEpipole.normalize();
 
@@ -348,7 +337,7 @@ public class FundamentalMatrix implements Serializable {
             throw new InvalidFundamentalMatrixException();
         }
 
-        mInternalMatrix = f;
+        internalMatrix = f;
     }
 
     /**
@@ -357,7 +346,7 @@ public class FundamentalMatrix implements Serializable {
      * @return true if internal matrix has been set, false otherwise.
      */
     public boolean isInternalMatrixAvailable() {
-        return mInternalMatrix != null;
+        return internalMatrix != null;
     }
 
     /**
@@ -367,9 +356,8 @@ public class FundamentalMatrix implements Serializable {
      * @return epipolar line on left view.
      * @throws NotReadyException if internal matrix has not yet been set.
      */
-    public Line2D getLeftEpipolarLine(final Point2D rightPoint)
-            throws NotReadyException {
-        final Line2D line = new Line2D();
+    public Line2D getLeftEpipolarLine(final Point2D rightPoint) throws NotReadyException {
+        final var line = new Line2D();
         leftEpipolarLine(rightPoint, line);
         return line;
     }
@@ -381,8 +369,7 @@ public class FundamentalMatrix implements Serializable {
      * @param result     line instance where result will be stored.
      * @throws NotReadyException if internal matrix has not yet been set.
      */
-    public void leftEpipolarLine(Point2D rightPoint, final Line2D result)
-            throws NotReadyException {
+    public void leftEpipolarLine(Point2D rightPoint, final Line2D result) throws NotReadyException {
 
         if (!isInternalMatrixAvailable()) {
             throw new NotReadyException();
@@ -398,16 +385,15 @@ public class FundamentalMatrix implements Serializable {
         normalize();
 
         // compute transposed fundamental matrix
-        final Matrix transFundMatrix = mInternalMatrix.transposeAndReturnNew();
+        final var transFundMatrix = internalMatrix.transposeAndReturnNew();
 
         // compute left epipolar line as the product of transposed fundamental
         // matrix with homogeneous right 2D point
-        final double[] rightPointArray = rightPoint.asArray();
-        final Matrix rightPointMatrix = Matrix.newFromArray(rightPointArray, true);
+        final var rightPointArray = rightPoint.asArray();
+        final var rightPointMatrix = Matrix.newFromArray(rightPointArray, true);
 
         try {
-            final Matrix leftEpipolarLineMatrix = transFundMatrix.
-                    multiplyAndReturnNew(rightPointMatrix);
+            final var leftEpipolarLineMatrix = transFundMatrix.multiplyAndReturnNew(rightPointMatrix);
 
             result.setParameters(leftEpipolarLineMatrix.getBuffer());
         } catch (final WrongSizeException ignore) {
@@ -425,9 +411,8 @@ public class FundamentalMatrix implements Serializable {
      * @return epipolar line on right view.
      * @throws NotReadyException if internal matrix has not yet been set.
      */
-    public Line2D getRightEpipolarLine(final Point2D leftPoint)
-            throws NotReadyException {
-        final Line2D line = new Line2D();
+    public Line2D getRightEpipolarLine(final Point2D leftPoint) throws NotReadyException {
+        final var line = new Line2D();
         rightEpipolarLine(leftPoint, line);
         return line;
     }
@@ -439,8 +424,7 @@ public class FundamentalMatrix implements Serializable {
      * @param result    line instance where result will be stored.
      * @throws NotReadyException if internal matrix has not yet been set.
      */
-    public void rightEpipolarLine(Point2D leftPoint, final Line2D result)
-            throws NotReadyException {
+    public void rightEpipolarLine(Point2D leftPoint, final Line2D result) throws NotReadyException {
 
         if (!isInternalMatrixAvailable()) {
             throw new NotReadyException();
@@ -457,11 +441,10 @@ public class FundamentalMatrix implements Serializable {
 
         // compute right epipolar line as the product of fundamental matrix with
         // homogeneous left 2D point
-        final double[] leftPointArray = leftPoint.asArray();
-        final Matrix leftPointMatrix = Matrix.newFromArray(leftPointArray, true);
+        final var leftPointArray = leftPoint.asArray();
+        final var leftPointMatrix = Matrix.newFromArray(leftPointArray, true);
         try {
-            final Matrix rightEpipolarPointMatrix =
-                    mInternalMatrix.multiplyAndReturnNew(leftPointMatrix);
+            final var rightEpipolarPointMatrix = internalMatrix.multiplyAndReturnNew(leftPointMatrix);
 
             result.setParameters(rightEpipolarPointMatrix.getBuffer());
         } catch (final WrongSizeException ignore) {
@@ -484,7 +467,7 @@ public class FundamentalMatrix implements Serializable {
             throw new NotAvailableException();
         }
 
-        return mLeftEpipole;
+        return leftEpipole;
     }
 
     /**
@@ -499,7 +482,7 @@ public class FundamentalMatrix implements Serializable {
             throw new NotAvailableException();
         }
 
-        return mRightEpipole;
+        return rightEpipole;
     }
 
     /**
@@ -510,16 +493,16 @@ public class FundamentalMatrix implements Serializable {
      * @throws NotReadyException if internal matrix has not already been set.
      */
     public void normalize() throws NotReadyException {
-        if (!mNormalized) {
+        if (!normalized) {
             if (!isInternalMatrixAvailable()) {
                 throw new NotReadyException();
             }
 
-            final double norm = Utils.normF(mInternalMatrix);
+            final var norm = Utils.normF(internalMatrix);
 
-            mInternalMatrix.multiplyByScalar(1.0 / norm);
+            internalMatrix.multiplyByScalar(1.0 / norm);
 
-            mNormalized = true;
+            normalized = true;
         }
     }
 
@@ -529,7 +512,7 @@ public class FundamentalMatrix implements Serializable {
      * @return true if this instance is normalized, false otherwise.
      */
     public boolean isNormalized() {
-        return mNormalized;
+        return normalized;
     }
 
     /**
@@ -540,8 +523,7 @@ public class FundamentalMatrix implements Serializable {
      * @throws InvalidFundamentalMatrixException if internal matrix is
      *                                           numerically unstable and epipoles couldn't be computed.
      */
-    public void computeEpipoles() throws NotReadyException,
-            InvalidFundamentalMatrixException {
+    public void computeEpipoles() throws NotReadyException, InvalidFundamentalMatrixException {
         if (!isInternalMatrixAvailable()) {
             throw new NotReadyException();
         }
@@ -554,24 +536,22 @@ public class FundamentalMatrix implements Serializable {
         // last singular value is zero
 
         // F = U*S*V'
-        final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                mInternalMatrix);
+        final var decomposer = new SingularValueDecomposer(internalMatrix);
 
         try {
             decomposer.decompose();
 
-            final Matrix u = decomposer.getU();
-            final Matrix v = decomposer.getV();
-            final double[] array = new double[
-                    Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH];
+            final var u = decomposer.getU();
+            final var v = decomposer.getV();
+            final var array = new double[Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH];
 
             // left epipole is the last column of V (right null-space)
             v.getSubmatrixAsArray(0, 2, 2, 2, array);
-            mLeftEpipole = new HomogeneousPoint2D(array);
+            leftEpipole = new HomogeneousPoint2D(array);
 
             // right epipole is the last column of U (left null-space)
             u.getSubmatrixAsArray(0, 2, 2, 2, array);
-            mRightEpipole = new HomogeneousPoint2D(array);
+            rightEpipole = new HomogeneousPoint2D(array);
         } catch (final AlgebraException e) {
             throw new InvalidFundamentalMatrixException(e);
         }
@@ -585,7 +565,7 @@ public class FundamentalMatrix implements Serializable {
      */
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean areEpipolesAvailable() {
-        return mLeftEpipole != null && mRightEpipole != null;
+        return leftEpipole != null && rightEpipole != null;
     }
 
     /**
@@ -624,11 +604,9 @@ public class FundamentalMatrix implements Serializable {
      */
     public void generateCamerasInArbitraryProjectiveSpace(
             final PinholeCamera leftCamera, final PinholeCamera rightCamera,
-            final double referencePlaneDirectorVectorX,
-            final double referencePlaneDirectorVectorY,
-            final double referencePlaneDirectorVectorZ,
-            final double scaleFactor) throws InvalidFundamentalMatrixException,
-            NotReadyException {
+            final double referencePlaneDirectorVectorX, final double referencePlaneDirectorVectorY,
+            final double referencePlaneDirectorVectorZ, final double scaleFactor)
+            throws InvalidFundamentalMatrixException, NotReadyException {
 
         normalize();
 
@@ -636,39 +614,34 @@ public class FundamentalMatrix implements Serializable {
             if (!areEpipolesAvailable()) {
                 computeEpipoles();
             }
-            final Point2D rightEpipole = getRightEpipole();
-            rightEpipole.normalize();
+            final var rEpipole = getRightEpipole();
+            rEpipole.normalize();
 
-            final Matrix e2 = new Matrix(
-                    Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH, 1);
-            e2.setElementAtIndex(0, rightEpipole.getHomX());
-            e2.setElementAtIndex(1, rightEpipole.getHomY());
-            e2.setElementAtIndex(2, rightEpipole.getHomW());
+            final var e2 = new Matrix(Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH, 1);
+            e2.setElementAtIndex(0, rEpipole.getHomX());
+            e2.setElementAtIndex(1, rEpipole.getHomY());
+            e2.setElementAtIndex(2, rEpipole.getHomW());
 
-            final Matrix tmp = Utils.skewMatrix(e2);
-            tmp.multiply(mInternalMatrix);
+            final var tmp = Utils.skewMatrix(e2);
+            tmp.multiply(internalMatrix);
 
-            if (referencePlaneDirectorVectorX != 0.0 ||
-                    referencePlaneDirectorVectorY != 0.0 ||
-                    referencePlaneDirectorVectorZ != 0.0) {
-                final Matrix tmp2 = new Matrix(
-                        1, Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH);
+            if (referencePlaneDirectorVectorX != 0.0 || referencePlaneDirectorVectorY != 0.0
+                    || referencePlaneDirectorVectorZ != 0.0) {
+                final var tmp2 = new Matrix(1, Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH);
                 tmp2.setElementAtIndex(0, referencePlaneDirectorVectorX);
                 tmp2.setElementAtIndex(1, referencePlaneDirectorVectorY);
                 tmp2.setElementAtIndex(2, referencePlaneDirectorVectorZ);
-                final Matrix tmp3 = e2.multiplyAndReturnNew(tmp2);
+                final var tmp3 = e2.multiplyAndReturnNew(tmp2);
 
                 tmp.add(tmp3);
             }
 
             e2.multiplyByScalar(scaleFactor);
 
-            final Matrix leftCameraMatrix = Matrix.identity(
-                    PinholeCamera.PINHOLE_CAMERA_MATRIX_ROWS,
+            final var leftCameraMatrix = Matrix.identity(PinholeCamera.PINHOLE_CAMERA_MATRIX_ROWS,
                     PinholeCamera.PINHOLE_CAMERA_MATRIX_COLS);
 
-            final Matrix rightCameraMatrix = new Matrix(
-                    PinholeCamera.PINHOLE_CAMERA_MATRIX_ROWS,
+            final var rightCameraMatrix = new Matrix(PinholeCamera.PINHOLE_CAMERA_MATRIX_ROWS,
                     PinholeCamera.PINHOLE_CAMERA_MATRIX_COLS);
             rightCameraMatrix.setSubmatrix(0, 0, 2, 2, tmp);
             rightCameraMatrix.setSubmatrix(0, 3, 2, 3, e2);
@@ -703,7 +676,7 @@ public class FundamentalMatrix implements Serializable {
     public void generateCamerasInArbitraryProjectiveSpace(
             final PinholeCamera leftCamera, final PinholeCamera rightCamera)
             throws InvalidFundamentalMatrixException, NotReadyException {
-        generateCamerasInArbitraryProjectiveSpace(leftCamera, rightCamera,
-                0.0, 0.0, 0.0, 1.0);
+        generateCamerasInArbitraryProjectiveSpace(leftCamera, rightCamera, 0.0,
+                0.0, 0.0, 1.0);
     }
 }

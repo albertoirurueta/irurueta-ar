@@ -32,8 +32,7 @@ import java.util.List;
  * Finds the best dual absolute quadric (DAQ) for provided collection of
  * cameras using PROSAC algorithm.
  */
-public class PROSACDualAbsoluteQuadricRobustEstimator extends
-        DualAbsoluteQuadricRobustEstimator {
+public class PROSACDualAbsoluteQuadricRobustEstimator extends DualAbsoluteQuadricRobustEstimator {
 
     /**
      * Constant defining default threshold to determine whether cameras are
@@ -55,20 +54,20 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
      * possible estimation solutions.
      * The threshold refers to the amount of error a possible solution has.
      */
-    private double mThreshold;
+    private double threshold;
 
     /**
      * Quality scores corresponding to each provided homography.
      * The larger the score value the better the quality of the sample.
      */
-    private double[] mQualityScores;
+    private double[] qualityScores;
 
     /**
      * Constructor.
      */
     public PROSACDualAbsoluteQuadricRobustEstimator() {
         super();
-        mThreshold = DEFAULT_THRESHOLD;
+        threshold = DEFAULT_THRESHOLD;
     }
 
     /**
@@ -77,10 +76,9 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      */
-    public PROSACDualAbsoluteQuadricRobustEstimator(
-            final DualAbsoluteQuadricRobustEstimatorListener listener) {
+    public PROSACDualAbsoluteQuadricRobustEstimator(final DualAbsoluteQuadricRobustEstimatorListener listener) {
         super(listener);
-        mThreshold = DEFAULT_THRESHOLD;
+        threshold = DEFAULT_THRESHOLD;
     }
 
     /**
@@ -93,7 +91,7 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
      */
     public PROSACDualAbsoluteQuadricRobustEstimator(final List<PinholeCamera> cameras) {
         super(cameras);
-        mThreshold = DEFAULT_THRESHOLD;
+        threshold = DEFAULT_THRESHOLD;
     }
 
     /**
@@ -109,7 +107,7 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
     public PROSACDualAbsoluteQuadricRobustEstimator(
             final List<PinholeCamera> cameras, final DualAbsoluteQuadricRobustEstimatorListener listener) {
         super(cameras, listener);
-        mThreshold = DEFAULT_THRESHOLD;
+        threshold = DEFAULT_THRESHOLD;
     }
 
     /**
@@ -174,8 +172,7 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
      *                                  don't have the same size.
      */
     public PROSACDualAbsoluteQuadricRobustEstimator(
-            final List<PinholeCamera> cameras,
-            final double[] qualityScores,
+            final List<PinholeCamera> cameras, final double[] qualityScores,
             final DualAbsoluteQuadricRobustEstimatorListener listener) {
         this(cameras, listener);
         internalSetQualityScores(qualityScores);
@@ -190,7 +187,7 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
      * testing possible estimation solutions.
      */
     public double getThreshold() {
-        return mThreshold;
+        return threshold;
     }
 
     /**
@@ -212,7 +209,7 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
         if (threshold <= MIN_THRESHOLD) {
             throw new IllegalArgumentException();
         }
-        mThreshold = threshold;
+        this.threshold = threshold;
     }
 
     /**
@@ -223,7 +220,7 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
      */
     @Override
     public double[] getQualityScores() {
-        return mQualityScores;
+        return qualityScores;
     }
 
     /**
@@ -254,8 +251,7 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
      */
     @Override
     public boolean isReady() {
-        return super.isReady() && mQualityScores != null &&
-                mQualityScores.length == mCameras.size();
+        return super.isReady() && qualityScores != null && qualityScores.length == cameras.size();
     }
 
     /**
@@ -270,8 +266,7 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
      */
     @SuppressWarnings("DuplicatedCode")
     @Override
-    public DualAbsoluteQuadric estimate() throws LockedException,
-            NotReadyException, RobustEstimatorException {
+    public DualAbsoluteQuadric estimate() throws LockedException, NotReadyException, RobustEstimatorException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -279,117 +274,106 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
             throw new NotReadyException();
         }
 
-        final PROSACRobustEstimator<DualAbsoluteQuadric> innerEstimator =
-                new PROSACRobustEstimator<>(
-                        new PROSACRobustEstimatorListener<DualAbsoluteQuadric>() {
+        final var innerEstimator = new PROSACRobustEstimator<DualAbsoluteQuadric>(
+                new PROSACRobustEstimatorListener<>() {
 
-                            // subset of cameras picked on each iteration
-                            private final List<PinholeCamera> mSubsetCameras =
-                                    new ArrayList<>();
+                    // subset of cameras picked on each iteration
+                    private final List<PinholeCamera> subsetCameras = new ArrayList<>();
 
-                            @Override
-                            public double getThreshold() {
-                                return mThreshold;
-                            }
+                    @Override
+                    public double getThreshold() {
+                        return threshold;
+                    }
 
-                            @Override
-                            public int getTotalSamples() {
-                                return mCameras.size();
-                            }
+                    @Override
+                    public int getTotalSamples() {
+                        return cameras.size();
+                    }
 
-                            @Override
-                            public int getSubsetSize() {
-                                return mDAQEstimator.getMinNumberOfRequiredCameras();
-                            }
+                    @Override
+                    public int getSubsetSize() {
+                        return daqEstimator.getMinNumberOfRequiredCameras();
+                    }
 
-                            @Override
-                            public void estimatePreliminarSolutions(
-                                    final int[] samplesIndices, final List<DualAbsoluteQuadric> solutions) {
-                                mSubsetCameras.clear();
-                                for (final int samplesIndex : samplesIndices) {
-                                    mSubsetCameras.add(mCameras.get(samplesIndex));
-                                }
+                    @Override
+                    public void estimatePreliminarSolutions(
+                            final int[] samplesIndices, final List<DualAbsoluteQuadric> solutions) {
+                        subsetCameras.clear();
+                        for (final var samplesIndex : samplesIndices) {
+                            subsetCameras.add(cameras.get(samplesIndex));
+                        }
 
-                                try {
-                                    mDAQEstimator.setLMSESolutionAllowed(false);
-                                    mDAQEstimator.setCameras(mSubsetCameras);
+                        try {
+                            daqEstimator.setLMSESolutionAllowed(false);
+                            daqEstimator.setCameras(subsetCameras);
 
-                                    final DualAbsoluteQuadric daq = mDAQEstimator.estimate();
-                                    solutions.add(daq);
-                                } catch (final Exception e) {
-                                    // if anything fails, no solution is added
-                                }
-                            }
+                            final var daq = daqEstimator.estimate();
+                            solutions.add(daq);
+                        } catch (final Exception e) {
+                            // if anything fails, no solution is added
+                        }
+                    }
 
-                            @Override
-                            public double computeResidual(
-                                    final DualAbsoluteQuadric currentEstimation, final int i) {
-                                return residual(currentEstimation, mCameras.get(i));
-                            }
+                    @Override
+                    public double computeResidual(final DualAbsoluteQuadric currentEstimation, final int i) {
+                        return residual(currentEstimation, cameras.get(i));
+                    }
 
-                            @Override
-                            public boolean isReady() {
-                                return PROSACDualAbsoluteQuadricRobustEstimator.this.isReady();
-                            }
+                    @Override
+                    public boolean isReady() {
+                        return PROSACDualAbsoluteQuadricRobustEstimator.this.isReady();
+                    }
 
-                            @Override
-                            public void onEstimateStart(
-                                    final RobustEstimator<DualAbsoluteQuadric> estimator) {
-                                if (mListener != null) {
-                                    mListener.onEstimateStart(
-                                            PROSACDualAbsoluteQuadricRobustEstimator.this);
-                                }
-                            }
+                    @Override
+                    public void onEstimateStart(final RobustEstimator<DualAbsoluteQuadric> estimator) {
+                        if (listener != null) {
+                            listener.onEstimateStart(PROSACDualAbsoluteQuadricRobustEstimator.this);
+                        }
+                    }
 
-                            @Override
-                            public void onEstimateEnd(
-                                    final RobustEstimator<DualAbsoluteQuadric> estimator) {
-                                if (mListener != null) {
-                                    mListener.onEstimateEnd(
-                                            PROSACDualAbsoluteQuadricRobustEstimator.this);
-                                }
-                            }
+                    @Override
+                    public void onEstimateEnd(final RobustEstimator<DualAbsoluteQuadric> estimator) {
+                        if (listener != null) {
+                            listener.onEstimateEnd(PROSACDualAbsoluteQuadricRobustEstimator.this);
+                        }
+                    }
 
-                            @Override
-                            public void onEstimateNextIteration(
-                                    final RobustEstimator<DualAbsoluteQuadric> estimator,
-                                    final int iteration) {
-                                if (mListener != null) {
-                                    mListener.onEstimateNextIteration(
-                                            PROSACDualAbsoluteQuadricRobustEstimator.this,
-                                            iteration);
-                                }
-                            }
+                    @Override
+                    public void onEstimateNextIteration(
+                            final RobustEstimator<DualAbsoluteQuadric> estimator, final int iteration) {
+                        if (listener != null) {
+                            listener.onEstimateNextIteration(
+                                    PROSACDualAbsoluteQuadricRobustEstimator.this, iteration);
+                        }
+                    }
 
-                            @Override
-                            public void onEstimateProgressChange(
-                                    final RobustEstimator<DualAbsoluteQuadric> estimator,
-                                    final float progress) {
-                                if (mListener != null) {
-                                    mListener.onEstimateProgressChange(
-                                            PROSACDualAbsoluteQuadricRobustEstimator.this,
-                                            progress);
-                                }
-                            }
+                    @Override
+                    public void onEstimateProgressChange(
+                            final RobustEstimator<DualAbsoluteQuadric> estimator, final float progress) {
+                        if (listener != null) {
+                            listener.onEstimateProgressChange(
+                                    PROSACDualAbsoluteQuadricRobustEstimator.this, progress);
+                        }
+                    }
 
-                            @Override
-                            public double[] getQualityScores() {
-                                return mQualityScores;
-                            }
-                        });
+                    @Override
+                    public double[] getQualityScores() {
+                        return qualityScores;
+                    }
+                });
 
         try {
-            mLocked = true;
-            innerEstimator.setConfidence(mConfidence);
-            innerEstimator.setMaxIterations(mMaxIterations);
-            innerEstimator.setProgressDelta(mProgressDelta);
+            locked = true;
+            innerEstimator.setConfidence(confidence);
+            innerEstimator.setMaxIterations(maxIterations);
+            innerEstimator.setProgressDelta(progressDelta);
             return innerEstimator.estimate();
         } catch (final com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
         } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
         } finally {
-            mLocked = false;
+            locked = false;
         }
     }
 
@@ -414,9 +398,9 @@ public class PROSACDualAbsoluteQuadricRobustEstimator extends
      *                                  settings.
      */
     private void internalSetQualityScores(final double[] qualityScores) {
-        if (qualityScores.length < mDAQEstimator.getMinNumberOfRequiredCameras()) {
+        if (qualityScores.length < daqEstimator.getMinNumberOfRequiredCameras()) {
             throw new IllegalArgumentException();
         }
-        mQualityScores = qualityScores;
+        this.qualityScores = qualityScores;
     }
 }

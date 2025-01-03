@@ -30,17 +30,16 @@ import com.irurueta.numerical.robust.RobustEstimatorException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import com.irurueta.statistics.GaussianRandomizer;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.List;
-import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class HomogeneousRightEpipoleRefinerTest implements RefinerListener<Point2D> {
+class HomogeneousRightEpipoleRefinerTest implements RefinerListener<Point2D> {
 
     private static final double MIN_RANDOM_VALUE = -1500.0;
     private static final double MAX_RANDOM_VALUE = 1500.0;
@@ -69,21 +68,19 @@ public class HomogeneousRightEpipoleRefinerTest implements RefinerListener<Point
     private int refineEnd;
 
     @Test
-    public void testConstructor() throws GeometryException,
-            AlgebraException, RobustEstimatorException {
-        final double refinementStandardDeviation = 1.0;
-        final PinholeCamera camera1 = new PinholeCamera();
-        final PinholeCamera camera2 = new PinholeCamera();
-        final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix();
-        final List<Point2D> samples1 = new ArrayList<>();
-        final List<Point2D> samples2 = new ArrayList<>();
-        final Transformation2D homography = generateHomography(camera1, camera2,
-                fundamentalMatrix, samples1, samples2);
+    void testConstructor() throws GeometryException, AlgebraException, RobustEstimatorException {
+        final var refinementStandardDeviation = 1.0;
+        final var camera1 = new PinholeCamera();
+        final var camera2 = new PinholeCamera();
+        final var fundamentalMatrix = new FundamentalMatrix();
+        final var samples1 = new ArrayList<Point2D>();
+        final var samples2 = new ArrayList<Point2D>();
+        final var homography = generateHomography(camera1, camera2, fundamentalMatrix, samples1, samples2);
 
-        final int numPoints = samples1.size();
-        final BitSet inliers = new BitSet(numPoints);
-        final double[] residuals = new double[numPoints];
-        final InliersData inliersData = new InliersData() {
+        final var numPoints = samples1.size();
+        final var inliers = new BitSet(numPoints);
+        final var res = new double[numPoints];
+        final var inliersData = new InliersData() {
             @Override
             public BitSet getInliers() {
                 return inliers;
@@ -91,7 +88,7 @@ public class HomogeneousRightEpipoleRefinerTest implements RefinerListener<Point
 
             @Override
             public double[] getResiduals() {
-                return residuals;
+                return res;
             }
 
             @Override
@@ -99,13 +96,13 @@ public class HomogeneousRightEpipoleRefinerTest implements RefinerListener<Point
                 return numPoints;
             }
         };
-        final int numInliers = inliersData.getNumInliers();
+        final var numInliers = inliersData.getNumInliers();
 
         fundamentalMatrix.normalize();
         fundamentalMatrix.computeEpipoles();
-        final Point2D rightEpipole = fundamentalMatrix.getRightEpipole();
+        final var rightEpipole = fundamentalMatrix.getRightEpipole();
 
-        HomogeneousRightEpipoleRefiner refiner = new HomogeneousRightEpipoleRefiner();
+        var refiner = new HomogeneousRightEpipoleRefiner();
 
         // check default values
         assertEquals(0.0, refiner.getRefinementStandardDeviation(), 0.0);
@@ -124,8 +121,8 @@ public class HomogeneousRightEpipoleRefinerTest implements RefinerListener<Point
         assertNull(refiner.getListener());
 
         // test non-empty constructor
-        refiner = new HomogeneousRightEpipoleRefiner(rightEpipole, true, inliers,
-                residuals, numInliers, samples1, samples2, refinementStandardDeviation, homography);
+        refiner = new HomogeneousRightEpipoleRefiner(rightEpipole, true, inliers, res, numInliers,
+                samples1, samples2, refinementStandardDeviation, homography);
 
         // check default values
         assertEquals(refinementStandardDeviation, refiner.getRefinementStandardDeviation(), 0.0);
@@ -134,7 +131,7 @@ public class HomogeneousRightEpipoleRefinerTest implements RefinerListener<Point
         assertSame(samples2, refiner.getSamples2());
         assertTrue(refiner.isReady());
         assertSame(inliers, refiner.getInliers());
-        assertSame(residuals, refiner.getResiduals());
+        assertSame(res, refiner.getResiduals());
         assertEquals(numPoints, refiner.getNumInliers());
         assertEquals(numPoints, refiner.getTotalSamples());
         assertSame(rightEpipole, refiner.getInitialEstimation());
@@ -144,18 +141,17 @@ public class HomogeneousRightEpipoleRefinerTest implements RefinerListener<Point
         assertNull(refiner.getListener());
 
         // test non-empty constructor with InliersData
-        refiner = new HomogeneousRightEpipoleRefiner(rightEpipole, true, inliersData,
-                samples1, samples2, refinementStandardDeviation, homography);
+        refiner = new HomogeneousRightEpipoleRefiner(rightEpipole, true, inliersData, samples1, samples2,
+                refinementStandardDeviation, homography);
 
         // check default values
-        assertEquals(refiner.getRefinementStandardDeviation(),
-                refinementStandardDeviation, 0.0);
+        assertEquals(refinementStandardDeviation, refiner.getRefinementStandardDeviation(), 0.0);
         assertSame(homography, refiner.getHomography());
         assertSame(samples1, refiner.getSamples1());
         assertSame(samples2, refiner.getSamples2());
         assertTrue(refiner.isReady());
         assertSame(inliers, refiner.getInliers());
-        assertSame(residuals, refiner.getResiduals());
+        assertSame(res, refiner.getResiduals());
         assertEquals(numPoints, refiner.getNumInliers());
         assertEquals(numPoints, refiner.getTotalSamples());
         assertSame(rightEpipole, refiner.getInitialEstimation());
@@ -166,8 +162,8 @@ public class HomogeneousRightEpipoleRefinerTest implements RefinerListener<Point
     }
 
     @Test
-    public void testGetSetListener() {
-        final HomogeneousRightEpipoleRefiner refiner = new HomogeneousRightEpipoleRefiner();
+    void testGetSetListener() {
+        final var refiner = new HomogeneousRightEpipoleRefiner();
 
         // check default value
         assertNull(refiner.getListener());
@@ -180,16 +176,15 @@ public class HomogeneousRightEpipoleRefinerTest implements RefinerListener<Point
     }
 
     @Test
-    public void testGetSetRefinementStandardDeviation() throws LockedException {
-        final HomogeneousRightEpipoleRefiner refiner = new HomogeneousRightEpipoleRefiner();
+    void testGetSetRefinementStandardDeviation() throws LockedException {
+        final var refiner = new HomogeneousRightEpipoleRefiner();
 
         // check default value
         assertEquals(0.0, refiner.getRefinementStandardDeviation(), 0.0);
 
         // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double refinementStandardDeviation = randomizer.nextDouble(
-                MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var randomizer = new UniformRandomizer();
+        final var refinementStandardDeviation = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
         refiner.setRefinementStandardDeviation(refinementStandardDeviation);
 
         // check correctness
@@ -197,14 +192,14 @@ public class HomogeneousRightEpipoleRefinerTest implements RefinerListener<Point
     }
 
     @Test
-    public void testGetSetHomography() throws LockedException {
-        final HomogeneousRightEpipoleRefiner refiner = new HomogeneousRightEpipoleRefiner();
+    void testGetSetHomography() throws LockedException {
+        final var refiner = new HomogeneousRightEpipoleRefiner();
 
         // check default value
         assertNull(refiner.getHomography());
 
         // set new value
-        final ProjectiveTransformation2D homography = new ProjectiveTransformation2D();
+        final var homography = new ProjectiveTransformation2D();
         refiner.setHomography(homography);
 
         // check correctness
@@ -212,14 +207,14 @@ public class HomogeneousRightEpipoleRefinerTest implements RefinerListener<Point
     }
 
     @Test
-    public void testGetSetSamples1() throws LockedException {
-        final HomogeneousRightEpipoleRefiner refiner = new HomogeneousRightEpipoleRefiner();
+    void testGetSetSamples1() throws LockedException {
+        final var refiner = new HomogeneousRightEpipoleRefiner();
 
         // check default value
         assertNull(refiner.getSamples1());
 
         // set new value
-        final List<Point2D> samples1 = new ArrayList<>();
+        final var samples1 = new ArrayList<Point2D>();
         refiner.setSamples1(samples1);
 
         // check correctness
@@ -227,14 +222,14 @@ public class HomogeneousRightEpipoleRefinerTest implements RefinerListener<Point
     }
 
     @Test
-    public void testGetSetSamples2() throws LockedException {
-        final HomogeneousRightEpipoleRefiner refiner = new HomogeneousRightEpipoleRefiner();
+    void testGetSetSamples2() throws LockedException {
+        final var refiner = new HomogeneousRightEpipoleRefiner();
 
         // check default value
         assertNull(refiner.getSamples2());
 
         // set new value
-        final List<Point2D> samples2 = new ArrayList<>();
+        final var samples2 = new ArrayList<Point2D>();
         refiner.setSamples2(samples2);
 
         // check correctness
@@ -242,14 +237,14 @@ public class HomogeneousRightEpipoleRefinerTest implements RefinerListener<Point
     }
 
     @Test
-    public void testGetSetInliers() throws LockedException {
-        final HomogeneousRightEpipoleRefiner refiner = new HomogeneousRightEpipoleRefiner();
+    void testGetSetInliers() throws LockedException {
+        final var refiner = new HomogeneousRightEpipoleRefiner();
 
         // check default value
         assertNull(refiner.getInliers());
 
         // set new value
-        final BitSet inliers = new BitSet(100);
+        final var inliers = new BitSet(100);
         refiner.setInliers(inliers);
 
         // check correctness
@@ -257,14 +252,14 @@ public class HomogeneousRightEpipoleRefinerTest implements RefinerListener<Point
     }
 
     @Test
-    public void testGetSetResiduals() throws LockedException {
-        final HomogeneousRightEpipoleRefiner refiner = new HomogeneousRightEpipoleRefiner();
+    void testGetSetResiduals() throws LockedException {
+        final var refiner = new HomogeneousRightEpipoleRefiner();
 
         // check default value
         assertNull(refiner.getResiduals());
 
         // set new value
-        final double[] residuals = new double[100];
+        final var residuals = new double[100];
         refiner.setResiduals(residuals);
 
         // check correctness
@@ -272,8 +267,8 @@ public class HomogeneousRightEpipoleRefinerTest implements RefinerListener<Point
     }
 
     @Test
-    public void testGetSetNumInliers() throws LockedException {
-        final HomogeneousRightEpipoleRefiner refiner = new HomogeneousRightEpipoleRefiner();
+    void testGetSetNumInliers() throws LockedException {
+        final var refiner = new HomogeneousRightEpipoleRefiner();
 
         // check default value
         assertEquals(0, refiner.getNumInliers());
@@ -286,11 +281,11 @@ public class HomogeneousRightEpipoleRefinerTest implements RefinerListener<Point
     }
 
     @Test
-    public void testSetInliersData() throws LockedException {
-        final int numPoints = MIN_NUM_POINTS;
-        final BitSet inliers = new BitSet(numPoints);
-        final double[] residuals = new double[numPoints];
-        final InliersData inliersData = new InliersData() {
+    void testSetInliersData() throws LockedException {
+        final var numPoints = MIN_NUM_POINTS;
+        final var inliers = new BitSet(numPoints);
+        final var res = new double[numPoints];
+        final var inliersData = new InliersData() {
             @Override
             public BitSet getInliers() {
                 return inliers;
@@ -298,7 +293,7 @@ public class HomogeneousRightEpipoleRefinerTest implements RefinerListener<Point
 
             @Override
             public double[] getResiduals() {
-                return residuals;
+                return res;
             }
 
             @Override
@@ -306,9 +301,9 @@ public class HomogeneousRightEpipoleRefinerTest implements RefinerListener<Point
                 return numPoints;
             }
         };
-        final int numInliers = inliersData.getNumInliers();
+        final var numInliers = inliersData.getNumInliers();
 
-        final HomogeneousRightEpipoleRefiner refiner = new HomogeneousRightEpipoleRefiner();
+        final var refiner = new HomogeneousRightEpipoleRefiner();
 
         // check default values
         assertNull(refiner.getInliers());
@@ -320,19 +315,19 @@ public class HomogeneousRightEpipoleRefinerTest implements RefinerListener<Point
 
         // check correctness
         assertSame(inliers, refiner.getInliers());
-        assertSame(residuals, refiner.getResiduals());
+        assertSame(res, refiner.getResiduals());
         assertEquals(numInliers, refiner.getNumInliers());
     }
 
     @Test
-    public void testGetSetInitialEstimation() throws LockedException {
-        final HomogeneousRightEpipoleRefiner refiner = new HomogeneousRightEpipoleRefiner();
+    void testGetSetInitialEstimation() throws LockedException {
+        final var refiner = new HomogeneousRightEpipoleRefiner();
 
         // check default value
         assertNull(refiner.getInitialEstimation());
 
         // set new value
-        final HomogeneousPoint2D initialEstimation = new HomogeneousPoint2D();
+        final var initialEstimation = new HomogeneousPoint2D();
         refiner.setInitialEstimation(initialEstimation);
 
         // check correctness
@@ -340,8 +335,8 @@ public class HomogeneousRightEpipoleRefinerTest implements RefinerListener<Point
     }
 
     @Test
-    public void testIsSetCovarianceKept() throws LockedException {
-        final HomogeneousRightEpipoleRefiner refiner = new HomogeneousRightEpipoleRefiner();
+    void testIsSetCovarianceKept() throws LockedException {
+        final var refiner = new HomogeneousRightEpipoleRefiner();
 
         // check default value
         assertFalse(refiner.isCovarianceKept());
@@ -354,52 +349,46 @@ public class HomogeneousRightEpipoleRefinerTest implements RefinerListener<Point
     }
 
     @Test
-    public void testRefine() throws GeometryException,
-            AlgebraException, RobustEstimatorException {
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final PinholeCamera camera1 = new PinholeCamera();
-            final PinholeCamera camera2 = new PinholeCamera();
-            final FundamentalMatrix groundTruthFundamentalMatrix = new FundamentalMatrix();
-            final List<Point2D> samples1 = new ArrayList<>();
-            final List<Point2D> samples2 = new ArrayList<>();
-            final Transformation2D homography = generateHomography(camera1, camera2,
-                    groundTruthFundamentalMatrix, samples1, samples2);
+    void testRefine() throws GeometryException, AlgebraException, RobustEstimatorException {
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var camera1 = new PinholeCamera();
+            final var camera2 = new PinholeCamera();
+            final var groundTruthFundamentalMatrix = new FundamentalMatrix();
+            final var samples1 = new ArrayList<Point2D>();
+            final var samples2 = new ArrayList<Point2D>();
+            final var homography = generateHomography(camera1, camera2, groundTruthFundamentalMatrix, samples1,
+                    samples2);
 
-            final int numPoints = samples1.size();
-            final BitSet inliers = new BitSet(numPoints);
+            final var numPoints = samples1.size();
+            final var inliers = new BitSet(numPoints);
             inliers.set(0, numPoints);
-            final double[] residuals = new double[numPoints];
+            final var residuals = new double[numPoints];
             Arrays.fill(residuals, 1.0);
 
             groundTruthFundamentalMatrix.normalize();
             groundTruthFundamentalMatrix.computeEpipoles();
-            final Point2D groundTruthRightEpipole =
-                    groundTruthFundamentalMatrix.getRightEpipole();
+            final var groundTruthRightEpipole = groundTruthFundamentalMatrix.getRightEpipole();
 
             // add noise to epipole
-            final GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
-                    new Random(), 0.0, ERROR_STD);
-            final double noiseX = noiseRandomizer.nextDouble();
-            final double noiseY = noiseRandomizer.nextDouble();
-            final HomogeneousPoint2D noisyRightEpipole = new HomogeneousPoint2D(
-                    groundTruthRightEpipole.getInhomX() + noiseX,
+            final var noiseRandomizer = new GaussianRandomizer(0.0, ERROR_STD);
+            final var noiseX = noiseRandomizer.nextDouble();
+            final var noiseY = noiseRandomizer.nextDouble();
+            final var noisyRightEpipole = new HomogeneousPoint2D(groundTruthRightEpipole.getInhomX() + noiseX,
                     groundTruthRightEpipole.getInhomY() + noiseY, 1.0);
             noisyRightEpipole.normalize();
 
-            final HomogeneousRightEpipoleRefiner refiner = new HomogeneousRightEpipoleRefiner(
-                    noisyRightEpipole, true, inliers, residuals, numPoints,
-                    samples1, samples2, ERROR_STD,
-                    homography);
+            final var refiner = new HomogeneousRightEpipoleRefiner(noisyRightEpipole, true, inliers,
+                    residuals, numPoints, samples1, samples2, ERROR_STD, homography);
             refiner.setListener(this);
 
             reset();
             assertEquals(0, refineStart);
             assertEquals(0, refineEnd);
 
-            final HomogeneousPoint2D refinedEpipole1 = new HomogeneousPoint2D();
+            final var refinedEpipole1 = new HomogeneousPoint2D();
             refiner.refine(refinedEpipole1);
-            final Point2D refinedEpipole2 = refiner.refine();
+            final var refinedEpipole2 = refiner.refine();
 
             assertEquals(2, refineStart);
             assertEquals(2, refineEnd);
@@ -416,21 +405,21 @@ public class HomogeneousRightEpipoleRefinerTest implements RefinerListener<Point
             }
             assertTrue(refinedEpipole2.equals(groundTruthRightEpipole, ABSOLUTE_ERROR));
 
-            final FundamentalMatrix refinedFundamentalMatrix1 = new FundamentalMatrix();
-            HomogeneousRightEpipoleRefiner.computeFundamentalMatrix(homography,
-                    refinedEpipole1, refinedFundamentalMatrix1);
+            final var refinedFundamentalMatrix1 = new FundamentalMatrix();
+            HomogeneousRightEpipoleRefiner.computeFundamentalMatrix(homography, refinedEpipole1,
+                    refinedFundamentalMatrix1);
             refinedFundamentalMatrix1.normalize();
 
-            final FundamentalMatrix refinedFundamentalMatrix2 = new FundamentalMatrix();
-            HomogeneousRightEpipoleRefiner.computeFundamentalMatrix(homography,
-                    new HomogeneousPoint2D(refinedEpipole2), refinedFundamentalMatrix2);
+            final var refinedFundamentalMatrix2 = new FundamentalMatrix();
+            HomogeneousRightEpipoleRefiner.computeFundamentalMatrix(homography, new HomogeneousPoint2D(refinedEpipole2),
+                    refinedFundamentalMatrix2);
             refinedFundamentalMatrix2.normalize();
 
             // check correctness
             if (!groundTruthFundamentalMatrix.getInternalMatrix().equals(
                     refinedFundamentalMatrix1.getInternalMatrix(), ABSOLUTE_ERROR)
-                    && !groundTruthFundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1.0)
-                    .equals(refinedFundamentalMatrix1.getInternalMatrix(), ABSOLUTE_ERROR)) {
+                    && !groundTruthFundamentalMatrix.getInternalMatrix().multiplyByScalarAndReturnNew(-1.0).equals(
+                            refinedFundamentalMatrix1.getInternalMatrix(), ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(groundTruthFundamentalMatrix.getInternalMatrix().equals(
@@ -456,46 +445,36 @@ public class HomogeneousRightEpipoleRefinerTest implements RefinerListener<Point
         assertTrue(numValid > 0);
     }
 
-    private Transformation2D generateHomography(
-            final PinholeCamera camera1,
-            final PinholeCamera camera2,
-            final FundamentalMatrix fundamentalMatrix,
-            final List<Point2D> projectedPoints1,
-            final List<Point2D> projectedPoints2) throws GeometryException, AlgebraException,
-            RobustEstimatorException {
+    private static Transformation2D generateHomography(
+            final PinholeCamera camera1, final PinholeCamera camera2, final FundamentalMatrix fundamentalMatrix,
+            final List<Point2D> projectedPoints1, final List<Point2D> projectedPoints2) throws GeometryException,
+            AlgebraException, RobustEstimatorException {
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH,
-                MAX_FOCAL_LENGTH);
-        final double aspectRatio = 1.0;
-        final double skewness = 0.0;
-        final double principalPoint = 0.0;
+        final var randomizer = new UniformRandomizer();
+        final var focalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final var aspectRatio = 1.0;
+        final var skewness = 0.0;
+        final var principalPoint = 0.0;
 
-        final PinholeCameraIntrinsicParameters intrinsic =
-                new PinholeCameraIntrinsicParameters(focalLength, focalLength,
-                        principalPoint, principalPoint, skewness);
+        final var intrinsic = new PinholeCameraIntrinsicParameters(focalLength, focalLength, principalPoint,
+                principalPoint, skewness);
         intrinsic.setAspectRatioKeepingHorizontalFocalLength(aspectRatio);
 
-        final double alphaEuler1 = 0.0;
-        final double betaEuler1 = 0.0;
-        final double gammaEuler1 = 0.0;
-        final double alphaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-        final double betaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-        final double gammaEuler2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+        final var alphaEuler1 = 0.0;
+        final var betaEuler1 = 0.0;
+        final var gammaEuler1 = 0.0;
+        final var alphaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var betaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var gammaEuler2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-        final double cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
+        final var cameraSeparation = randomizer.nextDouble(MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
-        final Point3D center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
-        final Point3D center2 = new InhomogeneousPoint3D(
-                center1.getInhomX() + cameraSeparation,
-                center1.getInhomY() + cameraSeparation,
-                center1.getInhomZ() + cameraSeparation);
+        final var center1 = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
+        final var center2 = new InhomogeneousPoint3D(center1.getInhomX() + cameraSeparation,
+                center1.getInhomY() + cameraSeparation, center1.getInhomZ() + cameraSeparation);
 
-        final MatrixRotation3D rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
-        final MatrixRotation3D rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
+        final var rotation1 = new MatrixRotation3D(alphaEuler1, betaEuler1, gammaEuler1);
+        final var rotation2 = new MatrixRotation3D(alphaEuler2, betaEuler2, gammaEuler2);
 
         camera1.setIntrinsicAndExtrinsicParameters(intrinsic, rotation1, center1);
         camera2.setIntrinsicAndExtrinsicParameters(intrinsic, rotation2, center2);
@@ -503,12 +482,11 @@ public class HomogeneousRightEpipoleRefinerTest implements RefinerListener<Point
         fundamentalMatrix.setFromPairOfCameras(camera1, camera2);
 
         // create 3D points laying in front of both cameras an in a plane
-        final Plane horizontalPlane1 = camera1.getHorizontalAxisPlane();
-        final Plane verticalPlane1 = camera1.getVerticalAxisPlane();
-        final Plane horizontalPlane2 = camera2.getHorizontalAxisPlane();
-        final Plane verticalPlane2 = camera2.getVerticalAxisPlane();
-        final Matrix planesIntersectionMatrix = new Matrix(Plane.PLANE_NUMBER_PARAMS,
-                Plane.PLANE_NUMBER_PARAMS);
+        final var horizontalPlane1 = camera1.getHorizontalAxisPlane();
+        final var verticalPlane1 = camera1.getVerticalAxisPlane();
+        final var horizontalPlane2 = camera2.getHorizontalAxisPlane();
+        final var verticalPlane2 = camera2.getVerticalAxisPlane();
+        final var planesIntersectionMatrix = new Matrix(Plane.PLANE_NUMBER_PARAMS, Plane.PLANE_NUMBER_PARAMS);
         planesIntersectionMatrix.setElementAt(0, 0, verticalPlane1.getA());
         planesIntersectionMatrix.setElementAt(0, 1, verticalPlane1.getB());
         planesIntersectionMatrix.setElementAt(0, 2, verticalPlane1.getC());
@@ -529,46 +507,46 @@ public class HomogeneousRightEpipoleRefinerTest implements RefinerListener<Point
         planesIntersectionMatrix.setElementAt(3, 2, horizontalPlane2.getC());
         planesIntersectionMatrix.setElementAt(3, 3, horizontalPlane2.getD());
 
-        final SingularValueDecomposer decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
+        final var decomposer = new SingularValueDecomposer(planesIntersectionMatrix);
         decomposer.decompose();
-        final Matrix v = decomposer.getV();
-        final HomogeneousPoint3D centralCommonPoint = new HomogeneousPoint3D(
+        final var v = decomposer.getV();
+        final var centralCommonPoint = new HomogeneousPoint3D(
                 v.getElementAt(0, 3),
                 v.getElementAt(1, 3),
                 v.getElementAt(2, 3),
                 v.getElementAt(3, 3));
 
-        final double[] principalAxis1 = camera1.getPrincipalAxisArray();
-        final double[] principalAxis2 = camera2.getPrincipalAxisArray();
-        final double[] avgPrincipalAxis = ArrayUtils.multiplyByScalarAndReturnNew(
+        final var principalAxis1 = camera1.getPrincipalAxisArray();
+        final var principalAxis2 = camera2.getPrincipalAxisArray();
+        final var avgPrincipalAxis = ArrayUtils.multiplyByScalarAndReturnNew(
                 ArrayUtils.sumAndReturnNew(principalAxis1, principalAxis2), 0.5);
 
-        final Plane plane = new Plane(centralCommonPoint, avgPrincipalAxis);
+        final var plane = new Plane(centralCommonPoint, avgPrincipalAxis);
         plane.normalize();
 
-        final double planeA = plane.getA();
-        final double planeB = plane.getB();
-        final double planeC = plane.getC();
-        final double planeD = plane.getD();
+        final var planeA = plane.getA();
+        final var planeB = plane.getB();
+        final var planeC = plane.getC();
+        final var planeD = plane.getD();
 
-        final int numPoints = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+        final var numPoints = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
 
         HomogeneousPoint3D point3D;
         projectedPoints1.clear();
         projectedPoints2.clear();
         boolean front1;
         boolean front2;
-        for (int i = 0; i < numPoints; i++) {
+        for (var i = 0; i < numPoints; i++) {
             // generate points and ensure they lie in front of both cameras
-            int numTry = 0;
+            var numTry = 0;
             do {
                 // get a random point belonging to the plane
                 // a*x + b*y + c*z + d*w = 0
                 // y = -(a*x + c*z + d*w)/b or x = -(b*y + c*z + d*w)/a
                 final double homX;
                 final double homY;
-                final double homW = 1.0;
-                final double homZ = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+                final var homW = 1.0;
+                final var homZ = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
                 if (Math.abs(planeB) > ABSOLUTE_ERROR) {
                     homX = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
                     homY = -(planeA * homX + planeC * homZ + planeD * homW) / planeB;
@@ -599,23 +577,21 @@ public class HomogeneousRightEpipoleRefinerTest implements RefinerListener<Point
         }
 
         // estimate homography
-        final ProjectiveTransformation2DRobustEstimator homographyEstimator =
-                ProjectiveTransformation2DRobustEstimator.createFromPoints(
-                        projectedPoints1, projectedPoints2, RobustEstimatorMethod.LMEDS);
+        final var homographyEstimator = ProjectiveTransformation2DRobustEstimator.createFromPoints(projectedPoints1,
+                projectedPoints2, RobustEstimatorMethod.LMEDS);
 
         return homographyEstimator.estimate();
     }
 
     @Override
-    public void onRefineStart(final Refiner<Point2D> refiner,
-                              final Point2D initialEstimation) {
+    public void onRefineStart(final Refiner<Point2D> refiner, final Point2D initialEstimation) {
         refineStart++;
         checkLocked((HomogeneousRightEpipoleRefiner) refiner);
     }
 
     @Override
-    public void onRefineEnd(final Refiner<Point2D> refiner, final Point2D initialEstimation,
-                            final Point2D result, final boolean errorDecreased) {
+    public void onRefineEnd(final Refiner<Point2D> refiner, final Point2D initialEstimation, final Point2D result,
+                            final boolean errorDecreased) {
         refineEnd++;
         checkLocked((HomogeneousRightEpipoleRefiner) refiner);
     }
@@ -624,31 +600,11 @@ public class HomogeneousRightEpipoleRefinerTest implements RefinerListener<Point
         refineStart = refineEnd = 0;
     }
 
-    private void checkLocked(final HomogeneousRightEpipoleRefiner refiner) {
+    private static void checkLocked(final HomogeneousRightEpipoleRefiner refiner) {
         assertTrue(refiner.isLocked());
-        try {
-            refiner.setRefinementStandardDeviation(0.0);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            refiner.setHomography(null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            refiner.refine();
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        } catch (final Exception ignore) {
-            fail("LockedException expected but not thrown");
-        }
-        try {
-            refiner.refine(new HomogeneousPoint2D());
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        } catch (final Exception ignore) {
-            fail("LockedException expected but not thrown");
-        }
+        assertThrows(LockedException.class, () -> refiner.setRefinementStandardDeviation(0.0));
+        assertThrows(LockedException.class, () -> refiner.setHomography(null));
+        assertThrows(LockedException.class, refiner::refine);
+        assertThrows(LockedException.class, () -> refiner.refine(new HomogeneousPoint2D()));
     }
 }

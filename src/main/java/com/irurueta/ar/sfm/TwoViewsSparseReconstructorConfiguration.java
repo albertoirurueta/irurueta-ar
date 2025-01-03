@@ -21,8 +21,7 @@ import java.io.Serializable;
  * Contains configuration for a two view sparse re-constructor.
  */
 public class TwoViewsSparseReconstructorConfiguration extends
-        BaseTwoViewsSparseReconstructorConfiguration<
-                TwoViewsSparseReconstructorConfiguration> implements Serializable {
+        BaseTwoViewsSparseReconstructorConfiguration<TwoViewsSparseReconstructorConfiguration> implements Serializable {
 
 
     /**

@@ -24,180 +24,174 @@ import com.irurueta.ar.epipolar.CorrectorType;
 import com.irurueta.ar.epipolar.estimators.FundamentalMatrixEstimatorMethod;
 import com.irurueta.ar.slam.AbsoluteOrientationConstantVelocityModelSlamCalibrationData;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfigurationTest {
+class AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfigurationTest {
 
     private static final int POINT_INHOM_COORDS = 3;
     private static final double CAMERA_POSITION_VARIANCE = 1e-6;
 
     @Test
-    public void testConstructor() {
-        final AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration cfg =
-                new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
+    void testConstructor() {
+        final var cfg = new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
 
         // check default values
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_NON_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD,
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_NON_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD,
                 cfg.getNonRobustFundamentalMatrixEstimatorMethod());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD,
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD,
                 cfg.getRobustFundamentalMatrixEstimatorMethod());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_REFINE_FUNDAMENTAL_MATRIX, cfg.isFundamentalMatrixRefined());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_KEEP_FUNDAMENTAL_MATRIX_COVARIANCE,
-                cfg.isFundamentalMatrixCovarianceKept());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_FUNDAMENTAL_MATRIX_CONFIDENCE,
-                cfg.getFundamentalMatrixConfidence(), 0.0);
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_FUNDAMENTAL_MATRIX_MAX_ITERATIONS, cfg.getFundamentalMatrixMaxIterations());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_REFINE_FUNDAMENTAL_MATRIX, cfg.isFundamentalMatrixRefined());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_KEEP_FUNDAMENTAL_MATRIX_COVARIANCE, cfg.isFundamentalMatrixCovarianceKept());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_FUNDAMENTAL_MATRIX_CONFIDENCE, cfg.getFundamentalMatrixConfidence(), 0.0);
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_FUNDAMENTAL_MATRIX_MAX_ITERATIONS, cfg.getFundamentalMatrixMaxIterations());
         assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
                 DEFAULT_FUNDAMENTAL_MATRIX_THRESHOLD, cfg.getFundamentalMatrixThreshold(), 0.0);
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_INLIERS,
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_INLIERS,
                 cfg.getFundamentalMatrixComputeAndKeepInliers());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_RESIDUALS,
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_RESIDUALS,
                 cfg.getFundamentalMatrixComputeAndKeepResiduals());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_PAIRED_CAMERAS_ESTIMATOR_METHOD, cfg.getPairedCamerasEstimatorMethod());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_DAQ_USE_HOMOGENEOUS_POINT_TRIANGULATOR,
-                cfg.getDaqUseHomogeneousPointTriangulator());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_PAIRED_CAMERAS_ASPECT_RATIO, cfg.getPairedCamerasAspectRatio(), 0.0);
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_PAIRED_CAMERAS_PRINCIPAL_POINT_X, cfg.getPrincipalPointX(), 0.0);
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_PAIRED_CAMERAS_PRINCIPAL_POINT_Y, cfg.getPrincipalPointY(), 0.0);
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_PAIRED_CAMERAS_CORRECTOR_TYPE, cfg.getPairedCamerasCorrectorType());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PAIRED_CAMERAS_MARK_VALID_TRIANGULATED_POINTS,
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_PAIRED_CAMERAS_ESTIMATOR_METHOD, cfg.getPairedCamerasEstimatorMethod());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_DAQ_USE_HOMOGENEOUS_POINT_TRIANGULATOR, cfg.getDaqUseHomogeneousPointTriangulator());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_PAIRED_CAMERAS_ASPECT_RATIO, cfg.getPairedCamerasAspectRatio(), 0.0);
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_PAIRED_CAMERAS_PRINCIPAL_POINT_X, cfg.getPrincipalPointX(), 0.0);
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_PAIRED_CAMERAS_PRINCIPAL_POINT_Y, cfg.getPrincipalPointY(), 0.0);
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_PAIRED_CAMERAS_CORRECTOR_TYPE, cfg.getPairedCamerasCorrectorType());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_PAIRED_CAMERAS_MARK_VALID_TRIANGULATED_POINTS,
                 cfg.getPairedCamerasMarkValidTriangulatedPoints());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_KNOWN_INTRINSIC_PARAMETERS, cfg.areIntrinsicParametersKnown());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_ALLOW_GENERAL_SCENE, cfg.isGeneralSceneAllowed());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_ALLOW_PLANAR_SCENE, cfg.isPlanarSceneAllowed());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_ROBUST_PLANAR_HOMOGRAPHY_ESTIMATOR_METHOD,
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_KNOWN_INTRINSIC_PARAMETERS, cfg.areIntrinsicParametersKnown());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_ALLOW_GENERAL_SCENE, cfg.isGeneralSceneAllowed());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_ALLOW_PLANAR_SCENE, cfg.isPlanarSceneAllowed());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_ROBUST_PLANAR_HOMOGRAPHY_ESTIMATOR_METHOD,
                 cfg.getRobustPlanarHomographyEstimatorMethod());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_REFINE_PLANAR_HOMOGRAPHY, cfg.isPlanarHomographyRefined());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE, cfg.isPlanarHomographyCovarianceKept());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_PLANAR_HOMOGRAPHY_CONFIDENCE, cfg.getPlanarHomographyConfidence(), 0.0);
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_PLANAR_HOMOGRAPHY_MAX_ITERATIONS, cfg.getPlanarHomographyMaxIterations());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_PLANAR_HOMOGRAPHY_THRESHOLD, cfg.getPlanarHomographyThreshold(), 0.0);
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS,
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_REFINE_PLANAR_HOMOGRAPHY, cfg.isPlanarHomographyRefined());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE, cfg.isPlanarHomographyCovarianceKept());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_PLANAR_HOMOGRAPHY_CONFIDENCE, cfg.getPlanarHomographyConfidence(), 0.0);
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_PLANAR_HOMOGRAPHY_MAX_ITERATIONS, cfg.getPlanarHomographyMaxIterations());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_PLANAR_HOMOGRAPHY_THRESHOLD, cfg.getPlanarHomographyThreshold(), 0.0);
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS,
                 cfg.getPlanarHomographyComputeAndKeepInliers());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS,
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS,
                 cfg.getPlanarHomographyComputeAndKeepResiduals());
         assertNull(cfg.getCalibrationData());
         assertNotNull(cfg.getCameraPositionCovariance());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_NOTIFY_SLAM_DATA_AVAILABLE, cfg.isNotifyAvailableSlamDataEnabled());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA, cfg.isNotifyEstimatedSlamCameraEnabled());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_NOTIFY_SLAM_DATA_AVAILABLE, cfg.isNotifyAvailableSlamDataEnabled());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA, cfg.isNotifyEstimatedSlamCameraEnabled());
     }
 
     @Test
-    public void testMake() {
-        final AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration cfg =
-                AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.make();
+    void testMake() {
+        final var cfg = AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.make();
 
         // check default values
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_NON_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD,
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_NON_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD,
                 cfg.getNonRobustFundamentalMatrixEstimatorMethod());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD,
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD,
                 cfg.getRobustFundamentalMatrixEstimatorMethod());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_REFINE_FUNDAMENTAL_MATRIX, cfg.isFundamentalMatrixRefined());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_KEEP_FUNDAMENTAL_MATRIX_COVARIANCE, cfg.isFundamentalMatrixCovarianceKept());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_FUNDAMENTAL_MATRIX_CONFIDENCE, cfg.getFundamentalMatrixConfidence(), 0.0);
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_FUNDAMENTAL_MATRIX_MAX_ITERATIONS, cfg.getFundamentalMatrixMaxIterations());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_FUNDAMENTAL_MATRIX_THRESHOLD, cfg.getFundamentalMatrixThreshold(), 0.0);
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_INLIERS,
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_REFINE_FUNDAMENTAL_MATRIX, cfg.isFundamentalMatrixRefined());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_KEEP_FUNDAMENTAL_MATRIX_COVARIANCE, cfg.isFundamentalMatrixCovarianceKept());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_FUNDAMENTAL_MATRIX_CONFIDENCE, cfg.getFundamentalMatrixConfidence(), 0.0);
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_FUNDAMENTAL_MATRIX_MAX_ITERATIONS, cfg.getFundamentalMatrixMaxIterations());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_FUNDAMENTAL_MATRIX_THRESHOLD, cfg.getFundamentalMatrixThreshold(), 0.0);
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_INLIERS,
                 cfg.getFundamentalMatrixComputeAndKeepInliers());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_RESIDUALS,
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_RESIDUALS,
                 cfg.getFundamentalMatrixComputeAndKeepResiduals());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_PAIRED_CAMERAS_ESTIMATOR_METHOD, cfg.getPairedCamerasEstimatorMethod());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_DAQ_USE_HOMOGENEOUS_POINT_TRIANGULATOR, cfg.getDaqUseHomogeneousPointTriangulator());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_PAIRED_CAMERAS_ASPECT_RATIO, cfg.getPairedCamerasAspectRatio(), 0.0);
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_PAIRED_CAMERAS_PRINCIPAL_POINT_X, cfg.getPrincipalPointX(), 0.0);
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_PAIRED_CAMERAS_PRINCIPAL_POINT_Y, cfg.getPrincipalPointY(), 0.0);
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_PAIRED_CAMERAS_CORRECTOR_TYPE, cfg.getPairedCamerasCorrectorType());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PAIRED_CAMERAS_MARK_VALID_TRIANGULATED_POINTS,
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_PAIRED_CAMERAS_ESTIMATOR_METHOD, cfg.getPairedCamerasEstimatorMethod());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_DAQ_USE_HOMOGENEOUS_POINT_TRIANGULATOR, cfg.getDaqUseHomogeneousPointTriangulator());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_PAIRED_CAMERAS_ASPECT_RATIO, cfg.getPairedCamerasAspectRatio(), 0.0);
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_PAIRED_CAMERAS_PRINCIPAL_POINT_X, cfg.getPrincipalPointX(), 0.0);
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_PAIRED_CAMERAS_PRINCIPAL_POINT_Y, cfg.getPrincipalPointY(), 0.0);
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_PAIRED_CAMERAS_CORRECTOR_TYPE, cfg.getPairedCamerasCorrectorType());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_PAIRED_CAMERAS_MARK_VALID_TRIANGULATED_POINTS,
                 cfg.getPairedCamerasMarkValidTriangulatedPoints());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_KNOWN_INTRINSIC_PARAMETERS, cfg.areIntrinsicParametersKnown());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_ALLOW_GENERAL_SCENE, cfg.isGeneralSceneAllowed());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_ALLOW_PLANAR_SCENE, cfg.isPlanarSceneAllowed());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_ROBUST_PLANAR_HOMOGRAPHY_ESTIMATOR_METHOD,
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_KNOWN_INTRINSIC_PARAMETERS, cfg.areIntrinsicParametersKnown());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_ALLOW_GENERAL_SCENE, cfg.isGeneralSceneAllowed());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_ALLOW_PLANAR_SCENE, cfg.isPlanarSceneAllowed());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_ROBUST_PLANAR_HOMOGRAPHY_ESTIMATOR_METHOD,
                 cfg.getRobustPlanarHomographyEstimatorMethod());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_REFINE_PLANAR_HOMOGRAPHY, cfg.isPlanarHomographyRefined());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE, cfg.isPlanarHomographyCovarianceKept());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_PLANAR_HOMOGRAPHY_CONFIDENCE, cfg.getPlanarHomographyConfidence(), 0.0);
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_PLANAR_HOMOGRAPHY_MAX_ITERATIONS, cfg.getPlanarHomographyMaxIterations());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_PLANAR_HOMOGRAPHY_THRESHOLD, cfg.getPlanarHomographyThreshold(), 0.0);
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS,
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_REFINE_PLANAR_HOMOGRAPHY, cfg.isPlanarHomographyRefined());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE, cfg.isPlanarHomographyCovarianceKept());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_PLANAR_HOMOGRAPHY_CONFIDENCE, cfg.getPlanarHomographyConfidence(), 0.0);
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_PLANAR_HOMOGRAPHY_MAX_ITERATIONS, cfg.getPlanarHomographyMaxIterations());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_PLANAR_HOMOGRAPHY_THRESHOLD, cfg.getPlanarHomographyThreshold(), 0.0);
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS,
                 cfg.getPlanarHomographyComputeAndKeepInliers());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS,
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS,
                 cfg.getPlanarHomographyComputeAndKeepResiduals());
         assertNull(cfg.getCalibrationData());
         assertNotNull(cfg.getCameraPositionCovariance());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_NOTIFY_SLAM_DATA_AVAILABLE, cfg.isNotifyAvailableSlamDataEnabled());
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA, cfg.isNotifyEstimatedSlamCameraEnabled());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_NOTIFY_SLAM_DATA_AVAILABLE, cfg.isNotifyAvailableSlamDataEnabled());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA, cfg.isNotifyEstimatedSlamCameraEnabled());
     }
 
     @Test
-    public void testGetSetNonRobustFundamentalMatrixEstimatorMethod() {
-        final AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration cfg =
-                new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
+    void testGetSetNonRobustFundamentalMatrixEstimatorMethod() {
+        final var cfg = new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_NON_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD,
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_NON_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD,
                 cfg.getNonRobustFundamentalMatrixEstimatorMethod());
 
         // set new value
@@ -210,13 +204,12 @@ public class AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseRecons
     }
 
     @Test
-    public void testGetSetRobustFundamentalMatrixEstimatorMethod() {
-        final AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration cfg =
-                new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
+    void testGetSetRobustFundamentalMatrixEstimatorMethod() {
+        final var cfg = new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD,
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD,
                 cfg.getRobustFundamentalMatrixEstimatorMethod());
 
         // set new value
@@ -227,13 +220,12 @@ public class AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseRecons
     }
 
     @Test
-    public void testIsSetFundamentalMatrixRefined() {
-        final AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration cfg =
-                new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
+    void testIsSetFundamentalMatrixRefined() {
+        final var cfg = new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_REFINE_FUNDAMENTAL_MATRIX, cfg.isFundamentalMatrixRefined());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_REFINE_FUNDAMENTAL_MATRIX, cfg.isFundamentalMatrixRefined());
 
         // set new value
         assertSame(cfg, cfg.setFundamentalMatrixRefined(false));
@@ -243,13 +235,12 @@ public class AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseRecons
     }
 
     @Test
-    public void testIsSetFundamentalMatrixCovarianceKept() {
-        final AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration cfg =
-                new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
+    void testIsSetFundamentalMatrixCovarianceKept() {
+        final var cfg = new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_KEEP_FUNDAMENTAL_MATRIX_COVARIANCE, cfg.isFundamentalMatrixCovarianceKept());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_KEEP_FUNDAMENTAL_MATRIX_COVARIANCE, cfg.isFundamentalMatrixCovarianceKept());
 
         // set new value
         assertSame(cfg, cfg.setFundamentalMatrixCovarianceKept(true));
@@ -259,13 +250,12 @@ public class AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseRecons
     }
 
     @Test
-    public void testGetSetFundamentalMatrixConfidence() {
-        final AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration cfg =
-                new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
+    void testGetSetFundamentalMatrixConfidence() {
+        final var cfg = new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_FUNDAMENTAL_MATRIX_CONFIDENCE, cfg.getFundamentalMatrixConfidence(), 0.0);
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_FUNDAMENTAL_MATRIX_CONFIDENCE, cfg.getFundamentalMatrixConfidence(), 0.0);
 
         // set new value
         assertSame(cfg, cfg.setFundamentalMatrixConfidence(0.7));
@@ -275,13 +265,12 @@ public class AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseRecons
     }
 
     @Test
-    public void testGetSetFundamentalMatrixMaxIterations() {
-        final AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration cfg =
-                new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
+    void testGetSetFundamentalMatrixMaxIterations() {
+        final var cfg = new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_FUNDAMENTAL_MATRIX_MAX_ITERATIONS, cfg.getFundamentalMatrixMaxIterations());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_FUNDAMENTAL_MATRIX_MAX_ITERATIONS, cfg.getFundamentalMatrixMaxIterations());
 
         // set new value
         assertSame(cfg, cfg.setFundamentalMatrixMaxIterations(10));
@@ -291,14 +280,12 @@ public class AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseRecons
     }
 
     @Test
-    public void testGetSetFundamentalMatrixThreshold() {
-        final AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration cfg =
-                new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
+    void testGetSetFundamentalMatrixThreshold() {
+        final var cfg = new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_FUNDAMENTAL_MATRIX_THRESHOLD,
-                cfg.getFundamentalMatrixThreshold(), 0.0);
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_FUNDAMENTAL_MATRIX_THRESHOLD, cfg.getFundamentalMatrixThreshold(), 0.0);
 
         // set new value
         assertSame(cfg, cfg.setFundamentalMatrixThreshold(2.0));
@@ -308,13 +295,12 @@ public class AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseRecons
     }
 
     @Test
-    public void testGetSetFundamentalMatrixComputeAndKeepInliers() {
-        final AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration cfg =
-                new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
+    void testGetSetFundamentalMatrixComputeAndKeepInliers() {
+        final var cfg = new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_INLIERS,
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_INLIERS,
                 cfg.getFundamentalMatrixComputeAndKeepInliers());
 
         // set new value
@@ -325,13 +311,12 @@ public class AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseRecons
     }
 
     @Test
-    public void testGetSetFundamentalMatrixComputeAndKeepResiduals() {
-        final AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration cfg =
-                new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
+    void testGetSetFundamentalMatrixComputeAndKeepResiduals() {
+        final var cfg = new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_RESIDUALS,
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_RESIDUALS,
                 cfg.getFundamentalMatrixComputeAndKeepResiduals());
 
         // set new value
@@ -342,32 +327,28 @@ public class AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseRecons
     }
 
     @Test
-    public void testGetSetPairedCamerasEstimatorMethod() {
-        final AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration cfg =
-                new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
+    void testGetSetPairedCamerasEstimatorMethod() {
+        final var cfg = new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_PAIRED_CAMERAS_ESTIMATOR_METHOD, cfg.getPairedCamerasEstimatorMethod());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_PAIRED_CAMERAS_ESTIMATOR_METHOD, cfg.getPairedCamerasEstimatorMethod());
 
         // set new value
-        assertSame(cfg.setPairedCamerasEstimatorMethod(
-                InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC), cfg);
+        assertSame(cfg.setPairedCamerasEstimatorMethod(InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC),
+                cfg);
 
         // check correctness
-        assertEquals(InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC,
-                cfg.getPairedCamerasEstimatorMethod());
+        assertEquals(InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC, cfg.getPairedCamerasEstimatorMethod());
     }
 
     @Test
-    public void testGetSetDaqUseHomogeneousPointTriangulator() {
-        final AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration cfg =
-                new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
+    void testGetSetDaqUseHomogeneousPointTriangulator() {
+        final var cfg = new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_DAQ_USE_HOMOGENEOUS_POINT_TRIANGULATOR,
-                cfg.getDaqUseHomogeneousPointTriangulator());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_DAQ_USE_HOMOGENEOUS_POINT_TRIANGULATOR, cfg.getDaqUseHomogeneousPointTriangulator());
 
         // set new value
         assertSame(cfg, cfg.setDaqUseHomogeneousPointTriangulator(false));
@@ -377,13 +358,12 @@ public class AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseRecons
     }
 
     @Test
-    public void testGetSetPairedCamerasAspectRatio() {
-        final AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration cfg =
-                new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
+    void testGetSetPairedCamerasAspectRatio() {
+        final var cfg = new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_PAIRED_CAMERAS_ASPECT_RATIO, cfg.getPairedCamerasAspectRatio(), 0.0);
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_PAIRED_CAMERAS_ASPECT_RATIO, cfg.getPairedCamerasAspectRatio(), 0.0);
 
         // set new value
         assertSame(cfg, cfg.setPairedCamerasAspectRatio(0.5));
@@ -393,9 +373,8 @@ public class AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseRecons
     }
 
     @Test
-    public void testGetSetPrincipalPointX() {
-        final AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration cfg =
-                new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
+    void testGetSetPrincipalPointX() {
+        final var cfg = new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
 
         // check default value
         assertEquals(0.0, cfg.getPrincipalPointX(), 0.0);
@@ -408,9 +387,8 @@ public class AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseRecons
     }
 
     @Test
-    public void testGetSetPrincipalPointY() {
-        final AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration cfg =
-                new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
+    void testGetSetPrincipalPointY() {
+        final var cfg = new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
 
         // check default value
         assertEquals(0.0, cfg.getPrincipalPointY(), 0.0);
@@ -423,13 +401,12 @@ public class AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseRecons
     }
 
     @Test
-    public void testGetSetPairedCamerasCorrectorType() {
-        final AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration cfg =
-                new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
+    void testGetSetPairedCamerasCorrectorType() {
+        final var cfg = new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_PAIRED_CAMERAS_CORRECTOR_TYPE, cfg.getPairedCamerasCorrectorType());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_PAIRED_CAMERAS_CORRECTOR_TYPE, cfg.getPairedCamerasCorrectorType());
 
         // set new value
         assertSame(cfg, cfg.setPairedCamerasCorrectorType(CorrectorType.GOLD_STANDARD));
@@ -439,13 +416,12 @@ public class AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseRecons
     }
 
     @Test
-    public void testGetSetPairedCamerasMarkValidTriangulatedPoints() {
-        final AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration cfg =
-                new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
+    void testGetSetPairedCamerasMarkValidTriangulatedPoints() {
+        final var cfg = new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PAIRED_CAMERAS_MARK_VALID_TRIANGULATED_POINTS,
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_PAIRED_CAMERAS_MARK_VALID_TRIANGULATED_POINTS,
                 cfg.getPairedCamerasMarkValidTriangulatedPoints());
 
         // set new value
@@ -456,70 +432,66 @@ public class AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseRecons
     }
 
     @Test
-    public void testAreSetIntrinsicParametersKnown() {
-        final AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration cfg =
-                new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
+    void testAreSetIntrinsicParametersKnown() {
+        final var cfg = new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_KNOWN_INTRINSIC_PARAMETERS, cfg.areIntrinsicParametersKnown());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_KNOWN_INTRINSIC_PARAMETERS, cfg.areIntrinsicParametersKnown());
 
         // set new value
         assertSame(cfg, cfg.setIntrinsicParametersKnown(
-                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_KNOWN_INTRINSIC_PARAMETERS));
+                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_KNOWN_INTRINSIC_PARAMETERS));
 
         // check correctness
-        assertEquals(!AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_KNOWN_INTRINSIC_PARAMETERS, cfg.areIntrinsicParametersKnown());
+        assertEquals(!AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_KNOWN_INTRINSIC_PARAMETERS, cfg.areIntrinsicParametersKnown());
     }
 
     @Test
-    public void testIsSetGeneralSceneAllowed() {
-        final AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration cfg =
-                new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
+    void testIsSetGeneralSceneAllowed() {
+        final var cfg = new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_ALLOW_GENERAL_SCENE, cfg.isGeneralSceneAllowed());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_ALLOW_GENERAL_SCENE, cfg.isGeneralSceneAllowed());
 
         // set new value
         assertSame(cfg, cfg.setGeneralSceneAllowed(
-                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_ALLOW_GENERAL_SCENE));
+                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_ALLOW_GENERAL_SCENE));
 
         // check correctness
-        assertEquals(!AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_ALLOW_GENERAL_SCENE, cfg.isGeneralSceneAllowed());
+        assertEquals(!AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_ALLOW_GENERAL_SCENE, cfg.isGeneralSceneAllowed());
     }
 
     @Test
-    public void testIsSetPlanarSceneAllowed() {
-        final AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration cfg =
-                new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
+    void testIsSetPlanarSceneAllowed() {
+        final var cfg = new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_ALLOW_PLANAR_SCENE, cfg.isPlanarSceneAllowed());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_ALLOW_PLANAR_SCENE, cfg.isPlanarSceneAllowed());
 
         // set new value
         assertSame(cfg, cfg.setPlanarSceneAllowed(
-                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_ALLOW_PLANAR_SCENE));
+                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_ALLOW_PLANAR_SCENE));
 
         // check correctness
-        assertEquals(!AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_ALLOW_PLANAR_SCENE, cfg.isPlanarSceneAllowed());
+        assertEquals(!AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_ALLOW_PLANAR_SCENE, cfg.isPlanarSceneAllowed());
     }
 
     @Test
-    public void testGetSetRobustPlanarHomographyEstimatorMethod() {
-        final AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration cfg =
-                new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
+    void testGetSetRobustPlanarHomographyEstimatorMethod() {
+        final var cfg = new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_ROBUST_PLANAR_HOMOGRAPHY_ESTIMATOR_METHOD,
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_ROBUST_PLANAR_HOMOGRAPHY_ESTIMATOR_METHOD,
                 cfg.getRobustPlanarHomographyEstimatorMethod());
 
         // set new value
@@ -530,51 +502,48 @@ public class AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseRecons
     }
 
     @Test
-    public void testIsSetPlanarHomographyRefined() {
-        final AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration cfg =
-                new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
+    void testIsSetPlanarHomographyRefined() {
+        final var cfg = new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_REFINE_PLANAR_HOMOGRAPHY, cfg.isPlanarHomographyRefined());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_REFINE_PLANAR_HOMOGRAPHY, cfg.isPlanarHomographyRefined());
 
         // set new value
         assertSame(cfg, cfg.setPlanarHomographyRefined(
-                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_REFINE_PLANAR_HOMOGRAPHY));
+                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_REFINE_PLANAR_HOMOGRAPHY));
 
         // check correctness
-        assertEquals(!AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_REFINE_PLANAR_HOMOGRAPHY, cfg.isPlanarHomographyRefined());
+        assertEquals(!AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_REFINE_PLANAR_HOMOGRAPHY, cfg.isPlanarHomographyRefined());
     }
 
     @Test
-    public void testIsSetPlanarHomographyCovarianceKept() {
-        final AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration cfg =
-                new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
+    void testIsSetPlanarHomographyCovarianceKept() {
+        final var cfg = new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE, cfg.isPlanarHomographyCovarianceKept());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE, cfg.isPlanarHomographyCovarianceKept());
 
         // set new value
         assertSame(cfg, cfg.setPlanarHomographyCovarianceKept(
-                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE));
+                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE));
 
         // check correctness
-        assertEquals(!AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE, cfg.isPlanarHomographyCovarianceKept());
+        assertEquals(!AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE, cfg.isPlanarHomographyCovarianceKept());
     }
 
     @Test
-    public void testGetSetPlanarHomographyConfidence() {
-        final AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration cfg =
-                new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
+    void testGetSetPlanarHomographyConfidence() {
+        final var cfg = new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_PLANAR_HOMOGRAPHY_CONFIDENCE, cfg.getPlanarHomographyConfidence(), 0.0);
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_PLANAR_HOMOGRAPHY_CONFIDENCE, cfg.getPlanarHomographyConfidence(), 0.0);
 
         // set new value
         assertSame(cfg, cfg.setPlanarHomographyConfidence(0.5));
@@ -584,13 +553,12 @@ public class AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseRecons
     }
 
     @Test
-    public void testGetSetPlanarHomographyMaxIterations() {
-        final AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration cfg =
-                new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
+    void testGetSetPlanarHomographyMaxIterations() {
+        final var cfg = new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_PLANAR_HOMOGRAPHY_MAX_ITERATIONS, cfg.getPlanarHomographyMaxIterations());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_PLANAR_HOMOGRAPHY_MAX_ITERATIONS, cfg.getPlanarHomographyMaxIterations());
 
         // set new value
         assertSame(cfg, cfg.setPlanarHomographyMaxIterations(100));
@@ -600,13 +568,12 @@ public class AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseRecons
     }
 
     @Test
-    public void testGetSetPlanarHomographyThreshold() {
-        final AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration cfg =
-                new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
+    void testGetSetPlanarHomographyThreshold() {
+        final var cfg = new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_PLANAR_HOMOGRAPHY_THRESHOLD, cfg.getPlanarHomographyThreshold(), 0.0);
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_PLANAR_HOMOGRAPHY_THRESHOLD, cfg.getPlanarHomographyThreshold(), 0.0);
 
         // set new value
         assertSame(cfg, cfg.setPlanarHomographyThreshold(0.5));
@@ -616,58 +583,54 @@ public class AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseRecons
     }
 
     @Test
-    public void testGetSetPlanarHomographyComputeAndKeepInliers() {
-        final AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration cfg =
-                new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
+    void testGetSetPlanarHomographyComputeAndKeepInliers() {
+        final var cfg = new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS,
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS,
                 cfg.getPlanarHomographyComputeAndKeepInliers());
 
         // set new value
         assertSame(cfg, cfg.setPlanarHomographyComputeAndKeepInliers(
-                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS));
+                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS));
 
         // check correctness
-        assertEquals(!AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS,
+        assertEquals(!AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS,
                 cfg.getPlanarHomographyComputeAndKeepInliers());
     }
 
     @Test
-    public void testGetSetPlanarHomographyComputeAndKeepResiduals() {
-        final AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration cfg =
-                new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
+    void testGetSetPlanarHomographyComputeAndKeepResiduals() {
+        final var cfg = new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS,
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS,
                 cfg.getPlanarHomographyComputeAndKeepResiduals());
 
         // set new value
         assertSame(cfg, cfg.setPlanarHomographyComputeAndKeepResiduals(
-                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS));
+                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS));
 
         // check correctness
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS,
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS,
                 !cfg.getPlanarHomographyComputeAndKeepResiduals());
     }
 
     @Test
-    public void testGetSetCalibrationData() {
-        final AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration cfg =
-                new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
+    void testGetSetCalibrationData() {
+        final var cfg = new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
 
         // check default value
         assertNull(cfg.getCalibrationData());
 
         // set new value
-        final AbsoluteOrientationConstantVelocityModelSlamCalibrationData calibrationData =
-                new AbsoluteOrientationConstantVelocityModelSlamCalibrationData();
+        final var calibrationData = new AbsoluteOrientationConstantVelocityModelSlamCalibrationData();
         assertSame(cfg, cfg.setCalibrationData(calibrationData));
 
         // check correctness
@@ -675,14 +638,13 @@ public class AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseRecons
     }
 
     @Test
-    public void testGetSetCameraPositionCovarianceAndVariance() throws AlgebraException {
-        final AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration cfg =
-                new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
+    void testGetSetCameraPositionCovarianceAndVariance() throws AlgebraException {
+        final var cfg = new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
 
         // check default value
         assertNotNull(cfg.getCameraPositionCovariance());
 
-        Matrix cov = Matrix.identity(POINT_INHOM_COORDS, POINT_INHOM_COORDS);
+        var cov = Matrix.identity(POINT_INHOM_COORDS, POINT_INHOM_COORDS);
         cov.multiplyByScalar(CAMERA_POSITION_VARIANCE);
         assertEquals(cov, cfg.getCameraPositionCovariance());
 
@@ -704,53 +666,49 @@ public class AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseRecons
     }
 
     @Test
-    public void testIsSetNotifyAvailableSlamDataEnabled() {
-        final AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration cfg =
-                new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
+    void testIsSetNotifyAvailableSlamDataEnabled() {
+        final var cfg = new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_NOTIFY_SLAM_DATA_AVAILABLE, cfg.isNotifyAvailableSlamDataEnabled());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_NOTIFY_SLAM_DATA_AVAILABLE, cfg.isNotifyAvailableSlamDataEnabled());
 
         // set new value
         assertSame(cfg, cfg.setNotifyAvailableSlamDataEnabled(
-                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_NOTIFY_SLAM_DATA_AVAILABLE));
+                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_NOTIFY_SLAM_DATA_AVAILABLE));
 
         // check correctness
-        assertEquals(!AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_NOTIFY_SLAM_DATA_AVAILABLE, cfg.isNotifyAvailableSlamDataEnabled());
+        assertEquals(!AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_NOTIFY_SLAM_DATA_AVAILABLE, cfg.isNotifyAvailableSlamDataEnabled());
     }
 
     @Test
-    public void testIsSetNotifyEstimatedSlamCameraEnabled() {
-        final AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration cfg =
-                new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
+    void testIsSetNotifyEstimatedSlamCameraEnabled() {
+        final var cfg = new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA, cfg.isNotifyEstimatedSlamCameraEnabled());
+        assertEquals(AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA, cfg.isNotifyEstimatedSlamCameraEnabled());
 
         // set new value
         assertSame(cfg, cfg.setNotifyEstimatedSlamCameraEnabled(
-                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA));
+                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA));
 
         // check correctness
-        assertEquals(!AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA, cfg.isNotifyEstimatedSlamCameraEnabled());
+        assertEquals(!AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA, cfg.isNotifyEstimatedSlamCameraEnabled());
     }
 
     @Test
-    public void testSerializeDeserialize() throws WrongSizeException, IOException, ClassNotFoundException {
-        final AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration cfg1 =
-                new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
+    void testSerializeDeserialize() throws WrongSizeException, IOException, ClassNotFoundException {
+        final var cfg1 = new AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration();
 
         // set new values
         assertSame(cfg1, cfg1.setNonRobustFundamentalMatrixEstimatorMethod(
                 FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM));
-        assertSame(cfg1, cfg1.setRobustFundamentalMatrixEstimatorMethod(
-                RobustEstimatorMethod.LMEDS));
+        assertSame(cfg1, cfg1.setRobustFundamentalMatrixEstimatorMethod(RobustEstimatorMethod.LMEDS));
         assertSame(cfg1, cfg1.setFundamentalMatrixRefined(false));
         assertSame(cfg1, cfg1.setFundamentalMatrixCovarianceKept(true));
         assertSame(cfg1, cfg1.setFundamentalMatrixConfidence(0.7));
@@ -767,42 +725,41 @@ public class AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseRecons
         assertSame(cfg1, cfg1.setPairedCamerasCorrectorType(CorrectorType.GOLD_STANDARD));
         assertSame(cfg1, cfg1.setPairedCamerasMarkValidTriangulatedPoints(false));
         assertSame(cfg1, cfg1.setIntrinsicParametersKnown(
-                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_KNOWN_INTRINSIC_PARAMETERS));
+                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_KNOWN_INTRINSIC_PARAMETERS));
         assertSame(cfg1, cfg1.setGeneralSceneAllowed(
-                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_ALLOW_GENERAL_SCENE));
+                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_ALLOW_GENERAL_SCENE));
         assertSame(cfg1, cfg1.setPlanarSceneAllowed(
-                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_ALLOW_PLANAR_SCENE));
+                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_ALLOW_PLANAR_SCENE));
         assertSame(cfg1, cfg1.setRobustPlanarHomographyEstimatorMethod(RobustEstimatorMethod.RANSAC));
         assertSame(cfg1, cfg1.setPlanarHomographyRefined(
-                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_REFINE_PLANAR_HOMOGRAPHY));
+                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_REFINE_PLANAR_HOMOGRAPHY));
         assertSame(cfg1, cfg1.setPlanarHomographyCovarianceKept(
-                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE));
+                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE));
         assertSame(cfg1, cfg1.setPlanarHomographyConfidence(0.5));
         assertSame(cfg1, cfg1.setPlanarHomographyMaxIterations(100));
         assertSame(cfg1, cfg1.setPlanarHomographyThreshold(0.5));
         assertSame(cfg1, cfg1.setPlanarHomographyComputeAndKeepInliers(
-                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS));
+                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS));
         assertSame(cfg1, cfg1.setPlanarHomographyComputeAndKeepResiduals(
-                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS));
-        final AbsoluteOrientationConstantVelocityModelSlamCalibrationData calibrationData =
-                new AbsoluteOrientationConstantVelocityModelSlamCalibrationData();
+                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS));
+        final var calibrationData = new AbsoluteOrientationConstantVelocityModelSlamCalibrationData();
         assertSame(cfg1, cfg1.setCalibrationData(calibrationData));
         final Matrix cov = Matrix.identity(POINT_INHOM_COORDS, POINT_INHOM_COORDS);
         cov.multiplyByScalar(2.0);
         assertSame(cfg1, cfg1.setCameraPositionCovariance(cov));
         assertSame(cfg1, cfg1.setNotifyAvailableSlamDataEnabled(
-                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_NOTIFY_SLAM_DATA_AVAILABLE));
+                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_NOTIFY_SLAM_DATA_AVAILABLE));
         assertSame(cfg1, cfg1.setNotifyEstimatedSlamCameraEnabled(
-                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA));
+                !AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA));
 
         // check
         assertEquals(FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM,
@@ -823,37 +780,38 @@ public class AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseRecons
         assertEquals(10.0, cfg1.getPrincipalPointY(), 0.0);
         assertEquals(CorrectorType.GOLD_STANDARD, cfg1.getPairedCamerasCorrectorType());
         assertFalse(cfg1.getPairedCamerasMarkValidTriangulatedPoints());
-        assertEquals(!AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_KNOWN_INTRINSIC_PARAMETERS, cfg1.areIntrinsicParametersKnown());
-        assertEquals(!AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_ALLOW_GENERAL_SCENE, cfg1.isGeneralSceneAllowed());
-        assertEquals(!AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_ALLOW_PLANAR_SCENE, cfg1.isPlanarSceneAllowed());
+        assertEquals(!AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_KNOWN_INTRINSIC_PARAMETERS, cfg1.areIntrinsicParametersKnown());
+        assertEquals(!AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_ALLOW_GENERAL_SCENE, cfg1.isGeneralSceneAllowed());
+        assertEquals(!AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_ALLOW_PLANAR_SCENE, cfg1.isPlanarSceneAllowed());
         assertEquals(RobustEstimatorMethod.RANSAC, cfg1.getRobustPlanarHomographyEstimatorMethod());
-        assertEquals(!AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_REFINE_PLANAR_HOMOGRAPHY, cfg1.isPlanarHomographyRefined());
-        assertEquals(!AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE, cfg1.isPlanarHomographyCovarianceKept());
+        assertEquals(!AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_REFINE_PLANAR_HOMOGRAPHY, cfg1.isPlanarHomographyRefined());
+        assertEquals(!AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE, cfg1.isPlanarHomographyCovarianceKept());
         assertEquals(0.5, cfg1.getPlanarHomographyConfidence(), 0.0);
         assertEquals(100, cfg1.getPlanarHomographyMaxIterations());
         assertEquals(0.5, cfg1.getPlanarHomographyThreshold(), 0.0);
-        assertEquals(!AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS,
+        assertEquals(!AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS,
                 cfg1.getPlanarHomographyComputeAndKeepInliers());
-        assertEquals(!AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                        DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS,
+        assertEquals(!AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                        .DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS,
                 cfg1.getPlanarHomographyComputeAndKeepResiduals());
         assertSame(calibrationData, cfg1.getCalibrationData());
         assertSame(cov, cfg1.getCameraPositionCovariance());
-        assertEquals(!AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_NOTIFY_SLAM_DATA_AVAILABLE, cfg1.isNotifyAvailableSlamDataEnabled());
-        assertEquals(!AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration.
-                DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA, cfg1.isNotifyEstimatedSlamCameraEnabled());
+        assertEquals(!AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_NOTIFY_SLAM_DATA_AVAILABLE, cfg1.isNotifyAvailableSlamDataEnabled());
+        assertEquals(!AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration
+                .DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA, cfg1.isNotifyEstimatedSlamCameraEnabled());
 
         // serialize and deserialize
-        final byte[] bytes = SerializationHelper.serialize(cfg1);
-        final AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration cfg2 =
-                SerializationHelper.deserialize(bytes);
+        final var bytes = SerializationHelper.serialize(cfg1);
+        final var cfg2 = SerializationHelper
+                .<AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseReconstructorConfiguration>deserialize(
+                        bytes);
 
         // check
         assertEquals(cfg1.getNonRobustFundamentalMatrixEstimatorMethod(),
@@ -863,8 +821,7 @@ public class AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseRecons
         //noinspection EqualsWithItself
         assertEquals(cfg1.isFundamentalMatrixRefined(), cfg1.isFundamentalMatrixRefined());
         assertEquals(cfg1.isFundamentalMatrixCovarianceKept(), cfg2.isFundamentalMatrixCovarianceKept());
-        assertEquals(cfg1.getFundamentalMatrixConfidence(),
-                cfg2.getFundamentalMatrixConfidence(), 0.0);
+        assertEquals(cfg1.getFundamentalMatrixConfidence(), cfg2.getFundamentalMatrixConfidence(), 0.0);
         assertEquals(cfg1.getFundamentalMatrixMaxIterations(), cfg2.getFundamentalMatrixMaxIterations());
         assertEquals(cfg1.getFundamentalMatrixThreshold(), cfg2.getFundamentalMatrixThreshold(), 0.0);
         assertEquals(cfg1.getFundamentalMatrixComputeAndKeepInliers(),
@@ -872,8 +829,7 @@ public class AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseRecons
         assertEquals(cfg1.getFundamentalMatrixComputeAndKeepResiduals(),
                 cfg2.getFundamentalMatrixComputeAndKeepResiduals());
         assertEquals(cfg1.getPairedCamerasEstimatorMethod(), cfg2.getPairedCamerasEstimatorMethod());
-        assertEquals(cfg1.getDaqUseHomogeneousPointTriangulator(),
-                cfg2.getDaqUseHomogeneousPointTriangulator());
+        assertEquals(cfg1.getDaqUseHomogeneousPointTriangulator(), cfg2.getDaqUseHomogeneousPointTriangulator());
         assertEquals(cfg1.getPairedCamerasAspectRatio(), cfg2.getPairedCamerasAspectRatio(), 0.0);
         assertEquals(cfg1.getPrincipalPointX(), cfg2.getPrincipalPointX(), 0.0);
         assertEquals(cfg1.getPrincipalPointY(), cfg2.getPrincipalPointY(), 0.0);
@@ -883,15 +839,13 @@ public class AbsoluteOrientationConstantVelocityModelSlamPairedViewsSparseRecons
         assertEquals(cfg1.areIntrinsicParametersKnown(), cfg2.areIntrinsicParametersKnown());
         assertEquals(cfg1.isGeneralSceneAllowed(), cfg2.isGeneralSceneAllowed());
         assertEquals(cfg1.isPlanarSceneAllowed(), cfg2.isPlanarSceneAllowed());
-        assertEquals(cfg1.getRobustPlanarHomographyEstimatorMethod(),
-                cfg2.getRobustPlanarHomographyEstimatorMethod());
+        assertEquals(cfg1.getRobustPlanarHomographyEstimatorMethod(), cfg2.getRobustPlanarHomographyEstimatorMethod());
         assertEquals(cfg1.isPlanarHomographyRefined(), cfg2.isPlanarHomographyRefined());
         assertEquals(cfg1.isPlanarHomographyCovarianceKept(), cfg2.isPlanarHomographyCovarianceKept());
         assertEquals(cfg1.getPlanarHomographyConfidence(), cfg2.getPlanarHomographyConfidence(), 0.0);
         assertEquals(cfg1.getPlanarHomographyMaxIterations(), cfg2.getPlanarHomographyMaxIterations());
         assertEquals(cfg1.getPlanarHomographyThreshold(), cfg2.getPlanarHomographyThreshold(), 0.0);
-        assertEquals(cfg1.getPlanarHomographyComputeAndKeepInliers(),
-                cfg2.getPlanarHomographyComputeAndKeepInliers());
+        assertEquals(cfg1.getPlanarHomographyComputeAndKeepInliers(), cfg2.getPlanarHomographyComputeAndKeepInliers());
         assertEquals(cfg1.getPlanarHomographyComputeAndKeepResiduals(),
                 cfg2.getPlanarHomographyComputeAndKeepResiduals());
         assertNotSame(cfg1.getCalibrationData(), cfg2.getCalibrationData());

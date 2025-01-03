@@ -39,8 +39,7 @@ import java.util.List;
  * equal.
  */
 @SuppressWarnings("DuplicatedCode")
-public class LMSEDualAbsoluteQuadricEstimator extends
-        DualAbsoluteQuadricEstimator {
+public class LMSEDualAbsoluteQuadricEstimator extends DualAbsoluteQuadricEstimator {
 
     /**
      * Indicates if by default an LMSE (the Least Mean Square Error) solution is
@@ -52,14 +51,14 @@ public class LMSEDualAbsoluteQuadricEstimator extends
      * Indicates if by default an LMSE (the Least Mean Square Error) solution is
      * allowed if more pinhole cameras than the minimum are provided.
      */
-    private boolean mAllowLMSESolution;
+    private boolean allowLMSESolution;
 
     /**
      * Constructor.
      */
     public LMSEDualAbsoluteQuadricEstimator() {
         super();
-        mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
+        allowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
     }
 
     /**
@@ -68,10 +67,9 @@ public class LMSEDualAbsoluteQuadricEstimator extends
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or estimation progress changes.
      */
-    public LMSEDualAbsoluteQuadricEstimator(
-            final DualAbsoluteQuadricEstimatorListener listener) {
+    public LMSEDualAbsoluteQuadricEstimator(final DualAbsoluteQuadricEstimatorListener listener) {
         super(listener);
-        mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
+        allowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
     }
 
     /**
@@ -84,7 +82,7 @@ public class LMSEDualAbsoluteQuadricEstimator extends
      */
     public LMSEDualAbsoluteQuadricEstimator(final List<PinholeCamera> cameras) {
         super(cameras);
-        mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
+        allowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
     }
 
     /**
@@ -97,10 +95,10 @@ public class LMSEDualAbsoluteQuadricEstimator extends
      * @throws IllegalArgumentException if list of cameras is null or invalid
      *                                  for default constraints.
      */
-    public LMSEDualAbsoluteQuadricEstimator(final List<PinholeCamera> cameras,
-                                            final DualAbsoluteQuadricEstimatorListener listener) {
+    public LMSEDualAbsoluteQuadricEstimator(
+            final List<PinholeCamera> cameras, final DualAbsoluteQuadricEstimatorListener listener) {
         super(cameras, listener);
-        mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
+        allowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
     }
 
     /**
@@ -112,7 +110,7 @@ public class LMSEDualAbsoluteQuadricEstimator extends
      * @return true if LMSE solution is allowed, false otherwise.
      */
     public boolean isLMSESolutionAllowed() {
-        return mAllowLMSESolution;
+        return allowLMSESolution;
     }
 
     /**
@@ -128,7 +126,7 @@ public class LMSEDualAbsoluteQuadricEstimator extends
         if (isLocked()) {
             throw new LockedException();
         }
-        mAllowLMSESolution = allowed;
+        allowLMSESolution = allowed;
     }
 
     /**
@@ -140,13 +138,13 @@ public class LMSEDualAbsoluteQuadricEstimator extends
      */
     @Override
     public boolean areValidConstraints() {
-        final boolean valid = super.areValidConstraints();
+        final var valid = super.areValidConstraints();
         if (!valid) {
             return false;
         }
 
-        if (mAllowLMSESolution) {
-            return !(mFocalDistanceAspectRatioKnown && mSingularityEnforced);
+        if (allowLMSESolution) {
+            return !(focalDistanceAspectRatioKnown && singularityEnforced);
         } else {
             return true;
         }
@@ -166,8 +164,7 @@ public class LMSEDualAbsoluteQuadricEstimator extends
      *                                               numerically unstable.
      */
     @Override
-    public void estimate(final DualAbsoluteQuadric result)
-            throws LockedException, NotReadyException,
+    public void estimate(final DualAbsoluteQuadric result) throws LockedException, NotReadyException,
             DualAbsoluteQuadricEstimatorException {
 
         if (isLocked()) {
@@ -178,16 +175,15 @@ public class LMSEDualAbsoluteQuadricEstimator extends
         }
 
         try {
-            mLocked = true;
-            if (mListener != null) {
-                mListener.onEstimateStart(this);
+            locked = true;
+            if (listener != null) {
+                listener.onEstimateStart(this);
             }
 
-            if (mPrincipalPointAtOrigin) {
-                if (mZeroSkewness) {
-                    if (mFocalDistanceAspectRatioKnown) {
-                        estimateZeroSkewnessPrincipalPointAtOriginAndKnownFocalDistanceAspectRatio(
-                                result);
+            if (principalPointAtOrigin) {
+                if (zeroSkewness) {
+                    if (focalDistanceAspectRatioKnown) {
+                        estimateZeroSkewnessPrincipalPointAtOriginAndKnownFocalDistanceAspectRatio(result);
                     } else {
                         estimateZeroSkewnessAndPrincipalPointAtOrigin(result);
                     }
@@ -196,11 +192,11 @@ public class LMSEDualAbsoluteQuadricEstimator extends
                 }
             }
 
-            if (mListener != null) {
-                mListener.onEstimateEnd(this);
+            if (listener != null) {
+                listener.onEstimateEnd(this);
             }
         } finally {
-            mLocked = false;
+            locked = false;
         }
     }
 
@@ -211,8 +207,7 @@ public class LMSEDualAbsoluteQuadricEstimator extends
      */
     @Override
     public DualAbsoluteQuadricEstimatorType getType() {
-        return DualAbsoluteQuadricEstimatorType.
-                LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR;
+        return DualAbsoluteQuadricEstimatorType.LMSE_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR;
     }
 
     /**
@@ -221,8 +216,7 @@ public class LMSEDualAbsoluteQuadricEstimator extends
      * @return minimum number of equations required to find a solution.
      */
     private int getMinRequiredEquations() {
-        return mSingularityEnforced ? MIN_REQUIRED_EQUATIONS - 1 :
-                MIN_REQUIRED_EQUATIONS;
+        return singularityEnforced ? MIN_REQUIRED_EQUATIONS - 1 : MIN_REQUIRED_EQUATIONS;
     }
 
     /**
@@ -239,16 +233,15 @@ public class LMSEDualAbsoluteQuadricEstimator extends
      *                                               provided, where no additional data is really provided.
      */
     private void estimateZeroSkewnessPrincipalPointAtOriginAndKnownFocalDistanceAspectRatio(
-            final DualAbsoluteQuadric result)
-            throws DualAbsoluteQuadricEstimatorException {
+            final DualAbsoluteQuadric result) throws DualAbsoluteQuadricEstimatorException {
         try {
-            final int nCams = mCameras.size();
+            final var nCams = cameras.size();
 
             final Matrix a;
             if (isLMSESolutionAllowed()) {
                 a = new Matrix(4 * nCams, BaseQuadric.N_PARAMS);
             } else {
-                a = new Matrix(mSingularityEnforced ? 8 : 12, BaseQuadric.N_PARAMS);
+                a = new Matrix(singularityEnforced ? 8 : 12, BaseQuadric.N_PARAMS);
             }
 
             Matrix cameraMatrix;
@@ -264,9 +257,9 @@ public class LMSEDualAbsoluteQuadricEstimator extends
             double p32;
             double p33;
             double p34;
-            int eqCounter = 0;
-            final int minReqEqs = getMinRequiredEquations();
-            for (final PinholeCamera camera : mCameras) {
+            var eqCounter = 0;
+            final var minReqEqs = getMinRequiredEquations();
+            for (final var camera : cameras) {
 
                 // normalize cameras to increase accuracy
                 camera.normalize();
@@ -290,31 +283,19 @@ public class LMSEDualAbsoluteQuadricEstimator extends
                 p34 = cameraMatrix.getElementAt(2, 3);
 
                 // 1st row
-                fill2ndRowAnd1stRowEquation(p11, p21,
-                        p12, p22,
-                        p13, p23,
-                        p14, p24, a, eqCounter);
+                fill2ndRowAnd1stRowEquation(p11, p21, p12, p22, p13, p23, p14, p24, a, eqCounter);
                 eqCounter++;
 
                 // 2nd row
-                fill3rdRowAnd1stRowEquation(p11, p31,
-                        p12, p32,
-                        p13, p33,
-                        p14, p34, a, eqCounter);
+                fill3rdRowAnd1stRowEquation(p11, p31, p12, p32, p13, p33, p14, p34, a, eqCounter);
                 eqCounter++;
 
                 // 3rd row
-                fill3rdRowAnd2ndRowEquation(p21, p31,
-                        p22, p32,
-                        p23, p33,
-                        p24, p34, a, eqCounter);
+                fill3rdRowAnd2ndRowEquation(p21, p31, p22, p32, p23, p33, p24, p34, a, eqCounter);
                 eqCounter++;
 
                 // 4th row
-                fill1stRowEqualTo2ndRowEquation(p11, p21,
-                        p12, p22,
-                        p13, p23,
-                        p14, p24, a, eqCounter);
+                fill1stRowEqualTo2ndRowEquation(p11, p21, p12, p22, p13, p23, p14, p24, a, eqCounter);
                 eqCounter++;
 
                 if (!isLMSESolutionAllowed() && eqCounter >= minReqEqs) {
@@ -322,7 +303,7 @@ public class LMSEDualAbsoluteQuadricEstimator extends
                 }
             }
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(a);
+            final var decomposer = new SingularValueDecomposer(a);
             enforceRank3IfNeeded(decomposer, result);
 
         } catch (final AlgebraException | NumericalException e) {
@@ -342,11 +323,10 @@ public class LMSEDualAbsoluteQuadricEstimator extends
      *                                               sequences such as pure parallel translations are
      *                                               provided, where no additional data is really provided.
      */
-    private void estimateZeroSkewnessAndPrincipalPointAtOrigin(
-            final DualAbsoluteQuadric result)
+    private void estimateZeroSkewnessAndPrincipalPointAtOrigin(final DualAbsoluteQuadric result)
             throws DualAbsoluteQuadricEstimatorException {
         try {
-            final int nCams = mCameras.size();
+            final var nCams = cameras.size();
 
             final Matrix a;
             if (isLMSESolutionAllowed()) {
@@ -368,9 +348,9 @@ public class LMSEDualAbsoluteQuadricEstimator extends
             double p32;
             double p33;
             double p34;
-            int eqCounter = 0;
-            final int minReqEqs = getMinRequiredEquations();
-            for (final PinholeCamera camera : mCameras) {
+            var eqCounter = 0;
+            final var minReqEqs = getMinRequiredEquations();
+            for (final var camera : cameras) {
 
                 // normalize cameras to increase accuracy
                 camera.normalize();
@@ -394,24 +374,15 @@ public class LMSEDualAbsoluteQuadricEstimator extends
                 p34 = cameraMatrix.getElementAt(2, 3);
 
                 // 1st row
-                fill2ndRowAnd1stRowEquation(p11, p21,
-                        p12, p22,
-                        p13, p23,
-                        p14, p24, a, eqCounter);
+                fill2ndRowAnd1stRowEquation(p11, p21, p12, p22, p13, p23, p14, p24, a, eqCounter);
                 eqCounter++;
 
                 // 2nd row
-                fill3rdRowAnd1stRowEquation(p11, p31,
-                        p12, p32,
-                        p13, p33,
-                        p14, p34, a, eqCounter);
+                fill3rdRowAnd1stRowEquation(p11, p31, p12, p32, p13, p33, p14, p34, a, eqCounter);
                 eqCounter++;
 
                 // 3rd row
-                fill3rdRowAnd2ndRowEquation(p21, p31,
-                        p22, p32,
-                        p23, p33,
-                        p24, p34, a, eqCounter);
+                fill3rdRowAnd2ndRowEquation(p21, p31, p22, p32, p23, p33, p24, p34, a, eqCounter);
                 eqCounter++;
 
                 if (!isLMSESolutionAllowed() && eqCounter >= minReqEqs) {
@@ -419,7 +390,7 @@ public class LMSEDualAbsoluteQuadricEstimator extends
                 }
             }
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(a);
+            final var decomposer = new SingularValueDecomposer(a);
             enforceRank3IfNeeded(decomposer, result);
 
         } catch (final AlgebraException | NumericalException e) {
@@ -439,17 +410,16 @@ public class LMSEDualAbsoluteQuadricEstimator extends
      *                                               sequences such as pure parallel translations are
      *                                               provided, where no additional data is really provided.
      */
-    private void estimatePrincipalPointAtOrigin(
-            final DualAbsoluteQuadric result)
+    private void estimatePrincipalPointAtOrigin(final DualAbsoluteQuadric result)
             throws DualAbsoluteQuadricEstimatorException {
         try {
-            final int nCams = mCameras.size();
+            final var nCams = cameras.size();
 
             final Matrix a;
             if (isLMSESolutionAllowed()) {
                 a = new Matrix(2 * nCams, BaseQuadric.N_PARAMS);
             } else {
-                a = new Matrix(mSingularityEnforced ? 8 : 10, BaseQuadric.N_PARAMS);
+                a = new Matrix(singularityEnforced ? 8 : 10, BaseQuadric.N_PARAMS);
             }
 
             Matrix cameraMatrix;
@@ -465,9 +435,9 @@ public class LMSEDualAbsoluteQuadricEstimator extends
             double p32;
             double p33;
             double p34;
-            int eqCounter = 0;
-            final int minReqEqs = getMinRequiredEquations();
-            for (final PinholeCamera camera : mCameras) {
+            var eqCounter = 0;
+            final var minReqEqs = getMinRequiredEquations();
+            for (final var camera : cameras) {
 
                 // normalize cameras to increase accuracy
                 camera.normalize();
@@ -491,17 +461,11 @@ public class LMSEDualAbsoluteQuadricEstimator extends
                 p34 = cameraMatrix.getElementAt(2, 3);
 
                 // 1st row
-                fill3rdRowAnd1stRowEquation(p11, p31,
-                        p12, p32,
-                        p13, p33,
-                        p14, p34, a, eqCounter);
+                fill3rdRowAnd1stRowEquation(p11, p31, p12, p32, p13, p33, p14, p34, a, eqCounter);
                 eqCounter++;
 
                 // 2nd row
-                fill3rdRowAnd2ndRowEquation(p21, p31,
-                        p22, p32,
-                        p23, p33,
-                        p24, p34, a, eqCounter);
+                fill3rdRowAnd2ndRowEquation(p21, p31, p22, p32, p23, p33, p24, p34, a, eqCounter);
                 eqCounter++;
 
                 if (!isLMSESolutionAllowed() && eqCounter >= minReqEqs) {
@@ -509,7 +473,7 @@ public class LMSEDualAbsoluteQuadricEstimator extends
                 }
             }
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(a);
+            final var decomposer = new SingularValueDecomposer(a);
             enforceRank3IfNeeded(decomposer, result);
 
         } catch (final AlgebraException | NumericalException e) {

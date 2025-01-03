@@ -18,7 +18,6 @@ package com.irurueta.ar.calibration.estimators;
 import com.irurueta.algebra.AlgebraException;
 import com.irurueta.algebra.CholeskyDecomposer;
 import com.irurueta.algebra.Complex;
-import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.SingularValueDecomposer;
 import com.irurueta.ar.calibration.DualImageOfAbsoluteConic;
 import com.irurueta.ar.epipolar.FundamentalMatrix;
@@ -68,8 +67,7 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      * aspect ratio. Typically, LCD sensor cells are square and hence aspect
      * ratio of focal distances is known and equal to 1.
      */
-    public static final boolean DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN =
-            true;
+    public static final boolean DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN = true;
 
     /**
      * Constant defining default aspect ratio of focal distances. This constant
@@ -86,12 +84,12 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
     /**
      * Known horizontal principal point coordinate.
      */
-    private double mPrincipalPointX;
+    private double principalPointX;
 
     /**
      * Known vertical principal point coordinate.
      */
-    private double mPrincipalPointY;
+    private double principalPointY;
 
     /**
      * Indicates whether aspect ratio of focal distances (i.e. vertical focal
@@ -100,7 +98,7 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      * ratio. Typically, LCD sensor cells are square and hence aspect ratio of
      * focal distances is known and equal to 1.
      */
-    private boolean mFocalDistanceAspectRatioKnown;
+    private boolean focalDistanceAspectRatioKnown;
 
     /**
      * Contains aspect ratio of focal distances (i.e. vertical focal distance
@@ -111,37 +109,36 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      * Notice that focal distance aspect ratio is not related to image size
      * aspect ratio.
      */
-    private double mFocalDistanceAspectRatio;
+    private double focalDistanceAspectRatio;
 
     /**
      * True when estimator is estimating the DIAC.
      */
-    private boolean mLocked;
+    private boolean locked;
 
     /**
      * Listener to be notified of events such as when estimation starts, ends or
      * estimation progress changes.
      */
-    private KruppaDualImageOfAbsoluteConicEstimatorListener mListener;
+    private KruppaDualImageOfAbsoluteConicEstimatorListener listener;
 
     /**
      * Fundamental matrix to estimate DIAC from.
      */
-    private FundamentalMatrix mFundamentalMatrix;
+    private FundamentalMatrix fundamentalMatrix;
 
     /**
      * Constructor.
      */
     public KruppaDualImageOfAbsoluteConicEstimator() {
-        mPrincipalPointX = DEFAULT_PRINCIPAL_POINT_X;
-        mPrincipalPointY = DEFAULT_PRINCIPAL_POINT_Y;
-        mFocalDistanceAspectRatioKnown =
-                DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN;
-        mFocalDistanceAspectRatio = DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO;
+        principalPointX = DEFAULT_PRINCIPAL_POINT_X;
+        principalPointY = DEFAULT_PRINCIPAL_POINT_Y;
+        focalDistanceAspectRatioKnown = DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN;
+        focalDistanceAspectRatio = DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO;
 
-        mLocked = false;
-        mListener = null;
-        mFundamentalMatrix = null;
+        locked = false;
+        listener = null;
+        fundamentalMatrix = null;
     }
 
     /**
@@ -150,10 +147,9 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or estimation progress changes.
      */
-    public KruppaDualImageOfAbsoluteConicEstimator(
-            final KruppaDualImageOfAbsoluteConicEstimatorListener listener) {
+    public KruppaDualImageOfAbsoluteConicEstimator(final KruppaDualImageOfAbsoluteConicEstimatorListener listener) {
         this();
-        mListener = listener;
+        this.listener = listener;
     }
 
     /**
@@ -161,10 +157,9 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      *
      * @param fundamentalMatrix fundamental matrix to estimate DIAC from.
      */
-    public KruppaDualImageOfAbsoluteConicEstimator(
-            final FundamentalMatrix fundamentalMatrix) {
+    public KruppaDualImageOfAbsoluteConicEstimator(final FundamentalMatrix fundamentalMatrix) {
         this();
-        mFundamentalMatrix = fundamentalMatrix;
+        this.fundamentalMatrix = fundamentalMatrix;
     }
 
     /**
@@ -175,10 +170,9 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      *                          starts, ends or estimation progress changes.
      */
     public KruppaDualImageOfAbsoluteConicEstimator(
-            final FundamentalMatrix fundamentalMatrix,
-            final KruppaDualImageOfAbsoluteConicEstimatorListener listener) {
+            final FundamentalMatrix fundamentalMatrix, final KruppaDualImageOfAbsoluteConicEstimatorListener listener) {
         this(fundamentalMatrix);
-        mListener = listener;
+        this.listener = listener;
     }
 
     /**
@@ -187,7 +181,7 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      * @return known horizontal principal point coordinate.
      */
     public double getPrincipalPointX() {
-        return mPrincipalPointX;
+        return principalPointX;
     }
 
     /**
@@ -197,12 +191,11 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      *                        set.
      * @throws LockedException if estimator is locked.
      */
-    public void setPrincipalPointX(final double principalPointX)
-            throws LockedException {
+    public void setPrincipalPointX(final double principalPointX) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mPrincipalPointX = principalPointX;
+        this.principalPointX = principalPointX;
     }
 
     /**
@@ -211,7 +204,7 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      * @return known vertical principal point coordinate.
      */
     public double getPrincipalPointY() {
-        return mPrincipalPointY;
+        return principalPointY;
     }
 
     /**
@@ -221,12 +214,11 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      *                        set.
      * @throws LockedException if estimator is locked.
      */
-    public void setPrincipalPointY(final double principalPointY)
-            throws LockedException {
+    public void setPrincipalPointY(final double principalPointY) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mPrincipalPointY = principalPointY;
+        this.principalPointY = principalPointY;
     }
 
     /**
@@ -242,7 +234,7 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      * @return true if focal distance aspect ratio is known, false otherwise.
      */
     public boolean isFocalDistanceAspectRatioKnown() {
-        return mFocalDistanceAspectRatioKnown;
+        return focalDistanceAspectRatioKnown;
     }
 
     /**
@@ -259,13 +251,12 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      *                                      is known, false otherwise.
      * @throws LockedException if estimator is locked.
      */
-    public void setFocalDistanceAspectRatioKnown(
-            final boolean focalDistanceAspectRatioKnown) throws LockedException {
+    public void setFocalDistanceAspectRatioKnown(final boolean focalDistanceAspectRatioKnown) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
 
-        mFocalDistanceAspectRatioKnown = focalDistanceAspectRatioKnown;
+        this.focalDistanceAspectRatioKnown = focalDistanceAspectRatioKnown;
     }
 
     /**
@@ -285,7 +276,7 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      * @return aspect ratio of focal distances.
      */
     public double getFocalDistanceAspectRatio() {
-        return mFocalDistanceAspectRatio;
+        return focalDistanceAspectRatio;
     }
 
     /**
@@ -310,17 +301,15 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      * @throws IllegalArgumentException if focal distance aspect ratio is too
      *                                  close to zero, as it might produce numerical instabilities.
      */
-    public void setFocalDistanceAspectRatio(final double focalDistanceAspectRatio)
-            throws LockedException {
+    public void setFocalDistanceAspectRatio(final double focalDistanceAspectRatio) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        if (Math.abs(focalDistanceAspectRatio) <
-                MIN_ABS_FOCAL_DISTANCE_ASPECT_RATIO) {
+        if (Math.abs(focalDistanceAspectRatio) < MIN_ABS_FOCAL_DISTANCE_ASPECT_RATIO) {
             throw new IllegalArgumentException();
         }
 
-        mFocalDistanceAspectRatio = focalDistanceAspectRatio;
+        this.focalDistanceAspectRatio = focalDistanceAspectRatio;
     }
 
     /**
@@ -330,7 +319,7 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      * otherwise.
      */
     public boolean isLocked() {
-        return mLocked;
+        return locked;
     }
 
     /**
@@ -340,7 +329,7 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      * @return listener to be notified of events.
      */
     public KruppaDualImageOfAbsoluteConicEstimatorListener getListener() {
-        return mListener;
+        return listener;
     }
 
     /**
@@ -351,12 +340,11 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      * @throws LockedException if estimator is locked.
      */
     public void setListener(
-            final KruppaDualImageOfAbsoluteConicEstimatorListener listener)
-            throws LockedException {
+            final KruppaDualImageOfAbsoluteConicEstimatorListener listener) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mListener = listener;
+        this.listener = listener;
     }
 
     /**
@@ -365,7 +353,7 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      * @return fundamental matrix to estimate DIAC from.
      */
     public FundamentalMatrix getFundamentalMatrix() {
-        return mFundamentalMatrix;
+        return fundamentalMatrix;
     }
 
     /**
@@ -374,12 +362,11 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      * @param fundamentalMatrix fundamental matrix to estimate DIAC from.
      * @throws LockedException if estimator is locked.
      */
-    public void setFundamentalMatrix(final FundamentalMatrix fundamentalMatrix)
-            throws LockedException {
+    public void setFundamentalMatrix(final FundamentalMatrix fundamentalMatrix) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mFundamentalMatrix = fundamentalMatrix;
+        this.fundamentalMatrix = fundamentalMatrix;
     }
 
     /**
@@ -391,7 +378,7 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      * @return true if estimator is ready, false otherwise.
      */
     public boolean isReady() {
-        return mFundamentalMatrix != null;
+        return fundamentalMatrix != null;
     }
 
     /**
@@ -406,11 +393,9 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      *                                                          degenerate camera movements, or because of
      *                                                          numerical instabilities.
      */
-    public DualImageOfAbsoluteConic estimate() throws LockedException,
-            NotReadyException,
+    public DualImageOfAbsoluteConic estimate() throws LockedException, NotReadyException,
             KruppaDualImageOfAbsoluteConicEstimatorException {
-        final DualImageOfAbsoluteConic result = new DualImageOfAbsoluteConic(0.0, 0.0,
-                0.0, 0.0, 0.0, 0.0);
+        final var result = new DualImageOfAbsoluteConic(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
         estimate(result);
         return result;
     }
@@ -427,8 +412,7 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      *                                                          degenerate camera movements, or because of
      *                                                          numerical instabilities.
      */
-    public void estimate(final DualImageOfAbsoluteConic result)
-            throws LockedException, NotReadyException,
+    public void estimate(final DualImageOfAbsoluteConic result) throws LockedException, NotReadyException,
             KruppaDualImageOfAbsoluteConicEstimatorException {
         if (isLocked()) {
             throw new LockedException();
@@ -438,23 +422,23 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
         }
 
         try {
-            mLocked = true;
+            locked = true;
 
-            if (mListener != null) {
-                mListener.onEstimateStart(this);
+            if (listener != null) {
+                listener.onEstimateStart(this);
             }
 
-            if (mFocalDistanceAspectRatioKnown) {
+            if (focalDistanceAspectRatioKnown) {
                 estimateKnownAspectRatio(result);
             } else {
                 estimateUnknownAspectRatio(result);
             }
 
-            if (mListener != null) {
-                mListener.onEstimateEnd(this);
+            if (listener != null) {
+                listener.onEstimateEnd(this);
             }
         } finally {
-            mLocked = false;
+            locked = false;
         }
     }
 
@@ -467,18 +451,16 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      * @param result                instance where estimated DIAC will be stored.
      * @return true if estimated DIAC is valid, false otherwise.
      */
-    private boolean buildDiac(final double horizontalFocalLength,
-                              final double verticalFocalLength,
+    private boolean buildDiac(final double horizontalFocalLength, final double verticalFocalLength,
                               final DualImageOfAbsoluteConic result) {
 
         try {
-            final PinholeCameraIntrinsicParameters intrinsic = new
-                    PinholeCameraIntrinsicParameters(horizontalFocalLength,
-                    verticalFocalLength, mPrincipalPointX, mPrincipalPointY, 0.0);
+            final var intrinsic = new PinholeCameraIntrinsicParameters(horizontalFocalLength, verticalFocalLength,
+                    principalPointX, principalPointY, 0.0);
             result.setFromPinholeCameraIntrinsicParameters(intrinsic);
 
-            final Matrix m = result.asMatrix();
-            final CholeskyDecomposer decomposer = new CholeskyDecomposer(m);
+            final var m = result.asMatrix();
+            final var decomposer = new CholeskyDecomposer(m);
             decomposer.decompose();
             return decomposer.isSPD();
         } catch (final AlgebraException e) {
@@ -500,99 +482,98 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
     private void estimateUnknownAspectRatio(final DualImageOfAbsoluteConic result)
             throws KruppaDualImageOfAbsoluteConicEstimatorException {
         try {
-            final double x0 = mPrincipalPointX;
-            final double y0 = mPrincipalPointY;
+            final var x0 = principalPointX;
+            final var y0 = principalPointY;
 
             // SVD decompose fundamental matrix
-            mFundamentalMatrix.normalize();
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    mFundamentalMatrix.getInternalMatrix());
+            fundamentalMatrix.normalize();
+            final var decomposer = new SingularValueDecomposer(fundamentalMatrix.getInternalMatrix());
             decomposer.decompose();
 
-            final double[] sigmas = decomposer.getSingularValues();
-            final Matrix u = decomposer.getU();
-            final Matrix v = decomposer.getV();
+            final var sigmas = decomposer.getSingularValues();
+            final var u = decomposer.getU();
+            final var v = decomposer.getV();
 
-            final double sigma1 = sigmas[0];
-            final double sigma2 = sigmas[1];
+            final var sigma1 = sigmas[0];
+            final var sigma2 = sigmas[1];
 
             // Column u1
-            final double u11 = u.getElementAt(0, 0);
-            final double u21 = u.getElementAt(1, 0);
-            final double u31 = u.getElementAt(2, 0);
+            final var u11 = u.getElementAt(0, 0);
+            final var u21 = u.getElementAt(1, 0);
+            final var u31 = u.getElementAt(2, 0);
 
             // Column u2
-            final double u12 = u.getElementAt(0, 1);
-            final double u22 = u.getElementAt(1, 1);
-            final double u32 = u.getElementAt(2, 1);
+            final var u12 = u.getElementAt(0, 1);
+            final var u22 = u.getElementAt(1, 1);
+            final var u32 = u.getElementAt(2, 1);
 
             // Column v1
-            final double v11 = v.getElementAt(0, 0);
-            final double v21 = v.getElementAt(1, 0);
-            final double v31 = v.getElementAt(2, 0);
+            final var v11 = v.getElementAt(0, 0);
+            final var v21 = v.getElementAt(1, 0);
+            final var v31 = v.getElementAt(2, 0);
 
             // Column v2
-            final double v12 = v.getElementAt(0, 1);
-            final double v22 = v.getElementAt(1, 1);
-            final double v32 = v.getElementAt(2, 1);
+            final var v12 = v.getElementAt(0, 1);
+            final var v22 = v.getElementAt(1, 1);
+            final var v32 = v.getElementAt(2, 1);
 
             // build Kruppa equations
-            final double polyA = u12 * u11;
-            final double polyB = u22 * u21;
-            final double polyC = Math.pow(x0, 2.0) * u12 * u11 + x0 * y0 * u22 * u11 + x0 * u32 * u11 +
-                    x0 * y0 * u12 * u21 + Math.pow(y0, 2.0) * u22 * u21 + y0 * u32 * u21 +
-                    x0 * u12 * u31 + y0 * u22 * u31 + u32 * u31;
-            final double polyD = Math.pow(sigma2, 2.0) * v12 * v12;
-            final double polyE = Math.pow(sigma2, 2.0) * v22 * v22;
-            final double polyF = Math.pow(sigma2 * x0, 2.0) * v12 * v12 +
-                    Math.pow(sigma2, 2.0) * x0 * y0 * v22 * v12 +
-                    Math.pow(sigma2, 2.0) * x0 * v32 * v12 +
-                    Math.pow(sigma2, 2.0) * x0 * y0 * v12 * v22 +
-                    Math.pow(sigma2 * y0, 2.0) * v22 * v22 +
-                    Math.pow(sigma2, 2.0) * y0 * v32 * v22 +
-                    Math.pow(sigma2, 2.0) * x0 * v12 * v32 +
-                    Math.pow(sigma2, 2.0) * y0 * v22 * v32 +
-                    Math.pow(sigma2, 2.0) * v32 * v32;
-            final double polyG = u11 * u11;
-            final double polyH = u21 * u21;
-            final double polyI = Math.pow(x0, 2.0) * u11 * u11 + x0 * y0 * u21 * u11 + x0 * u31 * u11 +
-                    x0 * y0 * u11 * u21 + Math.pow(y0, 2.0) * u21 * u21 + y0 * u31 * u21 +
-                    x0 * u11 * u31 + y0 * u21 * u31 + u31 * u31;
-            final double polyJ = sigma1 * sigma2 * v12 * v11;
-            final double polyK = sigma1 * sigma2 * v22 * v21;
-            final double polyL = sigma1 * sigma2 * Math.pow(x0, 2.0) * v12 * v11 +
-                    sigma1 * sigma2 * x0 * y0 * v22 * v11 + sigma1 * sigma2 * x0 * v32 * v11 +
-                    sigma1 * sigma2 * x0 * y0 * v12 * v21 +
-                    sigma1 * sigma2 * Math.pow(y0, 2.0) * v22 * v21 +
-                    sigma1 * sigma2 * y0 * v32 * v21 + sigma1 * sigma2 * x0 * v12 * v31 +
-                    sigma1 * sigma2 * y0 * v22 * v31 + sigma1 * sigma2 * v32 * v31;
-            final double polyM = Math.pow(sigma1, 2.0) * v11 * v11;
-            final double polyN = Math.pow(sigma1, 2.0) * v21 * v21;
-            final double polyO = Math.pow(sigma1 * x0, 2.0) * v11 * v11 +
-                    Math.pow(sigma1, 2.0) * x0 * y0 * v21 * v11 +
-                    Math.pow(sigma1, 2.0) * x0 * v31 * v11 +
-                    Math.pow(sigma1, 2.0) * x0 * y0 * v11 * v21 +
-                    Math.pow(sigma1 * y0, 2.0) * v21 * v21 +
-                    Math.pow(sigma1, 2.0) * y0 * v31 * v21 +
-                    Math.pow(sigma1, 2.0) * x0 * v11 * v31 +
-                    Math.pow(sigma1, 2.0) * y0 * v21 * v31 +
-                    Math.pow(sigma1, 2.0) * v31 * v31;
-            final double polyP = u12 * u12;
-            final double polyQ = u22 * u22;
-            final double polyR = Math.pow(x0, 2.0) * u12 * u12 + x0 * y0 * u22 * u12 + x0 * u32 * u12 +
-                    x0 * y0 * u12 * u22 + Math.pow(y0, 2.0) * u22 * u22 + y0 * u32 * u22 +
-                    x0 * u12 * u32 + y0 * u22 * u32 + u32 * u32;
+            final var polyA = u12 * u11;
+            final var polyB = u22 * u21;
+            final var polyC = Math.pow(x0, 2.0) * u12 * u11 + x0 * y0 * u22 * u11 + x0 * u32 * u11
+                    + x0 * y0 * u12 * u21 + Math.pow(y0, 2.0) * u22 * u21 + y0 * u32 * u21
+                    + x0 * u12 * u31 + y0 * u22 * u31 + u32 * u31;
+            final var polyD = Math.pow(sigma2, 2.0) * v12 * v12;
+            final var polyE = Math.pow(sigma2, 2.0) * v22 * v22;
+            final var polyF = Math.pow(sigma2 * x0, 2.0) * v12 * v12
+                    + Math.pow(sigma2, 2.0) * x0 * y0 * v22 * v12
+                    + Math.pow(sigma2, 2.0) * x0 * v32 * v12
+                    + Math.pow(sigma2, 2.0) * x0 * y0 * v12 * v22
+                    + Math.pow(sigma2 * y0, 2.0) * v22 * v22
+                    + Math.pow(sigma2, 2.0) * y0 * v32 * v22
+                    + Math.pow(sigma2, 2.0) * x0 * v12 * v32
+                    + Math.pow(sigma2, 2.0) * y0 * v22 * v32
+                    + Math.pow(sigma2, 2.0) * v32 * v32;
+            final var polyG = u11 * u11;
+            final var polyH = u21 * u21;
+            final var polyI = Math.pow(x0, 2.0) * u11 * u11 + x0 * y0 * u21 * u11 + x0 * u31 * u11
+                    + x0 * y0 * u11 * u21 + Math.pow(y0, 2.0) * u21 * u21 + y0 * u31 * u21
+                    + x0 * u11 * u31 + y0 * u21 * u31 + u31 * u31;
+            final var polyJ = sigma1 * sigma2 * v12 * v11;
+            final var polyK = sigma1 * sigma2 * v22 * v21;
+            final var polyL = sigma1 * sigma2 * Math.pow(x0, 2.0) * v12 * v11
+                    + sigma1 * sigma2 * x0 * y0 * v22 * v11 + sigma1 * sigma2 * x0 * v32 * v11
+                    + sigma1 * sigma2 * x0 * y0 * v12 * v21
+                    + sigma1 * sigma2 * Math.pow(y0, 2.0) * v22 * v21
+                    + sigma1 * sigma2 * y0 * v32 * v21 + sigma1 * sigma2 * x0 * v12 * v31
+                    + sigma1 * sigma2 * y0 * v22 * v31 + sigma1 * sigma2 * v32 * v31;
+            final var polyM = Math.pow(sigma1, 2.0) * v11 * v11;
+            final var polyN = Math.pow(sigma1, 2.0) * v21 * v21;
+            final var polyO = Math.pow(sigma1 * x0, 2.0) * v11 * v11
+                    + Math.pow(sigma1, 2.0) * x0 * y0 * v21 * v11
+                    + Math.pow(sigma1, 2.0) * x0 * v31 * v11
+                    + Math.pow(sigma1, 2.0) * x0 * y0 * v11 * v21
+                    + Math.pow(sigma1 * y0, 2.0) * v21 * v21
+                    + Math.pow(sigma1, 2.0) * y0 * v31 * v21
+                    + Math.pow(sigma1, 2.0) * x0 * v11 * v31
+                    + Math.pow(sigma1, 2.0) * y0 * v21 * v31
+                    + Math.pow(sigma1, 2.0) * v31 * v31;
+            final var polyP = u12 * u12;
+            final var polyQ = u22 * u22;
+            final var polyR = Math.pow(x0, 2.0) * u12 * u12 + x0 * y0 * u22 * u12 + x0 * u32 * u12
+                    + x0 * y0 * u12 * u22 + Math.pow(y0, 2.0) * u22 * u22 + y0 * u32 * u22
+                    + x0 * u12 * u32 + y0 * u22 * u32 + u32 * u32;
 
 
-            final double tmp = (polyP * polyJ + polyA * polyM) / (polyG * polyM - polyP * polyD);
-            final double polyS = (tmp * (polyH * polyN - polyQ * polyE) - (polyQ * polyK + polyB * polyN));
-            final double polyT = (tmp * (polyG * polyN + polyH * polyM - polyP * polyE - polyQ * polyD) -
-                    (polyP * polyK + polyQ * polyJ + polyA * polyN + polyB * polyM));
-            final double polyU = (tmp * (polyG * polyO + polyM * polyI - polyP * polyF - polyD * polyR) -
-                    (polyP * polyL + polyJ * polyR + polyA * polyO + polyM * polyC));
-            final double polyV = (tmp * (polyH * polyO + polyN * polyI - polyQ * polyF - polyE * polyR) -
-                    (polyQ * polyL + polyK * polyR + polyB * polyO + polyN * polyC));
-            final double polyW = (tmp * (polyO * polyI - polyF * polyR) - (polyL * polyR + polyO * polyC));
+            final var tmp = (polyP * polyJ + polyA * polyM) / (polyG * polyM - polyP * polyD);
+            final var polyS = (tmp * (polyH * polyN - polyQ * polyE) - (polyQ * polyK + polyB * polyN));
+            final var polyT = (tmp * (polyG * polyN + polyH * polyM - polyP * polyE - polyQ * polyD)
+                    - (polyP * polyK + polyQ * polyJ + polyA * polyN + polyB * polyM));
+            final var polyU = (tmp * (polyG * polyO + polyM * polyI - polyP * polyF - polyD * polyR)
+                    - (polyP * polyL + polyJ * polyR + polyA * polyO + polyM * polyC));
+            final var polyV = (tmp * (polyH * polyO + polyN * polyI - polyQ * polyF - polyE * polyR)
+                    - (polyQ * polyL + polyK * polyR + polyB * polyO + polyN * polyC));
+            final var polyW = (tmp * (polyO * polyI - polyF * polyR) - (polyL * polyR + polyO * polyC));
 
             // assuming that x = ax^2, y = ay^2 which are the horizontal and
             // vertical focal lengths, we obtain the following equations
@@ -610,31 +591,26 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
 
             // where we can solve y using any of the two latter equations, and
             // then use obtained y to solve x
-            final Complex[] roots = unknownAspectRatioRoots(polyA, polyB, polyC,
-                    polyD, polyE, polyF, polyG, polyH,
-                    polyI, polyJ, polyK, polyL, polyM,
-                    polyN, polyO, polyP, polyQ, polyR,
-                    polyS, polyT, polyU, polyV, polyW);
+            final var roots = unknownAspectRatioRoots(polyA, polyB, polyC, polyD, polyE, polyF, polyG, polyH, polyI,
+                    polyJ, polyK, polyL, polyM, polyN, polyO, polyP, polyQ, polyR, polyS, polyT, polyU, polyV, polyW);
 
             // roots contain possible y values. We use only their real part
             // and find x = (-y^2*S - y*V - W) / (y*T + U)
 
             // pick the best x, y values that produce a positive definite DIAC
             // matrix
-            final DualImageOfAbsoluteConic diac = new DualImageOfAbsoluteConic(
-                    0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-            boolean valid = false;
+            final var diac = new DualImageOfAbsoluteConic(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+            var valid = false;
             if (roots != null) {
-                for (final Complex root : roots) {
-                    final double y = root.getReal();
-                    final double x = getXFromY(y, polyS, polyT, polyU, polyV, polyW);
+                for (final var root : roots) {
+                    final var y = root.getReal();
+                    final var x = getXFromY(y, polyS, polyT, polyU, polyV, polyW);
 
                     // build DIAC matrix and check if it is positive definite
                     if (x >= 0.0 && y >= 0.0) {
-                        final double horizontalFocalLength = Math.sqrt(x);
-                        final double verticalFocalLength = Math.sqrt(y);
-                        valid = buildDiac(horizontalFocalLength,
-                                verticalFocalLength, diac);
+                        final var horizontalFocalLength = Math.sqrt(x);
+                        final var verticalFocalLength = Math.sqrt(y);
+                        valid = buildDiac(horizontalFocalLength, verticalFocalLength, diac);
                     }
 
                     if (valid) {
@@ -647,8 +623,7 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
 
             if (valid) {
                 // copy to result
-                result.setParameters(diac.getA(), diac.getB(), diac.getC(),
-                        diac.getD(), diac.getE(), diac.getF());
+                result.setParameters(diac.getA(), diac.getB(), diac.getC(), diac.getD(), diac.getE(), diac.getF());
             } else {
                 // no valid DIAC could be found
                 throw new KruppaDualImageOfAbsoluteConicEstimatorException();
@@ -675,8 +650,8 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
      * @param w internal value from Kruppa's equations.
      * @return x value.
      */
-    private double getXFromY(final double y, final double s, final double t,
-                             final double u, final double v, final double w) {
+    private double getXFromY(final double y, final double s, final double t, final double u, final double v,
+                             final double w) {
         return (-Math.pow(y, 2.0) * s - y * v - w) / (y * t + u);
     }
 
@@ -715,12 +690,11 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
         // (-y^2*S - y*V - W)*(y*T + U)*(-A*F - D*C - G*L - J*I) +
         // y*(y*T + U)^2*(-B*F - E*C - H*L - K*I) + (y*T + U)^2*(- F*C - L*I) = 0
 
-        final Polynomial result = new Polynomial(
-                POLY_DEGREE_UNKNOWN_ASPECT_RATIO + 1);
+        final var result = new Polynomial(POLY_DEGREE_UNKNOWN_ASPECT_RATIO + 1);
 
         // (-y^2*S - y*V - W)^2 *(-A*D - G*J)
-        final Polynomial tmp = new Polynomial(-w, -v, -s);
-        final Polynomial tmp2 = new Polynomial(-w, -v, -s);
+        final var tmp = new Polynomial(-w, -v, -s);
+        final var tmp2 = new Polynomial(-w, -v, -s);
         tmp.multiply(tmp2);
         tmp.multiplyByScalar(-a * d - g * j);
         result.add(tmp);
@@ -801,12 +775,11 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
         // (-y^2*S - y*V - W)*(y*T + U)*y*(G*N + H*M - P*E - Q*D) +
         // (-y^2*S - y*V - W)*(y*T + U)*(G*O + M*I - P*F - D*R) +
         // y*(y*T + U)^2*(H*O + N*I - Q*F - E*R) + (y*T + U)^2*(O*I - F*R) = 0
-        final Polynomial result = new Polynomial(
-                POLY_DEGREE_UNKNOWN_ASPECT_RATIO + 1);
+        final var result = new Polynomial(POLY_DEGREE_UNKNOWN_ASPECT_RATIO + 1);
 
         // (-y^2*S - y*V - W)^2*(G*M - P*D)
-        final Polynomial tmp = new Polynomial(-w, -v, -s);
-        final Polynomial tmp2 = new Polynomial(-w, -v, -s);
+        final var tmp = new Polynomial(-w, -v, -s);
+        final var tmp2 = new Polynomial(-w, -v, -s);
         tmp.multiply(tmp2);
         tmp.multiplyByScalar(g * m - p * d);
         result.add(tmp);
@@ -865,114 +838,110 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
     private void estimateKnownAspectRatio(final DualImageOfAbsoluteConic result)
             throws KruppaDualImageOfAbsoluteConicEstimatorException {
         try {
-            final double x0 = mPrincipalPointX;
-            final double y0 = mPrincipalPointY;
+            final var x0 = principalPointX;
+            final var y0 = principalPointY;
 
             // SVD decompose fundamental matrix
-            mFundamentalMatrix.normalize();
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    mFundamentalMatrix.getInternalMatrix());
+            fundamentalMatrix.normalize();
+            final var decomposer = new SingularValueDecomposer(fundamentalMatrix.getInternalMatrix());
             decomposer.decompose();
 
-            final double[] sigmas = decomposer.getSingularValues();
-            final Matrix u = decomposer.getU();
-            final Matrix v = decomposer.getV();
+            final var sigmas = decomposer.getSingularValues();
+            final var u = decomposer.getU();
+            final var v = decomposer.getV();
 
-            final double sigma1 = sigmas[0];
-            final double sigma2 = sigmas[1];
+            final var sigma1 = sigmas[0];
+            final var sigma2 = sigmas[1];
 
             // Column u1
-            final double u11 = u.getElementAt(0, 0);
-            final double u21 = u.getElementAt(1, 0);
-            final double u31 = u.getElementAt(2, 0);
+            final var u11 = u.getElementAt(0, 0);
+            final var u21 = u.getElementAt(1, 0);
+            final var u31 = u.getElementAt(2, 0);
 
             // Column u2
-            final double u12 = u.getElementAt(0, 1);
-            final double u22 = u.getElementAt(1, 1);
-            final double u32 = u.getElementAt(2, 1);
+            final var u12 = u.getElementAt(0, 1);
+            final var u22 = u.getElementAt(1, 1);
+            final var u32 = u.getElementAt(2, 1);
 
             // Column v1
-            final double v11 = v.getElementAt(0, 0);
-            final double v21 = v.getElementAt(1, 0);
-            final double v31 = v.getElementAt(2, 0);
+            final var v11 = v.getElementAt(0, 0);
+            final var v21 = v.getElementAt(1, 0);
+            final var v31 = v.getElementAt(2, 0);
 
             // Column v2
-            final double v12 = v.getElementAt(0, 1);
-            final double v22 = v.getElementAt(1, 1);
-            final double v32 = v.getElementAt(2, 1);
+            final var v12 = v.getElementAt(0, 1);
+            final var v22 = v.getElementAt(1, 1);
+            final var v32 = v.getElementAt(2, 1);
 
             // build Kruppa equations
-            final double polyA = u12 * u11;
-            final double polyB = u22 * u21;
-            final double polyC = Math.pow(x0, 2.0) * u12 * u11 + x0 * y0 * u22 * u11 + x0 * u32 * u11 +
-                    x0 * y0 * u12 * u21 + Math.pow(y0, 2.0) * u22 * u21 + y0 * u32 * u21 +
-                    x0 * u12 * u31 + y0 * u22 * u31 + u32 * u31;
-            final double polyD = Math.pow(sigma2, 2.0) * v12 * v12;
-            final double polyE = Math.pow(sigma2, 2.0) * v22 * v22;
-            final double polyF = Math.pow(sigma2 * x0, 2.0) * v12 * v12 +
-                    Math.pow(sigma2, 2.0) * x0 * y0 * v22 * v12 +
-                    Math.pow(sigma2, 2.0) * x0 * v32 * v12 +
-                    Math.pow(sigma2, 2.0) * x0 * y0 * v12 * v22 +
-                    Math.pow(sigma2 * y0, 2.0) * v22 * v22 +
-                    Math.pow(sigma2, 2.0) * y0 * v32 * v22 +
-                    Math.pow(sigma2, 2.0) * x0 * v12 * v32 +
-                    Math.pow(sigma2, 2.0) * y0 * v22 * v32 +
-                    Math.pow(sigma2, 2.0) * v32 * v32;
-            final double polyG = u11 * u11;
-            final double polyH = u21 * u21;
-            final double polyI = Math.pow(x0, 2.0) * u11 * u11 + x0 * y0 * u21 * u11 + x0 * u31 * u11 +
-                    x0 * y0 * u11 * u21 + Math.pow(y0, 2.0) * u21 * u21 + y0 * u31 * u21 +
-                    x0 * u11 * u31 + y0 * u21 * u31 + u31 * u31;
-            final double polyJ = sigma1 * sigma2 * v12 * v11;
-            final double polyK = sigma1 * sigma2 * v22 * v21;
-            final double polyL = sigma1 * sigma2 * Math.pow(x0, 2.0) * v12 * v11 +
-                    sigma1 * sigma2 * x0 * y0 * v22 * v11 + sigma1 * sigma2 * x0 * v32 * v11 +
-                    sigma1 * sigma2 * x0 * y0 * v12 * v21 +
-                    sigma1 * sigma2 * Math.pow(y0, 2.0) * v22 * v21 +
-                    sigma1 * sigma2 * y0 * v32 * v21 + sigma1 * sigma2 * x0 * v12 * v31 +
-                    sigma1 * sigma2 * y0 * v22 * v31 + sigma1 * sigma2 * v32 * v31;
-            final double polyM = Math.pow(sigma1, 2.0) * v11 * v11;
-            final double polyN = Math.pow(sigma1, 2.0) * v21 * v21;
-            final double polyO = Math.pow(sigma1 * x0, 2.0) * v11 * v11 +
-                    Math.pow(sigma1, 2.0) * x0 * y0 * v21 * v11 +
-                    Math.pow(sigma1, 2.0) * x0 * v31 * v11 +
-                    Math.pow(sigma1, 2.0) * x0 * y0 * v11 * v21 +
-                    Math.pow(sigma1 * y0, 2.0) * v21 * v21 +
-                    Math.pow(sigma1, 2.0) * y0 * v31 * v21 +
-                    Math.pow(sigma1, 2.0) * x0 * v11 * v31 +
-                    Math.pow(sigma1, 2.0) * y0 * v21 * v31 +
-                    Math.pow(sigma1, 2.0) * v31 * v31;
-            final double polyP = u12 * u12;
-            final double polyQ = u22 * u22;
-            final double polyR = Math.pow(x0, 2.0) * u12 * u12 + x0 * y0 * u22 * u12 + x0 * u32 * u12 +
-                    x0 * y0 * u12 * u22 + Math.pow(y0, 2.0) * u22 * u22 + y0 * u32 * u22 +
-                    x0 * u12 * u32 + y0 * u22 * u32 + u32 * u32;
+            final var polyA = u12 * u11;
+            final var polyB = u22 * u21;
+            final var polyC = Math.pow(x0, 2.0) * u12 * u11 + x0 * y0 * u22 * u11 + x0 * u32 * u11
+                    + x0 * y0 * u12 * u21 + Math.pow(y0, 2.0) * u22 * u21 + y0 * u32 * u21
+                    + x0 * u12 * u31 + y0 * u22 * u31 + u32 * u31;
+            final var polyD = Math.pow(sigma2, 2.0) * v12 * v12;
+            final var polyE = Math.pow(sigma2, 2.0) * v22 * v22;
+            final var polyF = Math.pow(sigma2 * x0, 2.0) * v12 * v12
+                    + Math.pow(sigma2, 2.0) * x0 * y0 * v22 * v12
+                    + Math.pow(sigma2, 2.0) * x0 * v32 * v12
+                    + Math.pow(sigma2, 2.0) * x0 * y0 * v12 * v22
+                    + Math.pow(sigma2 * y0, 2.0) * v22 * v22
+                    + Math.pow(sigma2, 2.0) * y0 * v32 * v22
+                    + Math.pow(sigma2, 2.0) * x0 * v12 * v32
+                    + Math.pow(sigma2, 2.0) * y0 * v22 * v32
+                    + Math.pow(sigma2, 2.0) * v32 * v32;
+            final var polyG = u11 * u11;
+            final var polyH = u21 * u21;
+            final var polyI = Math.pow(x0, 2.0) * u11 * u11 + x0 * y0 * u21 * u11 + x0 * u31 * u11
+                    + x0 * y0 * u11 * u21 + Math.pow(y0, 2.0) * u21 * u21 + y0 * u31 * u21
+                    + x0 * u11 * u31 + y0 * u21 * u31 + u31 * u31;
+            final var polyJ = sigma1 * sigma2 * v12 * v11;
+            final var polyK = sigma1 * sigma2 * v22 * v21;
+            final var polyL = sigma1 * sigma2 * Math.pow(x0, 2.0) * v12 * v11
+                    + sigma1 * sigma2 * x0 * y0 * v22 * v11 + sigma1 * sigma2 * x0 * v32 * v11
+                    + sigma1 * sigma2 * x0 * y0 * v12 * v21
+                    + sigma1 * sigma2 * Math.pow(y0, 2.0) * v22 * v21
+                    + sigma1 * sigma2 * y0 * v32 * v21 + sigma1 * sigma2 * x0 * v12 * v31
+                    + sigma1 * sigma2 * y0 * v22 * v31 + sigma1 * sigma2 * v32 * v31;
+            final var polyM = Math.pow(sigma1, 2.0) * v11 * v11;
+            final var polyN = Math.pow(sigma1, 2.0) * v21 * v21;
+            final var polyO = Math.pow(sigma1 * x0, 2.0) * v11 * v11
+                    + Math.pow(sigma1, 2.0) * x0 * y0 * v21 * v11
+                    + Math.pow(sigma1, 2.0) * x0 * v31 * v11
+                    + Math.pow(sigma1, 2.0) * x0 * y0 * v11 * v21
+                    + Math.pow(sigma1 * y0, 2.0) * v21 * v21
+                    + Math.pow(sigma1, 2.0) * y0 * v31 * v21
+                    + Math.pow(sigma1, 2.0) * x0 * v11 * v31
+                    + Math.pow(sigma1, 2.0) * y0 * v21 * v31
+                    + Math.pow(sigma1, 2.0) * v31 * v31;
+            final var polyP = u12 * u12;
+            final var polyQ = u22 * u22;
+            final var polyR = Math.pow(x0, 2.0) * u12 * u12 + x0 * y0 * u22 * u12 + x0 * u32 * u12
+                    + x0 * y0 * u12 * u22 + Math.pow(y0, 2.0) * u22 * u22 + y0 * u32 * u22
+                    + x0 * u12 * u32 + y0 * u22 * u32 + u32 * u32;
 
             // try to solve any of Kruppa's equations
-            final Complex[] roots = knownAspectRatioRoots(polyA, polyB, polyC, polyD,
-                    polyE, polyF, polyG, polyH, polyI, polyJ, polyK, polyL, polyM,
-                    polyN, polyO, polyP, polyQ, polyR);
+            final var roots = knownAspectRatioRoots(polyA, polyB, polyC, polyD, polyE, polyF, polyG, polyH, polyI,
+                    polyJ, polyK, polyL, polyM, polyN, polyO, polyP, polyQ, polyR);
 
             // roots contain possible x values. We use only their real part
 
             // pick the best x, y values that produce a positive definite DIAC
             // matrix
-            final DualImageOfAbsoluteConic diac = new DualImageOfAbsoluteConic(
-                    0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-            boolean valid = false;
+            final var diac = new DualImageOfAbsoluteConic(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+            var valid = false;
             if (roots != null) {
-                final double r = mFocalDistanceAspectRatio;
-                final double r2 = r * r;
-                for (final Complex root : roots) {
-                    final double x = root.getReal();
-                    final double y = r2 * x;
+                final var r = focalDistanceAspectRatio;
+                final var r2 = r * r;
+                for (final var root : roots) {
+                    final var x = root.getReal();
+                    final var y = r2 * x;
 
                     // build DIAC matrix and check if it is positive definite
                     if (x >= 0.0 && y >= 0.0) {
-                        final double horizontalFocalLength = Math.sqrt(x);
-                        final double verticalFocalLength = Math.sqrt(y);
-                        valid = buildDiac(horizontalFocalLength,
-                                verticalFocalLength, diac);
+                        final var horizontalFocalLength = Math.sqrt(x);
+                        final var verticalFocalLength = Math.sqrt(y);
+                        valid = buildDiac(horizontalFocalLength, verticalFocalLength, diac);
                     }
 
                     if (valid) {
@@ -985,8 +954,7 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
 
             if (valid) {
                 // copy to result
-                result.setParameters(diac.getA(), diac.getB(), diac.getC(),
-                        diac.getD(), diac.getE(), diac.getF());
+                result.setParameters(diac.getA(), diac.getB(), diac.getC(), diac.getD(), diac.getE(), diac.getF());
             } else {
                 // no valid DIAC could be found
                 throw new KruppaDualImageOfAbsoluteConicEstimatorException();
@@ -1026,9 +994,9 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
         // x^2*((-A*D - G*J) + r^4*(-B*E - H*K) + r^2*(-A*E - B*D - G*K - H*J)) +
         // x*((-A*F - D*C - G*L - J*I) + r^2*(-B*F - E*C - H*L - K*I)) +
         // (- F*C - L*I) = 0
-        final double r = mFocalDistanceAspectRatio;
-        final double r2 = r * r;
-        final double r4 = r2 * r2;
+        final var r = focalDistanceAspectRatio;
+        final var r2 = r * r;
+        final var r4 = r2 * r2;
         return new Polynomial(-f * c - l * i,
                 (-a * f - d * c - g * l - j * i) + r2 * (-b * f - e * c - h * l - k * i),
                 ((-a * d - g * j) + r4 * (-b * e - h * k) + r2 * (-a * e - b * d - g * k - h * j)));
@@ -1061,9 +1029,9 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
         // x^2*((G*M - P*D) + r^4*(H*N - Q*E) + r^2*(G*N + H*M - P*E - Q*D)) +
         // x*((G*O + M*I - P*F - D*R) + r^2*(H*O + N*I - Q*F - E*R)) +
         // (O*I - F*R) = 0
-        final double r1 = mFocalDistanceAspectRatio;
-        final double r2 = r1 * r1;
-        final double r4 = r2 * r2;
+        final var r1 = focalDistanceAspectRatio;
+        final var r2 = r1 * r1;
+        final var r4 = r2 * r2;
         return new Polynomial(o * i - f * r,
                 (g * o + m * i - p * f - d * r) + r2 * (h * o + n * i - q * f - e * r),
                 (g * m - p * d) + r4 * (h * n - q * e) + r2 * (g * n + h * m - p * e - q * d));
@@ -1096,9 +1064,9 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
         // x^2*((P*J + A*M) + r^4*(Q*K + B*N) + r^2*(P*K + Q*J + A*N + B*M)) +
         // x*((P*L + J*R + A*O + M*C) + r^2*(Q*L + K*R + B*O + N*C)) +
         // (L*R + O*C) = 0
-        final double r1 = mFocalDistanceAspectRatio;
-        final double r2 = r1 * r1;
-        final double r4 = r2 * r2;
+        final var r1 = focalDistanceAspectRatio;
+        final var r2 = r1 * r1;
+        final var r4 = r2 * r2;
         return new Polynomial(l * r + o * c,
                 (p * l + j * r + a * o + m * c) + r2 * (q * l + k * r + b * o + n * c),
                 (p * j + a * m) + r4 * (q * k + b * n) + r2 * (p * k + q * j + a * n + b * m));
@@ -1142,12 +1110,12 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
             final double polyU, final double polyV, final double polyW) throws NumericalException {
         Complex[] roots;
         try {
-            final Polynomial poly1 = buildPolynomial1(polyA, polyB, polyC, polyD, polyE, polyF, polyG,
+            final var poly1 = buildPolynomial1(polyA, polyB, polyC, polyD, polyE, polyF, polyG,
                     polyH, polyI, polyJ, polyK, polyL, polyS, polyT, polyU, polyV, polyW);
             roots = poly1.getRoots();
         } catch (final NumericalException ex1) {
             // if solution for poly1 fails, try with second polynomial
-            final Polynomial poly2 = buildPolynomial2(polyD, polyE, polyF, polyG, polyH, polyI,
+            final var poly2 = buildPolynomial2(polyD, polyE, polyF, polyG, polyH, polyI,
                     polyM, polyN, polyO, polyP, polyQ, polyR, polyS, polyT, polyU, polyV, polyW);
             roots = poly2.getRoots();
         }
@@ -1187,17 +1155,17 @@ public class KruppaDualImageOfAbsoluteConicEstimator {
             final double polyQ, final double polyR) throws NumericalException {
         Complex[] roots;
         try {
-            final Polynomial poly3 = buildPolynomial3(polyA, polyB, polyC, polyD, polyE, polyF, polyG,
+            final var poly3 = buildPolynomial3(polyA, polyB, polyC, polyD, polyE, polyF, polyG,
                     polyH, polyI, polyJ, polyK, polyL);
             roots = poly3.getRoots();
         } catch (final NumericalException e3) {
             try {
                 // if solution for poly3 fails, try with 4th polynomial
-                final Polynomial poly4 = buildPolynomial4(polyD, polyE, polyF, polyG, polyH,
+                final var poly4 = buildPolynomial4(polyD, polyE, polyF, polyG, polyH,
                         polyI, polyM, polyN, polyO, polyP, polyQ, polyR);
                 roots = poly4.getRoots();
             } catch (final NumericalException e4) {
-                final Polynomial poly5 = buildPolynomial5(polyA, polyB, polyC,
+                final var poly5 = buildPolynomial5(polyA, polyB, polyC,
                         polyJ, polyK, polyL, polyM, polyN, polyO, polyP, polyQ, polyR);
                 roots = poly5.getRoots();
             }

@@ -15,15 +15,15 @@
  */
 package com.irurueta.ar.epipolar.estimators;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class HomographyDecomposerExceptionTest {
+class HomographyDecomposerExceptionTest {
 
     @Test
-    public void testConstructor() {
-        HomographyDecomposerException ex = new HomographyDecomposerException();
+    void testConstructor() {
+        var ex = new HomographyDecomposerException();
         assertNotNull(ex);
 
         ex = new HomographyDecomposerException("message");
@@ -32,8 +32,7 @@ public class HomographyDecomposerExceptionTest {
         ex = new HomographyDecomposerException(new Exception());
         assertNotNull(ex);
 
-        ex = new HomographyDecomposerException("message",
-                new Exception());
+        ex = new HomographyDecomposerException("message", new Exception());
         assertNotNull(ex);
     }
 }

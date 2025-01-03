@@ -21,17 +21,17 @@ import com.irurueta.ar.SerializationHelper;
 import com.irurueta.geometry.InhomogeneousPoint2D;
 import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point2D;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class Sample2DTest {
+class Sample2DTest {
 
     @Test
-    public void testConstructor() {
-        final Sample2D s = new Sample2D();
+    void testConstructor() {
+        final var s = new Sample2D();
 
         // check default values
         assertNull(s.getId());
@@ -44,8 +44,8 @@ public class Sample2DTest {
     }
 
     @Test
-    public void testGetSetId() {
-        final Sample2D s = new Sample2D();
+    void testGetSetId() {
+        final var s = new Sample2D();
 
         // check default value
         assertNull(s.getId());
@@ -58,8 +58,8 @@ public class Sample2DTest {
     }
 
     @Test
-    public void testGetSetViewId() {
-        final Sample2D s = new Sample2D();
+    void testGetSetViewId() {
+        final var s = new Sample2D();
 
         // check default values
         assertEquals(0, s.getViewId());
@@ -72,14 +72,14 @@ public class Sample2DTest {
     }
 
     @Test
-    public void testGetSetPoint() {
-        final Sample2D s = new Sample2D();
+    void testGetSetPoint() {
+        final var s = new Sample2D();
 
         // check default value
         assertNull(s.getPoint());
 
         // set new value
-        final Point2D p = Point2D.create();
+        final var p = Point2D.create();
         s.setPoint(p);
 
         // check correctness
@@ -87,14 +87,14 @@ public class Sample2DTest {
     }
 
     @Test
-    public void testGetSetReconstructedPoint() {
-        final Sample2D s = new Sample2D();
+    void testGetSetReconstructedPoint() {
+        final var s = new Sample2D();
 
         // check default value
         assertNull(s.getReconstructedPoint());
 
         // set new value
-        final ReconstructedPoint3D reconstructedPoint3D = new ReconstructedPoint3D();
+        final var reconstructedPoint3D = new ReconstructedPoint3D();
         s.setReconstructedPoint(reconstructedPoint3D);
 
         // check correctness
@@ -102,8 +102,8 @@ public class Sample2DTest {
     }
 
     @Test
-    public void testGetSetQualityScore() {
-        final Sample2D s = new Sample2D();
+    void testGetSetQualityScore() {
+        final var s = new Sample2D();
 
         // check default value
         assertEquals(Sample2D.DEFAULT_QUALITY_SCORE, s.getQualityScore(), 0.0);
@@ -116,14 +116,14 @@ public class Sample2DTest {
     }
 
     @Test
-    public void testGetSetCovariance() throws WrongSizeException {
-        final Sample2D s = new Sample2D();
+    void testGetSetCovariance() throws WrongSizeException {
+        final var s = new Sample2D();
 
         // check default value
         assertNull(s.getCovariance());
 
         // set new value
-        final Matrix cov = new Matrix(2, 2);
+        final var cov = new Matrix(2, 2);
         s.setCovariance(cov);
 
         // check correctness
@@ -131,14 +131,14 @@ public class Sample2DTest {
     }
 
     @Test
-    public void testGetSetColorData() {
-        final Sample2D s = new Sample2D();
+    void testGetSetColorData() {
+        final var s = new Sample2D();
 
         // check default value
         assertNull(s.getColorData());
 
         // set new value
-        final PointColorData data = new CustomPointColorData();
+        final var data = new CustomPointColorData();
         s.setColorData(data);
 
         // check correctness
@@ -146,24 +146,23 @@ public class Sample2DTest {
     }
 
     @Test
-    public void testSerializeDeserialize() throws WrongSizeException, IOException,
-            ClassNotFoundException {
-        final Sample2D s1 = new Sample2D();
+    void testSerializeDeserialize() throws WrongSizeException, IOException, ClassNotFoundException {
+        final var s1 = new Sample2D();
 
         // set new values
         s1.setId("id");
         s1.setViewId(1);
-        final InhomogeneousPoint2D point = new InhomogeneousPoint2D(1.0, 2.0);
+        final var point = new InhomogeneousPoint2D(1.0, 2.0);
         s1.setPoint(point);
-        final ReconstructedPoint3D reconstructedPoint = new ReconstructedPoint3D();
+        final var reconstructedPoint = new ReconstructedPoint3D();
         reconstructedPoint.setPoint(new InhomogeneousPoint3D(1.0, 2.0, 3.0));
         reconstructedPoint.setId("2");
         reconstructedPoint.setInlier(true);
         s1.setReconstructedPoint(reconstructedPoint);
         s1.setQualityScore(1.0);
-        final Matrix cov = Matrix.identity(2, 2);
+        final var cov = Matrix.identity(2, 2);
         s1.setCovariance(cov);
-        final PointColorData data = new CustomPointColorData();
+        final var data = new CustomPointColorData();
         data.setId("3");
         data.setQualityScore(1.0);
         s1.setColorData(data);
@@ -178,31 +177,27 @@ public class Sample2DTest {
         assertSame(data, s1.getColorData());
 
         // serialize and deserialize
-        final byte[] bytes = SerializationHelper.serialize(s1);
-        final Sample2D s2 = SerializationHelper.deserialize(bytes);
+        final var bytes = SerializationHelper.serialize(s1);
+        final var s2 = SerializationHelper.<Sample2D>deserialize(bytes);
 
         // check
         assertEquals(s1.getId(), s2.getId());
         assertEquals(s1.getViewId(), s2.getViewId());
         assertEquals(s1.getPoint(), s2.getPoint());
-        assertEquals(s1.getReconstructedPoint().getPoint(),
-                s2.getReconstructedPoint().getPoint());
-        assertEquals(s1.getReconstructedPoint().getId(),
-                s2.getReconstructedPoint().getId());
-        assertEquals(s1.getReconstructedPoint().isInlier(),
-                s2.getReconstructedPoint().isInlier());
+        assertEquals(s1.getReconstructedPoint().getPoint(), s2.getReconstructedPoint().getPoint());
+        assertEquals(s1.getReconstructedPoint().getId(), s2.getReconstructedPoint().getId());
+        assertEquals(s1.getReconstructedPoint().isInlier(), s2.getReconstructedPoint().isInlier());
         assertEquals(s1.getQualityScore(), s2.getQualityScore(), 0.0);
         assertEquals(s1.getCovariance(), s2.getCovariance());
-        assertEquals(s1.getColorData().getId(),
-                s2.getColorData().getId());
-        assertEquals(s1.getColorData().getQualityScore(),
-                s2.getColorData().getQualityScore(), 0.0);
+        assertEquals(s1.getColorData().getId(), s2.getColorData().getId());
+        assertEquals(s1.getColorData().getQualityScore(), s2.getColorData().getQualityScore(), 0.0);
     }
 
     public static class CustomPointColorData extends PointColorData {
 
         @Override
         public void average(final PointColorData other, final PointColorData result) {
+            // no action needed
         }
     }
 }

@@ -27,16 +27,13 @@ import com.irurueta.numerical.robust.RobustEstimatorException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import com.irurueta.statistics.GaussianRandomizer;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class LMedSRadialDistortionRobustEstimatorTest implements
-        RadialDistortionRobustEstimatorListener {
+class LMedSRadialDistortionRobustEstimatorTest implements RadialDistortionRobustEstimatorListener {
 
     private static final double MIN_POINT_VALUE = -1.0;
     private static final double MAX_POINT_VALUE = 1.0;
@@ -63,44 +60,37 @@ public class LMedSRadialDistortionRobustEstimatorTest implements
     private int estimateProgressChange;
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         // test constructor without parameters
-        LMedSRadialDistortionRobustEstimator estimator = new LMedSRadialDistortionRobustEstimator();
+        var estimator = new LMedSRadialDistortionRobustEstimator();
 
         // check correctness
-        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_STOP_THRESHOLD,
-                estimator.getStopThreshold(), 0.0);
+        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_STOP_THRESHOLD, estimator.getStopThreshold(),
+                0.0);
         assertEquals(RobustEstimatorMethod.LMEDS, estimator.getMethod());
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                estimator.getProgressDelta(), 0.0);
-        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
-                estimator.getConfidence(), 0.0);
-        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS,
-                estimator.getMaxIterations());
+        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, estimator.getProgressDelta(),
+                0.0);
+        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, estimator.getConfidence(), 0.0);
+        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertNull(estimator.getDistortedPoints());
         assertNull(estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
-        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
-                estimator.getHorizontalFocalLength(), 0.0);
-        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
-                estimator.getVerticalFocalLength(), 0.0);
-        assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW,
-                estimator.getSkew(), 0.0);
-        assertEquals(0.0,
-                estimator.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
-        assertEquals(0.0,
-                estimator.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, estimator.getHorizontalFocalLength(),
+                0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, estimator.getVerticalFocalLength(),
+                0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW, estimator.getSkew(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(0.0, estimator.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
         assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
                 estimator.getIntrinsic().getHorizontalFocalLength(), 0.0);
         assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
                 estimator.getIntrinsic().getVerticalFocalLength(), 0.0);
-        assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW,
-                estimator.getIntrinsic().getSkewness(), 0.0);
-        assertEquals(RadialDistortionRobustEstimator.DEFAULT_NUM_K_PARAMS,
-                estimator.getNumKParams());
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW, estimator.getIntrinsic().getSkewness(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_NUM_K_PARAMS, estimator.getNumKParams());
         assertFalse(estimator.arePointsAvailable());
         assertFalse(estimator.isReady());
         assertNull(estimator.getQualityScores());
@@ -109,25 +99,23 @@ public class LMedSRadialDistortionRobustEstimatorTest implements
         estimator = new LMedSRadialDistortionRobustEstimator(this);
 
         // check correctness
-        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_STOP_THRESHOLD,
-                estimator.getStopThreshold(), 0.0);
+        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_STOP_THRESHOLD, estimator.getStopThreshold(),
+                0.0);
         assertEquals(RobustEstimatorMethod.LMEDS, estimator.getMethod());
         assertSame(this, estimator.getListener());
         assertTrue(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                estimator.getProgressDelta(), 0.0);
-        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
-                estimator.getConfidence(), 0.0);
-        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS,
-                estimator.getMaxIterations());
+        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, estimator.getProgressDelta(),
+                0.0);
+        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, estimator.getConfidence(), 0.0);
+        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertNull(estimator.getDistortedPoints());
         assertNull(estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
-        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
-                estimator.getHorizontalFocalLength(), 0.0);
-        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
-                estimator.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, estimator.getHorizontalFocalLength(),
+                0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, estimator.getVerticalFocalLength(),
+                0.0);
         assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW, estimator.getSkew(), 0.0);
         assertEquals(0.0, estimator.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
         assertEquals(0.0, estimator.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
@@ -135,178 +123,131 @@ public class LMedSRadialDistortionRobustEstimatorTest implements
                 estimator.getIntrinsic().getHorizontalFocalLength(), 0.0);
         assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
                 estimator.getIntrinsic().getVerticalFocalLength(), 0.0);
-        assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW,
-                estimator.getIntrinsic().getSkewness(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW, estimator.getIntrinsic().getSkewness(), 0.0);
         assertEquals(RadialDistortionRobustEstimator.DEFAULT_NUM_K_PARAMS, estimator.getNumKParams());
         assertFalse(estimator.arePointsAvailable());
         assertFalse(estimator.isReady());
         assertNull(estimator.getQualityScores());
 
         // test constructor with points
-        final List<Point2D> distortedPoints = new ArrayList<>();
-        final List<Point2D> undistortedPoints = new ArrayList<>();
-        for (int i = 0; i < RadialDistortionRobustEstimator.MIN_NUMBER_OF_POINTS; i++) {
+        final var distortedPoints = new ArrayList<Point2D>();
+        final var undistortedPoints = new ArrayList<Point2D>();
+        for (var i = 0; i < RadialDistortionRobustEstimator.MIN_NUMBER_OF_POINTS; i++) {
             distortedPoints.add(Point2D.create());
             undistortedPoints.add(Point2D.create());
         }
 
-        estimator = new LMedSRadialDistortionRobustEstimator(distortedPoints,
-                undistortedPoints);
+        estimator = new LMedSRadialDistortionRobustEstimator(distortedPoints, undistortedPoints);
 
         // check correctness
-        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_STOP_THRESHOLD,
-                estimator.getStopThreshold(), 0.0);
+        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_STOP_THRESHOLD, estimator.getStopThreshold(),
+                0.0);
         assertEquals(RobustEstimatorMethod.LMEDS, estimator.getMethod());
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                estimator.getProgressDelta(), 0.0);
-        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
-                estimator.getConfidence(), 0.0);
-        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS,
-                estimator.getMaxIterations());
+        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, estimator.getProgressDelta(),
+                0.0);
+        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, estimator.getConfidence(), 0.0);
+        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertSame(distortedPoints, estimator.getDistortedPoints());
         assertSame(undistortedPoints, estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
-        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
-                estimator.getHorizontalFocalLength(), 0.0);
-        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
-                estimator.getVerticalFocalLength(), 0.0);
-        assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW,
-                estimator.getSkew(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, estimator.getHorizontalFocalLength(),
+                0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, estimator.getVerticalFocalLength(),
+                0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW, estimator.getSkew(), 0.0);
         assertEquals(0.0, estimator.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
         assertEquals(0.0, estimator.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
         assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
                 estimator.getIntrinsic().getHorizontalFocalLength(), 0.0);
         assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
                 estimator.getIntrinsic().getVerticalFocalLength(), 0.0);
-        assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW,
-                estimator.getIntrinsic().getSkewness(), 0.0);
-        assertEquals(RadialDistortionRobustEstimator.DEFAULT_NUM_K_PARAMS,
-                estimator.getNumKParams());
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW, estimator.getIntrinsic().getSkewness(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_NUM_K_PARAMS, estimator.getNumKParams());
         assertTrue(estimator.arePointsAvailable());
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
 
         // Force IllegalArgumentException
-        final List<Point2D> emptyPoints = new ArrayList<>();
-        estimator = null;
-        try {
-            estimator = new LMedSRadialDistortionRobustEstimator(emptyPoints, undistortedPoints);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new LMedSRadialDistortionRobustEstimator(emptyPoints, emptyPoints);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new LMedSRadialDistortionRobustEstimator(null, undistortedPoints);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new LMedSRadialDistortionRobustEstimator(distortedPoints, null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
+        final var emptyPoints = new ArrayList<Point2D>();
+        assertThrows(IllegalArgumentException.class,
+                () -> new LMedSRadialDistortionRobustEstimator(emptyPoints, undistortedPoints));
+        assertThrows(IllegalArgumentException.class,
+                () -> new LMedSRadialDistortionRobustEstimator(emptyPoints, emptyPoints));
+        assertThrows(IllegalArgumentException.class,
+                () -> new LMedSRadialDistortionRobustEstimator(null, undistortedPoints));
+        assertThrows(IllegalArgumentException.class,
+                () -> new LMedSRadialDistortionRobustEstimator(distortedPoints, null));
 
         // test constructor with points and listener
-        estimator = new LMedSRadialDistortionRobustEstimator(distortedPoints, undistortedPoints,
-                this);
+        estimator = new LMedSRadialDistortionRobustEstimator(distortedPoints, undistortedPoints, this);
 
         // check correctness
-        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_STOP_THRESHOLD,
-                estimator.getStopThreshold(), 0.0);
+        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_STOP_THRESHOLD, estimator.getStopThreshold(),
+                0.0);
         assertEquals(RobustEstimatorMethod.LMEDS, estimator.getMethod());
         assertSame(this, estimator.getListener());
         assertTrue(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                estimator.getProgressDelta(), 0.0);
-        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
-                estimator.getConfidence(), 0.0);
-        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS,
-                estimator.getMaxIterations());
+        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, estimator.getProgressDelta(),
+                0.0);
+        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, estimator.getConfidence(), 0.0);
+        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertSame(distortedPoints, estimator.getDistortedPoints());
         assertSame(undistortedPoints, estimator.getUndistortedPoints());
         assertNull(estimator.getDistortionCenter());
-        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
-                estimator.getHorizontalFocalLength(), 0.0);
-        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
-                estimator.getVerticalFocalLength(), 0.0);
-        assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW,
-                estimator.getSkew(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, estimator.getHorizontalFocalLength(),
+                0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, estimator.getVerticalFocalLength(),
+                0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW, estimator.getSkew(), 0.0);
         assertEquals(0.0, estimator.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
         assertEquals(0.0, estimator.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
         assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
                 estimator.getIntrinsic().getHorizontalFocalLength(), 0.0);
         assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
                 estimator.getIntrinsic().getVerticalFocalLength(), 0.0);
-        assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW,
-                estimator.getIntrinsic().getSkewness(), 0.0);
-        assertEquals(RadialDistortionRobustEstimator.DEFAULT_NUM_K_PARAMS,
-                estimator.getNumKParams());
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW, estimator.getIntrinsic().getSkewness(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_NUM_K_PARAMS, estimator.getNumKParams());
         assertTrue(estimator.arePointsAvailable());
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
 
         // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new LMedSRadialDistortionRobustEstimator(emptyPoints,
-                    undistortedPoints, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new LMedSRadialDistortionRobustEstimator(emptyPoints,
-                    emptyPoints, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new LMedSRadialDistortionRobustEstimator(
-                    null, undistortedPoints, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new LMedSRadialDistortionRobustEstimator(
-                    distortedPoints, null, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
+        assertThrows(IllegalArgumentException.class, () -> new LMedSRadialDistortionRobustEstimator(emptyPoints,
+                undistortedPoints, this));
+        assertThrows(IllegalArgumentException.class, () -> new LMedSRadialDistortionRobustEstimator(emptyPoints,
+                emptyPoints, this));
+        assertThrows(IllegalArgumentException.class, () -> new LMedSRadialDistortionRobustEstimator(
+                null, undistortedPoints, this));
+        assertThrows(IllegalArgumentException.class, () -> new LMedSRadialDistortionRobustEstimator(
+                distortedPoints, null, this));
 
         // test constructor with points and center
-        final Point2D center = Point2D.create();
+        final var center = Point2D.create();
 
         estimator = new LMedSRadialDistortionRobustEstimator(distortedPoints, undistortedPoints, center);
 
         // check correctness
-        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_STOP_THRESHOLD,
-                estimator.getStopThreshold(), 0.0);
+        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_STOP_THRESHOLD, estimator.getStopThreshold(),
+                0.0);
         assertEquals(RobustEstimatorMethod.LMEDS, estimator.getMethod());
         assertNull(estimator.getListener());
         assertFalse(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                estimator.getProgressDelta(), 0.0);
-        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
-                estimator.getConfidence(), 0.0);
-        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS,
-                estimator.getMaxIterations());
+        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, estimator.getProgressDelta(),
+                0.0);
+        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, estimator.getConfidence(), 0.0);
+        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertSame(distortedPoints, estimator.getDistortedPoints());
         assertSame(undistortedPoints, estimator.getUndistortedPoints());
         assertSame(center, estimator.getDistortionCenter());
-        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
-                estimator.getHorizontalFocalLength(), 0.0);
-        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
-                estimator.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, estimator.getHorizontalFocalLength(),
+                0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, estimator.getVerticalFocalLength(),
+                0.0);
         assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW, estimator.getSkew(), 0.0);
         assertEquals(center.getInhomX(), estimator.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
         assertEquals(center.getInhomY(), estimator.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
@@ -314,64 +255,43 @@ public class LMedSRadialDistortionRobustEstimatorTest implements
                 estimator.getIntrinsic().getHorizontalFocalLength(), 0.0);
         assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
                 estimator.getIntrinsic().getVerticalFocalLength(), 0.0);
-        assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW,
-                estimator.getIntrinsic().getSkewness(), 0.0);
-        assertEquals(RadialDistortionRobustEstimator.DEFAULT_NUM_K_PARAMS,
-                estimator.getNumKParams());
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW, estimator.getIntrinsic().getSkewness(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_NUM_K_PARAMS, estimator.getNumKParams());
         assertTrue(estimator.arePointsAvailable());
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
 
         // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new LMedSRadialDistortionRobustEstimator(emptyPoints, undistortedPoints, center);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new LMedSRadialDistortionRobustEstimator(emptyPoints, emptyPoints, center);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new LMedSRadialDistortionRobustEstimator(
-                    null, undistortedPoints, center);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new LMedSRadialDistortionRobustEstimator(
-                    distortedPoints, null, center);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
+        assertThrows(IllegalArgumentException.class,
+                () -> new LMedSRadialDistortionRobustEstimator(emptyPoints, undistortedPoints, center));
+        assertThrows(IllegalArgumentException.class,
+                () -> new LMedSRadialDistortionRobustEstimator(emptyPoints, emptyPoints, center));
+        assertThrows(IllegalArgumentException.class, () -> new LMedSRadialDistortionRobustEstimator(
+                null, undistortedPoints, center));
+        assertThrows(IllegalArgumentException.class, () -> new LMedSRadialDistortionRobustEstimator(
+                distortedPoints, null, center));
 
         // test constructor with points, center and listener
-        estimator = new LMedSRadialDistortionRobustEstimator(distortedPoints,
-                undistortedPoints, center, this);
+        estimator = new LMedSRadialDistortionRobustEstimator(distortedPoints, undistortedPoints, center, this);
 
         // check correctness
-        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_STOP_THRESHOLD,
-                estimator.getStopThreshold(), 0.0);
+        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_STOP_THRESHOLD, estimator.getStopThreshold(),
+                0.0);
         assertEquals(RobustEstimatorMethod.LMEDS, estimator.getMethod());
         assertSame(this, estimator.getListener());
         assertTrue(estimator.isListenerAvailable());
         assertFalse(estimator.isLocked());
-        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                estimator.getProgressDelta(), 0.0);
-        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
-                estimator.getConfidence(), 0.0);
-        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS,
-                estimator.getMaxIterations());
+        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, estimator.getProgressDelta(),
+                0.0);
+        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, estimator.getConfidence(), 0.0);
+        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
         assertSame(distortedPoints, estimator.getDistortedPoints());
         assertSame(undistortedPoints, estimator.getUndistortedPoints());
         assertSame(center, estimator.getDistortionCenter());
-        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
-                estimator.getHorizontalFocalLength(), 0.0);
-        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
-                estimator.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, estimator.getHorizontalFocalLength(),
+                0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, estimator.getVerticalFocalLength(),
+                0.0);
         assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW, estimator.getSkew(), 0.0);
         assertEquals(estimator.getIntrinsic().getHorizontalPrincipalPoint(), center.getInhomX(), 0.0);
         assertEquals(estimator.getIntrinsic().getVerticalPrincipalPoint(), center.getInhomY(), 0.0);
@@ -379,51 +299,32 @@ public class LMedSRadialDistortionRobustEstimatorTest implements
                 estimator.getIntrinsic().getHorizontalFocalLength(), 0.0);
         assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
                 estimator.getIntrinsic().getVerticalFocalLength(), 0.0);
-        assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW,
-                estimator.getIntrinsic().getSkewness(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW, estimator.getIntrinsic().getSkewness(), 0.0);
         assertEquals(RadialDistortionRobustEstimator.DEFAULT_NUM_K_PARAMS, estimator.getNumKParams());
         assertTrue(estimator.arePointsAvailable());
         assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
 
         // Force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new LMedSRadialDistortionRobustEstimator(emptyPoints,
-                    undistortedPoints, center, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new LMedSRadialDistortionRobustEstimator(emptyPoints,
-                    emptyPoints, center, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new LMedSRadialDistortionRobustEstimator(
-                    null, undistortedPoints, center, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator = new LMedSRadialDistortionRobustEstimator(
-                    distortedPoints, null, center, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(estimator);
+        assertThrows(IllegalArgumentException.class, () -> new LMedSRadialDistortionRobustEstimator(emptyPoints,
+                undistortedPoints, center, this));
+        assertThrows(IllegalArgumentException.class, () -> new LMedSRadialDistortionRobustEstimator(emptyPoints,
+                emptyPoints, center, this));
+        assertThrows(IllegalArgumentException.class, () -> new LMedSRadialDistortionRobustEstimator(
+                null, undistortedPoints, center, this));
+        assertThrows(IllegalArgumentException.class, () -> new LMedSRadialDistortionRobustEstimator(
+                distortedPoints, null, center, this));
     }
 
     @Test
-    public void testGetSetQualityScores() throws LockedException {
-        final LMedSRadialDistortionRobustEstimator estimator = new LMedSRadialDistortionRobustEstimator();
+    void testGetSetQualityScores() throws LockedException {
+        final var estimator = new LMedSRadialDistortionRobustEstimator();
 
         // check default value
         assertNull(estimator.getQualityScores());
 
         // set new value
-        final double[] qualityScores = new double[1];
+        final var qualityScores = new double[1];
         estimator.setQualityScores(qualityScores);
 
         // check correctness
@@ -431,12 +332,12 @@ public class LMedSRadialDistortionRobustEstimatorTest implements
     }
 
     @Test
-    public void testGetSetStopThreshold() throws LockedException {
-        final LMedSRadialDistortionRobustEstimator estimator = new LMedSRadialDistortionRobustEstimator();
+    void testGetSetStopThreshold() throws LockedException {
+        final var estimator = new LMedSRadialDistortionRobustEstimator();
 
         // check default value
-        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_STOP_THRESHOLD,
-                estimator.getStopThreshold(), 0.0);
+        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_STOP_THRESHOLD, estimator.getStopThreshold(),
+                0.0);
 
         // set new value
         estimator.setStopThreshold(10.0);
@@ -445,16 +346,12 @@ public class LMedSRadialDistortionRobustEstimatorTest implements
         assertEquals(10.0, estimator.getStopThreshold(), 0.0);
 
         // Force IllegalArgumentException
-        try {
-            estimator.setStopThreshold(0.0);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> estimator.setStopThreshold(0.0));
     }
 
     @Test
-    public void testGetSetListener() throws LockedException {
-        final LMedSRadialDistortionRobustEstimator estimator = new LMedSRadialDistortionRobustEstimator();
+    void testGetSetListener() throws LockedException {
+        final var estimator = new LMedSRadialDistortionRobustEstimator();
 
         // check default value
         assertNull(estimator.getListener());
@@ -469,12 +366,12 @@ public class LMedSRadialDistortionRobustEstimatorTest implements
     }
 
     @Test
-    public void testGetSetProgressDelta() throws LockedException {
-        final LMedSRadialDistortionRobustEstimator estimator = new LMedSRadialDistortionRobustEstimator();
+    void testGetSetProgressDelta() throws LockedException {
+        final var estimator = new LMedSRadialDistortionRobustEstimator();
 
         // check default value
-        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA,
-                estimator.getProgressDelta(), 0.0);
+        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_PROGRESS_DELTA, estimator.getProgressDelta(),
+                0.0);
 
         // set new value
         estimator.setProgressDelta(0.5f);
@@ -483,25 +380,16 @@ public class LMedSRadialDistortionRobustEstimatorTest implements
         assertEquals(0.5, estimator.getProgressDelta(), 0.0);
 
         // Force IllegalArgumentException
-        try {
-            estimator.setProgressDelta(-1.0f);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator.setProgressDelta(2.0f);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> estimator.setProgressDelta(-1.0f));
+        assertThrows(IllegalArgumentException.class, () -> estimator.setProgressDelta(2.0f));
     }
 
     @Test
-    public void testGetSetConfidence() throws LockedException {
-        final LMedSRadialDistortionRobustEstimator estimator = new LMedSRadialDistortionRobustEstimator();
+    void testGetSetConfidence() throws LockedException {
+        final var estimator = new LMedSRadialDistortionRobustEstimator();
 
         // check default value
-        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_CONFIDENCE,
-                estimator.getConfidence(), 0.0);
+        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_CONFIDENCE, estimator.getConfidence(), 0.0);
 
         // set new value
         estimator.setConfidence(0.75);
@@ -510,25 +398,16 @@ public class LMedSRadialDistortionRobustEstimatorTest implements
         assertEquals(0.75, estimator.getConfidence(), 0.0);
 
         // Force IllegalArgumentException
-        try {
-            estimator.setConfidence(-1.0);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator.setConfidence(2.0);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> estimator.setConfidence(-1.0));
+        assertThrows(IllegalArgumentException.class, () -> estimator.setConfidence(2.0));
     }
 
     @Test
-    public void testGetSetMaxIterations() throws LockedException {
-        final LMedSRadialDistortionRobustEstimator estimator = new LMedSRadialDistortionRobustEstimator();
+    void testGetSetMaxIterations() throws LockedException {
+        final var estimator = new LMedSRadialDistortionRobustEstimator();
 
         // check default value
-        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS,
-                estimator.getMaxIterations());
+        assertEquals(LMedSRadialDistortionRobustEstimator.DEFAULT_MAX_ITERATIONS, estimator.getMaxIterations());
 
         // set new value
         estimator.setMaxIterations(10);
@@ -537,23 +416,19 @@ public class LMedSRadialDistortionRobustEstimatorTest implements
         assertEquals(10, estimator.getMaxIterations());
 
         // Force IllegalArgumentException
-        try {
-            estimator.setMaxIterations(0);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> estimator.setMaxIterations(0));
     }
 
     @Test
-    public void testGetSetPoints() throws LockedException {
-        final List<Point2D> distortedPoints = new ArrayList<>();
-        final List<Point2D> undistortedPoints = new ArrayList<>();
-        for (int i = 0; i < RadialDistortionRobustEstimator.MIN_NUMBER_OF_POINTS; i++) {
+    void testGetSetPoints() throws LockedException {
+        final var distortedPoints = new ArrayList<Point2D>();
+        final var undistortedPoints = new ArrayList<Point2D>();
+        for (var i = 0; i < RadialDistortionRobustEstimator.MIN_NUMBER_OF_POINTS; i++) {
             distortedPoints.add(Point2D.create());
             undistortedPoints.add(Point2D.create());
         }
 
-        final LMedSRadialDistortionRobustEstimator estimator = new LMedSRadialDistortionRobustEstimator();
+        final var estimator = new LMedSRadialDistortionRobustEstimator();
 
         // check default values
         assertNull(estimator.getDistortedPoints());
@@ -571,38 +446,22 @@ public class LMedSRadialDistortionRobustEstimatorTest implements
         assertTrue(estimator.isReady());
 
         // Force IllegalArgumentException
-        final List<Point2D> emptyPoints = new ArrayList<>();
-        try {
-            estimator.setPoints(emptyPoints, undistortedPoints);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator.setPoints(emptyPoints, emptyPoints);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator.setPoints(null, undistortedPoints);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            estimator.setPoints(distortedPoints, null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        final var emptyPoints = new ArrayList<Point2D>();
+        assertThrows(IllegalArgumentException.class, () -> estimator.setPoints(emptyPoints, undistortedPoints));
+        assertThrows(IllegalArgumentException.class, () -> estimator.setPoints(emptyPoints, emptyPoints));
+        assertThrows(IllegalArgumentException.class, () -> estimator.setPoints(null, undistortedPoints));
+        assertThrows(IllegalArgumentException.class, () -> estimator.setPoints(distortedPoints, null));
     }
 
     @Test
-    public void testGetSetDistortionCenter() throws LockedException {
-        final LMedSRadialDistortionRobustEstimator estimator = new LMedSRadialDistortionRobustEstimator();
+    void testGetSetDistortionCenter() throws LockedException {
+        final var estimator = new LMedSRadialDistortionRobustEstimator();
 
         // check default value
         assertNull(estimator.getDistortionCenter());
 
         // set new value
-        final Point2D center = Point2D.create();
+        final var center = Point2D.create();
         estimator.setDistortionCenter(center);
 
         // check correctness
@@ -610,12 +469,12 @@ public class LMedSRadialDistortionRobustEstimatorTest implements
     }
 
     @Test
-    public void testGetSetHorizontalFocalLength() throws LockedException {
-        final LMedSRadialDistortionRobustEstimator estimator = new LMedSRadialDistortionRobustEstimator();
+    void testGetSetHorizontalFocalLength() throws LockedException {
+        final var estimator = new LMedSRadialDistortionRobustEstimator();
 
         // check default value
-        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
-                estimator.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, estimator.getHorizontalFocalLength(),
+                0.0);
 
         // set new value
         estimator.setHorizontalFocalLength(2.0);
@@ -625,12 +484,12 @@ public class LMedSRadialDistortionRobustEstimatorTest implements
     }
 
     @Test
-    public void testGetSetVerticalFocalLength() throws LockedException {
-        final LMedSRadialDistortionRobustEstimator estimator = new LMedSRadialDistortionRobustEstimator();
+    void testGetSetVerticalFocalLength() throws LockedException {
+        final var estimator = new LMedSRadialDistortionRobustEstimator();
 
         // check default value
-        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
-                estimator.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, estimator.getVerticalFocalLength(),
+                0.0);
 
         // set new value
         estimator.setVerticalFocalLength(2.0);
@@ -640,12 +499,11 @@ public class LMedSRadialDistortionRobustEstimatorTest implements
     }
 
     @Test
-    public void testGetSetSkew() throws LockedException {
-        final LMedSRadialDistortionRobustEstimator estimator = new LMedSRadialDistortionRobustEstimator();
+    void testGetSetSkew() throws LockedException {
+        final var estimator = new LMedSRadialDistortionRobustEstimator();
 
         // check default value
-        assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW,
-                estimator.getSkew(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW, estimator.getSkew(), 0.0);
 
         // set new value
         estimator.setSkew(1.0);
@@ -655,18 +513,18 @@ public class LMedSRadialDistortionRobustEstimatorTest implements
     }
 
     @Test
-    public void testGetSetIntrinsic() throws LockedException {
-        final LMedSRadialDistortionRobustEstimator estimator = new LMedSRadialDistortionRobustEstimator();
+    void testGetSetIntrinsic() throws LockedException {
+        final var estimator = new LMedSRadialDistortionRobustEstimator();
 
         // check default value
-        PinholeCameraIntrinsicParameters intrinsic = estimator.getIntrinsic();
+        var intrinsic = estimator.getIntrinsic();
 
         assertEquals(0.0, intrinsic.getHorizontalPrincipalPoint(), 0.0);
         assertEquals(0.0, intrinsic.getVerticalPrincipalPoint(), 0.0);
-        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
-                intrinsic.getHorizontalFocalLength(), 0.0);
-        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH,
-                intrinsic.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, intrinsic.getHorizontalFocalLength(),
+                0.0);
+        assertEquals(RadialDistortionRobustEstimator.DEFAULT_FOCAL_LENGTH, intrinsic.getVerticalFocalLength(),
+                0.0);
         assertEquals(RadialDistortionRobustEstimator.DEFAULT_SKEW, intrinsic.getSkewness(), 0.0);
 
         // set new value
@@ -682,8 +540,8 @@ public class LMedSRadialDistortionRobustEstimatorTest implements
         assertEquals(6.0, intrinsic.getSkewness(), 0.0);
 
         // set again
-        estimator.setIntrinsic(new InhomogeneousPoint2D(6.0, 5.0),
-                4.0, 3.0, 2.0);
+        estimator.setIntrinsic(new InhomogeneousPoint2D(6.0, 5.0), 4.0, 3.0,
+                2.0);
 
         // check correctness
         assertEquals(6.0, estimator.getDistortionCenter().getInhomX(), 0.0);
@@ -694,8 +552,8 @@ public class LMedSRadialDistortionRobustEstimatorTest implements
     }
 
     @Test
-    public void testGetSetNumKParams() throws LockedException {
-        final LMedSRadialDistortionRobustEstimator estimator = new LMedSRadialDistortionRobustEstimator();
+    void testGetSetNumKParams() throws LockedException {
+        final var estimator = new LMedSRadialDistortionRobustEstimator();
 
         // check default value
         assertEquals(RadialDistortionRobustEstimator.DEFAULT_NUM_K_PARAMS, estimator.getNumKParams());
@@ -708,36 +566,33 @@ public class LMedSRadialDistortionRobustEstimatorTest implements
     }
 
     @Test
-    public void testEstimate() throws NotSupportedException, LockedException,
-            NotReadyException, RobustEstimatorException, DistortionException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testEstimate() throws NotSupportedException, LockedException, NotReadyException, RobustEstimatorException,
+            DistortionException {
+        final var randomizer = new UniformRandomizer();
 
-        for (int j = 0; j < TIMES; j++) {
-            final double k1 = randomizer.nextDouble(MIN_PARAM_VALUE, MAX_PARAM_VALUE);
-            final double k2 = randomizer.nextDouble(MIN_PARAM_VALUE, MAX_PARAM_VALUE);
+        for (var j = 0; j < TIMES; j++) {
+            final var k1 = randomizer.nextDouble(MIN_PARAM_VALUE, MAX_PARAM_VALUE);
+            final var k2 = randomizer.nextDouble(MIN_PARAM_VALUE, MAX_PARAM_VALUE);
 
-            final Point2D center = new InhomogeneousPoint2D(
+            final var center = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE),
                     randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE));
 
-            final RadialDistortion distortion = new RadialDistortion(k1, k2, center);
+            final var distortion = new RadialDistortion(k1, k2, center);
 
-            final int nPoints = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
+            final var nPoints = randomizer.nextInt(MIN_NUM_POINTS, MAX_NUM_POINTS);
 
-            final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                    new Random(), 0.0, STD_ERROR);
-            final List<Point2D> distortedPointsWithError = new ArrayList<>();
-            final List<Point2D> distortedPoints = new ArrayList<>();
-            final List<Point2D> undistortedPoints = new ArrayList<>();
-            Point2D distortedPoint;
-            Point2D distortedPointWithError;
-            Point2D undistortedPoint;
-            for (int i = 0; i < nPoints; i++) {
-                undistortedPoint = new InhomogeneousPoint2D(
+            final var errorRandomizer = new GaussianRandomizer(0.0, STD_ERROR);
+            final var distortedPointsWithError = new ArrayList<Point2D>();
+            final var distortedPoints = new ArrayList<Point2D>();
+            final var undistortedPoints = new ArrayList<Point2D>();
+            for (var i = 0; i < nPoints; i++) {
+                final var undistortedPoint = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE),
                         randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE));
 
-                distortedPoint = distortion.distort(undistortedPoint);
+                final var distortedPoint = distortion.distort(undistortedPoint);
+                Point2D distortedPointWithError;
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIER) {
                     // point is outlier
                     final double errorX = errorRandomizer.nextDouble();
@@ -754,9 +609,8 @@ public class LMedSRadialDistortionRobustEstimatorTest implements
                 undistortedPoints.add(undistortedPoint);
             }
 
-            final LMedSRadialDistortionRobustEstimator estimator =
-                    new LMedSRadialDistortionRobustEstimator(distortedPointsWithError,
-                            undistortedPoints, this);
+            final var estimator = new LMedSRadialDistortionRobustEstimator(distortedPointsWithError, undistortedPoints,
+                    this);
 
             estimator.setIntrinsic(distortion.getIntrinsic());
             estimator.setStopThreshold(THRESHOLD);
@@ -768,7 +622,7 @@ public class LMedSRadialDistortionRobustEstimatorTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
-            final RadialDistortion distortion2 = estimator.estimate();
+            final var distortion2 = estimator.estimate();
 
             assertEquals(1, estimateStart);
             assertEquals(1, estimateEnd);
@@ -781,7 +635,7 @@ public class LMedSRadialDistortionRobustEstimatorTest implements
             assertEquals(distortion2.getK2(), k2, ABSOLUTE_ERROR);
             assertEquals(distortion2.getCenter(), center);
 
-            for (int i = 0; i < nPoints; i++) {
+            for (var i = 0; i < nPoints; i++) {
                 assertEquals(0.0, distortedPoints.get(i).distanceTo(
                         distortion2.distort(undistortedPoints.get(i))), ABSOLUTE_ERROR);
             }
@@ -789,8 +643,7 @@ public class LMedSRadialDistortionRobustEstimatorTest implements
     }
 
     private void reset() {
-        estimateStart = estimateEnd = estimateNextIteration =
-                estimateProgressChange = 0;
+        estimateStart = estimateEnd = estimateNextIteration = estimateProgressChange = 0;
     }
 
     @Override
@@ -806,62 +659,26 @@ public class LMedSRadialDistortionRobustEstimatorTest implements
     }
 
     @Override
-    public void onEstimateNextIteration(
-            final RadialDistortionRobustEstimator estimator, final int iteration) {
+    public void onEstimateNextIteration(final RadialDistortionRobustEstimator estimator, final int iteration) {
         estimateNextIteration++;
         testLocked((LMedSRadialDistortionRobustEstimator) estimator);
     }
 
     @Override
-    public void onEstimateProgressChange(
-            final RadialDistortionRobustEstimator estimator, final float progress) {
+    public void onEstimateProgressChange(final RadialDistortionRobustEstimator estimator, final float progress) {
         estimateProgressChange++;
         testLocked((LMedSRadialDistortionRobustEstimator) estimator);
     }
 
     private void testLocked(final LMedSRadialDistortionRobustEstimator estimator) {
-        try {
-            estimator.setConfidence(0.5);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            estimator.setDistortionCenter(null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            estimator.setListener(this);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            estimator.setMaxIterations(10);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            estimator.setPoints(null, null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            estimator.setProgressDelta(0.5f);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            estimator.setStopThreshold(0.5);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            estimator.estimate();
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        } catch (final Exception ignore) {
-            fail("LockedException expected but not thrown");
-        }
+        assertThrows(LockedException.class, () -> estimator.setConfidence(0.5));
+        assertThrows(LockedException.class, () -> estimator.setDistortionCenter(null));
+        assertThrows(LockedException.class, () -> estimator.setListener(this));
+        assertThrows(LockedException.class, () -> estimator.setMaxIterations(10));
+        assertThrows(LockedException.class, () -> estimator.setPoints(null, null));
+        assertThrows(LockedException.class, () -> estimator.setProgressDelta(0.5f));
+        assertThrows(LockedException.class, () -> estimator.setStopThreshold(0.5));
+        assertThrows(LockedException.class, estimator::estimate);
         assertTrue(estimator.isLocked());
     }
 }

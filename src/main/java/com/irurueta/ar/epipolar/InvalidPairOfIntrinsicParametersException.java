@@ -19,8 +19,7 @@ package com.irurueta.ar.epipolar;
  * Raised when providing an invalid pair of intrinsic parameters to define an
  * essential matrix.
  */
-public class InvalidPairOfIntrinsicParametersException extends
-        EpipolarException {
+public class InvalidPairOfIntrinsicParametersException extends EpipolarException {
 
     /**
      * Constructor.
@@ -44,8 +43,7 @@ public class InvalidPairOfIntrinsicParametersException extends
      * @param message message describing the cause of the exception.
      * @param cause   instance containing the cause of the exception.
      */
-    public InvalidPairOfIntrinsicParametersException(final String message,
-                                                     final Throwable cause) {
+    public InvalidPairOfIntrinsicParametersException(final String message, final Throwable cause) {
         super(message, cause);
     }
 

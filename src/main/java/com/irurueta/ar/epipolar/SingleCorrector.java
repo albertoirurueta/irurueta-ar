@@ -37,33 +37,32 @@ public abstract class SingleCorrector {
     /**
      * Default corrector type.
      */
-    public static final CorrectorType DEFAULT_TYPE =
-            CorrectorType.GOLD_STANDARD;
+    public static final CorrectorType DEFAULT_TYPE = CorrectorType.GOLD_STANDARD;
 
     /**
      * Left matched point to be corrected.
      */
-    protected Point2D mLeftPoint;
+    protected Point2D leftPoint;
 
     /**
      * Right matched point to be corrected.
      */
-    protected Point2D mRightPoint;
+    protected Point2D rightPoint;
 
     /**
      * Left matched point after correction.
      */
-    protected Point2D mLeftCorrectedPoint;
+    protected Point2D leftCorrectedPoint;
 
     /**
      * Right matched point after correction.
      */
-    protected Point2D mRightCorrectedPoint;
+    protected Point2D rightCorrectedPoint;
 
     /**
      * A fundamental matrix defining an epipolar geometry.
      */
-    protected FundamentalMatrix mFundamentalMatrix;
+    protected FundamentalMatrix fundamentalMatrix;
 
     /**
      * Constructor.
@@ -112,8 +111,7 @@ public abstract class SingleCorrector {
      * @param fundamentalMatrix fundamental matrix defining an epipolar geometry.
      */
     public final void setPointsAndFundamentalMatrix(
-            final Point2D leftPoint, final Point2D rightPoint,
-            final FundamentalMatrix fundamentalMatrix) {
+            final Point2D leftPoint, final Point2D rightPoint, final FundamentalMatrix fundamentalMatrix) {
         setPoints(leftPoint, rightPoint);
         setFundamentalMatrix(fundamentalMatrix);
     }
@@ -125,8 +123,8 @@ public abstract class SingleCorrector {
      * @param rightPoint matched point on right view to be corrected.
      */
     public final void setPoints(final Point2D leftPoint, final Point2D rightPoint) {
-        mLeftPoint = leftPoint;
-        mRightPoint = rightPoint;
+        this.leftPoint = leftPoint;
+        this.rightPoint = rightPoint;
     }
 
     /**
@@ -135,7 +133,7 @@ public abstract class SingleCorrector {
      * @param fundamentalMatrix fundamental matrix to be set.
      */
     public final void setFundamentalMatrix(final FundamentalMatrix fundamentalMatrix) {
-        mFundamentalMatrix = fundamentalMatrix;
+        this.fundamentalMatrix = fundamentalMatrix;
     }
 
     /**
@@ -144,7 +142,7 @@ public abstract class SingleCorrector {
      * @return matched point on left view.
      */
     public Point2D getLeftPoint() {
-        return mLeftPoint;
+        return leftPoint;
     }
 
     /**
@@ -153,7 +151,7 @@ public abstract class SingleCorrector {
      * @return matched point on right view.
      */
     public Point2D getRightPoint() {
-        return mRightPoint;
+        return rightPoint;
     }
 
     /**
@@ -162,7 +160,7 @@ public abstract class SingleCorrector {
      * @return fundamental matrix defining epipolar geometry.
      */
     public FundamentalMatrix getFundamentalMatrix() {
-        return mFundamentalMatrix;
+        return fundamentalMatrix;
     }
 
     /**
@@ -172,9 +170,8 @@ public abstract class SingleCorrector {
      * @return true if ready, false otherwise.
      */
     public boolean isReady() {
-        return mLeftPoint != null && mRightPoint != null &&
-                mFundamentalMatrix != null &&
-                mFundamentalMatrix.isInternalMatrixAvailable();
+        return leftPoint != null && rightPoint != null && fundamentalMatrix != null
+                && fundamentalMatrix.isInternalMatrixAvailable();
     }
 
     /**
@@ -183,7 +180,7 @@ public abstract class SingleCorrector {
      * @return matched point on left view after correction.
      */
     public Point2D getLeftCorrectedPoint() {
-        return mLeftCorrectedPoint;
+        return leftCorrectedPoint;
     }
 
     /**
@@ -192,7 +189,7 @@ public abstract class SingleCorrector {
      * @return matched point on right view after correction.
      */
     public Point2D getRightCorrectedPoint() {
-        return mRightCorrectedPoint;
+        return rightCorrectedPoint;
     }
 
     /**
@@ -202,8 +199,7 @@ public abstract class SingleCorrector {
      *                             fundamental matrix has not been provided yet).
      * @throws CorrectionException if correction fails.
      */
-    public abstract void correct() throws NotReadyException,
-            CorrectionException;
+    public abstract void correct() throws NotReadyException, CorrectionException;
 
     /**
      * Gets type of correction being used.
@@ -219,13 +215,8 @@ public abstract class SingleCorrector {
      * @return an instance of a single corrector.
      */
     public static SingleCorrector create(final CorrectorType type) {
-        switch (type) {
-            case SAMPSON_CORRECTOR:
-                return new SampsonSingleCorrector();
-            case GOLD_STANDARD:
-            default:
-                return new GoldStandardSingleCorrector();
-        }
+        return type == CorrectorType.SAMPSON_CORRECTOR
+                ? new SampsonSingleCorrector() : new GoldStandardSingleCorrector();
     }
 
     /**
@@ -237,15 +228,9 @@ public abstract class SingleCorrector {
      * @param type              a corrector type.
      * @return an instance of a single corrector.
      */
-    public static SingleCorrector create(final FundamentalMatrix fundamentalMatrix,
-                                         final CorrectorType type) {
-        switch (type) {
-            case SAMPSON_CORRECTOR:
-                return new SampsonSingleCorrector(fundamentalMatrix);
-            case GOLD_STANDARD:
-            default:
-                return new GoldStandardSingleCorrector(fundamentalMatrix);
-        }
+    public static SingleCorrector create(final FundamentalMatrix fundamentalMatrix, final CorrectorType type) {
+        return type == CorrectorType.SAMPSON_CORRECTOR
+                ? new SampsonSingleCorrector(fundamentalMatrix) : new GoldStandardSingleCorrector(fundamentalMatrix);
     }
 
     /**
@@ -257,15 +242,10 @@ public abstract class SingleCorrector {
      * @param type       a corrector type.
      * @return an instance of a single corrector.
      */
-    public static SingleCorrector create(final Point2D leftPoint, final Point2D rightPoint,
-                                         final CorrectorType type) {
-        switch (type) {
-            case SAMPSON_CORRECTOR:
-                return new SampsonSingleCorrector(leftPoint, rightPoint);
-            case GOLD_STANDARD:
-            default:
-                return new GoldStandardSingleCorrector(leftPoint, rightPoint);
-        }
+    public static SingleCorrector create(final Point2D leftPoint, final Point2D rightPoint, final CorrectorType type) {
+        return type == CorrectorType.SAMPSON_CORRECTOR
+                ? new SampsonSingleCorrector(leftPoint, rightPoint)
+                : new GoldStandardSingleCorrector(leftPoint, rightPoint);
     }
 
     /**
@@ -280,17 +260,11 @@ public abstract class SingleCorrector {
      * @return an instance of a single corrector.
      */
     public static SingleCorrector create(
-            final Point2D leftPoint, final Point2D rightPoint,
-            final FundamentalMatrix fundamentalMatrix, final CorrectorType type) {
-        switch (type) {
-            case SAMPSON_CORRECTOR:
-                return new SampsonSingleCorrector(leftPoint, rightPoint,
-                        fundamentalMatrix);
-            case GOLD_STANDARD:
-            default:
-                return new GoldStandardSingleCorrector(leftPoint, rightPoint,
-                        fundamentalMatrix);
-        }
+            final Point2D leftPoint, final Point2D rightPoint, final FundamentalMatrix fundamentalMatrix,
+            final CorrectorType type) {
+        return type == CorrectorType.SAMPSON_CORRECTOR
+                ? new SampsonSingleCorrector(leftPoint, rightPoint, fundamentalMatrix)
+                : new GoldStandardSingleCorrector(leftPoint, rightPoint, fundamentalMatrix);
     }
 
     /**

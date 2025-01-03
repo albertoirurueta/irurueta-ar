@@ -21,13 +21,11 @@ import com.irurueta.algebra.WrongSizeException;
 import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Quaternion;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import java.util.Random;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.Assert.*;
-
-public class StatePredictorTest {
+class StatePredictorTest {
 
     private static final double MIN_RANDOM_VALUE = -100.0;
     private static final double MAX_RANDOM_VALUE = 100.0;
@@ -40,62 +38,59 @@ public class StatePredictorTest {
     private static final double JACOBIAN_ERROR = 1e-6;
 
     @Test
-    public void testPredict() throws WrongSizeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testPredict() throws WrongSizeException {
+        final var randomizer = new UniformRandomizer();
 
-        final double roll = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-        final double pitch = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-        final double yaw = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+        final var roll = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
+        final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var yaw = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
 
-        Quaternion q = new Quaternion(roll, pitch, yaw);
+        var q = new Quaternion(roll, pitch, yaw);
 
-        final double wx = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double wy = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double wz = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var wx = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var wy = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var wz = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
-        final double dt = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var dt = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
-        final double x = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double y = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double z = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double vx = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double vy = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double vz = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double ax = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double ay = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double az = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var x = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var y = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var z = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var vx = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var vy = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var vz = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var ax = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var ay = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var az = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
-        final double[] state = new double[]{
+        final var state = new double[]{
                 x, y, z, q.getA(), q.getB(), q.getC(), q.getD(), vx, vy, vz, ax, ay, az, wx, wy, wz
         };
 
-        final double[] u = new double[9];
+        final var u = new double[9];
         randomizer.fill(u, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
-        Matrix jacobianX = new Matrix(16, 16);
-        Matrix jacobianU = new Matrix(16, 9);
-        double[] result = new double[16];
-        StatePredictor.predict(state, u, dt, result, jacobianX, jacobianU);
+        final var jacobianX1 = new Matrix(16, 16);
+        final var jacobianU1 = new Matrix(16, 9);
+        final var result1 = new double[16];
+        StatePredictor.predict(state, u, dt, result1, jacobianX1, jacobianU1);
 
         // check correctness
-        final Matrix vv = new Matrix(3, 3);
-        final Matrix va = new Matrix(3, 3);
-        final double[] v = VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt, vv, va);
+        final var vv = new Matrix(3, 3);
+        final var va = new Matrix(3, 3);
+        final var v = VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt, vv, va);
 
-        InhomogeneousPoint3D r = new InhomogeneousPoint3D(x, y, z);
-        final Matrix rr = new Matrix(3, 3);
-        final Matrix rv = new Matrix(3, 3);
-        final Matrix ra = new Matrix(3, 3);
+        var r = new InhomogeneousPoint3D(x, y, z);
+        final var rr = new Matrix(3, 3);
+        final var rv = new Matrix(3, 3);
+        final var ra = new Matrix(3, 3);
         r = PositionPredictor.predict(r, vx, vy, vz, ax, ay, az, dt, rr, rv, ra);
 
-        final Matrix qq = new Matrix(4, 4);
-        final Matrix qw = new Matrix(4, 3);
+        final var qq = new Matrix(4, 4);
+        final var qw = new Matrix(4, 3);
         q = QuaternionPredictor.predict(q, wx, wy, wz, dt, true, qq, qw);
 
-        double[] result2 = new double[]{
+        var result2 = new double[]{
                 r.getInhomX(), r.getInhomY(), r.getInhomZ(),
                 q.getA(), q.getB(), q.getC(), q.getD(),
                 v[0] + u[0], v[1] + u[1], v[2] + u[2],
@@ -103,9 +98,9 @@ public class StatePredictorTest {
                 wx + u[6], wy + u[7], wz + u[8]
         };
 
-        assertArrayEquals(result, result2, ABSOLUTE_ERROR);
+        assertArrayEquals(result1, result2, ABSOLUTE_ERROR);
 
-        final Matrix jacobianX2 = Matrix.identity(16, 16);
+        final var jacobianX2 = Matrix.identity(16, 16);
         jacobianX2.setSubmatrix(0, 0, 2, 2, rr);
         jacobianX2.setSubmatrix(3, 3, 6, 6, qq);
         jacobianX2.setSubmatrix(0, 7, 2, 9, rv);
@@ -114,205 +109,152 @@ public class StatePredictorTest {
         jacobianX2.setSubmatrix(7, 10, 9, 12, va);
         jacobianX2.setSubmatrix(3, 13, 6, 15, qw);
 
-        final Matrix jacobianU2 = new Matrix(16, 9);
+        final var jacobianU2 = new Matrix(16, 9);
         jacobianU2.setSubmatrix(7, 0, 15, 8,
                 Matrix.identity(9, 9));
 
-        assertTrue(jacobianX.equals(jacobianX2, ABSOLUTE_ERROR));
-        assertTrue(jacobianU.equals(jacobianU2, ABSOLUTE_ERROR));
+        assertTrue(jacobianX1.equals(jacobianX2, ABSOLUTE_ERROR));
+        assertTrue(jacobianU1.equals(jacobianU2, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
-        try {
-            StatePredictor.predict(new double[1], u, dt, result, jacobianX, jacobianU);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            StatePredictor.predict(state, new double[1], dt, result, jacobianX, jacobianU);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            StatePredictor.predict(state, u, dt, new double[1], jacobianX, jacobianU);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            StatePredictor.predict(state, u, dt, result, new Matrix(1, 1), jacobianU);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            StatePredictor.predict(state, u, dt, result, jacobianX, new Matrix(1, 1));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class,
+                () -> StatePredictor.predict(new double[1], u, dt, result1, jacobianX1, jacobianU1));
+        assertThrows(IllegalArgumentException.class,
+                () -> StatePredictor.predict(state, new double[1], dt, result1, jacobianX1, jacobianU1));
+        assertThrows(IllegalArgumentException.class,
+                () -> StatePredictor.predict(state, u, dt, new double[1], jacobianX1, jacobianU1));
+        final var m = new Matrix(1, 1);
+        assertThrows(IllegalArgumentException.class,
+                () -> StatePredictor.predict(state, u, dt, result1, m, jacobianU1));
+        assertThrows(IllegalArgumentException.class,
+                () -> StatePredictor.predict(state, u, dt, result1, jacobianX1, m));
 
         // test without jacobians
-        result = new double[16];
-        StatePredictor.predict(state, u, dt, result);
+        final var result3 = new double[16];
+        StatePredictor.predict(state, u, dt, result3);
 
         // check correctness
-        assertArrayEquals(result, result2, ABSOLUTE_ERROR);
+        assertArrayEquals(result3, result2, ABSOLUTE_ERROR);
 
         // Force IllegalArgumentException
-        try {
-            StatePredictor.predict(new double[1], u, dt, result);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            StatePredictor.predict(state, new double[1], dt, result);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            StatePredictor.predict(state, u, dt, new double[1]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> StatePredictor.predict(new double[1], u, dt, result3));
+        assertThrows(IllegalArgumentException.class, () -> StatePredictor.predict(state, new double[1], dt, result3));
+        assertThrows(IllegalArgumentException.class, () -> StatePredictor.predict(state, u, dt, new double[1]));
 
         // test with new instance, with jacobians
-        jacobianX = new Matrix(16, 16);
-        jacobianU = new Matrix(16, 9);
-        result = StatePredictor.predict(state, u, dt, jacobianX, jacobianU);
+        final var jacobianX3 = new Matrix(16, 16);
+        final var jacobianU3 = new Matrix(16, 9);
+        final var result4 = StatePredictor.predict(state, u, dt, jacobianX3, jacobianU3);
 
         // check correctness
-        assertArrayEquals(result, result2, ABSOLUTE_ERROR);
-        assertTrue(jacobianX.equals(jacobianX2, ABSOLUTE_ERROR));
-        assertTrue(jacobianU.equals(jacobianU2, ABSOLUTE_ERROR));
+        assertArrayEquals(result4, result2, ABSOLUTE_ERROR);
+        assertTrue(jacobianX3.equals(jacobianX2, ABSOLUTE_ERROR));
+        assertTrue(jacobianU3.equals(jacobianU2, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
-        result = null;
-        try {
-            result = StatePredictor.predict(new double[1], u, dt, jacobianX, jacobianU);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            result = StatePredictor.predict(state, new double[1], dt, jacobianX, jacobianU);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            result = StatePredictor.predict(state, u, dt, new Matrix(1, 1), jacobianU);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            result = StatePredictor.predict(state, u, dt, jacobianX, new Matrix(1, 1));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(result);
+        assertThrows(IllegalArgumentException.class,
+                () -> StatePredictor.predict(new double[1], u, dt, jacobianX3, jacobianU3));
+        assertThrows(IllegalArgumentException.class,
+                () -> StatePredictor.predict(state, new double[1], dt, jacobianX3, jacobianU3));
+        assertThrows(IllegalArgumentException.class,
+                () -> StatePredictor.predict(state, u, dt, m, jacobianU3));
+        assertThrows(IllegalArgumentException.class,
+                () -> StatePredictor.predict(state, u, dt, jacobianX3, m));
 
         // test with new instance without jacobians
-        result = StatePredictor.predict(state, u, dt);
+        final var result5 = StatePredictor.predict(state, u, dt);
 
         // check correctness
-        assertArrayEquals(result, result2, ABSOLUTE_ERROR);
+        assertArrayEquals(result5, result2, ABSOLUTE_ERROR);
 
         // Force IllegalArgumentException
-        result = null;
-        try {
-            result = StatePredictor.predict(new double[1], u, dt);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            result = StatePredictor.predict(state, new double[1], dt);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(result);
+        assertThrows(IllegalArgumentException.class, () -> StatePredictor.predict(new double[1], u, dt));
+        assertThrows(IllegalArgumentException.class, () -> StatePredictor.predict(state, new double[1], dt));
 
         // check correctness of jacobians
-        jacobianX = new Matrix(16, 16);
-        jacobianU = new Matrix(16, 9);
-        result = StatePredictor.predict(state, u, dt, jacobianX, jacobianU);
+        final var jacobianX4 = new Matrix(16, 16);
+        final var jacobianU4 = new Matrix(16, 9);
+        final var result6 = StatePredictor.predict(state, u, dt, jacobianX4, jacobianU4);
 
         // check state variation
-        double[] diff = new double[16];
+        var diff = new double[16];
         randomizer.fill(diff, -JACOBIAN_ERROR, JACOBIAN_ERROR);
-        final double[] state2 = ArrayUtils.sumAndReturnNew(state, diff);
+        final var state2 = ArrayUtils.sumAndReturnNew(state, diff);
         result2 = StatePredictor.predict(state2, u, dt);
 
-        double[] diffResult = ArrayUtils.subtractAndReturnNew(result2, result);
-        double[] diffResult2 = jacobianX.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
+        var diffResult = ArrayUtils.subtractAndReturnNew(result2, result6);
+        var diffResult2 = jacobianX4.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
         assertArrayEquals(diffResult, diffResult2, ABSOLUTE_ERROR);
 
         // check control variation
         diff = new double[9];
         randomizer.fill(diff, -JACOBIAN_ERROR, JACOBIAN_ERROR);
-        final double[] u2 = ArrayUtils.sumAndReturnNew(u, diff);
+        final var u2 = ArrayUtils.sumAndReturnNew(u, diff);
         result2 = StatePredictor.predict(state, u2, dt);
 
-        diffResult = ArrayUtils.subtractAndReturnNew(result2, result);
-        diffResult2 = jacobianU.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
+        diffResult = ArrayUtils.subtractAndReturnNew(result2, result6);
+        diffResult2 = jacobianU4.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
         assertArrayEquals(diffResult, diffResult2, ABSOLUTE_ERROR);
     }
 
     @Test
-    public void testPredictWithPositionAdjustment() throws WrongSizeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testPredictWithPositionAdjustment() throws WrongSizeException {
+        final var randomizer = new UniformRandomizer();
 
-        final double roll = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-        final double pitch = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-        final double yaw = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+        final var roll = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
+        final var pitch = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var yaw = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
 
-        Quaternion q = new Quaternion(roll, pitch, yaw);
+        var q = new Quaternion(roll, pitch, yaw);
 
-        final double wx = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double wy = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double wz = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var wx = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var wy = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var wz = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
-        final double dt = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var dt = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
-        final double x = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double y = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double z = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double vx = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double vy = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double vz = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double ax = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double ay = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double az = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var x = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var y = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var z = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var vx = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var vy = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var vz = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var ax = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var ay = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var az = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
-        final double[] state = new double[]{
+        final var state = new double[]{
                 x, y, z, q.getA(), q.getB(), q.getC(), q.getD(), vx, vy, vz, ax, ay, az, wx, wy, wz
         };
 
-        final double[] u = new double[12];
+        final var u = new double[12];
         randomizer.fill(u, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double drx = u[0];
-        final double dry = u[1];
-        final double drz = u[2];
+        final var drx = u[0];
+        final var dry = u[1];
+        final var drz = u[2];
 
-        Matrix jacobianX = new Matrix(16, 16);
-        Matrix jacobianU = new Matrix(16, 12);
-        double[] result = new double[16];
-        StatePredictor.predictWithPositionAdjustment(state, u, dt, result, jacobianX, jacobianU);
+        final var jacobianX1 = new Matrix(16, 16);
+        final var jacobianU1 = new Matrix(16, 12);
+        final var result1 = new double[16];
+        StatePredictor.predictWithPositionAdjustment(state, u, dt, result1, jacobianX1, jacobianU1);
 
         // check correctness
-        final Matrix vv = new Matrix(3, 3);
-        final Matrix va = new Matrix(3, 3);
-        final double[] v = VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt, vv, va);
+        final var vv = new Matrix(3, 3);
+        final var va = new Matrix(3, 3);
+        final var v = VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt, vv, va);
 
-        InhomogeneousPoint3D r = new InhomogeneousPoint3D(x, y, z);
-        final Matrix rr = new Matrix(3, 3);
-        final Matrix rv = new Matrix(3, 3);
-        final Matrix ra = new Matrix(3, 3);
+        var r = new InhomogeneousPoint3D(x, y, z);
+        final var rr = new Matrix(3, 3);
+        final var rv = new Matrix(3, 3);
+        final var ra = new Matrix(3, 3);
         r = PositionPredictor.predictWithPositionAdjustment(r,
                 drx, dry, drz, vx, vy, vz, ax, ay, az, dt, rr, null, rv, ra);
 
-        final Matrix qq = new Matrix(4, 4);
-        final Matrix qw = new Matrix(4, 3);
+        final var qq = new Matrix(4, 4);
+        final var qw = new Matrix(4, 3);
         q = QuaternionPredictor.predict(q, wx, wy, wz, dt, true, qq, qw);
 
-        double[] result2 = new double[]{
+        var result2 = new double[]{
                 r.getInhomX(), r.getInhomY(), r.getInhomZ(),
                 q.getA(), q.getB(), q.getC(), q.getD(),
                 v[0] + u[3], v[1] + u[4], v[2] + u[5],
@@ -320,9 +262,9 @@ public class StatePredictorTest {
                 wx + u[9], wy + u[10], wz + u[11]
         };
 
-        assertArrayEquals(result, result2, ABSOLUTE_ERROR);
+        assertArrayEquals(result1, result2, ABSOLUTE_ERROR);
 
-        final Matrix jacobianX2 = Matrix.identity(16, 16);
+        final var jacobianX2 = Matrix.identity(16, 16);
         jacobianX2.setSubmatrix(0, 0, 2, 2, rr);
         jacobianX2.setSubmatrix(3, 3, 6, 6, qq);
         jacobianX2.setSubmatrix(0, 7, 2, 9, rv);
@@ -331,223 +273,166 @@ public class StatePredictorTest {
         jacobianX2.setSubmatrix(7, 10, 9, 12, va);
         jacobianX2.setSubmatrix(3, 13, 6, 15, qw);
 
-        final Matrix jacobianU2 = new Matrix(16, 12);
+        final var jacobianU2 = new Matrix(16, 12);
         jacobianU2.setSubmatrix(0, 0, 2, 2,
                 Matrix.identity(3, 3));
         jacobianU2.setSubmatrix(7, 3, 15, 11,
                 Matrix.identity(9, 9));
 
-        assertTrue(jacobianX.equals(jacobianX2, ABSOLUTE_ERROR));
-        assertTrue(jacobianU.equals(jacobianU2, ABSOLUTE_ERROR));
+        assertTrue(jacobianX1.equals(jacobianX2, ABSOLUTE_ERROR));
+        assertTrue(jacobianU1.equals(jacobianU2, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
-        try {
-            StatePredictor.predictWithPositionAdjustment(new double[1], u, dt, result, jacobianX, jacobianU);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            StatePredictor.predictWithPositionAdjustment(
-                    state, new double[1], dt, result, jacobianX, jacobianU);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            StatePredictor.predictWithPositionAdjustment(state, u, dt, new double[1], jacobianX, jacobianU);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            StatePredictor.predictWithPositionAdjustment(
-                    state, u, dt, result, new Matrix(1, 1), jacobianU);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            StatePredictor.predictWithPositionAdjustment(
-                    state, u, dt, result, jacobianX, new Matrix(1, 1));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> StatePredictor.predictWithPositionAdjustment(new double[1],
+                u, dt, result1, jacobianX1, jacobianU1));
+        assertThrows(IllegalArgumentException.class, () -> StatePredictor.predictWithPositionAdjustment(state,
+                new double[1], dt, result1, jacobianX1, jacobianU1));
+        assertThrows(IllegalArgumentException.class, () -> StatePredictor.predictWithPositionAdjustment(state, u, dt,
+                new double[1], jacobianX1, jacobianU1));
+        final var m = new Matrix(1, 1);
+        assertThrows(IllegalArgumentException.class, () -> StatePredictor.predictWithPositionAdjustment(state, u, dt,
+                result1, m, jacobianU1));
+        assertThrows(IllegalArgumentException.class, () -> StatePredictor.predictWithPositionAdjustment(state, u, dt,
+                result1, jacobianX1, m));
 
         // test without jacobians
-        result = new double[16];
-        StatePredictor.predictWithPositionAdjustment(state, u, dt, result);
+        final var result3 = new double[16];
+        StatePredictor.predictWithPositionAdjustment(state, u, dt, result3);
 
         // check correctness
-        assertArrayEquals(result, result2, ABSOLUTE_ERROR);
+        assertArrayEquals(result3, result2, ABSOLUTE_ERROR);
 
         // Force IllegalArgumentException
-        try {
-            StatePredictor.predictWithPositionAdjustment(new double[1], u, dt, result);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            StatePredictor.predictWithPositionAdjustment(state, new double[1], dt, result);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            StatePredictor.predictWithPositionAdjustment(state, u, dt, new double[1]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> StatePredictor.predictWithPositionAdjustment(new double[1],
+                u, dt, result3));
+        assertThrows(IllegalArgumentException.class, () -> StatePredictor.predictWithPositionAdjustment(state,
+                new double[1], dt, result3));
+        assertThrows(IllegalArgumentException.class, () -> StatePredictor.predictWithPositionAdjustment(state, u, dt,
+                new double[1]));
 
         // test with new instance and jacobians
-        jacobianX = new Matrix(16, 16);
-        jacobianU = new Matrix(16, 12);
-        result = StatePredictor.predictWithPositionAdjustment(state, u, dt, jacobianX, jacobianU);
+        final var jacobianX3 = new Matrix(16, 16);
+        final var jacobianU3 = new Matrix(16, 12);
+        final var result4 = StatePredictor.predictWithPositionAdjustment(state, u, dt, jacobianX3, jacobianU3);
 
         // check correctness
-        assertArrayEquals(result, result2, ABSOLUTE_ERROR);
+        assertArrayEquals(result4, result2, ABSOLUTE_ERROR);
 
-        assertTrue(jacobianX.equals(jacobianX2, ABSOLUTE_ERROR));
-        assertTrue(jacobianU.equals(jacobianU2, ABSOLUTE_ERROR));
+        assertTrue(jacobianX3.equals(jacobianX2, ABSOLUTE_ERROR));
+        assertTrue(jacobianU3.equals(jacobianU2, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
-        result = null;
-        try {
-            result = StatePredictor.predictWithPositionAdjustment(new double[1], u, dt, jacobianX, jacobianU);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            result = StatePredictor.predictWithPositionAdjustment(
-                    state, new double[1], dt, jacobianX, jacobianU);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            result = StatePredictor.predictWithPositionAdjustment(
-                    state, u, dt, new Matrix(1, 1), jacobianU);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            result = StatePredictor.predictWithPositionAdjustment(
-                    state, u, dt, jacobianX, new Matrix(1, 1));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(result);
+        assertThrows(IllegalArgumentException.class, () -> StatePredictor.predictWithPositionAdjustment(new double[1],
+                u, dt, jacobianX3, jacobianU3));
+        assertThrows(IllegalArgumentException.class, () -> StatePredictor.predictWithPositionAdjustment(state,
+                new double[1], dt, jacobianX3, jacobianU3));
+        assertThrows(IllegalArgumentException.class, () -> StatePredictor.predictWithPositionAdjustment(state, u, dt,
+                m, jacobianU3));
+        assertThrows(IllegalArgumentException.class, () -> StatePredictor.predictWithPositionAdjustment(state, u, dt,
+                jacobianX3, m));
 
         // test with new instance, without jacobians
-        result = StatePredictor.predictWithPositionAdjustment(state, u, dt);
+        final var result5 = StatePredictor.predictWithPositionAdjustment(state, u, dt);
 
         // check correctness
-        assertArrayEquals(result, result2, ABSOLUTE_ERROR);
+        assertArrayEquals(result5, result2, ABSOLUTE_ERROR);
 
         // Force IllegalArgumentException
-        result = null;
-        try {
-            result = StatePredictor.predictWithPositionAdjustment(new double[1], u, dt);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            result = StatePredictor.predictWithPositionAdjustment(state, new double[1], dt);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(result);
+        assertThrows(IllegalArgumentException.class,
+                () -> StatePredictor.predictWithPositionAdjustment(new double[1], u, dt));
+        assertThrows(IllegalArgumentException.class,
+                () -> StatePredictor.predictWithPositionAdjustment(state, new double[1], dt));
 
         // check correctness of jacobians
-        jacobianX = new Matrix(16, 16);
-        jacobianU = new Matrix(16, 12);
-        result = StatePredictor.predictWithPositionAdjustment(state, u, dt, jacobianX, jacobianU);
+        final var jacobianX4 = new Matrix(16, 16);
+        final var jacobianU4 = new Matrix(16, 12);
+        final var result6 = StatePredictor.predictWithPositionAdjustment(state, u, dt, jacobianX4, jacobianU4);
 
         // check state variation
-        double[] diff = new double[16];
+        var diff = new double[16];
         randomizer.fill(diff, -JACOBIAN_ERROR, JACOBIAN_ERROR);
-        final double[] state2 = ArrayUtils.sumAndReturnNew(state, diff);
+        final var state2 = ArrayUtils.sumAndReturnNew(state, diff);
         result2 = StatePredictor.predictWithPositionAdjustment(state2, u, dt);
 
-        double[] diffResult = ArrayUtils.subtractAndReturnNew(result2, result);
-        double[] diffResult2 = jacobianX.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
+        var diffResult = ArrayUtils.subtractAndReturnNew(result2, result6);
+        var diffResult2 = jacobianX4.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
         assertArrayEquals(diffResult, diffResult2, ABSOLUTE_ERROR);
 
         // check control variation
         diff = new double[12];
         randomizer.fill(diff, -JACOBIAN_ERROR, JACOBIAN_ERROR);
-        final double[] u2 = ArrayUtils.sumAndReturnNew(u, diff);
+        final var u2 = ArrayUtils.sumAndReturnNew(u, diff);
         result2 = StatePredictor.predictWithPositionAdjustment(state, u2, dt);
 
-        diffResult = ArrayUtils.subtractAndReturnNew(result2, result);
-        diffResult2 = jacobianU.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
+        diffResult = ArrayUtils.subtractAndReturnNew(result2, result6);
+        diffResult2 = jacobianU4.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
         assertArrayEquals(diffResult, diffResult2, ABSOLUTE_ERROR);
     }
 
     @Test
-    public void testConstantAccelerationModelPredictStateWithRotationAdjustment() throws WrongSizeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testConstantAccelerationModelPredictStateWithRotationAdjustment() throws WrongSizeException {
+        final var randomizer = new UniformRandomizer();
 
-        final double roll1 = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-        final double pitch1 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-        final double yaw1 = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+        final var roll1 = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
+        final var pitch1 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var yaw1 = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
 
-        final double roll2 = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-        final double pitch2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-        final double yaw2 = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+        final var roll2 = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
+        final var pitch2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var yaw2 = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
 
-        Quaternion q = new Quaternion(roll1, pitch1, yaw1);
-        final Quaternion dq = new Quaternion(roll2, pitch2, yaw2);
+        var q = new Quaternion(roll1, pitch1, yaw1);
+        final var dq = new Quaternion(roll2, pitch2, yaw2);
 
-        final double wx = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double wy = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double wz = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var wx = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var wy = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var wz = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
-        final double dt = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var dt = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
-        final double x = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double y = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double z = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double vx = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double vy = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double vz = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double ax = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double ay = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double az = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var x = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var y = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var z = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var vx = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var vy = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var vz = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var ax = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var ay = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var az = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
-        final double[] state = new double[]{
+        final var state = new double[]{
                 x, y, z, q.getA(), q.getB(), q.getC(), q.getD(), vx, vy, vz, ax, ay, az, wx, wy, wz
         };
 
-        final double[] u = new double[13];
+        final var u = new double[13];
         randomizer.fill(u, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
         u[0] = dq.getA();
         u[1] = dq.getB();
         u[2] = dq.getC();
         u[3] = dq.getD();
 
-        Matrix jacobianX = new Matrix(16, 16);
-        Matrix jacobianU = new Matrix(16, 13);
-        double[] result = new double[16];
-        StatePredictor.predictWithRotationAdjustment(state, u, dt, result, jacobianX, jacobianU);
+        final var jacobianX1 = new Matrix(16, 16);
+        final var jacobianU1 = new Matrix(16, 13);
+        final var result1 = new double[16];
+        StatePredictor.predictWithRotationAdjustment(state, u, dt, result1, jacobianX1, jacobianU1);
 
         // check correctness
-        final Matrix vv = new Matrix(3, 3);
-        final Matrix va = new Matrix(3, 3);
-        final double[] v = VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt, vv, va);
+        final var vv = new Matrix(3, 3);
+        final var va = new Matrix(3, 3);
+        final var v = VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt, vv, va);
 
-        InhomogeneousPoint3D r = new InhomogeneousPoint3D(x, y, z);
-        final Matrix rr = new Matrix(3, 3);
-        final Matrix rv = new Matrix(3, 3);
-        final Matrix ra = new Matrix(3, 3);
+        var r = new InhomogeneousPoint3D(x, y, z);
+        final var rr = new Matrix(3, 3);
+        final var rv = new Matrix(3, 3);
+        final var ra = new Matrix(3, 3);
         r = PositionPredictor.predict(r, vx, vy, vz, ax, ay, az, dt, rr, rv, ra);
 
-        final Matrix qq = new Matrix(4, 4);
-        final Matrix qw = new Matrix(4, 3);
-        final Matrix qdq = new Matrix(4, 4);
+        final var qq = new Matrix(4, 4);
+        final var qw = new Matrix(4, 3);
+        final var qdq = new Matrix(4, 4);
         q = QuaternionPredictor.predictWithRotationAdjustment(q, dq, wx, wy, wz, dt, qq, qdq, qw);
 
-        double[] result2 = new double[]{
+        var result2 = new double[]{
                 r.getInhomX(), r.getInhomY(), r.getInhomZ(),
                 q.getA(), q.getB(), q.getC(), q.getD(),
                 v[0] + u[4], v[1] + u[5], v[2] + u[6],
@@ -555,9 +440,9 @@ public class StatePredictorTest {
                 wx + u[10], wy + u[11], wz + u[12]
         };
 
-        assertArrayEquals(result, result2, ABSOLUTE_ERROR);
+        assertArrayEquals(result1, result2, ABSOLUTE_ERROR);
 
-        final Matrix jacobianX2 = Matrix.identity(16, 16);
+        final var jacobianX2 = Matrix.identity(16, 16);
         jacobianX2.setSubmatrix(0, 0, 2, 2, rr);
         jacobianX2.setSubmatrix(3, 3, 6, 6, qq);
         jacobianX2.setSubmatrix(0, 7, 2, 9, rv);
@@ -566,227 +451,170 @@ public class StatePredictorTest {
         jacobianX2.setSubmatrix(7, 10, 9, 12, va);
         jacobianX2.setSubmatrix(3, 13, 6, 15, qw);
 
-        final Matrix jacobianU2 = new Matrix(16, 13);
+        final var jacobianU2 = new Matrix(16, 13);
         jacobianU2.setSubmatrix(3, 0, 6, 3, qdq);
         jacobianU2.setSubmatrix(7, 4, 15, 12,
                 Matrix.identity(9, 9));
 
-        assertTrue(jacobianX.equals(jacobianX2, ABSOLUTE_ERROR));
-        assertTrue(jacobianU.equals(jacobianU2, ABSOLUTE_ERROR));
+        assertTrue(jacobianX1.equals(jacobianX2, ABSOLUTE_ERROR));
+        assertTrue(jacobianU1.equals(jacobianU2, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
-        try {
-            StatePredictor.predictWithRotationAdjustment(new double[1], u, dt, result, jacobianX, jacobianU);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            StatePredictor.predictWithRotationAdjustment(
-                    state, new double[1], dt, result, jacobianX, jacobianU);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            StatePredictor.predictWithRotationAdjustment(state, u, dt, new double[1], jacobianX, jacobianU);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            StatePredictor.predictWithRotationAdjustment(
-                    state, u, dt, result, new Matrix(1, 1), jacobianU);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            StatePredictor.predictWithRotationAdjustment(
-                    state, u, dt, result, jacobianX, new Matrix(1, 1));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class,
+                () -> StatePredictor.predictWithRotationAdjustment(new double[1], u, dt, result1, jacobianX1,
+                        jacobianU1));
+        assertThrows(IllegalArgumentException.class, () -> StatePredictor.predictWithRotationAdjustment(
+                state, new double[1], dt, result1, jacobianX1, jacobianU1));
+        assertThrows(IllegalArgumentException.class, () -> StatePredictor.predictWithRotationAdjustment(state, u, dt,
+                new double[1], jacobianX1, jacobianU1));
+        final var m = new Matrix(1, 1);
+        assertThrows(IllegalArgumentException.class, () -> StatePredictor.predictWithRotationAdjustment(state, u, dt,
+                result1, m, jacobianU1));
+        assertThrows(IllegalArgumentException.class, () -> StatePredictor.predictWithRotationAdjustment(state, u, dt,
+                result1, jacobianX1, m));
 
         // test without jacobians
-        result = new double[16];
-        StatePredictor.predictWithRotationAdjustment(state, u, dt, result);
+        final var result3 = new double[16];
+        StatePredictor.predictWithRotationAdjustment(state, u, dt, result3);
 
         // check correctness
-        assertArrayEquals(result, result2, ABSOLUTE_ERROR);
+        assertArrayEquals(result3, result2, ABSOLUTE_ERROR);
 
         // Force IllegalArgumentException
-        try {
-            StatePredictor.predictWithRotationAdjustment(new double[1], u, dt, result);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            StatePredictor.predictWithRotationAdjustment(state, new double[1], dt, result);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            StatePredictor.predictWithRotationAdjustment(state, u, dt, new double[1]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class,
+                () -> StatePredictor.predictWithRotationAdjustment(new double[1], u, dt, result3));
+        assertThrows(IllegalArgumentException.class,
+                () -> StatePredictor.predictWithRotationAdjustment(state, new double[1], dt, result3));
+        assertThrows(IllegalArgumentException.class,
+                () -> StatePredictor.predictWithRotationAdjustment(state, u, dt, new double[1]));
 
         // test with new instance, with jacobians
-        jacobianX = new Matrix(16, 16);
-        jacobianU = new Matrix(16, 13);
-        result = StatePredictor.predictWithRotationAdjustment(state, u, dt, jacobianX, jacobianU);
+        final var jacobianX3 = new Matrix(16, 16);
+        final var jacobianU3 = new Matrix(16, 13);
+        final var result4 = StatePredictor.predictWithRotationAdjustment(state, u, dt, jacobianX3, jacobianU3);
 
         // check correctness
-        assertArrayEquals(result, result2, ABSOLUTE_ERROR);
+        assertArrayEquals(result4, result2, ABSOLUTE_ERROR);
 
-        assertTrue(jacobianX.equals(jacobianX2, ABSOLUTE_ERROR));
-        assertTrue(jacobianU.equals(jacobianU2, ABSOLUTE_ERROR));
+        assertTrue(jacobianX3.equals(jacobianX2, ABSOLUTE_ERROR));
+        assertTrue(jacobianU3.equals(jacobianU2, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
-        result = null;
-        try {
-            result = StatePredictor.predictWithRotationAdjustment(new double[1], u, dt, jacobianX, jacobianU);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            result = StatePredictor.predictWithRotationAdjustment(
-                    state, new double[1], dt, jacobianX, jacobianU);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            result = StatePredictor.predictWithRotationAdjustment(
-                    state, u, dt, new Matrix(1, 1), jacobianU);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            result = StatePredictor.predictWithRotationAdjustment(
-                    state, u, dt, jacobianX, new Matrix(1, 1));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(result);
+        assertThrows(IllegalArgumentException.class,
+                () -> StatePredictor.predictWithRotationAdjustment(new double[1], u, dt, jacobianX3, jacobianU3));
+        assertThrows(IllegalArgumentException.class, () -> StatePredictor.predictWithRotationAdjustment(state,
+                new double[1], dt, jacobianX3, jacobianU3));
+        assertThrows(IllegalArgumentException.class, () -> StatePredictor.predictWithRotationAdjustment(
+                state, u, dt, m, jacobianU3));
+        assertThrows(IllegalArgumentException.class, () -> StatePredictor.predictWithRotationAdjustment(
+                state, u, dt, jacobianX3, m));
 
         // test with new instance, without jacobians
-        result = StatePredictor.predictWithRotationAdjustment(state, u, dt);
+        final var result5 = StatePredictor.predictWithRotationAdjustment(state, u, dt);
 
         // check correctness
-        assertArrayEquals(result, result2, ABSOLUTE_ERROR);
+        assertArrayEquals(result5, result2, ABSOLUTE_ERROR);
 
         // Force IllegalArgumentException
-        result = null;
-        try {
-            result = StatePredictor.predictWithRotationAdjustment(new double[1], u, dt);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            result = StatePredictor.predictWithRotationAdjustment(state, new double[1], dt);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(result);
+        assertThrows(IllegalArgumentException.class,
+                () -> StatePredictor.predictWithRotationAdjustment(new double[1], u, dt));
+        assertThrows(IllegalArgumentException.class,
+                () -> StatePredictor.predictWithRotationAdjustment(state, new double[1], dt));
 
         // check correctness of jacobians
-        jacobianX = new Matrix(16, 16);
-        jacobianU = new Matrix(16, 13);
-        result = StatePredictor.predictWithRotationAdjustment(state, u, dt, jacobianX, jacobianU);
+        final var jacobianX4 = new Matrix(16, 16);
+        final var jacobianU4 = new Matrix(16, 13);
+        final var result6 = StatePredictor.predictWithRotationAdjustment(state, u, dt, jacobianX4, jacobianU4);
 
         // check state variation
-        double[] diff = new double[16];
+        var diff = new double[16];
         randomizer.fill(diff, -JACOBIAN_ERROR, JACOBIAN_ERROR);
-        final double[] state2 = ArrayUtils.sumAndReturnNew(state, diff);
+        final var state2 = ArrayUtils.sumAndReturnNew(state, diff);
         result2 = StatePredictor.predictWithRotationAdjustment(state2, u, dt);
 
-        double[] diffResult = ArrayUtils.subtractAndReturnNew(result2, result);
-        double[] diffResult2 = jacobianX.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
+        var diffResult = ArrayUtils.subtractAndReturnNew(result2, result6);
+        var diffResult2 = jacobianX4.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
         assertArrayEquals(diffResult, diffResult2, ABSOLUTE_ERROR);
 
         // check control variation
         diff = new double[13];
         randomizer.fill(diff, -JACOBIAN_ERROR, JACOBIAN_ERROR);
-        final double[] u2 = ArrayUtils.sumAndReturnNew(u, diff);
+        final var u2 = ArrayUtils.sumAndReturnNew(u, diff);
         result2 = StatePredictor.predictWithRotationAdjustment(state, u2, dt);
 
-        diffResult = ArrayUtils.subtractAndReturnNew(result2, result);
-        diffResult2 = jacobianU.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
+        diffResult = ArrayUtils.subtractAndReturnNew(result2, result6);
+        diffResult2 = jacobianU4.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
         assertArrayEquals(diffResult, diffResult2, ABSOLUTE_ERROR);
     }
 
     @Test
-    public void testConstantAccelerationModelPredictStateWithPositionAndRotationAdjustment()
-            throws WrongSizeException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testConstantAccelerationModelPredictStateWithPositionAndRotationAdjustment() throws WrongSizeException {
+        final var randomizer = new UniformRandomizer();
 
-        final double roll1 = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-        final double pitch1 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-        final double yaw1 = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+        final var roll1 = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
+        final var pitch1 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var yaw1 = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
 
-        final double roll2 = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-        final double pitch2 = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-        final double yaw2 = randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES,
-                2.0 * MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+        final var roll2 = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
+        final var pitch2 = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var yaw2 = Math.toRadians(randomizer.nextDouble(2.0 * MIN_ANGLE_DEGREES, 2.0 * MAX_ANGLE_DEGREES));
 
-        Quaternion q = new Quaternion(roll1, pitch1, yaw1);
-        final Quaternion dq = new Quaternion(roll2, pitch2, yaw2);
+        var q = new Quaternion(roll1, pitch1, yaw1);
+        final var dq = new Quaternion(roll2, pitch2, yaw2);
 
-        final double wx = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double wy = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double wz = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var wx = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var wy = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var wz = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
-        final double dt = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var dt = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
-        final double x = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double y = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double z = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double vx = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double vy = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double vz = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double ax = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double ay = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double az = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var x = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var y = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var z = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var vx = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var vy = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var vz = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var ax = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var ay = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
+        final var az = randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
 
-        final double[] state = new double[]{
+        final var state = new double[]{
                 x, y, z, q.getA(), q.getB(), q.getC(), q.getD(), vx, vy, vz, ax, ay, az, wx, wy, wz
         };
 
-        final double[] u = new double[16];
+        final var u = new double[16];
         randomizer.fill(u, MIN_RANDOM_VALUE, MAX_RANDOM_VALUE);
-        final double drx = u[0];
-        final double dry = u[1];
-        final double drz = u[2];
+        final var drx = u[0];
+        final var dry = u[1];
+        final var drz = u[2];
         u[3] = dq.getA();
         u[4] = dq.getB();
         u[5] = dq.getC();
         u[6] = dq.getD();
 
-        Matrix jacobianX = new Matrix(16, 16);
-        Matrix jacobianU = new Matrix(16, 16);
-        double[] result = new double[16];
-        StatePredictor.predictWithPositionAndRotationAdjustment(state, u, dt, result, jacobianX, jacobianU);
+        final var jacobianX1 = new Matrix(16, 16);
+        final var jacobianU1 = new Matrix(16, 16);
+        final var result1 = new double[16];
+        StatePredictor.predictWithPositionAndRotationAdjustment(state, u, dt, result1, jacobianX1, jacobianU1);
 
         // check correctness
-        final Matrix vv = new Matrix(3, 3);
-        final Matrix va = new Matrix(3, 3);
-        final double[] v = VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt, vv, va);
+        final var vv = new Matrix(3, 3);
+        final var va = new Matrix(3, 3);
+        final var v = VelocityPredictor.predict(vx, vy, vz, ax, ay, az, dt, vv, va);
 
-        InhomogeneousPoint3D r = new InhomogeneousPoint3D(x, y, z);
-        final Matrix rr = new Matrix(3, 3);
-        final Matrix rv = new Matrix(3, 3);
-        final Matrix ra = new Matrix(3, 3);
+        var r = new InhomogeneousPoint3D(x, y, z);
+        final var rr = new Matrix(3, 3);
+        final var rv = new Matrix(3, 3);
+        final var ra = new Matrix(3, 3);
         r = PositionPredictor.predictWithPositionAdjustment(r,
                 drx, dry, drz, vx, vy, vz, ax, ay, az, dt, rr, null, rv, ra);
 
-        final Matrix qq = new Matrix(4, 4);
-        final Matrix qw = new Matrix(4, 3);
-        final Matrix qdq = new Matrix(4, 4);
+        final var qq = new Matrix(4, 4);
+        final var qw = new Matrix(4, 3);
+        final var qdq = new Matrix(4, 4);
         q = QuaternionPredictor.predictWithRotationAdjustment(q, dq, wx, wy, wz, dt, qq, qdq, qw);
 
-        double[] result2 = new double[]{
+        var result2 = new double[]{
                 r.getInhomX(), r.getInhomY(), r.getInhomZ(),
                 q.getA(), q.getB(), q.getC(), q.getD(),
                 v[0] + u[7], v[1] + u[8], v[2] + u[9],
@@ -794,9 +622,9 @@ public class StatePredictorTest {
                 wx + u[13], wy + u[14], wz + u[15]
         };
 
-        assertArrayEquals(result, result2, ABSOLUTE_ERROR);
+        assertArrayEquals(result1, result2, ABSOLUTE_ERROR);
 
-        final Matrix jacobianX2 = Matrix.identity(16, 16);
+        final var jacobianX2 = Matrix.identity(16, 16);
         jacobianX2.setSubmatrix(0, 0, 2, 2, rr);
         jacobianX2.setSubmatrix(3, 3, 6, 6, qq);
         jacobianX2.setSubmatrix(0, 7, 2, 9, rv);
@@ -805,150 +633,98 @@ public class StatePredictorTest {
         jacobianX2.setSubmatrix(7, 10, 9, 12, va);
         jacobianX2.setSubmatrix(3, 13, 6, 15, qw);
 
-        final Matrix jacobianU2 = Matrix.identity(16, 16);
+        final var jacobianU2 = Matrix.identity(16, 16);
         jacobianU2.setSubmatrix(3, 3, 6, 6, qdq);
 
-        assertTrue(jacobianX.equals(jacobianX2, ABSOLUTE_ERROR));
-        assertTrue(jacobianU.equals(jacobianU2, ABSOLUTE_ERROR));
+        assertTrue(jacobianX1.equals(jacobianX2, ABSOLUTE_ERROR));
+        assertTrue(jacobianU1.equals(jacobianU2, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
-        try {
-            StatePredictor.predictWithPositionAndRotationAdjustment(
-                    new double[1], u, dt, result, jacobianX, jacobianU);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            StatePredictor.predictWithPositionAndRotationAdjustment(
-                    state, new double[1], dt, result, jacobianX, jacobianU);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            StatePredictor.predictWithPositionAndRotationAdjustment(
-                    state, u, dt, new double[1], jacobianX, jacobianU);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            StatePredictor.predictWithPositionAndRotationAdjustment(
-                    state, u, dt, result, new Matrix(1, 1), jacobianU);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            StatePredictor.predictWithPositionAndRotationAdjustment(
-                    state, u, dt, result, jacobianX, new Matrix(1, 1));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> StatePredictor.predictWithPositionAndRotationAdjustment(
+                new double[1], u, dt, result1, jacobianX1, jacobianU1));
+        assertThrows(IllegalArgumentException.class, () -> StatePredictor.predictWithPositionAndRotationAdjustment(
+                state, new double[1], dt, result1, jacobianX1, jacobianU1));
+        assertThrows(IllegalArgumentException.class, () -> StatePredictor.predictWithPositionAndRotationAdjustment(
+                state, u, dt, new double[1], jacobianX1, jacobianU1));
+        final var m = new Matrix(1, 1);
+        assertThrows(IllegalArgumentException.class, () -> StatePredictor.predictWithPositionAndRotationAdjustment(
+                state, u, dt, result1, m, jacobianU1));
+        assertThrows(IllegalArgumentException.class, () -> StatePredictor.predictWithPositionAndRotationAdjustment(
+                state, u, dt, result1, jacobianX1, m));
 
         // test without jacobians
-        result = new double[16];
-        StatePredictor.predictWithPositionAndRotationAdjustment(state, u, dt, result);
+        final var result3 = new double[16];
+        StatePredictor.predictWithPositionAndRotationAdjustment(state, u, dt, result3);
 
         // check correctness
-        assertArrayEquals(result, result2, ABSOLUTE_ERROR);
+        assertArrayEquals(result3, result2, ABSOLUTE_ERROR);
 
         // Force IllegalArgumentException
-        try {
-            StatePredictor.predictWithPositionAndRotationAdjustment(new double[1], u, dt, result);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            StatePredictor.predictWithPositionAndRotationAdjustment(state, new double[1], dt, result);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            StatePredictor.predictWithPositionAndRotationAdjustment(state, u, dt, new double[1]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class,
+                () -> StatePredictor.predictWithPositionAndRotationAdjustment(new double[1], u, dt, result3));
+        assertThrows(IllegalArgumentException.class,
+                () -> StatePredictor.predictWithPositionAndRotationAdjustment(state, new double[1], dt, result3));
+        assertThrows(IllegalArgumentException.class,
+                () -> StatePredictor.predictWithPositionAndRotationAdjustment(state, u, dt, new double[1]));
 
         // test with new instance, with jacobians
-        jacobianX = new Matrix(16, 16);
-        jacobianU = new Matrix(16, 16);
-        result = StatePredictor.predictWithPositionAndRotationAdjustment(state, u, dt, jacobianX, jacobianU);
+        final var jacobianX3 = new Matrix(16, 16);
+        final var jacobianU3 = new Matrix(16, 16);
+        final var result4 = StatePredictor.predictWithPositionAndRotationAdjustment(state, u, dt, jacobianX3,
+                jacobianU3);
 
         // check correctness
-        assertArrayEquals(result, result2, ABSOLUTE_ERROR);
+        assertArrayEquals(result4, result2, ABSOLUTE_ERROR);
 
-        assertTrue(jacobianX.equals(jacobianX2, ABSOLUTE_ERROR));
-        assertTrue(jacobianU.equals(jacobianU2, ABSOLUTE_ERROR));
+        assertTrue(jacobianX3.equals(jacobianX2, ABSOLUTE_ERROR));
+        assertTrue(jacobianU3.equals(jacobianU2, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
-        result = null;
-        try {
-            result = StatePredictor.predictWithPositionAndRotationAdjustment(
-                    new double[1], u, dt, jacobianX, jacobianU);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            result = StatePredictor.predictWithPositionAndRotationAdjustment(
-                    state, new double[1], dt, jacobianX, jacobianU);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            result = StatePredictor.predictWithPositionAndRotationAdjustment(
-                    state, u, dt, new Matrix(1, 1), jacobianU);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            result = StatePredictor.predictWithPositionAndRotationAdjustment(
-                    state, u, dt, jacobianX, new Matrix(1, 1));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(result);
+        assertThrows(IllegalArgumentException.class, () -> StatePredictor.predictWithPositionAndRotationAdjustment(
+                new double[1], u, dt, jacobianX3, jacobianU3));
+        assertThrows(IllegalArgumentException.class, () -> StatePredictor.predictWithPositionAndRotationAdjustment(
+                state, new double[1], dt, jacobianX3, jacobianU3));
+        assertThrows(IllegalArgumentException.class, () -> StatePredictor.predictWithPositionAndRotationAdjustment(
+                state, u, dt, m, jacobianU3));
+        assertThrows(IllegalArgumentException.class, () -> StatePredictor.predictWithPositionAndRotationAdjustment(
+                state, u, dt, jacobianX3, m));
 
         // test with new instance, without jacobians
-        result = StatePredictor.predictWithPositionAndRotationAdjustment(state, u, dt);
+        final var result5 = StatePredictor.predictWithPositionAndRotationAdjustment(state, u, dt);
 
         // check correctness
-        assertArrayEquals(result, result2, ABSOLUTE_ERROR);
+        assertArrayEquals(result5, result2, ABSOLUTE_ERROR);
 
         // Force IllegalArgumentException
-        result = null;
-        try {
-            result = StatePredictor.predictWithPositionAndRotationAdjustment(new double[1], u, dt);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            result = StatePredictor.predictWithPositionAndRotationAdjustment(state, new double[1], dt);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(result);
+        assertThrows(IllegalArgumentException.class, () -> StatePredictor.predictWithPositionAndRotationAdjustment(
+                new double[1], u, dt));
+        assertThrows(IllegalArgumentException.class,
+                () -> StatePredictor.predictWithPositionAndRotationAdjustment(state, new double[1], dt));
 
         // check correctness of jacobians
-        jacobianX = new Matrix(16, 16);
-        jacobianU = new Matrix(16, 16);
-        result = StatePredictor.predictWithPositionAndRotationAdjustment(state, u, dt, jacobianX, jacobianU);
+        final var jacobianX4 = new Matrix(16, 16);
+        final var jacobianU4 = new Matrix(16, 16);
+        final var result6 = StatePredictor.predictWithPositionAndRotationAdjustment(state, u, dt, jacobianX4,
+                jacobianU4);
 
         // check state variation
-        double[] diff = new double[16];
+        var diff = new double[16];
         randomizer.fill(diff, -JACOBIAN_ERROR, JACOBIAN_ERROR);
-        final double[] state2 = ArrayUtils.sumAndReturnNew(state, diff);
+        final var state2 = ArrayUtils.sumAndReturnNew(state, diff);
         result2 = StatePredictor.predictWithPositionAndRotationAdjustment(state2, u, dt);
 
-        double[] diffResult = ArrayUtils.subtractAndReturnNew(result2, result);
-        double[] diffResult2 = jacobianX.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
+        var diffResult = ArrayUtils.subtractAndReturnNew(result2, result6);
+        var diffResult2 = jacobianX4.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
         assertArrayEquals(diffResult, diffResult2, ABSOLUTE_ERROR);
 
         // check control variation
         diff = new double[16];
         randomizer.fill(diff, -JACOBIAN_ERROR, JACOBIAN_ERROR);
-        final double[] u2 = ArrayUtils.sumAndReturnNew(u, diff);
+        final var u2 = ArrayUtils.sumAndReturnNew(u, diff);
         result2 = StatePredictor.predictWithPositionAndRotationAdjustment(state, u2, dt);
 
-        diffResult = ArrayUtils.subtractAndReturnNew(result2, result);
-        diffResult2 = jacobianU.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
+        diffResult = ArrayUtils.subtractAndReturnNew(result2, result6);
+        diffResult2 = jacobianU4.multiplyAndReturnNew(Matrix.newFromArray(diff)).toArray();
         assertArrayEquals(diffResult, diffResult2, ABSOLUTE_ERROR);
     }
 }

@@ -55,19 +55,19 @@ public abstract class BaseSlamTwoViewsSparseReconstructorConfiguration<
      * state of motion (e.g. acceleration and rotation).
      * If this is null, no calibration data will be used.
      */
-    private C mCalibrationData;
+    private C calibrationData;
 
     /**
      * Indicates whether new available SLAM state is notified each time that a whole set of IMU (Inertial
      * Measurement Unit) data is received.
      */
-    private boolean mNotifyAvailableSlamData = DEFAULT_NOTIFY_SLAM_DATA_AVAILABLE;
+    private boolean notifyAvailableSlamData = DEFAULT_NOTIFY_SLAM_DATA_AVAILABLE;
 
     /**
      * Indicates whether any new camera that can be estimated by means of SLAM using IMU data, will be
      * notified each time that accelerometer, gyroscope and orientation data is received.
      */
-    private boolean mNotifyEstimatedSlamCamera = DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA;
+    private boolean notifyEstimatedSlamCamera = DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA;
 
     /**
      * Constructor.
@@ -86,7 +86,7 @@ public abstract class BaseSlamTwoViewsSparseReconstructorConfiguration<
      * @return calibration data or null.
      */
     public C getCalibrationData() {
-        return mCalibrationData;
+        return calibrationData;
     }
 
     /**
@@ -101,7 +101,7 @@ public abstract class BaseSlamTwoViewsSparseReconstructorConfiguration<
      * @return this instance so that method can be easily chained.
      */
     public T setCalibrationData(final C calibrationData) {
-        mCalibrationData = calibrationData;
+        this.calibrationData = calibrationData;
         //noinspection unchecked
         return (T) this;
     }
@@ -115,7 +115,7 @@ public abstract class BaseSlamTwoViewsSparseReconstructorConfiguration<
      * received.
      */
     public boolean isNotifyAvailableSlamDataEnabled() {
-        return mNotifyAvailableSlamData;
+        return notifyAvailableSlamData;
     }
 
     /**
@@ -128,7 +128,7 @@ public abstract class BaseSlamTwoViewsSparseReconstructorConfiguration<
      * @return this instance so that method can be easily chained.
      */
     public T setNotifyAvailableSlamDataEnabled(final boolean notifyAvailableSlamData) {
-        mNotifyAvailableSlamData = notifyAvailableSlamData;
+        this.notifyAvailableSlamData = notifyAvailableSlamData;
 
         //noinspection unchecked
         return (T) this;
@@ -141,7 +141,7 @@ public abstract class BaseSlamTwoViewsSparseReconstructorConfiguration<
      * @return true if any newly estimated camera is notified, false otherwise.
      */
     public boolean isNotifyEstimatedSlamCameraEnabled() {
-        return mNotifyEstimatedSlamCamera;
+        return notifyEstimatedSlamCamera;
     }
 
     /**
@@ -152,7 +152,7 @@ public abstract class BaseSlamTwoViewsSparseReconstructorConfiguration<
      * @return this instance so that method can be easily chained.
      */
     public T setNotifyEstimatedSlamCameraEnabled(final boolean notifyEstimatedSlamCamera) {
-        mNotifyEstimatedSlamCamera = notifyEstimatedSlamCamera;
+        this.notifyEstimatedSlamCamera = notifyEstimatedSlamCamera;
 
         //noinspection unchecked
         return (T) this;

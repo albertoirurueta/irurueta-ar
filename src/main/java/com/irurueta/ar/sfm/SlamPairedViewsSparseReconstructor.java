@@ -25,9 +25,8 @@ import com.irurueta.ar.slam.SlamEstimator;
  * scale estimation.
  */
 public class SlamPairedViewsSparseReconstructor extends BaseSlamPairedViewsSparseReconstructor<
-        SlamCalibrationData,
-        SlamPairedViewsSparseReconstructorConfiguration,
-        SlamPairedViewsSparseReconstructor, SlamPairedViewsSparseReconstructorListener, SlamEstimator> {
+        SlamCalibrationData, SlamPairedViewsSparseReconstructorConfiguration, SlamPairedViewsSparseReconstructor,
+        SlamPairedViewsSparseReconstructorListener, SlamEstimator> {
 
     /**
      * Constructor.
@@ -63,8 +62,8 @@ public class SlamPairedViewsSparseReconstructor extends BaseSlamPairedViewsSpars
      */
     @Override
     public boolean processOneViewPair() {
-        if (!mRunning) {
-            mSlamEstimator = new SlamEstimator();
+        if (!running) {
+            slamEstimator = new SlamEstimator();
             setUpSlamEstimatorListener();
             setUpCalibrationData();
         }

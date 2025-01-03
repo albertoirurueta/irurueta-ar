@@ -22,17 +22,17 @@ import com.irurueta.ar.epipolar.estimators.FundamentalMatrixEstimatorMethod;
 import com.irurueta.geometry.InhomogeneousPoint2D;
 import com.irurueta.geometry.PinholeCameraIntrinsicParameters;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class SparseReconstructorConfigurationTest {
+class SparseReconstructorConfigurationTest {
 
     @Test
-    public void testConstructor() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testConstructor() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default values
         assertEquals(SparseReconstructorConfiguration.DEFAULT_NON_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD,
@@ -67,10 +67,8 @@ public class SparseReconstructorConfigurationTest {
                 cfg.getInitialCamerasMarkValidTriangulatedPoints());
         assertNull(cfg.getInitialIntrinsic1());
         assertNull(cfg.getInitialIntrinsic2());
-        assertEquals(SparseReconstructorConfiguration.DEFAULT_ALLOW_GENERAL_SCENE,
-                cfg.isGeneralSceneAllowed());
-        assertEquals(SparseReconstructorConfiguration.DEFAULT_ALLOW_PLANAR_SCENE,
-                cfg.isPlanarSceneAllowed());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ALLOW_GENERAL_SCENE, cfg.isGeneralSceneAllowed());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ALLOW_PLANAR_SCENE, cfg.isPlanarSceneAllowed());
         assertEquals(SparseReconstructorConfiguration.DEFAULT_ROBUST_PLANAR_HOMOGRAPHY_ESTIMATOR_METHOD,
                 cfg.getRobustPlanarHomographyEstimatorMethod());
         assertEquals(SparseReconstructorConfiguration.DEFAULT_REFINE_PLANAR_HOMOGRAPHY,
@@ -150,8 +148,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testMake() {
-        final SparseReconstructorConfiguration cfg = SparseReconstructorConfiguration.make();
+    void testMake() {
+        final var cfg = SparseReconstructorConfiguration.make();
 
         // check default values
         assertEquals(SparseReconstructorConfiguration.DEFAULT_NON_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD,
@@ -188,10 +186,8 @@ public class SparseReconstructorConfigurationTest {
                 cfg.getInitialCamerasMarkValidTriangulatedPoints());
         assertNull(cfg.getInitialIntrinsic1());
         assertNull(cfg.getInitialIntrinsic2());
-        assertEquals(SparseReconstructorConfiguration.DEFAULT_ALLOW_GENERAL_SCENE,
-                cfg.isGeneralSceneAllowed());
-        assertEquals(SparseReconstructorConfiguration.DEFAULT_ALLOW_PLANAR_SCENE,
-                cfg.isPlanarSceneAllowed());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ALLOW_GENERAL_SCENE, cfg.isGeneralSceneAllowed());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ALLOW_PLANAR_SCENE, cfg.isPlanarSceneAllowed());
         assertEquals(SparseReconstructorConfiguration.DEFAULT_ROBUST_PLANAR_HOMOGRAPHY_ESTIMATOR_METHOD,
                 cfg.getRobustPlanarHomographyEstimatorMethod());
         assertEquals(SparseReconstructorConfiguration.DEFAULT_REFINE_PLANAR_HOMOGRAPHY,
@@ -271,8 +267,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetNonRobustFundamentalMatrixEstimatorMethod() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetNonRobustFundamentalMatrixEstimatorMethod() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_NON_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD,
@@ -288,8 +284,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetRobustFundamentalMatrixEstimatorMethod() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetRobustFundamentalMatrixEstimatorMethod() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_ROBUST_FUNDAMENTAL_MATRIX_ESTIMATOR_METHOD,
@@ -303,8 +299,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testIsSetFundamentalMatrixRefined() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testIsSetFundamentalMatrixRefined() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_REFINE_FUNDAMENTAL_MATRIX,
@@ -318,8 +314,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testIsSetFundamentalMatrixCovarianceKept() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testIsSetFundamentalMatrixCovarianceKept() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_KEEP_FUNDAMENTAL_MATRIX_COVARIANCE,
@@ -333,8 +329,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetFundamentalMatrixConfidence() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetFundamentalMatrixConfidence() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_CONFIDENCE,
@@ -348,8 +344,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetFundamentalMatrixMaxIterations() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetFundamentalMatrixMaxIterations() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_MAX_ITERATIONS,
@@ -363,8 +359,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetFundamentalMatrixThreshold() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetFundamentalMatrixThreshold() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_THRESHOLD,
@@ -378,8 +374,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetFundamentalMatrixComputeAndKeepInliers() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetFundamentalMatrixComputeAndKeepInliers() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_INLIERS,
@@ -393,8 +389,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetFundamentalMatrixComputeAndKeepResiduals() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetFundamentalMatrixComputeAndKeepResiduals() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_FUNDAMENTAL_MATRIX_COMPUTE_AND_KEEP_RESIDUALS,
@@ -408,8 +404,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetInitialCamerasEstimatorMethod() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetInitialCamerasEstimatorMethod() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_ESTIMATOR_METHOD,
@@ -420,13 +416,12 @@ public class SparseReconstructorConfigurationTest {
                 InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC));
 
         // check correctness
-        assertEquals(InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC,
-                cfg.getInitialCamerasEstimatorMethod());
+        assertEquals(InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC, cfg.getInitialCamerasEstimatorMethod());
     }
 
     @Test
-    public void testGetSetDaqUseHomogeneousPointTriangulator() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetDaqUseHomogeneousPointTriangulator() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_DAQ_USE_HOMOGENEOUS_POINT_TRIANGULATOR,
@@ -440,8 +435,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetInitialCamerasAspectRatio() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetInitialCamerasAspectRatio() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_ASPECT_RATIO,
@@ -455,8 +450,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetPrincipalPointX() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetPrincipalPointX() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_PRINCIPAL_POINT_X,
@@ -470,8 +465,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetPrincipalPointY() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetPrincipalPointY() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_PRINCIPAL_POINT_Y,
@@ -485,8 +480,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetInitialCamerasCorrectorType() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetInitialCamerasCorrectorType() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_CORRECTOR_TYPE,
@@ -500,8 +495,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetInitialCamerasMarkValidTriangulatedPoints() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetInitialCamerasMarkValidTriangulatedPoints() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_INITIAL_CAMERAS_MARK_VALID_TRIANGULATED_POINTS,
@@ -515,14 +510,14 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetInitialIntrinsic1() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetInitialIntrinsic1() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertNull(cfg.getInitialIntrinsic1());
 
         // set new value
-        final PinholeCameraIntrinsicParameters intrinsic = new PinholeCameraIntrinsicParameters();
+        final var intrinsic = new PinholeCameraIntrinsicParameters();
         assertSame(cfg, cfg.setInitialIntrinsic1(intrinsic));
 
         // check correctness
@@ -530,14 +525,14 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetInitialIntrinsic2() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetInitialIntrinsic2() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertNull(cfg.getInitialIntrinsic2());
 
         // set new value
-        final PinholeCameraIntrinsicParameters intrinsic = new PinholeCameraIntrinsicParameters();
+        final var intrinsic = new PinholeCameraIntrinsicParameters();
         assertSame(cfg, cfg.setInitialIntrinsic2(intrinsic));
 
         // check correctness
@@ -545,40 +540,36 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testIsSetGeneralSceneAllowed() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testIsSetGeneralSceneAllowed() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
-        assertEquals(SparseReconstructorConfiguration.DEFAULT_ALLOW_GENERAL_SCENE,
-                cfg.isGeneralSceneAllowed());
+        assertEquals(SparseReconstructorConfiguration.DEFAULT_ALLOW_GENERAL_SCENE, cfg.isGeneralSceneAllowed());
 
         // set new value
-        assertSame(cfg, cfg.setGeneralSceneAllowed(
-                !SparseReconstructorConfiguration.DEFAULT_ALLOW_GENERAL_SCENE));
+        assertSame(cfg, cfg.setGeneralSceneAllowed(!SparseReconstructorConfiguration.DEFAULT_ALLOW_GENERAL_SCENE));
 
         // check correctness
-        assertEquals(!SparseReconstructorConfiguration.DEFAULT_ALLOW_GENERAL_SCENE,
-                cfg.isGeneralSceneAllowed());
+        assertEquals(!SparseReconstructorConfiguration.DEFAULT_ALLOW_GENERAL_SCENE, cfg.isGeneralSceneAllowed());
     }
 
     @Test
-    public void testIsSetPlanarSceneAllowed() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testIsSetPlanarSceneAllowed() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_ALLOW_PLANAR_SCENE, cfg.isPlanarSceneAllowed());
 
         // set new value
-        assertSame(cfg, cfg.setPlanarSceneAllowed(
-                !SparseReconstructorConfiguration.DEFAULT_ALLOW_PLANAR_SCENE));
+        assertSame(cfg, cfg.setPlanarSceneAllowed(!SparseReconstructorConfiguration.DEFAULT_ALLOW_PLANAR_SCENE));
 
         // check correctness
         assertEquals(!SparseReconstructorConfiguration.DEFAULT_ALLOW_PLANAR_SCENE, cfg.isPlanarSceneAllowed());
     }
 
     @Test
-    public void testGetSetRobustPlanarHomographyEstimatorMethod() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetRobustPlanarHomographyEstimatorMethod() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_ROBUST_PLANAR_HOMOGRAPHY_ESTIMATOR_METHOD,
@@ -592,8 +583,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testIsSetPlanarHomographyRefined() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testIsSetPlanarHomographyRefined() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_REFINE_PLANAR_HOMOGRAPHY,
@@ -609,8 +600,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testIsSetPlanarHomographyCovarianceKept() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testIsSetPlanarHomographyCovarianceKept() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_KEEP_PLANAR_HOMOGRAPHY_COVARIANCE,
@@ -626,8 +617,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetPlanarHomographyConfidence() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetPlanarHomographyConfidence() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_CONFIDENCE,
@@ -641,8 +632,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetPlanarHomographyMaxIterations() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetPlanarHomographyMaxIterations() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_MAX_ITERATIONS,
@@ -656,8 +647,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetPlanarHomographyThreshold() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetPlanarHomographyThreshold() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_THRESHOLD,
@@ -671,8 +662,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetPlanarHomographyComputeAndKeepInliers() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetPlanarHomographyComputeAndKeepInliers() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_INLIERS,
@@ -688,8 +679,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetPlanarHomographyComputeAndKeepResiduals() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetPlanarHomographyComputeAndKeepResiduals() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_PLANAR_HOMOGRAPHY_COMPUTE_AND_KEEP_RESIDUALS,
@@ -705,8 +696,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetUseDAQForAdditionalCamerasIntrinsics() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetUseDAQForAdditionalCamerasIntrinsics() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_USE_DAQ_FOR_ADDITIONAL_CAMERAS_INTRINSICS,
@@ -722,8 +713,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetUseDIACForAdditionalCamerasIntrinsics() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetUseDIACForAdditionalCamerasIntrinsics() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_USE_DIAC_FOR_ADDITIONAL_CAMERAS_INTRINSICS,
@@ -739,14 +730,14 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetAdditionalCamerasIntrinsics() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetAdditionalCamerasIntrinsics() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertNull(cfg.getAdditionalCamerasIntrinsics());
 
         // set new value
-        final PinholeCameraIntrinsicParameters intrinsics = new PinholeCameraIntrinsicParameters();
+        final var intrinsics = new PinholeCameraIntrinsicParameters();
         assertSame(cfg, cfg.setAdditionalCamerasIntrinsics(intrinsics));
 
         // check correctness
@@ -754,8 +745,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetAdditionalCamerasSkewness() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetAdditionalCamerasSkewness() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SKEWNESS,
@@ -769,8 +760,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetAdditionalCamerasHorizontalPrincipalPoint() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetAdditionalCamerasHorizontalPrincipalPoint() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_HORIZONTAL_PRINCIPAL_POINT,
@@ -784,8 +775,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetAdditionalCamerasVerticalPrincipalPoint() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetAdditionalCamerasVerticalPrincipalPoint() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_VERTICAL_PRINCIPAL_POINT,
@@ -799,8 +790,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetAdditionalCamerasAspectRatio() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetAdditionalCamerasAspectRatio() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ASPECT_RATIO,
@@ -814,8 +805,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetUseEPnPForAdditionalCamerasEstimation() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetUseEPnPForAdditionalCamerasEstimation() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_USE_EPNP_FOR_ADDITIONAL_CAMERAS_ESTIMATION,
@@ -831,8 +822,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetUseUPnPForAdditionalCamerasEstimation() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetUseUPnPForAdditionalCamerasEstimation() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_USE_UPNP_FOR_ADDITIONAL_CAMERAS_ESTIMATION,
@@ -848,8 +839,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetAdditionalCamerasRobustEstimationMethod() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetAdditionalCamerasRobustEstimationMethod() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_ROBUST_ESTIMATION_METHOD,
@@ -863,8 +854,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetAdditionalCamerasAllowPlanarConfiguration() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetAdditionalCamerasAllowPlanarConfiguration() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertTrue(cfg.getAdditionalCamerasAllowPlanarConfiguration());
@@ -877,8 +868,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetAdditionalCamerasAllowNullspaceDimension2() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetAdditionalCamerasAllowNullspaceDimension2() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertTrue(cfg.getAdditionalCamerasAllowNullspaceDimension2());
@@ -891,8 +882,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetAdditionalCamerasAllowNullspaceDimension3() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetAdditionalCamerasAllowNullspaceDimension3() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertTrue(cfg.getAdditionalCamerasAllowNullspaceDimension3());
@@ -905,8 +896,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetAdditionalCamerasPlanarThreshold() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetAdditionalCamerasPlanarThreshold() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_PLANAR_THRESHOLD,
@@ -920,8 +911,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testAreSetAdditionalCamerasRefined() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testAreSetAdditionalCamerasRefined() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertTrue(cfg.areAdditionalCamerasRefined());
@@ -934,8 +925,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testIsSetAdditionalCamerasCovarianceKept() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testIsSetAdditionalCamerasCovarianceKept() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_KEEP_COVARIANCE_ADDITIONAL_CAMERAS,
@@ -951,8 +942,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetAdditionalCamerasUseFastRefinement() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetAdditionalCamerasUseFastRefinement() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_USE_FAST_REFINEMENT,
@@ -968,8 +959,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetAdditionalCamerasConfidence() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetAdditionalCamerasConfidence() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_CONFIDENCE,
@@ -983,8 +974,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetAdditionalCamerasMaxIterations() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetAdditionalCamerasMaxIterations() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_MAX_ITERATIONS,
@@ -998,8 +989,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetAdditionalCamerasThreshold() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetAdditionalCamerasThreshold() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_THRESHOLD,
@@ -1013,8 +1004,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetAdditionalCamerasComputeAndKeepInliers() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetAdditionalCamerasComputeAndKeepInliers() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_COMPUTE_AND_KEEP_INLIERS,
@@ -1030,8 +1021,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetAdditionalCamerasComputeAndKeepResiduals() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetAdditionalCamerasComputeAndKeepResiduals() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_COMPUTE_AND_KEEP_RESIDUALS,
@@ -1047,8 +1038,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testIsSetAdditionalCamerasSuggestSkewnessValueEnabled() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testIsSetAdditionalCamerasSuggestSkewnessValueEnabled() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertFalse(cfg.isAdditionalCamerasSuggestSkewnessValueEnabled());
@@ -1061,8 +1052,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetAdditionalCamerasSuggestedSkewnessValue() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetAdditionalCamerasSuggestedSkewnessValue() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGESTED_SKEWNESS_VALUE,
@@ -1076,8 +1067,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testIsSetAdditionalCamerasSuggestHorizontalFocalLengthEnabled() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testIsSetAdditionalCamerasSuggestHorizontalFocalLengthEnabled() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertFalse(cfg.isAdditionalCamerasSuggestHorizontalFocalLengthEnabled());
@@ -1090,8 +1081,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetAdditionalCamerasSuggestedHorizontalFocalLengthValue() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetAdditionalCamerasSuggestedHorizontalFocalLengthValue() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(0.0, cfg.getAdditionalCamerasSuggestedHorizontalFocalLengthValue(), 0.0);
@@ -1104,8 +1095,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testIsSetAdditionalCamerasSuggestVerticalFocalLengthEnabled() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testIsSetAdditionalCamerasSuggestVerticalFocalLengthEnabled() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertFalse(cfg.isAdditionalCamerasSuggestVerticalFocalLengthEnabled());
@@ -1118,8 +1109,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetAdditionalCamerasSuggestedVerticalFocalLengthValue() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetAdditionalCamerasSuggestedVerticalFocalLengthValue() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(0.0, cfg.getAdditionalCamerasSuggestedVerticalFocalLengthValue(), 0.0);
@@ -1132,8 +1123,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testIsSetAdditionalCamerasSuggestAspectRatioEnabled() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testIsSetAdditionalCamerasSuggestAspectRatioEnabled() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertFalse(cfg.isAdditionalCamerasSuggestAspectRatioEnabled());
@@ -1146,8 +1137,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetAdditionalCamerasSuggestedAspectRatioValue() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetAdditionalCamerasSuggestedAspectRatioValue() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_ADDITIONAL_CAMERAS_SUGGESTED_ASPECT_RATIO_VALUE,
@@ -1161,8 +1152,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testIsSetAdditionalCamerasSuggestPrincipalPointEnabled() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testIsSetAdditionalCamerasSuggestPrincipalPointEnabled() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertFalse(cfg.isAdditionalCamerasSuggestPrincipalPointEnabled());
@@ -1172,14 +1163,14 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetAdditionalCamerasSuggestedPrincipalPointValue() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetAdditionalCamerasSuggestedPrincipalPointValue() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertNull(cfg.getAdditionalCamerasSuggestedPrincipalPointValue());
 
         // set new value
-        final InhomogeneousPoint2D principalPoint = new InhomogeneousPoint2D();
+        final var principalPoint = new InhomogeneousPoint2D();
         assertSame(cfg, cfg.setAdditionalCamerasSuggestedPrincipalPointValue(principalPoint));
 
         // check correctness
@@ -1187,8 +1178,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testIsSetHomogeneousPointTriangulatorUsed() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testIsSetHomogeneousPointTriangulatorUsed() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertTrue(cfg.isHomogeneousPointTriangulatorUsed());
@@ -1201,8 +1192,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetRobustPointTriangulatorMethod() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetRobustPointTriangulatorMethod() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_ROBUST_POINT_TRIANGULATOR_METHOD,
@@ -1216,8 +1207,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetPointTriangulatorConfidence() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetPointTriangulatorConfidence() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_POINT_TRIANGULATOR_CONFIDENCE,
@@ -1231,8 +1222,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetSetPointTriangulatorMaxIterations() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetSetPointTriangulatorMaxIterations() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_POINT_TRIANGULATOR_MAX_ITERATIONS,
@@ -1246,8 +1237,8 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testGetStPointTriangulatorThreshold() {
-        final SparseReconstructorConfiguration cfg = new SparseReconstructorConfiguration();
+    void testGetStPointTriangulatorThreshold() {
+        final var cfg = new SparseReconstructorConfiguration();
 
         // check default value
         assertEquals(SparseReconstructorConfiguration.DEFAULT_POINT_TRIANGULATOR_THRESHOLD,
@@ -1261,12 +1252,11 @@ public class SparseReconstructorConfigurationTest {
     }
 
     @Test
-    public void testSerializeDeserialize() throws IOException, ClassNotFoundException {
-        final SparseReconstructorConfiguration cfg1 = new SparseReconstructorConfiguration();
+    void testSerializeDeserialize() throws IOException, ClassNotFoundException {
+        final var cfg1 = new SparseReconstructorConfiguration();
 
         // set new values
-        cfg1.setNonRobustFundamentalMatrixEstimatorMethod(
-                FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM);
+        cfg1.setNonRobustFundamentalMatrixEstimatorMethod(FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM);
         cfg1.setRobustFundamentalMatrixEstimatorMethod(RobustEstimatorMethod.RANSAC);
         cfg1.setFundamentalMatrixRefined(false);
         cfg1.setFundamentalMatrixCovarianceKept(true);
@@ -1282,9 +1272,9 @@ public class SparseReconstructorConfigurationTest {
         cfg1.setPrincipalPointY(-0.1);
         cfg1.setInitialCamerasCorrectorType(CorrectorType.GOLD_STANDARD);
         cfg1.setInitialCamerasMarkValidTriangulatedPoints(false);
-        final PinholeCameraIntrinsicParameters intrinsic1a = new PinholeCameraIntrinsicParameters();
+        final var intrinsic1a = new PinholeCameraIntrinsicParameters();
         cfg1.setInitialIntrinsic1(intrinsic1a);
-        final PinholeCameraIntrinsicParameters intrinsic1b = new PinholeCameraIntrinsicParameters();
+        final var intrinsic1b = new PinholeCameraIntrinsicParameters();
         cfg1.setInitialIntrinsic2(intrinsic1b);
         cfg1.setGeneralSceneAllowed(false);
         cfg1.setPlanarSceneAllowed(false);
@@ -1298,7 +1288,7 @@ public class SparseReconstructorConfigurationTest {
         cfg1.setPlanarHomographyComputeAndKeepResiduals(false);
         cfg1.setUseDAQForAdditionalCamerasIntrinics(false);
         cfg1.setUseDIACForAdditionalCamerasIntrinsics(true);
-        final PinholeCameraIntrinsicParameters additionalIntrinsics1 = new PinholeCameraIntrinsicParameters();
+        final var additionalIntrinsics1 = new PinholeCameraIntrinsicParameters();
         cfg1.setAdditionalCamerasIntrinsics(additionalIntrinsics1);
         cfg1.setAdditionalCamerasSkewness(1e-3);
         cfg1.setAdditionalCamerasHorizontalPrincipalPoint(-1e-3);
@@ -1328,7 +1318,7 @@ public class SparseReconstructorConfigurationTest {
         cfg1.setAdditionalCamerasSuggestAspectRatioEnabled(true);
         cfg1.setAdditionalCamerasSuggestedAspectRatioValue(0.99);
         cfg1.setAdditionalCamerasSuggestPrincipalPointEnabled(true);
-        final InhomogeneousPoint2D additionalPrincipalPoint = new InhomogeneousPoint2D(0.0, 0.0);
+        final var additionalPrincipalPoint = new InhomogeneousPoint2D(0.0, 0.0);
         cfg1.setAdditionalCamerasSuggestedPrincipalPointValue(additionalPrincipalPoint);
         cfg1.setHomogeneousPointTriangulatorUsed(false);
         cfg1.setRobustPointTriangulatorMethod(RobustEstimatorMethod.RANSAC);
@@ -1347,8 +1337,7 @@ public class SparseReconstructorConfigurationTest {
         assertEquals(0.5, cfg1.getFundamentalMatrixThreshold(), 0.0);
         assertFalse(cfg1.getFundamentalMatrixComputeAndKeepInliers());
         assertFalse(cfg1.getFundamentalMatrixComputeAndKeepResiduals());
-        assertEquals(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC,
-                cfg1.getInitialCamerasEstimatorMethod());
+        assertEquals(InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC, cfg1.getInitialCamerasEstimatorMethod());
         assertFalse(cfg1.getDaqUseHomogeneousPointTriangulator());
         assertEquals(0.9, cfg1.getInitialCamerasAspectRatio(), 0.0);
         assertEquals(0.1, cfg1.getPrincipalPointX(), 0.0);
@@ -1406,8 +1395,8 @@ public class SparseReconstructorConfigurationTest {
         assertEquals(0.5, cfg1.getPointTriangulatorThreshold(), 0.0);
 
         // serialize and deserialize
-        final byte[] bytes = SerializationHelper.serialize(cfg1);
-        final SparseReconstructorConfiguration cfg2 = SerializationHelper.deserialize(bytes);
+        final var bytes = SerializationHelper.serialize(cfg1);
+        final var cfg2 = SerializationHelper.<SparseReconstructorConfiguration>deserialize(bytes);
 
         // check
         assertEquals(cfg1.getNonRobustFundamentalMatrixEstimatorMethod(),
@@ -1424,35 +1413,28 @@ public class SparseReconstructorConfigurationTest {
         assertEquals(cfg1.getFundamentalMatrixComputeAndKeepResiduals(),
                 cfg2.getFundamentalMatrixComputeAndKeepResiduals());
         assertEquals(cfg1.getInitialCamerasEstimatorMethod(), cfg2.getInitialCamerasEstimatorMethod());
-        assertEquals(cfg1.getDaqUseHomogeneousPointTriangulator(),
-                cfg2.getDaqUseHomogeneousPointTriangulator());
+        assertEquals(cfg1.getDaqUseHomogeneousPointTriangulator(), cfg2.getDaqUseHomogeneousPointTriangulator());
         assertEquals(cfg1.getInitialCamerasAspectRatio(), cfg2.getInitialCamerasAspectRatio(), 0.0);
         assertEquals(cfg1.getPrincipalPointX(), cfg2.getPrincipalPointX(), 0.0);
         assertEquals(cfg1.getPrincipalPointY(), cfg2.getPrincipalPointY(), 0.0);
         assertEquals(cfg1.getInitialCamerasCorrectorType(), cfg2.getInitialCamerasCorrectorType());
         assertEquals(cfg1.getInitialCamerasMarkValidTriangulatedPoints(),
                 cfg2.getInitialCamerasMarkValidTriangulatedPoints());
-        assertEquals(cfg1.getInitialIntrinsic1().getInternalMatrix(),
-                cfg2.getInitialIntrinsic1().getInternalMatrix());
-        assertEquals(cfg1.getInitialIntrinsic2().getInternalMatrix(),
-                cfg2.getInitialIntrinsic2().getInternalMatrix());
+        assertEquals(cfg1.getInitialIntrinsic1().getInternalMatrix(), cfg2.getInitialIntrinsic1().getInternalMatrix());
+        assertEquals(cfg1.getInitialIntrinsic2().getInternalMatrix(), cfg2.getInitialIntrinsic2().getInternalMatrix());
         assertEquals(cfg1.isGeneralSceneAllowed(), cfg2.isGeneralSceneAllowed());
         assertEquals(cfg1.isPlanarSceneAllowed(), cfg2.isPlanarSceneAllowed());
-        assertEquals(cfg1.getRobustPlanarHomographyEstimatorMethod(),
-                cfg2.getRobustPlanarHomographyEstimatorMethod());
+        assertEquals(cfg1.getRobustPlanarHomographyEstimatorMethod(), cfg2.getRobustPlanarHomographyEstimatorMethod());
         assertEquals(cfg1.isPlanarHomographyRefined(), cfg2.isPlanarHomographyRefined());
         assertEquals(cfg1.isPlanarHomographyCovarianceKept(), cfg2.isPlanarHomographyCovarianceKept());
         assertEquals(cfg1.getPlanarHomographyConfidence(), cfg2.getPlanarHomographyConfidence(), 0.0);
         assertEquals(cfg1.getPlanarHomographyMaxIterations(), cfg2.getPlanarHomographyMaxIterations());
         assertEquals(cfg1.getPlanarHomographyThreshold(), cfg2.getPlanarHomographyThreshold(), 0.0);
-        assertEquals(cfg1.getPlanarHomographyComputeAndKeepInliers(),
-                cfg2.getPlanarHomographyComputeAndKeepInliers());
+        assertEquals(cfg1.getPlanarHomographyComputeAndKeepInliers(), cfg2.getPlanarHomographyComputeAndKeepInliers());
         assertEquals(cfg1.getPlanarHomographyComputeAndKeepResiduals(),
                 cfg2.getPlanarHomographyComputeAndKeepResiduals());
-        assertEquals(cfg1.getUseDAQForAdditionalCamerasIntrinsics(),
-                cfg2.getUseDAQForAdditionalCamerasIntrinsics());
-        assertEquals(cfg1.getUseDIACForAdditionalCamerasIntrinsics(),
-                cfg2.getUseDIACForAdditionalCamerasIntrinsics());
+        assertEquals(cfg1.getUseDAQForAdditionalCamerasIntrinsics(), cfg2.getUseDAQForAdditionalCamerasIntrinsics());
+        assertEquals(cfg1.getUseDIACForAdditionalCamerasIntrinsics(), cfg2.getUseDIACForAdditionalCamerasIntrinsics());
         assertEquals(cfg1.getAdditionalCamerasIntrinsics().getInternalMatrix(),
                 cfg2.getAdditionalCamerasIntrinsics().getInternalMatrix());
         assertEquals(cfg1.getAdditionalCamerasSkewness(), cfg2.getAdditionalCamerasSkewness(), 0.0);
@@ -1461,10 +1443,8 @@ public class SparseReconstructorConfigurationTest {
         assertEquals(cfg1.getAdditionalCamerasVerticalPrincipalPoint(),
                 cfg2.getAdditionalCamerasVerticalPrincipalPoint(), 0.0);
         assertEquals(cfg1.getAdditionalCamerasAspectRatio(), cfg2.getAdditionalCamerasAspectRatio(), 0.0);
-        assertEquals(cfg1.getUseEPnPForAdditionalCamerasEstimation(),
-                cfg2.getUseEPnPForAdditionalCamerasEstimation());
-        assertEquals(cfg1.getUseUPnPForAdditionalCamerasEstimation(),
-                cfg2.getUseUPnPForAdditionalCamerasEstimation());
+        assertEquals(cfg1.getUseEPnPForAdditionalCamerasEstimation(), cfg2.getUseEPnPForAdditionalCamerasEstimation());
+        assertEquals(cfg1.getUseUPnPForAdditionalCamerasEstimation(), cfg2.getUseUPnPForAdditionalCamerasEstimation());
         assertEquals(cfg1.getAdditionalCamerasRobustEstimationMethod(),
                 cfg2.getAdditionalCamerasRobustEstimationMethod());
         assertEquals(cfg1.getAdditionalCamerasAllowPlanarConfiguration(),
@@ -1473,12 +1453,10 @@ public class SparseReconstructorConfigurationTest {
                 cfg2.getAdditionalCamerasAllowNullspaceDimension2());
         assertEquals(cfg1.getAdditionalCamerasAllowNullspaceDimension3(),
                 cfg2.getAdditionalCamerasAllowNullspaceDimension3());
-        assertEquals(cfg1.getAdditionalCamerasPlanarThreshold(),
-                cfg2.getAdditionalCamerasPlanarThreshold(), 0.0);
+        assertEquals(cfg1.getAdditionalCamerasPlanarThreshold(), cfg2.getAdditionalCamerasPlanarThreshold(), 0.0);
         assertEquals(cfg1.areAdditionalCamerasRefined(), cfg2.areAdditionalCamerasRefined());
         assertEquals(cfg1.isAdditionalCamerasCovarianceKept(), cfg2.isAdditionalCamerasCovarianceKept());
-        assertEquals(cfg1.getAdditionalCamerasUseFastRefinement(),
-                cfg2.getAdditionalCamerasUseFastRefinement());
+        assertEquals(cfg1.getAdditionalCamerasUseFastRefinement(), cfg2.getAdditionalCamerasUseFastRefinement());
         assertEquals(cfg1.getAdditionalCamerasConfidence(), cfg2.getAdditionalCamerasConfidence(), 0.0);
         assertEquals(cfg1.getAdditionalCamerasMaxIterations(), cfg2.getAdditionalCamerasMaxIterations());
         assertEquals(cfg1.getAdditionalCamerasThreshold(), cfg2.getAdditionalCamerasThreshold(), 0.0);

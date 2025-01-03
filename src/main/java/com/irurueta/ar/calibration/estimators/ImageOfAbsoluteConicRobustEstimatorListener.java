@@ -41,8 +41,7 @@ public interface ImageOfAbsoluteConicRobustEstimatorListener {
      * @param estimator reference to robust estimator
      * @param iteration current iteration
      */
-    void onEstimateNextIteration(
-            final ImageOfAbsoluteConicRobustEstimator estimator, final int iteration);
+    void onEstimateNextIteration(final ImageOfAbsoluteConicRobustEstimator estimator, final int iteration);
 
     /**
      * Called when estimation progress changes significantly.
@@ -51,6 +50,5 @@ public interface ImageOfAbsoluteConicRobustEstimatorListener {
      * @param progress  progress of estimation expressed as a value between 0.0
      *                  and 1.0
      */
-    void onEstimateProgressChange(
-            final ImageOfAbsoluteConicRobustEstimator estimator, final float progress);
+    void onEstimateProgressChange(final ImageOfAbsoluteConicRobustEstimator estimator, final float progress);
 }

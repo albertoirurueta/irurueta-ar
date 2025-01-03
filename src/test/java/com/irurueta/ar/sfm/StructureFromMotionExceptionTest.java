@@ -15,15 +15,15 @@
  */
 package com.irurueta.ar.sfm;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class StructureFromMotionExceptionTest {
+class StructureFromMotionExceptionTest {
 
     @Test
-    public void testConstructor() {
-        StructureFromMotionException ex = new StructureFromMotionException();
+    void testConstructor() {
+        var ex = new StructureFromMotionException();
         assertNotNull(ex);
 
         ex = new StructureFromMotionException("message");
@@ -32,8 +32,7 @@ public class StructureFromMotionExceptionTest {
         ex = new StructureFromMotionException(new Exception());
         assertNotNull(ex);
 
-        ex = new StructureFromMotionException("message",
-                new Exception());
+        ex = new StructureFromMotionException("message", new Exception());
         assertNotNull(ex);
     }
 }

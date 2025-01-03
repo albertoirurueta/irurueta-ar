@@ -15,13 +15,11 @@
  */
 package com.irurueta.ar.sfm;
 
-import com.irurueta.ar.calibration.DualImageOfAbsoluteConic;
 import com.irurueta.ar.calibration.estimators.KruppaDualImageOfAbsoluteConicEstimator;
 import com.irurueta.ar.epipolar.Corrector;
 import com.irurueta.ar.epipolar.CorrectorType;
 import com.irurueta.ar.epipolar.FundamentalMatrix;
 import com.irurueta.geometry.PinholeCamera;
-import com.irurueta.geometry.PinholeCameraIntrinsicParameters;
 import com.irurueta.geometry.Point2D;
 import com.irurueta.geometry.Point3D;
 import com.irurueta.geometry.estimators.LockedException;
@@ -39,8 +37,7 @@ import java.util.List;
  * poses and translations by triangulating a set of matched points and checking
  * that their triangulation lies in front of cameras.
  */
-public class DualImageOfAbsoluteConicInitialCamerasEstimator
-        extends InitialCamerasEstimator {
+public class DualImageOfAbsoluteConicInitialCamerasEstimator extends InitialCamerasEstimator {
 
     /**
      * Indicates whether matched 2D points must be triangulated by default.
@@ -58,8 +55,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * Typically, this value is 1.0 if vertical coordinates increase upwards,
      * or -1.0 if it is the opposite.
      */
-    private double mAspectRatio = KruppaDualImageOfAbsoluteConicEstimator.
-            DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO;
+    private double aspectRatio = KruppaDualImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO;
 
     /**
      * Horizontal coordinate of principal point. This value should be the
@@ -67,7 +63,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * on the top-left or bottom-left corner. Using a value close to zero
      * will produce inaccurate results.
      */
-    private double mPrincipalPointX;
+    private double principalPointX;
 
     /**
      * Vertical coordinate of principal point. This value should be the
@@ -75,46 +71,45 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * on the top-left or bottom-left corner. Using a value close to zero will
      * produce inaccurate results.
      */
-    private double mPrincipalPointY;
+    private double principalPointY;
 
     /**
      * Matched 2D points on left view.
      */
-    private List<Point2D> mLeftPoints;
+    private List<Point2D> leftPoints;
 
     /**
      * Matched 2D points on right view.
      */
-    private List<Point2D> mRightPoints;
+    private List<Point2D> rightPoints;
 
     /**
      * Type of corrector to use to triangulate matched points or null if no
      * corrector needs to be used.
      */
-    private CorrectorType mCorrectorType = Corrector.DEFAULT_TYPE;
+    private CorrectorType correctorType = Corrector.DEFAULT_TYPE;
 
     /**
      * Indicates whether matched 2D points need to be triangulated.
      */
-    private boolean mTriangulatePoints = DEFAULT_TRIANGULATE_POINTS;
+    private boolean triangulatePoints = DEFAULT_TRIANGULATE_POINTS;
 
     /**
      * Marks which of the triangulated points are marked as valid (lie in front
      * of both of the estimated cameras) and which ones aren't.
      */
-    private boolean mMarkValidTriangulatedPoints =
-            DEFAULT_MARK_VALID_TRIANGULATED_POINTS;
+    private boolean markValidTriangulatedPoints = DEFAULT_MARK_VALID_TRIANGULATED_POINTS;
 
     /**
      * Contains triangulated points.
      */
-    private List<Point3D> mTriangulatedPoints;
+    private List<Point3D> triangulatedPoints;
 
     /**
      * Contains booleans indicating whether triangulated points are valid (i.e.
      * lie in front of both estimated cameras) or not.
      */
-    private BitSet mValidTriangulatedPoints;
+    private BitSet validTriangulatedPoints;
 
     /**
      * Constructor.
@@ -128,8 +123,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      *
      * @param fundamentalMatrix fundamental matrix relating two views.
      */
-    public DualImageOfAbsoluteConicInitialCamerasEstimator(
-            final FundamentalMatrix fundamentalMatrix) {
+    public DualImageOfAbsoluteConicInitialCamerasEstimator(final FundamentalMatrix fundamentalMatrix) {
         super(fundamentalMatrix);
     }
 
@@ -142,8 +136,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      *                                  size.
      */
     public DualImageOfAbsoluteConicInitialCamerasEstimator(
-            final List<Point2D> leftPoints,
-            final List<Point2D> rightPoints) {
+            final List<Point2D> leftPoints, final List<Point2D> rightPoints) {
         super();
         internalSetLeftAndRightPoints(leftPoints, rightPoints);
     }
@@ -158,8 +151,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      *                                  size.
      */
     public DualImageOfAbsoluteConicInitialCamerasEstimator(
-            final FundamentalMatrix fundamentalMatrix,
-            final List<Point2D> leftPoints,
+            final FundamentalMatrix fundamentalMatrix, final List<Point2D> leftPoints,
             final List<Point2D> rightPoints) {
         super(fundamentalMatrix);
         internalSetLeftAndRightPoints(leftPoints, rightPoints);
@@ -170,8 +162,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      *
      * @param listener listener to handle events raised by this instance.
      */
-    public DualImageOfAbsoluteConicInitialCamerasEstimator(
-            final InitialCamerasEstimatorListener listener) {
+    public DualImageOfAbsoluteConicInitialCamerasEstimator(final InitialCamerasEstimatorListener listener) {
         super(listener);
     }
 
@@ -182,8 +173,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @param listener          listener to handle events raised by this instance.
      */
     public DualImageOfAbsoluteConicInitialCamerasEstimator(
-            final FundamentalMatrix fundamentalMatrix,
-            final InitialCamerasEstimatorListener listener) {
+            final FundamentalMatrix fundamentalMatrix, final InitialCamerasEstimatorListener listener) {
         super(fundamentalMatrix, listener);
     }
 
@@ -197,8 +187,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      *                                  size.
      */
     public DualImageOfAbsoluteConicInitialCamerasEstimator(
-            final List<Point2D> leftPoints,
-            final List<Point2D> rightPoints,
+            final List<Point2D> leftPoints, final List<Point2D> rightPoints,
             final InitialCamerasEstimatorListener listener) {
         super(listener);
         internalSetLeftAndRightPoints(leftPoints, rightPoints);
@@ -240,9 +229,8 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      */
     @Override
     public boolean isReady() {
-        return mFundamentalMatrix != null && mLeftPoints != null &&
-                mRightPoints != null &&
-                mLeftPoints.size() == mRightPoints.size();
+        return fundamentalMatrix != null && leftPoints != null && rightPoints != null
+                && leftPoints.size() == rightPoints.size();
     }
 
     /**
@@ -256,8 +244,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      */
     @SuppressWarnings("DuplicatedCode")
     @Override
-    public void estimate() throws LockedException, NotReadyException,
-            InitialCamerasEstimationFailedException {
+    public void estimate() throws LockedException, NotReadyException, InitialCamerasEstimationFailedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -267,49 +254,46 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
         }
 
         try {
-            mLocked = true;
+            locked = true;
 
-            if (mListener != null) {
-                mListener.onStart(this);
+            if (listener != null) {
+                listener.onStart(this);
             }
 
-            if (mTriangulatePoints) {
-                mTriangulatedPoints = new ArrayList<>();
+            if (triangulatePoints) {
+                triangulatedPoints = new ArrayList<>();
             } else {
-                mTriangulatedPoints = null;
+                triangulatedPoints = null;
             }
 
-            final int nPoints = mLeftPoints.size();
-            if (mMarkValidTriangulatedPoints) {
-                mValidTriangulatedPoints = new BitSet(nPoints);
+            final var nPoints = leftPoints.size();
+            if (markValidTriangulatedPoints) {
+                validTriangulatedPoints = new BitSet(nPoints);
             } else {
-                mValidTriangulatedPoints = null;
+                validTriangulatedPoints = null;
             }
 
-            if (mEstimatedLeftCamera == null) {
-                mEstimatedLeftCamera = new PinholeCamera();
+            if (estimatedLeftCamera == null) {
+                estimatedLeftCamera = new PinholeCamera();
             }
-            if (mEstimatedRightCamera == null) {
-                mEstimatedRightCamera = new PinholeCamera();
+            if (estimatedRightCamera == null) {
+                estimatedRightCamera = new PinholeCamera();
             }
 
-            generateInitialMetricCamerasUsingDIAC(mFundamentalMatrix,
-                    mPrincipalPointX, mPrincipalPointY, mAspectRatio,
-                    mLeftPoints, mRightPoints, mCorrectorType,
-                    mEstimatedLeftCamera, mEstimatedRightCamera,
-                    mTriangulatedPoints, mValidTriangulatedPoints);
+            generateInitialMetricCamerasUsingDIAC(fundamentalMatrix, principalPointX, principalPointY, aspectRatio,
+                    leftPoints, rightPoints, correctorType, estimatedLeftCamera, estimatedRightCamera,
+                    triangulatedPoints, validTriangulatedPoints);
 
-            if (mListener != null) {
-                mListener.onFinish(this, mEstimatedLeftCamera,
-                        mEstimatedRightCamera);
+            if (listener != null) {
+                listener.onFinish(this, estimatedLeftCamera, estimatedRightCamera);
             }
         } catch (final InitialCamerasEstimationFailedException e) {
-            if (mListener != null) {
-                mListener.onFail(this, e);
+            if (listener != null) {
+                listener.onFail(this, e);
             }
             throw e;
         } finally {
-            mLocked = false;
+            locked = false;
         }
     }
 
@@ -321,7 +305,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @return aspect ratio of intrinsic parameters of cameras.
      */
     public double getAspectRatio() {
-        return mAspectRatio;
+        return aspectRatio;
     }
 
     /**
@@ -336,7 +320,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
         if (isLocked()) {
             throw new LockedException();
         }
-        mAspectRatio = aspectRatio;
+        this.aspectRatio = aspectRatio;
     }
 
     /**
@@ -348,7 +332,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @return horizontal coordinate of principal point.
      */
     public double getPrincipalPointX() {
-        return mPrincipalPointX;
+        return principalPointX;
     }
 
     /**
@@ -360,12 +344,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @param principalPointX horizontal coordinate of principal point.
      * @throws LockedException if estimator is locked.
      */
-    public void setPrincipalPointX(final double principalPointX)
-            throws LockedException {
+    public void setPrincipalPointX(final double principalPointX) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mPrincipalPointX = principalPointX;
+        this.principalPointX = principalPointX;
     }
 
     /**
@@ -377,7 +360,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @return vertical coordinate of principal point.
      */
     public double getPrincipalPointY() {
-        return mPrincipalPointY;
+        return principalPointY;
     }
 
     /**
@@ -389,12 +372,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @param principalPointY vertical coordinate of principal point.
      * @throws LockedException if estimator is locked.
      */
-    public void setPrincipalPointY(final double principalPointY)
-            throws LockedException {
+    public void setPrincipalPointY(final double principalPointY) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mPrincipalPointY = principalPointY;
+        this.principalPointY = principalPointY;
     }
 
     /**
@@ -407,13 +389,12 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @param principalPointY vertical coordinate of principal point.
      * @throws LockedException if estimator is locked.
      */
-    public void setPrincipalPoint(final double principalPointX,
-                                  final double principalPointY) throws LockedException {
+    public void setPrincipalPoint(final double principalPointX, final double principalPointY) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mPrincipalPointX = principalPointX;
-        mPrincipalPointY = principalPointY;
+        this.principalPointX = principalPointX;
+        this.principalPointY = principalPointY;
     }
 
     /**
@@ -422,7 +403,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @return matched 2D points on left view.
      */
     public List<Point2D> getLeftPoints() {
-        return mLeftPoints;
+        return leftPoints;
     }
 
     /**
@@ -435,7 +416,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
         if (isLocked()) {
             throw new LockedException();
         }
-        mLeftPoints = leftPoints;
+        this.leftPoints = leftPoints;
     }
 
     /**
@@ -444,7 +425,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @return matched 2D points on right view.
      */
     public List<Point2D> getRightPoints() {
-        return mRightPoints;
+        return rightPoints;
     }
 
     /**
@@ -453,12 +434,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @param rightPoints matched 2D points on right view.
      * @throws LockedException if estimator is locked.
      */
-    public void setRightPoints(final List<Point2D> rightPoints)
-            throws LockedException {
+    public void setRightPoints(final List<Point2D> rightPoints) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mRightPoints = rightPoints;
+        this.rightPoints = rightPoints;
     }
 
     /**
@@ -470,8 +450,8 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @throws IllegalArgumentException if provided lists don't have the same
      *                                  size.
      */
-    public void setLeftAndRightPoints(final List<Point2D> leftPoints,
-                                      final List<Point2D> rightPoints) throws LockedException {
+    public void setLeftAndRightPoints(final List<Point2D> leftPoints, final List<Point2D> rightPoints)
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -485,7 +465,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @return type of corrector to use.
      */
     public CorrectorType getCorrectorType() {
-        return mCorrectorType;
+        return correctorType;
     }
 
     /**
@@ -495,12 +475,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @param correctorType type of corrector to use.
      * @throws LockedException if estimator is locked.
      */
-    public void setCorrectorType(final CorrectorType correctorType)
-            throws LockedException {
+    public void setCorrectorType(final CorrectorType correctorType) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mCorrectorType = correctorType;
+        this.correctorType = correctorType;
     }
 
     /**
@@ -509,7 +488,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @return true if 2D points need to be triangulated, false otherwise.
      */
     public boolean arePointsTriangulated() {
-        return mTriangulatePoints;
+        return triangulatePoints;
     }
 
     /**
@@ -519,12 +498,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      *                          otherwise.
      * @throws LockedException if estimator is locked.
      */
-    public void setPointsTriangulated(final boolean triangulatePoints)
-            throws LockedException {
+    public void setPointsTriangulated(final boolean triangulatePoints) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mTriangulatePoints = triangulatePoints;
+        this.triangulatePoints = triangulatePoints;
     }
 
     /**
@@ -535,7 +513,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * otherwise.
      */
     public boolean areValidTriangulatedPointsMarked() {
-        return mMarkValidTriangulatedPoints;
+        return markValidTriangulatedPoints;
     }
 
     /**
@@ -546,12 +524,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      *                                    triangulated points, false otherwise.
      * @throws LockedException if estimator is locked.
      */
-    public void setValidTriangulatedPointsMarked(
-            final boolean markValidTriangulatedPoints) throws LockedException {
+    public void setValidTriangulatedPointsMarked(final boolean markValidTriangulatedPoints) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mMarkValidTriangulatedPoints = markValidTriangulatedPoints;
+        this.markValidTriangulatedPoints = markValidTriangulatedPoints;
     }
 
     /**
@@ -560,7 +537,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @return triangulated points or null.
      */
     public List<Point3D> getTriangulatedPoints() {
-        return mTriangulatedPoints;
+        return triangulatedPoints;
     }
 
     /**
@@ -571,7 +548,7 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * available.
      */
     public BitSet getValidTriangulatedPoints() {
-        return mValidTriangulatedPoints;
+        return validTriangulatedPoints;
     }
 
     /**
@@ -619,9 +596,8 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
             final List<Point2D> rightPoints, final PinholeCamera leftCamera,
             final PinholeCamera rightCamera) throws InitialCamerasEstimationFailedException {
 
-        return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix,
-                principalPointX, principalPointY, leftPoints, rightPoints,
-                Corrector.DEFAULT_TYPE, leftCamera, rightCamera);
+        return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix, principalPointX, principalPointY,
+                leftPoints, rightPoints, Corrector.DEFAULT_TYPE, leftCamera, rightCamera);
     }
 
     /**
@@ -674,9 +650,9 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
             final PinholeCamera leftCamera, final PinholeCamera rightCamera)
             throws InitialCamerasEstimationFailedException {
 
-        return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix,
-                principalPointX, principalPointY, leftPoints, rightPoints,
-                correctorType, leftCamera, rightCamera, null, null);
+        return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix, principalPointX, principalPointY,
+                leftPoints, rightPoints, correctorType, leftCamera, rightCamera, null,
+                null);
     }
 
     /**
@@ -730,10 +706,9 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
             final BitSet validTriangulatedPoints)
             throws InitialCamerasEstimationFailedException {
 
-        return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix,
-                principalPointX, principalPointY, leftPoints, rightPoints,
-                Corrector.DEFAULT_TYPE, leftCamera, rightCamera,
-                triangulatedPoints, validTriangulatedPoints);
+        return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix, principalPointX, principalPointY,
+                leftPoints, rightPoints, Corrector.DEFAULT_TYPE, leftCamera, rightCamera, triangulatedPoints,
+                validTriangulatedPoints);
     }
 
     /**
@@ -793,10 +768,8 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
 
         return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix,
                 principalPointX, principalPointY,
-                KruppaDualImageOfAbsoluteConicEstimator.
-                        DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, leftPoints, rightPoints,
-                correctorType, leftCamera, rightCamera, triangulatedPoints,
-                validTriangulatedPoints);
+                KruppaDualImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, leftPoints, rightPoints,
+                correctorType, leftCamera, rightCamera, triangulatedPoints, validTriangulatedPoints);
     }
 
     /**
@@ -848,9 +821,8 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
             final PinholeCamera leftCamera, final PinholeCamera rightCamera)
             throws InitialCamerasEstimationFailedException {
 
-        return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix,
-                principalPointX, principalPointY, aspectRatio, leftPoints,
-                rightPoints, Corrector.DEFAULT_TYPE, leftCamera, rightCamera);
+        return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix, principalPointX, principalPointY, aspectRatio,
+                leftPoints, rightPoints, Corrector.DEFAULT_TYPE, leftCamera, rightCamera);
     }
 
     /**
@@ -906,9 +878,8 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
             final CorrectorType correctorType, final PinholeCamera leftCamera,
             final PinholeCamera rightCamera) throws InitialCamerasEstimationFailedException {
 
-        return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix,
-                principalPointX, principalPointY, aspectRatio, leftPoints,
-                rightPoints, correctorType, leftCamera, rightCamera, null,
+        return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix, principalPointX, principalPointY, aspectRatio,
+                leftPoints, rightPoints, correctorType, leftCamera, rightCamera, null,
                 null);
     }
 
@@ -966,10 +937,9 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
             final List<Point3D> triangulatedPoints, final BitSet validTriangulatedPoints)
             throws InitialCamerasEstimationFailedException {
 
-        return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix,
-                principalPointX, principalPointY, aspectRatio, leftPoints,
-                rightPoints, Corrector.DEFAULT_TYPE, leftCamera, rightCamera,
-                triangulatedPoints, validTriangulatedPoints);
+        return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix, principalPointX, principalPointY, aspectRatio,
+                leftPoints, rightPoints, Corrector.DEFAULT_TYPE, leftCamera, rightCamera, triangulatedPoints,
+                validTriangulatedPoints);
     }
 
     /**
@@ -1030,24 +1000,20 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
             final BitSet validTriangulatedPoints) throws InitialCamerasEstimationFailedException {
 
         try {
-            final KruppaDualImageOfAbsoluteConicEstimator diacEstimator =
-                    new KruppaDualImageOfAbsoluteConicEstimator(
-                            fundamentalMatrix);
+            final KruppaDualImageOfAbsoluteConicEstimator diacEstimator = new KruppaDualImageOfAbsoluteConicEstimator(
+                    fundamentalMatrix);
             diacEstimator.setPrincipalPointX(principalPointX);
             diacEstimator.setPrincipalPointY(principalPointY);
             diacEstimator.setFocalDistanceAspectRatioKnown(true);
             diacEstimator.setFocalDistanceAspectRatio(aspectRatio);
 
-            final DualImageOfAbsoluteConic diac = diacEstimator.estimate();
+            final var diac = diacEstimator.estimate();
 
-            final PinholeCameraIntrinsicParameters intrinsic =
-                    diac.getIntrinsicParameters();
+            final var intrinsic = diac.getIntrinsicParameters();
 
-            return EssentialMatrixInitialCamerasEstimator.
-                    generateInitialMetricCamerasFromEssentialMatrix(
-                            fundamentalMatrix, intrinsic, intrinsic, leftPoints,
-                            rightPoints, correctorType, leftCamera, rightCamera,
-                            triangulatedPoints, validTriangulatedPoints);
+            return EssentialMatrixInitialCamerasEstimator.generateInitialMetricCamerasFromEssentialMatrix(
+                    fundamentalMatrix, intrinsic, intrinsic, leftPoints, rightPoints, correctorType, leftCamera,
+                    rightCamera, triangulatedPoints, validTriangulatedPoints);
 
         } catch (final InitialCamerasEstimationFailedException e) {
             throw e;
@@ -1066,13 +1032,11 @@ public class DualImageOfAbsoluteConicInitialCamerasEstimator
      * @throws IllegalArgumentException if provided lists don't have the same
      *                                  size.
      */
-    private void internalSetLeftAndRightPoints(final List<Point2D> leftPoints,
-                                               final List<Point2D> rightPoints) {
-        if (leftPoints == null || rightPoints == null ||
-                leftPoints.size() != rightPoints.size()) {
+    private void internalSetLeftAndRightPoints(final List<Point2D> leftPoints, final List<Point2D> rightPoints) {
+        if (leftPoints == null || rightPoints == null || leftPoints.size() != rightPoints.size()) {
             throw new IllegalArgumentException();
         }
-        mLeftPoints = leftPoints;
-        mRightPoints = rightPoints;
+        this.leftPoints = leftPoints;
+        this.rightPoints = rightPoints;
     }
 }

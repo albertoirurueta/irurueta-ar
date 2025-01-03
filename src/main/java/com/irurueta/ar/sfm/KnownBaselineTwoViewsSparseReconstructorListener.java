@@ -20,6 +20,5 @@ package com.irurueta.ar.sfm;
  * from sparse image point correspondences in two views when baseline is known.
  */
 public interface KnownBaselineTwoViewsSparseReconstructorListener extends
-        BaseTwoViewsSparseReconstructorListener<
-                KnownBaselineTwoViewsSparseReconstructor> {
+        BaseTwoViewsSparseReconstructorListener<KnownBaselineTwoViewsSparseReconstructor> {
 }

@@ -16,16 +16,16 @@
 package com.irurueta.ar.epipolar.estimators;
 
 import com.irurueta.geometry.EuclideanTransformation3D;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class HomographyDecompositionTest {
+class HomographyDecompositionTest {
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         // empty constructor
-        HomographyDecomposition decomposition = new HomographyDecomposition();
+        var decomposition = new HomographyDecomposition();
 
         // check default values
         assertNull(decomposition.getTransformation());
@@ -33,8 +33,8 @@ public class HomographyDecompositionTest {
         assertEquals(0.0, decomposition.getPlaneDistance(), 0.0);
 
         // test non-empty constructor
-        final EuclideanTransformation3D transformation = new EuclideanTransformation3D();
-        final double[] planeNormal = new double[HomographyDecomposition.PLANE_NORMAL_LENGTH];
+        final var transformation = new EuclideanTransformation3D();
+        final var planeNormal = new double[HomographyDecomposition.PLANE_NORMAL_LENGTH];
         decomposition = new HomographyDecomposition(transformation, planeNormal, 5.0);
 
         // check correctness
@@ -43,25 +43,20 @@ public class HomographyDecompositionTest {
         assertEquals(5.0, decomposition.getPlaneDistance(), 0.0);
 
         // Force IllegalArgumentException
-        decomposition = null;
         final double[] wrong = new double[1];
-        try {
-            decomposition = new HomographyDecomposition(transformation, wrong, 3.0);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(decomposition);
+        assertThrows(IllegalArgumentException.class,
+                () -> new HomographyDecomposition(transformation, wrong, 3.0));
     }
 
     @Test
-    public void testGetSetTransformation() {
-        final HomographyDecomposition decomposition = new HomographyDecomposition();
+    void testGetSetTransformation() {
+        final var decomposition = new HomographyDecomposition();
 
         // check default value
         assertNull(decomposition.getTransformation());
 
         // set new value
-        final EuclideanTransformation3D transformation = new EuclideanTransformation3D();
+        final var transformation = new EuclideanTransformation3D();
         decomposition.setTransformation(transformation);
 
         // check correctness
@@ -69,31 +64,27 @@ public class HomographyDecompositionTest {
     }
 
     @Test
-    public void testGetSetPlaneNormal() {
-        final HomographyDecomposition decomposition = new HomographyDecomposition();
+    void testGetSetPlaneNormal() {
+        final var decomposition = new HomographyDecomposition();
 
         // check default value
         assertNull(decomposition.getPlaneNormal());
 
         // set new value
-        final double[] planeNormal = new double[HomographyDecomposition.PLANE_NORMAL_LENGTH];
+        final var planeNormal = new double[HomographyDecomposition.PLANE_NORMAL_LENGTH];
         decomposition.setPlaneNormal(planeNormal);
 
         // check correctness
         assertSame(planeNormal, decomposition.getPlaneNormal());
 
         // force IllegalArgumentException
-        final double[] wrong = new double[1];
-        try {
-            decomposition.setPlaneNormal(wrong);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        final var wrong = new double[1];
+        assertThrows(IllegalArgumentException.class, () -> decomposition.setPlaneNormal(wrong));
     }
 
     @Test
-    public void testGetSetPlaneDistance() {
-        final HomographyDecomposition decomposition = new HomographyDecomposition();
+    void testGetSetPlaneDistance() {
+        final var decomposition = new HomographyDecomposition();
 
         // initial value
         assertEquals(0.0, decomposition.getPlaneDistance(), 0.0);

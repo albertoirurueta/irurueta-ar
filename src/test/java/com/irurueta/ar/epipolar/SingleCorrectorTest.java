@@ -16,18 +16,18 @@
 package com.irurueta.ar.epipolar;
 
 import com.irurueta.geometry.Point2D;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class SingleCorrectorTest {
+class SingleCorrectorTest {
 
     @Test
-    public void testCreate() {
+    void testCreate() {
         // test create with method
 
         // Gold Standard
-        SingleCorrector corrector = SingleCorrector.create(CorrectorType.GOLD_STANDARD);
+        var corrector = SingleCorrector.create(CorrectorType.GOLD_STANDARD);
 
         // check correctness
         assertNull(corrector.getLeftPoint());
@@ -37,7 +37,7 @@ public class SingleCorrectorTest {
         assertNull(corrector.getLeftCorrectedPoint());
         assertNull(corrector.getRightCorrectedPoint());
         assertEquals(CorrectorType.GOLD_STANDARD, corrector.getType());
-        assertTrue(corrector instanceof GoldStandardSingleCorrector);
+        assertInstanceOf(GoldStandardSingleCorrector.class, corrector);
 
         // Sampson
         corrector = SingleCorrector.create(CorrectorType.SAMPSON_CORRECTOR);
@@ -50,10 +50,10 @@ public class SingleCorrectorTest {
         assertNull(corrector.getLeftCorrectedPoint());
         assertNull(corrector.getRightCorrectedPoint());
         assertEquals(CorrectorType.SAMPSON_CORRECTOR, corrector.getType());
-        assertTrue(corrector instanceof SampsonSingleCorrector);
+        assertInstanceOf(SampsonSingleCorrector.class, corrector);
 
         // test create with fundamental matrix and type
-        final FundamentalMatrix fundamentalMatrix = new FundamentalMatrix();
+        final var fundamentalMatrix = new FundamentalMatrix();
 
         // Gold standard
         corrector = SingleCorrector.create(fundamentalMatrix, CorrectorType.GOLD_STANDARD);
@@ -66,7 +66,7 @@ public class SingleCorrectorTest {
         assertNull(corrector.getLeftCorrectedPoint());
         assertNull(corrector.getRightCorrectedPoint());
         assertEquals(CorrectorType.GOLD_STANDARD, corrector.getType());
-        assertTrue(corrector instanceof GoldStandardSingleCorrector);
+        assertInstanceOf(GoldStandardSingleCorrector.class, corrector);
 
         // Sampson
         corrector = SingleCorrector.create(fundamentalMatrix, CorrectorType.SAMPSON_CORRECTOR);
@@ -79,11 +79,11 @@ public class SingleCorrectorTest {
         assertNull(corrector.getLeftCorrectedPoint());
         assertNull(corrector.getRightCorrectedPoint());
         assertEquals(CorrectorType.SAMPSON_CORRECTOR, corrector.getType());
-        assertTrue(corrector instanceof SampsonSingleCorrector);
+        assertInstanceOf(SampsonSingleCorrector.class, corrector);
 
         // test create with left and right points
-        final Point2D leftPoint = Point2D.create();
-        final Point2D rightPoint = Point2D.create();
+        final var leftPoint = Point2D.create();
+        final var rightPoint = Point2D.create();
 
         // Gold standard
         corrector = SingleCorrector.create(leftPoint, rightPoint, CorrectorType.GOLD_STANDARD);
@@ -96,7 +96,7 @@ public class SingleCorrectorTest {
         assertNull(corrector.getLeftCorrectedPoint());
         assertNull(corrector.getRightCorrectedPoint());
         assertEquals(CorrectorType.GOLD_STANDARD, corrector.getType());
-        assertTrue(corrector instanceof GoldStandardSingleCorrector);
+        assertInstanceOf(GoldStandardSingleCorrector.class, corrector);
 
         // Sampson
         corrector = SingleCorrector.create(leftPoint, rightPoint, CorrectorType.SAMPSON_CORRECTOR);
@@ -109,13 +109,12 @@ public class SingleCorrectorTest {
         assertNull(corrector.getLeftCorrectedPoint());
         assertNull(corrector.getRightCorrectedPoint());
         assertEquals(CorrectorType.SAMPSON_CORRECTOR, corrector.getType());
-        assertTrue(corrector instanceof SampsonSingleCorrector);
+        assertInstanceOf(SampsonSingleCorrector.class, corrector);
 
         // test create with left and right points and fundamental matrix
 
         // Gold standard
-        corrector = SingleCorrector.create(leftPoint, rightPoint, fundamentalMatrix,
-                CorrectorType.GOLD_STANDARD);
+        corrector = SingleCorrector.create(leftPoint, rightPoint, fundamentalMatrix, CorrectorType.GOLD_STANDARD);
 
         // check correctness
         assertSame(leftPoint, corrector.getLeftPoint());
@@ -126,11 +125,10 @@ public class SingleCorrectorTest {
         assertNull(corrector.getLeftCorrectedPoint());
         assertNull(corrector.getRightCorrectedPoint());
         assertEquals(CorrectorType.GOLD_STANDARD, corrector.getType());
-        assertTrue(corrector instanceof GoldStandardSingleCorrector);
+        assertInstanceOf(GoldStandardSingleCorrector.class, corrector);
 
         // Sampson
-        corrector = SingleCorrector.create(leftPoint, rightPoint, fundamentalMatrix,
-                CorrectorType.SAMPSON_CORRECTOR);
+        corrector = SingleCorrector.create(leftPoint, rightPoint, fundamentalMatrix, CorrectorType.SAMPSON_CORRECTOR);
 
         // check correctness
         assertSame(leftPoint, corrector.getLeftPoint());
@@ -141,7 +139,7 @@ public class SingleCorrectorTest {
         assertNull(corrector.getLeftCorrectedPoint());
         assertNull(corrector.getRightCorrectedPoint());
         assertEquals(CorrectorType.SAMPSON_CORRECTOR, corrector.getType());
-        assertTrue(corrector instanceof SampsonSingleCorrector);
+        assertInstanceOf(SampsonSingleCorrector.class, corrector);
 
         // test create without arguments
         corrector = SingleCorrector.create();

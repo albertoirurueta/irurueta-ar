@@ -16,20 +16,17 @@
 package com.irurueta.ar.calibration;
 
 import com.irurueta.ar.SerializationHelper;
-import com.irurueta.geometry.Point2D;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class CirclesPattern2DTest {
+class CirclesPattern2DTest {
 
     @Test
-    public void testConstructor() {
-        final CirclesPattern2D pattern = new CirclesPattern2D();
+    void testConstructor() {
+        final var pattern = new CirclesPattern2D();
 
         // check default values
         assertEquals(CirclesPattern2D.DEFAULT_POINT_SEPARATION, pattern.getPointSeparation(), 0.0);
@@ -40,8 +37,8 @@ public class CirclesPattern2DTest {
     }
 
     @Test
-    public void testGetSetPointSeparation() {
-        final CirclesPattern2D pattern = new CirclesPattern2D();
+    void testGetSetPointSeparation() {
+        final var pattern = new CirclesPattern2D();
 
         // check default value
         assertEquals(CirclesPattern2D.DEFAULT_POINT_SEPARATION, pattern.getPointSeparation(), 0.0);
@@ -53,16 +50,12 @@ public class CirclesPattern2DTest {
         assertEquals(1.0, pattern.getPointSeparation(), 0.0);
 
         // force IllegalArgumentException
-        try {
-            pattern.setPointSeparation(0.0);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> pattern.setPointSeparation(0.0));
     }
 
     @Test
-    public void testGetSetCols() {
-        final CirclesPattern2D pattern = new CirclesPattern2D();
+    void testGetSetCols() {
+        final var pattern = new CirclesPattern2D();
 
         // check default value
         assertEquals(CirclesPattern2D.DEFAULT_COLS, pattern.getCols());
@@ -76,16 +69,12 @@ public class CirclesPattern2DTest {
         assertEquals(pattern.getRows() * pattern.getCols(), pattern.getNumberOfPoints());
 
         // force IllegalArgumentException
-        try {
-            pattern.setCols(1);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> pattern.setCols(1));
     }
 
     @Test
-    public void testGetSetRows() {
-        final CirclesPattern2D pattern = new CirclesPattern2D();
+    void testGetSetRows() {
+        final var pattern = new CirclesPattern2D();
 
         // check default value
         assertEquals(CirclesPattern2D.DEFAULT_ROWS, pattern.getRows());
@@ -99,21 +88,17 @@ public class CirclesPattern2DTest {
         assertEquals(pattern.getRows() * pattern.getCols(), pattern.getNumberOfPoints());
 
         // force IllegalArgumentException
-        try {
-            pattern.setRows(1);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> pattern.setRows(1));
     }
 
     @Test
-    public void testGetIdealPoints() {
-        final CirclesPattern2D pattern = new CirclesPattern2D();
+    void testGetIdealPoints() {
+        final var pattern = new CirclesPattern2D();
         pattern.setPointSeparation(1.0);
         pattern.setCols(3);
         pattern.setRows(3);
 
-        final List<Point2D> points = pattern.getIdealPoints();
+        final var points = pattern.getIdealPoints();
 
         assertEquals(0.0, points.get(0).getInhomX(), 0.0);
         assertEquals(0.0, points.get(0).getInhomY(), 0.0);
@@ -146,8 +131,8 @@ public class CirclesPattern2DTest {
     }
 
     @Test
-    public void testSerializeDeserialize() throws IOException, ClassNotFoundException {
-        final CirclesPattern2D pattern1 = new CirclesPattern2D();
+    void testSerializeDeserialize() throws IOException, ClassNotFoundException {
+        final var pattern1 = new CirclesPattern2D();
 
         // set new values
         pattern1.setPointSeparation(1.0);
@@ -160,12 +145,11 @@ public class CirclesPattern2DTest {
         assertEquals(2, pattern1.getRows());
 
         // serialize and deserialize
-        final byte[] bytes = SerializationHelper.serialize(pattern1);
-        final CirclesPattern2D pattern2 = SerializationHelper.deserialize(bytes);
+        final var bytes = SerializationHelper.serialize(pattern1);
+        final var pattern2 = SerializationHelper.<CirclesPattern2D>deserialize(bytes);
 
         // check
-        assertEquals(pattern1.getPointSeparation(),
-                pattern2.getPointSeparation(), 0.0);
+        assertEquals(pattern1.getPointSeparation(), pattern2.getPointSeparation(), 0.0);
         assertEquals(pattern1.getCols(), pattern2.getCols());
         assertEquals(pattern1.getRows(), pattern2.getRows());
     }

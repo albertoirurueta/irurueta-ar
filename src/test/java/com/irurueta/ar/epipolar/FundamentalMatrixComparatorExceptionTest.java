@@ -15,26 +15,24 @@
  */
 package com.irurueta.ar.epipolar;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class FundamentalMatrixComparatorExceptionTest {
+class FundamentalMatrixComparatorExceptionTest {
 
     @Test
-    public void testConstructor() {
-        FundamentalMatrixComparatorException ex = new FundamentalMatrixComparatorException();
+    void testConstructor() {
+        var ex = new FundamentalMatrixComparatorException();
         assertNotNull(ex);
 
         ex = new FundamentalMatrixComparatorException("message");
         assertNotNull(ex);
 
-        ex = new FundamentalMatrixComparatorException(
-                new Exception());
+        ex = new FundamentalMatrixComparatorException(new Exception());
         assertNotNull(ex);
 
-        ex = new FundamentalMatrixComparatorException("message",
-                new Exception());
+        ex = new FundamentalMatrixComparatorException("message", new Exception());
         assertNotNull(ex);
     }
 }

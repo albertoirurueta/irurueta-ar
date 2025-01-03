@@ -61,8 +61,7 @@ public class DualImageOfAbsoluteConic extends DualConic implements Serializable 
      * @param camera              a pinhole camera.
      * @param dualAbsoluteQuadric the dual absolute quadric.
      */
-    public DualImageOfAbsoluteConic(final PinholeCamera camera,
-                                    final DualQuadric dualAbsoluteQuadric) {
+    public DualImageOfAbsoluteConic(final PinholeCamera camera, final DualQuadric dualAbsoluteQuadric) {
         super();
         setFromCameraAndDualAbsoluteQuadric(camera, dualAbsoluteQuadric);
     }
@@ -79,8 +78,7 @@ public class DualImageOfAbsoluteConic extends DualConic implements Serializable 
      * @param f Parameter F of the conic.
      */
     public DualImageOfAbsoluteConic(
-            final double a, final double b, final double c, final double d,
-            final double e, final double f) {
+            final double a, final double b, final double c, final double d, final double e, final double f) {
         super(a, b, c, d, e, f);
     }
 
@@ -115,7 +113,7 @@ public class DualImageOfAbsoluteConic extends DualConic implements Serializable 
      */
     @Override
     public Conic getConic() throws ConicNotAvailableException {
-        final ImageOfAbsoluteConic c = new ImageOfAbsoluteConic();
+        final var c = new ImageOfAbsoluteConic();
         conic(c);
         return c;
     }
@@ -127,12 +125,10 @@ public class DualImageOfAbsoluteConic extends DualConic implements Serializable 
      *
      * @param k pinhole camera intrinsic parameters.
      */
-    public final void setFromPinholeCameraIntrinsicParameters(
-            final PinholeCameraIntrinsicParameters k) {
-        final Matrix kMatrix = k.getInternalMatrix();
+    public final void setFromPinholeCameraIntrinsicParameters(final PinholeCameraIntrinsicParameters k) {
+        final var kMatrix = k.getInternalMatrix();
         try {
-            setParameters(kMatrix.multiplyAndReturnNew(
-                    kMatrix.transposeAndReturnNew()));
+            setParameters(kMatrix.multiplyAndReturnNew(kMatrix.transposeAndReturnNew()));
         } catch (final WrongSizeException | NonSymmetricMatrixException ignore) {
             // never happens
         }
@@ -174,17 +170,15 @@ public class DualImageOfAbsoluteConic extends DualConic implements Serializable 
             // C^-1=K*K'=(K*K')'=(C^-1)'
             // C=(K*K')^-1 = K'^-1*K^-1 = (K^-1)'*(K^-1), where K^-1 is still
             // upper triangular
-            final Matrix m = asMatrix();
-            final Matrix invM = com.irurueta.algebra.Utils.inverse(m);
-            final CholeskyDecomposer decomposer = new CholeskyDecomposer(invM);
+            final var m = asMatrix();
+            final var invM = com.irurueta.algebra.Utils.inverse(m);
+            final var decomposer = new CholeskyDecomposer(invM);
             decomposer.decompose();
-            final Matrix inverseInternalParamsMatrix = decomposer.getR();
-            final Matrix internalParamsMatrix = com.irurueta.algebra.Utils.inverse(
-                    inverseInternalParamsMatrix);
+            final var inverseInternalParamsMatrix = decomposer.getR();
+            final var internalParamsMatrix = com.irurueta.algebra.Utils.inverse(inverseInternalParamsMatrix);
             return new PinholeCameraIntrinsicParameters(internalParamsMatrix);
         } catch (final AlgebraException e) {
             throw new InvalidPinholeCameraIntrinsicParametersException(e);
         }
     }
-
 }

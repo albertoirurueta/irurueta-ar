@@ -20,19 +20,16 @@ import com.irurueta.geometry.MatrixRotation3D;
 import com.irurueta.geometry.PinholeCamera;
 import com.irurueta.geometry.PinholeCameraIntrinsicParameters;
 import com.irurueta.geometry.Point2D;
-import com.irurueta.geometry.Point3D;
 import com.irurueta.geometry.estimators.LockedException;
 import com.irurueta.geometry.estimators.NotReadyException;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class LMSEInhomogeneousSinglePoint3DTriangulatorTest implements SinglePoint3DTriangulatorListener {
+class LMSEInhomogeneousSinglePoint3DTriangulatorTest implements SinglePoint3DTriangulatorListener {
 
     private static final int MIN_VIEWS = 2;
     private static final int MAX_VIEWS = 20;
@@ -63,16 +60,14 @@ public class LMSEInhomogeneousSinglePoint3DTriangulatorTest implements SinglePoi
     private int triangulateEnd;
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         // test constructor without arguments
-        LMSEInhomogeneousSinglePoint3DTriangulator triangulator =
-                new LMSEInhomogeneousSinglePoint3DTriangulator();
+        var triangulator = new LMSEInhomogeneousSinglePoint3DTriangulator();
 
         // check correctness
         assertEquals(LMSEInhomogeneousSinglePoint3DTriangulator.DEFAULT_ALLOW_LMSE_SOLUTION,
                 triangulator.isLMSESolutionAllowed());
-        assertEquals(Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR,
-                triangulator.getType());
+        assertEquals(Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR, triangulator.getType());
         assertNull(triangulator.getPoints2D());
         assertNull(triangulator.getCameras());
         assertFalse(triangulator.isLocked());
@@ -80,11 +75,11 @@ public class LMSEInhomogeneousSinglePoint3DTriangulatorTest implements SinglePoi
         assertNull(triangulator.getListener());
 
         // test constructor with points and cameras
-        final List<Point2D> points = new ArrayList<>();
+        final var points = new ArrayList<Point2D>();
         points.add(Point2D.create());
         points.add(Point2D.create());
 
-        final List<PinholeCamera> cameras = new ArrayList<>();
+        final var cameras = new ArrayList<PinholeCamera>();
         cameras.add(new PinholeCamera());
         cameras.add(new PinholeCamera());
 
@@ -93,8 +88,7 @@ public class LMSEInhomogeneousSinglePoint3DTriangulatorTest implements SinglePoi
         // check correctness
         assertEquals(LMSEInhomogeneousSinglePoint3DTriangulator.DEFAULT_ALLOW_LMSE_SOLUTION,
                 triangulator.isLMSESolutionAllowed());
-        assertEquals(Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR,
-                triangulator.getType());
+        assertEquals(Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR, triangulator.getType());
         assertSame(points, triangulator.getPoints2D());
         assertSame(cameras, triangulator.getCameras());
         assertFalse(triangulator.isLocked());
@@ -102,26 +96,15 @@ public class LMSEInhomogeneousSinglePoint3DTriangulatorTest implements SinglePoi
         assertNull(triangulator.getListener());
 
         // force IllegalArgumentException
-        final List<Point2D> emptyPoints = new ArrayList<>();
-        final List<PinholeCamera> emptyCameras = new ArrayList<>();
+        final var emptyPoints = new ArrayList<Point2D>();
+        final var emptyCameras = new ArrayList<PinholeCamera>();
 
-        triangulator = null;
-        try {
-            triangulator = new LMSEInhomogeneousSinglePoint3DTriangulator(emptyPoints, cameras);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            triangulator = new LMSEInhomogeneousSinglePoint3DTriangulator(points, emptyCameras);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            triangulator = new LMSEInhomogeneousSinglePoint3DTriangulator(emptyPoints, emptyCameras);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(triangulator);
+        assertThrows(IllegalArgumentException.class,
+                () -> new LMSEInhomogeneousSinglePoint3DTriangulator(emptyPoints, cameras));
+        assertThrows(IllegalArgumentException.class,
+                () -> new LMSEInhomogeneousSinglePoint3DTriangulator(points, emptyCameras));
+        assertThrows(IllegalArgumentException.class,
+                () -> new LMSEInhomogeneousSinglePoint3DTriangulator(emptyPoints, emptyCameras));
 
         // test constructor with listener
         triangulator = new LMSEInhomogeneousSinglePoint3DTriangulator(this);
@@ -129,8 +112,7 @@ public class LMSEInhomogeneousSinglePoint3DTriangulatorTest implements SinglePoi
         // check correctness
         assertEquals(LMSEInhomogeneousSinglePoint3DTriangulator.DEFAULT_ALLOW_LMSE_SOLUTION,
                 triangulator.isLMSESolutionAllowed());
-        assertEquals(Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR,
-                triangulator.getType());
+        assertEquals(Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR, triangulator.getType());
         assertNull(triangulator.getPoints2D());
         assertNull(triangulator.getCameras());
         assertFalse(triangulator.isLocked());
@@ -151,37 +133,24 @@ public class LMSEInhomogeneousSinglePoint3DTriangulatorTest implements SinglePoi
         assertSame(this, triangulator.getListener());
 
         // Force IllegalArgumentException
-        triangulator = null;
-        try {
-            triangulator = new LMSEInhomogeneousSinglePoint3DTriangulator(emptyPoints, cameras);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            triangulator = new LMSEInhomogeneousSinglePoint3DTriangulator(points, emptyCameras);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            triangulator = new LMSEInhomogeneousSinglePoint3DTriangulator(emptyPoints, emptyCameras);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(triangulator);
+        assertThrows(IllegalArgumentException.class,
+                () -> new LMSEInhomogeneousSinglePoint3DTriangulator(emptyPoints, cameras));
+        assertThrows(IllegalArgumentException.class,
+                () -> new LMSEInhomogeneousSinglePoint3DTriangulator(points, emptyCameras));
+        assertThrows(IllegalArgumentException.class,
+                () -> new LMSEInhomogeneousSinglePoint3DTriangulator(emptyPoints, emptyCameras));
     }
 
     @Test
-    public void testIsSetLMSeSolutionAllowed() throws LockedException {
-        final LMSEInhomogeneousSinglePoint3DTriangulator triangulator =
-                new LMSEInhomogeneousSinglePoint3DTriangulator();
+    void testIsSetLMSeSolutionAllowed() throws LockedException {
+        final var triangulator = new LMSEInhomogeneousSinglePoint3DTriangulator();
 
         // check default value
         assertEquals(LMSEInhomogeneousSinglePoint3DTriangulator.DEFAULT_ALLOW_LMSE_SOLUTION,
                 triangulator.isLMSESolutionAllowed());
 
         // set new value
-        triangulator.setLMSESolutionAllowed(
-                !LMSEInhomogeneousSinglePoint3DTriangulator.DEFAULT_ALLOW_LMSE_SOLUTION);
+        triangulator.setLMSESolutionAllowed(!LMSEInhomogeneousSinglePoint3DTriangulator.DEFAULT_ALLOW_LMSE_SOLUTION);
 
         // check correctness
         assertEquals(!LMSEInhomogeneousSinglePoint3DTriangulator.DEFAULT_ALLOW_LMSE_SOLUTION,
@@ -189,20 +158,19 @@ public class LMSEInhomogeneousSinglePoint3DTriangulatorTest implements SinglePoi
     }
 
     @Test
-    public void testGetSetPointsAndCameras() throws LockedException {
-        final LMSEInhomogeneousSinglePoint3DTriangulator triangulator =
-                new LMSEInhomogeneousSinglePoint3DTriangulator();
+    void testGetSetPointsAndCameras() throws LockedException {
+        final var triangulator = new LMSEInhomogeneousSinglePoint3DTriangulator();
 
         // check default values
         assertNull(triangulator.getPoints2D());
         assertNull(triangulator.getCameras());
 
         // set new value
-        final List<Point2D> points = new ArrayList<>();
+        final var points = new ArrayList<Point2D>();
         points.add(Point2D.create());
         points.add(Point2D.create());
 
-        final List<PinholeCamera> cameras = new ArrayList<>();
+        final var cameras = new ArrayList<PinholeCamera>();
         cameras.add(new PinholeCamera());
         cameras.add(new PinholeCamera());
 
@@ -213,29 +181,16 @@ public class LMSEInhomogeneousSinglePoint3DTriangulatorTest implements SinglePoi
         assertSame(cameras, triangulator.getCameras());
 
         // Force IllegalArgumentException
-        final List<Point2D> emptyPoints = new ArrayList<>();
-        final List<PinholeCamera> emptyCameras = new ArrayList<>();
-        try {
-            triangulator.setPointsAndCameras(emptyPoints, cameras);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            triangulator.setPointsAndCameras(points, emptyCameras);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            triangulator.setPointsAndCameras(emptyPoints, emptyCameras);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
+        final var emptyPoints = new ArrayList<Point2D>();
+        final var emptyCameras = new ArrayList<PinholeCamera>();
+        assertThrows(IllegalArgumentException.class, () -> triangulator.setPointsAndCameras(emptyPoints, cameras));
+        assertThrows(IllegalArgumentException.class, () -> triangulator.setPointsAndCameras(points, emptyCameras));
+        assertThrows(IllegalArgumentException.class, () -> triangulator.setPointsAndCameras(emptyPoints, emptyCameras));
     }
 
     @Test
-    public void testGetSetListener() throws LockedException {
-        final LMSEInhomogeneousSinglePoint3DTriangulator triangulator =
-                new LMSEInhomogeneousSinglePoint3DTriangulator();
+    void testGetSetListener() throws LockedException {
+        final var triangulator = new LMSEInhomogeneousSinglePoint3DTriangulator();
 
         // check default value
         assertNull(triangulator.getListener());
@@ -248,73 +203,60 @@ public class LMSEInhomogeneousSinglePoint3DTriangulatorTest implements SinglePoi
     }
 
     @Test
-    public void testTriangulate() throws LockedException, NotReadyException,
-            Point3DTriangulationException {
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testTriangulate() throws LockedException, NotReadyException, Point3DTriangulationException {
+        var numValid = 0;
+        for (var t = 0; t < TIMES; t++) {
+            final var randomizer = new UniformRandomizer();
 
             // obtain number of views
-            final int numViews = randomizer.nextInt(MIN_VIEWS, MAX_VIEWS);
+            final var numViews = randomizer.nextInt(MIN_VIEWS, MAX_VIEWS);
 
             // create a random 3D point
-            final Point3D point3D = new InhomogeneousPoint3D(
+            final var point3D = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
 
-            final List<Point2D> points2D = new ArrayList<>();
-            final List<PinholeCamera> cameras = new ArrayList<>();
-            final Point3D previousCameraCenter = new InhomogeneousPoint3D();
-            for (int i = 0; i < numViews; i++) {
+            final var points2D = new ArrayList<Point2D>();
+            final var cameras = new ArrayList<PinholeCamera>();
+            final var previousCameraCenter = new InhomogeneousPoint3D();
+            for (var i = 0; i < numViews; i++) {
                 // create a random camera
-                final double horizontalFocalLength = randomizer.nextDouble(
-                        MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-                final double verticalFocalLength = randomizer.nextDouble(
-                        MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-                final double skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
-                final double horizontalPrincipalPoint = randomizer.nextDouble(
-                        MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-                final double verticalPrincipalPoint = randomizer.nextDouble(
-                        MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+                final var horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+                final var verticalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+                final var skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+                final var horizontalPrincipalPoint = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+                final var verticalPrincipalPoint = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
-                final double alphaEuler = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                        MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-                final double betaEuler = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                        MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-                final double gammaEuler = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                        MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+                final var alphaEuler = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final var betaEuler = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final var gammaEuler = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-                final double cameraSeparationX = randomizer.nextDouble(
-                        MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
-                final double cameraSeparationY = randomizer.nextDouble(
-                        MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
-                final double cameraSeparationZ = randomizer.nextDouble(
-                        MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
+                final var cameraSeparationX = randomizer.nextDouble(MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
+                final var cameraSeparationY = randomizer.nextDouble(MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
+                final var cameraSeparationZ = randomizer.nextDouble(MIN_CAMERA_SEPARATION, MAX_CAMERA_SEPARATION);
 
-                final PinholeCameraIntrinsicParameters intrinsic =
-                        new PinholeCameraIntrinsicParameters(horizontalFocalLength, verticalFocalLength,
-                                horizontalPrincipalPoint, verticalPrincipalPoint, skewness);
+                final var intrinsic = new PinholeCameraIntrinsicParameters(horizontalFocalLength, verticalFocalLength,
+                        horizontalPrincipalPoint, verticalPrincipalPoint, skewness);
 
-                final MatrixRotation3D rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
+                final var rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
 
-                final Point3D cameraCenter = new InhomogeneousPoint3D(
+                final var cameraCenter = new InhomogeneousPoint3D(
                         previousCameraCenter.getInhomX() + cameraSeparationX,
                         previousCameraCenter.getInhomY() + cameraSeparationY,
                         previousCameraCenter.getInhomZ() + cameraSeparationZ);
 
-                final PinholeCamera camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
+                final var camera = new PinholeCamera(intrinsic, rotation, cameraCenter);
 
                 // project 3D point using camera
-                final Point2D point2D = camera.project(point3D);
+                final var point2D = camera.project(point3D);
 
                 cameras.add(camera);
                 points2D.add(point2D);
             }
 
             // create triangulator
-            final LMSEInhomogeneousSinglePoint3DTriangulator triangulator =
-                    new LMSEInhomogeneousSinglePoint3DTriangulator(points2D, cameras, this);
+            final var triangulator = new LMSEInhomogeneousSinglePoint3DTriangulator(points2D, cameras, this);
 
             // check default values
             assertTrue(triangulator.isReady());
@@ -322,7 +264,7 @@ public class LMSEInhomogeneousSinglePoint3DTriangulatorTest implements SinglePoi
             assertEquals(0, triangulateStart);
             assertEquals(0, triangulateEnd);
 
-            final Point3D triangulated = triangulator.triangulate();
+            final var triangulated = triangulator.triangulate();
 
             // check correctness
             assertTrue(triangulator.isReady());
@@ -359,30 +301,11 @@ public class LMSEInhomogeneousSinglePoint3DTriangulatorTest implements SinglePoi
         triangulateStart = triangulateEnd = 0;
     }
 
-    private void checkLocked(
-            final LMSEInhomogeneousSinglePoint3DTriangulator triangulator) {
-        try {
-            triangulator.setLMSESolutionAllowed(true);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            triangulator.setListener(this);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            triangulator.setPointsAndCameras(null, null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            triangulator.triangulate();
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        } catch (final Exception e) {
-            fail("LockedException expected but not thrown");
-        }
+    private void checkLocked(final LMSEInhomogeneousSinglePoint3DTriangulator triangulator) {
+        assertThrows(LockedException.class, () -> triangulator.setLMSESolutionAllowed(true));
+        assertThrows(LockedException.class, () -> triangulator.setListener(this));
+        assertThrows(LockedException.class, () -> triangulator.setPointsAndCameras(null, null));
+        assertThrows(LockedException.class, triangulator::triangulate);
         assertTrue(triangulator.isLocked());
     }
 }

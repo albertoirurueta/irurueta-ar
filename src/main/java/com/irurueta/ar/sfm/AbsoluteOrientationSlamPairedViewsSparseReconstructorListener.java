@@ -22,6 +22,5 @@ package com.irurueta.ar.sfm;
  * for scale and orientation estimation.
  */
 public interface AbsoluteOrientationSlamPairedViewsSparseReconstructorListener extends
-        BaseSlamPairedViewsSparseReconstructorListener<
-                AbsoluteOrientationSlamPairedViewsSparseReconstructor> {
+        BaseSlamPairedViewsSparseReconstructorListener<AbsoluteOrientationSlamPairedViewsSparseReconstructor> {
 }

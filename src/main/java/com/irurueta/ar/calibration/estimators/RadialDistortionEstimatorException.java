@@ -18,8 +18,7 @@ package com.irurueta.ar.calibration.estimators;
 /**
  * Thrown when radial distortion estimation fails.
  */
-public class RadialDistortionEstimatorException extends
-        CalibrationEstimatorException {
+public class RadialDistortionEstimatorException extends CalibrationEstimatorException {
 
     /**
      * Constructor.

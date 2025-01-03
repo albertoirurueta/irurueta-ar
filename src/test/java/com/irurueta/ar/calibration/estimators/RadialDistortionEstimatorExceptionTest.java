@@ -15,26 +15,24 @@
  */
 package com.irurueta.ar.calibration.estimators;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class RadialDistortionEstimatorExceptionTest {
+class RadialDistortionEstimatorExceptionTest {
 
     @Test
-    public void testConstructor() {
-        RadialDistortionEstimatorException ex = new RadialDistortionEstimatorException();
+    void testConstructor() {
+        var ex = new RadialDistortionEstimatorException();
         assertNotNull(ex);
 
         ex = new RadialDistortionEstimatorException("message");
         assertNotNull(ex);
 
-        ex = new RadialDistortionEstimatorException(
-                new Exception());
+        ex = new RadialDistortionEstimatorException(new Exception());
         assertNotNull(ex);
 
-        ex = new RadialDistortionEstimatorException("message",
-                new Exception());
+        ex = new RadialDistortionEstimatorException("message", new Exception());
         assertNotNull(ex);
     }
 }

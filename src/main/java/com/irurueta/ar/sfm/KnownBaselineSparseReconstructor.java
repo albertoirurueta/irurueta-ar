@@ -17,11 +17,9 @@
 package com.irurueta.ar.sfm;
 
 import com.irurueta.geometry.MetricTransformation3D;
-import com.irurueta.geometry.PinholeCamera;
 import com.irurueta.geometry.Point3D;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Class in charge of estimating cameras and 3D reconstructed points from sparse
@@ -30,8 +28,8 @@ import java.util.List;
  * exact scale.
  */
 public class KnownBaselineSparseReconstructor extends
-        BaseSparseReconstructor<KnownBaselineSparseReconstructorConfiguration,
-                KnownBaselineSparseReconstructor, KnownBaselineSparseReconstructorListener> {
+        BaseSparseReconstructor<KnownBaselineSparseReconstructorConfiguration, KnownBaselineSparseReconstructor,
+                KnownBaselineSparseReconstructorListener> {
 
     /**
      * Constructor.
@@ -53,8 +51,7 @@ public class KnownBaselineSparseReconstructor extends
      * @param listener listener in charge of handling events.
      * @throws NullPointerException if listener is not provided.
      */
-    public KnownBaselineSparseReconstructor(
-            final KnownBaselineSparseReconstructorListener listener) {
+    public KnownBaselineSparseReconstructor(final KnownBaselineSparseReconstructorListener listener) {
         this(new KnownBaselineSparseReconstructorConfiguration(), listener);
     }
 
@@ -69,8 +66,8 @@ public class KnownBaselineSparseReconstructor extends
     @Override
     protected boolean postProcessOne(final boolean isInitialPairOfViews) {
         try {
-            final PinholeCamera metricCamera1 = mPreviousMetricEstimatedCamera.getCamera();
-            final PinholeCamera metricCamera2 = mCurrentMetricEstimatedCamera.getCamera();
+            final var metricCamera1 = previousMetricEstimatedCamera.getCamera();
+            final var metricCamera2 = currentMetricEstimatedCamera.getCamera();
 
             metricCamera1.decompose();
             metricCamera2.decompose();
@@ -79,65 +76,60 @@ public class KnownBaselineSparseReconstructor extends
             if (isInitialPairOfViews) {
                 // reconstruction succeeded, so we update scale of cameras and
                 // reconstructed points
-                final double baseline = mConfiguration.getBaseline();
+                final var baseline = configuration.getBaseline();
 
-                final Point3D center1 = metricCamera1.getCameraCenter();
-                final Point3D center2 = metricCamera2.getCameraCenter();
+                final var center1 = metricCamera1.getCameraCenter();
+                final var center2 = metricCamera2.getCameraCenter();
 
-                final double estimatedBaseline = center1.distanceTo(center2);
+                final var estimatedBaseline = center1.distanceTo(center2);
 
-                scale = mCurrentScale = baseline / estimatedBaseline;
+                scale = currentScale = baseline / estimatedBaseline;
             } else {
-                scale = mCurrentScale;
+                scale = currentScale;
             }
 
-            final double sqrScale = scale * scale;
+            final var sqrScale = scale * scale;
 
-            final MetricTransformation3D scaleTransformation =
-                    new MetricTransformation3D(scale);
+            final var scaleTransformation = new MetricTransformation3D(scale);
 
             // update scale of cameras
-            final PinholeCamera euclideanCamera1 = scaleTransformation.transformAndReturnNew(metricCamera1);
-            final PinholeCamera euclideanCamera2 = scaleTransformation.transformAndReturnNew(metricCamera2);
+            final var euclideanCamera1 = scaleTransformation.transformAndReturnNew(metricCamera1);
+            final var euclideanCamera2 = scaleTransformation.transformAndReturnNew(metricCamera2);
 
-            mPreviousEuclideanEstimatedCamera = new EstimatedCamera();
-            mPreviousEuclideanEstimatedCamera.setCamera(euclideanCamera1);
-            mPreviousEuclideanEstimatedCamera.setViewId(mPreviousMetricEstimatedCamera.getViewId());
-            mPreviousEuclideanEstimatedCamera.setQualityScore(
-                    mPreviousMetricEstimatedCamera.getQualityScore());
-            if (mPreviousMetricEstimatedCamera.getCovariance() != null) {
-                mPreviousEuclideanEstimatedCamera.setCovariance(
-                        mPreviousMetricEstimatedCamera.getCovariance().multiplyByScalarAndReturnNew(
-                                sqrScale));
+            previousEuclideanEstimatedCamera = new EstimatedCamera();
+            previousEuclideanEstimatedCamera.setCamera(euclideanCamera1);
+            previousEuclideanEstimatedCamera.setViewId(previousMetricEstimatedCamera.getViewId());
+            previousEuclideanEstimatedCamera.setQualityScore(previousMetricEstimatedCamera.getQualityScore());
+            if (previousMetricEstimatedCamera.getCovariance() != null) {
+                previousEuclideanEstimatedCamera.setCovariance(previousMetricEstimatedCamera.getCovariance()
+                        .multiplyByScalarAndReturnNew(sqrScale));
             }
 
-            mCurrentEuclideanEstimatedCamera = new EstimatedCamera();
-            mCurrentEuclideanEstimatedCamera.setCamera(euclideanCamera2);
-            mCurrentEuclideanEstimatedCamera.setViewId(mCurrentMetricEstimatedCamera.getViewId());
-            mCurrentEuclideanEstimatedCamera.setQualityScore(
-                    mCurrentMetricEstimatedCamera.getQualityScore());
-            if (mCurrentMetricEstimatedCamera.getCovariance() != null) {
-                mCurrentEuclideanEstimatedCamera.setCovariance(
-                        mCurrentMetricEstimatedCamera.getCovariance().multiplyByScalarAndReturnNew(
-                                sqrScale));
+            currentEuclideanEstimatedCamera = new EstimatedCamera();
+            currentEuclideanEstimatedCamera.setCamera(euclideanCamera2);
+            currentEuclideanEstimatedCamera.setViewId(currentMetricEstimatedCamera.getViewId());
+            currentEuclideanEstimatedCamera.setQualityScore(currentMetricEstimatedCamera.getQualityScore());
+            if (currentMetricEstimatedCamera.getCovariance() != null) {
+                currentEuclideanEstimatedCamera.setCovariance(
+                        currentMetricEstimatedCamera.getCovariance().multiplyByScalarAndReturnNew(sqrScale));
             }
 
             // update scale of reconstructed points
-            final int numPoints = mActiveMetricReconstructedPoints.size();
-            final List<Point3D> metricReconstructedPoints3D = new ArrayList<>();
-            for (ReconstructedPoint3D activeMetricReconstructedPoint : mActiveMetricReconstructedPoints) {
+            final var numPoints = activeMetricReconstructedPoints.size();
+            final var metricReconstructedPoints3D = new ArrayList<Point3D>();
+            for (final var activeMetricReconstructedPoint : activeMetricReconstructedPoints) {
                 metricReconstructedPoints3D.add(activeMetricReconstructedPoint.getPoint());
             }
 
-            final List<Point3D> euclideanReconstructedPoints3D =
-                    scaleTransformation.transformPointsAndReturnNew(metricReconstructedPoints3D);
+            final var euclideanReconstructedPoints3D = scaleTransformation.transformPointsAndReturnNew(
+                    metricReconstructedPoints3D);
 
             // set scaled points into result
-            mActiveEuclideanReconstructedPoints = new ArrayList<>();
+            activeEuclideanReconstructedPoints = new ArrayList<>();
             ReconstructedPoint3D euclideanPoint;
             ReconstructedPoint3D metricPoint;
-            for (int i = 0; i < numPoints; i++) {
-                metricPoint = mActiveMetricReconstructedPoints.get(i);
+            for (var i = 0; i < numPoints; i++) {
+                metricPoint = activeMetricReconstructedPoints.get(i);
 
                 euclideanPoint = new ReconstructedPoint3D();
                 euclideanPoint.setId(metricPoint.getId());
@@ -145,18 +137,17 @@ public class KnownBaselineSparseReconstructor extends
                 euclideanPoint.setInlier(metricPoint.isInlier());
                 euclideanPoint.setQualityScore(metricPoint.getQualityScore());
                 if (metricPoint.getCovariance() != null) {
-                    euclideanPoint.setCovariance(metricPoint.getCovariance().multiplyByScalarAndReturnNew(
-                            sqrScale));
+                    euclideanPoint.setCovariance(metricPoint.getCovariance().multiplyByScalarAndReturnNew(sqrScale));
                 }
                 euclideanPoint.setColorData(metricPoint.getColorData());
 
-                mActiveEuclideanReconstructedPoints.add(euclideanPoint);
+                activeEuclideanReconstructedPoints.add(euclideanPoint);
             }
 
             return true;
         } catch (final Exception e) {
-            mFailed = true;
-            mListener.onFail(this);
+            failed = true;
+            listener.onFail(this);
 
             return false;
         }

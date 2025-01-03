@@ -43,8 +43,7 @@ import java.util.List;
  * equal.
  */
 @SuppressWarnings("DuplicatedCode")
-public class WeightedDualAbsoluteQuadricEstimator extends
-        DualAbsoluteQuadricEstimator {
+public class WeightedDualAbsoluteQuadricEstimator extends DualAbsoluteQuadricEstimator {
 
     /**
      * Default number of cameras (i.e. correspondences) to be weighted and taken
@@ -62,27 +61,27 @@ public class WeightedDualAbsoluteQuadricEstimator extends
      * Maximum number of cameras (i.e. correspondences) to be weighted and taken
      * into account.
      */
-    private int mMaxCameras;
+    private int maxCameras;
 
     /**
      * Indicates if weights are sorted by default so that largest weighted
      * cameras are used first.
      */
-    private boolean mSortWeights;
+    private boolean sortWeights;
 
     /**
      * Array containing weights for all cameras.
      */
-    private double[] mWeights;
+    private double[] weights;
 
     /**
      * Constructor.
      */
     public WeightedDualAbsoluteQuadricEstimator() {
         super();
-        mMaxCameras = DEFAULT_MAX_CAMERAS;
-        mSortWeights = DEFAULT_SORT_WEIGHTS;
-        mWeights = null;
+        maxCameras = DEFAULT_MAX_CAMERAS;
+        sortWeights = DEFAULT_SORT_WEIGHTS;
+        weights = null;
     }
 
     /**
@@ -91,12 +90,11 @@ public class WeightedDualAbsoluteQuadricEstimator extends
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or estimation progress changes.
      */
-    public WeightedDualAbsoluteQuadricEstimator(
-            final DualAbsoluteQuadricEstimatorListener listener) {
+    public WeightedDualAbsoluteQuadricEstimator(final DualAbsoluteQuadricEstimatorListener listener) {
         super(listener);
-        mMaxCameras = DEFAULT_MAX_CAMERAS;
-        mSortWeights = DEFAULT_SORT_WEIGHTS;
-        mWeights = null;
+        maxCameras = DEFAULT_MAX_CAMERAS;
+        sortWeights = DEFAULT_SORT_WEIGHTS;
+        weights = null;
     }
 
     /**
@@ -108,9 +106,9 @@ public class WeightedDualAbsoluteQuadricEstimator extends
      */
     public WeightedDualAbsoluteQuadricEstimator(final List<PinholeCamera> cameras) {
         super(cameras);
-        mMaxCameras = DEFAULT_MAX_CAMERAS;
-        mSortWeights = DEFAULT_SORT_WEIGHTS;
-        mWeights = null;
+        maxCameras = DEFAULT_MAX_CAMERAS;
+        sortWeights = DEFAULT_SORT_WEIGHTS;
+        weights = null;
     }
 
     /**
@@ -122,12 +120,12 @@ public class WeightedDualAbsoluteQuadricEstimator extends
      *                 starts, ends or estimation progress changes.
      * @throws IllegalArgumentException if list of cameras is null.
      */
-    public WeightedDualAbsoluteQuadricEstimator(final List<PinholeCamera> cameras,
-                                                final DualAbsoluteQuadricEstimatorListener listener) {
+    public WeightedDualAbsoluteQuadricEstimator(
+            final List<PinholeCamera> cameras, final DualAbsoluteQuadricEstimatorListener listener) {
         super(cameras, listener);
-        mMaxCameras = DEFAULT_MAX_CAMERAS;
-        mSortWeights = DEFAULT_SORT_WEIGHTS;
-        mWeights = null;
+        maxCameras = DEFAULT_MAX_CAMERAS;
+        sortWeights = DEFAULT_SORT_WEIGHTS;
+        weights = null;
     }
 
     /**
@@ -141,11 +139,11 @@ public class WeightedDualAbsoluteQuadricEstimator extends
      * @throws IllegalArgumentException if provided lists of cameras and weights
      *                                  don't have the same size or enough cameras.
      */
-    public WeightedDualAbsoluteQuadricEstimator(final List<PinholeCamera> cameras,
-                                                final double[] weights) {
+    public WeightedDualAbsoluteQuadricEstimator(
+            final List<PinholeCamera> cameras, final double[] weights) {
         super(cameras);
-        mMaxCameras = DEFAULT_MAX_CAMERAS;
-        mSortWeights = DEFAULT_SORT_WEIGHTS;
+        maxCameras = DEFAULT_MAX_CAMERAS;
+        sortWeights = DEFAULT_SORT_WEIGHTS;
         try {
             setWeights(weights);
         } catch (final LockedException ignore) {
@@ -167,12 +165,11 @@ public class WeightedDualAbsoluteQuadricEstimator extends
      *                                  don't have the same size or enough cameras.
      */
     public WeightedDualAbsoluteQuadricEstimator(
-            final List<PinholeCamera> cameras,
-            final double[] weights,
+            final List<PinholeCamera> cameras, final double[] weights,
             final DualAbsoluteQuadricEstimatorListener listener) {
         super(cameras, listener);
-        mMaxCameras = DEFAULT_MAX_CAMERAS;
-        mSortWeights = DEFAULT_SORT_WEIGHTS;
+        maxCameras = DEFAULT_MAX_CAMERAS;
+        sortWeights = DEFAULT_SORT_WEIGHTS;
         try {
             setWeights(weights);
         } catch (final LockedException ignore) {
@@ -189,11 +186,8 @@ public class WeightedDualAbsoluteQuadricEstimator extends
      * @param weights array of weights to check.
      * @return true if cameras and weights are valid, false otherwise.
      */
-    public static boolean areValidCamerasAndWeights(
-            final List<PinholeCamera> cameras,
-            final double[] weights) {
-        return cameras != null && weights != null &&
-                cameras.size() == weights.length;
+    public static boolean areValidCamerasAndWeights(final List<PinholeCamera> cameras, final double[] weights) {
+        return cameras != null && weights != null && cameras.size() == weights.length;
     }
 
     /**
@@ -204,7 +198,7 @@ public class WeightedDualAbsoluteQuadricEstimator extends
      * @return weights for each corresponding camera.
      */
     public double[] getWeights() {
-        return mWeights;
+        return weights;
     }
 
     /**
@@ -218,15 +212,14 @@ public class WeightedDualAbsoluteQuadricEstimator extends
      * @throws LockedException          if estimator is locked.
      */
     public final void setWeights(final double[] weights) throws LockedException {
-        if (!areValidCamerasAndWeights(mCameras, weights)) {
-            throw new IllegalArgumentException(
-                    "cameras and weights must have the same length");
+        if (!areValidCamerasAndWeights(cameras, weights)) {
+            throw new IllegalArgumentException("cameras and weights must have the same length");
         }
         if (isLocked()) {
             throw new LockedException();
         }
 
-        mWeights = weights;
+        this.weights = weights;
     }
 
     /**
@@ -241,19 +234,16 @@ public class WeightedDualAbsoluteQuadricEstimator extends
      *                                  don't have the same size or enough cameras.
      * @throws LockedException          if estimator is locked.
      */
-    public void setCamerasAndWeights(
-            final List<PinholeCamera> cameras,
-            final double[] weights) throws LockedException {
+    public void setCamerasAndWeights(final List<PinholeCamera> cameras, final double[] weights) throws LockedException {
         if (!areValidCamerasAndWeights(cameras, weights)) {
-            throw new IllegalArgumentException(
-                    "cameras and weights must have the same length");
+            throw new IllegalArgumentException("cameras and weights must have the same length");
         }
         if (isLocked()) {
             throw new LockedException();
         }
 
-        mCameras = cameras;
-        mWeights = weights;
+        this.cameras = cameras;
+        this.weights = weights;
     }
 
     /**
@@ -262,7 +252,7 @@ public class WeightedDualAbsoluteQuadricEstimator extends
      * @return true if weights have been provided, false otherwise.
      */
     public boolean areWeightsAvailable() {
-        return mWeights != null;
+        return weights != null;
     }
 
     /**
@@ -272,7 +262,7 @@ public class WeightedDualAbsoluteQuadricEstimator extends
      * @return maximum number of cameras.
      */
     public int getMaxCameras() {
-        return mMaxCameras;
+        return maxCameras;
     }
 
     /**
@@ -288,7 +278,7 @@ public class WeightedDualAbsoluteQuadricEstimator extends
             throw new LockedException();
         }
 
-        mMaxCameras = maxCameras;
+        this.maxCameras = maxCameras;
     }
 
     /**
@@ -298,7 +288,7 @@ public class WeightedDualAbsoluteQuadricEstimator extends
      * @return true if weights are sorted by default, false otherwise.
      */
     public boolean isSortWeightsEnabled() {
-        return mSortWeights;
+        return sortWeights;
     }
 
     /**
@@ -314,7 +304,7 @@ public class WeightedDualAbsoluteQuadricEstimator extends
             throw new LockedException();
         }
 
-        mSortWeights = sortWeights;
+        this.sortWeights = sortWeights;
     }
 
     /**
@@ -324,8 +314,7 @@ public class WeightedDualAbsoluteQuadricEstimator extends
      */
     @Override
     public boolean isReady() {
-        return super.isReady() && areWeightsAvailable() &&
-                mMaxCameras >= getMinNumberOfRequiredCameras();
+        return super.isReady() && areWeightsAvailable() && maxCameras >= getMinNumberOfRequiredCameras();
     }
 
     /**
@@ -341,8 +330,7 @@ public class WeightedDualAbsoluteQuadricEstimator extends
      *                                               numerically unstable.
      */
     @Override
-    public void estimate(final DualAbsoluteQuadric result)
-            throws LockedException, NotReadyException,
+    public void estimate(final DualAbsoluteQuadric result) throws LockedException, NotReadyException,
             DualAbsoluteQuadricEstimatorException {
 
         if (isLocked()) {
@@ -353,16 +341,15 @@ public class WeightedDualAbsoluteQuadricEstimator extends
         }
 
         try {
-            mLocked = true;
-            if (mListener != null) {
-                mListener.onEstimateStart(this);
+            locked = true;
+            if (listener != null) {
+                listener.onEstimateStart(this);
             }
 
-            if (mPrincipalPointAtOrigin) {
-                if (mZeroSkewness) {
-                    if (mFocalDistanceAspectRatioKnown) {
-                        estimateZeroSkewnessPrincipalPointAtOriginAndKnownFocalDistanceAspectRatio(
-                                result);
+            if (principalPointAtOrigin) {
+                if (zeroSkewness) {
+                    if (focalDistanceAspectRatioKnown) {
+                        estimateZeroSkewnessPrincipalPointAtOriginAndKnownFocalDistanceAspectRatio(result);
                     } else {
                         estimateZeroSkewnessAndPrincipalPointAtOrigin(result);
                     }
@@ -371,11 +358,11 @@ public class WeightedDualAbsoluteQuadricEstimator extends
                 }
             }
 
-            if (mListener != null) {
-                mListener.onEstimateEnd(this);
+            if (listener != null) {
+                listener.onEstimateEnd(this);
             }
         } finally {
-            mLocked = false;
+            locked = false;
         }
     }
 
@@ -386,8 +373,7 @@ public class WeightedDualAbsoluteQuadricEstimator extends
      */
     @Override
     public DualAbsoluteQuadricEstimatorType getType() {
-        return DualAbsoluteQuadricEstimatorType.
-                WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR;
+        return DualAbsoluteQuadricEstimatorType.WEIGHTED_DUAL_ABSOLUTE_QUADRIC_ESTIMATOR;
     }
 
     /**
@@ -399,8 +385,7 @@ public class WeightedDualAbsoluteQuadricEstimator extends
      */
     @Override
     public boolean areValidConstraints() {
-        return super.areValidConstraints() && isZeroSkewness() &&
-                isFocalDistanceAspectRatioKnown();
+        return super.areValidConstraints() && isZeroSkewness() && isFocalDistanceAspectRatioKnown();
     }
 
     /**
@@ -417,20 +402,18 @@ public class WeightedDualAbsoluteQuadricEstimator extends
      *                                               provided, where no additional data is really provided.
      */
     private void estimateZeroSkewnessPrincipalPointAtOriginAndKnownFocalDistanceAspectRatio(
-            DualAbsoluteQuadric result)
-            throws DualAbsoluteQuadricEstimatorException {
+            final DualAbsoluteQuadric result) throws DualAbsoluteQuadricEstimatorException {
 
         try {
-            final int nCams = Math.min(mCameras.size(), mMaxCameras);
+            final var nCams = Math.min(cameras.size(), maxCameras);
 
-            final WeightSelection selection = WeightSelection.selectWeights(mWeights,
-                    mSortWeights, nCams);
-            final boolean[] selected = selection.getSelected();
+            final var selection = WeightSelection.selectWeights(weights, sortWeights, nCams);
+            final var selected = selection.getSelected();
 
-            final Matrix a = new Matrix(BaseQuadric.N_PARAMS, BaseQuadric.N_PARAMS);
-            final Matrix row = new Matrix(4, BaseQuadric.N_PARAMS);
-            final Matrix transRow = new Matrix(BaseQuadric.N_PARAMS, 4);
-            final Matrix tmp = new Matrix(BaseQuadric.N_PARAMS, BaseQuadric.N_PARAMS);
+            final var a = new Matrix(BaseQuadric.N_PARAMS, BaseQuadric.N_PARAMS);
+            final var row = new Matrix(4, BaseQuadric.N_PARAMS);
+            final var transRow = new Matrix(BaseQuadric.N_PARAMS, 4);
+            final var tmp = new Matrix(BaseQuadric.N_PARAMS, BaseQuadric.N_PARAMS);
 
             Matrix cameraMatrix;
             double p11;
@@ -446,10 +429,10 @@ public class WeightedDualAbsoluteQuadricEstimator extends
             double p33;
             double p34;
             int eqCounter;
-            int cameraCounter = 0;
+            var cameraCounter = 0;
             double weight;
-            double previousNorm = 1.0;
-            for (final PinholeCamera camera : mCameras) {
+            var previousNorm = 1.0;
+            for (final var camera : cameras) {
                 if (selected[cameraCounter]) {
                     eqCounter = 0;
 
@@ -474,39 +457,26 @@ public class WeightedDualAbsoluteQuadricEstimator extends
                     p24 = cameraMatrix.getElementAt(1, 3);
                     p34 = cameraMatrix.getElementAt(2, 3);
 
-                    weight = mWeights[cameraCounter];
+                    weight = weights[cameraCounter];
 
                     // 1st row
-                    fill2ndRowAnd1stRowEquation(p11, p21,
-                            p12, p22,
-                            p13, p23,
-                            p14, p24, row, eqCounter);
+                    fill2ndRowAnd1stRowEquation(p11, p21, p12, p22, p13, p23, p14, p24, row, eqCounter);
                     applyWeight(row, eqCounter, weight);
                     eqCounter++;
 
                     // 2nd row
-                    fill3rdRowAnd1stRowEquation(p11, p31,
-                            p12, p32,
-                            p13, p33,
-                            p14, p34, row, eqCounter);
+                    fill3rdRowAnd1stRowEquation(p11, p31, p12, p32, p13, p33, p14, p34, row, eqCounter);
                     applyWeight(row, eqCounter, weight);
                     eqCounter++;
 
                     // 3rd row
-                    fill3rdRowAnd2ndRowEquation(p21, p31,
-                            p22, p32,
-                            p23, p33,
-                            p24, p34, row, eqCounter);
+                    fill3rdRowAnd2ndRowEquation(p21, p31, p22, p32, p23, p33, p24, p34, row, eqCounter);
                     applyWeight(row, eqCounter, weight);
                     eqCounter++;
 
                     // 4th row
-                    fill1stRowEqualTo2ndRowEquation(p11, p21,
-                            p12, p22,
-                            p13, p23,
-                            p14, p24, row, eqCounter);
+                    fill1stRowEqualTo2ndRowEquation(p11, p21, p12, p22, p13, p23, p14, p24, row, eqCounter);
                     applyWeight(row, eqCounter, weight);
-
 
                     // transRow = row'
                     row.transpose(transRow);
@@ -524,7 +494,7 @@ public class WeightedDualAbsoluteQuadricEstimator extends
                 cameraCounter++;
             }
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(a);
+            final var decomposer = new SingularValueDecomposer(a);
             enforceRank3IfNeeded(decomposer, result);
 
         } catch (final AlgebraException | SortingException | NumericalException e) {
@@ -544,21 +514,19 @@ public class WeightedDualAbsoluteQuadricEstimator extends
      *                                               sequences such as pure parallel translations are
      *                                               provided, where no additional data is really provided.
      */
-    private void estimateZeroSkewnessAndPrincipalPointAtOrigin(
-            final DualAbsoluteQuadric result)
+    private void estimateZeroSkewnessAndPrincipalPointAtOrigin(final DualAbsoluteQuadric result)
             throws DualAbsoluteQuadricEstimatorException {
 
         try {
-            final int nCams = Math.min(mCameras.size(), mMaxCameras);
+            final var nCams = Math.min(cameras.size(), maxCameras);
 
-            final WeightSelection selection = WeightSelection.selectWeights(mWeights,
-                    mSortWeights, nCams);
-            final boolean[] selected = selection.getSelected();
+            final var selection = WeightSelection.selectWeights(weights, sortWeights, nCams);
+            final var selected = selection.getSelected();
 
-            final Matrix a = new Matrix(BaseQuadric.N_PARAMS, BaseQuadric.N_PARAMS);
-            final Matrix row = new Matrix(3, BaseQuadric.N_PARAMS);
-            final Matrix transRow = new Matrix(BaseQuadric.N_PARAMS, 3);
-            final Matrix tmp = new Matrix(BaseQuadric.N_PARAMS, BaseQuadric.N_PARAMS);
+            final var a = new Matrix(BaseQuadric.N_PARAMS, BaseQuadric.N_PARAMS);
+            final var row = new Matrix(3, BaseQuadric.N_PARAMS);
+            final var transRow = new Matrix(BaseQuadric.N_PARAMS, 3);
+            final var tmp = new Matrix(BaseQuadric.N_PARAMS, BaseQuadric.N_PARAMS);
 
             Matrix cameraMatrix;
             double p11;
@@ -574,10 +542,10 @@ public class WeightedDualAbsoluteQuadricEstimator extends
             double p33;
             double p34;
             int eqCounter;
-            int cameraCounter = 0;
+            var cameraCounter = 0;
             double weight;
-            double previousNorm = 1.0;
-            for (final PinholeCamera camera : mCameras) {
+            var previousNorm = 1.0;
+            for (final var camera : cameras) {
                 if (selected[cameraCounter]) {
                     eqCounter = 0;
 
@@ -602,29 +570,20 @@ public class WeightedDualAbsoluteQuadricEstimator extends
                     p24 = cameraMatrix.getElementAt(1, 3);
                     p34 = cameraMatrix.getElementAt(2, 3);
 
-                    weight = mWeights[cameraCounter];
+                    weight = weights[cameraCounter];
 
                     // 1st row
-                    fill2ndRowAnd1stRowEquation(p11, p21,
-                            p12, p22,
-                            p13, p23,
-                            p14, p24, a, eqCounter);
+                    fill2ndRowAnd1stRowEquation(p11, p21, p12, p22, p13, p23, p14, p24, a, eqCounter);
                     applyWeight(row, eqCounter, weight);
                     eqCounter++;
 
                     // 2nd row
-                    fill3rdRowAnd1stRowEquation(p11, p31,
-                            p12, p32,
-                            p13, p33,
-                            p14, p34, a, eqCounter);
+                    fill3rdRowAnd1stRowEquation(p11, p31, p12, p32, p13, p33, p14, p34, a, eqCounter);
                     applyWeight(row, eqCounter, weight);
                     eqCounter++;
 
                     // 3rd row
-                    fill3rdRowAnd2ndRowEquation(p21, p31,
-                            p22, p32,
-                            p23, p33,
-                            p24, p34, a, eqCounter);
+                    fill3rdRowAnd2ndRowEquation(p21, p31, p22, p32, p23, p33, p24, p34, a, eqCounter);
                     applyWeight(row, eqCounter, weight);
 
                     // transRow = row'
@@ -643,7 +602,7 @@ public class WeightedDualAbsoluteQuadricEstimator extends
                 cameraCounter++;
             }
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(a);
+            final var decomposer = new SingularValueDecomposer(a);
             enforceRank3IfNeeded(decomposer, result);
 
         } catch (final AlgebraException | SortingException | NumericalException e) {
@@ -663,21 +622,19 @@ public class WeightedDualAbsoluteQuadricEstimator extends
      *                                               sequences such as pure parallel translations are
      *                                               provided, where no additional data is really provided.
      */
-    private void estimatePrincipalPointAtOrigin(
-            DualAbsoluteQuadric result)
+    private void estimatePrincipalPointAtOrigin(DualAbsoluteQuadric result)
             throws DualAbsoluteQuadricEstimatorException {
 
         try {
-            final int nCams = Math.min(mCameras.size(), mMaxCameras);
+            final var nCams = Math.min(cameras.size(), maxCameras);
 
-            final WeightSelection selection = WeightSelection.selectWeights(mWeights,
-                    mSortWeights, nCams);
-            final boolean[] selected = selection.getSelected();
+            final var selection = WeightSelection.selectWeights(weights, sortWeights, nCams);
+            final var selected = selection.getSelected();
 
-            final Matrix a = new Matrix(BaseQuadric.N_PARAMS, BaseQuadric.N_PARAMS);
-            final Matrix row = new Matrix(2, BaseQuadric.N_PARAMS);
-            final Matrix transRow = new Matrix(BaseQuadric.N_PARAMS, 2);
-            final Matrix tmp = new Matrix(BaseQuadric.N_PARAMS, BaseQuadric.N_PARAMS);
+            final var a = new Matrix(BaseQuadric.N_PARAMS, BaseQuadric.N_PARAMS);
+            final var row = new Matrix(2, BaseQuadric.N_PARAMS);
+            final var transRow = new Matrix(BaseQuadric.N_PARAMS, 2);
+            final var tmp = new Matrix(BaseQuadric.N_PARAMS, BaseQuadric.N_PARAMS);
 
             Matrix cameraMatrix;
             double p11;
@@ -693,10 +650,10 @@ public class WeightedDualAbsoluteQuadricEstimator extends
             double p33;
             double p34;
             int eqCounter;
-            int cameraCounter = 0;
+            var cameraCounter = 0;
             double weight;
-            double previousNorm = 1.0;
-            for (final PinholeCamera camera : mCameras) {
+            var previousNorm = 1.0;
+            for (final var camera : cameras) {
                 if (selected[cameraCounter]) {
                     eqCounter = 0;
 
@@ -721,21 +678,15 @@ public class WeightedDualAbsoluteQuadricEstimator extends
                     p24 = cameraMatrix.getElementAt(1, 3);
                     p34 = cameraMatrix.getElementAt(2, 3);
 
-                    weight = mWeights[cameraCounter];
+                    weight = weights[cameraCounter];
 
                     // 1st row
-                    fill3rdRowAnd1stRowEquation(p11, p31,
-                            p12, p32,
-                            p13, p33,
-                            p14, p34, a, eqCounter);
+                    fill3rdRowAnd1stRowEquation(p11, p31, p12, p32, p13, p33, p14, p34, a, eqCounter);
                     applyWeight(row, eqCounter, weight);
                     eqCounter++;
 
                     // 2nd row
-                    fill3rdRowAnd2ndRowEquation(p21, p31,
-                            p22, p32,
-                            p23, p33,
-                            p24, p34, a, eqCounter);
+                    fill3rdRowAnd2ndRowEquation(p21, p31, p22, p32, p23, p33, p24, p34, a, eqCounter);
                     applyWeight(row, eqCounter, weight);
 
                     // transRow = row'
@@ -754,7 +705,7 @@ public class WeightedDualAbsoluteQuadricEstimator extends
                 cameraCounter++;
             }
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(a);
+            final var decomposer = new SingularValueDecomposer(a);
             enforceRank3IfNeeded(decomposer, result);
 
         } catch (final AlgebraException | SortingException | NumericalException e) {
@@ -770,8 +721,8 @@ public class WeightedDualAbsoluteQuadricEstimator extends
      * @param weight weight to be applied.
      */
     private void applyWeight(final Matrix a, final int row, final double weight) {
-        final int cols = a.getColumns();
-        for (int i = 0; i < cols; i++) {
+        final var cols = a.getColumns();
+        for (var i = 0; i < cols; i++) {
             a.setElementAt(row, i, a.getElementAt(row, i) * weight);
         }
     }

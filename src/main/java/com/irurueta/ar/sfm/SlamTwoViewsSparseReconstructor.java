@@ -23,13 +23,9 @@ import com.irurueta.ar.slam.SlamEstimator;
  * correspondences in two views and using SLAM (with accelerometer and gyroscope
  * data) for overall scale estimation.
  */
-public class SlamTwoViewsSparseReconstructor extends
-        BaseSlamTwoViewsSparseReconstructor<
-                SlamCalibrationData,
-                SlamTwoViewsSparseReconstructorConfiguration,
-                SlamTwoViewsSparseReconstructor,
-                SlamTwoViewsSparseReconstructorListener,
-                SlamEstimator> {
+public class SlamTwoViewsSparseReconstructor extends BaseSlamTwoViewsSparseReconstructor<
+        SlamCalibrationData, SlamTwoViewsSparseReconstructorConfiguration, SlamTwoViewsSparseReconstructor,
+        SlamTwoViewsSparseReconstructorListener, SlamEstimator> {
 
     /**
      * Constructor.
@@ -51,8 +47,7 @@ public class SlamTwoViewsSparseReconstructor extends
      * @param listener listener in charge of handling events.
      * @throws NullPointerException if listener is not provided.
      */
-    public SlamTwoViewsSparseReconstructor(
-            final SlamTwoViewsSparseReconstructorListener listener) {
+    public SlamTwoViewsSparseReconstructor(final SlamTwoViewsSparseReconstructorListener listener) {
         this(new SlamTwoViewsSparseReconstructorConfiguration(), listener);
     }
 
@@ -65,8 +60,8 @@ public class SlamTwoViewsSparseReconstructor extends
      */
     @Override
     public boolean processOneView() {
-        if (!mRunning) {
-            mSlamEstimator = new SlamEstimator();
+        if (!running) {
+            slamEstimator = new SlamEstimator();
             setUpSlamEstimatorListener();
             setUpCalibrationData();
         }

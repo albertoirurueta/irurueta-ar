@@ -22,17 +22,14 @@ import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.MatrixRotation3D;
 import com.irurueta.geometry.PinholeCamera;
 import com.irurueta.geometry.PinholeCameraIntrinsicParameters;
-import com.irurueta.geometry.Point3D;
-import com.irurueta.geometry.Rotation3D;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class EstimatedCameraTest {
+class EstimatedCameraTest {
 
     private static final double MIN_ANGLE_DEGREES = -30.0;
     private static final double MAX_ANGLE_DEGREES = 30.0;
@@ -50,8 +47,8 @@ public class EstimatedCameraTest {
     private static final double MAX_RANDOM_VALUE = 100.0;
 
     @Test
-    public void testConstructor() {
-        final EstimatedCamera ec = new EstimatedCamera();
+    void testConstructor() {
+        final var ec = new EstimatedCamera();
 
         // check default values
         assertNull(ec.getId());
@@ -62,8 +59,8 @@ public class EstimatedCameraTest {
     }
 
     @Test
-    public void testGetSetId() {
-        final EstimatedCamera ec = new EstimatedCamera();
+    void testGetSetId() {
+        final var ec = new EstimatedCamera();
 
         // check default value
         assertNull(ec.getId());
@@ -76,8 +73,8 @@ public class EstimatedCameraTest {
     }
 
     @Test
-    public void testGetSetViewId() {
-        final EstimatedCamera ec = new EstimatedCamera();
+    void testGetSetViewId() {
+        final var ec = new EstimatedCamera();
 
         // check default value
         assertEquals(0, ec.getViewId());
@@ -90,14 +87,14 @@ public class EstimatedCameraTest {
     }
 
     @Test
-    public void testGetSetCamera() {
-        final EstimatedCamera ec = new EstimatedCamera();
+    void testGetSetCamera() {
+        final var ec = new EstimatedCamera();
 
         // check default value
         assertNull(ec.getCamera());
 
         // set new value
-        final PinholeCamera camera = new PinholeCamera();
+        final var camera = new PinholeCamera();
         ec.setCamera(camera);
 
         // check correctness
@@ -105,8 +102,8 @@ public class EstimatedCameraTest {
     }
 
     @Test
-    public void testGetSetQualityScore() {
-        final EstimatedCamera ec = new EstimatedCamera();
+    void testGetSetQualityScore() {
+        final var ec = new EstimatedCamera();
 
         // check default value
         assertEquals(EstimatedCamera.DEFAULT_QUALITY_SCORE, ec.getQualityScore(), 0.0);
@@ -119,14 +116,14 @@ public class EstimatedCameraTest {
     }
 
     @Test
-    public void testGetSetCovariance() throws WrongSizeException {
-        final EstimatedCamera ec = new EstimatedCamera();
+    void testGetSetCovariance() throws WrongSizeException {
+        final var ec = new EstimatedCamera();
 
         // check default value
         assertNull(ec.getCovariance());
 
         // set new value
-        final Matrix cov = new Matrix(12, 12);
+        final var cov = new Matrix(12, 12);
         ec.setCovariance(cov);
 
         // check correctness
@@ -134,50 +131,40 @@ public class EstimatedCameraTest {
     }
 
     @Test
-    public void testSerializeDeserialize() throws WrongSizeException, IOException,
-            ClassNotFoundException {
-        final EstimatedCamera ec1 = new EstimatedCamera();
+    void testSerializeDeserialize() throws WrongSizeException, IOException, ClassNotFoundException {
+        final var ec1 = new EstimatedCamera();
 
         // set new values
         ec1.setId("id");
         ec1.setViewId(1);
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double alphaEuler = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-        final double betaEuler = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
-        final double gammaEuler = randomizer.nextDouble(MIN_ANGLE_DEGREES,
-                MAX_ANGLE_DEGREES) * Math.PI / 180.0;
+        final var randomizer = new UniformRandomizer();
+        final var alphaEuler = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var betaEuler = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final var gammaEuler = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
 
-        final double horizontalFocalLength = randomizer.nextDouble(
-                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-        final double verticalFocalLength = randomizer.nextDouble(
-                MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
-        final double skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
-        final double horizontalPrincipalPoint = randomizer.nextDouble(
-                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
-        final double verticalPrincipalPoint = randomizer.nextDouble(
-                MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final var horizontalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final var verticalFocalLength = randomizer.nextDouble(MIN_FOCAL_LENGTH, MAX_FOCAL_LENGTH);
+        final var skewness = randomizer.nextDouble(MIN_SKEWNESS, MAX_SKEWNESS);
+        final var horizontalPrincipalPoint = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
+        final var verticalPrincipalPoint = randomizer.nextDouble(MIN_PRINCIPAL_POINT, MAX_PRINCIPAL_POINT);
 
-        final Point3D center = new InhomogeneousPoint3D(
+        final var center = new InhomogeneousPoint3D(
                 randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                 randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                 randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
 
-        final Rotation3D rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
+        final var rotation = new MatrixRotation3D(alphaEuler, betaEuler, gammaEuler);
 
-        final PinholeCameraIntrinsicParameters intrinsic =
-                new PinholeCameraIntrinsicParameters(horizontalFocalLength,
-                        verticalFocalLength, horizontalPrincipalPoint,
-                        verticalPrincipalPoint, skewness);
+        final var intrinsic = new PinholeCameraIntrinsicParameters(horizontalFocalLength, verticalFocalLength,
+                horizontalPrincipalPoint, verticalPrincipalPoint, skewness);
 
-        final PinholeCamera camera = new PinholeCamera(intrinsic, rotation, center);
+        final var camera = new PinholeCamera(intrinsic, rotation, center);
 
         ec1.setCamera(camera);
         ec1.setQualityScore(0.5);
 
-        final Matrix cov = new Matrix(12, 12);
+        final var cov = new Matrix(12, 12);
         ec1.setCovariance(cov);
 
         // check
@@ -188,8 +175,8 @@ public class EstimatedCameraTest {
         assertSame(cov, ec1.getCovariance());
 
         // serialize and deserialize
-        final byte[] bytes = SerializationHelper.serialize(ec1);
-        final EstimatedCamera ec2 = SerializationHelper.deserialize(bytes);
+        final var bytes = SerializationHelper.serialize(ec1);
+        final var ec2 = SerializationHelper.<EstimatedCamera>deserialize(bytes);
 
         // check
         assertEquals(ec1.getId(), ec2.getId());

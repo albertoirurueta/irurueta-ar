@@ -34,8 +34,7 @@ import java.util.List;
  * Non-robust fundamental matrix estimator for Affine camera projection model.
  * This implementation uses 4 matched 2D points on left and right views.
  */
-public class AffineFundamentalMatrixEstimator extends
-        FundamentalMatrixEstimator {
+public class AffineFundamentalMatrixEstimator extends FundamentalMatrixEstimator {
 
     /**
      * Constant indicating that by default an LMSE solution is not allowed.
@@ -57,21 +56,21 @@ public class AffineFundamentalMatrixEstimator extends
      * Indicates whether an LMSE (the Least Mean Square Error) solution is allowed
      * or not.
      */
-    private boolean mAllowLMSESolution;
+    private boolean allowLMSESolution;
 
     /**
      * Indicates whether provided matched 2D points must be normalized to
      * increase the accuracy of the estimation.
      */
-    private boolean mNormalizePoints;
+    private boolean normalizePoints;
 
     /**
      * Constructor.
      */
     public AffineFundamentalMatrixEstimator() {
         super();
-        mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
-        mNormalizePoints = DEFAULT_NORMALIZE_POINT_CORRESPONDENCES;
+        allowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
+        normalizePoints = DEFAULT_NORMALIZE_POINT_CORRESPONDENCES;
     }
 
     /**
@@ -82,11 +81,10 @@ public class AffineFundamentalMatrixEstimator extends
      * @throws IllegalArgumentException if provided list of points do not
      *                                  have the same length.
      */
-    public AffineFundamentalMatrixEstimator(final List<Point2D> leftPoints,
-                                            final List<Point2D> rightPoints) {
+    public AffineFundamentalMatrixEstimator(final List<Point2D> leftPoints, final List<Point2D> rightPoints) {
         super(leftPoints, rightPoints);
-        mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
-        mNormalizePoints = DEFAULT_NORMALIZE_POINT_CORRESPONDENCES;
+        allowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
+        normalizePoints = DEFAULT_NORMALIZE_POINT_CORRESPONDENCES;
     }
 
     /**
@@ -99,7 +97,7 @@ public class AffineFundamentalMatrixEstimator extends
      * @return true if an LMSE solution is allowed, false otherwise.
      */
     public boolean isLMSESolutionAllowed() {
-        return mAllowLMSESolution;
+        return allowLMSESolution;
     }
 
     /**
@@ -118,7 +116,7 @@ public class AffineFundamentalMatrixEstimator extends
             throw new LockedException();
         }
 
-        mAllowLMSESolution = allowed;
+        allowLMSESolution = allowed;
     }
 
     /**
@@ -128,7 +126,7 @@ public class AffineFundamentalMatrixEstimator extends
      * @return true if points must be normalized, false otherwise.
      */
     public boolean arePointsNormalized() {
-        return mNormalizePoints;
+        return normalizePoints;
     }
 
     /**
@@ -140,13 +138,12 @@ public class AffineFundamentalMatrixEstimator extends
      * @throws LockedException if this instance is locked because an estimation
      *                         is in progress.
      */
-    public void setPointsNormalized(final boolean normalizePoints)
-            throws LockedException {
+    public void setPointsNormalized(final boolean normalizePoints) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
 
-        mNormalizePoints = normalizePoints;
+        this.normalizePoints = normalizePoints;
     }
 
     /**
@@ -161,9 +158,8 @@ public class AffineFundamentalMatrixEstimator extends
      */
     @Override
     public boolean isReady() {
-        return mLeftPoints != null && mRightPoints != null &&
-                mLeftPoints.size() == mRightPoints.size() &&
-                mLeftPoints.size() >= MIN_REQUIRED_POINTS;
+        return leftPoints != null && rightPoints != null && leftPoints.size() == rightPoints.size()
+                && leftPoints.size() >= MIN_REQUIRED_POINTS;
     }
 
     /**
@@ -180,8 +176,7 @@ public class AffineFundamentalMatrixEstimator extends
      */
     @SuppressWarnings("DuplicatedCode")
     @Override
-    public FundamentalMatrix estimate() throws LockedException,
-            NotReadyException, FundamentalMatrixEstimatorException {
+    public FundamentalMatrix estimate() throws LockedException, NotReadyException, FundamentalMatrixEstimatorException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -189,29 +184,28 @@ public class AffineFundamentalMatrixEstimator extends
             throw new NotReadyException();
         }
 
-        mLocked = true;
+        locked = true;
 
-        if (mListener != null) {
-            mListener.onEstimateStart(this);
+        if (listener != null) {
+            listener.onEstimateStart(this);
         }
 
-        final int nPoints = mLeftPoints.size();
+        final var nPoints = leftPoints.size();
 
         try {
             ProjectiveTransformation2D leftNormalization = null;
             ProjectiveTransformation2D rightNormalization = null;
             final List<Point2D> leftPoints;
             final List<Point2D> rightPoints;
-            if (mNormalizePoints) {
+            if (normalizePoints) {
                 // normalize points on left view
-                final Point2DNormalizer normalizer = new Point2DNormalizer(
-                        mLeftPoints);
+                final var normalizer = new Point2DNormalizer(this.leftPoints);
                 normalizer.compute();
 
                 leftNormalization = normalizer.getTransformation();
 
                 // normalize points on right view
-                normalizer.setPoints(mRightPoints);
+                normalizer.setPoints(this.rightPoints);
                 normalizer.compute();
 
                 rightNormalization = normalizer.getTransformation();
@@ -220,13 +214,11 @@ public class AffineFundamentalMatrixEstimator extends
                 leftNormalization.normalize();
                 rightNormalization.normalize();
 
-                leftPoints = leftNormalization.transformPointsAndReturnNew(
-                        mLeftPoints);
-                rightPoints = rightNormalization.transformPointsAndReturnNew(
-                        mRightPoints);
+                leftPoints = leftNormalization.transformPointsAndReturnNew(this.leftPoints);
+                rightPoints = rightNormalization.transformPointsAndReturnNew(this.rightPoints);
             } else {
-                leftPoints = mLeftPoints;
-                rightPoints = mRightPoints;
+                leftPoints = this.leftPoints;
+                rightPoints = this.rightPoints;
             }
 
             final Matrix a;
@@ -250,7 +242,7 @@ public class AffineFundamentalMatrixEstimator extends
             double value3;
             double value4;
             double rowNorm;
-            for (int i = 0; i < nPoints; i++) {
+            for (var i = 0; i < nPoints; i++) {
                 leftPoint = leftPoints.get(i);
                 rightPoint = rightPoints.get(i);
 
@@ -274,9 +266,9 @@ public class AffineFundamentalMatrixEstimator extends
                 value4 = homLeftW * homRightW;
 
                 // normalize row to increase accuracy
-                rowNorm = Math.sqrt(Math.pow(value0, 2.0) +
-                        Math.pow(value1, 2.0) + Math.pow(value2, 2.0) +
-                        Math.pow(value3, 2.0) + Math.pow(value4, 2.0));
+                rowNorm = Math.sqrt(Math.pow(value0, 2.0)
+                        + Math.pow(value1, 2.0) + Math.pow(value2, 2.0)
+                        + Math.pow(value3, 2.0) + Math.pow(value4, 2.0));
 
                 a.setElementAt(i, 0, value0 / rowNorm);
                 a.setElementAt(i, 1, value1 / rowNorm);
@@ -284,13 +276,12 @@ public class AffineFundamentalMatrixEstimator extends
                 a.setElementAt(i, 3, value3 / rowNorm);
                 a.setElementAt(i, 4, value4 / rowNorm);
 
-                if (!isLMSESolutionAllowed() &&
-                        i == (MIN_REQUIRED_POINTS - 1)) {
+                if (!isLMSESolutionAllowed() && i == (MIN_REQUIRED_POINTS - 1)) {
                     break;
                 }
             }
 
-            final SingularValueDecomposer decomposer = new SingularValueDecomposer(a);
+            final var decomposer = new SingularValueDecomposer(a);
 
             decomposer.decompose();
 
@@ -303,12 +294,11 @@ public class AffineFundamentalMatrixEstimator extends
                 throw new FundamentalMatrixEstimatorException();
             }
 
-            Matrix v = decomposer.getV();
+            var v = decomposer.getV();
 
             // The fundamental matrix is contained in vector form on the last
             // column of V, we reshape such vector into a 3x3 matrix
-            Matrix fundMatrix = new Matrix(
-                    FundamentalMatrix.FUNDAMENTAL_MATRIX_ROWS,
+            var fundMatrix = new Matrix(FundamentalMatrix.FUNDAMENTAL_MATRIX_ROWS,
                     FundamentalMatrix.FUNDAMENTAL_MATRIX_COLS);
             fundMatrix.setElementAt(0, 2, v.getElementAt(0, 4));
             fundMatrix.setElementAt(1, 2, v.getElementAt(1, 4));
@@ -316,11 +306,10 @@ public class AffineFundamentalMatrixEstimator extends
             fundMatrix.setElementAt(2, 1, v.getElementAt(3, 4));
             fundMatrix.setElementAt(2, 2, v.getElementAt(4, 4));
 
-            if (mNormalizePoints && leftNormalization != null) {
+            if (normalizePoints && leftNormalization != null) {
                 // denormalize fundMatrix
-                final Matrix transposedRightTransformationMatrix =
-                        rightNormalization.asMatrix().transposeAndReturnNew();
-                final Matrix leftTransformationMatrix = leftNormalization.asMatrix();
+                final var transposedRightTransformationMatrix = rightNormalization.asMatrix().transposeAndReturnNew();
+                final var leftTransformationMatrix = leftNormalization.asMatrix();
 
                 // compute fundMatrix = transposedRightTransformationMatrix *
                 // fundMatrix * leftTransformationMatrix
@@ -330,7 +319,7 @@ public class AffineFundamentalMatrixEstimator extends
 
                 // normalize by Frobenius norm to increase accuracy after point
                 // de-normalization
-                final double norm = Utils.normF(fundMatrix);
+                final var norm = Utils.normF(fundMatrix);
                 fundMatrix.multiplyByScalar(1.0 / norm);
             }
 
@@ -340,16 +329,16 @@ public class AffineFundamentalMatrixEstimator extends
             decomposer.decompose();
 
             // if rank is not already correct, then we enforce it
-            final int rank = decomposer.getRank();
+            final var rank = decomposer.getRank();
             if (rank > FundamentalMatrix.FUNDAMENTAL_MATRIX_RANK) {
                 // rank needs to be reduced
-                final Matrix u = decomposer.getU();
-                final Matrix w = decomposer.getW();
+                final var u = decomposer.getU();
+                final var w = decomposer.getW();
                 v = decomposer.getV();
 
                 // transpose V
                 v.transpose();
-                final Matrix transV = v;
+                final var transV = v;
 
                 // set last singular value to zero to enforce rank 2
                 w.setElementAt(2, 2, 0.0);
@@ -364,10 +353,10 @@ public class AffineFundamentalMatrixEstimator extends
                 throw new FundamentalMatrixEstimatorException();
             }
 
-            final FundamentalMatrix result = new FundamentalMatrix(fundMatrix);
+            final var result = new FundamentalMatrix(fundMatrix);
 
-            if (mListener != null) {
-                mListener.onEstimateEnd(this, result);
+            if (listener != null) {
+                listener.onEstimateEnd(this, result);
             }
 
             return result;
@@ -375,7 +364,7 @@ public class AffineFundamentalMatrixEstimator extends
         } catch (final InvalidFundamentalMatrixException | AlgebraException | NormalizerException e) {
             throw new FundamentalMatrixEstimatorException(e);
         } finally {
-            mLocked = false;
+            locked = false;
         }
     }
 

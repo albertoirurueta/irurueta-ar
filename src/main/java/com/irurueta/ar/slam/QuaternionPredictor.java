@@ -59,28 +59,26 @@ public class QuaternionPredictor {
             final double dt, final boolean exactMethod, final Quaternion result, final Matrix jacobianQ,
             final Matrix jacobianW) {
 
-        if (jacobianQ != null && (jacobianQ.getRows() != Quaternion.N_PARAMS ||
-                jacobianQ.getColumns() != Quaternion.N_PARAMS)) {
+        if (jacobianQ != null && (jacobianQ.getRows() != Quaternion.N_PARAMS
+                || jacobianQ.getColumns() != Quaternion.N_PARAMS)) {
             throw new IllegalArgumentException("jacobian wrt q must be 4x4");
         }
-        if (jacobianW != null && (jacobianW.getRows() != Quaternion.N_PARAMS ||
-                jacobianW.getColumns() != ANGULAR_SPEED_COMPONENTS)) {
+        if (jacobianW != null && (jacobianW.getRows() != Quaternion.N_PARAMS
+                || jacobianW.getColumns() != ANGULAR_SPEED_COMPONENTS)) {
             throw new IllegalArgumentException("jacobian wrt w must be 4x3");
         }
 
-        final double[] w = new double[]{wx, wy, wz};
+        final var w = new double[]{wx, wy, wz};
 
         if (exactMethod) {
             // exact jacobians and rotation
-
             ArrayUtils.multiplyByScalar(w, dt, w);
             Quaternion.rotationVectorToQuaternion(w, result, jacobianW);
             Matrix jacobianQ2 = null;
             if (jacobianW != null) {
                 jacobianW.multiplyByScalar(dt);
                 try {
-                    jacobianQ2 = new Matrix(Quaternion.N_PARAMS,
-                            Quaternion.N_PARAMS);
+                    jacobianQ2 = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);
                 } catch (final WrongSizeException ignore) {
                     // never happens
                 }
@@ -97,9 +95,9 @@ public class QuaternionPredictor {
             }
         } else {
             // tustin integration - fits with jacobians
-            Matrix skewW = RotationUtils.w2omega(w);
+            var skewW = RotationUtils.w2omega(w);
             try {
-                final Matrix qMatrix = new Matrix(Quaternion.N_PARAMS, 1);
+                final var qMatrix = new Matrix(Quaternion.N_PARAMS, 1);
                 qMatrix.setElementAtIndex(0, q.getA());
                 qMatrix.setElementAtIndex(1, q.getB());
                 qMatrix.setElementAtIndex(2, q.getC());
@@ -125,8 +123,7 @@ public class QuaternionPredictor {
                     w[2] = wz;
 
                     skewW = RotationUtils.w2omega(w);
-                    jacobianQ.copyFrom(Matrix.identity(Quaternion.N_PARAMS,
-                            Quaternion.N_PARAMS));
+                    jacobianQ.copyFrom(Matrix.identity(Quaternion.N_PARAMS, Quaternion.N_PARAMS));
                     jacobianQ.add(skewW);
                     jacobianQ.multiplyByScalar(0.5 * dt);
                 } catch (final WrongSizeException ignore) {
@@ -160,13 +157,11 @@ public class QuaternionPredictor {
      */
     public static void predict(
             final Quaternion q, final double[] w, final double dt,
-            final boolean exactMethod, final Quaternion result, final Matrix jacobianQ,
-            final Matrix jacobianW) {
+            final boolean exactMethod, final Quaternion result, final Matrix jacobianQ, final Matrix jacobianW) {
         if (w.length != ANGULAR_SPEED_COMPONENTS) {
             throw new IllegalArgumentException("w must have length 3");
         }
-        predict(q, w[0], w[1], w[2], dt, exactMethod, result, jacobianQ,
-                jacobianW);
+        predict(q, w[0], w[1], w[2], dt, exactMethod, result, jacobianQ, jacobianW);
     }
 
     /**
@@ -187,9 +182,8 @@ public class QuaternionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static void predict(
-            final Quaternion q, final double wx, final double wy,
-            final double wz, final double dt, final Quaternion result, final Matrix jacobianQ,
-            final Matrix jacobianW) {
+            final Quaternion q, final double wx, final double wy, final double wz, final double dt,
+            final Quaternion result, final Matrix jacobianQ, final Matrix jacobianW) {
         predict(q, wx, wy, wz, dt, true, result, jacobianQ, jacobianW);
     }
 
@@ -210,8 +204,8 @@ public class QuaternionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static void predict(
-            final Quaternion q, final double[] w, final double dt,
-            final Quaternion result, final Matrix jacobianQ, final Matrix jacobianW) {
+            final Quaternion q, final double[] w, final double dt, final Quaternion result, final Matrix jacobianQ,
+            final Matrix jacobianW) {
         predict(q, w, dt, true, result, jacobianQ, jacobianW);
     }
 
@@ -230,8 +224,8 @@ public class QuaternionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static void predict(
-            final Quaternion q, final double wx, final double wy,
-            final double wz, final double dt, final boolean exactMethod, final Quaternion result) {
+            final Quaternion q, final double wx, final double wy, final double wz, final double dt,
+            final boolean exactMethod, final Quaternion result) {
         predict(q, wx, wy, wz, dt, exactMethod, result, null, null);
     }
 
@@ -250,8 +244,7 @@ public class QuaternionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static void predict(
-            final Quaternion q, final double[] w, final double dt,
-            final boolean exactMethod, final Quaternion result) {
+            final Quaternion q, final double[] w, final double dt, final boolean exactMethod, final Quaternion result) {
         predict(q, w, dt, exactMethod, result, null, null);
     }
 
@@ -269,8 +262,8 @@ public class QuaternionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static void predict(
-            final Quaternion q, final double wx, final double wy,
-            final double wz, final double dt, final Quaternion result) {
+            final Quaternion q, final double wx, final double wy, final double wz, final double dt,
+            final Quaternion result) {
         predict(q, wx, wy, wz, dt, result, null, null);
     }
 
@@ -288,8 +281,7 @@ public class QuaternionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static void predict(
-            final Quaternion q, final double[] w, final double dt,
-            final Quaternion result) {
+            final Quaternion q, final double[] w, final double dt, final Quaternion result) {
         predict(q, w, dt, result, null, null);
     }
 
@@ -312,10 +304,9 @@ public class QuaternionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static Quaternion predict(
-            final Quaternion q, final double wx,
-            final double wy, final double wz, final double dt, final boolean exactMethod,
-            final Matrix jacobianQ, final Matrix jacobianW) {
-        final Quaternion result = new Quaternion();
+            final Quaternion q, final double wx, final double wy, final double wz, final double dt,
+            final boolean exactMethod, final Matrix jacobianQ, final Matrix jacobianW) {
+        final var result = new Quaternion();
         predict(q, wx, wy, wz, dt, exactMethod, result, jacobianQ, jacobianW);
         return result;
     }
@@ -338,10 +329,9 @@ public class QuaternionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static Quaternion predict(
-            final Quaternion q, final double[] w,
-            final double dt, final boolean exactMethod,
-            final Matrix jacobianQ, final Matrix jacobianW) {
-        final Quaternion result = new Quaternion();
+            final Quaternion q, final double[] w, final double dt, final boolean exactMethod, final Matrix jacobianQ,
+            final Matrix jacobianW) {
+        final var result = new Quaternion();
         predict(q, w, dt, exactMethod, result, jacobianQ, jacobianW);
         return result;
     }
@@ -364,9 +354,9 @@ public class QuaternionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static Quaternion predict(
-            final Quaternion q, final double wx, final double wy, final double wz,
-            final double dt, final Matrix jacobianQ, final Matrix jacobianW) {
-        final Quaternion result = new Quaternion();
+            final Quaternion q, final double wx, final double wy, final double wz, final double dt,
+            final Matrix jacobianQ, final Matrix jacobianW) {
+        final var result = new Quaternion();
         predict(q, wx, wy, wz, dt, result, jacobianQ, jacobianW);
         return result;
     }
@@ -388,9 +378,8 @@ public class QuaternionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static Quaternion predict(
-            final Quaternion q, final double[] w,
-            final double dt, final Matrix jacobianQ, final Matrix jacobianW) {
-        final Quaternion result = new Quaternion();
+            final Quaternion q, final double[] w, final double dt, final Matrix jacobianQ, final Matrix jacobianW) {
+        final var result = new Quaternion();
         predict(q, w, dt, result, jacobianQ, jacobianW);
         return result;
     }
@@ -410,9 +399,9 @@ public class QuaternionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static Quaternion predict(
-            final Quaternion q, final double wx, final double wy, final double wz,
-            final double dt, final boolean exactMethod) {
-        final Quaternion result = new Quaternion();
+            final Quaternion q, final double wx, final double wy, final double wz, final double dt,
+            final boolean exactMethod) {
+        final var result = new Quaternion();
         predict(q, wx, wy, wz, dt, exactMethod, result);
         return result;
     }
@@ -431,9 +420,8 @@ public class QuaternionPredictor {
      * @throws IllegalArgumentException if w does not have length 3
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
-    public static Quaternion predict(final Quaternion q, final double[] w,
-                                     final double dt, final boolean exactMethod) {
-        final Quaternion result = new Quaternion();
+    public static Quaternion predict(final Quaternion q, final double[] w, final double dt, final boolean exactMethod) {
+        final var result = new Quaternion();
         predict(q, w, dt, exactMethod, result);
         return result;
     }
@@ -451,9 +439,9 @@ public class QuaternionPredictor {
      * @return a new quaternion containing updated quaternion.
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
-    public static Quaternion predict(final Quaternion q, final double wx,
-                                     final double wy, final double wz, final double dt) {
-        final Quaternion result = new Quaternion();
+    public static Quaternion predict(final Quaternion q, final double wx, final double wy, final double wz,
+                                     final double dt) {
+        final var result = new Quaternion();
         predict(q, wx, wy, wz, dt, result);
         return result;
     }
@@ -471,9 +459,8 @@ public class QuaternionPredictor {
      * @throws IllegalArgumentException if w does not have length 3.
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
-    public static Quaternion predict(final Quaternion q, final double[] w,
-                                     final double dt) {
-        final Quaternion result = new Quaternion();
+    public static Quaternion predict(final Quaternion q, final double[] w, final double dt) {
+        final var result = new Quaternion();
         predict(q, w, dt, result);
         return result;
     }
@@ -497,11 +484,9 @@ public class QuaternionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static void predict(
-            final Quaternion q, final double wx, final double wy, final double wz,
-            final boolean exactMethod, final Quaternion result, final Matrix jacobianQ,
-            final Matrix jacobianW) {
-        predict(q, wx, wy, wz, 1.0, exactMethod, result, jacobianQ,
-                jacobianW);
+            final Quaternion q, final double wx, final double wy, final double wz, final boolean exactMethod,
+            final Quaternion result, final Matrix jacobianQ, final Matrix jacobianW) {
+        predict(q, wx, wy, wz, 1.0, exactMethod, result, jacobianQ, jacobianW);
     }
 
     /**
@@ -522,9 +507,8 @@ public class QuaternionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static void predict(
-            final Quaternion q, final double[] w,
-            final boolean exactMethod, final Quaternion result, final Matrix jacobianQ,
-            final Matrix jacobianW) {
+            final Quaternion q, final double[] w, final boolean exactMethod, final Quaternion result,
+            final Matrix jacobianQ, final Matrix jacobianW) {
         predict(q, w, 1.0, exactMethod, result, jacobianQ, jacobianW);
     }
 
@@ -545,8 +529,8 @@ public class QuaternionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static void predict(
-            final Quaternion q, final double wx, final double wy, final double wz,
-            final Quaternion result, final Matrix jacobianQ, final Matrix jacobianW) {
+            final Quaternion q, final double wx, final double wy, final double wz, final Quaternion result,
+            final Matrix jacobianQ, final Matrix jacobianW) {
         predict(q, wx, wy, wz, 1.0, result, jacobianQ, jacobianW);
     }
 
@@ -566,8 +550,8 @@ public class QuaternionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static void predict(
-            final Quaternion q, final double[] w,
-            final Quaternion result, final Matrix jacobianQ, final Matrix jacobianW) {
+            final Quaternion q, final double[] w, final Quaternion result, final Matrix jacobianQ,
+            final Matrix jacobianW) {
         predict(q, w, 1.0, result, jacobianQ, jacobianW);
     }
 
@@ -586,8 +570,8 @@ public class QuaternionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static void predict(
-            final Quaternion q, final double wx, final double wy,
-            final double wz, final boolean exactMethod, final Quaternion result) {
+            final Quaternion q, final double wx, final double wy, final double wz, final boolean exactMethod,
+            final Quaternion result) {
         predict(q, wx, wy, wz, 1.0, exactMethod, result);
     }
 
@@ -607,8 +591,7 @@ public class QuaternionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static void predict(
-            final Quaternion q, final double[] w,
-            final boolean exactMethod, final Quaternion result) {
+            final Quaternion q, final double[] w, final boolean exactMethod, final Quaternion result) {
         predict(q, w, 1.0, exactMethod, result);
     }
 
@@ -625,8 +608,7 @@ public class QuaternionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static void predict(
-            final Quaternion q, final double wx, final double wy, final double wz,
-            final Quaternion result) {
+            final Quaternion q, final double wx, final double wy, final double wz, final Quaternion result) {
         predict(q, wx, wy, wz, 1.0, result);
     }
 
@@ -643,8 +625,7 @@ public class QuaternionPredictor {
      *                                  have proper size.
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
-    public static void predict(final Quaternion q, final double[] w,
-                               final Quaternion result) {
+    public static void predict(final Quaternion q, final double[] w, final Quaternion result) {
         predict(q, w, 1.0, result);
     }
 
@@ -667,8 +648,8 @@ public class QuaternionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static Quaternion predict(
-            final Quaternion q, final double wx, final double wy, final double wz,
-            final boolean exactMethod, final Matrix jacobianQ, final Matrix jacobianW) {
+            final Quaternion q, final double wx, final double wy, final double wz, final boolean exactMethod,
+            final Matrix jacobianQ, final Matrix jacobianW) {
         return predict(q, wx, wy, wz, 1.0, exactMethod, jacobianQ, jacobianW);
     }
 
@@ -690,8 +671,8 @@ public class QuaternionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static Quaternion predict(
-            final Quaternion q, final double[] w,
-            final boolean exactMethod, final Matrix jacobianQ, final Matrix jacobianW) {
+            final Quaternion q, final double[] w, final boolean exactMethod, final Matrix jacobianQ,
+            final Matrix jacobianW) {
         return predict(q, w, 1.0, exactMethod, jacobianQ, jacobianW);
     }
 
@@ -712,8 +693,8 @@ public class QuaternionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static Quaternion predict(
-            final Quaternion q, final double wx, final double wy, final double wz,
-            final Matrix jacobianQ, final Matrix jacobianW) {
+            final Quaternion q, final double wx, final double wy, final double wz, final Matrix jacobianQ,
+            final Matrix jacobianW) {
         return predict(q, wx, wy, wz, 1.0, jacobianQ, jacobianW);
     }
 
@@ -732,8 +713,8 @@ public class QuaternionPredictor {
      *                                  have proper size.
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
-    public static Quaternion predict(final Quaternion q, final double[] w,
-                                     final Matrix jacobianQ, final Matrix jacobianW) {
+    public static Quaternion predict(final Quaternion q, final double[] w, final Matrix jacobianQ,
+                                     final Matrix jacobianW) {
         return predict(q, w, 1.0, jacobianQ, jacobianW);
     }
 
@@ -752,8 +733,7 @@ public class QuaternionPredictor {
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
     public static Quaternion predict(
-            final Quaternion q, final double wx, final double wy, final double wz,
-            final boolean exactMethod) {
+            final Quaternion q, final double wx, final double wy, final double wz, final boolean exactMethod) {
         return predict(q, wx, wy, wz, 1.0, exactMethod);
     }
 
@@ -770,8 +750,7 @@ public class QuaternionPredictor {
      * @return a new quaternion containing updated quaternion.
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
-    public static Quaternion predict(final Quaternion q, final double[] w,
-                                     final boolean exactMethod) {
+    public static Quaternion predict(final Quaternion q, final double[] w, final boolean exactMethod) {
         return predict(q, w, 1.0, exactMethod);
     }
 
@@ -787,8 +766,7 @@ public class QuaternionPredictor {
      * @return a new quaternion containing updated quaternion.
      * @see <a href="https://github.com/joansola/slamtb">qpredict.m at https://github.com/joansola/slamtb</a>
      */
-    public static Quaternion predict(final Quaternion q, final double wx,
-                                     final double wy, final double wz) {
+    public static Quaternion predict(final Quaternion q, final double wx, final double wy, final double wz) {
         return predict(q, wx, wy, wz, 1.0);
     }
 
@@ -828,25 +806,23 @@ public class QuaternionPredictor {
      *                                  have proper size.
      */
     public static void predictWithRotationAdjustment(
-            final Quaternion q, final Quaternion dq,
-            final double wx, final double wy, final double wz, final double dt,
-            final Quaternion result, final Matrix jacobianQ, final Matrix jacobianDQ,
-            final Matrix jacobianW) {
+            final Quaternion q, final Quaternion dq, final double wx, final double wy, final double wz, final double dt,
+            final Quaternion result, final Matrix jacobianQ, final Matrix jacobianDQ, final Matrix jacobianW) {
 
-        if (jacobianQ != null && (jacobianQ.getRows() != Quaternion.N_PARAMS ||
-                jacobianQ.getColumns() != Quaternion.N_PARAMS)) {
+        if (jacobianQ != null && (jacobianQ.getRows() != Quaternion.N_PARAMS
+                || jacobianQ.getColumns() != Quaternion.N_PARAMS)) {
             throw new IllegalArgumentException("jacobian wrt q must be 4x4");
         }
-        if (jacobianDQ != null && (jacobianDQ.getRows() != Quaternion.N_PARAMS ||
-                jacobianDQ.getColumns() != Quaternion.N_PARAMS)) {
+        if (jacobianDQ != null && (jacobianDQ.getRows() != Quaternion.N_PARAMS
+                || jacobianDQ.getColumns() != Quaternion.N_PARAMS)) {
             throw new IllegalArgumentException("jacobian wrt dq must be 4x4");
         }
-        if (jacobianW != null && (jacobianW.getRows() != Quaternion.N_PARAMS ||
-                jacobianW.getColumns() != ANGULAR_SPEED_COMPONENTS)) {
+        if (jacobianW != null && (jacobianW.getRows() != Quaternion.N_PARAMS
+                || jacobianW.getColumns() != ANGULAR_SPEED_COMPONENTS)) {
             throw new IllegalArgumentException("jacobian wrt w must be 4x3");
         }
 
-        final double[] w = new double[]{wx, wy, wz};
+        final var w = new double[]{wx, wy, wz};
 
         ArrayUtils.multiplyByScalar(w, dt, w);
         Quaternion.rotationVectorToQuaternion(w, result, jacobianW);
@@ -856,8 +832,7 @@ public class QuaternionPredictor {
         }
         if (jacobianW != null) {
             try {
-                jacobianQ2 = new Matrix(Quaternion.N_PARAMS,
-                        Quaternion.N_PARAMS);
+                jacobianQ2 = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);
             } catch (final WrongSizeException ignore) {
                 // never happens
             }
@@ -867,8 +842,7 @@ public class QuaternionPredictor {
         Matrix jacobianQ3 = null;
         if (jacobianDQ != null || jacobianW != null) {
             try {
-                jacobianQ3 = new Matrix(Quaternion.N_PARAMS,
-                        Quaternion.N_PARAMS);
+                jacobianQ3 = new Matrix(Quaternion.N_PARAMS, Quaternion.N_PARAMS);
             } catch (final WrongSizeException ignore) {
                 // never happens
             }
@@ -879,7 +853,7 @@ public class QuaternionPredictor {
         if (jacobianQ3 != null) {
             if (jacobianDQ != null) {
                 try {
-                    Matrix tmp = jacobianQ3.multiplyAndReturnNew(jacobianDQ);
+                    final var tmp = jacobianQ3.multiplyAndReturnNew(jacobianDQ);
                     jacobianDQ.copyFrom(tmp);
                 } catch (final WrongSizeException ignore) {
                     // never happens
@@ -917,14 +891,12 @@ public class QuaternionPredictor {
      *                                  have proper size or if w does not have length 3.
      */
     public static void predictWithRotationAdjustment(
-            final Quaternion q, final Quaternion dq,
-            final double[] w, final double dt, final Quaternion result,
+            final Quaternion q, final Quaternion dq, final double[] w, final double dt, final Quaternion result,
             final Matrix jacobianQ, final Matrix jacobianDQ, final Matrix jacobianW) {
         if (w.length != ANGULAR_SPEED_COMPONENTS) {
             throw new IllegalArgumentException("w must have length 3");
         }
-        predictWithRotationAdjustment(q, dq, w[0], w[1], w[2], dt, result,
-                jacobianQ, jacobianDQ, jacobianW);
+        predictWithRotationAdjustment(q, dq, w[0], w[1], w[2], dt, result, jacobianQ, jacobianDQ, jacobianW);
     }
 
     /**
@@ -941,11 +913,9 @@ public class QuaternionPredictor {
      * @param result instance where updated quaternion is stored.
      */
     public static void predictWithRotationAdjustment(
-            final Quaternion q, final Quaternion dq,
-            final double wx, final double wy, final double wz, final double dt,
+            final Quaternion q, final Quaternion dq, final double wx, final double wy, final double wz, final double dt,
             final Quaternion result) {
-        predictWithRotationAdjustment(q, dq, wx, wy, wz, dt, result, null, null,
-                null);
+        predictWithRotationAdjustment(q, dq, wx, wy, wz, dt, result, null, null, null);
     }
 
     /**
@@ -962,10 +932,8 @@ public class QuaternionPredictor {
      * @throws IllegalArgumentException if w does not have length 3.
      */
     public static void predictWithRotationAdjustment(
-            final Quaternion q, final Quaternion dq,
-            final double[] w, final double dt, final Quaternion result) {
-        predictWithRotationAdjustment(q, dq, w, dt, result, null, null,
-                null);
+            final Quaternion q, final Quaternion dq, final double[] w, final double dt, final Quaternion result) {
+        predictWithRotationAdjustment(q, dq, w, dt, result, null, null, null);
     }
 
     /**
@@ -987,12 +955,10 @@ public class QuaternionPredictor {
      *                                  have proper size.
      */
     public static Quaternion predictWithRotationAdjustment(
-            final Quaternion q, final Quaternion dq,
-            final double wx, final double wy, final double wz, final double dt,
+            final Quaternion q, final Quaternion dq, final double wx, final double wy, final double wz, final double dt,
             final Matrix jacobianQ, final Matrix jacobianDQ, final Matrix jacobianW) {
-        final Quaternion result = new Quaternion();
-        predictWithRotationAdjustment(q, dq, wx, wy, wz, dt, result, jacobianQ,
-                jacobianDQ, jacobianW);
+        final var result = new Quaternion();
+        predictWithRotationAdjustment(q, dq, wx, wy, wz, dt, result, jacobianQ, jacobianDQ, jacobianW);
         return result;
     }
 
@@ -1014,12 +980,10 @@ public class QuaternionPredictor {
      *                                  have proper size.
      */
     public static Quaternion predictWithRotationAdjustment(
-            final Quaternion q, final Quaternion dq,
-            final double[] w, final double dt, final Matrix jacobianQ,
+            final Quaternion q, final Quaternion dq, final double[] w, final double dt, final Matrix jacobianQ,
             final Matrix jacobianDQ, final Matrix jacobianW) {
-        final Quaternion result = new Quaternion();
-        predictWithRotationAdjustment(q, dq, w, dt, result, jacobianQ,
-                jacobianDQ, jacobianW);
+        final var result = new Quaternion();
+        predictWithRotationAdjustment(q, dq, w, dt, result, jacobianQ, jacobianDQ, jacobianW);
         return result;
     }
 
@@ -1037,9 +1001,9 @@ public class QuaternionPredictor {
      * @return a new updated quaternion.
      */
     public static Quaternion predictWithRotationAdjustment(
-            final Quaternion q, final Quaternion dq,
-            final double wx, final double wy, final double wz, final double dt) {
-        final Quaternion result = new Quaternion();
+            final Quaternion q, final Quaternion dq, final double wx, final double wy, final double wz,
+            final double dt) {
+        final var result = new Quaternion();
         predictWithRotationAdjustment(q, dq, wx, wy, wz, dt, result);
         return result;
     }
@@ -1059,7 +1023,7 @@ public class QuaternionPredictor {
      */
     public static Quaternion predictWithRotationAdjustment(
             final Quaternion q, final Quaternion dq, final double[] w, final double dt) {
-        final Quaternion result = new Quaternion();
+        final var result = new Quaternion();
         predictWithRotationAdjustment(q, dq, w, dt, result);
         return result;
     }

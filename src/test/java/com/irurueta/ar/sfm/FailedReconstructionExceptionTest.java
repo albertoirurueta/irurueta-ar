@@ -15,22 +15,21 @@
  */
 package com.irurueta.ar.sfm;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class FailedReconstructionExceptionTest {
+class FailedReconstructionExceptionTest {
 
     @Test
-    public void testConstructor() {
-        FailedReconstructionException ex = new FailedReconstructionException();
+    void testConstructor() {
+        var ex = new FailedReconstructionException();
         assertNotNull(ex);
 
         ex = new FailedReconstructionException("message");
         assertNotNull(ex);
 
-        ex = new FailedReconstructionException("message",
-                new Exception());
+        ex = new FailedReconstructionException("message", new Exception());
         assertNotNull(ex);
 
         ex = new FailedReconstructionException(new Exception());

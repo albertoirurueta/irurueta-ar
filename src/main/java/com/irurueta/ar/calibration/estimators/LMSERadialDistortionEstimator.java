@@ -24,7 +24,6 @@ import com.irurueta.geometry.Point2D;
 import com.irurueta.geometry.estimators.LockedException;
 import com.irurueta.geometry.estimators.NotReadyException;
 
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -50,14 +49,14 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
      * exceeding correspondences will be ignored and only the 6 first
      * correspondences will be used.
      */
-    private boolean mAllowLMSESolution;
+    private boolean allowLMSESolution;
 
     /**
      * Constructor.
      */
     public LMSERadialDistortionEstimator() {
         super();
-        mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
+        allowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
     }
 
     /**
@@ -66,10 +65,9 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or estimation progress changes.
      */
-    public LMSERadialDistortionEstimator(
-            final RadialDistortionEstimatorListener listener) {
+    public LMSERadialDistortionEstimator(final RadialDistortionEstimatorListener listener) {
         super(listener);
-        mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
+        allowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
     }
 
     /**
@@ -81,10 +79,9 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
      * @throws IllegalArgumentException if provided lists of points don't have
      *                                  the same size.
      */
-    public LMSERadialDistortionEstimator(final List<Point2D> distortedPoints,
-                                         final List<Point2D> undistortedPoints) {
+    public LMSERadialDistortionEstimator(final List<Point2D> distortedPoints, final List<Point2D> undistortedPoints) {
         super(distortedPoints, undistortedPoints);
-        mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
+        allowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
     }
 
     /**
@@ -99,11 +96,10 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
      *                                  the same size.
      */
 
-    public LMSERadialDistortionEstimator(final List<Point2D> distortedPoints,
-                                         final List<Point2D> undistortedPoints,
+    public LMSERadialDistortionEstimator(final List<Point2D> distortedPoints, final List<Point2D> undistortedPoints,
                                          final RadialDistortionEstimatorListener listener) {
         super(distortedPoints, undistortedPoints, listener);
-        mAllowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
+        allowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;
     }
 
     /**
@@ -126,8 +122,8 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
      * @param listener         listener to be notified of events such as when estimation
      *                         starts, ends or estimation progress changes.
      */
-    public LMSERadialDistortionEstimator(final Point2D distortionCenter,
-                                         final RadialDistortionEstimatorListener listener) {
+    public LMSERadialDistortionEstimator(
+            final Point2D distortionCenter, final RadialDistortionEstimatorListener listener) {
         super(distortionCenter, listener);
     }
 
@@ -143,8 +139,7 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
      * @throws IllegalArgumentException if provided lists of points don't have
      *                                  the same size.
      */
-    public LMSERadialDistortionEstimator(final List<Point2D> distortedPoints,
-                                         final List<Point2D> undistortedPoints,
+    public LMSERadialDistortionEstimator(final List<Point2D> distortedPoints, final List<Point2D> undistortedPoints,
                                          final Point2D distortionCenter) {
         super(distortedPoints, undistortedPoints, distortionCenter);
     }
@@ -163,10 +158,9 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
      * @throws IllegalArgumentException if provided lists of points don't have
      *                                  the same size.
      */
-    public LMSERadialDistortionEstimator(final List<Point2D> distortedPoints,
-                                         final List<Point2D> undistortedPoints,
-                                         final Point2D distortionCenter,
-                                         final RadialDistortionEstimatorListener listener) {
+    public LMSERadialDistortionEstimator(
+            final List<Point2D> distortedPoints, final List<Point2D> undistortedPoints, final Point2D distortionCenter,
+            final RadialDistortionEstimatorListener listener) {
         super(distortedPoints, undistortedPoints, distortionCenter, listener);
     }
 
@@ -179,7 +173,7 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
      * @return true if LMSE solution is allowed, false otherwise.
      */
     public boolean isLMSESolutionAllowed() {
-        return mAllowLMSESolution;
+        return allowLMSESolution;
     }
 
     /**
@@ -195,7 +189,7 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
         if (isLocked()) {
             throw new LockedException();
         }
-        mAllowLMSESolution = allowed;
+        allowLMSESolution = allowed;
     }
 
     /**
@@ -209,8 +203,7 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
      */
     @SuppressWarnings("DuplicatedCode")
     @Override
-    public RadialDistortion estimate() throws LockedException,
-            NotReadyException, RadialDistortionEstimatorException {
+    public RadialDistortion estimate() throws LockedException, NotReadyException, RadialDistortionEstimatorException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -219,12 +212,12 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
         }
 
         try {
-            mLocked = true;
-            if (mListener != null) {
-                mListener.onEstimateStart(this);
+            locked = true;
+            if (listener != null) {
+                listener.onEstimateStart(this);
             }
 
-            final int nPoints = mDistortedPoints.size();
+            final var nPoints = distortedPoints.size();
 
             int numRows;
             if (isLMSESolutionAllowed()) {
@@ -236,16 +229,15 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
                 numRows = 2 * getMinNumberOfMatchedPoints();
             }
 
-            final Matrix aMatrix = new Matrix(numRows, mNumKParams);
-            final double[] b = new double[numRows];
+            final var aMatrix = new Matrix(numRows, numKParams);
+            final var b = new double[numRows];
 
-            final Iterator<Point2D> iteratorDistorted = mDistortedPoints.iterator();
-            final Iterator<Point2D> iteratorUndistorted =
-                    mUndistortedPoints.iterator();
+            final var iteratorDistorted = distortedPoints.iterator();
+            final var iteratorUndistorted = undistortedPoints.iterator();
 
             Point2D distorted;
             Point2D undistorted;
-            int counter = 0;
+            var counter = 0;
 
             // undistorted normalized homogeneous coordinates
             double uNormHomX;
@@ -268,11 +260,11 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
             double rowNormY;
 
             // radial distortion center
-            double centerX = 0.0;
-            double centerY = 0.0;
-            if (mDistortionCenter != null) {
-                centerX = mDistortionCenter.getInhomX();
-                centerY = mDistortionCenter.getInhomY();
+            var centerX = 0.0;
+            var centerY = 0.0;
+            if (distortionCenter != null) {
+                centerX = distortionCenter.getInhomX();
+                centerY = distortionCenter.getInhomY();
             }
 
             // radial distance of undistorted normalized (calibration independent)
@@ -295,15 +287,15 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
                 uDenormInhomY = uDenormHomY / uDenormHomW;
 
                 // multiply intrinsic parameters by undistorted point
-                uNormHomX = mKinv.getElementAt(0, 0) * uDenormHomX +
-                        mKinv.getElementAt(0, 1) * uDenormHomY +
-                        mKinv.getElementAt(0, 2) * uDenormHomW;
-                uNormHomY = mKinv.getElementAt(1, 0) * uDenormHomX +
-                        mKinv.getElementAt(1, 1) * uDenormHomY +
-                        mKinv.getElementAt(1, 2) * uDenormHomW;
-                uNormHomW = mKinv.getElementAt(2, 0) * uDenormHomX +
-                        mKinv.getElementAt(2, 1) * uDenormHomY +
-                        mKinv.getElementAt(2, 2) * uDenormHomW;
+                uNormHomX = kInv.getElementAt(0, 0) * uDenormHomX
+                        + kInv.getElementAt(0, 1) * uDenormHomY
+                        + kInv.getElementAt(0, 2) * uDenormHomW;
+                uNormHomY = kInv.getElementAt(1, 0) * uDenormHomX
+                        + kInv.getElementAt(1, 1) * uDenormHomY
+                        + kInv.getElementAt(1, 2) * uDenormHomW;
+                uNormHomW = kInv.getElementAt(2, 0) * uDenormHomX
+                        + kInv.getElementAt(2, 1) * uDenormHomY
+                        + kInv.getElementAt(2, 2) * uDenormHomW;
 
                 uNormInhomX = uNormHomX / uNormHomW;
                 uNormInhomY = uNormHomY / uNormHomW;
@@ -315,7 +307,7 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
 
                 a = 1.0;
                 rowNormX = rowNormY = 0.0;
-                for (int i = 0; i < mNumKParams; i++) {
+                for (var i = 0; i < numKParams; i++) {
                     a *= r2;
 
                     // x and y coordinates generate linear dependent equations, for
@@ -347,7 +339,7 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
                 rowNormY += Math.pow(value, 2.0);
 
                 // normalize rows to increase accuracy
-                for (int i = 0; i < mNumKParams; i++) {
+                for (var i = 0; i < numKParams; i++) {
                     aMatrix.setElementAt(2 * counter, i,
                             aMatrix.getElementAt(2 * counter, i) / rowNormX);
                     aMatrix.setElementAt(2 * counter + 1, i,
@@ -364,21 +356,20 @@ public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
                 }
             }
 
-            final double[] params = Utils.solve(aMatrix, b);
+            final var params = Utils.solve(aMatrix, b);
 
-            final RadialDistortion distortion =
-                    new RadialDistortion(params, mDistortionCenter,
-                            mHorizontalFocalLength, mVerticalFocalLength, mSkew);
+            final var distortion = new RadialDistortion(params, distortionCenter, horizontalFocalLength,
+                    verticalFocalLength, skew);
 
-            if (mListener != null) {
-                mListener.onEstimateEnd(this);
+            if (listener != null) {
+                listener.onEstimateEnd(this);
             }
 
             return distortion;
         } catch (final AlgebraException | RadialDistortionException e) {
             throw new RadialDistortionEstimatorException(e);
         } finally {
-            mLocked = false;
+            locked = false;
         }
     }
 

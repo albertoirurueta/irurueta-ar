@@ -24,8 +24,7 @@ import java.util.List;
  *
  * @param <R> type of re-constructor.
  */
-public interface BaseTwoViewsSparseReconstructorListener<
-        R extends BaseTwoViewsSparseReconstructor<?, ?, ?>> {
+public interface BaseTwoViewsSparseReconstructorListener<R extends BaseTwoViewsSparseReconstructor<?, ?, ?>> {
     /**
      * Called to determine whether there are more views available to attempt to
      * use for the reconstruction.
@@ -44,8 +43,7 @@ public interface BaseTwoViewsSparseReconstructorListener<
      * @param samples       samples containing points of interest for current view to
      *                      test.
      */
-    void onRequestSamplesForCurrentView(final R reconstructor, final int viewId,
-                                        final List<Sample2D> samples);
+    void onRequestSamplesForCurrentView(final R reconstructor, final int viewId, final List<Sample2D> samples);
 
     /**
      * Called when requested samples have been accepted.
@@ -78,9 +76,8 @@ public interface BaseTwoViewsSparseReconstructorListener<
      * @param viewId2       id of second view.
      * @param matches       instance where matches must be stored.
      */
-    void onRequestMatches(final R reconstructor, final List<Sample2D> samples1,
-                          final List<Sample2D> samples2, final int viewId1, final int viewId2,
-                          final List<MatchedSamples> matches);
+    void onRequestMatches(final R reconstructor, final List<Sample2D> samples1, final List<Sample2D> samples2,
+                          final int viewId1, final int viewId2, final List<MatchedSamples> matches);
 
     /**
      * Called when a fundamental matrix relating two views has been estimated.
@@ -104,8 +101,8 @@ public interface BaseTwoViewsSparseReconstructorListener<
      * @param camera1       estimated camera for first view.
      * @param camera2       estimated camera for second view.
      */
-    void onCamerasEstimated(final R reconstructor, final int viewId1, final int viewId2,
-                            final EstimatedCamera camera1, final EstimatedCamera camera2);
+    void onCamerasEstimated(final R reconstructor, final int viewId1, final int viewId2, final EstimatedCamera camera1,
+                            final EstimatedCamera camera2);
 
     /**
      * Called when reconstructed points have been estimated from a series of 2D
@@ -116,8 +113,7 @@ public interface BaseTwoViewsSparseReconstructorListener<
      * @param matches       2D matches associated to estimated reconstructed points.
      * @param points        reconstructed 3D points.
      */
-    void onReconstructedPointsEstimated(final R reconstructor,
-                                        final List<MatchedSamples> matches,
+    void onReconstructedPointsEstimated(final R reconstructor, final List<MatchedSamples> matches,
                                         final List<ReconstructedPoint3D> points);
 
     /**

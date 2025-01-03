@@ -75,8 +75,7 @@ public class GoldStandardSingleCorrector extends SingleCorrector {
      * @param leftPoint  matched point on left view to be corrected.
      * @param rightPoint matched point on right view to be corrected.
      */
-    public GoldStandardSingleCorrector(
-            final Point2D leftPoint, final Point2D rightPoint) {
+    public GoldStandardSingleCorrector(final Point2D leftPoint, final Point2D rightPoint) {
         super(leftPoint, rightPoint);
     }
 
@@ -87,9 +86,8 @@ public class GoldStandardSingleCorrector extends SingleCorrector {
      * @param rightPoint        matched point on right view to be corrected.
      * @param fundamentalMatrix fundamental matrix defining an epipolar geometry.
      */
-    public GoldStandardSingleCorrector(
-            final Point2D leftPoint, final Point2D rightPoint,
-            final FundamentalMatrix fundamentalMatrix) {
+    public GoldStandardSingleCorrector(final Point2D leftPoint, final Point2D rightPoint,
+                                       final FundamentalMatrix fundamentalMatrix) {
         super(leftPoint, rightPoint, fundamentalMatrix);
     }
 
@@ -106,12 +104,9 @@ public class GoldStandardSingleCorrector extends SingleCorrector {
             throw new NotReadyException();
         }
 
-        mLeftCorrectedPoint = Point2D.create(
-                CoordinatesType.HOMOGENEOUS_COORDINATES);
-        mRightCorrectedPoint = Point2D.create(
-                CoordinatesType.HOMOGENEOUS_COORDINATES);
-        correct(mLeftPoint, mRightPoint, mFundamentalMatrix,
-                mLeftCorrectedPoint, mRightCorrectedPoint);
+        leftCorrectedPoint = Point2D.create(CoordinatesType.HOMOGENEOUS_COORDINATES);
+        rightCorrectedPoint = Point2D.create(CoordinatesType.HOMOGENEOUS_COORDINATES);
+        correct(leftPoint, rightPoint, fundamentalMatrix, leftCorrectedPoint, rightCorrectedPoint);
     }
 
     /**
@@ -140,10 +135,8 @@ public class GoldStandardSingleCorrector extends SingleCorrector {
      */
     @SuppressWarnings("DuplicatedCode")
     public static void correct(
-            final Point2D leftPoint, final Point2D rightPoint,
-            final FundamentalMatrix fundamentalMatrix,
-            final Point2D correctedLeftPoint,
-            final Point2D correctedRightPoint) throws NotReadyException,
+            final Point2D leftPoint, final Point2D rightPoint, final FundamentalMatrix fundamentalMatrix,
+            final Point2D correctedLeftPoint, final Point2D correctedRightPoint) throws NotReadyException,
             CorrectionException {
 
         // normalize to increase accuracy
@@ -154,63 +147,52 @@ public class GoldStandardSingleCorrector extends SingleCorrector {
         try {
             // create transformations to move left and right points to the origin
             // (0,0,1)
-            final Matrix leftTranslationMatrix = Matrix.identity(
-                    Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH,
+            final var leftTranslationMatrix = Matrix.identity(Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH,
                     Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH);
             // add terms to move left point to origin
             leftTranslationMatrix.setElementAt(0, 2, -leftPoint.getInhomX());
             leftTranslationMatrix.setElementAt(1, 2, -leftPoint.getInhomY());
 
             // create inverse transformation
-            Matrix invLeftTranslationMatrix = Matrix.identity(
-                    Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH,
+            var invLeftTranslationMatrix = Matrix.identity(Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH,
                     Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH);
             // add terms to obtain inverse transformation
             invLeftTranslationMatrix.setElementAt(0, 2, leftPoint.getInhomX());
             invLeftTranslationMatrix.setElementAt(1, 2, leftPoint.getInhomY());
 
-            final Matrix rightTranslationMatrix = Matrix.identity(
-                    Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH,
+            final var rightTranslationMatrix = Matrix.identity(Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH,
                     Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH);
             // add terms to move right point to origin
             rightTranslationMatrix.setElementAt(0, 2, -rightPoint.getInhomX());
             rightTranslationMatrix.setElementAt(1, 2, -rightPoint.getInhomY());
 
             // create inverse and transposed transformation
-            Matrix invTransRightTranslationMatrix = Matrix.identity(
-                    Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH,
+            var invTransRightTranslationMatrix = Matrix.identity(Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH,
                     Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH);
             // add terms to obtain inverse transformation
-            invTransRightTranslationMatrix.setElementAt(2, 0,
-                    rightPoint.getInhomX());
-            invTransRightTranslationMatrix.setElementAt(2, 1,
-                    rightPoint.getInhomY());
+            invTransRightTranslationMatrix.setElementAt(2, 0, rightPoint.getInhomX());
+            invTransRightTranslationMatrix.setElementAt(2, 1, rightPoint.getInhomY());
 
             // because points have been transformed using left and right
             // translations (T1 and T2 respectively), then fundamental matrix
             // becomes (T2^-1)'*F*T1^-1
-            Matrix fundInternalMatrix = fundamentalMatrix.getInternalMatrix();
+            var fundInternalMatrix = fundamentalMatrix.getInternalMatrix();
             fundInternalMatrix.multiply(invLeftTranslationMatrix);
             invTransRightTranslationMatrix.multiply(fundInternalMatrix);
 
             // compute transformations to rotate epipoles of transformed
             // fundamental matrix so that they are located at e1 = (1,0,f1) and
             // e2 = (1,0,f2)
-            final FundamentalMatrix transformedFundamentalMatrix =
-                    new FundamentalMatrix(invTransRightTranslationMatrix);
+            final var transformedFundamentalMatrix = new FundamentalMatrix(invTransRightTranslationMatrix);
             transformedFundamentalMatrix.computeEpipoles();
-            final Point2D leftEpipole = transformedFundamentalMatrix.
-                    getLeftEpipole();
-            final Point2D rightEpipole = transformedFundamentalMatrix.
-                    getRightEpipole();
+            final var leftEpipole = transformedFundamentalMatrix.getLeftEpipole();
+            final var rightEpipole = transformedFundamentalMatrix.getRightEpipole();
 
             // normalize so that leftEpipole.x^2 + leftEpipole.y^2 = 1 and
             // rightEpipole.x^2 + rightEpipole.y^2 = 1, that way transformations
             // become rotations
-            final double normLeftEpipole = Math.pow(leftEpipole.getHomX(), 2.0) +
-                    Math.pow(leftEpipole.getHomY(), 2.0);
-            final double normRightEpipole = Math.pow(rightEpipole.getHomX(), 2.0) +
-                    Math.pow(rightEpipole.getHomY(), 2.0);
+            final var normLeftEpipole = Math.pow(leftEpipole.getHomX(), 2.0) + Math.pow(leftEpipole.getHomY(), 2.0);
+            final var normRightEpipole = Math.pow(rightEpipole.getHomX(), 2.0) + Math.pow(rightEpipole.getHomY(), 2.0);
 
             leftEpipole.setHomogeneousCoordinates(
                     leftEpipole.getHomX() / normLeftEpipole,
@@ -221,8 +203,7 @@ public class GoldStandardSingleCorrector extends SingleCorrector {
                     rightEpipole.getHomY() / normRightEpipole,
                     rightEpipole.getHomW() / normRightEpipole);
 
-            final Matrix leftRotationMatrix = new Matrix(
-                    Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH,
+            final var leftRotationMatrix = new Matrix(Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH,
                     Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH);
             leftRotationMatrix.setElementAt(0, 0, leftEpipole.getHomX());
             leftRotationMatrix.setElementAt(1, 0, -leftEpipole.getHomY());
@@ -231,11 +212,9 @@ public class GoldStandardSingleCorrector extends SingleCorrector {
             leftRotationMatrix.setElementAt(2, 2, 1.0);
 
             // the inverse of a rotation is its transpose
-            final Matrix invLeftRotationMatrix =
-                    leftRotationMatrix.transposeAndReturnNew();
+            final var invLeftRotationMatrix = leftRotationMatrix.transposeAndReturnNew();
 
-            final Matrix rightRotationMatrix = new Matrix(
-                    Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH,
+            final var rightRotationMatrix = new Matrix(Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH,
                     Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH);
             rightRotationMatrix.setElementAt(0, 0, rightEpipole.getHomX());
             rightRotationMatrix.setElementAt(1, 0, -rightEpipole.getHomY());
@@ -244,8 +223,7 @@ public class GoldStandardSingleCorrector extends SingleCorrector {
             rightRotationMatrix.setElementAt(2, 2, 1.0);
 
             // again the inverse of rotation is its transpose
-            final Matrix invRightRotationMatrix =
-                    rightRotationMatrix.transposeAndReturnNew();
+            final var invRightRotationMatrix = rightRotationMatrix.transposeAndReturnNew();
 
             // and so the fundamental matrix now becomes: R2*(T2^-1)'*F*T1^-1*R1',
             // where the middle matrices correspond to previous transformation
@@ -261,10 +239,10 @@ public class GoldStandardSingleCorrector extends SingleCorrector {
             // [-f1*d    c       d       ]
 
             // hence:
-            final double a = invTransRightTranslationMatrix.getElementAt(1, 1);
-            final double b = invTransRightTranslationMatrix.getElementAt(1, 2);
-            final double c = invTransRightTranslationMatrix.getElementAt(2, 1);
-            final double d = invTransRightTranslationMatrix.getElementAt(2, 2);
+            final var a = invTransRightTranslationMatrix.getElementAt(1, 1);
+            final var b = invTransRightTranslationMatrix.getElementAt(1, 2);
+            final var c = invTransRightTranslationMatrix.getElementAt(2, 1);
+            final var d = invTransRightTranslationMatrix.getElementAt(2, 2);
             final double f1;
             final double f2;
             if (Math.abs(b) > Math.abs(d)) {
@@ -281,53 +259,44 @@ public class GoldStandardSingleCorrector extends SingleCorrector {
             // Hence the polynomial of degree 6 to solve corresponding to the derivative of s(t) is:
             // g(t) = A*t^6 + B*t^5 + C*t^4 + D*t^3 + E*t^2 + F*t + G
             // where:
-            final double tmp1 = Math.pow(a, 2.0) * d - a * b * c;
-            final double tmp2 = Math.pow(a, 2.0) + Math.pow(c, 2.0) * Math.pow(f2, 2.0);
-            final double tmp3 = a * b * d - Math.pow(b, 2.0) * c;
-            final double tmp4 = tmp3 * c;
-            final double tmp5 = a * b + c * d * Math.pow(f2, 2.0);
-            final double tmp6 = Math.pow(b, 2.0) + Math.pow(d, 2.0) * Math.pow(f2, 2.0);
+            final var tmp1 = Math.pow(a, 2.0) * d - a * b * c;
+            final var tmp2 = Math.pow(a, 2.0) + Math.pow(c, 2.0) * Math.pow(f2, 2.0);
+            final var tmp3 = a * b * d - Math.pow(b, 2.0) * c;
+            final var tmp4 = tmp3 * c;
+            final var tmp5 = a * b + c * d * Math.pow(f2, 2.0);
+            final var tmp6 = Math.pow(b, 2.0) + Math.pow(d, 2.0) * Math.pow(f2, 2.0);
 
-            final double realA = -tmp1 * c * Math.pow(f1, 4.0);
-            final double realB = Math.pow(tmp2, 2.0) -
-                    ((Math.pow(a, 2) * d - a * b * c) * d + tmp4) * Math.pow(f1, 4.0);
-            final double realC = (4.0 * tmp2 * tmp5 -
-                    (2.0 * tmp1 * c * Math.pow(f1, 2.0) + tmp3 * d * Math.pow(f1, 4.0)));
-            final double realD = 2.0 * (tmp2 * tmp6 +
-                    2.0 * Math.pow(tmp5, 2.0) -
-                    (tmp1 * d + tmp4) * Math.pow(f1, 2.0));
-            final double realE = (4.0 * tmp5 * tmp6 -
-                    (tmp1 * c + 2.0 * tmp3 * d * Math.pow(f1, 2.0)));
-            final double realF = (Math.pow(tmp6, 2.0) -
-                    (tmp1 * d + tmp4));
-            final double realG = -tmp3 * d;
+            final var realA = -tmp1 * c * Math.pow(f1, 4.0);
+            final var realB = Math.pow(tmp2, 2.0) - ((Math.pow(a, 2) * d - a * b * c) * d + tmp4) * Math.pow(f1, 4.0);
+            final var realC = (4.0 * tmp2 * tmp5 - (2.0 * tmp1 * c * Math.pow(f1, 2.0) + tmp3 * d * Math.pow(f1, 4.0)));
+            final var realD = 2.0 * (tmp2 * tmp6 + 2.0 * Math.pow(tmp5, 2.0) - (tmp1 * d + tmp4) * Math.pow(f1, 2.0));
+            final var realE = (4.0 * tmp5 * tmp6 - (tmp1 * c + 2.0 * tmp3 * d * Math.pow(f1, 2.0)));
+            final var realF = (Math.pow(tmp6, 2.0) - (tmp1 * d + tmp4));
+            final var realG = -tmp3 * d;
 
-            final Complex complexA = new Complex(realA);
-            final Complex complexB = new Complex(realB);
-            final Complex complexC = new Complex(realC);
-            final Complex complexD = new Complex(realD);
-            final Complex complexE = new Complex(realE);
-            final Complex complexF = new Complex(realF);
-            final Complex complexG = new Complex(realG);
-            final Complex[] polyParams = new Complex[]{complexG, complexF, complexE,
-                    complexD, complexC, complexB, complexA};
-            final LaguerrePolynomialRootsEstimator rootEstimator =
-                    new LaguerrePolynomialRootsEstimator(polyParams);
+            final var complexA = new Complex(realA);
+            final var complexB = new Complex(realB);
+            final var complexC = new Complex(realC);
+            final var complexD = new Complex(realD);
+            final var complexE = new Complex(realE);
+            final var complexF = new Complex(realF);
+            final var complexG = new Complex(realG);
+            final var polyParams = new Complex[]{complexG, complexF, complexE, complexD, complexC, complexB, complexA};
+            final var rootEstimator = new LaguerrePolynomialRootsEstimator(polyParams);
             rootEstimator.estimate();
-            final Complex[] roots = rootEstimator.getRoots();
+            final var roots = rootEstimator.getRoots();
 
             // evaluate polynomial s(t) on each root of its derivative to obtain
             // the global minima (we discard non-real roots)
-            double minimum = Double.MAX_VALUE;
-            double value;
+            var minimum = Double.MAX_VALUE;
             Complex bestRoot = null;
-            for (final Complex root : roots) {
+            for (final var root : roots) {
                 // skip solutions having an imaginary part
                 if (Math.abs(root.getImaginary()) > EPS) {
                     continue;
                 }
 
-                value = s(root.getReal(), a, b, c, d, f1, f2);
+                final var value = s(root.getReal(), a, b, c, d, f1, f2);
                 if (value < minimum) {
                     minimum = value;
                     bestRoot = root;
@@ -338,14 +307,14 @@ public class GoldStandardSingleCorrector extends SingleCorrector {
                 throw new CorrectionException();
             }
 
-            final double tmin = bestRoot.getReal();
+            final var tmin = bestRoot.getReal();
 
             // and so, the transformed left point is (-tmin^2*f1, tmin, 1 + (tmin*f1)^2)
-            final Point2D transformedLeftPoint = new HomogeneousPoint2D(
+            final var transformedLeftPoint = new HomogeneousPoint2D(
                     -Math.pow(tmin, 2.0) * f1, tmin, 1.0 + Math.pow(tmin * f1, 2.0));
             // and the right point is (f2*(c*tmin+d)^2, -(a*tmin+b)*(c*tmin+d), (a*t+b)^2 + f2^2*(c*t+d)^2)
-            final double tmp7 = Math.pow(c * tmin + d, 2.0);
-            final Point2D transformedRightPoint = new HomogeneousPoint2D(
+            final var tmp7 = Math.pow(c * tmin + d, 2.0);
+            final var transformedRightPoint = new HomogeneousPoint2D(
                     f2 * tmp7,
                     -(a * tmin + b) * (c * tmin + d),
                     Math.pow(a * tmin + b, 2.0) + Math.pow(f2, 2.0) * tmp7);
@@ -355,36 +324,28 @@ public class GoldStandardSingleCorrector extends SingleCorrector {
             // correctedRightPoint = T2^-1*R2'*transformedRightPoint
 
             // inverse left transformation
-            invLeftTranslationMatrix = Matrix.identity(
-                    Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH,
+            invLeftTranslationMatrix = Matrix.identity(Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH,
                     Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH);
             // add terms to obtain inverse transformation
             invLeftTranslationMatrix.setElementAt(0, 2, leftPoint.getInhomX());
             invLeftTranslationMatrix.setElementAt(1, 2, leftPoint.getInhomY());
 
             // inverse right translation transformation
-            final Matrix invRightTranslationMatrix = Matrix.identity(
-                    Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH,
+            final var invRightTranslationMatrix = Matrix.identity(Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH,
                     Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH);
             // add terms to obtain inverse transformation
             invRightTranslationMatrix.setElementAt(0, 2, rightPoint.getInhomX());
             invRightTranslationMatrix.setElementAt(1, 2, rightPoint.getInhomY());
 
             invLeftTranslationMatrix.multiply(invLeftRotationMatrix);
-            Matrix invLeftTransformationMatrix = invLeftTranslationMatrix;
+            final var invLeftTransformationMatrix = invLeftTranslationMatrix;
             invRightTranslationMatrix.multiply(invRightRotationMatrix);
 
-            final ProjectiveTransformation2D invLeftTransformation =
-                    new ProjectiveTransformation2D(
-                            invLeftTransformationMatrix);
-            final ProjectiveTransformation2D invRightTransformation =
-                    new ProjectiveTransformation2D(
-                            invRightTranslationMatrix);
+            final var invLeftTransformation = new ProjectiveTransformation2D(invLeftTransformationMatrix);
+            final var invRightTransformation = new ProjectiveTransformation2D(invRightTranslationMatrix);
 
-            invLeftTransformation.transform(transformedLeftPoint,
-                    correctedLeftPoint);
-            invRightTransformation.transform(transformedRightPoint,
-                    correctedRightPoint);
+            invLeftTransformation.transform(transformedLeftPoint, correctedLeftPoint);
+            invRightTransformation.transform(transformedRightPoint, correctedRightPoint);
 
         } catch (final AlgebraException | GeometryException | NumericalException e) {
             throw new CorrectionException(e);
@@ -404,13 +365,10 @@ public class GoldStandardSingleCorrector extends SingleCorrector {
      * @param f2 f2 value for transformed fundamental matrix.
      * @return evaluated polynomial value.
      */
-    private static double s(final double t, final double a,
-                            final double b, final double c,
-                            final double d, final double f1,
-                            final double f2) {
-        final double tmp = Math.pow(c * t + d, 2.0);
-        return Math.pow(t, 2.0) / (1 + Math.pow(t * f1, 2.0)) +
-                tmp / (Math.pow(a * t + b, 2.0) +
-                        Math.pow(f2, 2.0) * tmp);
+    private static double s(final double t, final double a, final double b, final double c,
+                            final double d, final double f1, final double f2) {
+        final var tmp = Math.pow(c * t + d, 2.0);
+        return Math.pow(t, 2.0) / (1 + Math.pow(t * f1, 2.0)) + tmp / (Math.pow(a * t + b, 2.0)
+                + Math.pow(f2, 2.0) * tmp);
     }
 }

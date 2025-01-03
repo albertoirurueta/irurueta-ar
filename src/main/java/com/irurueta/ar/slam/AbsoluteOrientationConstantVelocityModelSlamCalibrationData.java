@@ -21,8 +21,8 @@ import java.io.Serializable;
  * Contains control calibration data for an absolute orientation constant
  * velocity model SLAM estimator during Kalman filtering prediction stage.
  */
-public class AbsoluteOrientationConstantVelocityModelSlamCalibrationData
-        extends BaseCalibrationData implements Serializable {
+public class AbsoluteOrientationConstantVelocityModelSlamCalibrationData extends BaseCalibrationData
+        implements Serializable {
 
     /**
      * Constructor.

@@ -45,13 +45,12 @@ import java.util.List;
  * useful in some other situations.
  */
 @SuppressWarnings("DuplicatedCode")
-public class FundamentalMatrixRefiner extends
-        PairMatchesAndInliersDataRefiner<FundamentalMatrix, Point2D, Point2D> {
+public class FundamentalMatrixRefiner extends PairMatchesAndInliersDataRefiner<FundamentalMatrix, Point2D, Point2D> {
 
     /**
      * Test line to compute epipolar residuals.
      */
-    private final Line2D mTestLine = new Line2D();
+    private final Line2D testLine = new Line2D();
 
     /**
      * Standard deviation used for Levenberg-Marquardt fitting during
@@ -62,7 +61,7 @@ public class FundamentalMatrixRefiner extends
      * estimation, since residuals of found inliers are within the range of
      * such threshold.
      */
-    private double mRefinementStandardDeviation;
+    private double refinementStandardDeviation;
 
     /**
      * Constructor.
@@ -85,17 +84,11 @@ public class FundamentalMatrixRefiner extends
      *                                    Levenberg-Marquardt fitting.
      */
     public FundamentalMatrixRefiner(
-            final FundamentalMatrix initialEstimation,
-            final boolean keepCovariance,
-            final BitSet inliers,
-            final double[] residuals,
-            final int numInliers,
-            final List<Point2D> samples1,
-            final List<Point2D> samples2,
+            final FundamentalMatrix initialEstimation, final boolean keepCovariance, final BitSet inliers,
+            final double[] residuals, final int numInliers, final List<Point2D> samples1, final List<Point2D> samples2,
             final double refinementStandardDeviation) {
-        super(initialEstimation, keepCovariance, inliers, residuals, numInliers,
-                samples1, samples2);
-        mRefinementStandardDeviation = refinementStandardDeviation;
+        super(initialEstimation, keepCovariance, inliers, residuals, numInliers, samples1, samples2);
+        this.refinementStandardDeviation = refinementStandardDeviation;
     }
 
     /**
@@ -112,15 +105,10 @@ public class FundamentalMatrixRefiner extends
      *                                    Levenberg-Marquardt fitting.
      */
     public FundamentalMatrixRefiner(
-            final FundamentalMatrix initialEstimation,
-            final boolean keepCovariance,
-            final InliersData inliersData,
-            final List<Point2D> samples1,
-            final List<Point2D> samples2,
-            final double refinementStandardDeviation) {
-        super(initialEstimation, keepCovariance, inliersData, samples1,
-                samples2);
-        mRefinementStandardDeviation = refinementStandardDeviation;
+            final FundamentalMatrix initialEstimation, final boolean keepCovariance, final InliersData inliersData,
+            final List<Point2D> samples1, final List<Point2D> samples2, final double refinementStandardDeviation) {
+        super(initialEstimation, keepCovariance, inliersData, samples1, samples2);
+        this.refinementStandardDeviation = refinementStandardDeviation;
     }
 
     /**
@@ -135,7 +123,7 @@ public class FundamentalMatrixRefiner extends
      * @return standard deviation used for refinement.
      */
     public double getRefinementStandardDeviation() {
-        return mRefinementStandardDeviation;
+        return refinementStandardDeviation;
     }
 
     /**
@@ -151,12 +139,11 @@ public class FundamentalMatrixRefiner extends
      *                                    refinement.
      * @throws LockedException if estimator is locked.
      */
-    public void setRefinementStandardDeviation(
-            final double refinementStandardDeviation) throws LockedException {
+    public void setRefinementStandardDeviation(final double refinementStandardDeviation) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        mRefinementStandardDeviation = refinementStandardDeviation;
+        this.refinementStandardDeviation = refinementStandardDeviation;
     }
 
     /**
@@ -170,9 +157,8 @@ public class FundamentalMatrixRefiner extends
      *                           to converge to a result).
      */
     @Override
-    public FundamentalMatrix refine() throws NotReadyException,
-            LockedException, RefinerException {
-        final FundamentalMatrix result = new FundamentalMatrix();
+    public FundamentalMatrix refine() throws NotReadyException, LockedException, RefinerException {
+        final var result = new FundamentalMatrix();
         refine(result);
         return result;
     }
@@ -192,8 +178,7 @@ public class FundamentalMatrixRefiner extends
      *                           to converge to a result).
      */
     @Override
-    public boolean refine(final FundamentalMatrix result) throws NotReadyException,
-            LockedException, RefinerException {
+    public boolean refine(final FundamentalMatrix result) throws NotReadyException, LockedException, RefinerException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -201,34 +186,34 @@ public class FundamentalMatrixRefiner extends
             throw new NotReadyException();
         }
 
-        mLocked = true;
+        locked = true;
 
-        if (mListener != null) {
-            mListener.onRefineStart(this, mInitialEstimation);
+        if (listener != null) {
+            listener.onRefineStart(this, initialEstimation);
         }
 
-        mInitialEstimation.normalize();
+        initialEstimation.normalize();
 
-        final double initialTotalResidual = totalResidual(mInitialEstimation);
+        final var initialTotalResidual = totalResidual(initialEstimation);
 
         try {
-            final Matrix internalMatrix = mInitialEstimation.getInternalMatrix();
-            final double[] initParams = internalMatrix.getBuffer();
+            final var internalMatrix = initialEstimation.getInternalMatrix();
+            final var initParams = internalMatrix.getBuffer();
 
             // output values to be fitted/optimized will contain residuals
-            final double[] y = new double[mNumInliers];
+            final var y = new double[numInliers];
             // input values will contain 2 points to compute residuals
-            final int nDims = 2 * Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH;
-            final Matrix x = new Matrix(mNumInliers, nDims);
-            final int nSamples = mInliers.length();
-            int pos = 0;
+            final var nDims = 2 * Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH;
+            final var x = new Matrix(numInliers, nDims);
+            final var nSamples = inliers.length();
+            var pos = 0;
             Point2D leftPoint;
             Point2D rightPoint;
-            for (int i = 0; i < nSamples; i++) {
-                if (mInliers.get(i)) {
+            for (var i = 0; i < nSamples; i++) {
+                if (inliers.get(i)) {
                     // sample is inlier
-                    leftPoint = mSamples1.get(i);
-                    rightPoint = mSamples2.get(i);
+                    leftPoint = samples1.get(i);
+                    rightPoint = samples2.get(i);
                     leftPoint.normalize();
                     rightPoint.normalize();
                     x.setElementAt(pos, 0, leftPoint.getHomX());
@@ -238,111 +223,98 @@ public class FundamentalMatrixRefiner extends
                     x.setElementAt(pos, 4, rightPoint.getHomY());
                     x.setElementAt(pos, 5, rightPoint.getHomW());
 
-                    y[pos] = mResiduals[i];
+                    y[pos] = residuals[i];
                     pos++;
                 }
             }
 
-            final LevenbergMarquardtMultiDimensionFunctionEvaluator evaluator =
-                    new LevenbergMarquardtMultiDimensionFunctionEvaluator() {
+            final var evaluator = new LevenbergMarquardtMultiDimensionFunctionEvaluator() {
 
-                        private final Point2D mLeftPoint = Point2D.create(
-                                CoordinatesType.HOMOGENEOUS_COORDINATES);
+                private final Point2D leftPoint = Point2D.create(CoordinatesType.HOMOGENEOUS_COORDINATES);
 
-                        private final Point2D mRightPoint = Point2D.create(
-                                CoordinatesType.HOMOGENEOUS_COORDINATES);
+                private final Point2D rightPoint = Point2D.create(CoordinatesType.HOMOGENEOUS_COORDINATES);
 
-                        private final FundamentalMatrix mFundMatrix =
-                                new FundamentalMatrix();
+                private final FundamentalMatrix fundMatrix = new FundamentalMatrix();
 
-                        private Matrix mInternalMatrix;
+                private Matrix internalMatrix;
 
-                        private final GradientEstimator mGradientEstimator =
-                                new GradientEstimator(new MultiDimensionFunctionEvaluatorListener() {
+                private final GradientEstimator gradientEstimator = new GradientEstimator(
+                        new MultiDimensionFunctionEvaluatorListener() {
 
-                                    @Override
-                                    public double evaluate(final double[] params) {
+                            @Override
+                            public double evaluate(final double[] params) {
 
-                                        try {
-                                            mInternalMatrix.fromArray(params);
-                                            mFundMatrix.setInternalMatrix(mInternalMatrix);
+                                try {
+                                    internalMatrix.fromArray(params);
+                                    fundMatrix.setInternalMatrix(internalMatrix);
 
-                                            return residual(mFundMatrix, mLeftPoint,
-                                                    mRightPoint);
-                                        } catch (final AlgebraException
-                                                       | InvalidFundamentalMatrixException e) {
-                                            return initialTotalResidual;
-                                        }
-                                    }
-                                });
-
-                        @Override
-                        public int getNumberOfDimensions() {
-                            return nDims;
-                        }
-
-                        @Override
-                        public double[] createInitialParametersArray() {
-                            return initParams;
-                        }
-
-                        @Override
-                        public double evaluate(
-                                final int i, final double[] point,
-                                final double[] params, final double[] derivatives)
-                                throws EvaluationException {
-                            mLeftPoint.setHomogeneousCoordinates(point[0], point[1],
-                                    point[2]);
-                            mRightPoint.setHomogeneousCoordinates(point[3],
-                                    point[4], point[5]);
-
-                            double y;
-                            try {
-                                if (mInternalMatrix == null) {
-                                    mInternalMatrix = new Matrix(
-                                            FundamentalMatrix.FUNDAMENTAL_MATRIX_ROWS,
-                                            FundamentalMatrix.FUNDAMENTAL_MATRIX_COLS);
+                                    return residual(fundMatrix, leftPoint, rightPoint);
+                                } catch (final AlgebraException | InvalidFundamentalMatrixException e) {
+                                    return initialTotalResidual;
                                 }
-                                mInternalMatrix.fromArray(params);
-
-
-                                mFundMatrix.setInternalMatrix(mInternalMatrix);
-
-                                y = residual(mFundMatrix, mLeftPoint,
-                                        mRightPoint);
-                            } catch (final AlgebraException | InvalidFundamentalMatrixException e) {
-                                y = initialTotalResidual;
                             }
-                            mGradientEstimator.gradient(params, derivatives);
+                        });
 
-                            return y;
+                @Override
+                public int getNumberOfDimensions() {
+                    return nDims;
+                }
+
+                @Override
+                public double[] createInitialParametersArray() {
+                    return initParams;
+                }
+
+                @Override
+                public double evaluate(
+                        final int i, final double[] point, final double[] params, final double[] derivatives)
+                        throws EvaluationException {
+                    leftPoint.setHomogeneousCoordinates(point[0], point[1], point[2]);
+                    rightPoint.setHomogeneousCoordinates(point[3], point[4], point[5]);
+
+                    double y;
+                    try {
+                        if (internalMatrix == null) {
+                            internalMatrix = new Matrix(FundamentalMatrix.FUNDAMENTAL_MATRIX_ROWS,
+                                    FundamentalMatrix.FUNDAMENTAL_MATRIX_COLS);
                         }
-                    };
+                        internalMatrix.fromArray(params);
 
-            final LevenbergMarquardtMultiDimensionFitter fitter =
-                    new LevenbergMarquardtMultiDimensionFitter(evaluator, x, y,
-                            getRefinementStandardDeviation());
+
+                        fundMatrix.setInternalMatrix(internalMatrix);
+
+                        y = residual(fundMatrix, leftPoint, rightPoint);
+                    } catch (final AlgebraException | InvalidFundamentalMatrixException e) {
+                        y = initialTotalResidual;
+                    }
+                    gradientEstimator.gradient(params, derivatives);
+
+                    return y;
+                }
+            };
+
+            final var fitter = new LevenbergMarquardtMultiDimensionFitter(evaluator, x, y,
+                    getRefinementStandardDeviation());
 
             fitter.fit();
 
             // obtain estimated params
-            final double[] params = fitter.getA();
+            final var params = fitter.getA();
 
             // update fundamental matrix
             internalMatrix.fromArray(params);
             result.setInternalMatrix(internalMatrix);
 
-            if (mKeepCovariance) {
+            if (keepCovariance) {
                 // keep covariance
-                mCovariance = fitter.getCovar();
+                covariance = fitter.getCovar();
             }
 
-            final double finalTotalResidual = totalResidual(result);
-            final boolean errorDecreased = finalTotalResidual < initialTotalResidual;
+            final var finalTotalResidual = totalResidual(result);
+            final var errorDecreased = finalTotalResidual < initialTotalResidual;
 
-            if (mListener != null) {
-                mListener.onRefineEnd(this, mInitialEstimation, result,
-                        errorDecreased);
+            if (listener != null) {
+                listener.onRefineEnd(this, initialEstimation, result, errorDecreased);
             }
 
             return errorDecreased;
@@ -350,7 +322,7 @@ public class FundamentalMatrixRefiner extends
         } catch (final Exception e) {
             throw new RefinerException(e);
         } finally {
-            mLocked = false;
+            locked = false;
         }
     }
 
@@ -363,18 +335,16 @@ public class FundamentalMatrixRefiner extends
      * @param rightPoint        right 2D point.
      * @return residual (distance of point to epipolar line).
      */
-    private double residual(final FundamentalMatrix fundamentalMatrix,
-                            final Point2D leftPoint, final Point2D rightPoint) {
+    private double residual(final FundamentalMatrix fundamentalMatrix, final Point2D leftPoint,
+                            final Point2D rightPoint) {
         try {
             leftPoint.normalize();
             rightPoint.normalize();
             fundamentalMatrix.normalize();
-            fundamentalMatrix.leftEpipolarLine(rightPoint, mTestLine);
-            final double leftDistance = Math.abs(mTestLine.signedDistance(
-                    leftPoint));
-            fundamentalMatrix.rightEpipolarLine(leftPoint, mTestLine);
-            final double rightDistance = Math.abs(mTestLine.signedDistance(
-                    rightPoint));
+            fundamentalMatrix.leftEpipolarLine(rightPoint, testLine);
+            final var leftDistance = Math.abs(testLine.signedDistance(leftPoint));
+            fundamentalMatrix.rightEpipolarLine(leftPoint, testLine);
+            final var rightDistance = Math.abs(testLine.signedDistance(rightPoint));
             // return average distance as an error residual
             return 0.5 * (leftDistance + rightDistance);
         } catch (final NotReadyException e) {
@@ -389,16 +359,14 @@ public class FundamentalMatrixRefiner extends
      * @return total residual.
      */
     private double totalResidual(final FundamentalMatrix fundamentalMatrix) {
-        double result = 0.0;
+        var result = 0.0;
 
-        final int nSamples = mInliers.length();
-        Point2D leftPoint;
-        Point2D rightPoint;
-        for (int i = 0; i < nSamples; i++) {
-            if (mInliers.get(i)) {
+        final var nSamples = inliers.length();
+        for (var i = 0; i < nSamples; i++) {
+            if (inliers.get(i)) {
                 // sample is inlier
-                leftPoint = mSamples1.get(i);
-                rightPoint = mSamples2.get(i);
+                final var leftPoint = samples1.get(i);
+                final var rightPoint = samples2.get(i);
                 leftPoint.normalize();
                 rightPoint.normalize();
                 result += residual(fundamentalMatrix, leftPoint, rightPoint);

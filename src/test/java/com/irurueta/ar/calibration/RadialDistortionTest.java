@@ -20,16 +20,15 @@ import com.irurueta.geometry.InhomogeneousPoint2D;
 import com.irurueta.geometry.NotSupportedException;
 import com.irurueta.geometry.Point2D;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class RadialDistortionTest {
+class RadialDistortionTest {
 
     private static final double MIN_POINT_VALUE = -1.0;
     private static final double MAX_POINT_VALUE = 1.0;
@@ -44,22 +43,21 @@ public class RadialDistortionTest {
     private static final int TIMES = 100;
 
     @Test
-    public void testConstructor() throws NotSupportedException, DistortionException {
+    void testConstructor() throws NotSupportedException, DistortionException {
         // default constructor
-        RadialDistortion distortion = new RadialDistortion();
+        var distortion = new RadialDistortion();
 
         // check correctness
         assertNull(distortion.getCenter());
-        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
-                distortion.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH, distortion.getHorizontalFocalLength(), 0.0);
         assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH, distortion.getVerticalFocalLength(), 0.0);
         assertEquals(RadialDistortion.DEFAULT_SKEW, distortion.getSkew(), 0.0);
         assertEquals(0.0, distortion.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
         assertEquals(0.0, distortion.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
-        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
-                distortion.getIntrinsic().getHorizontalFocalLength(), 0.0);
-        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
-                distortion.getIntrinsic().getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH, distortion.getIntrinsic().getHorizontalFocalLength(),
+                0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH, distortion.getIntrinsic().getVerticalFocalLength(),
+                0.0);
         assertEquals(RadialDistortion.DEFAULT_SKEW, distortion.getIntrinsic().getSkewness(), 0.0);
         assertEquals(0.0, distortion.getK1(), 0.0);
         assertEquals(0.0, distortion.getK2(), 0.0);
@@ -73,17 +71,15 @@ public class RadialDistortionTest {
 
         // check correctness
         assertNull(distortion.getCenter());
-        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
-                distortion.getHorizontalFocalLength(), 0.0);
-        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
-                distortion.getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH, distortion.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH, distortion.getVerticalFocalLength(), 0.0);
         assertEquals(RadialDistortion.DEFAULT_SKEW, distortion.getSkew(), 0.0);
         assertEquals(0.0, distortion.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
         assertEquals(0.0, distortion.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
-        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
-                distortion.getIntrinsic().getHorizontalFocalLength(), 0.0);
-        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
-                distortion.getIntrinsic().getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH, distortion.getIntrinsic().getHorizontalFocalLength(),
+                0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH, distortion.getIntrinsic().getVerticalFocalLength(),
+                0.0);
         assertEquals(RadialDistortion.DEFAULT_SKEW, distortion.getIntrinsic().getSkewness(), 0.0);
         assertEquals(1.0, distortion.getK1(), 0.0);
         assertEquals(2.0, distortion.getK2(), 0.0);
@@ -98,16 +94,15 @@ public class RadialDistortionTest {
 
         // check correctness
         assertNull(distortion.getCenter());
-        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
-                distortion.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH, distortion.getHorizontalFocalLength(), 0.0);
         assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH, distortion.getVerticalFocalLength(), 0.0);
         assertEquals(RadialDistortion.DEFAULT_SKEW, distortion.getSkew(), 0.0);
         assertEquals(0.0, distortion.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
         assertEquals(0.0, distortion.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
-        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
-                distortion.getIntrinsic().getHorizontalFocalLength(), 0.0);
-        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
-                distortion.getIntrinsic().getVerticalFocalLength(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH, distortion.getIntrinsic().getHorizontalFocalLength(),
+                0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH, distortion.getIntrinsic().getVerticalFocalLength(),
+                0.0);
         assertEquals(RadialDistortion.DEFAULT_SKEW, distortion.getIntrinsic().getSkewness(), 0.0);
         assertEquals(-1.0, distortion.getK1(), 0.0);
         assertEquals(-2.0, distortion.getK2(), 0.0);
@@ -118,31 +113,23 @@ public class RadialDistortionTest {
         assertEquals(DistortionKind.BROWN_RADIAL_DISTORTION, distortion.getKind());
 
         // Force IllegalArgumentException
-        distortion = null;
-        try {
-            distortion = new RadialDistortion(null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(distortion);
+        assertThrows(IllegalArgumentException.class, () -> new RadialDistortion(null));
 
         // constructor with parameters and center
-        Point2D center = new InhomogeneousPoint2D(4.0, 5.0);
-        distortion = new RadialDistortion(2.0, 3.0, center);
+        final var center1 = new InhomogeneousPoint2D(4.0, 5.0);
+        distortion = new RadialDistortion(2.0, 3.0, center1);
 
         // check correctness
-        assertSame(center, distortion.getCenter());
-        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
-                distortion.getHorizontalFocalLength(), 0.0);
-        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
-                distortion.getVerticalFocalLength(), 0.0);
+        assertSame(center1, distortion.getCenter());
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH, distortion.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH, distortion.getVerticalFocalLength(), 0.0);
         assertEquals(RadialDistortion.DEFAULT_SKEW, distortion.getSkew(), 0.0);
-        assertEquals(center.getInhomX(), distortion.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
-        assertEquals(center.getInhomY(), distortion.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
-        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
-                distortion.getIntrinsic().getHorizontalFocalLength(), 0.0);
-        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
-                distortion.getIntrinsic().getVerticalFocalLength(), 0.0);
+        assertEquals(center1.getInhomX(), distortion.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(center1.getInhomY(), distortion.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH, distortion.getIntrinsic().getHorizontalFocalLength(),
+                0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH, distortion.getIntrinsic().getVerticalFocalLength(),
+                0.0);
         assertEquals(RadialDistortion.DEFAULT_SKEW, distortion.getIntrinsic().getSkewness(), 0.0);
         assertEquals(2.0, distortion.getK1(), 0.0);
         assertEquals(3.0, distortion.getK2(), 0.0);
@@ -153,21 +140,19 @@ public class RadialDistortionTest {
         assertEquals(DistortionKind.BROWN_RADIAL_DISTORTION, distortion.getKind());
 
         // constructor with parameters array and center
-        distortion = new RadialDistortion(new double[]{-2.0, -3.0}, center);
+        distortion = new RadialDistortion(new double[]{-2.0, -3.0}, center1);
 
         // check correctness
-        assertSame(center, distortion.getCenter());
-        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
-                distortion.getHorizontalFocalLength(), 0.0);
-        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
-                distortion.getVerticalFocalLength(), 0.0);
+        assertSame(center1, distortion.getCenter());
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH, distortion.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH, distortion.getVerticalFocalLength(), 0.0);
         assertEquals(RadialDistortion.DEFAULT_SKEW, distortion.getSkew(), 0.0);
-        assertEquals(center.getInhomX(), distortion.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
-        assertEquals(center.getInhomY(), distortion.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
-        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
-                distortion.getIntrinsic().getHorizontalFocalLength(), 0.0);
-        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
-                distortion.getIntrinsic().getVerticalFocalLength(), 0.0);
+        assertEquals(center1.getInhomX(), distortion.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(center1.getInhomY(), distortion.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH, distortion.getIntrinsic().getHorizontalFocalLength(),
+                0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH, distortion.getIntrinsic().getVerticalFocalLength(),
+                0.0);
         assertEquals(RadialDistortion.DEFAULT_SKEW, distortion.getIntrinsic().getSkewness(), 0.0);
         assertEquals(-2.0, distortion.getK1(), 0.0);
         assertEquals(-3.0, distortion.getK2(), 0.0);
@@ -178,25 +163,19 @@ public class RadialDistortionTest {
         assertEquals(DistortionKind.BROWN_RADIAL_DISTORTION, distortion.getKind());
 
         // Force IllegalArgumentException
-        distortion = null;
-        try {
-            distortion = new RadialDistortion(null, center);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(distortion);
+        assertThrows(IllegalArgumentException.class, () -> new RadialDistortion(null, center1));
 
         // constructor with parameters, center and intrinsic parameters
-        distortion = new RadialDistortion(1.0, 2.0, center,
-                3.0, 4.0, 5.0);
+        distortion = new RadialDistortion(1.0, 2.0, center1, 3.0, 4.0,
+                5.0);
 
         // check correctness
-        assertSame(distortion.getCenter(), center);
+        assertSame(center1, distortion.getCenter());
         assertEquals(3.0, distortion.getHorizontalFocalLength(), 0.0);
         assertEquals(4.0, distortion.getVerticalFocalLength(), 0.0);
         assertEquals(5.0, distortion.getSkew(), 0.0);
-        assertEquals(center.getInhomX(), distortion.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
-        assertEquals(center.getInhomY(), distortion.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
+        assertEquals(center1.getInhomX(), distortion.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(center1.getInhomY(), distortion.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
         assertEquals(3.0, distortion.getIntrinsic().getHorizontalFocalLength(), 0.0);
         assertEquals(4.0, distortion.getIntrinsic().getVerticalFocalLength(), 0.0);
         assertEquals(5.0, distortion.getIntrinsic().getSkewness(), 0.0);
@@ -209,26 +188,20 @@ public class RadialDistortionTest {
         assertEquals(DistortionKind.BROWN_RADIAL_DISTORTION, distortion.getKind());
 
         // Force RadialDistortionException
-        distortion = null;
-        try {
-            distortion = new RadialDistortion(1.0, 2.0, center,
-                    0.0, 4.0, 5.0);
-            fail("RadialDistortionException expected but not thrown");
-        } catch (final RadialDistortionException ignore) {
-        }
-        assertNull(distortion);
+        assertThrows(RadialDistortionException.class, () -> new RadialDistortion(1.0, 2.0, center1,
+                0.0, 4.0, 5.0));
 
         // constructor with parameters arrays, center and intrinsic parameters
-        distortion = new RadialDistortion(new double[]{-1.0, -2.0}, center,
-                3.0, 4.0, 5.0);
+        distortion = new RadialDistortion(new double[]{-1.0, -2.0}, center1, 3.0,
+                4.0, 5.0);
 
         // check correctness
-        assertSame(distortion.getCenter(), center);
+        assertSame(center1, distortion.getCenter());
         assertEquals(3.0, distortion.getHorizontalFocalLength(), 0.0);
         assertEquals(4.0, distortion.getVerticalFocalLength(), 0.0);
         assertEquals(5.0, distortion.getSkew(), 0.0);
-        assertEquals(center.getInhomX(), distortion.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
-        assertEquals(center.getInhomY(), distortion.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
+        assertEquals(center1.getInhomX(), distortion.getIntrinsic().getHorizontalPrincipalPoint(), 0.0);
+        assertEquals(center1.getInhomY(), distortion.getIntrinsic().getVerticalPrincipalPoint(), 0.0);
         assertEquals(3.0, distortion.getIntrinsic().getHorizontalFocalLength(), 0.0);
         assertEquals(4.0, distortion.getIntrinsic().getVerticalFocalLength(), 0.0);
         assertEquals(5.0, distortion.getIntrinsic().getSkewness(), 0.0);
@@ -241,81 +214,65 @@ public class RadialDistortionTest {
         assertEquals(DistortionKind.BROWN_RADIAL_DISTORTION, distortion.getKind());
 
         // Force RadialDistortionException
-        distortion = null;
-        try {
-            distortion = new RadialDistortion(new double[]{-1.0, -2.0}, center,
-                    0.0, 4.0, 5.0);
-            fail("RadialDistortionException expected but not thrown");
-        } catch (final RadialDistortionException ignore) {
-        }
+        assertThrows(RadialDistortionException.class, () -> new RadialDistortion(new double[]{-1.0, -2.0}, center1,
+                0.0, 4.0, 5.0));
 
         // Force IllegalArgumentException
-        try {
-            distortion = new RadialDistortion(null, center, 3.0,
-                    4.0, 5.0);
-            fail("RadialDistortionException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(distortion);
+        assertThrows(IllegalArgumentException.class, () -> new RadialDistortion(null, center1,
+                3.0, 4.0, 5.0));
 
         // constructor with points
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final var randomizer = new UniformRandomizer();
 
-        final double k1 = randomizer.nextDouble(MIN_PARAM_VALUE, MAX_PARAM_VALUE);
-        final double k2 = randomizer.nextDouble(MIN_PARAM_VALUE, MAX_PARAM_VALUE);
+        final var k1 = randomizer.nextDouble(MIN_PARAM_VALUE, MAX_PARAM_VALUE);
+        final var k2 = randomizer.nextDouble(MIN_PARAM_VALUE, MAX_PARAM_VALUE);
 
-        center = new InhomogeneousPoint2D(
-                randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE),
+        final var center2 = new InhomogeneousPoint2D(randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE),
                 randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE));
 
-        distortion = new RadialDistortion(k1, k2, center);
+        distortion = new RadialDistortion(k1, k2, center2);
 
-        final Point2D undistortedPoint1 = new InhomogeneousPoint2D(
-                randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE),
+        final var undistortedPoint1 = new InhomogeneousPoint2D(randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE),
                 randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE));
-        final Point2D undistortedPoint2 = new InhomogeneousPoint2D(
-                randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE),
+        final var undistortedPoint2 = new InhomogeneousPoint2D(randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE),
                 randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE));
-        final Point2D distortedPoint1 = distortion.distort(undistortedPoint1);
-        final Point2D distortedPoint2 = distortion.distort(undistortedPoint2);
+        final var distortedPoint1 = distortion.distort(undistortedPoint1);
+        final var distortedPoint2 = distortion.distort(undistortedPoint2);
 
-        distortion = new RadialDistortion(distortedPoint1, distortedPoint2,
-                undistortedPoint1, undistortedPoint2, center);
+        distortion = new RadialDistortion(distortedPoint1, distortedPoint2, undistortedPoint1, undistortedPoint2,
+                center2);
 
         // check correctness
         assertEquals(k1, distortion.getK1(), ERROR);
         assertEquals(k2, distortion.getK2(), ERROR);
-        assertSame(center, distortion.getCenter());
+        assertSame(center2, distortion.getCenter());
         assertTrue(distortion.canDistort());
         assertTrue(distortion.canUndistort());
     }
 
     @Test
-    public void testSetFromPointsAndCenter() throws NotSupportedException, DistortionException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testSetFromPointsAndCenter() throws NotSupportedException, DistortionException {
+        final var randomizer = new UniformRandomizer();
 
-        final double k1 = randomizer.nextDouble(MIN_PARAM_VALUE, MAX_PARAM_VALUE);
-        final double k2 = randomizer.nextDouble(MIN_PARAM_VALUE, MAX_PARAM_VALUE);
+        final var k1 = randomizer.nextDouble(MIN_PARAM_VALUE, MAX_PARAM_VALUE);
+        final var k2 = randomizer.nextDouble(MIN_PARAM_VALUE, MAX_PARAM_VALUE);
 
-        final Point2D center = new InhomogeneousPoint2D(
-                randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE),
+        final var center = new InhomogeneousPoint2D(randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE),
                 randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE));
 
-        RadialDistortion distortion = new RadialDistortion(k1, k2, center);
+        var distortion = new RadialDistortion(k1, k2, center);
 
-        final Point2D undistortedPoint1 = new InhomogeneousPoint2D(
-                randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE),
+        final var undistortedPoint1 = new InhomogeneousPoint2D(randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE),
                 randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE));
-        final Point2D undistortedPoint2 = new InhomogeneousPoint2D(
-                randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE),
+        final var undistortedPoint2 = new InhomogeneousPoint2D(randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE),
                 randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE));
-        final Point2D distortedPoint1 = distortion.distort(undistortedPoint1);
-        final Point2D distortedPoint2 = distortion.distort(undistortedPoint2);
+        final var distortedPoint1 = distortion.distort(undistortedPoint1);
+        final var distortedPoint2 = distortion.distort(undistortedPoint2);
 
         // set from points
         distortion = new RadialDistortion();
-        distortion.setFromPointsAndCenter(distortedPoint1, distortedPoint2,
-                undistortedPoint1, undistortedPoint2, center);
+        distortion.setFromPointsAndCenter(distortedPoint1, distortedPoint2, undistortedPoint1, undistortedPoint2,
+                center);
 
         // check correctness
         assertEquals(k1, distortion.getK1(), ERROR);
@@ -327,14 +284,14 @@ public class RadialDistortionTest {
     }
 
     @Test
-    public void testGetSetCenter() {
-        final RadialDistortion distortion = new RadialDistortion();
+    void testGetSetCenter() {
+        final var distortion = new RadialDistortion();
 
         // check default value
         assertNull(distortion.getCenter());
 
         // set new value
-        final Point2D center = Point2D.create();
+        final var center = Point2D.create();
         distortion.setCenter(center);
 
         // check correctness
@@ -342,12 +299,11 @@ public class RadialDistortionTest {
     }
 
     @Test
-    public void testGetSetHorizontalFocalLength() throws RadialDistortionException {
-        final RadialDistortion distortion = new RadialDistortion();
+    void testGetSetHorizontalFocalLength() throws RadialDistortionException {
+        final var distortion = new RadialDistortion();
 
         // check default value
-        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
-                distortion.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH, distortion.getHorizontalFocalLength(), 0.0);
 
         // set new value
         distortion.setHorizontalFocalLength(2.0);
@@ -356,16 +312,12 @@ public class RadialDistortionTest {
         assertEquals(2.0, distortion.getHorizontalFocalLength(), 0.0);
 
         // Force RadialDistortionException
-        try {
-            distortion.setHorizontalFocalLength(0.0);
-            fail("RadialDistortionException expected but not thrown");
-        } catch (final RadialDistortionException ignore) {
-        }
+        assertThrows(RadialDistortionException.class, () -> distortion.setHorizontalFocalLength(0.0));
     }
 
     @Test
-    public void testGetSetVerticalFocalLength() throws RadialDistortionException {
-        final RadialDistortion distortion = new RadialDistortion();
+    void testGetSetVerticalFocalLength() throws RadialDistortionException {
+        final var distortion = new RadialDistortion();
 
         // check default value
         assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH, distortion.getVerticalFocalLength(), 0.0);
@@ -377,16 +329,12 @@ public class RadialDistortionTest {
         assertEquals(2.0, distortion.getVerticalFocalLength(), 0.0);
 
         // Force RadialDistortionException
-        try {
-            distortion.setVerticalFocalLength(0.0);
-            fail("RadialDistortionException expected but not thrown");
-        } catch (final RadialDistortionException ignore) {
-        }
+        assertThrows(RadialDistortionException.class, () -> distortion.setVerticalFocalLength(0.0));
     }
 
     @Test
-    public void testGetSetSkew() {
-        final RadialDistortion distortion = new RadialDistortion();
+    void testGetSetSkew() {
+        final var distortion = new RadialDistortion();
 
         // check default value
         assertEquals(RadialDistortion.DEFAULT_SKEW, distortion.getSkew(), 0.0);
@@ -399,18 +347,17 @@ public class RadialDistortionTest {
     }
 
     @Test
-    public void testSetIntrinsic() throws RadialDistortionException {
-        final RadialDistortion distortion = new RadialDistortion();
+    void testSetIntrinsic() throws RadialDistortionException {
+        final var distortion = new RadialDistortion();
 
         // check default value
         assertNull(distortion.getCenter());
-        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH,
-                distortion.getHorizontalFocalLength(), 0.0);
+        assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH, distortion.getHorizontalFocalLength(), 0.0);
         assertEquals(RadialDistortion.DEFAULT_FOCAL_LENGTH, distortion.getVerticalFocalLength(), 0.0);
         assertEquals(RadialDistortion.DEFAULT_SKEW, distortion.getSkew(), 0.0);
 
         // set new value
-        final Point2D center = Point2D.create();
+        final var center = Point2D.create();
         distortion.setIntrinsic(center, 2.0, 3.0, 4.0);
 
         // check correctness
@@ -420,16 +367,13 @@ public class RadialDistortionTest {
         assertEquals(4.0, distortion.getSkew(), 0.0);
 
         // Force RadialDistortionException
-        try {
-            distortion.setIntrinsic(center, 0.0, 0.0, 4.0);
-            fail("RadialDistortionException expected but not thrown");
-        } catch (final RadialDistortionException ignore) {
-        }
+        assertThrows(RadialDistortionException.class,
+                () -> distortion.setIntrinsic(center, 0.0, 0.0, 4.0));
     }
 
     @Test
-    public void testGetSetK1() {
-        final RadialDistortion distortion = new RadialDistortion();
+    void testGetSetK1() {
+        final var distortion = new RadialDistortion();
 
         // check default value
         assertEquals(0.0, distortion.getK1(), 0.0);
@@ -442,8 +386,8 @@ public class RadialDistortionTest {
     }
 
     @Test
-    public void testGetSetK2() {
-        final RadialDistortion distortion = new RadialDistortion();
+    void testGetSetK2() {
+        final var distortion = new RadialDistortion();
 
         // check default value
         assertEquals(0.0, distortion.getK2(), 0.0);
@@ -456,8 +400,8 @@ public class RadialDistortionTest {
     }
 
     @Test
-    public void testGetSetKParams() {
-        final RadialDistortion distortion = new RadialDistortion();
+    void testGetSetKParams() {
+        final var distortion = new RadialDistortion();
 
         // check default value
         assertNull(distortion.getKParams());
@@ -465,7 +409,7 @@ public class RadialDistortionTest {
         assertEquals(0.0, distortion.getK2(), 0.0);
 
         // set new values
-        final double[] kParams = new double[]{1.0, 2.0, 3.0};
+        final var kParams = new double[]{1.0, 2.0, 3.0};
         distortion.setKParams(kParams);
 
         // check correctness
@@ -475,53 +419,47 @@ public class RadialDistortionTest {
     }
 
     @Test
-    public void testDistortUndistortPoint() throws NotSupportedException,
-            DistortionException {
-        for (int j = 0; j < TIMES; j++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testDistortUndistortPoint() throws NotSupportedException, DistortionException {
+        for (var j = 0; j < TIMES; j++) {
+            final var randomizer = new UniformRandomizer();
 
-            final double k1 = randomizer.nextDouble(MIN_PARAM_VALUE, MAX_PARAM_VALUE);
-            final double k2 = randomizer.nextDouble(MIN_PARAM_VALUE, MAX_PARAM_VALUE);
+            final var k1 = randomizer.nextDouble(MIN_PARAM_VALUE, MAX_PARAM_VALUE);
+            final var k2 = randomizer.nextDouble(MIN_PARAM_VALUE, MAX_PARAM_VALUE);
 
-            final Point2D center = new InhomogeneousPoint2D(
-                    randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE),
+            final var center = new InhomogeneousPoint2D(randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE),
                     randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE));
 
-            final Point2D distorted = new InhomogeneousPoint2D(
-                    randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE),
+            final var distorted = new InhomogeneousPoint2D(randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE),
                     randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE));
 
-            final RadialDistortion distortion = new RadialDistortion(k1, k2, center);
+            final var distortion = new RadialDistortion(k1, k2, center);
 
-            final Point2D undistorted = distortion.undistort(distorted);
-            final Point2D distorted2 = distortion.distort(undistorted);
+            final var undistorted = distortion.undistort(distorted);
+            final var distorted2 = distortion.distort(undistorted);
 
             assertEquals(0.0, distorted.distanceTo(distorted2), ERROR);
         }
     }
 
     @Test
-    public void testDistortUndistortPoints() throws NotSupportedException,
-            DistortionException {
-        for (int j = 0; j < TIMES; j++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testDistortUndistortPoints() throws NotSupportedException, DistortionException {
+        for (var j = 0; j < TIMES; j++) {
+            final var randomizer = new UniformRandomizer();
 
-            final double k1 = randomizer.nextDouble(MIN_PARAM_VALUE, MAX_PARAM_VALUE);
-            final double k2 = randomizer.nextDouble(MIN_PARAM_VALUE, MAX_PARAM_VALUE);
+            final var k1 = randomizer.nextDouble(MIN_PARAM_VALUE, MAX_PARAM_VALUE);
+            final var k2 = randomizer.nextDouble(MIN_PARAM_VALUE, MAX_PARAM_VALUE);
 
-            final Point2D center = new InhomogeneousPoint2D(
-                    randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE),
+            final var center = new InhomogeneousPoint2D(randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE),
                     randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE));
 
-            final RadialDistortion distortion = new RadialDistortion(k1, k2, center);
+            final var distortion = new RadialDistortion(k1, k2, center);
 
-            final List<Point2D> distortedPoints = new ArrayList<>();
-            final List<Point2D> undistortedPoints = new ArrayList<>();
+            final var distortedPoints = new ArrayList<Point2D>();
+            final var undistortedPoints = new ArrayList<Point2D>();
             List<Point2D> distortedPoints2;
             Point2D distortedPoint;
-            for (int i = 0; i < NUM_POINTS; i++) {
-                distortedPoint = new InhomogeneousPoint2D(
-                        randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE),
+            for (var i = 0; i < NUM_POINTS; i++) {
+                distortedPoint = new InhomogeneousPoint2D(randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE),
                         randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE));
 
                 distortedPoints.add(distortedPoint);
@@ -530,76 +468,69 @@ public class RadialDistortionTest {
 
             distortedPoints2 = distortion.distort(undistortedPoints);
 
-            for (int i = 0; i < NUM_POINTS; i++) {
-                assertEquals(0.0, distortedPoints.get(i).distanceTo(distortedPoints2.get(i)),
-                        ERROR);
+            for (var i = 0; i < NUM_POINTS; i++) {
+                assertEquals(0.0, distortedPoints.get(i).distanceTo(distortedPoints2.get(i)), ERROR);
             }
         }
     }
 
     @Test
-    public void testDistortPoint() throws NotSupportedException,
-            DistortionException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testDistortPoint() throws NotSupportedException, DistortionException {
+        final var randomizer = new UniformRandomizer();
 
-        final double k1 = randomizer.nextDouble(MIN_PARAM_VALUE, MAX_PARAM_VALUE);
-        final double k2 = randomizer.nextDouble(MIN_PARAM_VALUE, MAX_PARAM_VALUE);
+        final var k1 = randomizer.nextDouble(MIN_PARAM_VALUE, MAX_PARAM_VALUE);
+        final var k2 = randomizer.nextDouble(MIN_PARAM_VALUE, MAX_PARAM_VALUE);
 
-        final Point2D center = new InhomogeneousPoint2D(
-                randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE),
+        final var center = new InhomogeneousPoint2D(randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE),
                 randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE));
 
-        final Point2D undistorted = new InhomogeneousPoint2D(
-                randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE),
+        final var undistorted = new InhomogeneousPoint2D(randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE),
                 randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE));
 
-        final RadialDistortion distortion = new RadialDistortion(k1, k2, center);
+        final var distortion = new RadialDistortion(k1, k2, center);
 
-        final Point2D distorted1 = distortion.distort(undistorted);
-        final Point2D distorted2 = Point2D.create();
+        final var distorted1 = distortion.distort(undistorted);
+        final var distorted2 = Point2D.create();
         distortion.distort(undistorted, distorted2);
 
         assertEquals(distorted1, distorted2);
 
-        final double xu = undistorted.getInhomX();
-        final double yu = undistorted.getInhomY();
-        final double xc = center.getInhomX();
-        final double yc = center.getInhomY();
-        final double diffX = xu - xc;
-        final double diffY = yu - yc;
-        final double r2 = diffX * diffX + diffY * diffY;
-        final double r4 = r2 * r2;
-        final double factor = 1.0 + (k1 * r2) + (k2 * r4);
-        final double xd = xc + diffX * factor;
-        final double yd = yc + diffY * factor;
+        final var xu = undistorted.getInhomX();
+        final var yu = undistorted.getInhomY();
+        final var xc = center.getInhomX();
+        final var yc = center.getInhomY();
+        final var diffX = xu - xc;
+        final var diffY = yu - yc;
+        final var r2 = diffX * diffX + diffY * diffY;
+        final var r4 = r2 * r2;
+        final var factor = 1.0 + (k1 * r2) + (k2 * r4);
+        final var xd = xc + diffX * factor;
+        final var yd = yc + diffY * factor;
 
         assertEquals(xd, distorted1.getInhomX(), ERROR);
         assertEquals(yd, distorted1.getInhomY(), ERROR);
     }
 
     @Test
-    public void testDistortPoints() throws NotSupportedException,
-            DistortionException {
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+    void testDistortPoints() throws NotSupportedException, DistortionException {
+        final var randomizer = new UniformRandomizer();
 
-        final double k1 = randomizer.nextDouble(MIN_PARAM_VALUE, MAX_PARAM_VALUE);
-        final double k2 = randomizer.nextDouble(MIN_PARAM_VALUE, MAX_PARAM_VALUE);
+        final var k1 = randomizer.nextDouble(MIN_PARAM_VALUE, MAX_PARAM_VALUE);
+        final var k2 = randomizer.nextDouble(MIN_PARAM_VALUE, MAX_PARAM_VALUE);
 
-        final Point2D center = new InhomogeneousPoint2D(
-                randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE),
+        final var center = new InhomogeneousPoint2D(randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE),
                 randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE));
 
-        final RadialDistortion distortion = new RadialDistortion(k1, k2, center);
+        final var distortion = new RadialDistortion(k1, k2, center);
 
-        final List<Point2D> undistortedPoints = new ArrayList<>();
-        final List<Point2D> distortedPoints1 = new ArrayList<>();
+        final var undistortedPoints = new ArrayList<Point2D>();
+        final var distortedPoints1 = new ArrayList<Point2D>();
         final List<Point2D> distortedPoints2;
         Point2D undistortedPoint;
         Point2D distortedPoint1;
         Point2D distortedPoint2;
-        for (int i = 0; i < NUM_POINTS; i++) {
-            undistortedPoint = new InhomogeneousPoint2D(
-                    randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE),
+        for (var i = 0; i < NUM_POINTS; i++) {
+            undistortedPoint = new InhomogeneousPoint2D(randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE),
                     randomizer.nextDouble(MIN_POINT_VALUE, MAX_POINT_VALUE));
             undistortedPoints.add(undistortedPoint);
             distortedPoints1.add(Point2D.create());
@@ -611,24 +542,24 @@ public class RadialDistortionTest {
 
         assertEquals(NUM_POINTS, distortedPoints1.size());
         assertEquals(NUM_POINTS, distortedPoints2.size());
-        for (int i = 0; i < NUM_POINTS; i++) {
+        for (var i = 0; i < NUM_POINTS; i++) {
             undistortedPoint = undistortedPoints.get(i);
             distortedPoint1 = distortedPoints1.get(i);
             distortedPoint2 = distortedPoints2.get(i);
 
             assertEquals(distortedPoint1, distortedPoint2);
 
-            final double xu = undistortedPoint.getInhomX();
-            final double yu = undistortedPoint.getInhomY();
-            final double xc = center.getInhomX();
-            final double yc = center.getInhomY();
-            final double diffX = xu - xc;
-            final double diffY = yu - yc;
-            final double r2 = diffX * diffX + diffY * diffY;
-            final double r4 = r2 * r2;
-            final double factor = 1.0 + (k1 * r2) + (k2 * r4);
-            final double xd = xc + diffX * factor;
-            final double yd = yc + diffY * factor;
+            final var xu = undistortedPoint.getInhomX();
+            final var yu = undistortedPoint.getInhomY();
+            final var xc = center.getInhomX();
+            final var yc = center.getInhomY();
+            final var diffX = xu - xc;
+            final var diffY = yu - yc;
+            final var r2 = diffX * diffX + diffY * diffY;
+            final var r4 = r2 * r2;
+            final var factor = 1.0 + (k1 * r2) + (k2 * r4);
+            final var xd = xc + diffX * factor;
+            final var yd = yc + diffY * factor;
 
             assertEquals(xd, distortedPoint1.getInhomX(), ERROR);
             assertEquals(yd, distortedPoint1.getInhomY(), ERROR);
@@ -636,11 +567,11 @@ public class RadialDistortionTest {
     }
 
     @Test
-    public void testSerializeDeserialize() throws DistortionException, IOException, ClassNotFoundException {
-        final RadialDistortion distortion1 = new RadialDistortion();
+    void testSerializeDeserialize() throws DistortionException, IOException, ClassNotFoundException {
+        final var distortion1 = new RadialDistortion();
 
         // set new values
-        final InhomogeneousPoint2D center = new InhomogeneousPoint2D();
+        final var center = new InhomogeneousPoint2D();
         distortion1.setCenter(center);
         distortion1.setHorizontalFocalLength(0.5);
         distortion1.setVerticalFocalLength(0.4);
@@ -657,15 +588,13 @@ public class RadialDistortionTest {
         assertEquals(0.5, distortion1.getK2(), 0.0);
 
         // serialize and deserialize
-        final byte[] bytes = SerializationHelper.serialize(distortion1);
-        final RadialDistortion distortion2 = SerializationHelper.deserialize(bytes);
+        final var bytes = SerializationHelper.serialize(distortion1);
+        final var distortion2 = SerializationHelper.<RadialDistortion>deserialize(bytes);
 
         // check
         assertEquals(distortion1.getCenter(), distortion2.getCenter());
-        assertEquals(distortion1.getHorizontalFocalLength(), distortion2.getHorizontalFocalLength(),
-                0.0);
-        assertEquals(distortion1.getVerticalFocalLength(), distortion2.getVerticalFocalLength(),
-                0.0);
+        assertEquals(distortion1.getHorizontalFocalLength(), distortion2.getHorizontalFocalLength(), 0.0);
+        assertEquals(distortion1.getVerticalFocalLength(), distortion2.getVerticalFocalLength(), 0.0);
         assertEquals(distortion1.getSkew(), distortion2.getSkew(), 0.0);
         assertEquals(distortion1.getK1(), distortion2.getK1(), 0.0);
         assertEquals(distortion1.getK2(), distortion2.getK2(), 0.0);

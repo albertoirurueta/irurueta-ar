@@ -21,29 +21,28 @@ package com.irurueta.ar.slam;
  * This class must be used while gathering data for a system being kept constant
  * (no motion).
  */
-public class ConstantVelocityModelSlamCalibrator extends
-        BaseSlamCalibrator<ConstantVelocityModelSlamCalibrationData> {
+public class ConstantVelocityModelSlamCalibrator extends BaseSlamCalibrator<ConstantVelocityModelSlamCalibrationData> {
 
     /**
      * Last sample of angular speed along x-axis.
      */
-    private double mLastAngularSpeedX;
+    private double lastAngularSpeedX;
 
     /**
      * Last sample of angular speed along y-axis.
      */
-    private double mLastAngularSpeedY;
+    private double lastAngularSpeedY;
 
     /**
      * Last sample of angular speed along z-axis.
      */
-    private double mLastAngularSpeedZ;
+    private double lastAngularSpeedZ;
 
     /**
      * Last timestamp of a full sample expressed in nanoseconds since the epoch
      * time.
      */
-    private long mLastTimestampNanos = -1;
+    private long lastTimestampNanos = -1;
 
     /**
      * Constructor.
@@ -58,8 +57,8 @@ public class ConstantVelocityModelSlamCalibrator extends
     @Override
     public void reset() {
         super.reset();
-        mLastAngularSpeedX = mLastAngularSpeedY = mLastAngularSpeedZ = 0.0;
-        mLastTimestampNanos = -1;
+        lastAngularSpeedX = lastAngularSpeedY = lastAngularSpeedZ = 0.0;
+        lastTimestampNanos = -1;
     }
 
     /**
@@ -80,8 +79,7 @@ public class ConstantVelocityModelSlamCalibrator extends
      */
     @Override
     public ConstantVelocityModelSlamCalibrationData getCalibrationData() {
-        final ConstantVelocityModelSlamCalibrationData result =
-                new ConstantVelocityModelSlamCalibrationData();
+        final var result = new ConstantVelocityModelSlamCalibrationData();
         getCalibrationData(result);
         return result;
     }
@@ -93,52 +91,48 @@ public class ConstantVelocityModelSlamCalibrator extends
     @SuppressWarnings("DuplicatedCode")
     @Override
     protected void processFullSample() {
-        if (mListener != null) {
-            mListener.onFullSampleReceived(this);
+        if (listener != null) {
+            listener.onFullSampleReceived(this);
         }
 
-        final long timestamp = getMostRecentTimestampNanos();
-        if (mLastTimestampNanos < 0) {
+        final var timestamp = getMostRecentTimestampNanos();
+        if (lastTimestampNanos < 0) {
             // first time receiving control data we cannot determine its
             // variation
-            mLastAngularSpeedX = mAccumulatedAngularSpeedSampleX;
-            mLastAngularSpeedY = mAccumulatedAngularSpeedSampleY;
-            mLastAngularSpeedZ = mAccumulatedAngularSpeedSampleZ;
+            lastAngularSpeedX = accumulatedAngularSpeedSampleX;
+            lastAngularSpeedY = accumulatedAngularSpeedSampleY;
+            lastAngularSpeedZ = accumulatedAngularSpeedSampleZ;
 
-            mLastTimestampNanos = timestamp;
+            lastTimestampNanos = timestamp;
 
-            if (mListener != null) {
-                mListener.onFullSampleProcessed(this);
+            if (listener != null) {
+                listener.onFullSampleProcessed(this);
             }
 
             return;
         }
 
-        final double deltaAngularSpeedX = mAccumulatedAngularSpeedSampleX -
-                mLastAngularSpeedX;
-        final double deltaAngularSpeedY = mAccumulatedAngularSpeedSampleY -
-                mLastAngularSpeedY;
-        final double deltaAngularSpeedZ = mAccumulatedAngularSpeedSampleZ -
-                mLastAngularSpeedZ;
-        final double deltaTimestamp = (timestamp - mLastTimestampNanos) *
-                NANOS_TO_SECONDS;
+        final var deltaAngularSpeedX = accumulatedAngularSpeedSampleX - lastAngularSpeedX;
+        final var deltaAngularSpeedY = accumulatedAngularSpeedSampleY - lastAngularSpeedY;
+        final var deltaAngularSpeedZ = accumulatedAngularSpeedSampleZ - lastAngularSpeedZ;
+        final var deltaTimestamp = (timestamp - lastTimestampNanos) * NANOS_TO_SECONDS;
 
-        mSample[0] = mAccumulatedAccelerationSampleX * deltaTimestamp;
-        mSample[1] = mAccumulatedAccelerationSampleY * deltaTimestamp;
-        mSample[2] = mAccumulatedAccelerationSampleZ * deltaTimestamp;
-        mSample[3] = deltaAngularSpeedX;
-        mSample[4] = deltaAngularSpeedY;
-        mSample[5] = deltaAngularSpeedZ;
+        sample[0] = accumulatedAccelerationSampleX * deltaTimestamp;
+        sample[1] = accumulatedAccelerationSampleY * deltaTimestamp;
+        sample[2] = accumulatedAccelerationSampleZ * deltaTimestamp;
+        sample[3] = deltaAngularSpeedX;
+        sample[4] = deltaAngularSpeedY;
+        sample[5] = deltaAngularSpeedZ;
         updateSample();
 
-        mLastAngularSpeedX = mAccumulatedAngularSpeedSampleX;
-        mLastAngularSpeedY = mAccumulatedAngularSpeedSampleY;
-        mLastAngularSpeedZ = mAccumulatedAngularSpeedSampleZ;
+        lastAngularSpeedX = accumulatedAngularSpeedSampleX;
+        lastAngularSpeedY = accumulatedAngularSpeedSampleY;
+        lastAngularSpeedZ = accumulatedAngularSpeedSampleZ;
 
-        mLastTimestampNanos = timestamp;
+        lastTimestampNanos = timestamp;
 
-        if (mListener != null) {
-            mListener.onFullSampleProcessed(this);
+        if (listener != null) {
+            listener.onFullSampleProcessed(this);
         }
     }
 }
