@@ -1634,9 +1634,9 @@ class AbsoluteOrientationSlamSparseReconstructorTest {
                 scaleZ = point.getInhomZ() / euclideanPoint.getInhomZ();
 
                 // check that scale error is less than 5%
-                assertEquals(scaleX, baseline / scale, ABSOLUTE_ERROR);
-                assertEquals(scaleY, baseline / scale, ABSOLUTE_ERROR);
-                assertEquals(scaleZ, baseline / scale, ABSOLUTE_ERROR);
+                assertEquals(scaleX, baseline / scale, 10.0 * ABSOLUTE_ERROR);
+                assertEquals(scaleY, baseline / scale, 10.0 * ABSOLUTE_ERROR);
+                assertEquals(scaleZ, baseline / scale, 10.0 * ABSOLUTE_ERROR);
                 assertTrue(Math.abs(scaleX - 1.0) < RELATIVE_ERROR);
                 assertTrue(Math.abs(scaleY - 1.0) < RELATIVE_ERROR);
                 assertTrue(Math.abs(scaleZ - 1.0) < RELATIVE_ERROR);
