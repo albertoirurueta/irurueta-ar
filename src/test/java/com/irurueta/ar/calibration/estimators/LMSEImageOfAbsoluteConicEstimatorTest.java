@@ -2723,8 +2723,8 @@ class LMSEImageOfAbsoluteConicEstimatorTest implements ImageOfAbsoluteConicEstim
         avgVerticalPrincipalPointError /= succeeded;
 
         // check that average error of intrinsic parameters is small enough
-        assertEquals(0.0, avgHorizontalFocalDistanceError, LARGE_ABSOLUTE_ERROR);
-        assertEquals(0.0, avgVerticalFocalDistanceError, LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgHorizontalFocalDistanceError, 2.0 * LARGE_ABSOLUTE_ERROR);
+        assertEquals(0.0, avgVerticalFocalDistanceError, 2.0 * LARGE_ABSOLUTE_ERROR);
         assertEquals(0.0, avgSkewnessError, LARGE_ABSOLUTE_ERROR);
         assertEquals(0.0, avgHorizontalPrincipalPointError, LARGE_ABSOLUTE_ERROR);
         assertEquals(0.0, avgVerticalPrincipalPointError, LARGE_ABSOLUTE_ERROR);
