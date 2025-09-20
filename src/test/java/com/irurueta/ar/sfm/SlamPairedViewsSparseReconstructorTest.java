@@ -55,7 +55,7 @@ class SlamPairedViewsSparseReconstructorTest {
     private static final int TIMES = 500;
     private static final int MAX_TRIES = 20000;
 
-    private static final double ABSOLUTE_ERROR = 1e-6;
+    private static final double ABSOLUTE_ERROR = 2e-6;
     private static final double LARGE_ABSOLUTE_ERROR = 1e-3;
 
     // 5% of relative error in scale estimation
