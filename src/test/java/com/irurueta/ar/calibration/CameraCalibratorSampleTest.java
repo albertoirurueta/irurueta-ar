@@ -322,7 +322,7 @@ class CameraCalibratorSampleTest {
 
         var totalPoints = 0;
         var avgTotalError = 0.0;
-        for (var j = 0; j < TIMES; j++) {
+        for (var j = 0; j < 2 * TIMES; j++) {
             final var pattern = Pattern2D.create(Pattern2DType.CIRCLES);
             final var patternPoints = pattern.getIdealPoints();
 
