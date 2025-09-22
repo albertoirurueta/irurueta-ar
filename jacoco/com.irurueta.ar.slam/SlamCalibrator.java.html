@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SlamCalibrator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.slam</a> &gt; <span class="el_source">SlamCalibrator.java</span></div><h1>SlamCalibrator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2016 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.slam;
+
+/**
+ * Processes data to estimate calibration for SLAM estimator.
+ * This class must be used while gathering data for a system being kept constant
+ * (no motion).
+ */
+public class SlamCalibrator extends BaseSlamCalibrator&lt;SlamCalibrationData&gt; {
+
+    /**
+     * Last sample of linear acceleration along x-axis.
+     */
+    private double lastAccelerationX;
+
+    /**
+     * Last sample of linear acceleration along y-axis.
+     */
+    private double lastAccelerationY;
+
+    /**
+     * Last sample of linear acceleration along z-axis.
+     */
+    private double lastAccelerationZ;
+
+    /**
+     * Last sample of angular speed along x-axis.
+     */
+    private double lastAngularSpeedX;
+
+    /**
+     * Last sample of angular speed along y-axis.
+     */
+    private double lastAngularSpeedY;
+
+    /**
+     * Last sample of angular speed along z-axis.
+     */
+    private double lastAngularSpeedZ;
+
+    /**
+     * Last timestamp of a full sample expressed in nanoseconds since the epoch
+     * time.
+     */
+<span class="fc" id="L59">    private long lastTimestampNanos = -1;</span>
+
+    /**
+     * Constructor.
+     */
+    public SlamCalibrator() {
+<span class="fc" id="L65">        super(SlamEstimator.CONTROL_LENGTH);</span>
+<span class="fc" id="L66">    }</span>
+
+    /**
+     * Resets calibrator.
+     */
+    @Override
+    public void reset() {
+<span class="fc" id="L73">        super.reset();</span>
+<span class="fc" id="L74">        lastAccelerationX = lastAccelerationY = lastAccelerationZ =</span>
+                lastAngularSpeedX = lastAngularSpeedY = lastAngularSpeedZ = 0.0;
+<span class="fc" id="L76">        lastTimestampNanos = -1;</span>
+<span class="fc" id="L77">    }</span>
+
+    /**
+     * Obtains the number of state parameters in associated SLAM estimator.
+     *
+     * @return number of state parameters.
+     */
+    @Override
+    protected int getEstimatorStateLength() {
+<span class="fc" id="L86">        return SlamEstimator.STATE_LENGTH;</span>
+    }
+
+    /**
+     * Gets a new instance containing calibration data estimated by this
+     * calibrator.
+     *
+     * @return a new calibration data instance.
+     */
+    @Override
+    public SlamCalibrationData getCalibrationData() {
+<span class="fc" id="L97">        final var result = new SlamCalibrationData();</span>
+<span class="fc" id="L98">        getCalibrationData(result);</span>
+<span class="fc" id="L99">        return result;</span>
+    }
+
+
+    /**
+     * Processes a full sample of accelerometer and gyroscope data to compute
+     * statistics such as mean and covariance of variations.
+     */
+    @SuppressWarnings(&quot;DuplicatedCode&quot;)
+    @Override
+    protected void processFullSample() {
+<span class="fc bfc" id="L110" title="All 2 branches covered.">        if (listener != null) {</span>
+<span class="fc" id="L111">            listener.onFullSampleReceived(this);</span>
+        }
+
+<span class="fc" id="L114">        final var timestamp = getMostRecentTimestampNanos();</span>
+<span class="fc bfc" id="L115" title="All 2 branches covered.">        if (lastTimestampNanos &lt; 0) {</span>
+            // first time receiving control data we cannot determine its
+            // variation
+<span class="fc" id="L118">            lastAccelerationX = accumulatedAccelerationSampleX;</span>
+<span class="fc" id="L119">            lastAccelerationY = accumulatedAccelerationSampleY;</span>
+<span class="fc" id="L120">            lastAccelerationZ = accumulatedAccelerationSampleZ;</span>
+
+<span class="fc" id="L122">            lastAngularSpeedX = accumulatedAngularSpeedSampleX;</span>
+<span class="fc" id="L123">            lastAngularSpeedY = accumulatedAngularSpeedSampleY;</span>
+<span class="fc" id="L124">            lastAngularSpeedZ = accumulatedAngularSpeedSampleZ;</span>
+
+<span class="fc" id="L126">            lastTimestampNanos = timestamp;</span>
+
+<span class="fc bfc" id="L128" title="All 2 branches covered.">            if (listener != null) {</span>
+<span class="fc" id="L129">                listener.onFullSampleProcessed(this);</span>
+            }
+
+<span class="fc" id="L132">            return;</span>
+        }
+
+<span class="fc" id="L135">        final var deltaAccelerationX = accumulatedAccelerationSampleX - lastAccelerationX;</span>
+<span class="fc" id="L136">        final var deltaAccelerationY = accumulatedAccelerationSampleY - lastAccelerationY;</span>
+<span class="fc" id="L137">        final var deltaAccelerationZ = accumulatedAccelerationSampleZ - lastAccelerationZ;</span>
+<span class="fc" id="L138">        final var deltaAngularSpeedX = accumulatedAngularSpeedSampleX - lastAngularSpeedX;</span>
+<span class="fc" id="L139">        final var deltaAngularSpeedY = accumulatedAngularSpeedSampleY - lastAngularSpeedY;</span>
+<span class="fc" id="L140">        final var deltaAngularSpeedZ = accumulatedAngularSpeedSampleZ - lastAngularSpeedZ;</span>
+
+<span class="fc" id="L142">        sample[0] = sample[1] = sample[2] = 0.0;</span>
+<span class="fc" id="L143">        sample[3] = deltaAccelerationX;</span>
+<span class="fc" id="L144">        sample[4] = deltaAccelerationY;</span>
+<span class="fc" id="L145">        sample[5] = deltaAccelerationZ;</span>
+<span class="fc" id="L146">        sample[6] = deltaAngularSpeedX;</span>
+<span class="fc" id="L147">        sample[7] = deltaAngularSpeedY;</span>
+<span class="fc" id="L148">        sample[8] = deltaAngularSpeedZ;</span>
+<span class="fc" id="L149">        updateSample();</span>
+
+<span class="fc" id="L151">        lastAccelerationX = accumulatedAccelerationSampleX;</span>
+<span class="fc" id="L152">        lastAccelerationY = accumulatedAccelerationSampleY;</span>
+<span class="fc" id="L153">        lastAccelerationZ = accumulatedAccelerationSampleZ;</span>
+
+<span class="fc" id="L155">        lastAngularSpeedX = accumulatedAngularSpeedSampleX;</span>
+<span class="fc" id="L156">        lastAngularSpeedY = accumulatedAngularSpeedSampleY;</span>
+<span class="fc" id="L157">        lastAngularSpeedZ = accumulatedAngularSpeedSampleZ;</span>
+
+<span class="fc" id="L159">        lastTimestampNanos = timestamp;</span>
+
+<span class="fc bfc" id="L161" title="All 2 branches covered.">        if (listener != null) {</span>
+<span class="fc" id="L162">            listener.onFullSampleProcessed(this);</span>
+        }
+<span class="fc" id="L164">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

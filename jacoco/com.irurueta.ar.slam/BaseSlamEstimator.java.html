@@ -1,0 +1,1267 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BaseSlamEstimator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.slam</a> &gt; <span class="el_source">BaseSlamEstimator.java</span></div><h1>BaseSlamEstimator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2016 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.slam;
+
+import com.irurueta.algebra.Matrix;
+import com.irurueta.geometry.Point3D;
+import com.irurueta.geometry.Quaternion;
+import com.irurueta.statistics.MultivariateNormalDist;
+
+import java.io.Serializable;
+
+/**
+ * Base class to estimate position, velocity, acceleration and orientation of
+ * a device using sensor data such as accelerometers and gyroscopes.
+ * Implementations of this class are designed taking into account sensors
+ * available on Android devices.
+ *
+ * @param &lt;D&gt; calibrator type associated to implementations of SLAM calibration
+ *            data.
+ */
+@SuppressWarnings(&quot;DuplicatedCode&quot;)
+public abstract class BaseSlamEstimator&lt;D extends BaseCalibrationData&gt; implements Serializable {
+
+    /**
+     * Number of components in 3D.
+     */
+    protected static final int N_COMPONENTS_3D = 3;
+
+    /**
+     * Conversion of nanoseconds to milliseconds.
+     */
+    protected static final double NANOS_TO_SECONDS = 1e-9;
+
+    /**
+     * Indicates whether sample accumulation must be enabled or not.
+     */
+    protected static final boolean DEFAULT_ENABLE_SAMPLE_ACCUMULATION = true;
+
+    /**
+     * Current position of the device along x-axis expressed in meters (m).
+     */
+    protected double statePositionX;
+
+    /**
+     * Current position of the device along y-axis expressed in meters (m).
+     */
+    protected double statePositionY;
+
+    /**
+     * Current position of the device along z-axis expressed in meters (m).
+     */
+    protected double statePositionZ;
+
+    /**
+     * Current linear velocity of the device along x-axis expressed in meters
+     * per second (m/s).
+     */
+    protected double stateVelocityX;
+
+    /**
+     * Current linear velocity of the device along y-axis expressed in meters
+     * per second (m/s).
+     */
+    protected double stateVelocityY;
+
+    /**
+     * Current linear velocity of the device along z-axis expressed in meters
+     * per second (m/s).
+     */
+    protected double stateVelocityZ;
+
+    /**
+     * Current linear acceleration of the device along x-axis expressed in
+     * meters per squared second (m/s^2).
+     */
+    protected double stateAccelerationX;
+
+    /**
+     * Current linear acceleration of the device along y-axis expressed in
+     * meters per squared second (m/s^2).
+     */
+    protected double stateAccelerationY;
+
+    /**
+     * Current linear acceleration of the device along z-axis expressed in
+     * meters per squared second (m/s^2).
+     */
+    protected double stateAccelerationZ;
+
+    /**
+     * A value of quaternion containing current device orientation.
+     */
+    protected double stateQuaternionA;
+
+    /**
+     * B value of quaternion containing current device orientation.
+     */
+    protected double stateQuaternionB;
+
+    /**
+     * C value of quaternion containing current device orientation.
+     */
+    protected double stateQuaternionC;
+
+    /**
+     * D value of quaternion containing current device orientation.
+     */
+    protected double stateQuaternionD;
+
+    /**
+     * Angular speed of rotation of the device along x-axis expressed in radians
+     * per second (rad/s).
+     */
+    protected double stateAngularSpeedX;
+
+    /**
+     * Angular speed of rotation of the device along y-axis expressed in radians
+     * per second (rad/s).
+     */
+    protected double stateAngularSpeedY;
+
+    /**
+     * Angular speed of rotation of the device along z-axis expressed in radians
+     * per second (rad/s).
+     */
+    protected double stateAngularSpeedZ;
+
+    /**
+     * Indicates whether an error occurred during the estimation.
+     * If an error occurs the estimator should be restarted since state values
+     * might become unreliable.
+     */
+    protected boolean error;
+
+    /**
+     * Indicates whether accumulation of samples is enabled or not.
+     */
+<span class="fc" id="L151">    protected boolean accumulationEnabled = DEFAULT_ENABLE_SAMPLE_ACCUMULATION;</span>
+
+    /**
+     * Timestamp expressed in nanoseconds since the epoch time of the last
+     * accelerometer sample.
+     */
+<span class="fc" id="L157">    protected long accelerometerTimestampNanos = -1;</span>
+
+    /**
+     * Timestamp expressed in nanoseconds since the epoch time of the last
+     * gyroscope sample.
+     */
+<span class="fc" id="L163">    protected long gyroscopeTimestampNanos = -1;</span>
+
+    /**
+     * Number of accelerometer samples accumulated since last full sample.
+     */
+<span class="fc" id="L168">    protected int accumulatedAccelerometerSamples = 0;</span>
+
+    /**
+     * Number of gyroscope samples accumulated since last full sample.
+     */
+<span class="fc" id="L173">    protected int accumulatedGyroscopeSamples = 0;</span>
+
+    /**
+     * Average of acceleration along x-axis accumulated since last full sample.
+     * Expressed in meters per squared second (m/s^2).
+     */
+    protected double accumulatedAccelerationSampleX;
+
+    /**
+     * Average of acceleration along y-axis accumulated since last full sample.
+     * Expressed in meters per squared second (m/s^2).
+     */
+    protected double accumulatedAccelerationSampleY;
+
+    /**
+     * Average of acceleration along z-axis accumulated since last full sample.
+     * Expressed in meters per squared second (m/s^2).
+     */
+    protected double accumulatedAccelerationSampleZ;
+
+    /**
+     * Average of angular speed along x-axis accumulated since last full sample.
+     * Expressed in radians per second (rad/s).
+     */
+    protected double accumulatedAngularSpeedSampleX;
+
+    /**
+     * Average of angular speed along y-axis accumulated since last full sample.
+     * Expressed in radians per second (rad/s).
+     */
+    protected double accumulatedAngularSpeedSampleY;
+
+    /**
+     * Average of angular speed along z-axis accumulated since last full sample.
+     * Expressed in radians per second (red/s).
+     */
+    protected double accumulatedAngularSpeedSampleZ;
+
+    /**
+     * Listener in charge of handling events raised by instances of this class.
+     */
+    protected transient BaseSlamEstimatorListener&lt;D&gt; listener;
+
+    /**
+     * Calibration data. When provided, its mean and covariance are used
+     * to correct control samples and adjust process covariance matrix during
+     * Kalman filtering in prediction stage.
+     */
+    protected D calibrationData;
+
+    /**
+     * Multivariate distribution to be reused during propagation of calibrated
+     * covariance.
+     */
+    protected transient MultivariateNormalDist normalDist;
+
+    /**
+     * Constructor.
+     */
+<span class="fc" id="L232">    protected BaseSlamEstimator() {</span>
+<span class="fc" id="L233">        reset();</span>
+<span class="fc" id="L234">    }</span>
+
+    /**
+     * Resets position and timestamp to zero while keeping other state parameters.
+     */
+    public final void resetPosition() {
+<span class="fc" id="L240">        reset(0.0, 0.0, 0.0, stateVelocityX, stateVelocityY,</span>
+                stateVelocityZ, stateAccelerationX, stateAccelerationY, stateAccelerationZ,
+                stateQuaternionA, stateQuaternionB, stateQuaternionC, stateQuaternionD,
+                stateAngularSpeedX, stateAngularSpeedY, stateAngularSpeedZ);
+<span class="fc" id="L244">    }</span>
+
+    /**
+     * Resets linear velocity and timestamp to zero while keeping other state parameters.
+     */
+    public final void resetVelocity() {
+<span class="fc" id="L250">        reset(statePositionX, statePositionY, statePositionZ, 0.0, 0.0,</span>
+                0.0, stateAccelerationX, stateAccelerationY, stateAccelerationZ,
+                stateQuaternionA, stateQuaternionB, stateQuaternionC, stateQuaternionD,
+                stateAngularSpeedX, stateAngularSpeedY, stateAngularSpeedZ);
+<span class="fc" id="L254">    }</span>
+
+    /**
+     * Resets position, linear velocity and timestamp to zero while keeping other state parameters.
+     */
+    public final void resetPositionAndVelocity() {
+<span class="fc" id="L260">        reset(0.0, 0.0, 0.0, 0.0, 0.0,</span>
+                0.0, stateAccelerationX, stateAccelerationY, stateAccelerationZ,
+                stateQuaternionA, stateQuaternionB, stateQuaternionC, stateQuaternionD,
+                stateAngularSpeedX, stateAngularSpeedY, stateAngularSpeedZ);
+<span class="fc" id="L264">    }</span>
+
+    /**
+     * Resets acceleration and timestamp to zero while keeping other state parameters.
+     */
+    public final void resetAcceleration() {
+<span class="fc" id="L270">        reset(statePositionX, statePositionY, statePositionZ,</span>
+                stateVelocityX, stateVelocityY, stateVelocityZ, 0.0,
+                0.0, 0.0, stateQuaternionA, stateQuaternionB,
+                stateQuaternionC, stateQuaternionD, stateAngularSpeedX, stateAngularSpeedY,
+                stateAngularSpeedZ);
+<span class="fc" id="L275">    }</span>
+
+    /**
+     * Resets orientation and timestamp to zero while keeping other state parameters.
+     */
+    public final void resetOrientation() {
+<span class="fc" id="L281">        reset(statePositionX, statePositionY, statePositionZ,</span>
+                stateVelocityX, stateVelocityY, stateVelocityZ,
+                stateAccelerationX, stateAccelerationY, stateAccelerationZ,
+                1.0, 0.0, 0.0, 0.0,
+                stateAngularSpeedX, stateAngularSpeedY, stateAngularSpeedZ);
+<span class="fc" id="L286">    }</span>
+
+    /**
+     * Resets angular speed and timestamp to zero while keeping other state parameters.
+     */
+    public final void resetAngularSpeed() {
+<span class="fc" id="L292">        reset(statePositionX, statePositionY, statePositionZ,</span>
+                stateVelocityX, stateVelocityY, stateVelocityZ,
+                stateAccelerationX, stateAccelerationY, stateAccelerationZ,
+                stateQuaternionA, stateQuaternionB, stateQuaternionC, stateQuaternionD,
+                0.0, 0.0, 0.0);
+<span class="fc" id="L297">    }</span>
+
+    /**
+     * Resets position, linear velocity, linear acceleration, orientation and
+     * angular speed of the device to zero.
+     */
+    public final void reset() {
+        // NOTE: initial orientation is expressed as quaternion
+        // (1.0, 0.0, 0.0, 0.0) which is equivalent to no rotation.
+<span class="fc" id="L306">        reset(0.0, 0.0, 0.0, 0.0, 0.0,</span>
+                0.0, 0.0, 0.0, 0.0,
+                1.0, 0.0, 0.0, 0.0,
+                0.0, 0.0, 0.0);
+<span class="fc" id="L310">    }</span>
+
+    /**
+     * Obtains current x-position of the device expressed in meters (m).
+     *
+     * @return x-position of the device expressed in meters (m).
+     */
+    public double getStatePositionX() {
+<span class="fc" id="L318">        return statePositionX;</span>
+    }
+
+    /**
+     * Obtains current y-position of the device expressed in meters (m).
+     *
+     * @return y-position of the device expressed in meters (m).
+     */
+    public double getStatePositionY() {
+<span class="fc" id="L327">        return statePositionY;</span>
+    }
+
+    /**
+     * Obtains current z-position of the device expressed in meters (m).
+     *
+     * @return z-position of the device expressed in meters (m).
+     */
+    public double getStatePositionZ() {
+<span class="fc" id="L336">        return statePositionZ;</span>
+    }
+
+    /**
+     * Gets x,y,z coordinates of the device position expressed in meters (m).
+     *
+     * @return position of the device.
+     */
+    public double[] getStatePosition() {
+<span class="fc" id="L345">        return new double[]{statePositionX, statePositionY, statePositionZ};</span>
+    }
+
+    /**
+     * Gets x,y,z coordinates of the device position expressed in meters (m) and
+     * stores the result into provided array.
+     *
+     * @param result array where position coordinates will be stored.
+     * @throws IllegalArgumentException if the array does not have length 3.
+     */
+    public void getStatePosition(final double[] result) {
+<span class="fc bfc" id="L356" title="All 2 branches covered.">        if (result.length != N_COMPONENTS_3D) {</span>
+            // result must have length 3
+<span class="fc" id="L358">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L360">        result[0] = statePositionX;</span>
+<span class="fc" id="L361">        result[1] = statePositionY;</span>
+<span class="fc" id="L362">        result[2] = statePositionZ;</span>
+<span class="fc" id="L363">    }</span>
+
+    /**
+     * Gets current linear velocity of the device along x-axis expressed in
+     * meters per second (m/s).
+     *
+     * @return current velocity along x-axis expressed in meters per second
+     * (m/s).
+     */
+    public double getStateVelocityX() {
+<span class="fc" id="L373">        return stateVelocityX;</span>
+    }
+
+    /**
+     * Gets current linear velocity of the device along y-axis expressed in
+     * meters per second (m/s).
+     *
+     * @return current velocity along y-axis expressed in meters per second
+     * (m/s).
+     */
+    public double getStateVelocityY() {
+<span class="fc" id="L384">        return stateVelocityY;</span>
+    }
+
+    /**
+     * Gets current linear velocity of the device along z-axis expressed in
+     * meters per second (m/s).
+     *
+     * @return current velocity along z-axis expressed in meters per second
+     * (m/s).
+     */
+    public double getStateVelocityZ() {
+<span class="fc" id="L395">        return stateVelocityZ;</span>
+    }
+
+    /**
+     * Gets x,y,z coordinates of current linear velocity of the device expressed
+     * in meters per second (m/s).
+     *
+     * @return current linear velocity of the device.
+     */
+    public double[] getStateVelocity() {
+<span class="fc" id="L405">        return new double[]{stateVelocityX, stateVelocityY, stateVelocityZ};</span>
+    }
+
+    /**
+     * Gets x,y,z coordinates of current linear velocity of the device expressed
+     * in meters per second (m/s).
+     *
+     * @param result array where linear velocity of the device will be stored.
+     * @throws IllegalArgumentException if result array does not have length 3.
+     */
+    public void getStateVelocity(final double[] result) {
+<span class="fc bfc" id="L416" title="All 2 branches covered.">        if (result.length != N_COMPONENTS_3D) {</span>
+            // result must have length 3
+<span class="fc" id="L418">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L420">        result[0] = stateVelocityX;</span>
+<span class="fc" id="L421">        result[1] = stateVelocityY;</span>
+<span class="fc" id="L422">        result[2] = stateVelocityZ;</span>
+<span class="fc" id="L423">    }</span>
+
+    /**
+     * Gets current linear acceleration of the device along x-axis expressed in
+     * meters per squared second (m/s^2).
+     *
+     * @return linear acceleration of the device along x-axis.
+     */
+    public double getStateAccelerationX() {
+<span class="fc" id="L432">        return stateAccelerationX;</span>
+    }
+
+    /**
+     * Gets current linear acceleration of the device along y-axis expressed in
+     * meters per squared second (m/s^2).
+     *
+     * @return linear acceleration of the device along y-axis.
+     */
+    public double getStateAccelerationY() {
+<span class="fc" id="L442">        return stateAccelerationY;</span>
+    }
+
+    /**
+     * Gets current linear acceleration of the device along z-axis expressed in
+     * meters per squared second (m/s^2).
+     *
+     * @return linear acceleration of the device along z-axis.
+     */
+    public double getStateAccelerationZ() {
+<span class="fc" id="L452">        return stateAccelerationZ;</span>
+    }
+
+    /**
+     * Gets current x,y,z linear acceleration coordinates of the device
+     * expressed in meters per squared second (m/s^2).
+     *
+     * @return current linear acceleration of the device.
+     */
+    public double[] getStateAcceleration() {
+<span class="fc" id="L462">        return new double[]{stateAccelerationX, stateAccelerationY, stateAccelerationZ};</span>
+    }
+
+    /**
+     * Gets current x,y,z linear acceleration coordinates of the device
+     * expressed in meters per squared second (m/s^2).
+     *
+     * @param result array where resulting linear acceleration coordinates will
+     *               be stored.
+     * @throws IllegalArgumentException if array does not have length 3.
+     */
+    public void getStateAcceleration(final double[] result) {
+<span class="fc bfc" id="L474" title="All 2 branches covered.">        if (result.length != N_COMPONENTS_3D) {</span>
+            // result must have length 3
+<span class="fc" id="L476">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L478">        result[0] = stateAccelerationX;</span>
+<span class="fc" id="L479">        result[1] = stateAccelerationY;</span>
+<span class="fc" id="L480">        result[2] = stateAccelerationZ;</span>
+<span class="fc" id="L481">    }</span>
+
+    /**
+     * Gets A value of quaternion containing current device orientation.
+     *
+     * @return A value of quaternion containing current device orientation.
+     */
+    public double getStateQuaternionA() {
+<span class="fc" id="L489">        return stateQuaternionA;</span>
+    }
+
+    /**
+     * Gets B value of quaternion containing current device orientation.
+     *
+     * @return B value of quaternion containing current device orientation.
+     */
+    public double getStateQuaternionB() {
+<span class="fc" id="L498">        return stateQuaternionB;</span>
+    }
+
+    /**
+     * Gets C value of quaternion containing current device orientation.
+     *
+     * @return C value of quaternion containing current device orientation.
+     */
+    public double getStateQuaternionC() {
+<span class="fc" id="L507">        return stateQuaternionC;</span>
+    }
+
+    /**
+     * Gets D value of quaternion containing current device orientation.
+     *
+     * @return D value of quaternion containing current device orientation.
+     */
+    public double getStateQuaternionD() {
+<span class="fc" id="L516">        return stateQuaternionD;</span>
+    }
+
+    /**
+     * Gets A, B, C, D values of quaternion containing current device
+     * orientation.
+     *
+     * @return A, B, C, D values of quaternion containing current device
+     * orientation.
+     */
+    public double[] getStateQuaternionArray() {
+<span class="fc" id="L527">        return new double[]{stateQuaternionA, stateQuaternionB, stateQuaternionC, stateQuaternionD};</span>
+    }
+
+    /**
+     * Gets A, B, C, D values of quaternion containing current device
+     * orientation.
+     *
+     * @param result array where A, B, C, D values of quaternion will be stored.
+     *               Must have length 4.
+     * @throws IllegalArgumentException if provided array does not have length
+     *                                  4.
+     */
+    public void getStateQuaternionArray(final double[] result) {
+<span class="fc bfc" id="L540" title="All 2 branches covered.">        if (result.length != Quaternion.N_PARAMS) {</span>
+<span class="fc" id="L541">            throw new IllegalArgumentException(&quot;result must have length 4&quot;);</span>
+        }
+<span class="fc" id="L543">        result[0] = stateQuaternionA;</span>
+<span class="fc" id="L544">        result[1] = stateQuaternionB;</span>
+<span class="fc" id="L545">        result[2] = stateQuaternionC;</span>
+<span class="fc" id="L546">        result[3] = stateQuaternionD;</span>
+<span class="fc" id="L547">    }</span>
+
+    /**
+     * Gets quaternion containing current device orientation.
+     *
+     * @return quaternion containing current device orientation.
+     */
+    public Quaternion getStateQuaternion() {
+<span class="fc" id="L555">        return new Quaternion(stateQuaternionA, stateQuaternionB, stateQuaternionC, stateQuaternionD);</span>
+    }
+
+    /**
+     * Gets quaternion containing current device orientation.
+     *
+     * @param result instance where quaternion data will be stored.
+     */
+    public void getStateQuaternion(final Quaternion result) {
+<span class="fc" id="L564">        result.setA(stateQuaternionA);</span>
+<span class="fc" id="L565">        result.setB(stateQuaternionB);</span>
+<span class="fc" id="L566">        result.setC(stateQuaternionC);</span>
+<span class="fc" id="L567">        result.setD(stateQuaternionD);</span>
+<span class="fc" id="L568">    }</span>
+
+    /**
+     * Gets angular speed along x-axis expressed in radians per second (rad/s).
+     *
+     * @return angular speed along x-axis.
+     */
+    public double getStateAngularSpeedX() {
+<span class="fc" id="L576">        return stateAngularSpeedX;</span>
+    }
+
+    /**
+     * Gets angular speed along y-axis expressed in radians per second (rad/s).
+     *
+     * @return angular speed along y-axis.
+     */
+    public double getStateAngularSpeedY() {
+<span class="fc" id="L585">        return stateAngularSpeedY;</span>
+    }
+
+    /**
+     * Gets angular speed along z-axis expressed in radians per second (rad/s).
+     *
+     * @return angular speed along z-axis.
+     */
+    public double getStateAngularSpeedZ() {
+<span class="fc" id="L594">        return stateAngularSpeedZ;</span>
+    }
+
+    /**
+     * Gets angular speed of the device along x,y,z axes expressed in radians
+     * per second (rad/s).
+     *
+     * @return device's angular speed.
+     */
+    public double[] getStateAngularSpeed() {
+<span class="fc" id="L604">        return new double[]{stateAngularSpeedX, stateAngularSpeedY, stateAngularSpeedZ};</span>
+    }
+
+    /**
+     * Gets angular speed of the device along x,y,z axes expressed in radians
+     * per second (rad/s) and stores the result into provided array.
+     *
+     * @param result array where angular speed will be stored. Must have length
+     *               3.
+     * @throws IllegalArgumentException if provided array does not have length
+     *                                  3.
+     */
+    public void getStateAngularSpeed(final double[] result) {
+<span class="fc bfc" id="L617" title="All 2 branches covered.">        if (result.length != N_COMPONENTS_3D) {</span>
+            // result must have length 3
+<span class="fc" id="L619">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L621">        result[0] = stateAngularSpeedX;</span>
+<span class="fc" id="L622">        result[1] = stateAngularSpeedY;</span>
+<span class="fc" id="L623">        result[2] = stateAngularSpeedZ;</span>
+<span class="fc" id="L624">    }</span>
+
+    /**
+     * Gets covariance matrix of state variables (position, velocity, acceleration, orientation and
+     * angular speed).
+     * Actual meaning of elements in returned matrix will depend on actual implementation of the estimator.
+     *
+     * @return covariance matrix of state variables.
+     */
+    public abstract Matrix getStateCovariance();
+
+    /**
+     * Indicates whether an error occurred during the estimation.
+     * If an error occurs the estimator should be restarted since state values
+     * might become unreliable.
+     *
+     * @return true if an error occurred since last start time, false otherwise.
+     */
+    public boolean hasError() {
+<span class="fc" id="L643">        return error;</span>
+    }
+
+    /**
+     * Indicates whether accumulation of samples is enabled or not.
+     *
+     * @return true if accumulation of samples is enabled, false otherwise.
+     */
+    public boolean isAccumulationEnabled() {
+<span class="fc" id="L652">        return accumulationEnabled;</span>
+    }
+
+    /**
+     * Specifies whether accumulation of samples is enabled or not.
+     *
+     * @param accumulationEnabled true if accumulation of samples is enabled,
+     *                            false otherwise.
+     */
+    public void setAccumulationEnabled(final boolean accumulationEnabled) {
+<span class="fc" id="L662">        this.accumulationEnabled = accumulationEnabled;</span>
+<span class="fc" id="L663">    }</span>
+
+    /**
+     * Gets timestamp expressed in nanoseconds since the epoch time of the last
+     * accelerometer sample, or -1 if no sample has been set yet.
+     *
+     * @return timestamp expressed in nanoseconds since the epoch time of the
+     * last accelerometer sample, or -1.
+     */
+    public long getAccelerometerTimestampNanos() {
+<span class="fc" id="L673">        return accelerometerTimestampNanos;</span>
+    }
+
+    /**
+     * Gets timestamp expressed in nanoseconds since the epoch time of the last
+     * gyroscope sample, or -1 if no sample has been set yet.
+     *
+     * @return timestamp expressed in nanoseconds since the epoch time of the
+     * last gyroscope sample, or -1.
+     */
+    public long getGyroscopeTimestampNanos() {
+<span class="fc" id="L684">        return gyroscopeTimestampNanos;</span>
+    }
+
+    /**
+     * Gets number of accelerometer samples accumulated since last full sample.
+     *
+     * @return number of accelerometer samples accumulated since last full
+     * sample.
+     */
+    public int getAccumulatedAccelerometerSamples() {
+<span class="fc" id="L694">        return accumulatedAccelerometerSamples;</span>
+    }
+
+    /**
+     * Gets number of gyroscope samples accumulated since last full sample.
+     *
+     * @return number of gyroscope samples accumulated since last full sample.
+     */
+    public int getAccumulatedGyroscopeSamples() {
+<span class="fc" id="L703">        return accumulatedGyroscopeSamples;</span>
+    }
+
+    /**
+     * Indicates whether the accelerometer sample has been received since the
+     * last full sample (accelerometer + gyroscope).
+     *
+     * @return true if accelerometer sample has been received, false otherwise.
+     */
+    public boolean isAccelerometerSampleReceived() {
+<span class="fc bfc" id="L713" title="All 2 branches covered.">        return accumulatedAccelerometerSamples &gt; 0;</span>
+    }
+
+    /**
+     * Indicates whether the gyroscope sample has been received since the last
+     * full sample (accelerometer + gyroscope).
+     *
+     * @return true if gyroscope sample has been received, false otherwise.
+     */
+    public boolean isGyroscopeSampleReceived() {
+<span class="fc bfc" id="L723" title="All 2 branches covered.">        return accumulatedGyroscopeSamples &gt; 0;</span>
+    }
+
+    /**
+     * Indicates whether a full sample (accelerometer + gyroscope) has been
+     * received or not.
+     *
+     * @return true if full sample has been received, false otherwise.
+     */
+    public boolean isFullSampleAvailable() {
+<span class="fc bfc" id="L733" title="All 4 branches covered.">        return isAccelerometerSampleReceived() &amp;&amp; isGyroscopeSampleReceived();</span>
+    }
+
+    /**
+     * Gets average acceleration along x-axis accumulated since last full
+     * sample. Expressed in meters per squared second (m/s^2).
+     *
+     * @return average acceleration along x-axis accumulated since last full
+     * sample.
+     */
+    public double getAccumulatedAccelerationSampleX() {
+<span class="fc" id="L744">        return accumulatedAccelerationSampleX;</span>
+    }
+
+    /**
+     * Gets average acceleration along y-axis accumulated since last full
+     * sample. Expressed in meters per squared second (m/s^2).
+     *
+     * @return average acceleration along y-axis accumulated since last full
+     * sample.
+     */
+    public double getAccumulatedAccelerationSampleY() {
+<span class="fc" id="L755">        return accumulatedAccelerationSampleY;</span>
+    }
+
+    /**
+     * Gets average acceleration along z-axis accumulated since last full
+     * sample. Expressed in meters per squared second (m/s^2).
+     *
+     * @return average acceleration along z-axis accumulated since last full
+     * sample.
+     */
+    public double getAccumulatedAccelerationSampleZ() {
+<span class="fc" id="L766">        return accumulatedAccelerationSampleZ;</span>
+    }
+
+    /**
+     * Gets average acceleration along x,y,z axes accumulated since last full
+     * sample. Expressed in meters per squared second (m/s^2).
+     *
+     * @return average acceleration along x,y,z axes expressed in meters per
+     * squared second (m/s^2).
+     */
+    public double[] getAccumulatedAccelerationSample() {
+<span class="fc" id="L777">        return new double[]{</span>
+                accumulatedAccelerationSampleX,
+                accumulatedAccelerationSampleY,
+                accumulatedAccelerationSampleZ
+        };
+    }
+
+    /**
+     * Gets average acceleration along x,y,z axes accumulated since last full
+     * sample. Expressed in meters per squared second (m/s^2).
+     *
+     * @param result array where average acceleration along x,y,z axes will be
+     *               stored.
+     * @throws IllegalArgumentException if provided array does not have length
+     *                                  3.
+     */
+    public void getAccumulatedAccelerationSample(final double[] result) {
+<span class="fc bfc" id="L794" title="All 2 branches covered.">        if (result.length != N_COMPONENTS_3D) {</span>
+<span class="fc" id="L795">            throw new IllegalArgumentException(&quot;result must have length 3&quot;);</span>
+        }
+<span class="fc" id="L797">        result[0] = accumulatedAccelerationSampleX;</span>
+<span class="fc" id="L798">        result[1] = accumulatedAccelerationSampleY;</span>
+<span class="fc" id="L799">        result[2] = accumulatedAccelerationSampleZ;</span>
+<span class="fc" id="L800">    }</span>
+
+    /**
+     * Gets average angular speed along x-axis accumulated since last full
+     * sample. Expressed in radians per second (rad/s).
+     *
+     * @return average angular speed along x-axis expressed in radians per
+     * second (rad/s).
+     */
+    public double getAccumulatedAngularSpeedSampleX() {
+<span class="fc" id="L810">        return accumulatedAngularSpeedSampleX;</span>
+    }
+
+    /**
+     * Gets average angular speed along y-axis accumulated since last full
+     * sample. Expressed in radians per second (rad/s).
+     *
+     * @return average angular speed along y-axis expressed in radians per
+     * second (rad/s).
+     */
+    public double getAccumulatedAngularSpeedSampleY() {
+<span class="fc" id="L821">        return accumulatedAngularSpeedSampleY;</span>
+    }
+
+    /**
+     * Gets average angular speed along z-axis accumulated since last full
+     * sample. Expressed in radians per second (rad/s).
+     *
+     * @return average angular speed along z-axis expressed in radians per
+     * second.
+     */
+    public double getAccumulatedAngularSpeedSampleZ() {
+<span class="fc" id="L832">        return accumulatedAngularSpeedSampleZ;</span>
+    }
+
+    /**
+     * Gets average angular speed along x,y,z axes accumulated since last full
+     * sample. Expressed in radians per second (rad/s).
+     *
+     * @return average angular speed along x,y,z axes expressed in radians per
+     * second.
+     */
+    public double[] getAccumulatedAngularSpeedSample() {
+<span class="fc" id="L843">        return new double[]{</span>
+                accumulatedAngularSpeedSampleX,
+                accumulatedAngularSpeedSampleY,
+                accumulatedAngularSpeedSampleZ
+        };
+    }
+
+    /**
+     * Gets average angular speed along x,y,z axes accumulated since last full
+     * sample. Expressed in radians per second (rad/s).
+     *
+     * @param result array where average angular speed along x,y,z axes will be
+     *               stored.
+     * @throws IllegalArgumentException if provided array does not have length
+     *                                  3.
+     */
+    public void getAccumulatedAngularSpeedSample(final double[] result) {
+<span class="fc bfc" id="L860" title="All 2 branches covered.">        if (result.length != N_COMPONENTS_3D) {</span>
+<span class="fc" id="L861">            throw new IllegalArgumentException(&quot;result must have length 3&quot;);</span>
+        }
+<span class="fc" id="L863">        result[0] = accumulatedAngularSpeedSampleX;</span>
+<span class="fc" id="L864">        result[1] = accumulatedAngularSpeedSampleY;</span>
+<span class="fc" id="L865">        result[2] = accumulatedAngularSpeedSampleZ;</span>
+<span class="fc" id="L866">    }</span>
+
+    /**
+     * Provides a new accelerometer sample.
+     * If accumulation is enabled, samples are averaged until a full sample is
+     * received.
+     * When a full sample (accelerometer + gyroscope) is received, internal
+     * state gets also updated.
+     *
+     * @param timestamp     timestamp of accelerometer sample since epoch time and
+     *                      expressed in nanoseconds.
+     * @param accelerationX linear acceleration along x-axis expressed in meters
+     *                      per squared second (m/s^2).
+     * @param accelerationY linear acceleration along y-axis expressed in meters
+     *                      per squared second (m/s^2).
+     * @param accelerationZ linear acceleration along z-axis expressed in meters
+     *                      per squared second (m/s^2).
+     */
+    public void updateAccelerometerSample(
+            final long timestamp, final float accelerationX, final float accelerationY, final float accelerationZ) {
+<span class="pc bpc" id="L886" title="1 of 2 branches missed.">        if (!isFullSampleAvailable()) {</span>
+<span class="fc" id="L887">            accelerometerTimestampNanos = timestamp;</span>
+<span class="fc bfc" id="L888" title="All 4 branches covered.">            if (isAccumulationEnabled() &amp;&amp; isAccelerometerSampleReceived()) {</span>
+                // accumulation enabled
+<span class="fc" id="L890">                final var nextSamples = accumulatedAccelerometerSamples + 1;</span>
+<span class="fc" id="L891">                accumulatedAccelerationSampleX = (accumulatedAccelerationSampleX * accumulatedAccelerometerSamples</span>
+                        + accelerationX) / nextSamples;
+<span class="fc" id="L893">                accumulatedAccelerationSampleY = (accumulatedAccelerationSampleY * accumulatedAccelerometerSamples</span>
+                        + accelerationY) / nextSamples;
+<span class="fc" id="L895">                accumulatedAccelerationSampleZ = (accumulatedAccelerationSampleZ * accumulatedAccelerometerSamples</span>
+                        + accelerationZ) / nextSamples;
+<span class="fc" id="L897">                accumulatedAccelerometerSamples = nextSamples;</span>
+<span class="fc" id="L898">            } else {</span>
+                // accumulation disabled
+<span class="fc" id="L900">                accumulatedAccelerationSampleX = accelerationX;</span>
+<span class="fc" id="L901">                accumulatedAccelerationSampleY = accelerationY;</span>
+<span class="fc" id="L902">                accumulatedAccelerationSampleZ = accelerationZ;</span>
+<span class="fc" id="L903">                accumulatedAccelerometerSamples++;</span>
+            }
+<span class="fc" id="L905">            notifyFullSampleAndResetSampleReceive();</span>
+        }
+<span class="fc" id="L907">    }</span>
+
+    /**
+     * Provides a new accelerometer sample.
+     * If accumulation is enabled, samples are averaged until a full sample is
+     * received.
+     * When a full sample (accelerometer + gyroscope) is received, internal
+     * state gets also updated.
+     *
+     * @param timestamp timestamp of accelerometer sample since epoch time and
+     *                  expressed in nanoseconds.
+     * @param data      array containing x,y,z components of linear acceleration
+     *                  expressed in meters per squared second (m/s^2).
+     * @throws IllegalArgumentException if provided array does not have length
+     *                                  3.
+     */
+    public void updateAccelerometerSample(final long timestamp, final float[] data) {
+<span class="fc bfc" id="L924" title="All 2 branches covered.">        if (data.length != N_COMPONENTS_3D) {</span>
+<span class="fc" id="L925">            throw new IllegalArgumentException(&quot;acceleration must have length 3&quot;);</span>
+        }
+<span class="fc" id="L927">        updateAccelerometerSample(timestamp, data[0], data[1], data[2]);</span>
+<span class="fc" id="L928">    }</span>
+
+    /**
+     * Provides a new gyroscope sample.
+     * If accumulation is enabled, samples are averaged until a full sample is
+     * received.
+     * When a full sample (accelerometer + gyroscope) is received, internal
+     * state gets also updated.
+     *
+     * @param timestamp     timestamp of gyroscope sample since epoch time and
+     *                      expressed in nanoseconds.
+     * @param angularSpeedX angular speed of rotation along x-axis expressed in
+     *                      radians per second (rad/s).
+     * @param angularSpeedY angular speed of rotation along y-axis expressed in
+     *                      radians per second (rad/s).
+     * @param angularSpeedZ angular speed of rotation along z-axis expressed in
+     *                      radians per second (rad/s).
+     */
+    public void updateGyroscopeSample(
+            final long timestamp, final float angularSpeedX, final float angularSpeedY, final float angularSpeedZ) {
+<span class="pc bpc" id="L948" title="1 of 2 branches missed.">        if (!isFullSampleAvailable()) {</span>
+<span class="fc" id="L949">            gyroscopeTimestampNanos = timestamp;</span>
+<span class="fc bfc" id="L950" title="All 4 branches covered.">            if (isAccumulationEnabled() &amp;&amp; isGyroscopeSampleReceived()) {</span>
+                // accumulation enabled
+<span class="fc" id="L952">                final var nextSamples = accumulatedGyroscopeSamples + 1;</span>
+<span class="fc" id="L953">                accumulatedAngularSpeedSampleX = (accumulatedAngularSpeedSampleX * accumulatedGyroscopeSamples</span>
+                        + angularSpeedX) / nextSamples;
+<span class="fc" id="L955">                accumulatedAngularSpeedSampleY = (accumulatedAngularSpeedSampleY * accumulatedGyroscopeSamples</span>
+                        + angularSpeedY) / nextSamples;
+<span class="fc" id="L957">                accumulatedAngularSpeedSampleZ = (accumulatedAngularSpeedSampleZ * accumulatedGyroscopeSamples</span>
+                        + angularSpeedZ) / nextSamples;
+<span class="fc" id="L959">                accumulatedGyroscopeSamples = nextSamples;</span>
+<span class="fc" id="L960">            } else {</span>
+                // accumulation disabled
+<span class="fc" id="L962">                accumulatedAngularSpeedSampleX = angularSpeedX;</span>
+<span class="fc" id="L963">                accumulatedAngularSpeedSampleY = angularSpeedY;</span>
+<span class="fc" id="L964">                accumulatedAngularSpeedSampleZ = angularSpeedZ;</span>
+<span class="fc" id="L965">                accumulatedGyroscopeSamples++;</span>
+            }
+<span class="fc" id="L967">            notifyFullSampleAndResetSampleReceive();</span>
+        }
+<span class="fc" id="L969">    }</span>
+
+    /**
+     * Provides a new gyroscope sample.
+     * If accumulation is enabled, samples are averaged until a full sample is
+     * received.
+     * When a full sample (accelerometer + gyroscope) is received, internal
+     * state gets also updated.
+     *
+     * @param timestamp timestamp of gyroscope sample since epoch time and
+     *                  expressed in nanoseconds.
+     * @param data      angular speed of rotation along x,y,z axes expressed in
+     *                  radians per second (rad/s).
+     * @throws IllegalArgumentException if provided array does not have length
+     *                                  3.
+     */
+    public void updateGyroscopeSample(final long timestamp, final float[] data) {
+<span class="fc bfc" id="L986" title="All 2 branches covered.">        if (data.length != N_COMPONENTS_3D) {</span>
+<span class="fc" id="L987">            throw new IllegalArgumentException(&quot;angular speed must have length 3&quot;);</span>
+        }
+<span class="fc" id="L989">        updateGyroscopeSample(timestamp, data[0], data[1], data[2]);</span>
+<span class="fc" id="L990">    }</span>
+
+    /**
+     * Gets most recent timestamp of received partial samples (accelerometer or
+     * gyroscope).
+     *
+     * @return most recent timestamp of received partial sample.
+     */
+    public long getMostRecentTimestampNanos() {
+<span class="fc" id="L999">        return Math.max(accelerometerTimestampNanos, gyroscopeTimestampNanos);</span>
+    }
+
+    /**
+     * Corrects system state with provided position measure having an accuracy
+     * determined by provided covariance matrix.
+     *
+     * @param positionX          new position along x-axis expressed in meters (m).
+     * @param positionY          new position along y-axis expressed in meters (m).
+     * @param positionZ          new position along z-axis expressed in meters (m).
+     * @param positionCovariance new position covariance matrix determining
+     *                           new position accuracy or null if last available covariance does not need
+     *                           to be updated.
+     * @throws IllegalArgumentException if provided covariance matrix is not
+     *                                  3x3.
+     */
+    public void correctWithPositionMeasure(
+            final double positionX, final double positionY, final double positionZ, final Matrix positionCovariance) {
+<span class="fc" id="L1017">        setPositionCovarianceMatrix(positionCovariance);</span>
+<span class="fc" id="L1018">        correctWithPositionMeasure(positionX, positionY, positionZ);</span>
+<span class="fc" id="L1019">    }</span>
+
+    /**
+     * Corrects system state with provided position measure having an accuracy
+     * determined by provided covariance matrix.
+     *
+     * @param position           x,y,z coordinates of position expressed in meters (m).
+     *                           Must have length 3.
+     * @param positionCovariance new position covariance matrix determining new
+     *                           position accuracy or null if last available covariance does not need to
+     *                           be updated.
+     * @throws IllegalArgumentException if provided covariance matrix is not
+     *                                  3x3 or if provided position array does not have length 3.
+     */
+    public void correctWithPositionMeasure(final double[] position, final Matrix positionCovariance) {
+<span class="fc bfc" id="L1034" title="All 2 branches covered.">        if (position.length != N_COMPONENTS_3D) {</span>
+<span class="fc" id="L1035">            throw new IllegalArgumentException(&quot;position must have length 3&quot;);</span>
+        }
+<span class="fc" id="L1037">        correctWithPositionMeasure(position[0], position[1], position[2], positionCovariance);</span>
+<span class="fc" id="L1038">    }</span>
+
+    /**
+     * Corrects system state with provided position measure having an accuracy
+     * determined by provided covariance matrix.
+     *
+     * @param position           position expressed in meters (m).
+     * @param positionCovariance new position covariance matrix determining new
+     *                           position accuracy or null if last available covariance does not need to
+     *                           be updated.
+     * @throws IllegalArgumentException if provided covariance matrix is not
+     *                                  3x3.
+     */
+    public void correctWithPositionMeasure(final Point3D position, final Matrix positionCovariance) {
+<span class="fc" id="L1052">        correctWithPositionMeasure(position.getInhomX(), position.getInhomY(), position.getInhomZ(),</span>
+                positionCovariance);
+<span class="fc" id="L1054">    }</span>
+
+    /**
+     * Updates covariance matrix of position measures.
+     * If null is provided, covariance matrix is not updated.
+     *
+     * @param positionCovariance new position covariance determining position
+     *                           accuracy or null if last available covariance does not need to be
+     *                           updated.
+     * @throws IllegalArgumentException if provided covariance matrix is not
+     *                                  3x3.
+     */
+    public abstract void setPositionCovarianceMatrix(final Matrix positionCovariance);
+
+    /**
+     * Gets current covariance matrix of position measures determining current
+     * accuracy of provided position measures.
+     *
+     * @return covariance matrix of position measures.
+     */
+    public abstract Matrix getPositionCovarianceMatrix();
+
+    /**
+     * Corrects system state with provided position measure using current
+     * position accuracy.
+     *
+     * @param positionX new position along x-axis expressed in meters (m).
+     * @param positionY new position along y-axis expressed in meters (m).
+     * @param positionZ new position along z-axis expressed in meters (m).
+     */
+    public abstract void correctWithPositionMeasure(
+            final double positionX, final double positionY, final double positionZ);
+
+    /**
+     * Corrects system state with provided position measure using current
+     * position accuracy.
+     *
+     * @param position x,y,z coordinates of position expressed in meters (m).
+     *                 Must have length 3.
+     * @throws IllegalArgumentException if provided array does not have length
+     *                                  3.
+     */
+    public void correctWithPositionMeasure(final double[] position) {
+<span class="fc" id="L1097">        correctWithPositionMeasure(position, null);</span>
+<span class="fc" id="L1098">    }</span>
+
+    /**
+     * Corrects system state with provided position measure using current
+     * position accuracy.
+     *
+     * @param position position expressed in meters (m).
+     */
+    public void correctWithPositionMeasure(final Point3D position) {
+<span class="fc" id="L1107">        correctWithPositionMeasure(position, null);</span>
+<span class="fc" id="L1108">    }</span>
+
+    /**
+     * Gets listener in charge of handling events raised by instances of this
+     * class.
+     *
+     * @return listener in charge of handling events raised by instances of this
+     * class.
+     */
+    public BaseSlamEstimatorListener&lt;D&gt; getListener() {
+<span class="fc" id="L1118">        return listener;</span>
+    }
+
+    /**
+     * Sets listener in charge of handling events raised by instances of this
+     * class.
+     *
+     * @param listener listener in charge of handling events raised by instances
+     *                 of this class.
+     */
+    public void setListener(final BaseSlamEstimatorListener&lt;D&gt; listener) {
+<span class="fc" id="L1129">        this.listener = listener;</span>
+<span class="fc" id="L1130">    }</span>
+
+    /**
+     * Gets calibration data. When provided, its mean and covariance are used
+     * to correct control samples and adjust process covariance matrix during
+     * Kalman filtering in prediction stage.
+     *
+     * @return calibration data.
+     */
+    public D getCalibrationData() {
+<span class="fc" id="L1140">        return calibrationData;</span>
+    }
+
+    /**
+     * Sets calibration data. When provided, its mean and covariance are used
+     * to correct control samples and adjust process covariance matrix during
+     * Kalman filtering in prediction stage.
+     *
+     * @param calibrationData calibration data.
+     */
+    public void setCalibrationData(final D calibrationData) {
+<span class="fc" id="L1151">        this.calibrationData = calibrationData;</span>
+<span class="fc" id="L1152">    }</span>
+
+    /**
+     * Resets position, linear velocity, linear acceleration, orientation and
+     * angular speed to provided values.
+     *
+     * @param statePositionX     position along x-axis expressed in meters (m).
+     * @param statePositionY     position along y-axis expressed in meters (m).
+     * @param statePositionZ     position along z-axis expressed in meters (m).
+     * @param stateVelocityX     linear velocity along x-axis expressed in meters
+     *                           per second (m/s).
+     * @param stateVelocityY     linear velocity along y-axis expressed in meters
+     *                           per second (m/s).
+     * @param stateVelocityZ     linear velocity along z-axis expressed in meters
+     *                           per second (m/s).
+     * @param stateAccelerationX linear acceleration along x-axis expressed in
+     *                           meters per squared second (m/s^2).
+     * @param stateAccelerationY linear acceleration along y-axis expressed in
+     *                           meters per squared second (m/s^2).
+     * @param stateAccelerationZ linear acceleration along z-axis expressed in
+     *                           meters per squared second (m/s^2).
+     * @param stateQuaternionA   A value of orientation quaternion.
+     * @param stateQuaternionB   B value of orientation quaternion.
+     * @param stateQuaternionC   C value of orientation quaternion.
+     * @param stateQuaternionD   D value of orientation quaternion.
+     * @param stateAngularSpeedX angular speed along x-axis expressed in radians
+     *                           per second (rad/s).
+     * @param stateAngularSpeedY angular speed along y-axis expressed in radians
+     *                           per second (rad/s).
+     * @param stateAngularSpeedZ angular speed along z-axis expressed in radians
+     *                           per second (rad/s).
+     */
+    protected void reset(
+            final double statePositionX, final double statePositionY, final double statePositionZ,
+            final double stateVelocityX, final double stateVelocityY, final double stateVelocityZ,
+            final double stateAccelerationX, final double stateAccelerationY, final double stateAccelerationZ,
+            final double stateQuaternionA, final double stateQuaternionB,
+            final double stateQuaternionC, final double stateQuaternionD,
+            final double stateAngularSpeedX, final double stateAngularSpeedY, final double stateAngularSpeedZ) {
+<span class="fc" id="L1191">        this.statePositionX = statePositionX;</span>
+<span class="fc" id="L1192">        this.statePositionY = statePositionY;</span>
+<span class="fc" id="L1193">        this.statePositionZ = statePositionZ;</span>
+<span class="fc" id="L1194">        this.stateVelocityX = stateVelocityX;</span>
+<span class="fc" id="L1195">        this.stateVelocityY = stateVelocityY;</span>
+<span class="fc" id="L1196">        this.stateVelocityZ = stateVelocityZ;</span>
+<span class="fc" id="L1197">        this.stateAccelerationX = stateAccelerationX;</span>
+<span class="fc" id="L1198">        this.stateAccelerationY = stateAccelerationY;</span>
+<span class="fc" id="L1199">        this.stateAccelerationZ = stateAccelerationZ;</span>
+<span class="fc" id="L1200">        this.stateQuaternionA = stateQuaternionA;</span>
+<span class="fc" id="L1201">        this.stateQuaternionB = stateQuaternionB;</span>
+<span class="fc" id="L1202">        this.stateQuaternionC = stateQuaternionC;</span>
+<span class="fc" id="L1203">        this.stateQuaternionD = stateQuaternionD;</span>
+<span class="fc" id="L1204">        this.stateAngularSpeedX = stateAngularSpeedX;</span>
+<span class="fc" id="L1205">        this.stateAngularSpeedY = stateAngularSpeedY;</span>
+<span class="fc" id="L1206">        this.stateAngularSpeedZ = stateAngularSpeedZ;</span>
+<span class="fc" id="L1207">        accelerometerTimestampNanos = gyroscopeTimestampNanos = -1;</span>
+<span class="fc" id="L1208">    }</span>
+
+    /**
+     * Notifies that a full sample has been received and resets flags indicating
+     * whether partial samples have been received.
+     */
+    protected void notifyFullSampleAndResetSampleReceive() {
+<span class="fc bfc" id="L1215" title="All 2 branches covered.">        if (isFullSampleAvailable()) {</span>
+<span class="fc" id="L1216">            processFullSample();</span>
+<span class="fc" id="L1217">            accumulatedAccelerometerSamples = accumulatedGyroscopeSamples = 0;</span>
+        }
+<span class="fc" id="L1219">    }</span>
+
+    /**
+     * Method to be implemented in subclasses to process a full sample.
+     */
+    protected abstract void processFullSample();
+
+    /**
+     * Listener for implementations of this class.
+     *
+     * @param &lt;D&gt; calibrator type associated to implementations of SLAM calibration
+     *            data.
+     */
+    public interface BaseSlamEstimatorListener&lt;D extends BaseCalibrationData&gt; {
+        /**
+         * Called when a full sample (accelerometer + gyroscope, etc.) has been
+         * received and is about to be processed to update internal state.
+         *
+         * @param estimator SLAM estimator.
+         */
+        void onFullSampleReceived(final BaseSlamEstimator&lt;D&gt; estimator);
+
+        /**
+         * Called when a full sample (accelerometer + gyroscope, etc.) has been
+         * received and has already been processed, and hence internal state has
+         * also been updated.
+         *
+         * @param estimator SLAM estimator.
+         */
+        void onFullSampleProcessed(final BaseSlamEstimator&lt;D&gt; estimator);
+
+        /**
+         * Called when internal state is about to be corrected by using an
+         * external measure.
+         *
+         * @param estimator SLAM estimator.
+         */
+        void onCorrectWithPositionMeasure(final BaseSlamEstimator&lt;D&gt; estimator);
+
+        /**
+         * Called after internal state has been corrected using an external
+         * measure.
+         *
+         * @param estimator SLAM estimator.
+         */
+        void onCorrectedWithPositionMeasure(final BaseSlamEstimator&lt;D&gt; estimator);
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

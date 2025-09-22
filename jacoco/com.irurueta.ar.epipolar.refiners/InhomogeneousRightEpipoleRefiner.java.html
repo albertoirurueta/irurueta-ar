@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InhomogeneousRightEpipoleRefiner.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.epipolar.refiners</a> &gt; <span class="el_source">InhomogeneousRightEpipoleRefiner.java</span></div><h1>InhomogeneousRightEpipoleRefiner.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2017 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.epipolar.refiners;
+
+import com.irurueta.algebra.Matrix;
+import com.irurueta.ar.epipolar.FundamentalMatrix;
+import com.irurueta.ar.epipolar.InvalidFundamentalMatrixException;
+import com.irurueta.geometry.CoordinatesType;
+import com.irurueta.geometry.InhomogeneousPoint2D;
+import com.irurueta.geometry.Point2D;
+import com.irurueta.geometry.Transformation2D;
+import com.irurueta.geometry.estimators.LockedException;
+import com.irurueta.geometry.estimators.NotReadyException;
+import com.irurueta.geometry.refiners.RefinerException;
+import com.irurueta.numerical.EvaluationException;
+import com.irurueta.numerical.GradientEstimator;
+import com.irurueta.numerical.fitting.LevenbergMarquardtMultiDimensionFitter;
+import com.irurueta.numerical.fitting.LevenbergMarquardtMultiDimensionFunctionEvaluator;
+import com.irurueta.numerical.robust.InliersData;
+
+import java.util.BitSet;
+import java.util.List;
+
+/**
+ * Refines the epipole of a fundamental matrix formed by an initial epipole
+ * estimation and an estimated homography.
+ * Any fundamental matrix can be expressed as F = [e']x*H, where
+ * e' is the epipole on the right view, []x is the skew matrix, and H is a
+ * non-degenerate homography.
+ * This class refines an initial epipole so that residuals from provided point
+ * correspondences generating fundamental matrix F are reduced.
+ * This class is especially useful in cases where geometry of the scene is
+ * degenerate (e.g. planar scene) and provided point correspondences would
+ * generate an inaccurate fundamental matrix.
+ * This implementation uses Levenberg-Marquardt algorithm for a fast cost
+ * optimization and uses inhomogeneous points for epipole refinement,
+ * which makes it unsuitable for cases when epipoles are at or near infinity
+ * (i.e. pure lateral translations).
+ */
+public class InhomogeneousRightEpipoleRefiner extends RightEpipoleRefiner {
+
+    /**
+     * Maximum allowed number of refinement iterations.
+     */
+    public static final int MAX_ITERS = 10;
+
+    /**
+     * Constructor.
+     */
+<span class="fc" id="L63">    public InhomogeneousRightEpipoleRefiner() {</span>
+<span class="fc" id="L64">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param initialEpipoleEstimation    initial right epipole estimation to be
+     *                                    set and refined.
+     * @param keepCovariance              true if covariance of estimation must be kept after
+     *                                    refinement, false otherwise.
+     * @param inliers                     set indicating which of the provided matches are inliers.
+     * @param residuals                   residuals for matched samples.
+     * @param numInliers                  number of inliers on initial estimation.
+     * @param samples1                    1st set of paired samples.
+     * @param samples2                    2nd set of paired samples.
+     * @param refinementStandardDeviation standard deviation used for
+     *                                    Levenberg-Marquardt fitting.
+     * @param homography                  homography relating samples in two views, which is
+     *                                    used to generate a fundamental matrix and its corresponding
+     *                                    epipolar geometry.
+     */
+    public InhomogeneousRightEpipoleRefiner(
+            final Point2D initialEpipoleEstimation, final boolean keepCovariance, final BitSet inliers,
+            final double[] residuals, final int numInliers, final List&lt;Point2D&gt; samples1, final List&lt;Point2D&gt; samples2,
+            final double refinementStandardDeviation, final Transformation2D homography) {
+<span class="fc" id="L88">        super(initialEpipoleEstimation, keepCovariance, inliers, residuals, numInliers, samples1, samples2,</span>
+                refinementStandardDeviation, homography);
+<span class="fc" id="L90">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param initialEpipoleEstimation    initial right epipole estimation to be
+     *                                    set and refined.
+     * @param keepCovariance              true if covariance of estimation must be kept after
+     *                                    refinement, false otherwise.
+     * @param inliersData                 inlier data, typically obtained from a robust
+     *                                    estimator.
+     * @param samples1                    1st set of paired samples.
+     * @param samples2                    2nd set of paired samples.
+     * @param refinementStandardDeviation standard deviation used for
+     *                                    Levenberg-Marquardt fitting.
+     * @param homography                  homography relating samples in two views, which is used
+     *                                    to generate a fundamental matrix and its corresponding
+     *                                    epipolar geometry.
+     */
+    public InhomogeneousRightEpipoleRefiner(
+            final Point2D initialEpipoleEstimation, final boolean keepCovariance, final InliersData inliersData,
+            final List&lt;Point2D&gt; samples1, final List&lt;Point2D&gt; samples2, final double refinementStandardDeviation,
+            final Transformation2D homography) {
+<span class="fc" id="L113">        super(initialEpipoleEstimation, keepCovariance, inliersData, samples1, samples2, refinementStandardDeviation,</span>
+                homography);
+<span class="fc" id="L115">    }</span>
+
+    /**
+     * Refines provided initial right epipole estimation.
+     * This method always sets a value into provided result instance regardless
+     * of the fact that error has actually improved in LMSE terms or not.
+     *
+     * @param result instance where refined estimation will be stored.
+     * @return true if result improves (decreases) in LMSE terms respect to
+     * initial estimation, false if no improvement has been achieved.
+     * @throws NotReadyException if not enough input data has been provided.
+     * @throws LockedException   if estimator is locked because refinement is
+     *                           already in progress.
+     * @throws RefinerException  if refinement fails for some reason (e.g. unable
+     *                           to converge to a result).
+     */
+
+    @Override
+    public boolean refine(final Point2D result) throws NotReadyException, LockedException, RefinerException {
+<span class="fc bfc" id="L134" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L135">            throw new LockedException();</span>
+        }
+<span class="pc bpc" id="L137" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L138">            throw new NotReadyException();</span>
+        }
+
+<span class="fc" id="L141">        locked = true;</span>
+
+<span class="pc bpc" id="L143" title="1 of 2 branches missed.">        if (listener != null) {</span>
+<span class="fc" id="L144">            listener.onRefineStart(this, initialEstimation);</span>
+        }
+
+        try {
+<span class="fc" id="L148">            final var epipole = new InhomogeneousPoint2D(initialEstimation);</span>
+<span class="fc" id="L149">            var errorDecreased = false;</span>
+            boolean iterErrorDecreased;
+<span class="fc" id="L151">            var numIter = 0;</span>
+            do {
+<span class="fc" id="L153">                final var fundamentalMatrix = new FundamentalMatrix();</span>
+<span class="fc" id="L154">                computeFundamentalMatrix(homography, epipole, fundamentalMatrix);</span>
+<span class="fc" id="L155">                final var initialTotalResidual = totalResidual(fundamentalMatrix);</span>
+<span class="fc" id="L156">                final var initParams = epipole.asArray();</span>
+
+                // output values to be fitted/optimized will contain residuals
+<span class="fc" id="L159">                final var y = new double[numInliers];</span>
+                // input values will contain 2 points to compute residuals
+<span class="fc" id="L161">                final var nDims = 2 * Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH;</span>
+<span class="fc" id="L162">                final var x = new Matrix(numInliers, nDims);</span>
+<span class="fc" id="L163">                final var nSamples = inliers.length();</span>
+<span class="fc" id="L164">                var pos = 0;</span>
+                Point2D leftPoint;
+                Point2D rightPoint;
+<span class="fc bfc" id="L167" title="All 2 branches covered.">                for (var i = 0; i &lt; nSamples; i++) {</span>
+<span class="pc bpc" id="L168" title="1 of 2 branches missed.">                    if (inliers.get(i)) {</span>
+                        // sample is inlier
+<span class="fc" id="L170">                        leftPoint = samples1.get(i);</span>
+<span class="fc" id="L171">                        rightPoint = samples2.get(i);</span>
+<span class="fc" id="L172">                        leftPoint.normalize();</span>
+<span class="fc" id="L173">                        rightPoint.normalize();</span>
+<span class="fc" id="L174">                        x.setElementAt(pos, 0, leftPoint.getInhomX());</span>
+<span class="fc" id="L175">                        x.setElementAt(pos, 1, leftPoint.getInhomY());</span>
+<span class="fc" id="L176">                        x.setElementAt(pos, 2, rightPoint.getInhomX());</span>
+<span class="fc" id="L177">                        x.setElementAt(pos, 3, rightPoint.getInhomY());</span>
+
+<span class="fc" id="L179">                        y[pos] = residuals[i];</span>
+<span class="fc" id="L180">                        pos++;</span>
+                    }
+                }
+
+<span class="fc" id="L184">                final var evaluator = new LevenbergMarquardtMultiDimensionFunctionEvaluator() {</span>
+
+<span class="fc" id="L186">                    private final Point2D leftPoint = Point2D.create(CoordinatesType.INHOMOGENEOUS_COORDINATES);</span>
+
+<span class="fc" id="L188">                    private final Point2D rightPoint = Point2D.create(CoordinatesType.INHOMOGENEOUS_COORDINATES);</span>
+
+<span class="fc" id="L190">                    private final InhomogeneousPoint2D epipole = new InhomogeneousPoint2D();</span>
+
+<span class="fc" id="L192">                    private final FundamentalMatrix fundMatrix = new FundamentalMatrix();</span>
+
+<span class="fc" id="L194">                    @SuppressWarnings(&quot;DuplicatedCode&quot;)</span>
+                    private final GradientEstimator gradientEstimator = new GradientEstimator(point -&gt; {
+
+                        try {
+<span class="fc" id="L198">                            epipole.setCoordinates(point);</span>
+<span class="fc" id="L199">                            computeFundamentalMatrix(homography, epipole, fundMatrix);</span>
+<span class="fc" id="L200">                            return residual(fundMatrix, leftPoint, rightPoint);</span>
+<span class="nc" id="L201">                        } catch (final InvalidFundamentalMatrixException e) {</span>
+<span class="nc" id="L202">                            throw new EvaluationException(e);</span>
+                        }
+                    });
+
+                    @Override
+                    public int getNumberOfDimensions() {
+<span class="fc" id="L208">                        return nDims;</span>
+                    }
+
+                    @Override
+                    public double[] createInitialParametersArray() {
+<span class="fc" id="L213">                        return initParams;</span>
+                    }
+
+                    @Override
+                    public double evaluate(
+                            final int i, final double[] point, final double[] params, final double[] derivatives)
+                            throws EvaluationException {
+                        try {
+<span class="fc" id="L221">                            leftPoint.setInhomogeneousCoordinates(point[0], point[1]);</span>
+<span class="fc" id="L222">                            rightPoint.setInhomogeneousCoordinates(point[2], point[3]);</span>
+
+<span class="fc" id="L224">                            epipole.setCoordinates(params);</span>
+<span class="fc" id="L225">                            computeFundamentalMatrix(homography, epipole, fundMatrix);</span>
+
+<span class="fc" id="L227">                            final var y = residual(fundMatrix, leftPoint, rightPoint);</span>
+<span class="fc" id="L228">                            gradientEstimator.gradient(params, derivatives);</span>
+
+<span class="fc" id="L230">                            return y;</span>
+<span class="nc" id="L231">                        } catch (final InvalidFundamentalMatrixException e) {</span>
+<span class="nc" id="L232">                            throw new EvaluationException(e);</span>
+                        }
+                    }
+                };
+
+<span class="fc" id="L237">                final var fitter = new LevenbergMarquardtMultiDimensionFitter(evaluator, x, y,</span>
+<span class="fc" id="L238">                        getRefinementStandardDeviation());</span>
+
+<span class="fc" id="L240">                fitter.fit();</span>
+
+                // obtain estimated params
+<span class="fc" id="L243">                final var params = fitter.getA();</span>
+
+                // update initial epipole for next iteration
+<span class="fc" id="L246">                epipole.setInhomogeneousCoordinates(params[0], params[1]);</span>
+
+<span class="fc" id="L248">                computeFundamentalMatrix(homography, epipole, fundamentalMatrix);</span>
+
+<span class="fc" id="L250">                final var finalTotalResidual = totalResidual(fundamentalMatrix);</span>
+<span class="fc bfc" id="L251" title="All 2 branches covered.">                iterErrorDecreased = finalTotalResidual &lt; initialTotalResidual;</span>
+<span class="fc bfc" id="L252" title="All 4 branches covered.">                if (iterErrorDecreased || !errorDecreased) {</span>
+<span class="fc" id="L253">                    errorDecreased = true;</span>
+                    // update final result
+<span class="fc" id="L255">                    result.setInhomogeneousCoordinates(params[0], params[1]);</span>
+
+<span class="pc bpc" id="L257" title="1 of 2 branches missed.">                    if (keepCovariance) {</span>
+                        // keep covariance
+<span class="fc" id="L259">                        covariance = fitter.getCovar();</span>
+                    }
+                }
+<span class="fc" id="L262">                numIter++;</span>
+<span class="pc bpc" id="L263" title="1 of 4 branches missed.">            } while (iterErrorDecreased &amp;&amp; numIter &lt; MAX_ITERS);</span>
+
+<span class="pc bpc" id="L265" title="1 of 2 branches missed.">            if (listener != null) {</span>
+<span class="fc" id="L266">                listener.onRefineEnd(this, initialEstimation, result, errorDecreased);</span>
+            }
+
+<span class="fc" id="L269">            return errorDecreased;</span>
+
+<span class="nc" id="L271">        } catch (final Exception e) {</span>
+<span class="nc" id="L272">            throw new RefinerException(e);</span>
+        } finally {
+<span class="fc" id="L274">            locked = false;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
