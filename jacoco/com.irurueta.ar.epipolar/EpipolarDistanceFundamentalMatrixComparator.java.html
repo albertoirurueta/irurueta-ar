@@ -1,0 +1,812 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EpipolarDistanceFundamentalMatrixComparator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.epipolar</a> &gt; <span class="el_source">EpipolarDistanceFundamentalMatrixComparator.java</span></div><h1>EpipolarDistanceFundamentalMatrixComparator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2015 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.epipolar;
+
+import com.irurueta.geometry.CoordinatesType;
+import com.irurueta.geometry.Line2D;
+import com.irurueta.geometry.Point2D;
+import com.irurueta.geometry.estimators.LockedException;
+import com.irurueta.geometry.estimators.NotReadyException;
+import com.irurueta.statistics.UniformRandomizer;
+
+/**
+ * Compares two fundamental matrices by estimating average epipolar distances.
+ * This class uses epipolar geometry to determine how similar fundamental
+ * matrices are. This is done by assuming a certain size on the retinal planes
+ * and generating random 2D points to obtain their associated epipolar lines and
+ * the distances of matched points to those epipolar lines
+ * This class simply computes the norm of the difference of both fundamental
+ * matrices. The smaller the value the more similar the fundamental matrices
+ * will be from a pure algebraic point of view.
+ */
+public class EpipolarDistanceFundamentalMatrixComparator extends FundamentalMatrixComparator {
+
+    /**
+     * Defines default minimum horizontal coordinate when generating random
+     * samples.
+     */
+    public static final double DEFAULT_MIN_X = 0.0;
+
+    /**
+     * Defines default maximum horizontal coordinate when generating random
+     * samples.
+     */
+    public static final double DEFAULT_MAX_X = 640.0;
+
+    /**
+     * Defines default minimum vertical coordinate when generating random
+     * samples.
+     */
+    public static final double DEFAULT_MIN_Y = 0.0;
+
+    /**
+     * Defines default maximum vertical coordinate when generating random
+     * samples.
+     */
+    public static final double DEFAULT_MAX_Y = 480.0;
+
+    /**
+     * Default number of random samples to generate to compare fundamental
+     * matrices.
+     */
+    public static final int DEFAULT_N_SAMPLES = 100;
+
+    /**
+     * Minimum number of samples that must be generated to compare fundamental
+     * matrices.
+     */
+    public static final int MIN_N_SAMPLES = 1;
+
+    /**
+     * Minimum disparity factor respect to retinal plane size defined by
+     * minimum and maximum samples coordinates. When computing residuals,
+     * matched samples are created along the corresponding epipolar lines with a
+     * random disparity within provided range, and then the epipolar line for
+     * the randomly generated matched sample is generated on the original view
+     * to determine the distance to such line and the original sample.
+     */
+    public static final double DEFAULT_MIN_DISPARITY_FACTOR = -0.1;
+
+    /**
+     * Maximum disparity factor respect to retinal plane size defined by
+     * minimum and maximum samples coordinates. When computing residuals,
+     * matched samples are created along the corresponding epipolar lines with a
+     * random disparity within provided range, and then the epipolar line for
+     * the randomly generated matched sample is generated on the original view
+     * to determine the distance to such line and the original sample.
+     */
+    public static final double DEFAULT_MAX_DISPARITY_FACTOR = 0.1;
+
+    /**
+     * Default factor to determine maximum number of iterations respect to the
+     * number of samples to compute comparison.
+     */
+    public static final double DEFAULT_MAX_ITERATIONS_FACTOR = 10.0;
+
+    /**
+     * Minimum value for the factor to determine maximum number of iterations
+     * respect to the number of samples to compute comparison.
+     */
+    public static final double MIN_MAX_ITERATIONS_FACTOR = 1.0;
+
+    /**
+     * Default amount of progress variation before notifying a change in
+     * comparison progress. By default, this is set to 5%.
+     */
+    public static final float DEFAULT_PROGRESS_DELTA = 0.05f;
+
+    /**
+     * Minimum allowed value for progress delta.
+     */
+    public static final float MIN_PROGRESS_DELTA = 0.0f;
+
+    /**
+     * Maximum allowed value for progress delta.
+     */
+    public static final float MAX_PROGRESS_DELTA = 1.0f;
+
+    /**
+     * Minimum horizontal coordinate when generating random samples.
+     */
+    private double minX;
+
+    /**
+     * Maximum horizontal coordinate when generating random samples.
+     */
+    private double maxX;
+
+    /**
+     * Minimum vertical coordinate when generating random samples.
+     */
+    private double minY;
+
+    /**
+     * Maximum vertical coordinate when generating random samples.
+     */
+    private double maxY;
+
+    /**
+     * Number of random samples to generate to compare fundamental matrices.
+     */
+    private int nSamples;
+
+    /**
+     * Minimum horizontal disparity factor respect to retinal plane size defined
+     * by minimum and maximum samples coordinates. When computing residuals,
+     * matched samples are created along the corresponding epipolar lines with a
+     * random disparity within provided range of disparities, and then the
+     * epipolar line for the randomly generated matched sample is generated on
+     * the original view to determine the distance to such line and the original
+     * sample.
+     */
+    private double minHorizontalDisparityFactor;
+
+    /**
+     * Maximum horizontal disparity factor respect to retinal plane size defined
+     * by minimum and maximum samples coordinates. When computing residuals,
+     * matched samples are created along the corresponding epipolar lines with a
+     * random disparity within provided range of disparities, and then the
+     * epipolar line for the randomly generated matched sample is generated on
+     * the original view to determine the distance to such line and the original
+     * sample.
+     */
+    private double maxHorizontalDisparityFactor;
+
+    /**
+     * Minimum vertical disparity factor respect to retinal plane size defined
+     * by minimum and maximum samples coordinates. When computing residuals,
+     * matched samples are created along the corresponding epipolar lines with a
+     * random disparity within provided range of disparities, and then the
+     * epipolar line for the randomly generated matched sample is generated on
+     * the original view to determine the distance to such line and the original
+     * sample.
+     */
+    private double minVerticalDisparityFactor;
+
+    /**
+     * Maximum vertical disparity factor respect to retinal plane size defined
+     * by minimum and maximum samples coordinates. When computing residuals,
+     * matched samples are created along the corresponding epipolar lines with a
+     * random disparity within provided range of disparities, and then the
+     * epipolar line for the randomly generated matched sample is generated on
+     * the original view to determine the distance to such line and the original
+     * sample.
+     */
+    private double maxVerticalDisparityFactor;
+
+    /**
+     * Factor to determine maximum number of iterations respect to the
+     * number of samples to compute comparison.
+     */
+    private double maxIterationsFactor;
+
+    /**
+     * Amount of progress variation before notifying a progress change during
+     * comparison.
+     */
+    protected float progressDelta;
+
+    /**
+     * Constructor.
+     */
+    public EpipolarDistanceFundamentalMatrixComparator() {
+<span class="fc" id="L206">        super();</span>
+<span class="fc" id="L207">        init();</span>
+<span class="fc" id="L208">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param groundTruthFundamentalMatrix fundamental matrix to be considered
+     *                                     as ground truth to compare against.
+     * @param otherFundamentalMatrix       other fundamental matrix being compared.
+     */
+    public EpipolarDistanceFundamentalMatrixComparator(
+            final FundamentalMatrix groundTruthFundamentalMatrix, final FundamentalMatrix otherFundamentalMatrix) {
+<span class="fc" id="L219">        super(groundTruthFundamentalMatrix, otherFundamentalMatrix);</span>
+<span class="fc" id="L220">        init();</span>
+<span class="fc" id="L221">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param listener listener to handle events generated by this class.
+     */
+    public EpipolarDistanceFundamentalMatrixComparator(final FundamentalMatrixComparatorListener listener) {
+<span class="fc" id="L229">        super(listener);</span>
+<span class="fc" id="L230">        init();</span>
+<span class="fc" id="L231">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param groundTruthFundamentalMatrix fundamental matrix to be considered
+     *                                     as ground truth to compare against.
+     * @param otherFundamentalMatrix       other fundamental matrix being compared.
+     * @param listener                     listener to handle events generated by this class.
+     */
+    public EpipolarDistanceFundamentalMatrixComparator(
+            final FundamentalMatrix groundTruthFundamentalMatrix, final FundamentalMatrix otherFundamentalMatrix,
+            final FundamentalMatrixComparatorListener listener) {
+<span class="fc" id="L244">        super(groundTruthFundamentalMatrix, otherFundamentalMatrix, listener);</span>
+<span class="fc" id="L245">        init();</span>
+<span class="fc" id="L246">    }</span>
+
+    /**
+     * Returns minimum horizontal coordinate when generating random samples.
+     *
+     * @return minimum horizontal coordinate when generating random samples.
+     */
+    public double getMinX() {
+<span class="fc" id="L254">        return minX;</span>
+    }
+
+    /**
+     * Returns maximum horizontal coordinate when generating random samples.
+     *
+     * @return maximum horizontal coordinate when generating random samples.
+     */
+    public double getMaxX() {
+<span class="fc" id="L263">        return maxX;</span>
+    }
+
+    /**
+     * Sets minimum and maximum horizontal coordinates when generating random
+     * samples.
+     *
+     * @param minX minimum horizontal coordinate when generating random samples.
+     * @param maxX maximum horizontal coordinate when generating random samples.
+     * @throws LockedException          if this instance is locked.
+     * @throws IllegalArgumentException if minimum value is larger or equal
+     *                                  than maximum one.
+     */
+    public void setMinMaxX(final double minX, final double maxX) throws LockedException {
+<span class="fc bfc" id="L277" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L278">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L280" title="All 2 branches covered.">        if (minX &gt;= maxX) {</span>
+<span class="fc" id="L281">            throw new IllegalArgumentException();</span>
+        }
+
+<span class="fc" id="L284">        this.minX = minX;</span>
+<span class="fc" id="L285">        this.maxX = maxX;</span>
+<span class="fc" id="L286">    }</span>
+
+    /**
+     * Returns minimum vertical coordinate when generating random samples.
+     *
+     * @return minimum vertical coordinate when generating random samples.
+     */
+    public double getMinY() {
+<span class="fc" id="L294">        return minY;</span>
+    }
+
+    /**
+     * Returns maximum vertical coordinate when generating random samples.
+     *
+     * @return maximum vertical coordinate when generating random samples.
+     */
+    public double getMaxY() {
+<span class="fc" id="L303">        return maxY;</span>
+    }
+
+    /**
+     * Sets minimum and maximum vertical coordinates when generating random
+     * samples.
+     *
+     * @param minY minimum vertical coordinate when generating random samples.
+     * @param maxY maximum vertical coordinate when generating random samples.
+     * @throws LockedException          if this instance is locked.
+     * @throws IllegalArgumentException if minimum value is larger or equal
+     *                                  than maximum one.
+     */
+    public void setMinMaxY(final double minY, final double maxY) throws LockedException {
+<span class="fc bfc" id="L317" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L318">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L320" title="All 2 branches covered.">        if (minY &gt;= maxY) {</span>
+<span class="fc" id="L321">            throw new IllegalArgumentException();</span>
+        }
+
+<span class="fc" id="L324">        this.minY = minY;</span>
+<span class="fc" id="L325">        this.maxY = maxY;</span>
+<span class="fc" id="L326">    }</span>
+
+    /**
+     * Returns number of random samples to generate to compare fundamental
+     * matrices.
+     *
+     * @return number of random samples to generate to compare fundamental
+     * matrices.
+     */
+    public int getNSamples() {
+<span class="fc" id="L336">        return nSamples;</span>
+    }
+
+    /**
+     * Sets number of random samples to generate to compare fundamental matrices.
+     *
+     * @param nSamples number of random samples to generate to compare
+     *                 fundamental matrices.
+     * @throws LockedException          if this instance is locked.
+     * @throws IllegalArgumentException if provided value is less than 1.
+     */
+    public void setNSamples(final int nSamples) throws LockedException {
+<span class="fc bfc" id="L348" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L349">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L351" title="All 2 branches covered.">        if (nSamples &lt; MIN_N_SAMPLES) {</span>
+<span class="fc" id="L352">            throw new IllegalArgumentException();</span>
+        }
+
+<span class="fc" id="L355">        this.nSamples = nSamples;</span>
+<span class="fc" id="L356">    }</span>
+
+    /**
+     * Returns minimum horizontal disparity factor respect to retinal plane size
+     * defined by minimum and maximum samples coordinates. When computing
+     * residuals, matched samples are created along the corresponding epipolar
+     * lines with a random disparity within provided range of disparities, and
+     * then the epipolar line for the randomly generated matched sample is
+     * generated on the original view to determine the distance to such line and
+     * the original sample.
+     *
+     * @return minimum horizontal disparity factor.
+     */
+    public double getMinHorizontalDisparityFactor() {
+<span class="fc" id="L370">        return minHorizontalDisparityFactor;</span>
+    }
+
+    /**
+     * Returns maximum horizontal disparity factor respect to retinal plane size
+     * defined by minimum and maximum samples coordinates. When computing
+     * residuals, matched samples are created along the corresponding epipolar
+     * lines with a random disparity within provided range of disparities, and
+     * then the epipolar line for the randomly generated matched sample is
+     * generated on the original view to determine the distance to such line and
+     * the original sample.
+     *
+     * @return maximum horizontal disparity factor.
+     */
+    public double getMaxHorizontalDisparityFactor() {
+<span class="fc" id="L385">        return maxHorizontalDisparityFactor;</span>
+    }
+
+    /**
+     * Sets minimum and maximum horizontal disparity factor respect to retinal
+     * plane size defined by minimum and maximum samples coordinates. When
+     * computing residuals, matched samples are created along the corresponding
+     * epipolar lines with a random disparity within provided range of
+     * disparities, and then the epipolar line for the randomly generated matched
+     * sample is generated on the original view to determine the distance to
+     * such line and the original sample.
+     *
+     * @param minHorizontalDisparityFactor minimum horizontal disparity factor.
+     * @param maxHorizontalDisparityFactor maximum horizontal disparity factor.
+     * @throws LockedException          if this instance is locked.
+     * @throws IllegalArgumentException if minimum value is larger or equal
+     *                                  than maximum one.
+     */
+    public void setMinMaxHorizontalDisparityFactor(
+            final double minHorizontalDisparityFactor, final double maxHorizontalDisparityFactor)
+            throws LockedException {
+<span class="fc bfc" id="L406" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L407">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L409" title="All 2 branches covered.">        if (minHorizontalDisparityFactor &gt;= maxHorizontalDisparityFactor) {</span>
+<span class="fc" id="L410">            throw new IllegalArgumentException();</span>
+        }
+
+<span class="fc" id="L413">        this.minHorizontalDisparityFactor = minHorizontalDisparityFactor;</span>
+<span class="fc" id="L414">        this.maxHorizontalDisparityFactor = maxHorizontalDisparityFactor;</span>
+<span class="fc" id="L415">    }</span>
+
+    /**
+     * Returns minimum vertical disparity factor respect to retinal plane size
+     * defined by minimum and maximum samples coordinates. When computing
+     * residuals, matched samples are created along the corresponding epipolar
+     * lines with a random disparity within provided range of disparities, and
+     * then the epipolar line for the randomly generated matched sample is
+     * generated on the original view to determine the distance to such line and
+     * the original sample.
+     *
+     * @return minimum vertical disparity factor.
+     */
+    public double getMinVerticalDisparityFactor() {
+<span class="fc" id="L429">        return minVerticalDisparityFactor;</span>
+    }
+
+    /**
+     * Returns maximum vertical disparity factor respect to retinal plane size
+     * defined by minimum and maximum samples coordinates. When computing
+     * residuals, matched samples are created along the corresponding epipolar
+     * lines with a random disparity within provided range of disparities, and
+     * then the epipolar line for the randomly generated matched sample is
+     * generated on the original view to determine the distance to such line and
+     * the original sample.
+     *
+     * @return maximum vertical disparity factor.
+     */
+    public double getMaxVerticalDisparityFactor() {
+<span class="fc" id="L444">        return maxVerticalDisparityFactor;</span>
+    }
+
+    /**
+     * Sets minimum and maximum vertical disparity factor respect to retinal
+     * plane size defined by minimum and maximum samples coordinates. When
+     * computing residuals, matched samples are created along the corresponding
+     * epipolar lines with a random disparity within provided range of
+     * disparities, and then the epipolar line for the randomly generated matched
+     * sample is generated on the original view to determine the distance to
+     * such line and the original sample.
+     *
+     * @param minVerticalDisparityFactor minimum vertical disparity factor.
+     * @param maxVerticalDisparityFactor maximum vertical disparity factor.
+     * @throws LockedException          if this instance is locked.
+     * @throws IllegalArgumentException if minimum value is larger or equal
+     *                                  than maximum one.
+     */
+    public void setMinMaxVerticalDisparityFactor(
+            final double minVerticalDisparityFactor, final double maxVerticalDisparityFactor) throws LockedException {
+<span class="fc bfc" id="L464" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L465">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L467" title="All 2 branches covered.">        if (minVerticalDisparityFactor &gt;= maxVerticalDisparityFactor) {</span>
+<span class="fc" id="L468">            throw new IllegalArgumentException();</span>
+        }
+
+<span class="fc" id="L471">        this.minVerticalDisparityFactor = minVerticalDisparityFactor;</span>
+<span class="fc" id="L472">        this.maxVerticalDisparityFactor = maxVerticalDisparityFactor;</span>
+<span class="fc" id="L473">    }</span>
+
+    /**
+     * Returns factor to determine maximum number of iterations respect to the
+     * number of samples to compute comparison.
+     *
+     * @return factor to determine maximum number of iterations respect to the
+     * number of samples to compute comparison.
+     */
+    public double getMaxIterationsFactor() {
+<span class="fc" id="L483">        return maxIterationsFactor;</span>
+    }
+
+    /**
+     * Sets factor to determine maximum number of iterations respect to the
+     * number of samples to compute comparison.
+     *
+     * @param maxIterationsFactor maximum number of iterations respect to the
+     *                            number of samples to compute comparison.
+     * @throws LockedException          if this instance is locked.
+     * @throws IllegalArgumentException if provided value is less than 1.0.
+     */
+    public void setMaxIterationsFactor(final double maxIterationsFactor) throws LockedException {
+<span class="fc bfc" id="L496" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L497">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L499" title="All 2 branches covered.">        if (maxIterationsFactor &lt; MIN_MAX_ITERATIONS_FACTOR) {</span>
+<span class="fc" id="L500">            throw new IllegalArgumentException();</span>
+        }
+
+<span class="fc" id="L503">        this.maxIterationsFactor = maxIterationsFactor;</span>
+<span class="fc" id="L504">    }</span>
+
+    /**
+     * Returns amount of progress variation before notifying a progress change
+     * during comparison computation.
+     *
+     * @return amount of progress variation before notifying a progress change
+     * during comparison computation.
+     */
+    public float getProgressDelta() {
+<span class="fc" id="L514">        return progressDelta;</span>
+    }
+
+    /**
+     * Sets amount of progress variation before notifying a progress change
+     * during comparison computation.
+     *
+     * @param progressDelta amount of progress variation before notifying a
+     *                      progress change during comparison computation.
+     * @throws IllegalArgumentException if progress delta is less than zero or
+     *                                  greater than 1.
+     * @throws LockedException          if this estimator is locked.
+     */
+    public void setProgressDelta(final float progressDelta) throws LockedException {
+<span class="fc bfc" id="L528" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L529">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L531" title="All 4 branches covered.">        if (progressDelta &lt; MIN_PROGRESS_DELTA || progressDelta &gt; MAX_PROGRESS_DELTA) {</span>
+<span class="fc" id="L532">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L534">        this.progressDelta = progressDelta;</span>
+<span class="fc" id="L535">    }</span>
+
+    /**
+     * Compares two fundamental matrices and returns the comparison value.
+     * Comparison value will depend on the method implemented to compare both
+     * fundamental matrices.
+     *
+     * @return comparison value. Typically, the smaller the absolute value the
+     * more similar the fundamental matrices are.
+     * @throws NotReadyException                    if this comparator is not  yet ready to start
+     *                                              the comparison.
+     * @throws LockedException                      if this instance is locked.
+     * @throws FundamentalMatrixComparatorException if comparison fails due to
+     *                                              some other reason.
+     */
+    @SuppressWarnings(&quot;DuplicatedCode&quot;)
+    @Override
+    public double compare() throws NotReadyException, LockedException, FundamentalMatrixComparatorException {
+<span class="fc bfc" id="L553" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L554">            throw new LockedException();</span>
+        }
+<span class="pc bpc" id="L556" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L557">            throw new NotReadyException();</span>
+        }
+
+        try {
+<span class="fc" id="L561">            locked = true;</span>
+
+<span class="pc bpc" id="L563" title="1 of 2 branches missed.">            if (listener != null) {</span>
+<span class="fc" id="L564">                listener.onCompareStart(this);</span>
+            }
+
+<span class="fc" id="L567">            final var minHorizontalDisparity = minHorizontalDisparityFactor * (maxX - minX);</span>
+<span class="fc" id="L568">            final var maxHorizontalDisparity = maxHorizontalDisparityFactor * (maxX - minX);</span>
+<span class="fc" id="L569">            final var minVerticalDisparity = minVerticalDisparityFactor * (maxY - minY);</span>
+<span class="fc" id="L570">            final var maxVerticalDisparity = maxVerticalDisparityFactor * (maxY - minY);</span>
+
+            double d1;
+            double d1prime;
+            double d2;
+            double d2prime;
+            double inhomX;
+            double inhomY;
+            boolean repeat;
+            int counter;
+<span class="fc" id="L580">            final var m1 = Point2D.create(CoordinatesType.HOMOGENEOUS_COORDINATES);</span>
+<span class="fc" id="L581">            final var m2 = Point2D.create(CoordinatesType.HOMOGENEOUS_COORDINATES);</span>
+<span class="fc" id="L582">            final var l1real = new Line2D();</span>
+<span class="fc" id="L583">            final var l1est = new Line2D();</span>
+<span class="fc" id="L584">            final var l2real = new Line2D();</span>
+<span class="fc" id="L585">            final var l2est = new Line2D();</span>
+<span class="fc" id="L586">            final var randomizer = new UniformRandomizer();</span>
+<span class="fc" id="L587">            var avgDist = 0.0;</span>
+<span class="fc" id="L588">            final var maxIterations = (int) (nSamples * maxIterationsFactor);</span>
+<span class="fc" id="L589">            var currentIter = 0;</span>
+            float progress;
+<span class="fc" id="L591">            var previousProgress = 0.0f;</span>
+<span class="fc bfc" id="L592" title="All 2 branches covered.">            for (var i = 0; i &lt; nSamples; i++) {</span>
+<span class="fc" id="L593">                repeat = true;</span>
+<span class="fc" id="L594">                counter = 0;</span>
+<span class="pc bpc" id="L595" title="1 of 4 branches missed.">                while (repeat &amp;&amp; (counter &lt; nSamples)) {</span>
+                    // set x value
+<span class="fc" id="L597">                    inhomX = randomizer.nextDouble(minX, maxX);</span>
+
+                    // set y value
+<span class="fc" id="L600">                    inhomY = randomizer.nextDouble(minY, maxY);</span>
+<span class="fc" id="L601">                    m1.setInhomogeneousCoordinates(inhomX, inhomY);</span>
+<span class="fc" id="L602">                    m1.normalize();</span>
+
+                    // real epipolar line for random point m1
+<span class="fc" id="L605">                    groundTruthFundamentalMatrix.rightEpipolarLine(m1, l2real);</span>
+<span class="fc" id="L606">                    l2real.normalize();</span>
+
+                    // check that epipolar line lies within retinal plane size
+                    // taking into account the following equation
+                    // x*l2.getA() + y*l2.getB() + l2.getC() = 0
+                    double yMinX;
+                    double yMaxX;
+<span class="pc bpc" id="L613" title="1 of 2 branches missed.">                    if (Math.abs(l2real.getB()) &gt; Double.MIN_VALUE) {</span>
+                        // for x = mMinX
+<span class="fc" id="L615">                        yMinX = -(minX * l2real.getA() + l2real.getC()) / l2real.getB();</span>
+
+                        // for x = mMaxX
+<span class="fc" id="L618">                        yMaxX = -(maxX * l2real.getA() + l2real.getC()) / l2real.getB();</span>
+                    } else {
+<span class="nc bnc" id="L620" title="All 2 branches missed.">                        yMinX = l2real.getA() &gt;= 0.0 ? -Double.MAX_VALUE : Double.MAX_VALUE;</span>
+<span class="nc" id="L621">                        yMaxX = -yMinX;</span>
+                    }
+
+                    // for y = mMinY
+<span class="fc" id="L625">                    final var xMinY = -(minY * l2real.getB() + l2real.getC()) / l2real.getA();</span>
+
+                    // for y = mMaxY
+<span class="fc" id="L628">                    final var xMaxY = -(maxY * l2real.getB() + l2real.getC()) / l2real.getA();</span>
+
+                    // if epipolar line does not intersect second image, we need
+                    // to repeat with a different sample
+<span class="pc bpc" id="L632" title="6 of 16 branches missed.">                    repeat = (((yMinX &lt; minY) &amp;&amp; (yMaxX &lt; minY)) || ((yMinX &gt; maxY)</span>
+                            &amp;&amp; (yMaxX &gt; maxY)) || ((xMinY &lt; minX) &amp;&amp; (xMaxY &lt; minX))
+                            || ((xMinY &gt; maxX) &amp;&amp; (xMaxY &gt; maxX)));
+<span class="fc" id="L635">                    counter++;</span>
+<span class="fc" id="L636">                    currentIter++;</span>
+<span class="fc" id="L637">                }</span>
+
+<span class="pc bpc" id="L639" title="1 of 2 branches missed.">                if (counter &gt;= nSamples) {</span>
+<span class="nc" id="L640">                    continue;</span>
+                }
+
+                // choose point lying on epipolar line l2real :
+                // m2.getX() * l2real.getA() + m2.getY() * l2real.getB() +
+                // l2real.getC() = 0
+                // choose random horizontal component within provided disparity:
+<span class="fc" id="L647">                inhomX = m1.getInhomX() + randomizer.nextDouble(minHorizontalDisparity, maxHorizontalDisparity);</span>
+<span class="pc bpc" id="L648" title="1 of 2 branches missed.">                if (Math.abs(l2real.getB()) &gt; Double.MIN_VALUE) {</span>
+<span class="fc" id="L649">                    inhomY = -(inhomX * l2real.getA() + l2real.getC()) / l2real.getB();</span>
+                } else {
+<span class="nc" id="L651">                    inhomY = Double.MAX_VALUE;</span>
+                }
+
+                // if point lies outside retinal plane limits, try setting random
+                // vertical component within provided disparity
+<span class="fc bfc" id="L656" title="All 4 branches covered.">                if ((inhomY &lt; minY) || (inhomY &gt; maxY)) {</span>
+<span class="fc" id="L657">                    inhomY = m1.getInhomY() + randomizer.nextDouble(minVerticalDisparity, maxVerticalDisparity);</span>
+<span class="fc" id="L658">                    inhomX = -(inhomY * l2real.getB() + l2real.getC()) / l2real.getA();</span>
+                }
+
+<span class="fc" id="L661">                m2.setInhomogeneousCoordinates(inhomX, inhomY);</span>
+<span class="fc" id="L662">                m2.normalize();</span>
+
+                // estimated epipolar line for some random point m1
+<span class="fc" id="L665">                otherFundamentalMatrix.rightEpipolarLine(m1, l2est);</span>
+<span class="fc" id="L666">                l2est.normalize();</span>
+
+                // compute distance from l2est to m2 (distance from estimated to
+                // real)
+<span class="fc" id="L670">                d1prime = Math.abs(l2est.signedDistance(m2));</span>
+
+<span class="fc" id="L672">                otherFundamentalMatrix.leftEpipolarLine(m2, l1est);</span>
+<span class="fc" id="L673">                l1est.normalize();</span>
+<span class="fc" id="L674">                d1 = Math.abs(l1est.signedDistance(m1));</span>
+
+                // repeat reversing roles of ground truth and other fundamental
+                // matrix
+<span class="fc" id="L678">                repeat = true;</span>
+<span class="fc" id="L679">                counter = 0;</span>
+<span class="pc bpc" id="L680" title="1 of 4 branches missed.">                while (repeat &amp;&amp; (counter &lt; nSamples)) {</span>
+                    // set x value
+<span class="fc" id="L682">                    inhomX = randomizer.nextDouble(minX, maxX);</span>
+
+                    // set y value
+<span class="fc" id="L685">                    inhomY = randomizer.nextDouble(minY, maxY);</span>
+<span class="fc" id="L686">                    m1.setInhomogeneousCoordinates(inhomX, inhomY);</span>
+<span class="fc" id="L687">                    m1.normalize();</span>
+
+                    // real epipolar line for random point m1
+<span class="fc" id="L690">                    otherFundamentalMatrix.rightEpipolarLine(m1, l2est);</span>
+<span class="fc" id="L691">                    l2est.normalize();</span>
+
+                    // check that epipolar line lies within retinal plane size
+                    // taking into account the following equation
+                    // x*l2.getA() + y*l2.getB() + l2.getC() = 0
+                    double yMinX;
+                    double yMaxX;
+<span class="pc bpc" id="L698" title="1 of 2 branches missed.">                    if (Math.abs(l2est.getB()) &gt; Double.MIN_VALUE) {</span>
+                        // for x = mMinX
+<span class="fc" id="L700">                        yMinX = -(minX * l2est.getA() + l2est.getC()) / l2est.getB();</span>
+
+                        // for x = mMaxX
+<span class="fc" id="L703">                        yMaxX = -(maxX * l2est.getA() + l2est.getC()) / l2est.getB();</span>
+                    } else {
+<span class="nc bnc" id="L705" title="All 2 branches missed.">                        yMinX = l2est.getA() &gt;= 0.0 ? -Double.MAX_VALUE : Double.MAX_VALUE;</span>
+<span class="nc" id="L706">                        yMaxX = -yMinX;</span>
+                    }
+
+                    // for y = mMinY
+<span class="fc" id="L710">                    final var xMinY = -(minY * l2est.getB() + l2est.getC()) / l2est.getA();</span>
+
+                    // for y = mMaxY
+<span class="fc" id="L713">                    final var xMaxY = -(maxY * l2est.getB() + l2est.getC()) / l2est.getA();</span>
+
+                    // if epipolar line does not intersect second image, we need
+                    // to repeat with a different sample
+<span class="pc bpc" id="L717" title="4 of 16 branches missed.">                    repeat = (((yMinX &lt; minY) &amp;&amp; (yMaxX &lt; minY)) || ((yMinX &gt; maxY)</span>
+                            &amp;&amp; (yMaxX &gt; maxY)) || ((xMinY &lt; minX) &amp;&amp; (xMaxY &lt; minX))
+                            || ((xMinY &gt; maxX) &amp;&amp; (xMaxY &gt; maxX)));
+<span class="fc" id="L720">                    counter++;</span>
+<span class="fc" id="L721">                    currentIter++;</span>
+<span class="fc" id="L722">                }</span>
+
+<span class="pc bpc" id="L724" title="1 of 2 branches missed.">                if (counter &gt;= nSamples) {</span>
+<span class="nc" id="L725">                    continue;</span>
+                }
+
+                // choose point lying on epipolar line l2est :
+                // m2.getX() * l2est.getA() + m2.getY() * l2est.getB() +
+                // l2est.getC() = 0
+                // choose random horizontal component within provided disparity:
+<span class="fc" id="L732">                inhomX = m1.getInhomX() + randomizer.nextDouble(minHorizontalDisparity, maxHorizontalDisparity);</span>
+<span class="pc bpc" id="L733" title="1 of 2 branches missed.">                if (Math.abs(l2real.getB()) &gt; Double.MIN_VALUE) {</span>
+<span class="fc" id="L734">                    inhomY = -(inhomX * l2est.getA() + l2est.getC()) / l2est.getB();</span>
+                } else {
+<span class="nc" id="L736">                    inhomY = Double.MAX_VALUE;</span>
+                }
+
+                // if point lies outside retinal plane limits, try setting random
+                // Vertical component within provided disparity
+<span class="fc bfc" id="L741" title="All 4 branches covered.">                if ((inhomY &lt; minY) || (inhomY &gt; maxY)) {</span>
+<span class="fc" id="L742">                    inhomY = m1.getInhomY() + randomizer.nextDouble(minVerticalDisparity, maxVerticalDisparity);</span>
+<span class="fc" id="L743">                    inhomX = -(inhomY * l2est.getB() + l2est.getC()) / l2est.getA();</span>
+                }
+
+<span class="fc" id="L746">                m2.setInhomogeneousCoordinates(inhomX, inhomY);</span>
+<span class="fc" id="L747">                m2.normalize();</span>
+
+                // estimated epipolar line for some random point m1
+<span class="fc" id="L750">                otherFundamentalMatrix.rightEpipolarLine(m1, l2real);</span>
+<span class="fc" id="L751">                l2real.normalize();</span>
+
+                // compute distance from l2real to m2 (distance from estimated to
+                // real)
+<span class="fc" id="L755">                d2prime = Math.abs(l2real.signedDistance(m2));</span>
+
+<span class="fc" id="L757">                otherFundamentalMatrix.leftEpipolarLine(m2, l1real);</span>
+<span class="fc" id="L758">                l1real.normalize();</span>
+<span class="fc" id="L759">                d2 = Math.abs(l1real.signedDistance(m1));</span>
+
+<span class="fc" id="L761">                avgDist += (d1 + d1prime + d2 + d2prime) / 4.0;</span>
+
+<span class="pc bpc" id="L763" title="1 of 2 branches missed.">                if (currentIter &gt; maxIterations) {</span>
+<span class="nc" id="L764">                    throw new FundamentalMatrixComparatorException();</span>
+                }
+
+<span class="fc" id="L767">                progress = (float) currentIter / (float) maxIterations;</span>
+
+<span class="pc bpc" id="L769" title="1 of 4 branches missed.">                if (listener != null &amp;&amp; progress - previousProgress &gt; progressDelta) {</span>
+<span class="fc" id="L770">                    previousProgress = progress;</span>
+<span class="fc" id="L771">                    listener.onCompareProgressChange(this, progress);</span>
+                }
+            }
+
+
+<span class="pc bpc" id="L776" title="1 of 2 branches missed.">            if (listener != null) {</span>
+<span class="fc" id="L777">                listener.onCompareEnd(this);</span>
+            }
+
+<span class="fc" id="L780">            return avgDist / nSamples;</span>
+
+        } finally {
+<span class="fc" id="L783">            locked = false;</span>
+        }
+    }
+
+    /**
+     * Returns type of comparator.
+     *
+     * @return type of comparator.
+     */
+    @Override
+    public FundamentalMatrixComparatorType getType() {
+<span class="fc" id="L794">        return FundamentalMatrixComparatorType.EPIPOLAR_DISTANCE_COMPARATOR;</span>
+    }
+
+    /**
+     * Initializes default settings.
+     */
+    private void init() {
+<span class="fc" id="L801">        minX = DEFAULT_MIN_X;</span>
+<span class="fc" id="L802">        maxX = DEFAULT_MAX_X;</span>
+<span class="fc" id="L803">        minY = DEFAULT_MIN_Y;</span>
+<span class="fc" id="L804">        maxY = DEFAULT_MAX_Y;</span>
+<span class="fc" id="L805">        nSamples = DEFAULT_N_SAMPLES;</span>
+<span class="fc" id="L806">        minHorizontalDisparityFactor = minVerticalDisparityFactor = DEFAULT_MIN_DISPARITY_FACTOR;</span>
+<span class="fc" id="L807">        maxHorizontalDisparityFactor = maxVerticalDisparityFactor = DEFAULT_MAX_DISPARITY_FACTOR;</span>
+<span class="fc" id="L808">        maxIterationsFactor = DEFAULT_MAX_ITERATIONS_FACTOR;</span>
+<span class="fc" id="L809">        progressDelta = DEFAULT_PROGRESS_DELTA;</span>
+<span class="fc" id="L810">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Distortion.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.calibration</a> &gt; <span class="el_source">Distortion.java</span></div><h1>Distortion.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2015 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.calibration;
+
+import com.irurueta.geometry.NotSupportedException;
+import com.irurueta.geometry.Point2D;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * This class accounts for any possible distortion that might occur on 2D
+ * points. This might occur for instance when using cameras that produce
+ * additional distortion (such as radial distortion) not modelled in the general
+ * camera model.
+ * This class is abstract, specific implementations for each kind of supported
+ * distortion exists.
+ */
+<span class="fc" id="L32">public abstract class Distortion {</span>
+
+    /**
+     * Distorts provided 2D point.
+     *
+     * @param undistortedPoint undistorted point to be distorted.
+     * @return distorted point.
+     * @throws NotSupportedException raised if distortion implementation does
+     *                               not support distorting points.
+     * @throws DistortionException   raised if distortion computation failed.
+     */
+    public Point2D distort(final Point2D undistortedPoint) throws NotSupportedException, DistortionException {
+<span class="fc" id="L44">        final var distortedPoint = Point2D.create();</span>
+<span class="fc" id="L45">        distort(undistortedPoint, distortedPoint);</span>
+<span class="fc" id="L46">        return distortedPoint;</span>
+    }
+
+    /**
+     * Distorts provided 2D points.
+     *
+     * @param undistortedPoints list of undistorted points to be distorted.
+     * @return distorted points.
+     * @throws NotSupportedException raised if distortion implementation does
+     *                               not support distorting points.
+     * @throws DistortionException   raised if distortion computation failed.
+     */
+    public List&lt;Point2D&gt; distort(final List&lt;Point2D&gt; undistortedPoints) throws NotSupportedException,
+            DistortionException {
+<span class="fc" id="L60">        final var size = undistortedPoints.size();</span>
+<span class="fc" id="L61">        final var distortedPoints = new ArrayList&lt;Point2D&gt;(size);</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">        for (var i = 0; i &lt; size; i++) {</span>
+<span class="fc" id="L63">            distortedPoints.add(Point2D.create());</span>
+        }
+<span class="fc" id="L65">        distort(undistortedPoints, distortedPoints);</span>
+<span class="fc" id="L66">        return distortedPoints;</span>
+    }
+
+    /**
+     * Distorts provided 2D points and stores them into provided distorted
+     * points list.
+     *
+     * @param undistortedPoints list of undistorted points to be distorted.
+     * @param distortedPoints   distorted points where result is stored.
+     * @throws IllegalArgumentException if both lists don't have the same size.
+     * @throws NotSupportedException    raised if distortion implementation does
+     *                                  not support distorting points.
+     * @throws DistortionException      raised if distortion computation failed.
+     */
+    public void distort(final List&lt;Point2D&gt; undistortedPoints, final List&lt;Point2D&gt; distortedPoints)
+            throws NotSupportedException, DistortionException {
+<span class="pc bpc" id="L82" title="1 of 2 branches missed.">        if (undistortedPoints.size() != distortedPoints.size()) {</span>
+<span class="nc" id="L83">            throw new IllegalArgumentException();</span>
+        }
+
+<span class="fc" id="L86">        final var it1 = undistortedPoints.iterator();</span>
+<span class="fc" id="L87">        final var it2 = distortedPoints.iterator();</span>
+<span class="pc bpc" id="L88" title="1 of 4 branches missed.">        while (it1.hasNext() &amp;&amp; it2.hasNext()) {</span>
+<span class="fc" id="L89">            var undistortedPoint = it1.next();</span>
+<span class="fc" id="L90">            var distortedPoint = it2.next();</span>
+<span class="fc" id="L91">            distort(undistortedPoint, distortedPoint);</span>
+<span class="fc" id="L92">        }</span>
+<span class="fc" id="L93">    }</span>
+
+    /**
+     * Un-distorts provided 2D point.
+     *
+     * @param distortedPoint distorted point to be undistorted
+     * @return undistorted point.
+     * @throws NotSupportedException raised if distortion implementation does
+     *                               not support un-distorting points.
+     * @throws DistortionException   raised if un-distortion computation failed.
+     */
+    public Point2D undistort(final Point2D distortedPoint) throws NotSupportedException, DistortionException {
+<span class="fc" id="L105">        final var undistortedPoint = Point2D.create();</span>
+<span class="fc" id="L106">        undistort(distortedPoint, undistortedPoint);</span>
+<span class="fc" id="L107">        return undistortedPoint;</span>
+    }
+
+    /**
+     * Un-distorts provided 2D points.
+     *
+     * @param distortedPoints list of distorted points to be undistorted
+     * @return undistorted points.
+     * @throws NotSupportedException raised if distortion implementation does
+     *                               not support un-distorting points.
+     * @throws DistortionException   raised if un-distortion computation failed.
+     */
+    public List&lt;Point2D&gt; undistort(final List&lt;Point2D&gt; distortedPoints) throws NotSupportedException,
+            DistortionException {
+<span class="fc" id="L121">        final var size = distortedPoints.size();</span>
+<span class="fc" id="L122">        final var undistortedPoints = new ArrayList&lt;Point2D&gt;(size);</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">        for (var i = 0; i &lt; size; i++) {</span>
+<span class="fc" id="L124">            undistortedPoints.add(Point2D.create());</span>
+        }
+<span class="fc" id="L126">        undistort(distortedPoints, undistortedPoints);</span>
+<span class="fc" id="L127">        return undistortedPoints;</span>
+    }
+
+    /**
+     * Un-distorts provided 2D points and stores them into provided undistorted
+     * points list.
+     *
+     * @param distortedPoints   list of distorted points to be undistorted.
+     * @param undistortedPoints undistorted points where result is stored.
+     * @throws IllegalArgumentException if both lists don't have the same size.
+     * @throws NotSupportedException    raised if distortion implementation does
+     *                                  not support un-distorting points.
+     * @throws DistortionException      raised if un-distortion computation failed.
+     */
+    public void undistort(
+            final List&lt;Point2D&gt; distortedPoints, final List&lt;Point2D&gt; undistortedPoints) throws NotSupportedException,
+            DistortionException {
+<span class="pc bpc" id="L144" title="1 of 2 branches missed.">        if (distortedPoints.size() != undistortedPoints.size()) {</span>
+<span class="nc" id="L145">            throw new IllegalArgumentException();</span>
+        }
+
+<span class="fc" id="L148">        final var it1 = distortedPoints.iterator();</span>
+<span class="fc" id="L149">        final var it2 = undistortedPoints.iterator();</span>
+<span class="pc bpc" id="L150" title="1 of 4 branches missed.">        while (it1.hasNext() &amp;&amp; it2.hasNext()) {</span>
+<span class="fc" id="L151">            final var distortedPoint = it1.next();</span>
+<span class="fc" id="L152">            final var undistortedPoint = it2.next();</span>
+<span class="fc" id="L153">            undistort(distortedPoint, undistortedPoint);</span>
+<span class="fc" id="L154">        }</span>
+<span class="fc" id="L155">    }</span>
+
+    /**
+     * Distorts provided 2D point and stores result into provided distorted
+     * point.
+     *
+     * @param undistortedPoint undistorted point to be undistorted.
+     * @param distortedPoint   distorted point where result is stored.
+     * @throws NotSupportedException raised if distortion implementation does
+     *                               not support distorting points.
+     * @throws DistortionException   raised if distortion computation failed.
+     */
+    public abstract void distort(final Point2D undistortedPoint, final Point2D distortedPoint)
+            throws NotSupportedException, DistortionException;
+
+    /**
+     * Un-distorts provided 2D point and stores result into provided undistorted
+     * point.
+     *
+     * @param distortedPoint   distorted point to be undistorted.
+     * @param undistortedPoint undistorted point where result is stored.
+     * @throws NotSupportedException raised if distortion implementation does
+     *                               not support un-distorting points.
+     * @throws DistortionException   raised if un-distortion computation failed.
+     */
+    public abstract void undistort(final Point2D distortedPoint, final Point2D undistortedPoint)
+            throws NotSupportedException, DistortionException;
+
+    /**
+     * Indicates whether this instance can distort points.
+     *
+     * @return true if points can be distorted, false otherwise.
+     */
+    public abstract boolean canDistort();
+
+    /**
+     * Indicates whether this instance can un-distort points.
+     *
+     * @return true if points can be undistorted, false otherwise.
+     */
+    public abstract boolean canUndistort();
+
+    /**
+     * Returns kind of distortion.
+     *
+     * @return kind of distortion.
+     */
+    public abstract DistortionKind getKind();
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

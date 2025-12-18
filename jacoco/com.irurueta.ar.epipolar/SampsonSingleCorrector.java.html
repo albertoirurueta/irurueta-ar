@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SampsonSingleCorrector.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.epipolar</a> &gt; <span class="el_source">SampsonSingleCorrector.java</span></div><h1>SampsonSingleCorrector.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2015 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.epipolar;
+
+import com.irurueta.geometry.CoordinatesType;
+import com.irurueta.geometry.Line2D;
+import com.irurueta.geometry.Point2D;
+import com.irurueta.geometry.estimators.NotReadyException;
+
+/**
+ * Fixes a single matched pair of points so that they perfectly follow a given
+ * epipolar geometry using the Sampson approximation.
+ * When matching points typically the matching precision is about 1 pixel,
+ * however this makes that matched points under a given epipolar geometry (i.e.
+ * fundamental or essential matrix), do not lie perfectly on the corresponding
+ * epipolar plane or epipolar lines.
+ * The consequence is that triangularization of these matches will fail or
+ * produce inaccurate results.
+ * By fixing matched points using a corrector following a given epipolar
+ * geometry, this effect is alleviated.
+ * This corrector uses the Sampson approximation which is capable to remove
+ * small errors when matches are close to their real epipolar lines. This method
+ * is faster than the Gold standard method, but can only correct small errors
+ * (1 or 2 pixels).
+ */
+public class SampsonSingleCorrector extends SingleCorrector {
+
+    /**
+     * Constructor.
+     */
+    public SampsonSingleCorrector() {
+<span class="fc" id="L45">        super();</span>
+<span class="fc" id="L46">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param fundamentalMatrix fundamental matrix defining the epipolar
+     *                          geometry.
+     */
+    public SampsonSingleCorrector(final FundamentalMatrix fundamentalMatrix) {
+<span class="fc" id="L55">        super(fundamentalMatrix);</span>
+<span class="fc" id="L56">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param leftPoint  matched point on left view to be corrected.
+     * @param rightPoint matched point on right view to be corrected.
+     */
+    public SampsonSingleCorrector(final Point2D leftPoint, final Point2D rightPoint) {
+<span class="fc" id="L65">        super(leftPoint, rightPoint);</span>
+<span class="fc" id="L66">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param leftPoint         matched point on left view to be corrected.
+     * @param rightPoint        matched point on right view to be corrected.
+     * @param fundamentalMatrix fundamental matrix defining an epipolar geometry.
+     */
+    public SampsonSingleCorrector(final Point2D leftPoint, final Point2D rightPoint,
+                                  final FundamentalMatrix fundamentalMatrix) {
+<span class="fc" id="L77">        super(leftPoint, rightPoint, fundamentalMatrix);</span>
+<span class="fc" id="L78">    }</span>
+
+    /**
+     * Corrects the pair of provided matched points to be corrected.
+     *
+     * @throws NotReadyException if this instance is not ready (either points or
+     *                           fundamental matrix has not been provided yet).
+     */
+    @Override
+    public void correct() throws NotReadyException {
+<span class="pc bpc" id="L88" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L89">            throw new NotReadyException();</span>
+        }
+
+<span class="fc" id="L92">        leftCorrectedPoint = Point2D.create(CoordinatesType.HOMOGENEOUS_COORDINATES);</span>
+<span class="fc" id="L93">        rightCorrectedPoint = Point2D.create(CoordinatesType.HOMOGENEOUS_COORDINATES);</span>
+<span class="fc" id="L94">        correct(leftPoint, rightPoint, fundamentalMatrix, leftCorrectedPoint, rightCorrectedPoint);</span>
+<span class="fc" id="L95">    }</span>
+
+    /**
+     * Gets type of correction being used.
+     *
+     * @return type of correction.
+     */
+    @Override
+    public CorrectorType getType() {
+<span class="fc" id="L104">        return CorrectorType.SAMPSON_CORRECTOR;</span>
+    }
+
+    /**
+     * Corrects the pair of provided matched points to be corrected using
+     * provided fundamental matrix and stores the corrected points into provided
+     * instances.
+     *
+     * @param leftPoint           point on left view to be corrected.
+     * @param rightPoint          point on right view to be corrected.
+     * @param fundamentalMatrix   fundamental matrix defining the epipolar
+     *                            geometry.
+     * @param correctedLeftPoint  point on left view after correction.
+     * @param correctedRightPoint point on right view after correction.
+     * @throws NotReadyException if provided fundamental matrix is not ready.
+     */
+    public static void correct(final Point2D leftPoint, final Point2D rightPoint,
+                               final FundamentalMatrix fundamentalMatrix, final Point2D correctedLeftPoint,
+                               final Point2D correctedRightPoint) throws NotReadyException {
+
+<span class="fc" id="L124">        final var leftEpipolarLine = new Line2D();</span>
+<span class="fc" id="L125">        final var rightEpipolarLine = new Line2D();</span>
+<span class="fc" id="L126">        correct(leftPoint, rightPoint, fundamentalMatrix, correctedLeftPoint, correctedRightPoint, leftEpipolarLine,</span>
+                rightEpipolarLine);
+<span class="fc" id="L128">    }</span>
+
+    /**
+     * Corrects the pair of provided matched points to be corrected using
+     * provided fundamental matrix and stores the corrected points into provided
+     * instances. Provided epipolar lines are used for memory efficiency
+     * purposes only, so that those instances can be reused.
+     *
+     * @param leftPoint           point on left view to be corrected.
+     * @param rightPoint          point on right view to be corrected.
+     * @param fundamentalMatrix   fundamental matrix defining the epipolar
+     *                            geometry.
+     * @param correctedLeftPoint  point on left view after correction.
+     * @param correctedRightPoint point on right view after correction.
+     * @param leftEpipolarLine    left epipolar line to be reused for memory
+     *                            efficiency purposes.
+     * @param rightEpipolarLine   right epipolar line to be reused for memory
+     *                            efficiency purposes.
+     * @throws NotReadyException if provided fundamental matrix is not ready.
+     */
+    protected static void correct(
+            final Point2D leftPoint, final Point2D rightPoint, final FundamentalMatrix fundamentalMatrix,
+            final Point2D correctedLeftPoint, final Point2D correctedRightPoint, final Line2D leftEpipolarLine,
+            final Line2D rightEpipolarLine) throws NotReadyException {
+
+        // normalize to increase accuracy
+<span class="fc" id="L154">        leftPoint.normalize();</span>
+<span class="fc" id="L155">        rightPoint.normalize();</span>
+<span class="fc" id="L156">        fundamentalMatrix.normalize();</span>
+
+<span class="fc" id="L158">        fundamentalMatrix.leftEpipolarLine(rightPoint, leftEpipolarLine);</span>
+<span class="fc" id="L159">        fundamentalMatrix.rightEpipolarLine(leftPoint, rightEpipolarLine);</span>
+
+<span class="fc" id="L161">        leftEpipolarLine.normalize();</span>
+<span class="fc" id="L162">        rightEpipolarLine.normalize();</span>
+
+<span class="fc" id="L164">        final var numerator = rightPoint.getHomX() * rightEpipolarLine.getA()</span>
+<span class="fc" id="L165">                + rightPoint.getHomY() * rightEpipolarLine.getB()</span>
+<span class="fc" id="L166">                + rightPoint.getHomW() * rightEpipolarLine.getC();</span>
+
+<span class="fc" id="L168">        final var denominator = Math.pow(rightEpipolarLine.getA(), 2.0)</span>
+<span class="fc" id="L169">                + Math.pow(rightEpipolarLine.getB(), 2.0)</span>
+<span class="fc" id="L170">                + Math.pow(leftEpipolarLine.getA(), 2.0)</span>
+<span class="fc" id="L171">                + Math.pow(leftEpipolarLine.getB(), 2.0);</span>
+
+<span class="fc" id="L173">        final var factor = numerator / denominator;</span>
+
+<span class="fc" id="L175">        final var leftCorrectionX = factor * leftEpipolarLine.getA();</span>
+<span class="fc" id="L176">        final var leftCorrectionY = factor * leftEpipolarLine.getB();</span>
+<span class="fc" id="L177">        final var rightCorrectionX = factor * rightEpipolarLine.getA();</span>
+<span class="fc" id="L178">        final var rightCorrectionY = factor * rightEpipolarLine.getB();</span>
+
+<span class="fc" id="L180">        final var correctedLeftX = leftPoint.getInhomX() - leftCorrectionX;</span>
+<span class="fc" id="L181">        final var correctedLeftY = leftPoint.getInhomY() - leftCorrectionY;</span>
+<span class="fc" id="L182">        final var correctedRightX = rightPoint.getInhomX() - rightCorrectionX;</span>
+<span class="fc" id="L183">        final var correctedRightY = rightPoint.getInhomY() - rightCorrectionY;</span>
+
+<span class="fc" id="L185">        correctedLeftPoint.setInhomogeneousCoordinates(correctedLeftX, correctedLeftY);</span>
+<span class="fc" id="L186">        correctedRightPoint.setInhomogeneousCoordinates(correctedRightX, correctedRightY);</span>
+<span class="fc" id="L187">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

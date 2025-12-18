@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EstimatedFundamentalMatrix.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.sfm</a> &gt; <span class="el_source">EstimatedFundamentalMatrix.java</span></div><h1>EstimatedFundamentalMatrix.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2016 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.sfm;
+
+import com.irurueta.algebra.Matrix;
+import com.irurueta.ar.epipolar.FundamentalMatrix;
+
+import java.io.Serializable;
+import java.util.BitSet;
+import java.util.List;
+
+/**
+ * Contains data of estimated fundamental matrix.
+ */
+<span class="fc" id="L28">public class EstimatedFundamentalMatrix implements Serializable {</span>
+
+    /**
+     * Default quality score value.
+     */
+    public static final double DEFAULT_QUALITY_SCORE = 1.0;
+
+    /**
+     * ID to identify this instance. This is useful in case that this data is
+     * stored in some sort of database and must be set externally.
+     */
+    private String id;
+
+    /**
+     * Estimated fundamental matrix.
+     */
+    private FundamentalMatrix fundamentalMatrix;
+
+    /**
+     * Quality score of estimated fundamental matrix. The larger the value,
+     * the better the quality.
+     */
+<span class="fc" id="L50">    private double qualityScore = DEFAULT_QUALITY_SCORE;</span>
+
+    /**
+     * Covariance of estimated fundamental matrix. This can be computed during
+     * estimation.
+     */
+    private Matrix covariance;
+
+    /**
+     * ID of first view related by fundamental matrix.
+     */
+    private int viewId1;
+
+    /**
+     * ID of second view related by fundamental matrix.
+     */
+    private int viewId2;
+
+    /**
+     * Indicates which samples used for fundamental matrix estimation where
+     * considered inliers.
+     */
+    private BitSet inliers;
+
+    /**
+     * Left samples used for fundamental matrix estimation.
+     */
+    private List&lt;Sample2D&gt; leftSamples;
+
+    /**
+     * Right samples used for fundamental matrix estimation.
+     */
+    private List&lt;Sample2D&gt; rightSamples;
+
+    /**
+     * Gets id to identify this instance. This is useful in case that this data
+     * is stored in some sort of database and must be set externally.
+     *
+     * @return id to identify this instance.
+     */
+    public String getId() {
+<span class="fc" id="L91">        return id;</span>
+    }
+
+    /**
+     * Sets id to identify this instance. This is useful in case that this data
+     * is stored in some sort of database and must be set externally.
+     *
+     * @param id id to identify this instance.
+     */
+    public void setId(final String id) {
+<span class="fc" id="L101">        this.id = id;</span>
+<span class="fc" id="L102">    }</span>
+
+    /**
+     * Gets estimated fundamental matrix.
+     *
+     * @return estimated fundamental matrix.
+     */
+    public FundamentalMatrix getFundamentalMatrix() {
+<span class="fc" id="L110">        return fundamentalMatrix;</span>
+    }
+
+    /**
+     * Sets estimated fundamental matrix.
+     *
+     * @param fundamentalMatrix estimated fundamental matrix.
+     */
+    public void setFundamentalMatrix(final FundamentalMatrix fundamentalMatrix) {
+<span class="fc" id="L119">        this.fundamentalMatrix = fundamentalMatrix;</span>
+<span class="fc" id="L120">    }</span>
+
+    /**
+     * Gets quality score of estimated fundamental matrix. The larger the value,
+     * the better the quality.
+     *
+     * @return quality score of estimated fundamental matrix.
+     */
+    public double getQualityScore() {
+<span class="fc" id="L129">        return qualityScore;</span>
+    }
+
+    /**
+     * Sets quality score of estimated fundamental matrix. The larger the value,
+     * the better the quality.
+     *
+     * @param qualityScore quality score of estimated fundamental matrix.
+     */
+    public void setQualityScore(final double qualityScore) {
+<span class="fc" id="L139">        this.qualityScore = qualityScore;</span>
+<span class="fc" id="L140">    }</span>
+
+    /**
+     * Gets covariance of estimated fundamental matrix. This can be computed
+     * during estimation.
+     *
+     * @return covariance of estimated fundamental matrix.
+     */
+    public Matrix getCovariance() {
+<span class="fc" id="L149">        return covariance;</span>
+    }
+
+    /**
+     * Sets covariance of estimated fundamental matrix. This can be computed
+     * during estimation.
+     *
+     * @param covariance covariance of estimated fundamental matrix.
+     */
+    public void setCovariance(final Matrix covariance) {
+<span class="fc" id="L159">        this.covariance = covariance;</span>
+<span class="fc" id="L160">    }</span>
+
+    /**
+     * Gets id of first view related by fundamental matrix.
+     *
+     * @return id of first view related by fundamental matrix.
+     */
+    public int getViewId1() {
+<span class="fc" id="L168">        return viewId1;</span>
+    }
+
+    /**
+     * Sets id of first view related by fundamental matrix.
+     *
+     * @param viewId1 id of first view related by fundamental matrix.
+     */
+    public void setViewId1(final int viewId1) {
+<span class="fc" id="L177">        this.viewId1 = viewId1;</span>
+<span class="fc" id="L178">    }</span>
+
+    /**
+     * Gets id of second view related by fundamental matrix.
+     *
+     * @return id of second view related by fundamental matrix.
+     */
+    public int getViewId2() {
+<span class="fc" id="L186">        return viewId2;</span>
+    }
+
+    /**
+     * Sets id of second view related by fundamental matrix.
+     *
+     * @param viewId2 id of second view related by fundamental matrix.
+     */
+    public void setViewId2(final int viewId2) {
+<span class="fc" id="L195">        this.viewId2 = viewId2;</span>
+<span class="fc" id="L196">    }</span>
+
+    /**
+     * Indicates which samples used for fundamental matrix estimation where
+     * considered inliers.
+     *
+     * @return which samples used for fundamental matrix estimation where
+     * considered inliers.
+     */
+    public BitSet getInliers() {
+<span class="fc" id="L206">        return inliers;</span>
+    }
+
+    /**
+     * Specifies which samples used for fundamental matrix estimation where
+     * considered inliers.
+     *
+     * @param inliers which samples used for fundamental matrix estimation where
+     *                considered inliers.
+     */
+    public void setInliers(final BitSet inliers) {
+<span class="fc" id="L217">        this.inliers = inliers;</span>
+<span class="fc" id="L218">    }</span>
+
+    /**
+     * Gets left samples used for fundamental matrix estimation.
+     *
+     * @return left samples used for fundamental matrix estimation.
+     */
+    public List&lt;Sample2D&gt; getLeftSamples() {
+<span class="fc" id="L226">        return leftSamples;</span>
+    }
+
+    /**
+     * Sets left samples used for fundamental matrix estimation.
+     *
+     * @param leftSamples left samples used for fundamental matrix estimation.
+     */
+    public void setLeftSamples(final List&lt;Sample2D&gt; leftSamples) {
+<span class="fc" id="L235">        this.leftSamples = leftSamples;</span>
+<span class="fc" id="L236">    }</span>
+
+    /**
+     * Gets right samples used for fundamental matrix estimation.
+     *
+     * @return right samples used for fundamental matrix estimation.
+     */
+    public List&lt;Sample2D&gt; getRightSamples() {
+<span class="fc" id="L244">        return rightSamples;</span>
+    }
+
+    /**
+     * Sets right samples used for fundamental matrix estimation.
+     *
+     * @param rightSamples right samples used for fundamental matrix estimation.
+     */
+    public void setRightSamples(final List&lt;Sample2D&gt; rightSamples) {
+<span class="fc" id="L253">        this.rightSamples = rightSamples;</span>
+<span class="fc" id="L254">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

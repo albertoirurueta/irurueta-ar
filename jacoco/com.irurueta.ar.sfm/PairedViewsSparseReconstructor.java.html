@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PairedViewsSparseReconstructor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.sfm</a> &gt; <span class="el_source">PairedViewsSparseReconstructor.java</span></div><h1>PairedViewsSparseReconstructor.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2017 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.irurueta.ar.sfm;
+
+import com.irurueta.algebra.AlgebraException;
+import com.irurueta.geometry.MetricTransformation3D;
+import com.irurueta.geometry.Point3D;
+
+import java.util.ArrayList;
+
+/**
+ * Class in charge of estimating pairs of cameras and 3D reconstruction points from
+ * sparse image point correspondences.
+ */
+public class PairedViewsSparseReconstructor extends BasePairedViewsSparseReconstructor&lt;
+        PairedViewsSparseReconstructorConfiguration, PairedViewsSparseReconstructor,
+        PairedViewsSparseReconstructorListener&gt; {
+
+    /**
+     * Constructor.
+     *
+     * @param configuration configuration for this re-constructor.
+     * @param listener      listener in charge of handling events.
+     * @throws NullPointerException if listener or configuration is not provided.
+     */
+    public PairedViewsSparseReconstructor(
+            final PairedViewsSparseReconstructorConfiguration configuration,
+            final PairedViewsSparseReconstructorListener listener) {
+<span class="fc" id="L43">        super(configuration, listener);</span>
+<span class="fc" id="L44">    }</span>
+
+    /**
+     * Constructor with default configuration.
+     *
+     * @param listener listener in charge of handling events.
+     * @throws NullPointerException if listener or configuration is not provided.
+     */
+    public PairedViewsSparseReconstructor(final PairedViewsSparseReconstructorListener listener) {
+<span class="fc" id="L53">        this(new PairedViewsSparseReconstructorConfiguration(), listener);</span>
+<span class="fc" id="L54">    }</span>
+
+    /**
+     * Indicates whether implementations of a re-constructor uses absolute orientation or
+     * not.
+     *
+     * @return true if absolute orientation is used, false, otherwise.
+     */
+    @Override
+    protected boolean hasAbsoluteOrientation() {
+<span class="fc" id="L64">        return false;</span>
+    }
+
+    /**
+     * Transforms metric cameras on current pair of views so that they are referred to
+     * last kept location and rotation.
+     *
+     * @param isInitialPairOfViews   true if initial pair of views is being processed, false otherwise.
+     * @param hasAbsoluteOrientation true if absolute orientation is required, false otherwise.
+     * @return true if cameras were successfully transformed.
+     */
+    @SuppressWarnings(&quot;DuplicatedCode&quot;)
+    @Override
+    protected boolean transformPairOfCamerasAndPoints(
+            final boolean isInitialPairOfViews, final boolean hasAbsoluteOrientation) {
+<span class="fc" id="L79">        final var previousMetricCamera = previousMetricEstimatedCamera.getCamera();</span>
+<span class="fc" id="L80">        final var currentMetricCamera = currentMetricEstimatedCamera.getCamera();</span>
+<span class="pc bpc" id="L81" title="2 of 4 branches missed.">        if (previousMetricCamera == null || currentMetricCamera == null) {</span>
+<span class="nc" id="L82">            return false;</span>
+        }
+
+<span class="fc" id="L85">        currentScale = listener.onBaselineRequested(this, previousViewId, currentViewId,</span>
+                previousMetricEstimatedCamera, currentMetricEstimatedCamera);
+<span class="fc" id="L87">        final var sqrScale = currentScale * currentScale;</span>
+
+<span class="fc" id="L89">        final var scaleTransformation = new MetricTransformation3D(currentScale);</span>
+
+<span class="fc bfc" id="L91" title="All 2 branches covered.">        if (isInitialPairOfViews) {</span>
+            // the first pair of views does not require setting translation and rotation
+<span class="fc" id="L93">            referenceEuclideanTransformation = scaleTransformation;</span>
+        } else {
+            // additional pairs also need to translate and rotate
+<span class="fc" id="L96">            final var invRot = lastEuclideanCameraRotation.inverseRotationAndReturnNew();</span>
+<span class="fc" id="L97">            final var translation = new double[Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH];</span>
+<span class="fc" id="L98">            translation[0] = lastEuclideanCameraCenter.getInhomX();</span>
+<span class="fc" id="L99">            translation[1] = lastEuclideanCameraCenter.getInhomY();</span>
+<span class="fc" id="L100">            translation[2] = lastEuclideanCameraCenter.getInhomZ();</span>
+<span class="fc" id="L101">            referenceEuclideanTransformation = scaleTransformation.combineAndReturnNew(</span>
+                    new MetricTransformation3D(invRot, translation, 1.0));
+<span class="fc" id="L103">            referenceEuclideanTransformation.setRotation(invRot);</span>
+<span class="fc" id="L104">            referenceEuclideanTransformation.setTranslation(lastEuclideanCameraCenter);</span>
+        }
+
+        try {
+            // transform cameras
+<span class="fc" id="L109">            final var previousEuclideanCamera = referenceEuclideanTransformation.transformAndReturnNew(</span>
+                    previousMetricCamera);
+<span class="fc" id="L111">            final var currentEuclideanCamera = referenceEuclideanTransformation.transformAndReturnNew(</span>
+                    currentMetricCamera);
+
+<span class="fc" id="L114">            previousEuclideanEstimatedCamera = new EstimatedCamera();</span>
+<span class="fc" id="L115">            previousEuclideanEstimatedCamera.setCamera(previousEuclideanCamera);</span>
+<span class="fc" id="L116">            previousEuclideanEstimatedCamera.setViewId(previousMetricEstimatedCamera.getViewId());</span>
+<span class="fc" id="L117">            previousEuclideanEstimatedCamera.setQualityScore(previousMetricEstimatedCamera.getQualityScore());</span>
+<span class="pc bpc" id="L118" title="1 of 2 branches missed.">            if (previousMetricEstimatedCamera.getCovariance() != null) {</span>
+<span class="nc" id="L119">                previousEuclideanEstimatedCamera.setCovariance(</span>
+<span class="nc" id="L120">                        previousMetricEstimatedCamera.getCovariance().multiplyByScalarAndReturnNew(sqrScale));</span>
+            }
+
+<span class="fc" id="L123">            currentEuclideanEstimatedCamera = new EstimatedCamera();</span>
+<span class="fc" id="L124">            currentEuclideanEstimatedCamera.setCamera(currentEuclideanCamera);</span>
+<span class="fc" id="L125">            currentEuclideanEstimatedCamera.setViewId(currentMetricEstimatedCamera.getViewId());</span>
+<span class="fc" id="L126">            currentEuclideanEstimatedCamera.setQualityScore(currentMetricEstimatedCamera.getQualityScore());</span>
+<span class="pc bpc" id="L127" title="1 of 2 branches missed.">            if (currentMetricEstimatedCamera.getCovariance() != null) {</span>
+<span class="nc" id="L128">                currentEuclideanEstimatedCamera.setCovariance(</span>
+<span class="nc" id="L129">                        currentMetricEstimatedCamera.getCovariance().multiplyByScalarAndReturnNew(sqrScale));</span>
+            }
+
+            // transform points
+<span class="fc" id="L133">            euclideanReconstructedPoints = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L134" title="All 2 branches covered.">            for (final var metricReconstructedPoint : metricReconstructedPoints) {</span>
+<span class="fc" id="L135">                final var metricPoint = metricReconstructedPoint.getPoint();</span>
+<span class="fc" id="L136">                final var euclideanPoint = referenceEuclideanTransformation.transformAndReturnNew(metricPoint);</span>
+<span class="fc" id="L137">                final var euclideanReconstructedPoint = new ReconstructedPoint3D();</span>
+<span class="fc" id="L138">                euclideanReconstructedPoint.setPoint(euclideanPoint);</span>
+<span class="fc" id="L139">                euclideanReconstructedPoint.setInlier(metricReconstructedPoint.isInlier());</span>
+<span class="fc" id="L140">                euclideanReconstructedPoint.setId(metricReconstructedPoint.getId());</span>
+<span class="fc" id="L141">                euclideanReconstructedPoint.setColorData(metricReconstructedPoint.getColorData());</span>
+<span class="pc bpc" id="L142" title="1 of 2 branches missed.">                if (metricReconstructedPoint.getCovariance() != null) {</span>
+<span class="nc" id="L143">                    euclideanReconstructedPoint.setCovariance(</span>
+<span class="nc" id="L144">                            metricReconstructedPoint.getCovariance().multiplyByScalarAndReturnNew(sqrScale));</span>
+                }
+<span class="fc" id="L146">                euclideanReconstructedPoint.setQualityScore(metricReconstructedPoint.getQualityScore());</span>
+<span class="fc" id="L147">                euclideanReconstructedPoints.add(euclideanReconstructedPoint);</span>
+<span class="fc" id="L148">            }</span>
+
+<span class="nc" id="L150">        } catch (final AlgebraException e) {</span>
+<span class="nc" id="L151">            return false;</span>
+<span class="fc" id="L152">        }</span>
+
+<span class="fc" id="L154">        return super.transformPairOfCamerasAndPoints(isInitialPairOfViews, hasAbsoluteOrientation);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

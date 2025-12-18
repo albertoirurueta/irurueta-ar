@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbsoluteOrientationBaseSlamCalibrator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.slam</a> &gt; <span class="el_source">AbsoluteOrientationBaseSlamCalibrator.java</span></div><h1>AbsoluteOrientationBaseSlamCalibrator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2016 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.slam;
+
+import com.irurueta.geometry.Quaternion;
+import com.irurueta.geometry.Rotation3D;
+
+/**
+ * Base class for estimating mean and covariance of noise in control values
+ * when the system state is held constant (only noise is provided as control
+ * input).
+ * This subclass of BaseSlamCalibrator is used for slam estimator taking into
+ * account absolute orientation.
+ *
+ * @param &lt;D&gt; type of calibration data.
+ */
+public abstract class AbsoluteOrientationBaseSlamCalibrator&lt;D extends BaseCalibrationData&gt; extends
+        BaseSlamCalibrator&lt;D&gt; {
+
+    /**
+     * Timestamp expressed in nanoseconds since the epoch time of the last
+     * sample containing absolute orientation.
+     */
+<span class="fc" id="L37">    protected long orientationTimestampNanos = -1;</span>
+
+    /**
+     * Number of orientation samples accumulated since last full sample.
+     */
+<span class="fc" id="L42">    protected int accumulatedOrientationSamples = 0;</span>
+
+    /**
+     * Average orientation accumulated since last full sample.
+     */
+    protected final Quaternion accumulatedOrientation;
+
+    /**
+     * Temporary quaternion. For memory reuse.
+     */
+    private Quaternion tempQ;
+
+    /**
+     * Constructor.
+     *
+     * @param sampleLength sample length of control values used during
+     *                     prediction stage in SLAM estimator.
+     * @throws IllegalArgumentException if sample length is less than 1.
+     */
+    protected AbsoluteOrientationBaseSlamCalibrator(final int sampleLength) {
+<span class="fc" id="L62">        super(sampleLength);</span>
+<span class="fc" id="L63">        accumulatedOrientation = new Quaternion();</span>
+<span class="fc" id="L64">    }</span>
+
+    /**
+     * Gets timestamp expressed in nanoseconds since the epoch time of the last
+     * orientation sample, or -1 if no sample has been set yet.
+     *
+     * @return timestamp expressed in nanoseconds since the epoch time of the
+     * last orientation sample, or -1.
+     */
+    public long getOrientationTimestampNanos() {
+<span class="fc" id="L74">        return orientationTimestampNanos;</span>
+    }
+
+    /**
+     * Gets average orientation accumulated since last full sample.
+     *
+     * @return orientation accumulated since last full sample.
+     */
+    public Rotation3D getAccumulatedOrientation() {
+<span class="fc" id="L83">        return accumulatedOrientation.toQuaternion();</span>
+    }
+
+    /**
+     * Gets average orientation accumulated since last full sample.
+     *
+     * @param result instance where orientation accumulated since last full
+     *               sample will be stored.
+     */
+    public void getAccumulatedOrientation(final Rotation3D result) {
+<span class="fc" id="L93">        result.fromRotation(accumulatedOrientation);</span>
+<span class="fc" id="L94">    }</span>
+
+    /**
+     * Gets number of orientation samples accumulated since last full sample.
+     *
+     * @return number of orientation samples accumulated since last full sample.
+     */
+    public int getAccumulatedOrientationSamples() {
+<span class="fc" id="L102">        return accumulatedOrientationSamples;</span>
+    }
+
+    /**
+     * Indicates whether the orientation sample has been received since last
+     * full sample (accelerometer + gyroscope + orientation).
+     *
+     * @return true if orientation sample has been received, false otherwise.
+     */
+    public boolean isOrientationSampleReceived() {
+<span class="fc bfc" id="L112" title="All 2 branches covered.">        return accumulatedOrientationSamples &gt; 0;</span>
+    }
+
+    /**
+     * Indicates whether a full sample (accelerometer + gyroscope +
+     * magnetic field) has been received or not.
+     *
+     * @return true if full sample has been received, false otherwise.
+     */
+    @Override
+    public boolean isFullSampleAvailable() {
+<span class="fc bfc" id="L123" title="All 4 branches covered.">        return super.isFullSampleAvailable() &amp;&amp; isOrientationSampleReceived();</span>
+    }
+
+    /**
+     * Provides a new orientation sample.
+     * If accumulation is enabled, samples are averaged until a full sample is
+     * received.
+     * When a full sample (accelerometer + gyroscope + orientation) is
+     * received, internal state gets also updated.
+     *
+     * @param timestamp   timestamp of accelerometer sample since epoch time and
+     *                    expressed in nanoseconds.
+     * @param orientation new orientation.
+     */
+    @SuppressWarnings(&quot;DuplicatedCode&quot;)
+    public void updateOrientationSample(final long timestamp, final Rotation3D orientation) {
+<span class="pc bpc" id="L139" title="1 of 2 branches missed.">        if (!isFullSampleAvailable()) {</span>
+<span class="fc" id="L140">            orientationTimestampNanos = timestamp;</span>
+<span class="fc bfc" id="L141" title="All 4 branches covered.">            if (isAccumulationEnabled() &amp;&amp; isOrientationSampleReceived()) {</span>
+                // accumulation enabled
+<span class="fc" id="L143">                final var nextSamples = accumulatedOrientationSamples + 1;</span>
+
+<span class="fc" id="L145">                var accumA = accumulatedOrientation.getA();</span>
+<span class="fc" id="L146">                var accumB = accumulatedOrientation.getB();</span>
+<span class="fc" id="L147">                var accumC = accumulatedOrientation.getC();</span>
+<span class="fc" id="L148">                var accumD = accumulatedOrientation.getD();</span>
+
+<span class="fc bfc" id="L150" title="All 2 branches covered.">                if (tempQ == null) {</span>
+<span class="fc" id="L151">                    tempQ = new Quaternion();</span>
+                }
+<span class="fc" id="L153">                tempQ.fromRotation(orientation);</span>
+<span class="fc" id="L154">                tempQ.normalize();</span>
+<span class="fc" id="L155">                final var a = tempQ.getA();</span>
+<span class="fc" id="L156">                final var b = tempQ.getB();</span>
+<span class="fc" id="L157">                final var c = tempQ.getC();</span>
+<span class="fc" id="L158">                final var d = tempQ.getD();</span>
+
+<span class="fc" id="L160">                accumA = (accumA * accumulatedOrientationSamples + a) / nextSamples;</span>
+<span class="fc" id="L161">                accumB = (accumB * accumulatedOrientationSamples + b) / nextSamples;</span>
+<span class="fc" id="L162">                accumC = (accumC * accumulatedOrientationSamples + c) / nextSamples;</span>
+<span class="fc" id="L163">                accumD = (accumD * accumulatedOrientationSamples + d) / nextSamples;</span>
+
+<span class="fc" id="L165">                accumulatedOrientation.setA(accumA);</span>
+<span class="fc" id="L166">                accumulatedOrientation.setB(accumB);</span>
+<span class="fc" id="L167">                accumulatedOrientation.setC(accumC);</span>
+<span class="fc" id="L168">                accumulatedOrientation.setD(accumD);</span>
+<span class="fc" id="L169">                accumulatedOrientationSamples = nextSamples;</span>
+<span class="fc" id="L170">            } else {</span>
+                // accumulation disabled
+<span class="fc" id="L172">                accumulatedOrientation.fromRotation(orientation);</span>
+<span class="fc" id="L173">                accumulatedOrientationSamples++;</span>
+            }
+<span class="fc" id="L175">            notifyFullSampleAndResetSampleReceive();</span>
+        }
+<span class="fc" id="L177">    }</span>
+
+    /**
+     * Gets most recent timestamp of received partial samples (accelerometer,
+     * gyroscope or magnetic field).
+     *
+     * @return most recent timestamp of received partial sample.
+     */
+    @Override
+    public long getMostRecentTimestampNanos() {
+<span class="fc" id="L187">        final var mostRecent = super.getMostRecentTimestampNanos();</span>
+<span class="fc" id="L188">        return Math.max(mostRecent, orientationTimestampNanos);</span>
+    }
+
+    /**
+     * Notifies that a full sample has been received and resets flags indicating
+     * whether partial samples have been received.
+     */
+    @Override
+    protected void notifyFullSampleAndResetSampleReceive() {
+<span class="fc bfc" id="L197" title="All 2 branches covered.">        if (isFullSampleAvailable()) {</span>
+<span class="fc" id="L198">            processFullSample();</span>
+<span class="fc" id="L199">            accumulatedAccelerometerSamples = accumulatedGyroscopeSamples = accumulatedOrientationSamples = 0;</span>
+        }
+<span class="fc" id="L201">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

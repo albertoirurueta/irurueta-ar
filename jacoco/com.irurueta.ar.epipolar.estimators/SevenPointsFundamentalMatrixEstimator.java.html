@@ -1,0 +1,775 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SevenPointsFundamentalMatrixEstimator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.epipolar.estimators</a> &gt; <span class="el_source">SevenPointsFundamentalMatrixEstimator.java</span></div><h1>SevenPointsFundamentalMatrixEstimator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2015 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.epipolar.estimators;
+
+import com.irurueta.algebra.AlgebraException;
+import com.irurueta.algebra.Complex;
+import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.SingularValueDecomposer;
+import com.irurueta.algebra.Utils;
+import com.irurueta.ar.epipolar.FundamentalMatrix;
+import com.irurueta.ar.epipolar.InvalidFundamentalMatrixException;
+import com.irurueta.geometry.Point2D;
+import com.irurueta.geometry.ProjectiveTransformation2D;
+import com.irurueta.geometry.estimators.LockedException;
+import com.irurueta.geometry.estimators.NormalizerException;
+import com.irurueta.geometry.estimators.NotReadyException;
+import com.irurueta.geometry.estimators.Point2DNormalizer;
+import com.irurueta.numerical.NumericalException;
+import com.irurueta.numerical.roots.FirstDegreePolynomialRootsEstimator;
+import com.irurueta.numerical.roots.SecondDegreePolynomialRootsEstimator;
+import com.irurueta.numerical.roots.ThirdDegreePolynomialRootsEstimator;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Non-robust fundamental matrix estimator that uses 7 matched 2D points on
+ * left and right views.
+ * Although this algorithm requires one less point than the 8 points algorithm,
+ * it might return up to three different fundamental matrices that must be
+ * later checked (i.e. using a robust algorithm to maximize inliers) so that
+ * the correct solution is picked.
+ * If the correct solution is found, it typically obtains results with higher
+ * accuracy than the 8 points algorithm, because rank-2 is not approximated
+ * using SVD, and rather it is accurately enforced.
+ */
+public class SevenPointsFundamentalMatrixEstimator extends FundamentalMatrixEstimator {
+
+    /**
+     * Constant indicating that by default an LMSE solution is not allowed.
+     */
+    public static final boolean DEFAULT_ALLOW_LMSE_SOLUTION = false;
+
+    /**
+     * Minimum number of matched 2D points to start the estimation.
+     */
+    public static final int MIN_REQUIRED_POINTS = 7;
+
+    /**
+     * Indicates if by default provided point correspondences are normalized to
+     * increase the accuracy of the estimation.
+     */
+    public static final boolean DEFAULT_NORMALIZE_POINT_CORRESPONDENCES = true;
+
+    /**
+     * Tiniest value closest to zero.
+     */
+    public static final double EPS = Double.MIN_VALUE;
+
+    /**
+     * Indicates whether an LMSE (the Least Mean Square Error) solution is allowed
+     * or not. When an LMSE solution is allowed, more than 7 matched points can
+     * be used for fundamental matrix estimation. If LMSE solution is not
+     * allowed then only the 7 former matched points will be taken into account.
+     */
+    private boolean allowLMSESolution;
+
+    /**
+     * Indicates whether provided matched 2D points must be normalized to
+     * increase the accuracy of the estimation.
+     */
+    private boolean normalizePoints;
+
+    /**
+     * Constructor.
+     */
+    public SevenPointsFundamentalMatrixEstimator() {
+<span class="fc" id="L91">        super();</span>
+<span class="fc" id="L92">        allowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;</span>
+<span class="fc" id="L93">        normalizePoints = DEFAULT_NORMALIZE_POINT_CORRESPONDENCES;</span>
+<span class="fc" id="L94">    }</span>
+
+    /**
+     * Constructor with matched 2D points.
+     *
+     * @param leftPoints  2D points on left view.
+     * @param rightPoints 2D points on right view.
+     * @throws IllegalArgumentException if provided list of points do not
+     *                                  have the same length.
+     */
+    public SevenPointsFundamentalMatrixEstimator(final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints) {
+<span class="fc" id="L105">        super(leftPoints, rightPoints);</span>
+<span class="fc" id="L106">        allowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;</span>
+<span class="fc" id="L107">        normalizePoints = DEFAULT_NORMALIZE_POINT_CORRESPONDENCES;</span>
+<span class="fc" id="L108">    }</span>
+
+    /**
+     * Returns boolean indicating whether an LMSE (the Least Mean Square Error)
+     * solution is allowed or not. When an LMSE solution is allowed, more than 8
+     * matched points can be used for fundamental matrix estimation. If LMSE
+     * solution is not allowed then only the 7 former matched points will be
+     * taken into account.
+     *
+     * @return true if an LMSE solution is allowed, false otherwise.
+     */
+    public boolean isLMSESolutionAllowed() {
+<span class="fc" id="L120">        return allowLMSESolution;</span>
+    }
+
+    /**
+     * Sets boolean indicating whether an LMSE (the Least Mean Square Error)
+     * solution is allowed or not. When an LMSE solution is allowed, more than 8
+     * matched points can be used for fundamental matrix estimation. If LMSE
+     * solution is not allowed then only the 7 former matched points will be
+     * taken into account.
+     *
+     * @param allowed true if an LMSE solution is allowed, false otherwise.
+     * @throws LockedException if this instance is locked because an estimation
+     *                         is in progress.
+     */
+    public void setLMSESolutionAllowed(final boolean allowed) throws LockedException {
+<span class="fc bfc" id="L135" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L136">            throw new LockedException();</span>
+        }
+
+<span class="fc" id="L139">        allowLMSESolution = allowed;</span>
+<span class="fc" id="L140">    }</span>
+
+    /**
+     * Indicates whether provided matched 2D points must be normalized to
+     * increase the accuracy of the estimation.
+     *
+     * @return true if points must be normalized, false otherwise.
+     */
+    public boolean arePointsNormalized() {
+<span class="fc" id="L149">        return normalizePoints;</span>
+    }
+
+    /**
+     * Sets boolean indicating whether provided matched 2D points must be
+     * normalized to increase the accuracy of the estimation.
+     *
+     * @param normalizePoints true if points must be normalized, false
+     *                        otherwise.
+     * @throws LockedException if this instance is locked because an estimation
+     *                         is in progress.
+     */
+    public void setPointsNormalized(final boolean normalizePoints) throws LockedException {
+<span class="fc bfc" id="L162" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L163">            throw new LockedException();</span>
+        }
+
+<span class="fc" id="L166">        this.normalizePoints = normalizePoints;</span>
+<span class="fc" id="L167">    }</span>
+
+    /**
+     * Returns boolean indicating whether estimator is ready to start the
+     * fundamental matrix estimation.
+     * This is true when the required minimum number of matched points is
+     * provided to obtain a solution and both left and right views have the
+     * same number of matched points.
+     *
+     * @return true if estimator is ready to start the fundamental matrix
+     * estimation, false otherwise.
+     */
+    @Override
+    public boolean isReady() {
+<span class="pc bpc" id="L181" title="2 of 6 branches missed.">        return leftPoints != null &amp;&amp; rightPoints != null &amp;&amp; leftPoints.size() == rightPoints.size()</span>
+<span class="pc bpc" id="L182" title="1 of 2 branches missed.">                &amp;&amp; leftPoints.size() &gt;= MIN_REQUIRED_POINTS;</span>
+    }
+
+    /**
+     * Estimates all possible fundamental matrices found using provided points.
+     * Because the algorithm uses 7 points and enforces rank 2 by solving a
+     * third degree polynomial, the algorithm might return 1 real solution
+     * (and 2 imaginary ones which are discarded), 3 real solutions, or 1 real
+     * solution with triple multiplicity.
+     *
+     * @return all possible fundamental matrices found using provided points.
+     * @throws LockedException                     if estimator is locked doing an estimation.
+     * @throws NotReadyException                   if estimator is not ready because required
+     *                                             input points have not already been provided.
+     * @throws FundamentalMatrixEstimatorException if configuration of provided
+     *                                             2D points is degenerate and fundamental matrix
+     *                                             estimation fails.
+     */
+    public List&lt;FundamentalMatrix&gt; estimateAll() throws LockedException, NotReadyException,
+            FundamentalMatrixEstimatorException {
+<span class="fc" id="L202">        final var result = new ArrayList&lt;FundamentalMatrix&gt;();</span>
+<span class="fc" id="L203">        estimateAll(result);</span>
+<span class="fc" id="L204">        return result;</span>
+    }
+
+    /**
+     * Estimates all possible fundamental matrices found using provided points
+     * and adds the result to provided result list.
+     * Because the algorithm uses 7 points and enforces rank 2 by solving a
+     * third degree polynomial, the algorithm might return 1 real solution
+     * (and 2 imaginary ones which are discarded), 3 real solutions, or 1 real
+     * solution with triple multiplicity.
+     *
+     * @param result list where results will be stored.
+     * @throws LockedException                     if estimator is locked doing an estimation.
+     * @throws NotReadyException                   if estimator is not ready because required
+     *                                             input points have not already been provided.
+     * @throws FundamentalMatrixEstimatorException if configuration of provided
+     *                                             2D points is degenerate and fundamental matrix
+     *                                             estimation fails.
+     */
+    @SuppressWarnings(&quot;DuplicatedCode&quot;)
+    public void estimateAll(final List&lt;FundamentalMatrix&gt; result) throws LockedException, NotReadyException,
+            FundamentalMatrixEstimatorException {
+
+<span class="fc bfc" id="L227" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L228">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L230" title="All 2 branches covered.">        if (!isReady()) {</span>
+<span class="fc" id="L231">            throw new NotReadyException();</span>
+        }
+
+<span class="fc" id="L234">        locked = true;</span>
+
+<span class="fc" id="L236">        result.clear();</span>
+
+<span class="fc bfc" id="L238" title="All 2 branches covered.">        if (listener != null) {</span>
+<span class="fc" id="L239">            listener.onEstimateStart(this);</span>
+        }
+
+<span class="fc" id="L242">        final var nPoints = leftPoints.size();</span>
+
+        try {
+<span class="fc" id="L245">            ProjectiveTransformation2D leftNormalization = null;</span>
+<span class="fc" id="L246">            ProjectiveTransformation2D rightNormalization = null;</span>
+            final List&lt;Point2D&gt; leftPoints;
+            final List&lt;Point2D&gt; rightPoints;
+<span class="fc bfc" id="L249" title="All 2 branches covered.">            if (normalizePoints) {</span>
+                // normalize points on left view
+<span class="fc" id="L251">                final var normalizer = new Point2DNormalizer(this.leftPoints);</span>
+<span class="fc" id="L252">                normalizer.compute();</span>
+
+<span class="fc" id="L254">                leftNormalization = normalizer.getTransformation();</span>
+
+                // normalize points on right view
+<span class="fc" id="L257">                normalizer.setPoints(this.rightPoints);</span>
+<span class="fc" id="L258">                normalizer.compute();</span>
+
+<span class="fc" id="L260">                rightNormalization = normalizer.getTransformation();</span>
+
+                // normalize to increase accuracy
+<span class="fc" id="L263">                leftNormalization.normalize();</span>
+<span class="fc" id="L264">                rightNormalization.normalize();</span>
+
+<span class="fc" id="L266">                leftPoints = leftNormalization.transformPointsAndReturnNew(this.leftPoints);</span>
+<span class="fc" id="L267">                rightPoints = rightNormalization.transformPointsAndReturnNew(this.rightPoints);</span>
+<span class="fc" id="L268">            } else {</span>
+<span class="fc" id="L269">                leftPoints = this.leftPoints;</span>
+<span class="fc" id="L270">                rightPoints = this.rightPoints;</span>
+            }
+
+            final Matrix a;
+<span class="fc bfc" id="L274" title="All 2 branches covered.">            if (isLMSESolutionAllowed()) {</span>
+<span class="fc" id="L275">                a = new Matrix(nPoints, 9);</span>
+            } else {
+<span class="fc" id="L277">                a = new Matrix(MIN_REQUIRED_POINTS, 9);</span>
+            }
+
+            Point2D leftPoint;
+            Point2D rightPoint;
+            double homLeftX;
+            double homLeftY;
+            double homLeftW;
+            double homRightX;
+            double homRightY;
+            double homRightW;
+            double value0;
+            double value1;
+            double value2;
+            double value3;
+            double value4;
+            double value5;
+            double value6;
+            double value7;
+            double value8;
+            double rowNorm;
+<span class="fc bfc" id="L298" title="All 2 branches covered.">            for (var i = 0; i &lt; nPoints; i++) {</span>
+<span class="fc" id="L299">                leftPoint = leftPoints.get(i);</span>
+<span class="fc" id="L300">                rightPoint = rightPoints.get(i);</span>
+
+                // normalize points to increase accuracy
+<span class="fc" id="L303">                leftPoint.normalize();</span>
+<span class="fc" id="L304">                rightPoint.normalize();</span>
+
+<span class="fc" id="L306">                homLeftX = leftPoint.getHomX();</span>
+<span class="fc" id="L307">                homLeftY = leftPoint.getHomY();</span>
+<span class="fc" id="L308">                homLeftW = leftPoint.getHomW();</span>
+
+<span class="fc" id="L310">                homRightX = rightPoint.getHomX();</span>
+<span class="fc" id="L311">                homRightY = rightPoint.getHomY();</span>
+<span class="fc" id="L312">                homRightW = rightPoint.getHomW();</span>
+
+                // set a row values
+<span class="fc" id="L315">                value0 = homLeftX * homRightX;</span>
+<span class="fc" id="L316">                value1 = homLeftY * homRightX;</span>
+<span class="fc" id="L317">                value2 = homLeftW * homRightX;</span>
+
+<span class="fc" id="L319">                value3 = homLeftX * homRightY;</span>
+<span class="fc" id="L320">                value4 = homLeftY * homRightY;</span>
+<span class="fc" id="L321">                value5 = homLeftW * homRightY;</span>
+
+<span class="fc" id="L323">                value6 = homLeftX * homRightW;</span>
+<span class="fc" id="L324">                value7 = homLeftY * homRightW;</span>
+<span class="fc" id="L325">                value8 = homLeftW * homRightW;</span>
+
+                // normalize row to increase accuracy
+<span class="fc" id="L328">                rowNorm = Math.sqrt(Math.pow(value0, 2.0)</span>
+<span class="fc" id="L329">                        + Math.pow(value1, 2.0) + Math.pow(value2, 2.0)</span>
+<span class="fc" id="L330">                        + Math.pow(value3, 2.0) + Math.pow(value4, 2.0)</span>
+<span class="fc" id="L331">                        + Math.pow(value5, 2.0) + Math.pow(value6, 2.0)</span>
+<span class="fc" id="L332">                        + Math.pow(value7, 2.0) + Math.pow(value8, 2.0));</span>
+
+<span class="fc" id="L334">                a.setElementAt(i, 0, value0 / rowNorm);</span>
+<span class="fc" id="L335">                a.setElementAt(i, 1, value1 / rowNorm);</span>
+<span class="fc" id="L336">                a.setElementAt(i, 2, value2 / rowNorm);</span>
+<span class="fc" id="L337">                a.setElementAt(i, 3, value3 / rowNorm);</span>
+<span class="fc" id="L338">                a.setElementAt(i, 4, value4 / rowNorm);</span>
+<span class="fc" id="L339">                a.setElementAt(i, 5, value5 / rowNorm);</span>
+<span class="fc" id="L340">                a.setElementAt(i, 6, value6 / rowNorm);</span>
+<span class="fc" id="L341">                a.setElementAt(i, 7, value7 / rowNorm);</span>
+<span class="fc" id="L342">                a.setElementAt(i, 8, value8 / rowNorm);</span>
+
+<span class="fc bfc" id="L344" title="All 4 branches covered.">                if (!isLMSESolutionAllowed() &amp;&amp; i == (MIN_REQUIRED_POINTS - 1)) {</span>
+<span class="fc" id="L345">                    break;</span>
+                }
+            }
+
+<span class="fc" id="L349">            final var decomposer = new SingularValueDecomposer(a);</span>
+
+<span class="fc" id="L351">            decomposer.decompose();</span>
+
+            // having 7 points for 9 variables means that rank can be as high as
+            // 7, and nullity must be 2, so that the final fundamental matrix
+            // can be found as a linear combination of the null-space.
+            // If nullity is bigger than 2, then geometry is degenerate, usually
+            // due to co-linearities or co-planarities on projected image points.
+            // In this case we throw an exception
+<span class="fc bfc" id="L359" title="All 2 branches covered.">            if (decomposer.getNullity() &gt; 2) {</span>
+<span class="fc" id="L360">                throw new FundamentalMatrixEstimatorException();</span>
+            }
+
+<span class="fc" id="L363">            final var v = decomposer.getV();</span>
+
+            // The last two column vectors of V contain the &quot;base&quot; matrices
+            // to be used for the retrieval of the true fundamental matrix, since
+            // the fundamental matrix we are looking for will be a linear
+            // combination of such matrices after reshaping the vectors into 3x3
+            // matrices
+<span class="fc" id="L370">            var fundMatrix1 = new Matrix(FundamentalMatrix.FUNDAMENTAL_MATRIX_ROWS,</span>
+                    FundamentalMatrix.FUNDAMENTAL_MATRIX_COLS);
+<span class="fc" id="L372">            fundMatrix1.setElementAt(0, 0, v.getElementAt(0, 8));</span>
+<span class="fc" id="L373">            fundMatrix1.setElementAt(0, 1, v.getElementAt(1, 8));</span>
+<span class="fc" id="L374">            fundMatrix1.setElementAt(0, 2, v.getElementAt(2, 8));</span>
+<span class="fc" id="L375">            fundMatrix1.setElementAt(1, 0, v.getElementAt(3, 8));</span>
+<span class="fc" id="L376">            fundMatrix1.setElementAt(1, 1, v.getElementAt(4, 8));</span>
+<span class="fc" id="L377">            fundMatrix1.setElementAt(1, 2, v.getElementAt(5, 8));</span>
+<span class="fc" id="L378">            fundMatrix1.setElementAt(2, 0, v.getElementAt(6, 8));</span>
+<span class="fc" id="L379">            fundMatrix1.setElementAt(2, 1, v.getElementAt(7, 8));</span>
+<span class="fc" id="L380">            fundMatrix1.setElementAt(2, 2, v.getElementAt(8, 8));</span>
+
+<span class="fc" id="L382">            var fundMatrix2 = new Matrix(FundamentalMatrix.FUNDAMENTAL_MATRIX_ROWS,</span>
+                    FundamentalMatrix.FUNDAMENTAL_MATRIX_COLS);
+<span class="fc" id="L384">            fundMatrix2.setElementAt(0, 0, v.getElementAt(0, 7));</span>
+<span class="fc" id="L385">            fundMatrix2.setElementAt(0, 1, v.getElementAt(1, 7));</span>
+<span class="fc" id="L386">            fundMatrix2.setElementAt(0, 2, v.getElementAt(2, 7));</span>
+<span class="fc" id="L387">            fundMatrix2.setElementAt(1, 0, v.getElementAt(3, 7));</span>
+<span class="fc" id="L388">            fundMatrix2.setElementAt(1, 1, v.getElementAt(4, 7));</span>
+<span class="fc" id="L389">            fundMatrix2.setElementAt(1, 2, v.getElementAt(5, 7));</span>
+<span class="fc" id="L390">            fundMatrix2.setElementAt(2, 0, v.getElementAt(6, 7));</span>
+<span class="fc" id="L391">            fundMatrix2.setElementAt(2, 1, v.getElementAt(7, 7));</span>
+<span class="fc" id="L392">            fundMatrix2.setElementAt(2, 2, v.getElementAt(8, 7));</span>
+
+<span class="pc bpc" id="L394" title="1 of 4 branches missed.">            if (normalizePoints &amp;&amp; leftNormalization != null) {</span>
+                // denormalize linear combination of fundamental matrices
+                // fundMatrix1 and fundMatrix2
+<span class="fc" id="L397">                final var transposedRightTransformationMatrix = rightNormalization.asMatrix().transposeAndReturnNew();</span>
+<span class="fc" id="L398">                final var leftTransformationMatrix = leftNormalization.asMatrix();</span>
+
+                // compute fundMatrix1 = transposedRightTransformationMatrix *
+                // fundMatrix1 * leftTransformationMatrix
+<span class="fc" id="L402">                fundMatrix1.multiply(leftTransformationMatrix);</span>
+<span class="fc" id="L403">                fundMatrix1 = transposedRightTransformationMatrix.multiplyAndReturnNew(fundMatrix1);</span>
+
+                // normalize by Frobenius norm to increase accuracy after point
+                // de-normalization
+<span class="fc" id="L407">                var norm = Utils.normF(fundMatrix1);</span>
+<span class="fc" id="L408">                fundMatrix1.multiplyByScalar(1.0 / norm);</span>
+
+                // compute fundMatrix2 = transposedRightTransformationMatrix *
+                // fundMatrix2 * leftTransformationMatrix
+<span class="fc" id="L412">                fundMatrix2.multiply(leftTransformationMatrix);</span>
+<span class="fc" id="L413">                transposedRightTransformationMatrix.multiply(fundMatrix2);</span>
+<span class="fc" id="L414">                fundMatrix2 = transposedRightTransformationMatrix;</span>
+
+                // normalize by Frobenius norm to increase accuracy after point
+                // de-normalization
+<span class="fc" id="L418">                norm = Utils.normF(fundMatrix2);</span>
+<span class="fc" id="L419">                fundMatrix2.multiplyByScalar(1.0 / norm);</span>
+            }
+
+            // because fundMatrix1, and fundMatrix2 have been obtained as
+            // columns of V, then its Frobenius norm will be 1 because SVD
+            // already returns normalized singular vectors, and there is no need
+            // to normalize by Frobenius norm if points are NOT normalized
+
+            // The last thing we need to do is to enforce rank 2 on fundamental
+            // matrix, since we know it is always a rank 2 matrix. For that
+            // reason we know that det(F) = 0.
+            // Since the fundamental matrix F is a linear combination of the
+            // two matrices F1, F2 we have found then: F = b * F1 + (1.0 - b) *F2
+            // where b will range from 0 to 1.
+            // Hence: det(b * F1 + (1.0 - b) * F2) = 0
+            // This produces a third degree polynomial as follows:
+
+            // coefficients of polynomial: a*x^3 + b*x^2 + c*x + d
+<span class="fc" id="L437">            var aPoly = 0.0;</span>
+<span class="fc" id="L438">            var bPoly = 0.0;</span>
+<span class="fc" id="L439">            var cPoly = 0.0;</span>
+<span class="fc" id="L440">            var dPoly = 0.0;</span>
+<span class="fc" id="L441">            final var params = new double[4];</span>
+
+<span class="fc" id="L443">            computeParams(fundMatrix1.getElementAt(0, 0),</span>
+<span class="fc" id="L444">                    fundMatrix2.getElementAt(0, 0),</span>
+<span class="fc" id="L445">                    fundMatrix1.getElementAt(1, 1),</span>
+<span class="fc" id="L446">                    fundMatrix2.getElementAt(1, 1),</span>
+<span class="fc" id="L447">                    fundMatrix1.getElementAt(2, 2),</span>
+<span class="fc" id="L448">                    fundMatrix2.getElementAt(2, 2), params);</span>
+
+<span class="fc" id="L450">            aPoly += params[0];</span>
+<span class="fc" id="L451">            bPoly += params[1];</span>
+<span class="fc" id="L452">            cPoly += params[2];</span>
+<span class="fc" id="L453">            dPoly += params[3];</span>
+
+<span class="fc" id="L455">            computeParams(fundMatrix1.getElementAt(2, 1),</span>
+<span class="fc" id="L456">                    fundMatrix2.getElementAt(2, 1),</span>
+<span class="fc" id="L457">                    fundMatrix1.getElementAt(1, 0),</span>
+<span class="fc" id="L458">                    fundMatrix2.getElementAt(1, 0),</span>
+<span class="fc" id="L459">                    fundMatrix1.getElementAt(0, 2),</span>
+<span class="fc" id="L460">                    fundMatrix2.getElementAt(0, 2), params);</span>
+
+<span class="fc" id="L462">            aPoly += params[0];</span>
+<span class="fc" id="L463">            bPoly += params[1];</span>
+<span class="fc" id="L464">            cPoly += params[2];</span>
+<span class="fc" id="L465">            dPoly += params[3];</span>
+
+<span class="fc" id="L467">            computeParams(fundMatrix1.getElementAt(2, 0),</span>
+<span class="fc" id="L468">                    fundMatrix2.getElementAt(2, 0),</span>
+<span class="fc" id="L469">                    fundMatrix1.getElementAt(0, 1),</span>
+<span class="fc" id="L470">                    fundMatrix2.getElementAt(0, 1),</span>
+<span class="fc" id="L471">                    fundMatrix1.getElementAt(1, 2),</span>
+<span class="fc" id="L472">                    fundMatrix2.getElementAt(1, 2), params);</span>
+
+<span class="fc" id="L474">            aPoly += params[0];</span>
+<span class="fc" id="L475">            bPoly += params[1];</span>
+<span class="fc" id="L476">            cPoly += params[2];</span>
+<span class="fc" id="L477">            dPoly += params[3];</span>
+
+<span class="fc" id="L479">            computeParams(fundMatrix1.getElementAt(2, 0),</span>
+<span class="fc" id="L480">                    fundMatrix2.getElementAt(2, 0),</span>
+<span class="fc" id="L481">                    fundMatrix1.getElementAt(1, 1),</span>
+<span class="fc" id="L482">                    fundMatrix2.getElementAt(1, 1),</span>
+<span class="fc" id="L483">                    fundMatrix1.getElementAt(0, 2),</span>
+<span class="fc" id="L484">                    fundMatrix2.getElementAt(0, 2), params);</span>
+
+<span class="fc" id="L486">            aPoly -= params[0];</span>
+<span class="fc" id="L487">            bPoly -= params[1];</span>
+<span class="fc" id="L488">            cPoly -= params[2];</span>
+<span class="fc" id="L489">            dPoly -= params[3];</span>
+
+<span class="fc" id="L491">            computeParams(fundMatrix1.getElementAt(1, 2),</span>
+<span class="fc" id="L492">                    fundMatrix2.getElementAt(1, 2),</span>
+<span class="fc" id="L493">                    fundMatrix1.getElementAt(2, 1),</span>
+<span class="fc" id="L494">                    fundMatrix2.getElementAt(2, 1),</span>
+<span class="fc" id="L495">                    fundMatrix1.getElementAt(0, 0),</span>
+<span class="fc" id="L496">                    fundMatrix2.getElementAt(0, 0), params);</span>
+
+<span class="fc" id="L498">            aPoly -= params[0];</span>
+<span class="fc" id="L499">            bPoly -= params[1];</span>
+<span class="fc" id="L500">            cPoly -= params[2];</span>
+<span class="fc" id="L501">            dPoly -= params[3];</span>
+
+<span class="fc" id="L503">            computeParams(fundMatrix1.getElementAt(1, 0),</span>
+<span class="fc" id="L504">                    fundMatrix2.getElementAt(1, 0),</span>
+<span class="fc" id="L505">                    fundMatrix1.getElementAt(0, 1),</span>
+<span class="fc" id="L506">                    fundMatrix2.getElementAt(0, 1),</span>
+<span class="fc" id="L507">                    fundMatrix1.getElementAt(2, 2),</span>
+<span class="fc" id="L508">                    fundMatrix2.getElementAt(2, 2), params);</span>
+
+<span class="fc" id="L510">            aPoly -= params[0];</span>
+<span class="fc" id="L511">            bPoly -= params[1];</span>
+<span class="fc" id="L512">            cPoly -= params[2];</span>
+<span class="fc" id="L513">            dPoly -= params[3];</span>
+
+            // normalize polynomial coefficients to increase accuracy
+<span class="fc" id="L516">            final var coeffNorm = Math.sqrt(Math.pow(aPoly, 2.0)</span>
+<span class="fc" id="L517">                    + Math.pow(bPoly, 2.0) + Math.pow(cPoly, 2.0)</span>
+<span class="fc" id="L518">                    + Math.pow(dPoly, 2.0));</span>
+<span class="fc" id="L519">            aPoly /= coeffNorm;</span>
+<span class="fc" id="L520">            bPoly /= coeffNorm;</span>
+<span class="fc" id="L521">            cPoly /= coeffNorm;</span>
+<span class="fc" id="L522">            dPoly /= coeffNorm;</span>
+
+            // store polynomial coefficients into array and find its roots to
+            // enforce det(F) = 0. The solution must be unique and real!
+<span class="fc" id="L526">            params[0] = dPoly;</span>
+<span class="fc" id="L527">            params[1] = cPoly;</span>
+<span class="fc" id="L528">            params[2] = bPoly;</span>
+<span class="fc" id="L529">            params[3] = aPoly;</span>
+
+<span class="fc" id="L531">            var beta1 = 0.0;</span>
+<span class="fc" id="L532">            var beta2 = 0.0;</span>
+<span class="fc" id="L533">            var beta3 = 0.0;</span>
+<span class="fc" id="L534">            var beta1Available = false;</span>
+<span class="fc" id="L535">            var beta2Available = false;</span>
+<span class="fc" id="L536">            var beta3Available = false;</span>
+            final Complex[] roots;
+            final Complex root1;
+            final Complex root2;
+            final Complex root3;
+
+<span class="pc bpc" id="L542" title="1 of 2 branches missed.">            if (ThirdDegreePolynomialRootsEstimator.isThirdDegree(params)) {</span>
+                // solve third degree polynomial
+<span class="fc" id="L544">                final var estimator = new ThirdDegreePolynomialRootsEstimator(params);</span>
+<span class="fc" id="L545">                estimator.estimate();</span>
+<span class="fc" id="L546">                roots = estimator.getRoots();</span>
+<span class="fc" id="L547">                root1 = roots[0];</span>
+<span class="fc" id="L548">                root2 = roots[1];</span>
+<span class="fc" id="L549">                root3 = roots[2];</span>
+
+<span class="fc bfc" id="L551" title="All 2 branches covered.">                if (Math.abs(root1.getImaginary()) &lt;= EPS) {</span>
+                    // 1st root is real, so we keep it
+<span class="fc" id="L553">                    beta1 = root1.getReal();</span>
+<span class="fc" id="L554">                    beta1Available = true;</span>
+                }
+<span class="fc bfc" id="L556" title="All 2 branches covered.">                if (Math.abs(root2.getImaginary()) &lt;= EPS) {</span>
+                    // 2nd root is real, so we keep it
+<span class="fc" id="L558">                    beta2 = root2.getReal();</span>
+<span class="fc" id="L559">                    beta2Available = true;</span>
+                }
+<span class="fc bfc" id="L561" title="All 2 branches covered.">                if (Math.abs(root3.getImaginary()) &lt;= EPS) {</span>
+                    // 3rd root is real, so we keep it
+<span class="fc" id="L563">                    beta3 = root3.getReal();</span>
+<span class="fc" id="L564">                    beta3Available = true;</span>
+                }
+<span class="pc bnc" id="L566" title="All 2 branches missed.">            } else if (SecondDegreePolynomialRootsEstimator.isSecondDegree(params)) {</span>
+                // solve second degree polynomial
+<span class="nc" id="L568">                final var estimator = new SecondDegreePolynomialRootsEstimator(params);</span>
+<span class="nc" id="L569">                estimator.estimate();</span>
+<span class="nc" id="L570">                roots = estimator.getRoots();</span>
+<span class="nc" id="L571">                root1 = roots[0];</span>
+<span class="nc" id="L572">                root2 = roots[1];</span>
+<span class="nc bnc" id="L573" title="All 2 branches missed.">                if (Math.abs(root1.getImaginary()) &lt;= EPS) {</span>
+                    // 1st root is real, so we keep it
+<span class="nc" id="L575">                    beta1 = root1.getReal();</span>
+<span class="nc" id="L576">                    beta1Available = true;</span>
+                }
+<span class="nc bnc" id="L578" title="All 2 branches missed.">                if (Math.abs(root2.getImaginary()) &lt;= EPS) {</span>
+                    // 2nd root is real, so we keep it
+<span class="nc" id="L580">                    beta2 = root2.getReal();</span>
+<span class="nc" id="L581">                    beta2Available = true;</span>
+                }
+<span class="nc bnc" id="L583" title="All 2 branches missed.">            } else if (FirstDegreePolynomialRootsEstimator.isFirstDegree(params)) {</span>
+                // solve first degree polynomial
+<span class="nc" id="L585">                final var estimator = new FirstDegreePolynomialRootsEstimator(params);</span>
+<span class="nc" id="L586">                estimator.estimate();</span>
+<span class="nc" id="L587">                roots = estimator.getRoots();</span>
+                // this is the only solution and is real
+                // because coefficients are real
+<span class="nc" id="L590">                root1 = roots[0];</span>
+<span class="nc" id="L591">                beta1 = root1.getReal();</span>
+<span class="nc" id="L592">                beta1Available = true;</span>
+<span class="nc" id="L593">            } else {</span>
+                // invalid polynomial degree
+<span class="nc" id="L595">                throw new FundamentalMatrixEstimatorException();</span>
+            }
+
+<span class="pc bpc" id="L598" title="2 of 6 branches missed.">            if (!beta1Available &amp;&amp; !beta2Available &amp;&amp; !beta3Available) {</span>
+                // No solution was found
+<span class="nc" id="L600">                throw new FundamentalMatrixEstimatorException();</span>
+            }
+
+            // Once the polynomial is solved we compute the linear combination
+            // F = b * F1 + (1 - b) * F2 which has rank 2 using all available
+            // solutions
+            Matrix fundMatrix;
+            FundamentalMatrix f;
+            // clear previous values
+<span class="fc" id="L609">            result.clear();</span>
+<span class="fc bfc" id="L610" title="All 2 branches covered.">            if (beta1Available) {</span>
+<span class="fc" id="L611">                fundMatrix = fundMatrix1.multiplyByScalarAndReturnNew(beta1).addAndReturnNew(</span>
+<span class="fc" id="L612">                        fundMatrix2.multiplyByScalarAndReturnNew(1.0 - beta1));</span>
+<span class="pc bpc" id="L613" title="1 of 2 branches missed.">                if (enforceRank2(fundMatrix, decomposer)) {</span>
+<span class="nc" id="L614">                    throw new FundamentalMatrixEstimatorException();</span>
+                }
+
+<span class="fc" id="L617">                f = new FundamentalMatrix(fundMatrix);</span>
+<span class="fc" id="L618">                result.add(f);</span>
+            }
+<span class="fc bfc" id="L620" title="All 2 branches covered.">            if (beta2Available) {</span>
+<span class="fc" id="L621">                fundMatrix = fundMatrix1.multiplyByScalarAndReturnNew(beta2).addAndReturnNew(</span>
+<span class="fc" id="L622">                        fundMatrix2.multiplyByScalarAndReturnNew(1.0 - beta2));</span>
+<span class="pc bpc" id="L623" title="1 of 2 branches missed.">                if (enforceRank2(fundMatrix, decomposer)) {</span>
+<span class="nc" id="L624">                    throw new FundamentalMatrixEstimatorException();</span>
+                }
+
+<span class="fc" id="L627">                f = new FundamentalMatrix(fundMatrix);</span>
+<span class="fc" id="L628">                result.add(f);</span>
+            }
+<span class="fc bfc" id="L630" title="All 2 branches covered.">            if (beta3Available) {</span>
+<span class="fc" id="L631">                fundMatrix = fundMatrix1.multiplyByScalarAndReturnNew(beta3).addAndReturnNew(</span>
+<span class="fc" id="L632">                        fundMatrix2.multiplyByScalarAndReturnNew(1.0 - beta3));</span>
+<span class="pc bpc" id="L633" title="1 of 2 branches missed.">                if (enforceRank2(fundMatrix, decomposer)) {</span>
+<span class="nc" id="L634">                    throw new FundamentalMatrixEstimatorException();</span>
+                }
+
+<span class="fc" id="L637">                f = new FundamentalMatrix(fundMatrix);</span>
+<span class="fc" id="L638">                result.add(f);</span>
+            }
+
+<span class="fc bfc" id="L641" title="All 2 branches covered.">            if (listener != null) {</span>
+<span class="fc" id="L642">                listener.onEstimateEnd(this, result.get(0));</span>
+            }
+
+<span class="nc" id="L645">        } catch (final InvalidFundamentalMatrixException | AlgebraException | NumericalException</span>
+                       | NormalizerException e) {
+<span class="nc" id="L647">            throw new FundamentalMatrixEstimatorException(e);</span>
+        } finally {
+<span class="fc" id="L649">            locked = false;</span>
+        }
+<span class="fc" id="L651">    }</span>
+
+    /**
+     * Estimates a fundamental matrix using provided lists of matched points on
+     * left and right views.
+     * This method returns a solution only if one possible solution exists.
+     * If more than one solution is available, this method will fail.
+     * Because this algorithm might return more than one solution, it is highly
+     * encouraged to use estimateAll method instead.
+     *
+     * @return a fundamental matrix.
+     * @throws LockedException                     if estimator is locked doing an estimation.
+     * @throws NotReadyException                   if estimator is not ready because required
+     *                                             input points have not already been provided.
+     * @throws FundamentalMatrixEstimatorException if configuration of provided
+     *                                             2D points is degenerate and fundamental matrix
+     *                                             estimation fails or more than one solution exists.
+     */
+    @Override
+    public FundamentalMatrix estimate() throws LockedException, NotReadyException, FundamentalMatrixEstimatorException {
+<span class="fc" id="L671">        final var list = estimateAll();</span>
+<span class="pc bpc" id="L672" title="1 of 2 branches missed.">        if (list.size() &gt; 1) {</span>
+<span class="fc" id="L673">            throw new FundamentalMatrixEstimatorException();</span>
+        }
+
+<span class="nc" id="L676">        return list.get(0);</span>
+    }
+
+    /**
+     * Returns method of non-robust fundamental matrix estimator.
+     *
+     * @return method of fundamental matrix estimator.
+     */
+    @Override
+    public FundamentalMatrixEstimatorMethod getMethod() {
+<span class="fc" id="L686">        return FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM;</span>
+    }
+
+    /**
+     * Returns minimum number of matched pair of points required to start
+     * the estimation. This implementation requires a minimum of 7 points.
+     *
+     * @return minimum number of matched pair of points required to start
+     * the estimation. Always returns 7.
+     */
+    @Override
+    public int getMinRequiredPoints() {
+<span class="fc" id="L698">        return MIN_REQUIRED_POINTS;</span>
+    }
+
+    /**
+     * Enforces rank 2 into provided matrix.
+     * This method modifies provided matrix.
+     *
+     * @param matrix     matrix to be enforced to have rank 2.
+     * @param decomposer an SVD decomposer.
+     * @return false if rank was successfully enforced, true otherwise.
+     * @throws AlgebraException if an error occurs during SVD decomposition
+     *                          because of numerical instabilities.
+     */
+    private boolean enforceRank2(final Matrix matrix, final SingularValueDecomposer decomposer)
+            throws AlgebraException {
+
+<span class="fc" id="L714">        decomposer.setInputMatrix(matrix);</span>
+<span class="fc" id="L715">        decomposer.decompose();</span>
+
+<span class="fc" id="L717">        final var rank = decomposer.getRank();</span>
+<span class="pc bpc" id="L718" title="1 of 2 branches missed.">        if (rank &gt; FundamentalMatrix.FUNDAMENTAL_MATRIX_RANK) {</span>
+            // rank needs to be reduced
+<span class="nc" id="L720">            final var u = decomposer.getU();</span>
+<span class="nc" id="L721">            final var w = decomposer.getW();</span>
+<span class="nc" id="L722">            final var v = decomposer.getV();</span>
+
+            // transpose V
+<span class="nc" id="L725">            v.transpose();</span>
+
+            // set last singular value to zero to enforce rank 2
+<span class="nc" id="L728">            w.setElementAt(2, 2, 0.0);</span>
+
+            // compute matrix = U * W * V'
+<span class="nc" id="L731">            w.multiply(v);</span>
+<span class="nc" id="L732">            u.multiply(w);</span>
+<span class="nc" id="L733">            matrix.copyFrom(u);</span>
+<span class="nc" id="L734">            return false;</span>
+        } else {
+            // if rank is 2, rank is ok, otherwise rank is lower than fundamental
+            // matrix rank (rank 1) and estimation has failed because of
+            // co-planarities
+<span class="pc bpc" id="L739" title="1 of 2 branches missed.">            return rank != FundamentalMatrix.FUNDAMENTAL_MATRIX_RANK;</span>
+        }
+    }
+
+    /**
+     * Computes parameters of third degree polynomial to obtain possible
+     * solutions.
+     *
+     * @param a   1st param.
+     * @param b   2nd param.
+     * @param c   3rd param.
+     * @param d   4th param.
+     * @param e   5th param.
+     * @param f   6th param.
+     * @param out array of length 4 where partial parameters of third degree
+     *            polynomial are stored.
+     */
+    private void computeParams(
+            final double a, final double b, final double c, final double d, final double e, final double f,
+            final double[] out) {
+
+<span class="fc" id="L760">        final var ace = a * c * e;</span>
+<span class="fc" id="L761">        final var ade = a * d * e;</span>
+<span class="fc" id="L762">        final var bce = b * c * e;</span>
+<span class="fc" id="L763">        final var bde = b * d * e;</span>
+<span class="fc" id="L764">        final var acf = a * c * f;</span>
+<span class="fc" id="L765">        final var adf = a * d * f;</span>
+<span class="fc" id="L766">        final var bcf = b * c * f;</span>
+<span class="fc" id="L767">        final var bdf = b * d * f;</span>
+
+<span class="fc" id="L769">        out[0] = ace - ade - bce + bde - acf + adf + bcf - bdf;</span>
+<span class="fc" id="L770">        out[1] = ade + bce - 2.0 * bde + acf - 2.0 * adf - 2.0 * bcf + 3.0 * bdf;</span>
+<span class="fc" id="L771">        out[2] = bde + adf + bcf - 3.0 * bdf;</span>
+<span class="fc" id="L772">        out[3] = bdf;</span>
+<span class="fc" id="L773">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
