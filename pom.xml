@@ -6,7 +6,7 @@
 
     <groupId>com.irurueta</groupId>
     <artifactId>irurueta-ar</artifactId>
-    <version>1.4.0</version>
+    <version>1.5.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
