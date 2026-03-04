@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BaseCalibrationData.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.slam</a> &gt; <span class="el_source">BaseCalibrationData.java</span></div><h1>BaseCalibrationData.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2016 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.slam;
+
+import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.WrongSizeException;
+import com.irurueta.statistics.InvalidCovarianceMatrixException;
+import com.irurueta.statistics.MultivariateNormalDist;
+
+import java.io.Serializable;
+
+/**
+ * Contains control calibration data for a SLAM estimator during
+ * Kalman filtering prediction stage.
+ */
+public abstract class BaseCalibrationData implements Serializable {
+
+    /**
+     * Length of control signal.
+     */
+    private final int controlLength;
+
+    /**
+     * Length of state in SLAM estimator.
+     */
+    private final int stateLength;
+
+    /**
+     * Control signal mean to correct biases in control signal.
+     */
+    private double[] controlMean;
+
+    /**
+     * Control signal covariance to take into account for estimation of process
+     * noise during Kalman prediction stage.
+     */
+    private Matrix controlCovariance;
+
+    /**
+     * Evaluator for distribution propagation.
+     */
+    private transient MultivariateNormalDist.JacobianEvaluator evaluator;
+
+    /**
+     * Constructor.
+     *
+     * @param controlLength length of control signal.
+     * @param stateLength   length of state in SLAM estimator.
+     * @throws IllegalArgumentException if provided length is not greater than
+     *                                  zero.
+     */
+<span class="fc" id="L65">    protected BaseCalibrationData(final int controlLength, final int stateLength) {</span>
+<span class="pc bpc" id="L66" title="2 of 4 branches missed.">        if (controlLength &lt; 1 || stateLength &lt; 1) {</span>
+<span class="nc" id="L67">            throw new IllegalArgumentException(&quot;length must be greater than zero&quot;);</span>
+        }
+
+<span class="fc" id="L70">        this.controlLength = controlLength;</span>
+<span class="fc" id="L71">        this.stateLength = stateLength;</span>
+<span class="fc" id="L72">    }</span>
+
+    /**
+     * Gets length of control signal.
+     *
+     * @return length of control signal.
+     */
+    public int getControlLength() {
+<span class="fc" id="L80">        return controlLength;</span>
+    }
+
+    /**
+     * Gets length of state in SLAM estimator.
+     *
+     * @return length of state in SLAM estimator.
+     */
+    public int getStateLength() {
+<span class="fc" id="L89">        return stateLength;</span>
+    }
+
+    /**
+     * Gets control signal mean to correct biases in control signal.
+     *
+     * @return control signal mean.
+     */
+    public double[] getControlMean() {
+<span class="fc" id="L98">        return controlMean;</span>
+    }
+
+    /**
+     * Sets control signal mean to correct biases in control signal.
+     *
+     * @param controlMean control signal mean.
+     * @throws IllegalArgumentException if provided array does not have expected
+     *                                  length.
+     */
+    public void setControlMean(final double[] controlMean) {
+<span class="fc bfc" id="L109" title="All 2 branches covered.">        if (controlMean.length != controlLength) {</span>
+<span class="fc" id="L110">            throw new IllegalArgumentException(&quot;wrong mean length&quot;);</span>
+        }
+
+<span class="fc" id="L113">        this.controlMean = controlMean;</span>
+<span class="fc" id="L114">    }</span>
+
+    /**
+     * Gets control signal covariance to take into account for estimation of
+     * process noise during Kalman prediction stage.
+     *
+     * @return control signal covariance.
+     */
+    public Matrix getControlCovariance() {
+<span class="fc" id="L123">        return controlCovariance;</span>
+    }
+
+    /**
+     * Sets control signal covariance to take into account for estimation of
+     * process noise during Kalman prediction stage.
+     *
+     * @param controlCovariance control signal covariance.
+     * @throws IllegalArgumentException if provided covariance size is wrong.
+     */
+    public void setControlCovariance(final Matrix controlCovariance) {
+<span class="pc bpc" id="L134" title="1 of 4 branches missed.">        if (controlCovariance.getRows() != controlLength || controlCovariance.getColumns() != controlLength) {</span>
+<span class="fc" id="L135">            throw new IllegalArgumentException(&quot;wrong covariance size&quot;);</span>
+        }
+
+<span class="fc" id="L138">        this.controlCovariance = controlCovariance;</span>
+<span class="fc" id="L139">    }</span>
+
+    /**
+     * Sets control signal mean and covariance to correct biases in control
+     * signal and to take into account for estimation process noise during
+     * Kalman prediction stage.
+     *
+     * @param controlMean       control signal mean.
+     * @param controlCovariance control signal covariance.
+     * @throws IllegalArgumentException if provided mean or covariance do not
+     *                                  have proper size or length.
+     */
+    public void setControlMeanAndCovariance(final double[] controlMean, final Matrix controlCovariance) {
+<span class="fc bfc" id="L152" title="All 2 branches covered.">        if (controlMean.length != controlLength) {</span>
+<span class="fc" id="L153">            throw new IllegalArgumentException(&quot;wrong mean length&quot;);</span>
+        }
+<span class="pc bpc" id="L155" title="1 of 4 branches missed.">        if (controlCovariance.getRows() != controlLength || controlCovariance.getColumns() != controlLength) {</span>
+<span class="fc" id="L156">            throw new IllegalArgumentException(&quot;wrong covariance size&quot;);</span>
+        }
+
+<span class="fc" id="L159">        this.controlMean = controlMean;</span>
+<span class="fc" id="L160">        this.controlCovariance = controlCovariance;</span>
+<span class="fc" id="L161">    }</span>
+
+    /**
+     * Propagates calibrated control signal covariance using current control
+     * jacobian matrix.
+     * The propagated distribution can be used during prediction stage in Kalman
+     * filtering.
+     *
+     * @param controlJacobian current control jacobian matrix.
+     * @return propagated distribution.
+     * @throws InvalidCovarianceMatrixException if estimated covariance is not
+     *                                          valid.
+     * @throws IllegalArgumentException         if provided jacobian has invalid size.
+     */
+    public MultivariateNormalDist propagateWithControlJacobian(final Matrix controlJacobian)
+            throws InvalidCovarianceMatrixException {
+<span class="fc" id="L177">        final var dist = new MultivariateNormalDist();</span>
+<span class="fc" id="L178">        propagateWithControlJacobian(controlJacobian, dist);</span>
+<span class="fc" id="L179">        return dist;</span>
+    }
+
+    /**
+     * Propagates calibrated control signal covariance using current control
+     * jacobian matrix.
+     * The propagated distribution can be used during prediction stage in Kalman
+     * filtering.
+     *
+     * @param controlJacobian current control jacobian matrix.
+     * @param result          instance where propagated distribution will be stored.
+     * @throws InvalidCovarianceMatrixException if estimated covariance is not
+     *                                          valid.
+     * @throws IllegalArgumentException         if provided jacobian has invalid size.
+     */
+    public void propagateWithControlJacobian(
+            final Matrix controlJacobian, final MultivariateNormalDist result) throws InvalidCovarianceMatrixException {
+<span class="pc bpc" id="L196" title="2 of 4 branches missed.">        if (controlJacobian.getRows() != stateLength || controlJacobian.getColumns() != controlLength) {</span>
+<span class="nc" id="L197">            throw new IllegalArgumentException(&quot;wrong control jacobian size&quot;);</span>
+        }
+
+<span class="fc bfc" id="L200" title="All 2 branches covered.">        if (evaluator == null) {</span>
+<span class="fc" id="L201">            evaluator = new MultivariateNormalDist.JacobianEvaluator() {</span>
+                @Override
+                public void evaluate(final double[] x, final double[] y, final Matrix jacobian) {
+<span class="fc" id="L204">                    controlJacobian.copyTo(jacobian);</span>
+<span class="fc" id="L205">                }</span>
+
+                @Override
+                public int getNumberOfVariables() {
+<span class="fc" id="L209">                    return stateLength;</span>
+                }
+            };
+        }
+
+        try {
+<span class="fc" id="L215">            MultivariateNormalDist.propagate(evaluator, controlMean, controlCovariance, result);</span>
+<span class="nc" id="L216">        } catch (final WrongSizeException e) {</span>
+<span class="nc" id="L217">            throw new InvalidCovarianceMatrixException(e);</span>
+<span class="fc" id="L218">        }</span>
+<span class="fc" id="L219">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MSACImageOfAbsoluteConicRobustEstimator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.calibration.estimators</a> &gt; <span class="el_source">MSACImageOfAbsoluteConicRobustEstimator.java</span></div><h1>MSACImageOfAbsoluteConicRobustEstimator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2015 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.calibration.estimators;
+
+import com.irurueta.ar.calibration.ImageOfAbsoluteConic;
+import com.irurueta.geometry.Transformation2D;
+import com.irurueta.geometry.estimators.LockedException;
+import com.irurueta.geometry.estimators.NotReadyException;
+import com.irurueta.numerical.robust.MSACRobustEstimator;
+import com.irurueta.numerical.robust.MSACRobustEstimatorListener;
+import com.irurueta.numerical.robust.RobustEstimator;
+import com.irurueta.numerical.robust.RobustEstimatorException;
+import com.irurueta.numerical.robust.RobustEstimatorMethod;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Finds the best image of absolute conic (IAC) for provided collection of
+ * homographies (2D transformations) using MSAC algorithm.
+ */
+public class MSACImageOfAbsoluteConicRobustEstimator extends ImageOfAbsoluteConicRobustEstimator {
+
+    /**
+     * Constant defining default threshold to determine whether homographies are
+     * inliers or not.
+     * Threshold is defined by equations h1'*IAC*h2 = 0 and
+     * h1'*IAC*h1 = h2'*IAC*h2 --&amp;lt; h1'*IAC*h1 - h2'*IAC*h2 = 0, where
+     * h1 and h2 are the 1st and 2nd columns of an homography (2D
+     * transformation).
+     * These equations are derived from the fact that rotation matrices are
+     * orthonormal.
+     */
+    public static final double DEFAULT_THRESHOLD = 1e-6;
+
+    /**
+     * Minimum value that can be set as threshold.
+     * Threshold must be strictly greater than 0.0.
+     */
+    public static final double MIN_THRESHOLD = 0.0;
+
+    /**
+     * Threshold to determine whether homographies are inliers or not when
+     * testing possible estimation solutions.
+     * The threshold refers to the amount of error a possible solution has on
+     * the ortho-normality assumption of rotation matrices.
+     */
+    private double threshold;
+
+    /**
+     * Constructor.
+     */
+    public MSACImageOfAbsoluteConicRobustEstimator() {
+<span class="fc" id="L67">        super();</span>
+<span class="fc" id="L68">        threshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L69">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param listener listener to be notified of events such as when
+     *                 estimation starts, ends or its progress significantly changes.
+     */
+    public MSACImageOfAbsoluteConicRobustEstimator(final ImageOfAbsoluteConicRobustEstimatorListener listener) {
+<span class="fc" id="L78">        super(listener);</span>
+<span class="fc" id="L79">        threshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L80">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param homographies list of homographies (2D transformations) used to
+     *                     estimate the image of absolute conic (IAC), which can be used to obtain
+     *                     pinhole camera intrinsic parameters.
+     * @throws IllegalArgumentException if not enough homographies are provided
+     *                                  for default settings. Hence, at least 1 homography must be provided.
+     */
+    public MSACImageOfAbsoluteConicRobustEstimator(final List&lt;Transformation2D&gt; homographies) {
+<span class="fc" id="L92">        super(homographies);</span>
+<span class="fc" id="L93">        threshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L94">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param homographies list of homographies (2D transformations) used to
+     *                     estimate the image of absolute conic (IAC), which can be used to obtain
+     *                     pinhole camera intrinsic parameters.
+     * @param listener     listener to be notified of events such as when estimation
+     *                     starts, ends or estimation progress changes.
+     * @throws IllegalArgumentException if not enough homographies are provided
+     *                                  for default settings. Hence, at least 1 homography must be provided.
+     */
+    public MSACImageOfAbsoluteConicRobustEstimator(
+            final List&lt;Transformation2D&gt; homographies, final ImageOfAbsoluteConicRobustEstimatorListener listener) {
+<span class="fc" id="L109">        super(homographies, listener);</span>
+<span class="fc" id="L110">        threshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L111">    }</span>
+
+    /**
+     * Returns threshold to determine whether homographies are inliers or not
+     * when testing possible estimation solutions.
+     * The threshold refers to the amount of error a possible solution has on
+     * the ortho-normality assumption of rotation matrices.
+     *
+     * @return threshold to determine whether homographies are inliers or not
+     * when testing possible estimation solutions.
+     */
+    public double getThreshold() {
+<span class="fc" id="L123">        return threshold;</span>
+    }
+
+    /**
+     * Sets threshold to determine whether homographies are inliers or not when
+     * testing possible estimation solutions.
+     * The threshold refers to the amount of error a possible solution has on
+     * the ortho-normality assumption of rotation matrices.
+     *
+     * @param threshold threshold to determine whether homographies are inliers
+     *                  or not when testing possible estimation solutions.
+     * @throws IllegalArgumentException if provided value is equal or less than
+     *                                  zero.
+     * @throws LockedException          if robust estimator is locked because an
+     *                                  estimation is already in progress.
+     */
+    public void setThreshold(final double threshold) throws LockedException {
+<span class="fc bfc" id="L140" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L141">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L143" title="All 2 branches covered.">        if (threshold &lt;= MIN_THRESHOLD) {</span>
+<span class="fc" id="L144">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L146">        this.threshold = threshold;</span>
+<span class="fc" id="L147">    }</span>
+
+    /**
+     * Estimates Image of Absolute Conic (IAC).
+     *
+     * @return estimated IAC.
+     * @throws LockedException          if robust estimator is locked because an
+     *                                  estimation is already in progress.
+     * @throws NotReadyException        if provided input data is not enough to start
+     *                                  the estimation.
+     * @throws RobustEstimatorException if estimation fails for any reason
+     *                                  (i.e. numerical instability, no solution available, etc).
+     */
+    @SuppressWarnings(&quot;DuplicatedCode&quot;)
+    @Override
+    public ImageOfAbsoluteConic estimate() throws LockedException, NotReadyException, RobustEstimatorException {
+<span class="fc bfc" id="L163" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L164">            throw new LockedException();</span>
+        }
+<span class="pc bpc" id="L166" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L167">            throw new NotReadyException();</span>
+        }
+
+<span class="fc" id="L170">        final var innerEstimator = new MSACRobustEstimator&lt;ImageOfAbsoluteConic&gt;(new MSACRobustEstimatorListener&lt;&gt;() {</span>
+
+            // subset of homographies picked on each iteration
+<span class="fc" id="L173">            private final List&lt;Transformation2D&gt; subsetHomographies = new ArrayList&lt;&gt;();</span>
+
+            @Override
+            public double getThreshold() {
+<span class="fc" id="L177">                return threshold;</span>
+            }
+
+            @Override
+            public int getTotalSamples() {
+<span class="fc" id="L182">                return homographies.size();</span>
+            }
+
+            @Override
+            public int getSubsetSize() {
+<span class="fc" id="L187">                return iacEstimator.getMinNumberOfRequiredHomographies();</span>
+            }
+
+            @Override
+            public void estimatePreliminarSolutions(
+                    final int[] samplesIndices, final List&lt;ImageOfAbsoluteConic&gt; solutions) {
+<span class="fc" id="L193">                subsetHomographies.clear();</span>
+<span class="fc bfc" id="L194" title="All 2 branches covered.">                for (final var samplesIndex : samplesIndices) {</span>
+<span class="fc" id="L195">                    subsetHomographies.add(homographies.get(samplesIndex));</span>
+                }
+
+                try {
+<span class="fc" id="L199">                    iacEstimator.setLMSESolutionAllowed(false);</span>
+<span class="fc" id="L200">                    iacEstimator.setHomographies(subsetHomographies);</span>
+
+<span class="fc" id="L202">                    final var iac = iacEstimator.estimate();</span>
+<span class="fc" id="L203">                    solutions.add(iac);</span>
+<span class="nc" id="L204">                } catch (final Exception e) {</span>
+                    // if anything fails, no solution is added
+<span class="fc" id="L206">                }</span>
+<span class="fc" id="L207">            }</span>
+
+            @Override
+            public double computeResidual(final ImageOfAbsoluteConic currentEstimation, final int i) {
+<span class="fc" id="L211">                return residual(currentEstimation, homographies.get(i));</span>
+            }
+
+            @Override
+            public boolean isReady() {
+<span class="fc" id="L216">                return MSACImageOfAbsoluteConicRobustEstimator.this.isReady();</span>
+            }
+
+            @Override
+            public void onEstimateStart(final RobustEstimator&lt;ImageOfAbsoluteConic&gt; estimator) {
+<span class="pc bpc" id="L221" title="1 of 2 branches missed.">                if (listener != null) {</span>
+<span class="fc" id="L222">                    listener.onEstimateStart(MSACImageOfAbsoluteConicRobustEstimator.this);</span>
+                }
+<span class="fc" id="L224">            }</span>
+
+            @Override
+            public void onEstimateEnd(final RobustEstimator&lt;ImageOfAbsoluteConic&gt; estimator) {
+<span class="pc bpc" id="L228" title="1 of 2 branches missed.">                if (listener != null) {</span>
+<span class="fc" id="L229">                    listener.onEstimateEnd(MSACImageOfAbsoluteConicRobustEstimator.this);</span>
+                }
+<span class="fc" id="L231">            }</span>
+
+            @Override
+            public void onEstimateNextIteration(
+                    final RobustEstimator&lt;ImageOfAbsoluteConic&gt; estimator, final int iteration) {
+<span class="pc bpc" id="L236" title="1 of 2 branches missed.">                if (listener != null) {</span>
+<span class="fc" id="L237">                    listener.onEstimateNextIteration(MSACImageOfAbsoluteConicRobustEstimator.this, iteration);</span>
+                }
+<span class="fc" id="L239">            }</span>
+
+            @Override
+            public void onEstimateProgressChange(
+                    final RobustEstimator&lt;ImageOfAbsoluteConic&gt; estimator, final float progress) {
+<span class="pc bpc" id="L244" title="1 of 2 branches missed.">                if (listener != null) {</span>
+<span class="fc" id="L245">                    listener.onEstimateProgressChange(MSACImageOfAbsoluteConicRobustEstimator.this, progress);</span>
+                }
+<span class="fc" id="L247">            }</span>
+        });
+
+        try {
+<span class="fc" id="L251">            locked = true;</span>
+<span class="fc" id="L252">            innerEstimator.setConfidence(confidence);</span>
+<span class="fc" id="L253">            innerEstimator.setMaxIterations(maxIterations);</span>
+<span class="fc" id="L254">            innerEstimator.setProgressDelta(progressDelta);</span>
+<span class="fc" id="L255">            return innerEstimator.estimate();</span>
+<span class="nc" id="L256">        } catch (final com.irurueta.numerical.LockedException e) {</span>
+<span class="nc" id="L257">            throw new LockedException(e);</span>
+<span class="nc" id="L258">        } catch (final com.irurueta.numerical.NotReadyException e) {</span>
+<span class="nc" id="L259">            throw new NotReadyException(e);</span>
+        } finally {
+<span class="fc" id="L261">            locked = false;</span>
+        }
+    }
+
+    /**
+     * Returns method being used for robust estimation
+     *
+     * @return method being used for robust estimation
+     */
+    @Override
+    public RobustEstimatorMethod getMethod() {
+<span class="fc" id="L272">        return RobustEstimatorMethod.MSAC;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

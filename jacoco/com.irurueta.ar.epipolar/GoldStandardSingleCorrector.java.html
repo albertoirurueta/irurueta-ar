@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GoldStandardSingleCorrector.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.epipolar</a> &gt; <span class="el_source">GoldStandardSingleCorrector.java</span></div><h1>GoldStandardSingleCorrector.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2015 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.epipolar;
+
+import com.irurueta.algebra.AlgebraException;
+import com.irurueta.algebra.Complex;
+import com.irurueta.algebra.Matrix;
+import com.irurueta.geometry.CoordinatesType;
+import com.irurueta.geometry.GeometryException;
+import com.irurueta.geometry.HomogeneousPoint2D;
+import com.irurueta.geometry.Point2D;
+import com.irurueta.geometry.ProjectiveTransformation2D;
+import com.irurueta.geometry.estimators.NotReadyException;
+import com.irurueta.numerical.NumericalException;
+import com.irurueta.numerical.roots.LaguerrePolynomialRootsEstimator;
+
+/**
+ * Fixes a single matched pair of points so that they perfectly follow a given
+ * epipolar geometry using the Gold Standard method, which is capable to
+ * completely remove errors assuming their gaussianity.
+ * When matching points typically the matching precision is about 1 pixel,
+ * however this makes that matched points under a given epipolar geometry (i.e.
+ * fundamental or essential matrix), do not lie perfectly on the corresponding
+ * epipolar plane or epipolar lines.
+ * The consequence is that triangularization of these matches will fail or
+ * produce inaccurate results.
+ * By fixing matched points using a corrector following a given epipolar
+ * geometry, this effect is alleviated.
+ * This corrector uses the Gold Standard method, which is more expensive to
+ * compute than the Sampson approximation, but is capable to remove larger
+ * errors assuming their gaussianity. Contrary to the Sampson corrector, the
+ * Gold Standard method might fail in some situations, while in those cases
+ * probably the Sampson corrector produces wrong results without failing.
+ */
+public class GoldStandardSingleCorrector extends SingleCorrector {
+
+    /**
+     * A tiny value.
+     */
+    private static final double EPS = 1e-6;
+
+    /**
+     * Constructor.
+     */
+    public GoldStandardSingleCorrector() {
+<span class="fc" id="L59">        super();</span>
+<span class="fc" id="L60">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param fundamentalMatrix fundamental matrix defining the epipolar
+     *                          geometry.
+     */
+    public GoldStandardSingleCorrector(final FundamentalMatrix fundamentalMatrix) {
+<span class="fc" id="L69">        super(fundamentalMatrix);</span>
+<span class="fc" id="L70">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param leftPoint  matched point on left view to be corrected.
+     * @param rightPoint matched point on right view to be corrected.
+     */
+    public GoldStandardSingleCorrector(final Point2D leftPoint, final Point2D rightPoint) {
+<span class="fc" id="L79">        super(leftPoint, rightPoint);</span>
+<span class="fc" id="L80">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param leftPoint         matched point on left view to be corrected.
+     * @param rightPoint        matched point on right view to be corrected.
+     * @param fundamentalMatrix fundamental matrix defining an epipolar geometry.
+     */
+    public GoldStandardSingleCorrector(final Point2D leftPoint, final Point2D rightPoint,
+                                       final FundamentalMatrix fundamentalMatrix) {
+<span class="fc" id="L91">        super(leftPoint, rightPoint, fundamentalMatrix);</span>
+<span class="fc" id="L92">    }</span>
+
+    /**
+     * Corrects the pair of provided matched points to be corrected.
+     *
+     * @throws NotReadyException   if this instance is not ready (either points or
+     *                             fundamental matrix has not been provided yet).
+     * @throws CorrectionException if correction fails.
+     */
+    @Override
+    public void correct() throws NotReadyException, CorrectionException {
+<span class="pc bpc" id="L103" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L104">            throw new NotReadyException();</span>
+        }
+
+<span class="fc" id="L107">        leftCorrectedPoint = Point2D.create(CoordinatesType.HOMOGENEOUS_COORDINATES);</span>
+<span class="fc" id="L108">        rightCorrectedPoint = Point2D.create(CoordinatesType.HOMOGENEOUS_COORDINATES);</span>
+<span class="fc" id="L109">        correct(leftPoint, rightPoint, fundamentalMatrix, leftCorrectedPoint, rightCorrectedPoint);</span>
+<span class="fc" id="L110">    }</span>
+
+    /**
+     * Gets type of correction being used.
+     *
+     * @return type of correction.
+     */
+    @Override
+    public CorrectorType getType() {
+<span class="fc" id="L119">        return CorrectorType.GOLD_STANDARD;</span>
+    }
+
+    /**
+     * Corrects the pair of provided matched points to be corrected using
+     * provided fundamental matrix and stores the corrected points into provided
+     * instances.
+     *
+     * @param leftPoint           point on left view to be corrected.
+     * @param rightPoint          point on right view to be corrected.
+     * @param fundamentalMatrix   fundamental matrix defining the epipolar
+     *                            geometry.
+     * @param correctedLeftPoint  point on left view after correction.
+     * @param correctedRightPoint point on right view after correction.
+     * @throws NotReadyException   if provided fundamental matrix is not ready.
+     * @throws CorrectionException if correction fails.
+     */
+    @SuppressWarnings(&quot;DuplicatedCode&quot;)
+    public static void correct(
+            final Point2D leftPoint, final Point2D rightPoint, final FundamentalMatrix fundamentalMatrix,
+            final Point2D correctedLeftPoint, final Point2D correctedRightPoint) throws NotReadyException,
+            CorrectionException {
+
+        // normalize to increase accuracy
+<span class="fc" id="L143">        leftPoint.normalize();</span>
+<span class="fc" id="L144">        rightPoint.normalize();</span>
+<span class="fc" id="L145">        fundamentalMatrix.normalize();</span>
+
+        try {
+            // create transformations to move left and right points to the origin
+            // (0,0,1)
+<span class="fc" id="L150">            final var leftTranslationMatrix = Matrix.identity(Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH,</span>
+                    Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH);
+            // add terms to move left point to origin
+<span class="fc" id="L153">            leftTranslationMatrix.setElementAt(0, 2, -leftPoint.getInhomX());</span>
+<span class="fc" id="L154">            leftTranslationMatrix.setElementAt(1, 2, -leftPoint.getInhomY());</span>
+
+            // create inverse transformation
+<span class="fc" id="L157">            var invLeftTranslationMatrix = Matrix.identity(Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH,</span>
+                    Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH);
+            // add terms to obtain inverse transformation
+<span class="fc" id="L160">            invLeftTranslationMatrix.setElementAt(0, 2, leftPoint.getInhomX());</span>
+<span class="fc" id="L161">            invLeftTranslationMatrix.setElementAt(1, 2, leftPoint.getInhomY());</span>
+
+<span class="fc" id="L163">            final var rightTranslationMatrix = Matrix.identity(Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH,</span>
+                    Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH);
+            // add terms to move right point to origin
+<span class="fc" id="L166">            rightTranslationMatrix.setElementAt(0, 2, -rightPoint.getInhomX());</span>
+<span class="fc" id="L167">            rightTranslationMatrix.setElementAt(1, 2, -rightPoint.getInhomY());</span>
+
+            // create inverse and transposed transformation
+<span class="fc" id="L170">            var invTransRightTranslationMatrix = Matrix.identity(Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH,</span>
+                    Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH);
+            // add terms to obtain inverse transformation
+<span class="fc" id="L173">            invTransRightTranslationMatrix.setElementAt(2, 0, rightPoint.getInhomX());</span>
+<span class="fc" id="L174">            invTransRightTranslationMatrix.setElementAt(2, 1, rightPoint.getInhomY());</span>
+
+            // because points have been transformed using left and right
+            // translations (T1 and T2 respectively), then fundamental matrix
+            // becomes (T2^-1)'*F*T1^-1
+<span class="fc" id="L179">            var fundInternalMatrix = fundamentalMatrix.getInternalMatrix();</span>
+<span class="fc" id="L180">            fundInternalMatrix.multiply(invLeftTranslationMatrix);</span>
+<span class="fc" id="L181">            invTransRightTranslationMatrix.multiply(fundInternalMatrix);</span>
+
+            // compute transformations to rotate epipoles of transformed
+            // fundamental matrix so that they are located at e1 = (1,0,f1) and
+            // e2 = (1,0,f2)
+<span class="fc" id="L186">            final var transformedFundamentalMatrix = new FundamentalMatrix(invTransRightTranslationMatrix);</span>
+<span class="fc" id="L187">            transformedFundamentalMatrix.computeEpipoles();</span>
+<span class="fc" id="L188">            final var leftEpipole = transformedFundamentalMatrix.getLeftEpipole();</span>
+<span class="fc" id="L189">            final var rightEpipole = transformedFundamentalMatrix.getRightEpipole();</span>
+
+            // normalize so that leftEpipole.x^2 + leftEpipole.y^2 = 1 and
+            // rightEpipole.x^2 + rightEpipole.y^2 = 1, that way transformations
+            // become rotations
+<span class="fc" id="L194">            final var normLeftEpipole = Math.pow(leftEpipole.getHomX(), 2.0) + Math.pow(leftEpipole.getHomY(), 2.0);</span>
+<span class="fc" id="L195">            final var normRightEpipole = Math.pow(rightEpipole.getHomX(), 2.0) + Math.pow(rightEpipole.getHomY(), 2.0);</span>
+
+<span class="fc" id="L197">            leftEpipole.setHomogeneousCoordinates(</span>
+<span class="fc" id="L198">                    leftEpipole.getHomX() / normLeftEpipole,</span>
+<span class="fc" id="L199">                    leftEpipole.getHomY() / normLeftEpipole,</span>
+<span class="fc" id="L200">                    leftEpipole.getHomW() / normLeftEpipole);</span>
+<span class="fc" id="L201">            rightEpipole.setHomogeneousCoordinates(</span>
+<span class="fc" id="L202">                    rightEpipole.getHomX() / normRightEpipole,</span>
+<span class="fc" id="L203">                    rightEpipole.getHomY() / normRightEpipole,</span>
+<span class="fc" id="L204">                    rightEpipole.getHomW() / normRightEpipole);</span>
+
+<span class="fc" id="L206">            final var leftRotationMatrix = new Matrix(Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH,</span>
+                    Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH);
+<span class="fc" id="L208">            leftRotationMatrix.setElementAt(0, 0, leftEpipole.getHomX());</span>
+<span class="fc" id="L209">            leftRotationMatrix.setElementAt(1, 0, -leftEpipole.getHomY());</span>
+<span class="fc" id="L210">            leftRotationMatrix.setElementAt(0, 1, leftEpipole.getHomY());</span>
+<span class="fc" id="L211">            leftRotationMatrix.setElementAt(1, 1, leftEpipole.getHomX());</span>
+<span class="fc" id="L212">            leftRotationMatrix.setElementAt(2, 2, 1.0);</span>
+
+            // the inverse of a rotation is its transpose
+<span class="fc" id="L215">            final var invLeftRotationMatrix = leftRotationMatrix.transposeAndReturnNew();</span>
+
+<span class="fc" id="L217">            final var rightRotationMatrix = new Matrix(Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH,</span>
+                    Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH);
+<span class="fc" id="L219">            rightRotationMatrix.setElementAt(0, 0, rightEpipole.getHomX());</span>
+<span class="fc" id="L220">            rightRotationMatrix.setElementAt(1, 0, -rightEpipole.getHomY());</span>
+<span class="fc" id="L221">            rightRotationMatrix.setElementAt(0, 1, rightEpipole.getHomY());</span>
+<span class="fc" id="L222">            rightRotationMatrix.setElementAt(1, 1, rightEpipole.getHomX());</span>
+<span class="fc" id="L223">            rightRotationMatrix.setElementAt(2, 2, 1.0);</span>
+
+            // again the inverse of rotation is its transpose
+<span class="fc" id="L226">            final var invRightRotationMatrix = rightRotationMatrix.transposeAndReturnNew();</span>
+
+            // and so the fundamental matrix now becomes: R2*(T2^-1)'*F*T1^-1*R1',
+            // where the middle matrices correspond to previous transformation
+<span class="fc" id="L230">            fundInternalMatrix = invTransRightTranslationMatrix;</span>
+<span class="fc" id="L231">            fundInternalMatrix.multiply(invLeftRotationMatrix);</span>
+<span class="fc" id="L232">            rightRotationMatrix.multiply(fundInternalMatrix);</span>
+<span class="fc" id="L233">            invTransRightTranslationMatrix = rightRotationMatrix;</span>
+
+            // where F is a transformed fundamental matrix that has the following
+            // form:
+            // [f1*f2*d  -f2*c   -f2*d   ]
+            // [-f1*b    a       b       ]
+            // [-f1*d    c       d       ]
+
+            // hence:
+<span class="fc" id="L242">            final var a = invTransRightTranslationMatrix.getElementAt(1, 1);</span>
+<span class="fc" id="L243">            final var b = invTransRightTranslationMatrix.getElementAt(1, 2);</span>
+<span class="fc" id="L244">            final var c = invTransRightTranslationMatrix.getElementAt(2, 1);</span>
+<span class="fc" id="L245">            final var d = invTransRightTranslationMatrix.getElementAt(2, 2);</span>
+            final double f1;
+            final double f2;
+<span class="fc bfc" id="L248" title="All 2 branches covered.">            if (Math.abs(b) &gt; Math.abs(d)) {</span>
+<span class="fc" id="L249">                f1 = -invTransRightTranslationMatrix.getElementAt(1, 0) / b;</span>
+            } else {
+<span class="fc" id="L251">                f1 = -invTransRightTranslationMatrix.getElementAt(2, 0) / d;</span>
+            }
+<span class="fc bfc" id="L253" title="All 2 branches covered.">            if (Math.abs(c) &gt; Math.abs(d)) {</span>
+<span class="fc" id="L254">                f2 = -invTransRightTranslationMatrix.getElementAt(0, 1) / c;</span>
+            } else {
+<span class="fc" id="L256">                f2 = -invTransRightTranslationMatrix.getElementAt(0, 2) / d;</span>
+            }
+
+            // Hence the polynomial of degree 6 to solve corresponding to the derivative of s(t) is:
+            // g(t) = A*t^6 + B*t^5 + C*t^4 + D*t^3 + E*t^2 + F*t + G
+            // where:
+<span class="fc" id="L262">            final var tmp1 = Math.pow(a, 2.0) * d - a * b * c;</span>
+<span class="fc" id="L263">            final var tmp2 = Math.pow(a, 2.0) + Math.pow(c, 2.0) * Math.pow(f2, 2.0);</span>
+<span class="fc" id="L264">            final var tmp3 = a * b * d - Math.pow(b, 2.0) * c;</span>
+<span class="fc" id="L265">            final var tmp4 = tmp3 * c;</span>
+<span class="fc" id="L266">            final var tmp5 = a * b + c * d * Math.pow(f2, 2.0);</span>
+<span class="fc" id="L267">            final var tmp6 = Math.pow(b, 2.0) + Math.pow(d, 2.0) * Math.pow(f2, 2.0);</span>
+
+<span class="fc" id="L269">            final var realA = -tmp1 * c * Math.pow(f1, 4.0);</span>
+<span class="fc" id="L270">            final var realB = Math.pow(tmp2, 2.0) - ((Math.pow(a, 2) * d - a * b * c) * d + tmp4) * Math.pow(f1, 4.0);</span>
+<span class="fc" id="L271">            final var realC = (4.0 * tmp2 * tmp5 - (2.0 * tmp1 * c * Math.pow(f1, 2.0) + tmp3 * d * Math.pow(f1, 4.0)));</span>
+<span class="fc" id="L272">            final var realD = 2.0 * (tmp2 * tmp6 + 2.0 * Math.pow(tmp5, 2.0) - (tmp1 * d + tmp4) * Math.pow(f1, 2.0));</span>
+<span class="fc" id="L273">            final var realE = (4.0 * tmp5 * tmp6 - (tmp1 * c + 2.0 * tmp3 * d * Math.pow(f1, 2.0)));</span>
+<span class="fc" id="L274">            final var realF = (Math.pow(tmp6, 2.0) - (tmp1 * d + tmp4));</span>
+<span class="fc" id="L275">            final var realG = -tmp3 * d;</span>
+
+<span class="fc" id="L277">            final var complexA = new Complex(realA);</span>
+<span class="fc" id="L278">            final var complexB = new Complex(realB);</span>
+<span class="fc" id="L279">            final var complexC = new Complex(realC);</span>
+<span class="fc" id="L280">            final var complexD = new Complex(realD);</span>
+<span class="fc" id="L281">            final var complexE = new Complex(realE);</span>
+<span class="fc" id="L282">            final var complexF = new Complex(realF);</span>
+<span class="fc" id="L283">            final var complexG = new Complex(realG);</span>
+<span class="fc" id="L284">            final var polyParams = new Complex[]{complexG, complexF, complexE, complexD, complexC, complexB, complexA};</span>
+<span class="fc" id="L285">            final var rootEstimator = new LaguerrePolynomialRootsEstimator(polyParams);</span>
+<span class="fc" id="L286">            rootEstimator.estimate();</span>
+<span class="fc" id="L287">            final var roots = rootEstimator.getRoots();</span>
+
+            // evaluate polynomial s(t) on each root of its derivative to obtain
+            // the global minima (we discard non-real roots)
+<span class="fc" id="L291">            var minimum = Double.MAX_VALUE;</span>
+<span class="fc" id="L292">            Complex bestRoot = null;</span>
+<span class="fc bfc" id="L293" title="All 2 branches covered.">            for (final var root : roots) {</span>
+                // skip solutions having an imaginary part
+<span class="fc bfc" id="L295" title="All 2 branches covered.">                if (Math.abs(root.getImaginary()) &gt; EPS) {</span>
+<span class="fc" id="L296">                    continue;</span>
+                }
+
+<span class="fc" id="L299">                final var value = s(root.getReal(), a, b, c, d, f1, f2);</span>
+<span class="fc bfc" id="L300" title="All 2 branches covered.">                if (value &lt; minimum) {</span>
+<span class="fc" id="L301">                    minimum = value;</span>
+<span class="fc" id="L302">                    bestRoot = root;</span>
+                }
+            }
+
+<span class="pc bpc" id="L306" title="1 of 2 branches missed.">            if (bestRoot == null) {</span>
+<span class="nc" id="L307">                throw new CorrectionException();</span>
+            }
+
+<span class="fc" id="L310">            final var tmin = bestRoot.getReal();</span>
+
+            // and so, the transformed left point is (-tmin^2*f1, tmin, 1 + (tmin*f1)^2)
+<span class="fc" id="L313">            final var transformedLeftPoint = new HomogeneousPoint2D(</span>
+<span class="fc" id="L314">                    -Math.pow(tmin, 2.0) * f1, tmin, 1.0 + Math.pow(tmin * f1, 2.0));</span>
+            // and the right point is (f2*(c*tmin+d)^2, -(a*tmin+b)*(c*tmin+d), (a*t+b)^2 + f2^2*(c*t+d)^2)
+<span class="fc" id="L316">            final var tmp7 = Math.pow(c * tmin + d, 2.0);</span>
+<span class="fc" id="L317">            final var transformedRightPoint = new HomogeneousPoint2D(</span>
+                    f2 * tmp7,
+                    -(a * tmin + b) * (c * tmin + d),
+<span class="fc" id="L320">                    Math.pow(a * tmin + b, 2.0) + Math.pow(f2, 2.0) * tmp7);</span>
+
+            // undo translation and rotation transformations
+            // correctedLeftPoint = T1^-1*R1'*transformedLeftPoint
+            // correctedRightPoint = T2^-1*R2'*transformedRightPoint
+
+            // inverse left transformation
+<span class="fc" id="L327">            invLeftTranslationMatrix = Matrix.identity(Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH,</span>
+                    Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH);
+            // add terms to obtain inverse transformation
+<span class="fc" id="L330">            invLeftTranslationMatrix.setElementAt(0, 2, leftPoint.getInhomX());</span>
+<span class="fc" id="L331">            invLeftTranslationMatrix.setElementAt(1, 2, leftPoint.getInhomY());</span>
+
+            // inverse right translation transformation
+<span class="fc" id="L334">            final var invRightTranslationMatrix = Matrix.identity(Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH,</span>
+                    Point2D.POINT2D_HOMOGENEOUS_COORDINATES_LENGTH);
+            // add terms to obtain inverse transformation
+<span class="fc" id="L337">            invRightTranslationMatrix.setElementAt(0, 2, rightPoint.getInhomX());</span>
+<span class="fc" id="L338">            invRightTranslationMatrix.setElementAt(1, 2, rightPoint.getInhomY());</span>
+
+<span class="fc" id="L340">            invLeftTranslationMatrix.multiply(invLeftRotationMatrix);</span>
+<span class="fc" id="L341">            final var invLeftTransformationMatrix = invLeftTranslationMatrix;</span>
+<span class="fc" id="L342">            invRightTranslationMatrix.multiply(invRightRotationMatrix);</span>
+
+<span class="fc" id="L344">            final var invLeftTransformation = new ProjectiveTransformation2D(invLeftTransformationMatrix);</span>
+<span class="fc" id="L345">            final var invRightTransformation = new ProjectiveTransformation2D(invRightTranslationMatrix);</span>
+
+<span class="fc" id="L347">            invLeftTransformation.transform(transformedLeftPoint, correctedLeftPoint);</span>
+<span class="fc" id="L348">            invRightTransformation.transform(transformedRightPoint, correctedRightPoint);</span>
+
+<span class="fc" id="L350">        } catch (final AlgebraException | GeometryException | NumericalException e) {</span>
+<span class="fc" id="L351">            throw new CorrectionException(e);</span>
+<span class="fc" id="L352">        }</span>
+<span class="fc" id="L353">    }</span>
+
+    /**
+     * Evaluates polynomial to be minimized in order to find best corrected
+     * points.
+     *
+     * @param t  polynomial variable.
+     * @param a  a value for transformed fundamental matrix.
+     * @param b  b value for transformed fundamental matrix.
+     * @param c  c value for transformed fundamental matrix.
+     * @param d  d value for transformed fundamental matrix.
+     * @param f1 f1 value for transformed fundamental matrix.
+     * @param f2 f2 value for transformed fundamental matrix.
+     * @return evaluated polynomial value.
+     */
+    private static double s(final double t, final double a, final double b, final double c,
+                            final double d, final double f1, final double f2) {
+<span class="fc" id="L370">        final var tmp = Math.pow(c * t + d, 2.0);</span>
+<span class="fc" id="L371">        return Math.pow(t, 2.0) / (1 + Math.pow(t * f1, 2.0)) + tmp / (Math.pow(a * t + b, 2.0)</span>
+<span class="fc" id="L372">                + Math.pow(f2, 2.0) * tmp);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

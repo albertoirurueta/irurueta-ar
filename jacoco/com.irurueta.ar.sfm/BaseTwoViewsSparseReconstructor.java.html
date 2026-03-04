@@ -1,0 +1,1150 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BaseTwoViewsSparseReconstructor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.sfm</a> &gt; <span class="el_source">BaseTwoViewsSparseReconstructor.java</span></div><h1>BaseTwoViewsSparseReconstructor.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2017 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.irurueta.ar.sfm;
+
+import com.irurueta.ar.calibration.estimators.LMSEImageOfAbsoluteConicEstimator;
+import com.irurueta.ar.epipolar.Corrector;
+import com.irurueta.ar.epipolar.EpipolarException;
+import com.irurueta.ar.epipolar.EssentialMatrix;
+import com.irurueta.ar.epipolar.FundamentalMatrix;
+import com.irurueta.ar.epipolar.estimators.EightPointsFundamentalMatrixEstimator;
+import com.irurueta.ar.epipolar.estimators.FundamentalMatrixEstimatorMethod;
+import com.irurueta.ar.epipolar.estimators.FundamentalMatrixRobustEstimator;
+import com.irurueta.ar.epipolar.estimators.LMedSFundamentalMatrixRobustEstimator;
+import com.irurueta.ar.epipolar.estimators.MSACFundamentalMatrixRobustEstimator;
+import com.irurueta.ar.epipolar.estimators.PROMedSFundamentalMatrixRobustEstimator;
+import com.irurueta.ar.epipolar.estimators.PROSACFundamentalMatrixRobustEstimator;
+import com.irurueta.ar.epipolar.estimators.RANSACFundamentalMatrixRobustEstimator;
+import com.irurueta.ar.epipolar.estimators.SevenPointsFundamentalMatrixEstimator;
+import com.irurueta.geometry.PinholeCamera;
+import com.irurueta.geometry.PinholeCameraIntrinsicParameters;
+import com.irurueta.geometry.Point2D;
+import com.irurueta.geometry.Point3D;
+import com.irurueta.geometry.Transformation2D;
+import com.irurueta.geometry.estimators.LMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator;
+import com.irurueta.geometry.estimators.MSACPointCorrespondenceProjectiveTransformation2DRobustEstimator;
+import com.irurueta.geometry.estimators.NotReadyException;
+import com.irurueta.geometry.estimators.PROMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator;
+import com.irurueta.geometry.estimators.PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator;
+import com.irurueta.geometry.estimators.PointCorrespondenceProjectiveTransformation2DRobustEstimator;
+import com.irurueta.geometry.estimators.ProjectiveTransformation2DRobustEstimator;
+import com.irurueta.geometry.estimators.RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Base class in charge of estimating cameras and 3D reconstructed points from
+ * sparse image point correspondences in two views.
+ *
+ * @param &lt;C&gt; type of configuration.
+ * @param &lt;R&gt; type of re-constructor.
+ * @param &lt;L&gt; type of listener.
+ */
+@SuppressWarnings(&quot;DuplicatedCode&quot;)
+public abstract class BaseTwoViewsSparseReconstructor&lt;
+        C extends BaseTwoViewsSparseReconstructorConfiguration&lt;C&gt;,
+        R extends BaseTwoViewsSparseReconstructor&lt;C, R, L&gt;,
+        L extends BaseTwoViewsSparseReconstructorListener&lt;R&gt;&gt; {
+
+    /**
+     * Number of views.
+     */
+    public static final int NUMBER_OF_VIEWS = 2;
+
+    /**
+     * Estimated fundamental matrix.
+     */
+    protected EstimatedFundamentalMatrix estimatedFundamentalMatrix;
+
+    /**
+     * Estimated first camera.
+     */
+    protected EstimatedCamera estimatedCamera1;
+
+    /**
+     * Estimated second camera.
+     */
+    protected EstimatedCamera estimatedCamera2;
+
+    /**
+     * Reconstructed 3D points.
+     */
+    protected List&lt;ReconstructedPoint3D&gt; reconstructedPoints;
+
+    /**
+     * Configuration for this re-constructor.
+     */
+    protected C configuration;
+
+    /**
+     * Listener in charge of handling events such as when reconstruction starts,
+     * ends, when certain data is needed or when estimation of data has been
+     * computed.
+     */
+    protected L listener;
+
+    /**
+     * Indicates whether reconstruction has failed or not.
+     */
+    protected volatile boolean failed;
+
+    /**
+     * Indicates whether reconstruction is running or not.
+     */
+    protected volatile boolean running;
+
+    /**
+     * Indicates whether reconstruction has been cancelled or not.
+     */
+    private volatile boolean cancelled;
+
+    /**
+     * Counter of number of processed views.
+     */
+    private int viewCount;
+
+    /**
+     * Indicates whether reconstruction has finished or not.
+     */
+<span class="fc" id="L124">    private boolean finished = false;</span>
+
+    /**
+     * Samples on first view.
+     */
+<span class="fc" id="L129">    private List&lt;Sample2D&gt; firstViewSamples = null;</span>
+
+    /**
+     * Samples on last processed view (i.e. current view).
+     */
+    private List&lt;Sample2D&gt; currentViewSamples;
+
+    /**
+     * Matches between first and current view.
+     */
+<span class="fc" id="L139">    private final List&lt;MatchedSamples&gt; matches = new ArrayList&lt;&gt;();</span>
+
+    /**
+     * ID of first view.
+     */
+<span class="fc" id="L144">    private int firstViewId = 0;</span>
+
+    /**
+     * Constructor.
+     *
+     * @param configuration configuration for this re-constructor.
+     * @param listener      listener in charge of handling events.
+     * @throws NullPointerException if listener or configuration is not
+     *                              provided.
+     */
+<span class="fc" id="L154">    protected BaseTwoViewsSparseReconstructor(final C configuration, final L listener) {</span>
+<span class="pc bpc" id="L155" title="2 of 4 branches missed.">        if (configuration == null || listener == null) {</span>
+<span class="nc" id="L156">            throw new NullPointerException();</span>
+        }
+<span class="fc" id="L158">        this.configuration = configuration;</span>
+<span class="fc" id="L159">        this.listener = listener;</span>
+<span class="fc" id="L160">    }</span>
+
+    /**
+     * Gets configuration for this re-constructor.
+     *
+     * @return configuration for this re-constructor.
+     */
+    public C getConfiguration() {
+<span class="fc" id="L168">        return configuration;</span>
+    }
+
+    /**
+     * Gets listener in charge of handling events such as when reconstruction
+     * starts, ends, when certain data is needed or when estimation of data has
+     * been computed.
+     *
+     * @return listener in charge of handling events.
+     */
+    public BaseTwoViewsSparseReconstructorListener&lt;R&gt; getListener() {
+<span class="fc" id="L179">        return listener;</span>
+    }
+
+    /**
+     * Indicates whether reconstruction is running or not.
+     *
+     * @return true if reconstruction is running, false if reconstruction has
+     * stopped for any reason.
+     */
+    public boolean isRunning() {
+<span class="fc" id="L189">        return running;</span>
+    }
+
+    /**
+     * Indicates whether reconstruction has been cancelled or not.
+     *
+     * @return true if reconstruction has been cancelled, false otherwise.
+     */
+    public boolean isCancelled() {
+<span class="fc" id="L198">        return cancelled;</span>
+    }
+
+    /**
+     * Indicates whether reconstruction has failed or not.
+     *
+     * @return true if reconstruction has failed, false otherwise.
+     */
+    public boolean hasFailed() {
+<span class="fc" id="L207">        return failed;</span>
+    }
+
+    /**
+     * Indicates whether the reconstruction has finished.
+     *
+     * @return true if reconstruction has finished, false otherwise.
+     */
+    public boolean isFinished() {
+<span class="fc" id="L216">        return finished;</span>
+    }
+
+    /**
+     * Gets counter of number of processed views.
+     *
+     * @return counter of number of processed views.
+     */
+    public int getViewCount() {
+<span class="fc" id="L225">        return viewCount;</span>
+    }
+
+    /**
+     * Gets estimated fundamental matrix.
+     *
+     * @return estimated fundamental matrix.
+     */
+    public EstimatedFundamentalMatrix getEstimatedFundamentalMatrix() {
+<span class="fc" id="L234">        return estimatedFundamentalMatrix;</span>
+    }
+
+    /**
+     * Gets estimated first camera.
+     *
+     * @return estimated first camera.
+     */
+    public EstimatedCamera getEstimatedCamera1() {
+<span class="fc" id="L243">        return estimatedCamera1;</span>
+    }
+
+    /**
+     * Gets estimated second camera.
+     *
+     * @return estimated second camera.
+     */
+    public EstimatedCamera getEstimatedCamera2() {
+<span class="fc" id="L252">        return estimatedCamera2;</span>
+    }
+
+    /**
+     * Gets reconstructed 3D points.
+     *
+     * @return reconstructed 3D points.
+     */
+    public List&lt;ReconstructedPoint3D&gt; getReconstructedPoints() {
+<span class="fc" id="L261">        return reconstructedPoints;</span>
+    }
+
+    /**
+     * Process one view of all the available data during the reconstruction.
+     * This method can be called multiple times instead of {@link #start()} to build the reconstruction
+     * step by step, one view at a time.
+     *
+     * @return true if more views can be processed, false when reconstruction has finished.
+     */
+    public boolean processOneView() {
+<span class="fc bfc" id="L272" title="All 2 branches covered.">        if (viewCount == 0) {</span>
+<span class="pc bpc" id="L273" title="1 of 2 branches missed.">            if (running) {</span>
+                // already started
+<span class="nc" id="L275">                return true;</span>
+            }
+
+<span class="fc" id="L278">            reset();</span>
+<span class="fc" id="L279">            running = true;</span>
+
+            //noinspection unchecked
+<span class="fc" id="L282">            listener.onStart((R) this);</span>
+        }
+
+        //noinspection unchecked
+<span class="fc bfc" id="L286" title="All 2 branches covered.">        if (!listener.hasMoreViewsAvailable((R) this)) {</span>
+<span class="fc" id="L287">            return false;</span>
+        }
+
+<span class="fc" id="L290">        estimatedFundamentalMatrix = null;</span>
+<span class="fc" id="L291">        currentViewSamples = new ArrayList&lt;&gt;();</span>
+        //noinspection unchecked
+<span class="fc" id="L293">        listener.onRequestSamplesForCurrentView((R) this, viewCount, currentViewSamples);</span>
+
+<span class="fc bfc" id="L295" title="All 2 branches covered.">        if (firstViewSamples == null) {</span>
+            // for first view we simply keep samples (if enough are provided)
+<span class="pc bpc" id="L297" title="1 of 2 branches missed.">            if (hasEnoughSamples(currentViewSamples)) {</span>
+                //noinspection unchecked
+<span class="fc" id="L299">                listener.onSamplesAccepted((R) this, viewCount, currentViewSamples);</span>
+<span class="fc" id="L300">                firstViewSamples = currentViewSamples;</span>
+<span class="fc" id="L301">                firstViewId = viewCount;</span>
+            }
+
+        } else {
+
+            // for second view, check that we have enough samples
+<span class="pc bpc" id="L307" title="1 of 2 branches missed.">            if (hasEnoughSamples(currentViewSamples)) {</span>
+
+                // find matches
+<span class="fc" id="L310">                matches.clear();</span>
+                //noinspection unchecked
+<span class="fc" id="L312">                listener.onRequestMatches((R) this, firstViewSamples, currentViewSamples, firstViewId, viewCount,</span>
+                        matches);
+
+<span class="pc bpc" id="L315" title="1 of 2 branches missed.">                if (hasEnoughMatches(matches)) {</span>
+                    // if enough matches are retrieved, attempt to compute
+                    // fundamental matrix
+<span class="pc bpc" id="L318" title="1 of 2 branches missed.">                    if ((configuration.isGeneralSceneAllowed()</span>
+<span class="fc bfc" id="L319" title="All 2 branches covered.">                            &amp;&amp; estimateFundamentalMatrix(matches, firstViewId, viewCount))</span>
+<span class="pc bpc" id="L320" title="1 of 2 branches missed.">                            || (configuration.isPlanarSceneAllowed()</span>
+<span class="fc bfc" id="L321" title="All 2 branches covered.">                            &amp;&amp; estimatePlanarFundamentalMatrix(matches, firstViewId, viewCount))) {</span>
+                        // fundamental matrix could be estimated
+                        //noinspection unchecked
+<span class="fc" id="L324">                        listener.onSamplesAccepted((R) this, viewCount, currentViewSamples);</span>
+<span class="fc" id="L325">                        var secondViewId = viewCount;</span>
+
+                        //noinspection unchecked
+<span class="fc" id="L328">                        listener.onFundamentalMatrixEstimated((R) this, estimatedFundamentalMatrix);</span>
+
+<span class="fc bfc" id="L330" title="All 2 branches covered.">                        if (estimateInitialCamerasAndPoints()) {</span>
+                            // cameras and points have been estimated
+                            //noinspection unchecked
+<span class="fc" id="L333">                            listener.onCamerasEstimated((R) this, firstViewId, secondViewId, estimatedCamera1,</span>
+                                    estimatedCamera2);
+                            //noinspection unchecked
+<span class="fc" id="L336">                            listener.onReconstructedPointsEstimated((R) this, matches, reconstructedPoints);</span>
+<span class="pc bpc" id="L337" title="1 of 2 branches missed.">                            if (postProcessOne()) {</span>
+                                //noinspection unchecked
+<span class="fc" id="L339">                                listener.onFinish((R) this);</span>
+<span class="fc" id="L340">                                running = false;</span>
+<span class="fc" id="L341">                                finished = true;</span>
+                            }
+                        } else {
+                            // initial cameras failed
+<span class="fc" id="L345">                            failed = true;</span>
+                            //noinspection unchecked
+<span class="fc" id="L347">                            listener.onFail((R) this);</span>
+                        }
+<span class="fc" id="L349">                    } else {</span>
+                        // estimation of fundamental matrix failed
+                        //noinspection unchecked
+<span class="fc" id="L352">                        listener.onSamplesRejected((R) this, viewCount, currentViewSamples);</span>
+                    }
+                }
+            }
+        }
+
+<span class="fc" id="L358">        viewCount++;</span>
+
+<span class="pc bpc" id="L360" title="1 of 2 branches missed.">        if (cancelled) {</span>
+            //noinspection unchecked
+<span class="nc" id="L362">            listener.onCancel((R) this);</span>
+        }
+
+<span class="fc bfc" id="L365" title="All 2 branches covered.">        return !finished;</span>
+    }
+
+    /**
+     * Starts reconstruction of all available data to reconstruct the whole scene.
+     * If reconstruction has already started and is running, calling this method
+     * has no effect.
+     */
+    public void start() {
+<span class="fc bfc" id="L374" title="All 2 branches covered.">        while (processOneView()) {</span>
+<span class="pc bpc" id="L375" title="1 of 2 branches missed.">            if (cancelled) {</span>
+<span class="nc" id="L376">                break;</span>
+            }
+        }
+<span class="fc" id="L379">    }</span>
+
+    /**
+     * Cancels reconstruction.
+     * If reconstruction has already been cancelled, calling this method has no
+     * effect.
+     */
+    public void cancel() {
+<span class="pc bpc" id="L387" title="1 of 2 branches missed.">        if (cancelled) {</span>
+            // already cancelled
+<span class="nc" id="L389">            return;</span>
+        }
+
+<span class="fc" id="L392">        cancelled = true;</span>
+<span class="fc" id="L393">    }</span>
+
+    /**
+     * Resets this instance so that a reconstruction can be started from the beginning without cancelling
+     * current one.
+     */
+    public void reset() {
+<span class="fc" id="L400">        firstViewSamples = currentViewSamples = null;</span>
+
+<span class="fc" id="L402">        cancelled = failed = false;</span>
+<span class="fc" id="L403">        viewCount = 0;</span>
+<span class="fc" id="L404">        running = false;</span>
+
+<span class="fc" id="L406">        estimatedFundamentalMatrix = null;</span>
+<span class="fc" id="L407">        estimatedCamera1 = estimatedCamera2 = null;</span>
+<span class="fc" id="L408">        reconstructedPoints = null;</span>
+
+<span class="fc" id="L410">        finished = false;</span>
+<span class="fc" id="L411">    }</span>
+
+    /**
+     * Called when processing one frame is successfully finished. This can be done to estimate scale on
+     * those implementations where scale can be measured or is already known.
+     *
+     * @return true if post-processing succeeded, false otherwise.
+     */
+    protected abstract boolean postProcessOne();
+
+    /**
+     * Indicates whether there are enough samples to estimate a fundamental
+     * matrix.
+     *
+     * @param samples samples to check.
+     * @return true if there are enough samples, false otherwise.
+     */
+    private boolean hasEnoughSamples(final List&lt;Sample2D&gt; samples) {
+<span class="pc bpc" id="L429" title="1 of 2 branches missed.">        return hasEnoughSamplesOrMatches(samples != null ? samples.size() : 0);</span>
+    }
+
+    /**
+     * Indicates whether there are enough matches to estimate a fundamental
+     * matrix.
+     *
+     * @param matches matches to check.
+     * @return true if there are enough matches, false otherwise.
+     */
+    private boolean hasEnoughMatches(final List&lt;MatchedSamples&gt; matches) {
+<span class="pc bpc" id="L440" title="1 of 2 branches missed.">        return hasEnoughSamplesOrMatches(matches != null ? matches.size() : 0);</span>
+    }
+
+    /**
+     * Indicates whether there are enough matches or samples to estimate a
+     * fundamental matrix.
+     *
+     * @param count number of matches or samples.
+     * @return true if there are enough matches or samples, false otherwise.
+     */
+    private boolean hasEnoughSamplesOrMatches(final int count) {
+<span class="pc bpc" id="L451" title="1 of 2 branches missed.">        if (configuration.isGeneralSceneAllowed()) {</span>
+<span class="pc bpc" id="L452" title="1 of 2 branches missed.">            if (configuration.getNonRobustFundamentalMatrixEstimatorMethod()</span>
+                    == FundamentalMatrixEstimatorMethod.EIGHT_POINTS_ALGORITHM) {
+<span class="nc bnc" id="L454" title="All 2 branches missed.">                return count &gt;= EightPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS;</span>
+<span class="pc bpc" id="L455" title="1 of 2 branches missed.">            } else if (configuration.getNonRobustFundamentalMatrixEstimatorMethod()</span>
+                    == FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM) {
+<span class="pc bpc" id="L457" title="1 of 2 branches missed.">                return count &gt;= SevenPointsFundamentalMatrixEstimator.MIN_REQUIRED_POINTS;</span>
+            }
+<span class="nc bnc" id="L459" title="All 2 branches missed.">        } else if (configuration.isPlanarSceneAllowed()) {</span>
+<span class="nc bnc" id="L460" title="All 2 branches missed.">            return count &gt;= ProjectiveTransformation2DRobustEstimator.MINIMUM_SIZE;</span>
+        }
+<span class="nc" id="L462">        return false;</span>
+    }
+
+    /**
+     * Estimates fundamental matrix for provided matches, when 3D points lay in
+     * a general non-degenerate 3D configuration.
+     *
+     * @param matches pairs of matches to find fundamental matrix.
+     * @param viewId1 id of first view.
+     * @param viewId2 id of second view.
+     * @return true if estimation succeeded, false otherwise.
+     */
+    private boolean estimateFundamentalMatrix(final List&lt;MatchedSamples&gt; matches, final int viewId1,
+                                              final int viewId2) {
+<span class="pc bpc" id="L476" title="1 of 2 branches missed.">        if (matches == null) {</span>
+<span class="nc" id="L477">            return false;</span>
+        }
+
+<span class="fc" id="L480">        final var count = matches.size();</span>
+<span class="fc" id="L481">        final var leftSamples = new ArrayList&lt;Sample2D&gt;(count);</span>
+<span class="fc" id="L482">        final var rightSamples = new ArrayList&lt;Sample2D&gt;(count);</span>
+<span class="fc" id="L483">        final var leftPoints = new ArrayList&lt;Point2D&gt;(count);</span>
+<span class="fc" id="L484">        final var rightPoints = new ArrayList&lt;Point2D&gt;(count);</span>
+<span class="fc" id="L485">        final var qualityScores = new double[count];</span>
+        final double principalPointX;
+        final double principalPointY;
+<span class="fc bfc" id="L488" title="All 2 branches covered.">        if (configuration.getInitialCamerasEstimatorMethod() == InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC</span>
+<span class="fc bfc" id="L489" title="All 2 branches covered.">                || configuration.getInitialCamerasEstimatorMethod()</span>
+                == InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC_AND_ESSENTIAL_MATRIX) {
+<span class="fc" id="L491">            principalPointX = configuration.getPrincipalPointX();</span>
+<span class="fc" id="L492">            principalPointY = configuration.getPrincipalPointY();</span>
+        } else {
+<span class="fc" id="L494">            principalPointX = principalPointY = 0.0;</span>
+        }
+
+<span class="fc" id="L497">        var i = 0;</span>
+<span class="fc bfc" id="L498" title="All 2 branches covered.">        for (final var match : matches) {</span>
+<span class="fc" id="L499">            final var samples = match.getSamples();</span>
+<span class="pc bpc" id="L500" title="1 of 2 branches missed.">            if (samples.length != NUMBER_OF_VIEWS) {</span>
+<span class="nc" id="L501">                return false;</span>
+            }
+
+<span class="fc" id="L504">            leftSamples.add(samples[0]);</span>
+<span class="fc" id="L505">            rightSamples.add(samples[1]);</span>
+
+<span class="fc" id="L507">            final var leftPoint = Point2D.create();</span>
+<span class="fc" id="L508">            leftPoint.setInhomogeneousCoordinates(</span>
+<span class="fc" id="L509">                    samples[0].getPoint().getInhomX() - principalPointX,</span>
+<span class="fc" id="L510">                    samples[0].getPoint().getInhomY() - principalPointY);</span>
+<span class="fc" id="L511">            leftPoints.add(leftPoint);</span>
+
+<span class="fc" id="L513">            final var rightPoint = Point2D.create();</span>
+<span class="fc" id="L514">            rightPoint.setInhomogeneousCoordinates(</span>
+<span class="fc" id="L515">                    samples[1].getPoint().getInhomX() - principalPointX,</span>
+<span class="fc" id="L516">                    samples[1].getPoint().getInhomY() - principalPointY);</span>
+<span class="fc" id="L517">            rightPoints.add(rightPoint);</span>
+
+<span class="fc" id="L519">            qualityScores[i] = match.getQualityScore();</span>
+<span class="fc" id="L520">            i++;</span>
+<span class="fc" id="L521">        }</span>
+
+        try {
+<span class="fc" id="L524">            final var estimator = FundamentalMatrixRobustEstimator.create(leftPoints, rightPoints, qualityScores,</span>
+<span class="fc" id="L525">                    configuration.getRobustFundamentalMatrixEstimatorMethod());</span>
+<span class="fc" id="L526">            estimator.setNonRobustFundamentalMatrixEstimatorMethod(</span>
+<span class="fc" id="L527">                    configuration.getNonRobustFundamentalMatrixEstimatorMethod());</span>
+<span class="fc" id="L528">            estimator.setResultRefined(configuration.isFundamentalMatrixRefined());</span>
+<span class="fc" id="L529">            estimator.setCovarianceKept(configuration.isFundamentalMatrixCovarianceKept());</span>
+<span class="fc" id="L530">            estimator.setConfidence(configuration.getFundamentalMatrixConfidence());</span>
+<span class="fc" id="L531">            estimator.setMaxIterations(configuration.getFundamentalMatrixMaxIterations());</span>
+
+<span class="pc bpc" id="L533" title="5 of 6 branches missed.">            switch (configuration.getRobustFundamentalMatrixEstimatorMethod()) {</span>
+                case LMEDS:
+<span class="nc" id="L535">                    ((LMedSFundamentalMatrixRobustEstimator) estimator)</span>
+<span class="nc" id="L536">                            .setStopThreshold(configuration.getFundamentalMatrixThreshold());</span>
+<span class="nc" id="L537">                    break;</span>
+                case MSAC:
+<span class="nc" id="L539">                    ((MSACFundamentalMatrixRobustEstimator) estimator)</span>
+<span class="nc" id="L540">                            .setThreshold(configuration.getFundamentalMatrixThreshold());</span>
+<span class="nc" id="L541">                    break;</span>
+                case PROMEDS:
+<span class="nc" id="L543">                    ((PROMedSFundamentalMatrixRobustEstimator) estimator)</span>
+<span class="nc" id="L544">                            .setStopThreshold(configuration.getFundamentalMatrixThreshold());</span>
+<span class="nc" id="L545">                    break;</span>
+                case PROSAC:
+<span class="fc" id="L547">                    var prosacEstimator = (PROSACFundamentalMatrixRobustEstimator) estimator;</span>
+<span class="fc" id="L548">                    prosacEstimator.setThreshold(configuration.getFundamentalMatrixThreshold());</span>
+<span class="fc" id="L549">                    prosacEstimator.setComputeAndKeepInliersEnabled(</span>
+<span class="fc" id="L550">                            configuration.getFundamentalMatrixComputeAndKeepInliers());</span>
+<span class="fc" id="L551">                    prosacEstimator.setComputeAndKeepResidualsEnabled(</span>
+<span class="fc" id="L552">                            configuration.getFundamentalMatrixComputeAndKeepResiduals());</span>
+<span class="fc" id="L553">                    break;</span>
+                case RANSAC:
+<span class="nc" id="L555">                    var ransacEstimator = (RANSACFundamentalMatrixRobustEstimator) estimator;</span>
+<span class="nc" id="L556">                    ransacEstimator.setThreshold(configuration.getFundamentalMatrixThreshold());</span>
+<span class="nc" id="L557">                    ransacEstimator.setComputeAndKeepInliersEnabled(</span>
+<span class="nc" id="L558">                            configuration.getFundamentalMatrixComputeAndKeepInliers());</span>
+<span class="nc" id="L559">                    ransacEstimator.setComputeAndKeepResidualsEnabled(</span>
+<span class="nc" id="L560">                            configuration.getFundamentalMatrixComputeAndKeepResiduals());</span>
+<span class="nc" id="L561">                    break;</span>
+                default:
+                    break;
+            }
+
+
+<span class="fc" id="L567">            final var fundamentalMatrix = estimator.estimate();</span>
+
+<span class="fc" id="L569">            estimatedFundamentalMatrix = new EstimatedFundamentalMatrix();</span>
+<span class="fc" id="L570">            estimatedFundamentalMatrix.setFundamentalMatrix(fundamentalMatrix);</span>
+<span class="fc" id="L571">            estimatedFundamentalMatrix.setViewId1(viewId1);</span>
+<span class="fc" id="L572">            estimatedFundamentalMatrix.setViewId2(viewId2);</span>
+<span class="fc" id="L573">            estimatedFundamentalMatrix.setCovariance(estimator.getCovariance());</span>
+
+            // determine quality score and inliers
+<span class="fc" id="L576">            final var inliersData = estimator.getInliersData();</span>
+<span class="pc bpc" id="L577" title="1 of 2 branches missed.">            if (inliersData != null) {</span>
+<span class="fc" id="L578">                final var numInliers = inliersData.getNumInliers();</span>
+<span class="fc" id="L579">                final var inliers = inliersData.getInliers();</span>
+<span class="fc" id="L580">                final var length = inliers.length();</span>
+<span class="fc" id="L581">                var fundamentalMatrixQualityScore = 0.0;</span>
+<span class="fc bfc" id="L582" title="All 2 branches covered.">                for (i = 0; i &lt; length; i++) {</span>
+<span class="pc bpc" id="L583" title="1 of 2 branches missed.">                    if (inliers.get(i)) {</span>
+                        // inlier
+<span class="fc" id="L585">                        fundamentalMatrixQualityScore += qualityScores[i] / numInliers;</span>
+                    }
+                }
+<span class="fc" id="L588">                estimatedFundamentalMatrix.setQualityScore(fundamentalMatrixQualityScore);</span>
+<span class="fc" id="L589">                estimatedFundamentalMatrix.setInliers(inliers);</span>
+            }
+
+            // store left/right samples
+<span class="fc" id="L593">            estimatedFundamentalMatrix.setLeftSamples(leftSamples);</span>
+<span class="fc" id="L594">            estimatedFundamentalMatrix.setRightSamples(rightSamples);</span>
+
+<span class="fc" id="L596">            return true;</span>
+<span class="fc" id="L597">        } catch (final Exception e) {</span>
+<span class="fc" id="L598">            return false;</span>
+        }
+    }
+
+    /**
+     * Estimates fundamental matrix for provided matches, when 3D points lay in
+     * a planar 3D scene.
+     *
+     * @param matches pairs of matches to find fundamental matrix.
+     * @param viewId1 id of first view.
+     * @param viewId2 id of second view.
+     * @return true if estimation succeeded, false otherwise.
+     */
+    private boolean estimatePlanarFundamentalMatrix(
+            final List&lt;MatchedSamples&gt; matches, final int viewId1, final int viewId2) {
+<span class="pc bpc" id="L613" title="1 of 2 branches missed.">        if (matches == null) {</span>
+<span class="nc" id="L614">            return false;</span>
+        }
+
+<span class="fc" id="L617">        final var count = matches.size();</span>
+<span class="fc" id="L618">        final var leftSamples = new ArrayList&lt;Sample2D&gt;();</span>
+<span class="fc" id="L619">        final var rightSamples = new ArrayList&lt;Sample2D&gt;();</span>
+<span class="fc" id="L620">        final var leftPoints = new ArrayList&lt;Point2D&gt;();</span>
+<span class="fc" id="L621">        final var rightPoints = new ArrayList&lt;Point2D&gt;();</span>
+<span class="fc" id="L622">        final var qualityScores = new double[count];</span>
+        final double principalPointX;
+        final double principalPointY;
+<span class="fc bfc" id="L625" title="All 2 branches covered.">        if (configuration.getInitialCamerasEstimatorMethod() == InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC</span>
+<span class="fc bfc" id="L626" title="All 2 branches covered.">                || configuration.getInitialCamerasEstimatorMethod()</span>
+                == InitialCamerasEstimatorMethod.DUAL_ABSOLUTE_QUADRIC_AND_ESSENTIAL_MATRIX) {
+<span class="fc" id="L628">            principalPointX = configuration.getPrincipalPointX();</span>
+<span class="fc" id="L629">            principalPointY = configuration.getPrincipalPointY();</span>
+        } else {
+<span class="fc" id="L631">            principalPointX = principalPointY = 0.0;</span>
+        }
+
+<span class="fc" id="L634">        var i = 0;</span>
+<span class="fc bfc" id="L635" title="All 2 branches covered.">        for (final var match : matches) {</span>
+<span class="fc" id="L636">            final var samples = match.getSamples();</span>
+<span class="pc bpc" id="L637" title="1 of 2 branches missed.">            if (samples.length != NUMBER_OF_VIEWS) {</span>
+<span class="nc" id="L638">                return false;</span>
+            }
+
+<span class="fc" id="L641">            leftSamples.add(samples[0]);</span>
+<span class="fc" id="L642">            rightSamples.add(samples[1]);</span>
+
+<span class="fc" id="L644">            final var leftPoint = Point2D.create();</span>
+<span class="fc" id="L645">            leftPoint.setInhomogeneousCoordinates(</span>
+<span class="fc" id="L646">                    samples[0].getPoint().getInhomX() - principalPointX,</span>
+<span class="fc" id="L647">                    samples[0].getPoint().getInhomY() - principalPointY);</span>
+<span class="fc" id="L648">            leftPoints.add(leftPoint);</span>
+
+<span class="fc" id="L650">            final var rightPoint = Point2D.create();</span>
+<span class="fc" id="L651">            rightPoint.setInhomogeneousCoordinates(</span>
+<span class="fc" id="L652">                    samples[1].getPoint().getInhomX() - principalPointX,</span>
+<span class="fc" id="L653">                    samples[1].getPoint().getInhomY() - principalPointY);</span>
+<span class="fc" id="L654">            rightPoints.add(rightPoint);</span>
+
+<span class="fc" id="L656">            qualityScores[i] = match.getQualityScore();</span>
+<span class="fc" id="L657">            i++;</span>
+<span class="fc" id="L658">        }</span>
+
+        try {
+<span class="fc" id="L661">            final var homographyEstimator = PointCorrespondenceProjectiveTransformation2DRobustEstimator.create(</span>
+<span class="fc" id="L662">                    configuration.getRobustPlanarHomographyEstimatorMethod());</span>
+<span class="fc" id="L663">            homographyEstimator.setResultRefined(configuration.isPlanarHomographyRefined());</span>
+<span class="fc" id="L664">            homographyEstimator.setCovarianceKept(configuration.isPlanarHomographyCovarianceKept());</span>
+<span class="fc" id="L665">            homographyEstimator.setConfidence(configuration.getPlanarHomographyConfidence());</span>
+<span class="fc" id="L666">            homographyEstimator.setMaxIterations(configuration.getPlanarHomographyMaxIterations());</span>
+
+<span class="pc bpc" id="L668" title="4 of 5 branches missed.">            switch (configuration.getRobustPlanarHomographyEstimatorMethod()) {</span>
+                case LMEDS:
+<span class="nc" id="L670">                    ((LMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator) homographyEstimator)</span>
+<span class="nc" id="L671">                            .setStopThreshold(configuration.getPlanarHomographyThreshold());</span>
+<span class="nc" id="L672">                    break;</span>
+                case MSAC:
+<span class="nc" id="L674">                    ((MSACPointCorrespondenceProjectiveTransformation2DRobustEstimator) homographyEstimator)</span>
+<span class="nc" id="L675">                            .setThreshold(configuration.getPlanarHomographyThreshold());</span>
+<span class="nc" id="L676">                    break;</span>
+                case PROMEDS:
+<span class="fc" id="L678">                    ((PROMedSPointCorrespondenceProjectiveTransformation2DRobustEstimator) homographyEstimator)</span>
+<span class="fc" id="L679">                            .setStopThreshold(configuration.getPlanarHomographyThreshold());</span>
+<span class="fc" id="L680">                    break;</span>
+                case PROSAC:
+<span class="nc" id="L682">                    final var prosacHomographyEstimator =</span>
+                            (PROSACPointCorrespondenceProjectiveTransformation2DRobustEstimator) homographyEstimator;
+
+<span class="nc" id="L685">                    prosacHomographyEstimator.setThreshold(configuration.getPlanarHomographyThreshold());</span>
+<span class="nc" id="L686">                    prosacHomographyEstimator.setComputeAndKeepInliersEnabled(</span>
+<span class="nc" id="L687">                            configuration.getPlanarHomographyComputeAndKeepInliers());</span>
+<span class="nc" id="L688">                    prosacHomographyEstimator.setComputeAndKeepResidualsEnabled(</span>
+<span class="nc" id="L689">                            configuration.getPlanarHomographyComputeAndKeepResiduals());</span>
+<span class="nc" id="L690">                    break;</span>
+                case RANSAC:
+                default:
+<span class="nc" id="L693">                    final var ransacHomographyEstimator =</span>
+                            (RANSACPointCorrespondenceProjectiveTransformation2DRobustEstimator) homographyEstimator;
+
+<span class="nc" id="L696">                    ransacHomographyEstimator.setThreshold(configuration.getPlanarHomographyThreshold());</span>
+<span class="nc" id="L697">                    ransacHomographyEstimator.setComputeAndKeepInliersEnabled(</span>
+<span class="nc" id="L698">                            configuration.getPlanarHomographyComputeAndKeepInliers());</span>
+<span class="nc" id="L699">                    ransacHomographyEstimator.setComputeAndKeepResidualsEnabled(</span>
+<span class="nc" id="L700">                            configuration.getPlanarHomographyComputeAndKeepResiduals());</span>
+                    break;
+            }
+
+<span class="fc" id="L704">            final var fundamentalMatrixEstimator = new PlanarBestFundamentalMatrixEstimatorAndReconstructor();</span>
+<span class="fc" id="L705">            fundamentalMatrixEstimator.setHomographyEstimator(homographyEstimator);</span>
+<span class="fc" id="L706">            fundamentalMatrixEstimator.setLeftAndRightPoints(leftPoints, rightPoints);</span>
+<span class="fc" id="L707">            fundamentalMatrixEstimator.setQualityScores(qualityScores);</span>
+
+<span class="fc" id="L709">            var intrinsic1 = configuration.getInitialIntrinsic1();</span>
+<span class="fc" id="L710">            var intrinsic2 = configuration.getInitialIntrinsic1();</span>
+<span class="pc bpc" id="L711" title="1 of 4 branches missed.">            if (intrinsic1 == null &amp;&amp; intrinsic2 == null) {</span>
+                // estimate homography
+<span class="fc" id="L713">                final var homography = homographyEstimator.estimate();</span>
+
+                // estimate intrinsic parameters using the Image of Absolute
+                // Conic (IAC)
+<span class="fc" id="L717">                final var homographies = new ArrayList&lt;Transformation2D&gt;();</span>
+<span class="fc" id="L718">                homographies.add(homography);</span>
+
+<span class="fc" id="L720">                final var iacEstimator = new LMSEImageOfAbsoluteConicEstimator(homographies);</span>
+<span class="fc" id="L721">                final var iac = iacEstimator.estimate();</span>
+
+<span class="fc" id="L723">                intrinsic1 = intrinsic2 = iac.getIntrinsicParameters();</span>
+
+<span class="pc bpc" id="L725" title="1 of 2 branches missed.">            } else if (intrinsic1 == null) { // &amp;&amp; intrinsic2 != null</span>
+<span class="nc" id="L726">                intrinsic1 = intrinsic2;</span>
+<span class="pc bpc" id="L727" title="1 of 2 branches missed.">            } else if (intrinsic2 == null) { // &amp;&amp; intrinsic1 != null</span>
+<span class="nc" id="L728">                intrinsic2 = intrinsic1;</span>
+            }
+<span class="fc" id="L730">            fundamentalMatrixEstimator.setLeftIntrinsics(intrinsic1);</span>
+<span class="fc" id="L731">            fundamentalMatrixEstimator.setRightIntrinsics(intrinsic2);</span>
+
+<span class="fc" id="L733">            fundamentalMatrixEstimator.estimateAndReconstruct();</span>
+
+<span class="fc" id="L735">            final var fundamentalMatrix = fundamentalMatrixEstimator.getFundamentalMatrix();</span>
+
+<span class="fc" id="L737">            estimatedFundamentalMatrix = new EstimatedFundamentalMatrix();</span>
+<span class="fc" id="L738">            estimatedFundamentalMatrix.setFundamentalMatrix(fundamentalMatrix);</span>
+<span class="fc" id="L739">            estimatedFundamentalMatrix.setViewId1(viewId1);</span>
+<span class="fc" id="L740">            estimatedFundamentalMatrix.setViewId2(viewId2);</span>
+
+            // determine quality score and inliers
+<span class="fc" id="L743">            final var inliersData = homographyEstimator.getInliersData();</span>
+<span class="pc bpc" id="L744" title="1 of 2 branches missed.">            if (inliersData != null) {</span>
+<span class="fc" id="L745">                final var numInliers = inliersData.getNumInliers();</span>
+<span class="fc" id="L746">                final var inliers = inliersData.getInliers();</span>
+<span class="fc" id="L747">                final var length = inliers.length();</span>
+<span class="fc" id="L748">                var fundamentalMatrixQualityScore = 0.0;</span>
+<span class="fc bfc" id="L749" title="All 2 branches covered.">                for (i = 0; i &lt; length; i++) {</span>
+<span class="fc bfc" id="L750" title="All 2 branches covered.">                    if (inliers.get(i)) {</span>
+                        // inlier
+<span class="fc" id="L752">                        fundamentalMatrixQualityScore += qualityScores[i] / numInliers;</span>
+                    }
+                }
+<span class="fc" id="L755">                estimatedFundamentalMatrix.setQualityScore(fundamentalMatrixQualityScore);</span>
+<span class="fc" id="L756">                estimatedFundamentalMatrix.setInliers(inliers);</span>
+            }
+
+            // store left/right samples
+<span class="fc" id="L760">            estimatedFundamentalMatrix.setLeftSamples(leftSamples);</span>
+<span class="fc" id="L761">            estimatedFundamentalMatrix.setRightSamples(rightSamples);</span>
+
+<span class="fc" id="L763">            return true;</span>
+<span class="fc" id="L764">        } catch (final Exception e) {</span>
+<span class="fc" id="L765">            return false;</span>
+        }
+    }
+
+    /**
+     * Estimates initial cameras and reconstructed points.
+     *
+     * @return true if cameras and points could be estimated, false if something
+     * failed.
+     */
+    private boolean estimateInitialCamerasAndPoints() {
+<span class="fc bfc" id="L776" title="All 4 branches covered.">        return switch (configuration.getInitialCamerasEstimatorMethod()) {</span>
+<span class="fc" id="L777">            case ESSENTIAL_MATRIX -&gt; estimateInitialCamerasAndPointsEssential();</span>
+<span class="fc" id="L778">            case DUAL_IMAGE_OF_ABSOLUTE_CONIC -&gt; estimateInitialCamerasAndPointsDIAC();</span>
+<span class="fc" id="L779">            case DUAL_ABSOLUTE_QUADRIC -&gt; estimateInitialCamerasAndPointsDAQ();</span>
+<span class="fc" id="L780">            default -&gt; estimateInitialCamerasAndPointsDAQAndEssential();</span>
+        };
+    }
+
+    /**
+     * Estimates initial cameras and reconstructed points using the Dual
+     * Absolute Quadric to estimate intrinsic parameters and then use those
+     * intrinsic parameters with the essential matrix.
+     *
+     * @return true if cameras and points could be estimated, false if something
+     * failed.
+     */
+    private boolean estimateInitialCamerasAndPointsDAQAndEssential() {
+        try {
+<span class="fc" id="L794">            final var fundamentalMatrix = estimatedFundamentalMatrix.getFundamentalMatrix();</span>
+
+<span class="fc" id="L796">            final var estimator = new DualAbsoluteQuadricInitialCamerasEstimator(fundamentalMatrix);</span>
+<span class="fc" id="L797">            estimator.setAspectRatio(configuration.getInitialCamerasAspectRatio());</span>
+<span class="fc" id="L798">            estimator.estimate();</span>
+
+<span class="fc" id="L800">            final var camera1 = estimator.getEstimatedLeftCamera();</span>
+<span class="fc" id="L801">            final var camera2 = estimator.getEstimatedRightCamera();</span>
+
+<span class="fc" id="L803">            camera1.decompose();</span>
+<span class="fc" id="L804">            camera2.decompose();</span>
+
+<span class="fc" id="L806">            final var intrinsicZeroPrincipalPoint1 = camera1.getIntrinsicParameters();</span>
+<span class="fc" id="L807">            final var intrinsicZeroPrincipalPoint2 = camera2.getIntrinsicParameters();</span>
+
+<span class="fc" id="L809">            final var principalPointX = configuration.getPrincipalPointX();</span>
+<span class="fc" id="L810">            final var principalPointY = configuration.getPrincipalPointY();</span>
+
+<span class="fc" id="L812">            final var intrinsic1 = new PinholeCameraIntrinsicParameters(intrinsicZeroPrincipalPoint1);</span>
+<span class="fc" id="L813">            intrinsic1.setHorizontalPrincipalPoint(intrinsic1.getHorizontalPrincipalPoint() + principalPointX);</span>
+<span class="fc" id="L814">            intrinsic1.setVerticalPrincipalPoint(intrinsic1.getVerticalPrincipalPoint() + principalPointY);</span>
+
+<span class="fc" id="L816">            final var intrinsic2 = new PinholeCameraIntrinsicParameters(intrinsicZeroPrincipalPoint2);</span>
+<span class="fc" id="L817">            intrinsic2.setHorizontalPrincipalPoint(intrinsic2.getHorizontalPrincipalPoint() + principalPointX);</span>
+<span class="fc" id="L818">            intrinsic2.setVerticalPrincipalPoint(intrinsic2.getVerticalPrincipalPoint() + principalPointY);</span>
+
+            // fix fundamental matrix to account for principal point different
+            // from zero
+<span class="fc" id="L822">            fixFundamentalMatrix(fundamentalMatrix, intrinsicZeroPrincipalPoint1, intrinsicZeroPrincipalPoint2,</span>
+                    intrinsic1, intrinsic2);
+
+<span class="fc" id="L825">            return estimateInitialCamerasAndPointsEssential(intrinsic1, intrinsic2);</span>
+<span class="nc" id="L826">        } catch (final Exception e) {</span>
+<span class="nc" id="L827">            return false;</span>
+        }
+    }
+
+    /**
+     * Estimates initial cameras and reconstructed points using the Dual
+     * Absolute Quadric.
+     *
+     * @return true if cameras and points could be estimated, false if something
+     * failed.
+     */
+    private boolean estimateInitialCamerasAndPointsDAQ() {
+        try {
+<span class="fc" id="L840">            final var fundamentalMatrix = estimatedFundamentalMatrix.getFundamentalMatrix();</span>
+<span class="fc" id="L841">            fundamentalMatrix.normalize();</span>
+
+<span class="fc" id="L843">            final var estimator = new DualAbsoluteQuadricInitialCamerasEstimator(fundamentalMatrix);</span>
+<span class="fc" id="L844">            estimator.setAspectRatio(configuration.getInitialCamerasAspectRatio());</span>
+<span class="fc" id="L845">            estimator.estimate();</span>
+
+<span class="fc" id="L847">            final var camera1 = estimator.getEstimatedLeftCamera();</span>
+<span class="fc" id="L848">            final var camera2 = estimator.getEstimatedRightCamera();</span>
+
+<span class="fc" id="L850">            camera1.decompose();</span>
+<span class="fc" id="L851">            camera2.decompose();</span>
+
+<span class="fc" id="L853">            final var intrinsicZeroPrincipalPoint1 = camera1.getIntrinsicParameters();</span>
+<span class="fc" id="L854">            final var intrinsicZeroPrincipalPoint2 = camera2.getIntrinsicParameters();</span>
+
+<span class="fc" id="L856">            final var principalPointX = configuration.getPrincipalPointX();</span>
+<span class="fc" id="L857">            final var principalPointY = configuration.getPrincipalPointY();</span>
+
+<span class="fc" id="L859">            final var intrinsic1 = new PinholeCameraIntrinsicParameters(intrinsicZeroPrincipalPoint1);</span>
+<span class="fc" id="L860">            intrinsic1.setHorizontalPrincipalPoint(intrinsic1.getHorizontalPrincipalPoint() + principalPointX);</span>
+<span class="fc" id="L861">            intrinsic1.setVerticalPrincipalPoint(intrinsic1.getVerticalPrincipalPoint() + principalPointY);</span>
+<span class="fc" id="L862">            camera1.setIntrinsicParameters(intrinsic1);</span>
+
+<span class="fc" id="L864">            final var intrinsic2 = new PinholeCameraIntrinsicParameters(intrinsicZeroPrincipalPoint2);</span>
+<span class="fc" id="L865">            intrinsic2.setHorizontalPrincipalPoint(intrinsic2.getHorizontalPrincipalPoint() + principalPointX);</span>
+<span class="fc" id="L866">            intrinsic2.setVerticalPrincipalPoint(intrinsic2.getVerticalPrincipalPoint() + principalPointY);</span>
+<span class="fc" id="L867">            camera2.setIntrinsicParameters(intrinsic2);</span>
+
+<span class="fc" id="L869">            estimatedCamera1 = new EstimatedCamera();</span>
+<span class="fc" id="L870">            estimatedCamera1.setCamera(camera1);</span>
+
+<span class="fc" id="L872">            estimatedCamera2 = new EstimatedCamera();</span>
+<span class="fc" id="L873">            estimatedCamera2.setCamera(camera2);</span>
+
+            // fix fundamental matrix to account for principal point different
+            // from zero
+<span class="fc" id="L877">            fixFundamentalMatrix(fundamentalMatrix, intrinsicZeroPrincipalPoint1, intrinsicZeroPrincipalPoint2,</span>
+                    intrinsic1, intrinsic2);
+
+            // triangulate points
+<span class="fc" id="L881">            Corrector corrector = null;</span>
+<span class="pc bpc" id="L882" title="1 of 2 branches missed.">            if (configuration.getInitialCamerasCorrectorType() != null) {</span>
+<span class="fc" id="L883">                corrector = Corrector.create(fundamentalMatrix, configuration.getInitialCamerasCorrectorType());</span>
+            }
+
+            // use all points used for fundamental matrix estimation
+<span class="fc" id="L887">            final var samples1 = estimatedFundamentalMatrix.getLeftSamples();</span>
+<span class="fc" id="L888">            final var samples2 = estimatedFundamentalMatrix.getRightSamples();</span>
+
+<span class="fc" id="L890">            final var points1 = new ArrayList&lt;Point2D&gt;();</span>
+<span class="fc" id="L891">            final var points2 = new ArrayList&lt;Point2D&gt;();</span>
+<span class="fc" id="L892">            final var length = samples1.size();</span>
+<span class="fc bfc" id="L893" title="All 2 branches covered.">            for (var i = 0; i &lt; length; i++) {</span>
+<span class="fc" id="L894">                final var sample1 = samples1.get(i);</span>
+<span class="fc" id="L895">                final var sample2 = samples2.get(i);</span>
+
+<span class="fc" id="L897">                final var point1 = sample1.getPoint();</span>
+<span class="fc" id="L898">                final var point2 = sample2.getPoint();</span>
+
+<span class="fc" id="L900">                points1.add(point1);</span>
+<span class="fc" id="L901">                points2.add(point2);</span>
+            }
+
+            // correct points if needed
+            List&lt;Point2D&gt; correctedPoints1;
+            List&lt;Point2D&gt; correctedPoints2;
+<span class="pc bpc" id="L907" title="1 of 2 branches missed.">            if (corrector != null) {</span>
+<span class="fc" id="L908">                corrector.setLeftAndRightPoints(points1, points2);</span>
+<span class="fc" id="L909">                corrector.correct();</span>
+
+<span class="fc" id="L911">                correctedPoints1 = corrector.getLeftCorrectedPoints();</span>
+<span class="fc" id="L912">                correctedPoints2 = corrector.getRightCorrectedPoints();</span>
+            } else {
+<span class="nc" id="L914">                correctedPoints1 = points1;</span>
+<span class="nc" id="L915">                correctedPoints2 = points2;</span>
+            }
+
+            // triangulate points
+            final SinglePoint3DTriangulator triangulator;
+<span class="pc bpc" id="L920" title="1 of 2 branches missed.">            if (configuration.getDaqUseHomogeneousPointTriangulator()) {</span>
+<span class="fc" id="L921">                triangulator = SinglePoint3DTriangulator.create(Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR);</span>
+            } else {
+<span class="nc" id="L923">                triangulator = SinglePoint3DTriangulator.create(</span>
+                        Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR);
+            }
+
+<span class="fc" id="L927">            final var cameras = new ArrayList&lt;PinholeCamera&gt;();</span>
+<span class="fc" id="L928">            cameras.add(camera1);</span>
+<span class="fc" id="L929">            cameras.add(camera2);</span>
+
+<span class="fc" id="L931">            reconstructedPoints = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L932">            final var points = new ArrayList&lt;Point2D&gt;();</span>
+<span class="fc" id="L933">            final var numPoints = correctedPoints1.size();</span>
+            Point3D triangulatedPoint;
+            ReconstructedPoint3D reconstructedPoint;
+<span class="fc bfc" id="L936" title="All 2 branches covered.">            for (var i = 0; i &lt; numPoints; i++) {</span>
+<span class="fc" id="L937">                points.clear();</span>
+<span class="fc" id="L938">                points.add(correctedPoints1.get(i));</span>
+<span class="fc" id="L939">                points.add(correctedPoints2.get(i));</span>
+
+<span class="fc" id="L941">                triangulator.setPointsAndCameras(points, cameras);</span>
+<span class="fc" id="L942">                triangulatedPoint = triangulator.triangulate();</span>
+
+<span class="fc" id="L944">                reconstructedPoint = new ReconstructedPoint3D();</span>
+<span class="fc" id="L945">                reconstructedPoint.setPoint(triangulatedPoint);</span>
+
+                // only points reconstructed in front of both cameras are
+                // considered valid
+<span class="fc" id="L949">                final var front1 = camera1.isPointInFrontOfCamera(triangulatedPoint);</span>
+<span class="fc" id="L950">                final var front2 = camera2.isPointInFrontOfCamera(triangulatedPoint);</span>
+<span class="fc bfc" id="L951" title="All 4 branches covered.">                reconstructedPoint.setInlier(front1 &amp;&amp; front2);</span>
+
+<span class="fc" id="L953">                reconstructedPoints.add(reconstructedPoint);</span>
+            }
+
+<span class="fc" id="L956">            return true;</span>
+<span class="nc" id="L957">        } catch (final Exception e) {</span>
+<span class="nc" id="L958">            return false;</span>
+        }
+    }
+
+    /**
+     * Estimates initial cameras and reconstructed points using Dual Image of
+     * Absolute Conic.
+     *
+     * @return true if cameras and points could be estimated, false if something
+     * failed.
+     */
+    private boolean estimateInitialCamerasAndPointsDIAC() {
+<span class="fc" id="L970">        final var fundamentalMatrix = estimatedFundamentalMatrix.getFundamentalMatrix();</span>
+
+        // use inlier points used for fundamental matrix estimation
+<span class="fc" id="L973">        final var samples1 = estimatedFundamentalMatrix.getLeftSamples();</span>
+<span class="fc" id="L974">        final var samples2 = estimatedFundamentalMatrix.getRightSamples();</span>
+
+<span class="fc" id="L976">        final var points1 = new ArrayList&lt;Point2D&gt;();</span>
+<span class="fc" id="L977">        final var points2 = new ArrayList&lt;Point2D&gt;();</span>
+<span class="fc" id="L978">        final var length = samples1.size();</span>
+<span class="fc bfc" id="L979" title="All 2 branches covered.">        for (var i = 0; i &lt; length; i++) {</span>
+<span class="fc" id="L980">            final var sample1 = samples1.get(i);</span>
+<span class="fc" id="L981">            final var sample2 = samples2.get(i);</span>
+
+<span class="fc" id="L983">            final var point1 = sample1.getPoint();</span>
+<span class="fc" id="L984">            final var point2 = sample2.getPoint();</span>
+
+<span class="fc" id="L986">            points1.add(point1);</span>
+<span class="fc" id="L987">            points2.add(point2);</span>
+        }
+
+        try {
+<span class="fc" id="L991">            final var estimator = new DualImageOfAbsoluteConicInitialCamerasEstimator(fundamentalMatrix, points1,</span>
+                    points2);
+<span class="fc" id="L993">            estimator.setPrincipalPoint(configuration.getPrincipalPointX(), configuration.getPrincipalPointY());</span>
+<span class="fc" id="L994">            estimator.setAspectRatio(configuration.getInitialCamerasAspectRatio());</span>
+<span class="fc" id="L995">            estimator.setCorrectorType(configuration.getInitialCamerasCorrectorType());</span>
+<span class="fc" id="L996">            estimator.setPointsTriangulated(true);</span>
+<span class="fc" id="L997">            estimator.setValidTriangulatedPointsMarked(configuration.getInitialCamerasMarkValidTriangulatedPoints());</span>
+
+<span class="fc" id="L999">            estimator.estimate();</span>
+
+            // store cameras
+<span class="fc" id="L1002">            final var camera1 = estimator.getEstimatedLeftCamera();</span>
+<span class="fc" id="L1003">            final var camera2 = estimator.getEstimatedRightCamera();</span>
+
+<span class="fc" id="L1005">            estimatedCamera1 = new EstimatedCamera();</span>
+<span class="fc" id="L1006">            estimatedCamera1.setCamera(camera1);</span>
+
+<span class="fc" id="L1008">            estimatedCamera2 = new EstimatedCamera();</span>
+<span class="fc" id="L1009">            estimatedCamera2.setCamera(camera2);</span>
+
+            // store points
+<span class="fc" id="L1012">            final var triangulatedPoints = estimator.getTriangulatedPoints();</span>
+<span class="fc" id="L1013">            final var validTriangulatedPoints = estimator.getValidTriangulatedPoints();</span>
+
+<span class="fc" id="L1015">            reconstructedPoints = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L1016">            final var size = triangulatedPoints.size();</span>
+<span class="fc bfc" id="L1017" title="All 2 branches covered.">            for (var i = 0; i &lt; size; i++) {</span>
+<span class="fc" id="L1018">                final var reconstructedPoint = new ReconstructedPoint3D();</span>
+<span class="fc" id="L1019">                reconstructedPoint.setPoint(triangulatedPoints.get(i));</span>
+<span class="fc" id="L1020">                reconstructedPoint.setInlier(validTriangulatedPoints.get(i));</span>
+<span class="fc" id="L1021">                reconstructedPoints.add(reconstructedPoint);</span>
+            }
+
+<span class="fc" id="L1024">            return true;</span>
+<span class="fc" id="L1025">        } catch (final Exception e) {</span>
+<span class="fc" id="L1026">            return false;</span>
+        }
+    }
+
+    /**
+     * Estimates initial cameras and reconstructed points using the essential
+     * matrix and provided intrinsic parameters that must have been set during
+     * offline calibration.
+     *
+     * @return true if cameras and points could be estimated, false if something
+     * failed.
+     */
+    private boolean estimateInitialCamerasAndPointsEssential() {
+<span class="fc" id="L1039">        final var intrinsic1 = configuration.getInitialIntrinsic1();</span>
+<span class="fc" id="L1040">        final var intrinsic2 = configuration.getInitialIntrinsic2();</span>
+<span class="fc" id="L1041">        return estimateInitialCamerasAndPointsEssential(intrinsic1, intrinsic2);</span>
+    }
+
+    /**
+     * Estimates initial cameras and reconstructed points using the essential
+     * matrix and provided intrinsic parameters that must have been set during
+     * offline calibration.
+     *
+     * @param intrinsic1 intrinsic parameters of 1st camera.
+     * @param intrinsic2 intrinsic parameters of 2nd camera.
+     * @return true if cameras and points could be estimated, false if something
+     * failed.
+     */
+    private boolean estimateInitialCamerasAndPointsEssential(
+            final PinholeCameraIntrinsicParameters intrinsic1,
+            final PinholeCameraIntrinsicParameters intrinsic2) {
+<span class="fc" id="L1057">        final var fundamentalMatrix = estimatedFundamentalMatrix.getFundamentalMatrix();</span>
+
+        // use all points used for fundamental matrix estimation
+<span class="fc" id="L1060">        final var samples1 = estimatedFundamentalMatrix.getLeftSamples();</span>
+<span class="fc" id="L1061">        final var samples2 = estimatedFundamentalMatrix.getRightSamples();</span>
+
+<span class="fc" id="L1063">        final var points1 = new ArrayList&lt;Point2D&gt;();</span>
+<span class="fc" id="L1064">        final var points2 = new ArrayList&lt;Point2D&gt;();</span>
+<span class="fc" id="L1065">        final var length = samples1.size();</span>
+<span class="fc bfc" id="L1066" title="All 2 branches covered.">        for (var i = 0; i &lt; length; i++) {</span>
+<span class="fc" id="L1067">            final var sample1 = samples1.get(i);</span>
+<span class="fc" id="L1068">            final var sample2 = samples2.get(i);</span>
+
+<span class="fc" id="L1070">            final var point1 = sample1.getPoint();</span>
+<span class="fc" id="L1071">            final var point2 = sample2.getPoint();</span>
+
+<span class="fc" id="L1073">            points1.add(point1);</span>
+<span class="fc" id="L1074">            points2.add(point2);</span>
+        }
+
+        try {
+<span class="fc" id="L1078">            final var estimator = new EssentialMatrixInitialCamerasEstimator(fundamentalMatrix, intrinsic1, intrinsic2,</span>
+                    points1, points2);
+
+<span class="fc" id="L1081">            estimator.setCorrectorType(configuration.getInitialCamerasCorrectorType());</span>
+<span class="fc" id="L1082">            estimator.setPointsTriangulated(true);</span>
+<span class="fc" id="L1083">            estimator.setValidTriangulatedPointsMarked(configuration.getInitialCamerasMarkValidTriangulatedPoints());</span>
+
+<span class="fc" id="L1085">            estimator.estimate();</span>
+
+            // store cameras
+<span class="fc" id="L1088">            final var camera1 = estimator.getEstimatedLeftCamera();</span>
+<span class="fc" id="L1089">            final var camera2 = estimator.getEstimatedRightCamera();</span>
+
+<span class="fc" id="L1091">            estimatedCamera1 = new EstimatedCamera();</span>
+<span class="fc" id="L1092">            estimatedCamera1.setCamera(camera1);</span>
+
+<span class="fc" id="L1094">            estimatedCamera2 = new EstimatedCamera();</span>
+<span class="fc" id="L1095">            estimatedCamera2.setCamera(camera2);</span>
+
+            // store points
+<span class="fc" id="L1098">            final var triangulatedPoints = estimator.getTriangulatedPoints();</span>
+<span class="fc" id="L1099">            final var validTriangulatedPoints = estimator.getValidTriangulatedPoints();</span>
+
+<span class="fc" id="L1101">            reconstructedPoints = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L1102">            final var size = triangulatedPoints.size();</span>
+<span class="fc bfc" id="L1103" title="All 2 branches covered.">            for (var i = 0; i &lt; size; i++) {</span>
+<span class="fc" id="L1104">                final var reconstructedPoint = new ReconstructedPoint3D();</span>
+<span class="fc" id="L1105">                reconstructedPoint.setPoint(triangulatedPoints.get(i));</span>
+<span class="fc" id="L1106">                reconstructedPoint.setInlier(validTriangulatedPoints.get(i));</span>
+<span class="fc" id="L1107">                reconstructedPoints.add(reconstructedPoint);</span>
+            }
+
+<span class="fc" id="L1110">            return true;</span>
+<span class="nc" id="L1111">        } catch (final Exception e) {</span>
+<span class="nc" id="L1112">            return false;</span>
+        }
+    }
+
+    /**
+     * Fixes fundamental matrix to account for principal point different from
+     * zero when using DAQ estimation.
+     *
+     * @param fundamentalMatrix            fundamental matrix to be fixed.
+     * @param intrinsicZeroPrincipalPoint1 intrinsic parameters of camera 1
+     *                                     assuming zero principal point.
+     * @param intrinsicZeroPrincipalPoint2 intrinsic parameters of camera 2
+     *                                     assuming zero principal point.
+     * @param intrinsicPrincipalPoint1     intrinsic parameters of camera 1 using
+     *                                     proper principal point.
+     * @param intrinsicPrincipalPoint2     intrinsic parameters of camera 2 using
+     *                                     proper principal point.
+     * @throws EpipolarException if something fails.
+     * @throws NotReadyException never happens.
+     */
+    private void fixFundamentalMatrix(
+            final FundamentalMatrix fundamentalMatrix,
+            final PinholeCameraIntrinsicParameters intrinsicZeroPrincipalPoint1,
+            final PinholeCameraIntrinsicParameters intrinsicZeroPrincipalPoint2,
+            final PinholeCameraIntrinsicParameters intrinsicPrincipalPoint1,
+            final PinholeCameraIntrinsicParameters intrinsicPrincipalPoint2)
+            throws EpipolarException, NotReadyException {
+
+        // first compute essential matrix as E = K2a'F*K1a
+<span class="fc" id="L1141">        final var essential = new EssentialMatrix(fundamentalMatrix, intrinsicZeroPrincipalPoint1,</span>
+                intrinsicZeroPrincipalPoint2);
+<span class="fc" id="L1143">        final var fixedFundamentalMatrix = essential.toFundamentalMatrix(intrinsicPrincipalPoint1,</span>
+                intrinsicPrincipalPoint2);
+<span class="fc" id="L1145">        fixedFundamentalMatrix.normalize();</span>
+<span class="fc" id="L1146">        estimatedFundamentalMatrix.setFundamentalMatrix(fixedFundamentalMatrix);</span>
+<span class="fc" id="L1147">        estimatedFundamentalMatrix.setCovariance(null);</span>
+<span class="fc" id="L1148">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

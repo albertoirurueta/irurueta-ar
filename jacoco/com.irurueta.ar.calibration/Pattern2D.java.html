@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Pattern2D.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.calibration</a> &gt; <span class="el_source">Pattern2D.java</span></div><h1>Pattern2D.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2015 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.calibration;
+
+import com.irurueta.geometry.Point2D;
+
+import java.util.List;
+
+/**
+ * Abstract representation of the 2D samples contained in a pattern.
+ * Implementations for each pattern type will return the ideal coordinates
+ * of a pattern to be used for camera calibration.
+ * Coordinates of points returned by a pattern will be measured values in
+ * the real world (expressed in meters). Measures are ideal values not affected
+ * by any kind of distortion and as precise as possible, so they can be used for
+ * camera calibration.
+ */
+<span class="fc" id="L31">public abstract class Pattern2D {</span>
+
+    /**
+     * Returns ideal points coordinates contained in a pattern and expressed
+     * in meters. These values are use for calibration purposes.
+     *
+     * @return ideal points coordinates.
+     */
+    public abstract List&lt;Point2D&gt; getIdealPoints();
+
+    /**
+     * Returns number of 2D points used by this pattern.
+     *
+     * @return number of 2D points used by this pattern.
+     */
+    public abstract int getNumberOfPoints();
+
+    /**
+     * Returns type of pattern.
+     *
+     * @return type of pattern.
+     */
+    public abstract Pattern2DType getType();
+
+    /**
+     * Creates an instance of a 2D pattern using provided type.
+     *
+     * @param type type of 2D pattern to create.
+     * @return an instance of a 2D pattern.
+     */
+    public static Pattern2D create(final Pattern2DType type) {
+<span class="fc bfc" id="L62" title="All 2 branches covered.">        return type == Pattern2DType.QR ? new QRPattern2D() : new CirclesPattern2D();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
