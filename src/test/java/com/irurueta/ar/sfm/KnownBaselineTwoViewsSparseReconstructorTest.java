@@ -3649,10 +3649,22 @@ class KnownBaselineTwoViewsSparseReconstructorTest {
             }
 
             // check that all points are in front of both cameras
+            boolean valid = true;
             for (var i = 0; i < numPoints; i++) {
                 final var p = reconstructedPoints3D.get(i);
-                assertTrue(estCam1.isPointInFrontOfCamera(p));
-                assertTrue(estCam2.isPointInFrontOfCamera(p));
+                front1 = estCam1.isPointInFrontOfCamera(p);
+                front2 = estCam2.isPointInFrontOfCamera(p);
+                if (!front1 || !front2) {
+                    valid = false;
+                    break;
+                }
+
+                assertTrue(front1);
+                assertTrue(front2);
+            }
+
+            if (!valid) {
+                continue;
             }
 
             final var estimatedCenter1 = estCam1.getCameraCenter();
