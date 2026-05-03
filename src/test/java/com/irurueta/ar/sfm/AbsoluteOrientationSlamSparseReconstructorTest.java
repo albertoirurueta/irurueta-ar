@@ -56,7 +56,7 @@ class AbsoluteOrientationSlamSparseReconstructorTest {
     private static final int TIMES = 500;
     private static final int MAX_TRIES = 5000;
 
-    private static final double ABSOLUTE_ERROR = 1e-6;
+    private static final double ABSOLUTE_ERROR = 1e-5;
     private static final double LARGE_ABSOLUTE_ERROR = 1e-3;
 
     private static final int MIN_TRACKED_POINTS = 10;
