@@ -7,9 +7,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [1.6.0] - 2026-07-25
+
+### Added
+
+- Published new project documentation as an Antora site (`docs/`), covering camera calibration, self-calibration,
+  epipolar geometry (essential/fundamental matrices, point correction), robust vs. non-robust estimation, and
+  structure-from-motion/SLAM reconstruction, plus an expanded `README.md` with a usage example and updated
+  project/documentation links.
+
 ### Changed
 
 - Raised the minimum Java version from 17 to 21 (compiler source/target, CI workflows, and SonarCloud analysis).
+- Updated `irurueta-numerical` and `irurueta-geometry` dependencies to 1.6.0, and `irurueta-statistics`,
+  `irurueta-sorting`, and `irurueta-algebra` dependencies to 1.4.0.
 
 ## [1.5.0] - 2026-03-04
 
@@ -91,7 +102,8 @@ Initial release.
 - Standalone SLAM estimators and calibrators (position/orientation/velocity state prediction and calibration data)
   for fusing accelerometer/gyroscope samples with camera-based motion estimates.
 
-[Unreleased]: https://github.com/albertoirurueta/irurueta-ar/compare/1.5.0...HEAD
+[Unreleased]: https://github.com/albertoirurueta/irurueta-ar/compare/1.6.0...HEAD
+[1.6.0]: https://github.com/albertoirurueta/irurueta-ar/compare/1.5.0...1.6.0
 [1.5.0]: https://github.com/albertoirurueta/irurueta-ar/compare/1.4.0...1.5.0
 [1.4.0]: https://github.com/albertoirurueta/irurueta-ar/compare/1.3.2...1.4.0
 [1.3.2]: https://github.com/albertoirurueta/irurueta-ar/compare/1.3.1...1.3.2
