@@ -1,0 +1,55 @@
+= irurueta-ar
+
+NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
+
+`irurueta-ar` is a Java library for augmented reality and 3D reconstruction. Given point correspondences observed
+across multiple images of a scene taken from a moving camera, it estimates the cameras' geometry and recovers the
+3D structure of the scene, optionally fusing inertial sensor data (accelerometer/gyroscope) for scale and
+orientation estimation.
+
+== Why it exists
+
+Reconstructing a 3D scene from ordinary photographs or video frames requires solving several interlocking
+geometric estimation problems: finding the epipolar geometry between image pairs, recovering camera calibration
+and pose, and triangulating 3D points, all robustly in the presence of noisy or outlier-ridden point matches.
+`irurueta-ar` packages these building blocks, along with a ready-to-use Structure-from-Motion (SfM) pipeline, so
+that consumers don't have to implement multi-view geometry and robust estimation from scratch.
+
+== Core concepts
+
+* **Epipolar geometry** (`com.irurueta.ar.epipolar`) — the fundamental and essential matrices describing the
+  geometric relationship between a pair of camera views, along with robust estimators (RANSAC, LMedS, MSAC,
+  PROSAC, PROMedS) that recover them from noisy point correspondences.
+* **Calibration** (`com.irurueta.ar.calibration`) — camera self-calibration via the image/dual absolute conic and
+  dual absolute quadric, plus camera pose and radial distortion estimation.
+* **Structure from Motion** (`com.irurueta.ar.sfm`) — the `SparseReconstructor` family (and its `TwoViews`,
+  `PairedViews`, and SLAM-fused variants) drives the end-to-end pipeline from matched 2D points to reconstructed
+  3D points and cameras.
+* **SLAM** (`com.irurueta.ar.slam`) — Kalman-filter based estimators that predict a device's position, velocity,
+  acceleration, and orientation from accelerometer and gyroscope readings, which can be fused into the SfM
+  pipeline to resolve absolute scale.
+
+== The reconstruction pipeline
+
+At the core of the library is a Structure-from-Motion pipeline that turns matched 2D image points into
+reconstructed 3D points and camera poses:
+
+[mermaid]
+....
+flowchart LR
+    A[Matched 2D point\ncorrespondences] --> B[Fundamental matrix\nestimation (robust)]
+    B --> C[Point correction]
+    C --> D[Essential matrix\n& initial camera pose]
+    D --> E[Self-calibration\n(IAC / DAQ estimators)]
+    E --> F[Triangulation]
+    F --> G[Reconstructed 3D points\n& cameras]
+    H[Accelerometer /\ngyroscope data] -.SLAM fusion.-> G
+....
+
+The `SparseReconstructor` class (and its `BaseSparseReconstructor` base class) is the main entry point that drives
+this pipeline end to end.
+
+== Next steps
+
+* xref:installation.adoc[] — how to add `irurueta-ar` as a dependency, or build it from source.
+* xref:reference.adoc[] — links to the generated Javadoc, coverage, and code-quality reports.
