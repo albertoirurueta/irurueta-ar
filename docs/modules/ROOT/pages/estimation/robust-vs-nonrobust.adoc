@@ -1,0 +1,148 @@
+= Robust vs. non-robust estimation
+:stem: latexmath
+
+NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
+
+Every geometric quantity `irurueta-ar` estimates -- the fundamental and essential matrices, the image/dual
+absolute conic, the dual absolute quadric, radial distortion, triangulated 3D points -- follows the same
+two-tier pattern:
+
+* A **non-robust estimator** that computes an exact (or least-mean-squared-error) solution from a fixed,
+  minimal or over-determined set of correspondences, assuming every correspondence is a genuine inlier.
+* A family of **robust estimators** that wrap the non-robust one inside an outlier-rejection loop, so that a
+  correct solution can still be found when a fraction of the input correspondences are mismatches.
+
+This page explains the shared robust-estimation framework once; the domain pages
+(xref:epipolar/fundamental-matrix.adoc[], xref:calibration/self-calibration.adoc[], etc.) each describe their
+own non-robust algorithm and reuse this framework for the robust variants.
+
+== Why outliers require a different strategy
+
+A plain least-squares fit assumes every measurement's error follows the same (Gaussian) distribution. Point
+correspondences produced by automatic matching are not like that: a wrong match is not "a bit noisier", it is
+arbitrarily wrong, and even a handful of such outliers can pull a least-squares solution far from the correct
+answer xref:reference.adoc#ref-hartley-zisserman-2003[Hartley & Zisserman, 2003]. Robust estimators solve a
+different problem: find the largest subset of correspondences ("inliers") that agrees with *some* instance of
+the model, and fit the model to that subset only.
+
+== The RANSAC family
+
+`irurueta-ar` builds its robust estimators on top of `com.irurueta.numerical.robust.RobustEstimatorMethod`
+(from the sibling `irurueta-numerical` library), which enumerates the sampling/scoring strategy:
+
+[cols="1,3"]
+|===
+|Method |Strategy
+
+|`RANSAC`
+|Random SAmple Consensus xref:reference.adoc#ref-fischler-bolles-1981[Fischler & Bolles, 1981]. Repeatedly draws
+a minimal random sample, instantiates the model, and counts inliers (points within a distance threshold `t` of
+the model). The sample with the largest inlier count wins.
+
+|`LMedS`
+|Least Median of Squares. Same random sampling, but scores each candidate model by the *median* squared
+residual over all points instead of an inlier count, so no distance threshold needs to be chosen up front.
+
+|`MSAC`
+|M-estimator SAmple Consensus. Like RANSAC, but instead of counting inliers it sums a capped residual (inliers
+contribute their actual residual, outliers contribute a fixed penalty), which produces a smoother, more
+accurate score surface than a hard inlier count.
+
+|`PROSAC`
+|PROgressive SAmple Consensus. Like RANSAC, but draws samples preferentially from the highest-quality matches
+first (given a quality score per correspondence, e.g. a descriptor-matching score), converging faster when
+scores are informative.
+
+|`PROMedS`
+|The PROSAC sampling strategy combined with the LMedS median-residual score.
+|===
+
+Every domain in `irurueta-ar` exposes one concrete class per row above, named
+`{RANSAC,LMedS,MSAC,PROSAC,PROMedS}<Thing>RobustEstimator` (e.g. `RANSACFundamentalMatrixRobustEstimator`),
+plus an abstract `<Thing>RobustEstimator` base class with a `create(...)` factory that switches on
+`RobustEstimatorMethod`.
+
+=== Inlier threshold and iteration count
+
+For threshold-based methods (RANSAC, MSAC, PROSAC), a point is accepted as an inlier when its residual is
+below a threshold `t`. If the measurement error is assumed Gaussian with standard deviation stem:[\sigma], the
+squared residual follows a stem:[\chi^2_m] distribution with `m` degrees of freedom equal to the codimension of
+the model (`m = 1` for a fundamental matrix's point-to-epipolar-line distance), and `t` can be derived from the
+desired inlier probability stem:[\alpha] (typically 0.95) via the inverse cumulative
+stem:[\chi^2] xref:reference.adoc#ref-hartley-zisserman-2003[Hartley & Zisserman, 2003]. In practice `irurueta-ar`
+exposes `t` directly as a tunable `threshold` property (e.g. `RANSACFundamentalMatrixRobustEstimator.DEFAULT_THRESHOLD = 1.0` pixel), since the
+right value depends on how the correspondences were produced.
+
+Given a sample size `s` (the minimum number of correspondences needed to instantiate the model), a desired
+confidence `p` that at least one sample is outlier-free, and an outlier proportion stem:[\varepsilon], the
+number of random samples `N` needed is:
+
+[stem]
+++++
+N = \frac{\log(1-p)}{\log\left(1 - (1-\varepsilon)^s\right)}
+++++
+
+`irurueta-ar` recomputes stem:[\varepsilon] adaptively as better solutions are found (shrinking `N` as the
+best-known inlier ratio improves) and exposes `confidence` (default `0.99`) and `maxIterations` (default
+`5000`) as the tunable stopping criteria on every `*RobustEstimator` class. This matches the RANSAC treatment
+in the thesis itself xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] (algorithms 2.2 and 3.1) and in
+Hartley & Zisserman xref:reference.adoc#ref-hartley-zisserman-2003[Hartley & Zisserman, 2003].
+
+After the best consensus set is found, every robust estimator can optionally refine the result (`refineResult`,
+default `true`) by re-fitting the non-robust estimator, or a non-linear (Levenberg-Marquardt) refiner, over all
+detected inliers -- the numerical machinery for that non-linear refinement follows the same Jacobian-based
+least-squares approach described in Numerical Recipes
+xref:reference.adoc#ref-press-2007[Press et al., 2007] (chapter 15, "Modeling of Data").
+
+== Estimator families in this library
+
+[cols="2,2,3",options="header"]
+|===
+|Domain |Non-robust estimator(s) |Robust family
+
+|Fundamental matrix
+|`EightPointsFundamentalMatrixEstimator`, `SevenPointsFundamentalMatrixEstimator`, `AffineFundamentalMatrixEstimator`, `PlanarFundamentalMatrixEstimator`
+|`{RANSAC,LMedS,MSAC,PROSAC,PROMedS}FundamentalMatrixRobustEstimator` -- see xref:epipolar/fundamental-matrix.adoc[]
+
+|Dual absolute quadric (self-calibration)
+|`LMSEDualAbsoluteQuadricEstimator`, `WeightedDualAbsoluteQuadricEstimator`
+|`{RANSAC,LMedS,MSAC,PROSAC,PROMedS}DualAbsoluteQuadricRobustEstimator` -- see xref:calibration/self-calibration.adoc[]
+
+|Image/dual image of the absolute conic
+|`LMSEImageOfAbsoluteConicEstimator`, `WeightedImageOfAbsoluteConicEstimator`, `KruppaDualImageOfAbsoluteConicEstimator`
+|`{RANSAC,LMedS,MSAC,PROSAC,PROMedS}ImageOfAbsoluteConicRobustEstimator` -- see xref:calibration/self-calibration.adoc[]
+
+|Radial distortion
+|`LMSERadialDistortionEstimator`, `WeightedRadialDistortionEstimator`
+|`{RANSAC,LMedS,MSAC,PROSAC,PROMedS}RadialDistortionRobustEstimator` -- see xref:calibration/camera-calibration.adoc[]
+
+|3D point triangulation
+|`LMSEHomogeneousSinglePoint3DTriangulator`, `LMSEInhomogeneousSinglePoint3DTriangulator`, `WeightedHomogeneousSinglePoint3DTriangulator`, `WeightedInhomogeneousSinglePoint3DTriangulator`
+|`{RANSAC,LMedS,MSAC,PROSAC,PROMedS}RobustSinglePoint3DTriangulator` -- see xref:sfm/structure-from-motion.adoc[]
+|===
+
+== Example
+
+Choosing between a non-robust and a robust estimator for the same problem (fundamental matrix estimation from
+8 exact correspondences vs. from a noisy correspondence set):
+
+[source,java]
+----
+// Non-robust: exactly 8 correspondences, all assumed correct
+var exact = new EightPointsFundamentalMatrixEstimator(leftPoints, rightPoints);
+FundamentalMatrix fundamentalMatrix = exact.estimate();
+
+// Robust: many correspondences, some of which may be wrong matches
+var robust = (RANSACFundamentalMatrixRobustEstimator)
+        FundamentalMatrixRobustEstimator.create(leftPoints, rightPoints, RobustEstimatorMethod.RANSAC);
+robust.setThreshold(1.0); // pixels
+FundamentalMatrix robustFundamentalMatrix = robust.estimate();
+----
+
+== References
+
+xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;2.5, &sect;3.2.3 +
+xref:reference.adoc#ref-hartley-zisserman-2003[Hartley & Zisserman, 2003] chapter 4 ("Estimation - 2D
+Projective Transformations") +
+xref:reference.adoc#ref-fischler-bolles-1981[Fischler & Bolles, 1981] +
+xref:reference.adoc#ref-press-2007[Press et al., 2007] chapter 15 ("Modeling of Data")

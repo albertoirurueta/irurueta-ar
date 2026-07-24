@@ -1,0 +1,74 @@
+= Point correction
+:stem: latexmath
+
+NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
+
+A pair of matched image points estimated from real (noisy) correspondences almost never satisfies the
+epipolar constraint stem:[m'^{T}Fm = 0] exactly. Triangulating such a pair back-projects two rays of light that
+do not actually intersect in 3D, so before triangulation it helps to *correct* stem:[m] and stem:[m'] to the
+closest pair that lies exactly on the epipolar geometry given by stem:[F].
+
+image::epipolar/point-correction.svg[Point correction onto epipolar lines,600,role=text-center]
+
+== The correction problem
+
+Given measured points stem:[m], stem:[m'] and a fundamental matrix stem:[F], the corrected points
+stem:[\hat m], stem:[\hat m'] minimize the reprojection cost subject to exact epipolar compliance:
+
+[stem]
+++++
+C(m,m') = d(m,\hat m)^2 + d(m',\hat m')^2,\qquad \hat m'^{T} F \hat m = 0
+++++
+
+`irurueta-ar` implements two solvers for this problem, both exposed through a common
+`com.irurueta.ar.epipolar.Corrector` base class selected via `CorrectorType`.
+
+== Sampson approximation
+
+The Sampson correction is a first-order approximation, valid for small errors (typically 1-2 pixels): writing
+stem:[X = (m, m')^T] and expanding the cost function to first order in a displacement stem:[\delta x] gives a
+constrained least-norm problem solved in closed form with Lagrange multipliers, yielding a single correction
+stem:[\delta x = -J^{T}(JJ^{T})^{-1}\varepsilon] with
+
+[stem]
+++++
+\varepsilon = m'^{T} F m,\qquad J = \left[(F^{T}m')_1,\ (F^{T}m')_2,\ (Fm)_1,\ (Fm)_2\right]
+++++
+
+so the corrected coordinates are stem:[\hat X = X - \varepsilon\, J^{T}/(JJ^{T})]
+xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;3.2.5.1. This is a single closed-form update -- much
+cheaper than the Gold Standard method below, at the cost of being only approximate for larger errors.
+
+Maps to `com.irurueta.ar.epipolar.SampsonCorrector` (batch) / `SampsonSingleCorrector` (single pair).
+
+== Gold Standard method
+
+The Gold Standard method solves the correction cost exactly under a Gaussian noise assumption. After
+translating both measured points to the origin and rotating each view so its epipole lies on the x-axis, the
+cost becomes a rational function of a single parameter stem:[t] (parametrizing the family of candidate epipolar
+lines through the transformed epipole); its stationary points are the roots of a degree-6 polynomial in
+stem:[t], found via the same companion-matrix eigenvalue technique used for the
+xref:epipolar/fundamental-matrix.adoc[7-point algorithm]. Evaluating the cost at each real root picks the
+global minimum, and the corrected point is the foot of the perpendicular from the (transformed) measured point
+to the corresponding epipolar line xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;3.2.5.2. This is
+exact (not a first-order approximation) but more expensive than Sampson correction.
+
+Maps to `com.irurueta.ar.epipolar.GoldStandardCorrector` / `GoldStandardSingleCorrector`.
+
+== Example
+
+[source,java]
+----
+var corrector = Corrector.create(leftPoints, rightPoints, fundamentalMatrix, CorrectorType.GOLD_STANDARD);
+corrector.correct();
+
+List<Point2D> correctedLeft = corrector.getLeftCorrectedPoints();
+List<Point2D> correctedRight = corrector.getRightCorrectedPoints();
+// triangulate correctedLeft/correctedRight instead of the raw matches
+----
+
+== References
+
+xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;3.2.5 +
+xref:reference.adoc#ref-hartley-zisserman-2003[Hartley & Zisserman, 2003] &sect;11.4-11.5 +
+xref:reference.adoc#ref-hartley-zisserman-2003[Hartley & Zisserman, 2003] Appendix 6 (iterative estimation)

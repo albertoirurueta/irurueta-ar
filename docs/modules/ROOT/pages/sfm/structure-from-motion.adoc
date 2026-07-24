@@ -1,0 +1,115 @@
+= Structure from Motion
+:stem: latexmath
+
+NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
+
+`irurueta-ar` turns matched 2D point correspondences across a sequence of images into reconstructed 3D points
+and camera poses. This page ties together the previous pages -- xref:epipolar/fundamental-matrix.adoc[],
+xref:epipolar/essential-matrix.adoc[], xref:epipolar/point-correction.adoc[], and
+xref:calibration/self-calibration.adoc[] -- into the end-to-end pipeline, and explains the two paths a
+reconstruction can take depending on whether the cameras' intrinsic parameters are known.
+
+image::sfm/stratum-pipeline.svg[Projective vs metric stratum pipeline,760,role=text-center]
+
+== Choosing the initial pair
+
+The very first decision is which two views to reconstruct from first. Two views whose camera centers are too
+close together, or whose visible points lie on a ruled quadric (most commonly, a plane), produce a *degenerate*
+epipolar geometry -- the xref:epipolar/fundamental-matrix.adoc[7-point algorithm]'s cubic has 3 real roots
+instead of 1. `irurueta-ar` detects this and simply skips to the next candidate view rather than trying to
+reconstruct from a degenerate pair xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;4.2 (algorithm
+4.1).
+
+== Two paths from the fundamental matrix
+
+Once a good pair and its fundamental matrix stem:[F] are found (and correspondences corrected as in
+xref:epipolar/point-correction.adoc[]), there are two ways to obtain an initial camera pair, matching
+`com.irurueta.ar.sfm.InitialCamerasEstimatorMethod`:
+
+**Intrinsics known -- straight to metric.** If a (possibly approximate) calibration matrix stem:[K] is
+available for both views, xref:epipolar/essential-matrix.adoc[] gives stem:[E = K'^{T}FK] directly, and its
+four-fold cheirality-disambiguated decomposition gives a metric camera pair immediately -- no self-calibration
+needed. Maps to `EssentialMatrixInitialCamerasEstimator`
+(`InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX`).
+
+**Intrinsics unknown -- projective first, metric later.** Without any known stem:[K], only stem:[F] is
+available. As shown in xref:epipolar/fundamental-matrix.adoc[], any stem:[F] can generate *some* pair of
+cameras that reproduces it, but that pair is not unique -- it is defined only up to an arbitrary projective
+transformation:
+
+[stem]
+++++
+P = [I\,|\,0],\qquad P' = \left[\,[e']_\times F + e'\pi^{T}\ \Big|\ \lambda e'\,\right]
+++++
+
+for any plane direction stem:[\pi] and scale stem:[\lambda] xref:reference.adoc#ref-thesis[Irurueta, PhD
+thesis] &sect;3.2.4. Triangulating points with this pair places the whole reconstruction in an arbitrary
+**projective stratum**: valid for triangulation and for adding more views, but visibly distorted (straight
+lines bend, parallel lines don't meet at infinity correctly) until it is upgraded. That upgrade is exactly
+xref:calibration/self-calibration.adoc[self-calibration]: once enough views are available, the dual absolute
+quadric (or, pairwise, the Kruppa equations) recovers each view's stem:[K] and the plane at infinity, giving the
+projective-to-metric transform stem:[T_{PM}] that turns the projective reconstruction into a metric one, correct
+up to an overall similarity (scale) xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;4.6, &sect;5.
+Maps to `DualImageOfAbsoluteConicInitialCamerasEstimator` / `DualAbsoluteQuadricInitialCamerasEstimator`
+(`InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC` / `DUAL_ABSOLUTE_QUADRIC` /
+`DUAL_ABSOLUTE_QUADRIC_AND_ESSENTIAL_MATRIX`).
+
+Either way, the common entry point is `com.irurueta.ar.sfm.InitialCamerasEstimator.create(...)`, which
+dispatches to the right concrete estimator for the chosen `InitialCamerasEstimatorMethod`.
+
+== Triangulation
+
+Given a camera pair (in whichever stratum) and corrected correspondences, 3D points are recovered with the same
+xref:estimation/robust-vs-nonrobust.adoc[two-tier pattern] as everything else: non-robust
+`LMSEHomogeneousSinglePoint3DTriangulator` / `LMSEInhomogeneousSinglePoint3DTriangulator` /
+`WeightedHomogeneousSinglePoint3DTriangulator` / `WeightedInhomogeneousSinglePoint3DTriangulator`, or the robust
+family `{RANSAC,LMedS,MSAC,PROSAC,PROMedS}RobustSinglePoint3DTriangulator` when some of the per-point ray
+correspondences (across more than 2 views) might themselves be wrong.
+
+== Adding more views and the full reconstructor
+
+Once an initial two-view (or paired-views) reconstruction exists, each new view is resected by matching its
+image points against already-triangulated 3D points and solving for its camera matrix with DLT + a robust
+estimator (the same RANSAC/DLT combination used for camera resectioning throughout this library)
+xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;4.3 (algorithm 4.3). `irurueta-ar` packages this
+whole loop -- initial pair selection, point correction, initial cameras, triangulation, self-calibration when
+needed, and incremental resectioning of further views -- into the `com.irurueta.ar.sfm.SparseReconstructor`
+family:
+
+[cols="1,3"]
+|===
+|Class |Use case
+
+|`TwoViewsSparseReconstructor`
+|Just the initial pair -- projective or metric reconstruction from two views.
+
+|`PairedViewsSparseReconstructor`
+|A sequence processed as consecutive view pairs.
+
+|`SparseReconstructor`
+|The general, incremental multi-view pipeline (`BaseSparseReconstructor` is its shared orchestrator).
+
+|`Slam*SparseReconstructor` / `AbsoluteOrientationSlam*SparseReconstructor` (+ constant-velocity-model variants)
+|The same pipelines fused with inertial-sensor (accelerometer/gyroscope) SLAM estimates to resolve absolute
+scale and orientation without relying on scene assumptions.
+|===
+
+== Example
+
+[source,java]
+----
+var configuration = new TwoViewsSparseReconstructorConfiguration();
+configuration.setInitialCamerasEstimatorMethod(InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC);
+
+var reconstructor = new TwoViewsSparseReconstructor(configuration, listener);
+reconstructor.start();
+// listener callbacks receive matched samples requests, the estimated fundamental/essential matrices,
+// the initial camera pair, and the final triangulated 3D points as reconstruction progresses
+----
+
+== References
+
+xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;3.2.4, &sect;4, &sect;5 +
+xref:reference.adoc#ref-hartley-zisserman-2003[Hartley & Zisserman, 2003] chapter 10 ("3D Reconstruction of
+Cameras and Structure") +
+xref:reference.adoc#ref-pollefeys-2000[Pollefeys, 2000]

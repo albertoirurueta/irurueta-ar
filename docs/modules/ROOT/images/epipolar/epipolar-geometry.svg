@@ -1,0 +1,72 @@
+<svg viewBox="0 0 760 520" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="16">
+  <!-- ================= LEFT VIEW ================= -->
+  <!-- camera center C -->
+  <circle cx="90" cy="430" r="5" fill="#1f2937"/>
+  <text x="68" y="452" fill="#1f2937">C</text>
+
+  <!-- image plane R: tilted quadrilateral (T top, Rr right, B bottom, L left) -->
+  <polygon points="240,150 345,220 300,420 195,330" fill="#1f2937" fill-opacity="0.08" stroke="#1f2937" stroke-width="1.6"/>
+  <text x="255" y="140" fill="#1f2937">R</text>
+
+  <!-- frustum edges from C to the four corners of R -->
+  <line x1="90" y1="430" x2="240" y2="150" stroke="#1f2937" stroke-width="1.3"/>
+  <line x1="90" y1="430" x2="345" y2="220" stroke="#1f2937" stroke-width="1.3"/>
+  <line x1="90" y1="430" x2="300" y2="420" stroke="#1f2937" stroke-width="1.3"/>
+  <line x1="90" y1="430" x2="195" y2="330" stroke="#1f2937" stroke-width="1.3"/>
+
+  <!-- ray of light continuing from C, through m, to M -->
+  <line x1="90" y1="430" x2="400" y2="50" stroke="#1f2937" stroke-width="1.8"/>
+  <text x="120" y="270" fill="#374151" font-size="13" transform="rotate(-52 120 270)">ray of light</text>
+
+  <!-- image point m where the ray crosses R (t=0.4 along C-M, exactly on the ray) -->
+  <circle cx="214" cy="278" r="4.5" fill="#dc2626"/>
+  <text x="180" y="270" fill="#dc2626">m</text>
+
+  <!-- epipole e on the baseline, near the R-B edge of the plane -->
+  <circle cx="305" cy="423" r="4.5" fill="#059669"/>
+  <text x="313" y="418" fill="#059669">e</text>
+
+  <!-- epipolar line l, dotted, from e to m inside the plane -->
+  <line x1="305" y1="423" x2="214" y2="278" stroke="#dc2626" stroke-width="2" stroke-dasharray="1 4" stroke-linecap="round"/>
+  <text x="255" y="360" fill="#dc2626" font-size="14">l</text>
+
+  <!-- ================= RIGHT VIEW (mirrored) ================= -->
+  <circle cx="670" cy="410" r="5" fill="#1f2937"/>
+  <text x="682" y="432" fill="#1f2937">C&#8242;</text>
+
+  <polygon points="520,150 415,220 460,420 565,330" fill="#1f2937" fill-opacity="0.08" stroke="#1f2937" stroke-width="1.6"/>
+  <text x="490" y="140" fill="#1f2937">R&#8242;</text>
+
+  <line x1="670" y1="410" x2="520" y2="150" stroke="#1f2937" stroke-width="1.3"/>
+  <line x1="670" y1="410" x2="415" y2="220" stroke="#1f2937" stroke-width="1.3"/>
+  <line x1="670" y1="410" x2="460" y2="420" stroke="#1f2937" stroke-width="1.3"/>
+  <line x1="670" y1="410" x2="565" y2="330" stroke="#1f2937" stroke-width="1.3"/>
+
+  <line x1="670" y1="410" x2="400" y2="50" stroke="#1f2937" stroke-width="1.8"/>
+  <text x="630" y="270" fill="#374151" font-size="13" transform="rotate(52 630 270)">ray of light</text>
+
+  <circle cx="546" cy="278" r="4.5" fill="#dc2626"/>
+  <text x="554" y="270" fill="#dc2626">m&#8242;</text>
+
+  <circle cx="455" cy="423" r="4.5" fill="#059669"/>
+  <text x="430" y="418" fill="#059669" text-anchor="end">e&#8242;</text>
+
+  <line x1="455" y1="423" x2="546" y2="278" stroke="#dc2626" stroke-width="2" stroke-dasharray="1 4" stroke-linecap="round"/>
+  <text x="490" y="360" fill="#dc2626" font-size="14">l&#8242;</text>
+
+  <!-- ================= SHARED ================= -->
+  <!-- world point M -->
+  <circle cx="400" cy="50" r="5" fill="#1f2937"/>
+  <text x="410" y="46" fill="#1f2937">M</text>
+
+  <!-- baseline C-C', passing near the epipoles -->
+  <line x1="90" y1="430" x2="670" y2="410" stroke="#1f2937" stroke-width="2"/>
+  <text x="345" y="452" fill="#1f2937" font-size="14">baseline</text>
+
+  <!-- disparity / point matches, dotted, between m and m' -->
+  <line x1="214" y1="278" x2="546" y2="278" stroke="#6b7280" stroke-width="1.3" stroke-dasharray="5 4"/>
+  <text x="315" y="268" fill="#6b7280" font-size="13">disparity / point matches</text>
+
+  <!-- epipolar plane label -->
+  <text x="345" y="110" fill="#2563eb" font-size="14">&#928;e (epipolar plane)</text>
+</svg>

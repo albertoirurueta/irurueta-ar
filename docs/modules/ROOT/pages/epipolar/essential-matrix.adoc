@@ -1,0 +1,86 @@
+= Essential matrix
+:stem: latexmath
+
+NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
+
+The essential matrix stem:[E] is the fundamental matrix's calibrated counterpart: the same epipolar constraint,
+but written for image points that have been normalized by known camera intrinsics. If a scene is calibrated
+(both cameras' intrinsic matrices stem:[K], stem:[K'] are known), stem:[E] recovers not just the epipolar
+geometry but an actual metric camera pair -- up to scale -- directly from two views. This is the bridge between
+xref:epipolar/fundamental-matrix.adoc[] (purely projective) and a metric
+xref:sfm/structure-from-motion.adoc[reconstruction].
+
+== Relation to the fundamental matrix
+
+For canonical cameras stem:[P = K[I\,|\,0\]] and stem:[P' = K'[R\,|\,t\]] (stem:[t = -RC']), the fundamental
+matrix expression from xref:epipolar/fundamental-matrix.adoc[] reduces to
+
+[stem]
+++++
+F = K'^{-T}\, [t]_\times R\, K^{-1}
+++++
+
+Normalizing points with the known intrinsics, stem:[\hat m = K^{-1} m], stem:[\hat m' = K'^{-1} m'], the
+epipolar constraint stem:[\hat m'^{T} E \hat m = 0] holds for
+
+[stem]
+++++
+E = K'^{T} F K = [t]_\times R
+++++
+
+xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;3.2.7. Unlike stem:[F], stem:[E] is not an arbitrary
+rank-2 matrix: because it factors as a skew-symmetric matrix times a rotation, its SVD always has the form
+stem:[E = U\,\mathrm{diag}(1,1,0)\,V^{T}] -- two equal, non-zero singular values (defined up to the overall
+scale of stem:[E]) and a third that is exactly zero. Counting rotation (3 DOF) and translation direction (2 DOF
+up to scale) confirms stem:[E] has only **5 degrees of freedom**, two fewer than stem:[F]'s 7.
+
+Maps to `com.irurueta.ar.epipolar.EssentialMatrix`, with a constructor overload
+`EssentialMatrix(FundamentalMatrix, PinholeCameraIntrinsicParameters leftIntrinsics,
+PinholeCameraIntrinsicParameters rightIntrinsics)` that implements stem:[E = K'^{T}FK] directly, plus
+overloads for building stem:[E] straight from a `Rotation3D` + translation, or from a pair of `PinholeCamera`s.
+
+== Recovering the camera pair: four-fold ambiguity
+
+Because stem:[E = [t\]_\times R] with stem:[\lVert t \rVert = 1] (a convenient normalization of the baseline
+length), its SVD-based decomposition stem:[E = U\,\mathrm{diag}(1,1,0)\,V^{T}] admits, with
+
+[stem]
+++++
+W = \begin{bmatrix} 0 & -1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix}
+++++
+
+two candidate rotations stem:[R = UWV^{T}] or stem:[UW^{T}V^{T}], and translation stem:[t = \pm u_3] (the last
+column of stem:[U]) -- **four** combinations for the second camera stem:[P' = K'[R\,|\,t\]]. Two of the four are
+a *twisted pair* related by a 180&deg; rotation about the baseline. Only one combination places every
+triangulated 3D point in front of *both* cameras (correct cheirality); the other three put at least some points
+behind a camera, so the standard disambiguation is to triangulate a handful of correspondences under all four
+hypotheses and keep the one with the most positive cheiralities
+xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;3.2.7.2.
+
+Maps to `EssentialMatrix.computePossibleRotationAndTranslations()` +
+`getFirstPossibleRotation()`/`getSecondPossibleRotation()` +
+`getFirstPossibleTranslation()`/`getSecondPossibleTranslation()`. The cheirality-based disambiguation across
+the four combinations is what `com.irurueta.ar.sfm.EssentialMatrixInitialCamerasEstimator` automates -- see
+xref:sfm/structure-from-motion.adoc[].
+
+== Example
+
+[source,java]
+----
+// F already estimated (see epipolar/fundamental-matrix.adoc), K and K' known
+var essential = new EssentialMatrix(fundamentalMatrix, leftIntrinsics, rightIntrinsics);
+essential.computePossibleRotationAndTranslations();
+
+Rotation3D rotationA = essential.getFirstPossibleRotation();
+Rotation3D rotationB = essential.getSecondPossibleRotation();
+Point2D translationA = essential.getFirstPossibleTranslation();
+Point2D translationB = essential.getSecondPossibleTranslation();
+// triangulate a few points under each of the 4 (rotation, translation) combinations
+// and keep the one with all-positive cheirality (see sfm/structure-from-motion.adoc)
+----
+
+== References
+
+xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;3.2.7 +
+xref:reference.adoc#ref-hartley-zisserman-2003[Hartley & Zisserman, 2003] &sect;9.6 +
+xref:reference.adoc#ref-hartley-1993[Hartley, 1993] (cheirality)

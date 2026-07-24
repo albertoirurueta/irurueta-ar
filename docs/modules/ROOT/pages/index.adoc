@@ -17,14 +17,19 @@ that consumers don't have to implement multi-view geometry and robust estimation
 
 == Core concepts
 
-* **Epipolar geometry** (`com.irurueta.ar.epipolar`) — the fundamental and essential matrices describing the
-  geometric relationship between a pair of camera views, along with robust estimators (RANSAC, LMedS, MSAC,
-  PROSAC, PROMedS) that recover them from noisy point correspondences.
-* **Calibration** (`com.irurueta.ar.calibration`) — camera self-calibration via the image/dual absolute conic and
-  dual absolute quadric, plus camera pose and radial distortion estimation.
-* **Structure from Motion** (`com.irurueta.ar.sfm`) — the `SparseReconstructor` family (and its `TwoViews`,
-  `PairedViews`, and SLAM-fused variants) drives the end-to-end pipeline from matched 2D points to reconstructed
-  3D points and cameras.
+* **Estimation** (xref:estimation/robust-vs-nonrobust.adoc[]) — the shared robust/non-robust estimator pattern
+  (RANSAC, LMedS, MSAC, PROSAC, PROMedS) used by every algorithm family below.
+* **Epipolar geometry** (`com.irurueta.ar.epipolar`) — xref:epipolar/fundamental-matrix.adoc[the fundamental
+  matrix] (7-/8-point algorithms) and xref:epipolar/essential-matrix.adoc[the essential matrix] describing the
+  geometric relationship between a pair of camera views, plus xref:epipolar/point-correction.adoc[point
+  correction] (Sampson, Gold Standard) for accurate triangulation.
+* **Calibration** (`com.irurueta.ar.calibration`) — xref:calibration/self-calibration.adoc[self-calibration] via
+  the image/dual absolute conic, dual absolute quadric, and Kruppa equations, plus
+  xref:calibration/camera-calibration.adoc[pattern-based calibration] and radial distortion estimation.
+* **Structure from Motion** (xref:sfm/structure-from-motion.adoc[], `com.irurueta.ar.sfm`) — the
+  `SparseReconstructor` family (and its `TwoViews`, `PairedViews`, and SLAM-fused variants) drives the
+  end-to-end pipeline from matched 2D points to reconstructed 3D points and cameras, upgrading from a
+  projective to a metric stratum via self-calibration when camera intrinsics are unknown.
 * **SLAM** (`com.irurueta.ar.slam`) — Kalman-filter based estimators that predict a device's position, velocity,
   acceleration, and orientation from accelerometer and gyroscope readings, which can be fused into the SfM
   pipeline to resolve absolute scale.
@@ -39,12 +44,19 @@ reconstructed 3D points and camera poses:
 flowchart LR
     A["Matched 2D point<br/>correspondences"] --> B["Fundamental matrix<br/>estimation (robust)"]
     B --> C["Point correction"]
-    C --> D["Essential matrix<br/>&amp; initial camera pose"]
-    D --> E["Self-calibration<br/>(IAC / DAQ estimators)"]
-    E --> F["Triangulation"]
-    F --> G["Reconstructed 3D points<br/>&amp; cameras"]
+    C --> D1["K known:<br/>Essential matrix"]
+    C --> D2["K unknown:<br/>projective camera pair"]
+    D1 --> F["Triangulation"]
+    D2 --> E["Self-calibration<br/>(DAQ / Kruppa)"]
+    E --> F
+    F --> G["Reconstructed 3D points<br/>&amp; cameras, up to scale"]
     H["Accelerometer /<br/>gyroscope data"] -.SLAM fusion.-> G
 ....
+
+See xref:estimation/robust-vs-nonrobust.adoc[], xref:epipolar/fundamental-matrix.adoc[],
+xref:epipolar/essential-matrix.adoc[], xref:epipolar/point-correction.adoc[],
+xref:calibration/self-calibration.adoc[], and xref:sfm/structure-from-motion.adoc[] for the full detail behind
+each stage.
 
 The `SparseReconstructor` class (and its `BaseSparseReconstructor` base class) is the main entry point that drives
 this pipeline end to end.

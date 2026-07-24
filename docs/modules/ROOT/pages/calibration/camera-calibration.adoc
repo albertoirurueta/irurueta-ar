@@ -1,0 +1,53 @@
+= Pattern-based calibration and radial distortion
+
+NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
+
+xref:calibration/self-calibration.adoc[Self-calibration] recovers intrinsics with no calibration object, from
+natural-scene correspondences alone. When a physical calibration pattern *is* available (a checkerboard, a
+circle grid, a QR-coded grid), `irurueta-ar` also provides the more classical alternative: photograph the
+pattern from several poses and solve directly for each camera's intrinsics from known-to-observed point
+correspondences.
+
+== Calibration patterns
+
+`com.irurueta.ar.calibration.Pattern2D` is the abstract base for a set of ideal, known 2D points; concrete
+patterns are `QRPattern2D` (a QR-code-like marker grid) and `CirclesPattern2D` (a grid of circle centers), both
+exposing `getIdealPoints()`.
+
+== Camera calibrators
+
+Given a `Pattern2D` and one `CameraCalibratorSample` per photographed view (the pattern's detected image
+points for that view), `com.irurueta.ar.calibration.CameraCalibrator` estimates the homography between the
+ideal pattern and each view, then the image of the absolute conic per view, following the same
+DIAC-to-intrinsics relation described in xref:calibration/self-calibration.adoc[] but now with the "world
+conic" being the known pattern instead of the (unknown) absolute conic at infinity. Two concrete strategies are
+provided: `AlternatingCameraCalibrator` (alternates between estimating intrinsics and radial distortion) and
+`ErrorOptimizationCameraCalibrator` (jointly refines both by minimizing reprojection error). Both are created
+through the `CameraCalibrator.create(...)` factory, selected via `CameraCalibratorMethod`.
+
+== Radial distortion
+
+Lens radial distortion is estimated separately from the pinhole intrinsics, following the same two-tier
+xref:estimation/robust-vs-nonrobust.adoc[robust/non-robust] pattern: `LMSERadialDistortionEstimator` /
+`WeightedRadialDistortionEstimator` fit distortion coefficients from distorted/undistorted point pairs, and
+`{RANSAC,LMedS,MSAC,PROSAC,PROMedS}RadialDistortionRobustEstimator` add outlier rejection when those pairs come
+from noisy detections. Maps to `com.irurueta.ar.calibration.RadialDistortion` /
+`com.irurueta.ar.calibration.estimators.RadialDistortionEstimator`.
+
+== Example
+
+[source,java]
+----
+Pattern2D pattern = new QRPattern2D();
+var calibrator = CameraCalibrator.create(pattern, samples); // one sample per photographed view
+calibrator.calibrate();
+
+PinholeCameraIntrinsicParameters intrinsics = calibrator.getEstimatedIntrinsicParameters();
+RadialDistortion distortion = calibrator.getDistortion();
+----
+
+== References
+
+xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;2 (camera models, DLT camera estimation) +
+xref:reference.adoc#ref-hartley-zisserman-2003[Hartley & Zisserman, 2003] &sect;7 (computation of the camera
+matrix)
