@@ -43,7 +43,12 @@ jobs:
           node-version: 24
 
       - name: Install Antora
-        run: cd docs && npm ci
+        run: |
+          mkdir -p docs && cd docs
+          npm i -D -E antora
+          npm i @antora/lunr-extension
+          npm i @sntke/antora-mermaid-extension
+          npm i @djencks/asciidoctor-mathjax
 
       - name: Build Antora docs
         run: cd docs && npx antora antora-playbook.yml

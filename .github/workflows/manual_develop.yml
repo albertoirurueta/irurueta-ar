@@ -34,6 +34,28 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: mvn sonar:sonar -Dsonar.token=${{ secrets.SONAR_TOKEN }}
 
+    - name: Install Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 24
+
+    - name: Install Antora
+      run: |
+        mkdir -p docs && cd docs
+        npm i -D -E antora
+        npm i @antora/lunr-extension
+        npm i @sntke/antora-mermaid-extension
+        npm i @djencks/asciidoctor-mathjax
+
+    - name: Build Antora docs
+      run: cd docs && npx antora antora-playbook.yml
+
+    - name: Merge documentation
+      run: |
+        touch ./docs/build/site/.nojekyll
+        cp -r ./docs/build/site ./doc
+        cp -r ./target/site ./doc/mvn-site
+
     - name: Deploy to GitHub Pages
       if: success()
       uses: crazy-max/ghaction-github-pages@v5

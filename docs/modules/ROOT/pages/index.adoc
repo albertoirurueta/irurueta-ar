@@ -37,13 +37,13 @@ reconstructed 3D points and camera poses:
 [mermaid]
 ....
 flowchart LR
-    A[Matched 2D point\ncorrespondences] --> B[Fundamental matrix\nestimation (robust)]
-    B --> C[Point correction]
-    C --> D[Essential matrix\n& initial camera pose]
-    D --> E[Self-calibration\n(IAC / DAQ estimators)]
-    E --> F[Triangulation]
-    F --> G[Reconstructed 3D points\n& cameras]
-    H[Accelerometer /\ngyroscope data] -.SLAM fusion.-> G
+    A["Matched 2D point<br/>correspondences"] --> B["Fundamental matrix<br/>estimation (robust)"]
+    B --> C["Point correction"]
+    C --> D["Essential matrix<br/>&amp; initial camera pose"]
+    D --> E["Self-calibration<br/>(IAC / DAQ estimators)"]
+    E --> F["Triangulation"]
+    F --> G["Reconstructed 3D points<br/>&amp; cameras"]
+    H["Accelerometer /<br/>gyroscope data"] -.SLAM fusion.-> G
 ....
 
 The `SparseReconstructor` class (and its `BaseSparseReconstructor` base class) is the main entry point that drives
