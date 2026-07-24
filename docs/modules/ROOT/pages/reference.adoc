@@ -11,16 +11,24 @@ These reports are generated during the build.
 |Report
 |Description
 
-|https://albertoirurueta.github.io/irurueta-ar[Maven Site Report]
-|Aggregated project report published to GitHub Pages, including Javadoc API documentation, the JaCoCo code
-coverage report, and the Surefire test report, generated via `mvn site`.
+|https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/index.html[Javadoc]
+|API reference generated as part of Maven site execution.
 
-|https://sonarcloud.io/dashboard?id=albertoirurueta_irurueta-ar[SonarCloud Dashboard]
-|Continuous code quality analysis (bugs, code smells, coverage, duplications, maintainability, reliability,
-and security ratings), produced by the `sonar-maven-plugin` during CI.
+|https://albertoirurueta.github.io/irurueta-ar/mvn-site/jacoco/index.html[JaCoCo]
+|Code coverage report generated during the Maven build.
 
-|https://github.com/albertoirurueta/irurueta-ar[GitHub Repository]
-|Source code, issue tracker, and GitHub Actions CI workflows (`develop`, `master`/release, and manual-develop).
+|https://albertoirurueta.github.io/irurueta-ar/mvn-site/surefire.html[Surefire]
+|Unit test execution report.
+
+|https://albertoirurueta.github.io/irurueta-ar/mvn-site[Maven Site]
+|Aggregated Maven site report published to GitHub Pages, including Javadoc, JaCoCo, and Surefire reports plus
+project info, dependencies, and plugin reports, generated via `mvn site`.
+
+|https://sonarcloud.io/project/overview?id=albertoirurueta_irurueta-ar[SonarCloud]
+|Code quality, issue, and coverage information from SonarCloud.
+
+|https://github.com/albertoirurueta/irurueta-ar[Repository]
+|GitHub repository.
 |===
 
 == Attachments

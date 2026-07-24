@@ -35,7 +35,11 @@ Augmented Reality and 3D reconstruction library
 
 ## Documentation
 
-- [Maven Site Report](http://albertoirurueta.github.io/irurueta-ar) — Javadoc, coverage, and code-quality reports
+- [Project documentation](https://albertoirurueta.github.io/irurueta-ar/)
+- [Javadoc report](https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/index.html)
+- [JaCoCo coverage report](https://albertoirurueta.github.io/irurueta-ar/mvn-site/jacoco/index.html)
+- [Surefire test report](https://albertoirurueta.github.io/irurueta-ar/mvn-site/surefire.html)
+- [Maven Site](https://albertoirurueta.github.io/irurueta-ar/mvn-site)
 - [SonarCloud dashboard](https://sonarcloud.io/dashboard?id=albertoirurueta_irurueta-ar)
 - [CHANGELOG](CHANGELOG.md)
 
