@@ -1,0 +1,59 @@
+<svg viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="16">
+  <!-- camera centers and baseline: C, e, e', C' are all collinear on the baseline -->
+  <circle cx="60" cy="330" r="5" fill="#1f2937"/>
+  <text x="38" y="352" fill="#1f2937">C</text>
+  <circle cx="840" cy="290" r="5" fill="#1f2937"/>
+  <text x="852" y="312" fill="#1f2937">C&#8242;</text>
+  <line x1="60" y1="330" x2="840" y2="290" stroke="#1f2937" stroke-width="2"/>
+  <text x="420" y="352" fill="#1f2937" font-size="14">baseline</text>
+
+  <!-- a background stack of large epipolar planes (Πe), unfilled, all sharing the baseline, crossing near the top -->
+  <g fill="none" stroke="#9ca3af" stroke-width="1.1">
+    <polygon points="60,330 840,290 760,60 260,20"/>
+    <polygon points="60,330 840,290 660,40 300,60"/>
+    <polygon points="60,330 840,290 560,30 340,90"/>
+  </g>
+  <text x="330" y="15" fill="#6b7280" font-size="13">&#928;e -- pencil of epipolar planes, all sharing the baseline</text>
+
+  <!-- left image plane R (tilted quadrilateral, same style as the epipolar-geometry figure) -->
+  <polygon points="215,130 320,200 277,368 172,300" fill="#1f2937" fill-opacity="0.07" stroke="#1f2937" stroke-width="1.7"/>
+  <text x="228" y="120" fill="#1f2937">R</text>
+
+  <!-- frustum edges from C to the four corners of R -->
+  <line x1="60" y1="330" x2="215" y2="130" stroke="#1f2937" stroke-width="1.3"/>
+  <line x1="60" y1="330" x2="320" y2="200" stroke="#1f2937" stroke-width="1.3"/>
+  <line x1="60" y1="330" x2="277" y2="368" stroke="#1f2937" stroke-width="1.3"/>
+  <line x1="60" y1="330" x2="172" y2="300" stroke="#1f2937" stroke-width="1.3"/>
+
+  <!-- epipole e, on the baseline, inside/near the bottom of R -->
+  <circle cx="282" cy="352" r="4.5" fill="#059669"/>
+  <text x="290" y="347" fill="#059669">e</text>
+
+  <!-- pencil of epipolar lines l1..l4, ALL fanning out from the single epipole e -->
+  <line x1="282" y1="352" x2="195" y2="175" stroke="#dc2626" stroke-width="1.6"/>
+  <line x1="282" y1="352" x2="230" y2="150" stroke="#dc2626" stroke-width="1.6"/>
+  <line x1="282" y1="352" x2="275" y2="140" stroke="#dc2626" stroke-width="1.6"/>
+  <line x1="282" y1="352" x2="320" y2="160" stroke="#dc2626" stroke-width="1.6"/>
+  <text x="330" y="230" fill="#dc2626" font-size="14">l</text>
+
+  <!-- right image plane R', mirrored -->
+  <polygon points="685,130 580,200 623,368 728,300" fill="#1f2937" fill-opacity="0.07" stroke="#1f2937" stroke-width="1.7"/>
+  <text x="655" y="120" fill="#1f2937">R&#8242;</text>
+
+  <line x1="840" y1="290" x2="685" y2="130" stroke="#1f2937" stroke-width="1.3"/>
+  <line x1="840" y1="290" x2="580" y2="200" stroke="#1f2937" stroke-width="1.3"/>
+  <line x1="840" y1="290" x2="623" y2="368" stroke="#1f2937" stroke-width="1.3"/>
+  <line x1="840" y1="290" x2="728" y2="300" stroke="#1f2937" stroke-width="1.3"/>
+
+  <circle cx="618" cy="330" r="4.5" fill="#059669"/>
+  <text x="595" y="325" fill="#059669" text-anchor="end">e&#8242;</text>
+
+  <line x1="618" y1="330" x2="705" y2="165" stroke="#dc2626" stroke-width="1.6"/>
+  <line x1="618" y1="330" x2="670" y2="140" stroke="#dc2626" stroke-width="1.6"/>
+  <line x1="618" y1="330" x2="625" y2="130" stroke="#dc2626" stroke-width="1.6"/>
+  <line x1="618" y1="330" x2="580" y2="150" stroke="#dc2626" stroke-width="1.6"/>
+  <text x="570" y="215" fill="#dc2626" font-size="14">l&#8242;</text>
+
+  <text x="90" y="480" fill="#374151" font-size="13">Every epipolar plane still contains the baseline, so on each view every one of its epipolar lines still passes</text>
+  <text x="90" y="497" fill="#374151" font-size="13">through that view's single epipole -- a pencil of lines, all fanning out from e (or e&#8242;).</text>
+</svg>

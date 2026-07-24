@@ -1,0 +1,5 @@
+name: irurueta-ar
+version: 1.6.0
+title: irurueta-ar
+nav:
+  - modules/ROOT/nav.adoc

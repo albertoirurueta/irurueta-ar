@@ -1,0 +1,66 @@
+<svg viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="15">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#374151"/>
+    </marker>
+  </defs>
+
+  <!-- Stage boxes -->
+  <rect x="20" y="30" width="170" height="60" rx="6" fill="#1f2937" fill-opacity="0.06" stroke="#1f2937" stroke-width="1.5"/>
+  <text x="105" y="55" text-anchor="middle" fill="#1f2937">Matched 2D points</text>
+  <text x="105" y="75" text-anchor="middle" fill="#1f2937">(two views)</text>
+
+  <rect x="230" y="30" width="170" height="60" rx="6" fill="#1f2937" fill-opacity="0.06" stroke="#1f2937" stroke-width="1.5"/>
+  <text x="315" y="55" text-anchor="middle" fill="#1f2937">Fundamental matrix</text>
+  <text x="315" y="75" text-anchor="middle" fill="#1f2937">(robust, 7-/8-point)</text>
+
+  <rect x="440" y="30" width="170" height="60" rx="6" fill="#1f2937" fill-opacity="0.06" stroke="#1f2937" stroke-width="1.5"/>
+  <text x="525" y="55" text-anchor="middle" fill="#1f2937">Point correction</text>
+  <text x="525" y="75" text-anchor="middle" fill="#1f2937">(Sampson / Gold Standard)</text>
+
+  <line x1="190" y1="60" x2="225" y2="60" stroke="#374151" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <line x1="400" y1="60" x2="435" y2="60" stroke="#374151" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- Branch down from point correction -->
+  <line x1="525" y1="90" x2="525" y2="130" stroke="#374151" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- Two branches: K known vs K unknown -->
+  <line x1="525" y1="130" x2="230" y2="130" stroke="#374151" stroke-width="1.4"/>
+  <line x1="525" y1="130" x2="720" y2="130" stroke="#374151" stroke-width="1.4"/>
+  <line x1="230" y1="130" x2="230" y2="150" stroke="#374151" stroke-width="1.4" marker-end="url(#arrow)"/>
+  <line x1="720" y1="130" x2="720" y2="150" stroke="#374151" stroke-width="1.4" marker-end="url(#arrow)"/>
+
+  <text x="230" y="122" text-anchor="middle" fill="#374151" font-size="13">K known</text>
+  <text x="720" y="122" text-anchor="middle" fill="#374151" font-size="13">K unknown</text>
+
+  <!-- Left branch: essential matrix -> metric directly -->
+  <rect x="140" y="150" width="180" height="60" rx="6" fill="#059669" fill-opacity="0.08" stroke="#059669" stroke-width="1.5"/>
+  <text x="230" y="175" text-anchor="middle" fill="#059669">Essential matrix E</text>
+  <text x="230" y="195" text-anchor="middle" fill="#059669">= K&#8242;&#7488;FK, 4-fold pose</text>
+
+  <rect x="140" y="240" width="180" height="60" rx="6" fill="#059669" fill-opacity="0.08" stroke="#059669" stroke-width="1.5"/>
+  <text x="230" y="265" text-anchor="middle" fill="#059669">Metric stratum</text>
+  <text x="230" y="285" text-anchor="middle" fill="#059669">(cheirality-disambiguated)</text>
+
+  <line x1="230" y1="210" x2="230" y2="235" stroke="#059669" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- Right branch: projective pair -> self-calibration -> metric -->
+  <rect x="630" y="150" width="180" height="60" rx="6" fill="#dc2626" fill-opacity="0.07" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="720" y="175" text-anchor="middle" fill="#dc2626">Projective camera pair</text>
+  <text x="720" y="195" text-anchor="middle" fill="#dc2626">P&#8242;=[e&#8242;]&#8339;F+e&#8242;&#960;&#7488;</text>
+
+  <rect x="630" y="240" width="180" height="60" rx="6" fill="#dc2626" fill-opacity="0.07" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="720" y="265" text-anchor="middle" fill="#dc2626">Self-calibration</text>
+  <text x="720" y="285" text-anchor="middle" fill="#dc2626">(DAQ / Kruppa)</text>
+
+  <line x1="720" y1="210" x2="720" y2="235" stroke="#dc2626" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- both merge into final metric reconstruction -->
+  <line x1="230" y1="300" x2="230" y2="330" stroke="#374151" stroke-width="1.4"/>
+  <line x1="720" y1="300" x2="720" y2="330" stroke="#374151" stroke-width="1.4"/>
+  <line x1="230" y1="330" x2="720" y2="330" stroke="#374151" stroke-width="1.4"/>
+  <line x1="475" y1="330" x2="475" y2="350" stroke="#374151" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <rect x="330" y="350" width="290" height="45" rx="6" fill="#1f2937" fill-opacity="0.06" stroke="#1f2937" stroke-width="1.5"/>
+  <text x="475" y="378" text-anchor="middle" fill="#1f2937">Triangulated 3D points &amp; cameras, up to scale</text>
+</svg>

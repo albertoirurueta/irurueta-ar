@@ -1,0 +1,158 @@
+= Reference
+
+NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
+
+These reports are generated during the build.
+
+== Generated Reports
+
+[cols="1,3",options="header"]
+|===
+|Report
+|Description
+
+|https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/index.html[Javadoc]
+|API reference generated as part of Maven site execution.
+
+|https://albertoirurueta.github.io/irurueta-ar/mvn-site/jacoco/index.html[JaCoCo]
+|Code coverage report generated during the Maven build.
+
+|https://albertoirurueta.github.io/irurueta-ar/mvn-site/surefire.html[Surefire]
+|Unit test execution report.
+
+|https://albertoirurueta.github.io/irurueta-ar/mvn-site[Maven Site]
+|Aggregated Maven site report published to GitHub Pages, including Javadoc, JaCoCo, and Surefire reports plus
+project info, dependencies, and plugin reports, generated via `mvn site`.
+
+|https://sonarcloud.io/project/overview?id=albertoirurueta_irurueta-ar[SonarCloud]
+|Code quality, issue, and coverage information from SonarCloud.
+
+|https://github.com/albertoirurueta/irurueta-ar[Repository]
+|GitHub repository.
+|===
+
+== Attachments
+
+|===
+|Attachment |Description
+
+|xref:attachment$irurueta-phd-thesis.pdf[Fixed Scene 3D Reconstruction for Mobile Applications (PDF)]
+|The author's own PhD thesis/technical report. It is the primary source for the equations, algorithms, and
+figures used throughout the xref:estimation/robust-vs-nonrobust.adoc[Estimation], xref:epipolar/fundamental-matrix.adoc[Epipolar geometry],
+xref:calibration/self-calibration.adoc[Calibration], and xref:sfm/structure-from-motion.adoc[Structure from Motion]
+pages. Reproduced here in full with the author's permission since he holds the copyright.
+|===
+
+== Bibliography
+
+References cited throughout this documentation. Every citation elsewhere in the site links back to an anchor
+in this list.
+
+. [[ref-thesis]] A. Irurueta. "Fixed Scene 3D Reconstruction for Mobile Applications". Visual Engineering.
+  Unpublished technical report/thesis (see the attachment above).
+. [[ref-nyquist-1924]] H. Nyquist. "Certain factors affecting telegraph speed". _Bell System Technical Journal_,
+  324-346, 1924.
+. [[ref-scharstein-szeliski-2002]] D. Scharstein and R. Szeliski. "A Taxonomy and Evaluation of Dense
+  Two-Frame Stereo Correspondence Algorithms". _IJCV_, 2002.
+. [[ref-birchfield-tomasi-1998]] S. Birchfield and C. Tomasi. "A Pixel Dissimilarity Measure That Is
+  Insensitive to Image Sampling". _IEEE Transactions on Pattern Analysis and Machine Intelligence_, Vol. 20,
+  1998.
+. [[ref-scharstein-szeliski-1998]] D. Scharstein and R. Szeliski. "Stereo Matching with Nonlinear
+  Diffusion". _IJCV_, 1998.
+. [[ref-cyganek-siebert-2009]] B. Cyganek and J. P. Siebert. "An Introduction to 3D Computer Vision
+  Techniques and Algorithms". Wiley & Sons, 2009.
+. [[ref-banks-corke-2001]] J. Banks and P. Corke. "Quantitative Evaluation of Matching Methods and Validity
+  Measures for Stereo Vision". _The International Journal of Robotics Research_, 2001.
+. [[ref-pollefeys-2000]] M. Pollefeys. "Tutorial on 3D Modeling from Images". Lecture Notes of ECCV2000,
+  Dublin, 2000.
+. [[ref-hartley-zisserman-2003]] R. Hartley and A. Zisserman. "Multiple View Geometry in Computer Vision".
+  Cambridge University Press, 2nd edition, 2003.
+. [[ref-faugeras-1993]] O. Faugeras. "Three-Dimensional Computer Vision. A Geometric Viewpoint". The MIT
+  Press, 1993.
+. [[ref-faugeras-luong-2004]] O. Faugeras and Q. Luong. "The Geometry of Multiple Images: The Laws That
+  Govern the Formation of Multiple Images of a Scene and Some of Their Applications". The MIT Press, 2004.
+. [[ref-mordohai-medioni-2006]] P. Mordohai and G. Medioni. "Stereo Using Monocular Cues within the Tensor
+  Voting Framework". _Transactions on Pattern Analysis and Machine Intelligence_, Vol. 28, 2006.
+. [[ref-yoon-kweon-2006]] K. Yoon and I. Kweon. "Adaptive Support-Weight Approach for Correspondence
+  Search". _Transactions on Pattern Analysis and Machine Intelligence_, Vol. 28, 2006.
+. [[ref-taguchi-2008]] Y. Taguchi et al. "Stereo Reconstruction with Mixed Pixels Using Adaptive
+  Over-Segmentation". _CVPR_, 2008.
+. [[ref-kanade-okutomi-1994]] T. Kanade and M. Okutomi. "A Stereo Matching Algorithm with an Adaptive
+  Window: Theory and Experiment". _IEEE Transactions on Pattern Analysis and Machine Intelligence_, Vol. 16,
+  1994.
+. [[ref-wang-2006]] L. Wang et al. "High-quality Real-time Stereo using Adaptive Cost Aggregation and
+  Dynamic Programming". Third International Symposium on 3D Data Processing, Visualization, and
+  Transmission, 2006.
+. [[ref-tombari-2007]] F. Tombari et al. "Segmentation-Based Adaptive Support for Accurate Stereo
+  Correspondence". _IEEE Pacific-Rim Symposium on Image and Video Technology_, 2007.
+. [[ref-yin-cooperstock-2004]] J. Yin and J. R. Cooperstock. "Improving Depth Maps by Nonlinear
+  Diffusion". _WSCG_, 2004.
+. [[ref-hirschmuller-2006]] H. Hirschmüller. "Stereo Vision in Structured Environments by Consistent
+  Semi-Global Matching". _CVPR_, 2006.
+. [[ref-harris-stephens-1988]] C. Harris and M. Stephens. "A Combined Corner and Edge Detector".
+  Proceedings of The Fourth Alvey Vision Conference, 1988.
+. [[ref-lowe-1999]] D. G. Lowe. "Object Recognition from Local Scale-Invariant Features". Proceedings of
+  the International Conference on Computer Vision, 1999.
+. [[ref-memin-perez-2002]] E. Mémin and P. Pérez. "Hierarchical Estimation and Segmentation of Dense
+  Motion Fields". _International Journal of Computer Vision_, 2002.
+. [[ref-wang-zheng-2008]] Z. Wang and Z. Zheng. "A Region Based Stereo Matching Algorithm Using
+  Cooperative Optimization". _CVPR_, 2008.
+. [[ref-brox-2004]] T. Brox et al. "High Accuracy Optical Flow Estimation Based on a Theory for Warping".
+  Proc. 8th European Conference on Computer Vision, 2004.
+. [[ref-mainberger-2008]] M. Mainberger et al. "Is Dense Optic Flow Useful to Compute the Fundamental
+  Matrix?". Lecture Notes in Computer Science, 2008.
+. [[ref-kang-2001]] S. Kang et al. "Handling Occlusions in Dense Multi-view Stereo". _CVPR_, vol. 1, p.
+  103, 2001.
+. [[ref-black-1991]] M. J. Black. "Robust Dynamic Motion Estimation Over Time". _Computer Vision and
+  Pattern Recognition_, 1991.
+. [[ref-bhusnurmath-taylor-2008]] A. Bhusnurmath and C. J. Taylor. "Solving Stereo Matching Problems using
+  Interior Point Methods". _European Conference on Computer Vision_, 2008.
+. [[ref-slesareva-2005]] N. Slesareva et al. "Optic Flow Goes Stereo: A Variational Method for Estimating
+  Discontinuity-Preserving Dense Disparity Maps". LNCS 3663, pp. 33-40, 2005.
+. [[ref-ohta-kanade-1985]] Y. Ohta and T. Kanade. "Stereo by Intra- and Inter-Scanline Search Using
+  Dynamic Programming". _IEEE Trans. Pattern Analysis and Machine Intelligence_, Vol. PAMI-7, No. 2, 1985.
+. [[ref-csurka-1996]] G. Csurka, C. Zeller, Z. Zhang and O. Faugeras. "Characterizing the Uncertainty of
+  the Fundamental Matrix". _Computer Vision and Image Understanding_, 1996.
+. [[ref-luong-faugeras-1995]] Q. T. Luong and O. D. Faugeras. "The Fundamental Matrix: theory,
+  algorithms, and stability analysis". _IJCV_, 1995.
+. [[ref-zhang-1998]] Z. Zhang. "Determining the Epipolar Geometry and its Uncertainty: A Review".
+  _International Journal of Computer Vision_, 27(3), 161-198, 1998.
+. [[ref-atzpadin-2004]] N. Atzpadin, P. Kauff, O. Schreer. "3D Analysis by Hybrid Recursive Matching for
+  Real-Time Immersive Video Conferencing". _IEEE Trans. on Circuits and Systems for Video Technology_,
+  Special Issue on Immersive Telecommunications, Vol. 14, pp. 321-334, 2004.
+. [[ref-press-2007]] W. H. Press, S. A. Teukolsky, W. T. Vetterling and B. P. Flannery. "Numerical
+  Recipes: The Art of Scientific Computing". Cambridge University Press, 3rd edition, 2007.
+. [[ref-cormen-2001]] T. H. Cormen, C. E. Leiserson, R. L. Rivest and C. Stein. "Introduction to
+  Algorithms". The MIT Press, 2nd edition, 2001.
+. [[ref-george-tjahjadi-1999]] M. George and T. Tjahjadi. "Multi-Resolution Optical Flow Estimation Using
+  Adaptive Shifting". _International Conference on Image Processing_, 1999.
+. [[ref-alvarez-2000]] L. Alvarez, J. Wickert and J. Sánchez. "Reliable Estimation of Dense Optical Flow
+  Fields with Large Displacements". _International Journal of Computer Vision_, Vol. 39, 2000.
+. [[ref-alvarez-1999]] L. Alvarez, J. Esclarin, M. Lefebure and J. Sánchez. "A PDE model for computing the
+  Optical Flow". Proceedings of CEDYA XVI, 1999.
+. [[ref-bergen-1992]] J. R. Bergen, P. Ananda, K. J. Hanna and R. Hingorani. "Hierarchical Model-Based
+  Motion Estimation". _European Conference on Computer Vision_, 1992.
+. [[ref-middlebury]] Datasets from the Middlebury Stereo Vision Page. www.middlebury.edu/stereo.
+. [[ref-zitnick-2004]] C.L. Zitnick, S.B. Kang, M. Uyttendaele, S. Winder, and R. Szeliski. "High-quality
+  video view interpolation using a layered representation". _ACM SIGGRAPH / ACM Trans. on Graphics_, 2004.
+. [[ref-pollefeys-koch-gool-1999]] M. Pollefeys, R. Koch and L.V. Gool. "A simple and efficient
+  rectification method for general motion". _ICCV_, 1999.
+. [[ref-hartley-1993]] R. Hartley. "Cheirality Invariants". Proc. D.A.R.P.A. Image Understanding Workshop,
+  pp. 743-753, 1993.
+. [[ref-laveau-faugeras-1996]] S. Laveau and O. Faugeras. "Oriented Projective Geometry for Computer
+  Vision". _Computer Vision - ECCV'96_, Lecture Notes in Computer Science, Vol. 1064, Springer-Verlag, pp.
+  147-156, 1996.
+. [[ref-horn-schunck-1981]] B. Horn and B. Schunck. "Determining Optical Flow". _Artificial Intelligence_,
+  17:185-203, 1981.
+. [[ref-perona-malik-1990]] P. Perona and J. Malik. "Scale-Space and Edge Detection Using Anisotropic
+  Diffusion". _IEEE Transactions on Pattern Analysis and Machine Intelligence_, Vol. 12, No. 7, 1990.
+. [[ref-hornung-kobbelt-2006]] A. Hornung and L. Kobbelt. "Robust Reconstruction of Watertight 3D Models
+  from Non-uniformly Sampled Point Clouds Without Normal Information". Eurographics Symposium on Geometry
+  Processing, 2006.
+. [[ref-kazhdan-2006]] M. Kazhdan, M. Bolitho and H. Hoppe. "Poisson Surface Reconstruction". Eurographics
+  Symposium on Geometry Processing, 2006.
+. [[ref-merrell-2007]] P. Merrell, A. Akbarzadeh, L. Wang, P. Mordohai, J. Frahm, R. Yang, D. Nistér, and
+  M. Pollefeys. "Real-Time Visibility-Based Fusion of Depth Maps". _ICCV_, 2007.
+. [[ref-fischler-bolles-1981]] M. A. Fischler and R. C. Bolles. "Random Sample Consensus: A Paradigm for
+  Model Fitting with Applications to Image Analysis and Automated Cartography". _Communications of the ACM_,
+  24(6), 381-395, 1981.

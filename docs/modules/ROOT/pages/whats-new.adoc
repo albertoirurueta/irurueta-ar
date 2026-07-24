@@ -1,0 +1,14 @@
+= What's New
+
+NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
+
+== 1.6.0
+
+* ✨ Published new project documentation as an Antora site (`docs/`), covering camera calibration,
+  self-calibration, epipolar geometry (essential/fundamental matrices, point correction), robust vs. non-robust
+  estimation, and structure-from-motion/SLAM reconstruction, plus an expanded `README.md` with a usage example
+  and updated project/documentation links.
+* ♻️ Raised the minimum Java version from 17 to 21 (compiler source/target, CI workflows, and SonarCloud
+  analysis).
+* ♻️ Updated `irurueta-numerical` and `irurueta-geometry` dependencies to 1.6.0, and `irurueta-statistics`,
+  `irurueta-sorting`, and `irurueta-algebra` dependencies to 1.4.0.
