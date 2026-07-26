@@ -151,8 +151,7 @@ in this list.
   Processing, 2006.
 . [[ref-kazhdan-2006]] M. Kazhdan, M. Bolitho and H. Hoppe. "Poisson Surface Reconstruction". Eurographics
   Symposium on Geometry Processing, 2006.
-. [[ref-merrell-2007]] P. Merrell, A. Akbarzadeh, L. Wang, P. Mordohai, J. Frahm, R. Yang, D. Nistér, and
-  M. Pollefeys. "Real-Time Visibility-Based Fusion of Depth Maps". _ICCV_, 2007.
+. [[ref-merrell-2007]] P. Merrell, A. Akbarzadeh, L. Wang, P. Mordohai, J. Frahm, R. Yang, D. Nistér, and M. Pollefeys. "Real-Time Visibility-Based Fusion of Depth Maps". _ICCV_, 2007.
 . [[ref-fischler-bolles-1981]] M. A. Fischler and R. C. Bolles. "Random Sample Consensus: A Paradigm for
   Model Fitting with Applications to Image Analysis and Automated Cartography". _Communications of the ACM_,
   24(6), 381-395, 1981.
