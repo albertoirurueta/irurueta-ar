@@ -67,6 +67,21 @@ List<Point2D> correctedRight = corrector.getRightCorrectedPoints();
 // triangulate correctedLeft/correctedRight instead of the raw matches
 ----
 
+== Key classes
+
+[cols="2,1,1",options="header"]
+|===
+|Class |Repository |Javadoc
+
+|`Corrector`
+|https://github.com/albertoirurueta/irurueta-ar/blob/master/src/main/java/com/irurueta/ar/epipolar/Corrector.java[Source]
+|https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/com/irurueta/ar/epipolar/Corrector.html[Javadoc]
+
+|`CorrectorType`
+|https://github.com/albertoirurueta/irurueta-ar/blob/master/src/main/java/com/irurueta/ar/epipolar/CorrectorType.java[Source]
+|https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/com/irurueta/ar/epipolar/CorrectorType.html[Javadoc]
+|===
+
 == References
 
 xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;3.2.5 +

@@ -107,6 +107,25 @@ reconstructor.start();
 // the initial camera pair, and the final triangulated 3D points as reconstruction progresses
 ----
 
+== Key classes
+
+[cols="2,1,1",options="header"]
+|===
+|Class |Repository |Javadoc
+
+|`TwoViewsSparseReconstructorConfiguration`
+|https://github.com/albertoirurueta/irurueta-ar/blob/master/src/main/java/com/irurueta/ar/sfm/TwoViewsSparseReconstructorConfiguration.java[Source]
+|https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/com/irurueta/ar/sfm/TwoViewsSparseReconstructorConfiguration.html[Javadoc]
+
+|`InitialCamerasEstimatorMethod`
+|https://github.com/albertoirurueta/irurueta-ar/blob/master/src/main/java/com/irurueta/ar/sfm/InitialCamerasEstimatorMethod.java[Source]
+|https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/com/irurueta/ar/sfm/InitialCamerasEstimatorMethod.html[Javadoc]
+
+|`TwoViewsSparseReconstructor`
+|https://github.com/albertoirurueta/irurueta-ar/blob/master/src/main/java/com/irurueta/ar/sfm/TwoViewsSparseReconstructor.java[Source]
+|https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/com/irurueta/ar/sfm/TwoViewsSparseReconstructor.html[Javadoc]
+|===
+
 == References
 
 xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;3.2.4, &sect;4, &sect;5 +

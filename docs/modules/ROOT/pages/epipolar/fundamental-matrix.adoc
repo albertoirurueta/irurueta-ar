@@ -120,6 +120,29 @@ Point2D leftEpipole = fundamentalMatrix.getLeftEpipole();
 Point2D rightEpipole = fundamentalMatrix.getRightEpipole();
 ----
 
+== Key classes
+
+[cols="2,1,1",options="header"]
+|===
+|Class |Repository |Javadoc
+
+|`FundamentalMatrix`
+|https://github.com/albertoirurueta/irurueta-ar/blob/master/src/main/java/com/irurueta/ar/epipolar/FundamentalMatrix.java[Source]
+|https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/com/irurueta/ar/epipolar/FundamentalMatrix.html[Javadoc]
+
+|`SevenPointsFundamentalMatrixEstimator`
+|https://github.com/albertoirurueta/irurueta-ar/blob/master/src/main/java/com/irurueta/ar/epipolar/estimators/SevenPointsFundamentalMatrixEstimator.java[Source]
+|https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/com/irurueta/ar/epipolar/estimators/SevenPointsFundamentalMatrixEstimator.html[Javadoc]
+
+|`FundamentalMatrixRobustEstimator`
+|https://github.com/albertoirurueta/irurueta-ar/blob/master/src/main/java/com/irurueta/ar/epipolar/estimators/FundamentalMatrixRobustEstimator.java[Source]
+|https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/com/irurueta/ar/epipolar/estimators/FundamentalMatrixRobustEstimator.html[Javadoc]
+
+|`RANSACFundamentalMatrixRobustEstimator`
+|https://github.com/albertoirurueta/irurueta-ar/blob/master/src/main/java/com/irurueta/ar/epipolar/estimators/RANSACFundamentalMatrixRobustEstimator.java[Source]
+|https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/com/irurueta/ar/epipolar/estimators/RANSACFundamentalMatrixRobustEstimator.html[Javadoc]
+|===
+
 == Next
 
 xref:epipolar/essential-matrix.adoc[] shows how stem:[F] combines with known intrinsic calibration to give the

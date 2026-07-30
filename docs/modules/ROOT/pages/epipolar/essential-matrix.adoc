@@ -79,6 +79,21 @@ Point2D translationB = essential.getSecondPossibleTranslation();
 // and keep the one with all-positive cheirality (see sfm/structure-from-motion.adoc)
 ----
 
+== Key classes
+
+[cols="2,1,1",options="header"]
+|===
+|Class |Repository |Javadoc
+
+|`EssentialMatrix`
+|https://github.com/albertoirurueta/irurueta-ar/blob/master/src/main/java/com/irurueta/ar/epipolar/EssentialMatrix.java[Source]
+|https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/com/irurueta/ar/epipolar/EssentialMatrix.html[Javadoc]
+
+|`FundamentalMatrix`
+|https://github.com/albertoirurueta/irurueta-ar/blob/master/src/main/java/com/irurueta/ar/epipolar/FundamentalMatrix.java[Source]
+|https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/com/irurueta/ar/epipolar/FundamentalMatrix.html[Javadoc]
+|===
+
 == References
 
 xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;3.2.7 +
