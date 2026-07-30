@@ -46,6 +46,29 @@ PinholeCameraIntrinsicParameters intrinsics = calibrator.getEstimatedIntrinsicPa
 RadialDistortion distortion = calibrator.getDistortion();
 ----
 
+== Key classes
+
+[cols="2,1,1",options="header"]
+|===
+|Class |Repository |Javadoc
+
+|`Pattern2D`
+|https://github.com/albertoirurueta/irurueta-ar/blob/master/src/main/java/com/irurueta/ar/calibration/Pattern2D.java[Source]
+|https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/com/irurueta/ar/calibration/Pattern2D.html[Javadoc]
+
+|`QRPattern2D`
+|https://github.com/albertoirurueta/irurueta-ar/blob/master/src/main/java/com/irurueta/ar/calibration/QRPattern2D.java[Source]
+|https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/com/irurueta/ar/calibration/QRPattern2D.html[Javadoc]
+
+|`CameraCalibrator`
+|https://github.com/albertoirurueta/irurueta-ar/blob/master/src/main/java/com/irurueta/ar/calibration/CameraCalibrator.java[Source]
+|https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/com/irurueta/ar/calibration/CameraCalibrator.html[Javadoc]
+
+|`RadialDistortion`
+|https://github.com/albertoirurueta/irurueta-ar/blob/master/src/main/java/com/irurueta/ar/calibration/RadialDistortion.java[Source]
+|https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/com/irurueta/ar/calibration/RadialDistortion.html[Javadoc]
+|===
+
 == References
 
 xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;2 (camera models, DLT camera estimation) +

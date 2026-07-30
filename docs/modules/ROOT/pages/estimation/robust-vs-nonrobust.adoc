@@ -139,6 +139,29 @@ robust.setThreshold(1.0); // pixels
 FundamentalMatrix robustFundamentalMatrix = robust.estimate();
 ----
 
+== Key classes
+
+[cols="2,1,1",options="header"]
+|===
+|Class |Repository |Javadoc
+
+|`FundamentalMatrix`
+|https://github.com/albertoirurueta/irurueta-ar/blob/master/src/main/java/com/irurueta/ar/epipolar/FundamentalMatrix.java[Source]
+|https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/com/irurueta/ar/epipolar/FundamentalMatrix.html[Javadoc]
+
+|`EightPointsFundamentalMatrixEstimator`
+|https://github.com/albertoirurueta/irurueta-ar/blob/master/src/main/java/com/irurueta/ar/epipolar/estimators/EightPointsFundamentalMatrixEstimator.java[Source]
+|https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/com/irurueta/ar/epipolar/estimators/EightPointsFundamentalMatrixEstimator.html[Javadoc]
+
+|`FundamentalMatrixRobustEstimator`
+|https://github.com/albertoirurueta/irurueta-ar/blob/master/src/main/java/com/irurueta/ar/epipolar/estimators/FundamentalMatrixRobustEstimator.java[Source]
+|https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/com/irurueta/ar/epipolar/estimators/FundamentalMatrixRobustEstimator.html[Javadoc]
+
+|`RANSACFundamentalMatrixRobustEstimator`
+|https://github.com/albertoirurueta/irurueta-ar/blob/master/src/main/java/com/irurueta/ar/epipolar/estimators/RANSACFundamentalMatrixRobustEstimator.java[Source]
+|https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/com/irurueta/ar/epipolar/estimators/RANSACFundamentalMatrixRobustEstimator.html[Javadoc]
+|===
+
 == References
 
 xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;2.5, &sect;3.2.3 +

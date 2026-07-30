@@ -206,6 +206,29 @@ DualImageOfAbsoluteConic diac = kruppaEstimator.estimate();
 PinholeCameraIntrinsicParameters intrinsics = diac.getIntrinsicParameters();
 ----
 
+== Key classes
+
+[cols="2,1,1",options="header"]
+|===
+|Class |Repository |Javadoc
+
+|`DualAbsoluteQuadricEstimator`
+|https://github.com/albertoirurueta/irurueta-ar/blob/master/src/main/java/com/irurueta/ar/calibration/estimators/DualAbsoluteQuadricEstimator.java[Source]
+|https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/com/irurueta/ar/calibration/estimators/DualAbsoluteQuadricEstimator.html[Javadoc]
+
+|`DualAbsoluteQuadric`
+|https://github.com/albertoirurueta/irurueta-ar/blob/master/src/main/java/com/irurueta/ar/calibration/DualAbsoluteQuadric.java[Source]
+|https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/com/irurueta/ar/calibration/DualAbsoluteQuadric.html[Javadoc]
+
+|`KruppaDualImageOfAbsoluteConicEstimator`
+|https://github.com/albertoirurueta/irurueta-ar/blob/master/src/main/java/com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimator.java[Source]
+|https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/com/irurueta/ar/calibration/estimators/KruppaDualImageOfAbsoluteConicEstimator.html[Javadoc]
+
+|`DualImageOfAbsoluteConic`
+|https://github.com/albertoirurueta/irurueta-ar/blob/master/src/main/java/com/irurueta/ar/calibration/DualImageOfAbsoluteConic.java[Source]
+|https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/com/irurueta/ar/calibration/DualImageOfAbsoluteConic.html[Javadoc]
+|===
+
 == Next
 
 See xref:sfm/structure-from-motion.adoc[] for how self-calibration fits into the full reconstruction pipeline:
