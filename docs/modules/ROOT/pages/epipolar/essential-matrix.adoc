@@ -28,7 +28,7 @@ epipolar constraint stem:[\hat m'^{T} E \hat m = 0] holds for
 E = K'^{T} F K = [t]_\times R
 ++++
 
-xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;3.2.7. Unlike stem:[F], stem:[E] is not an arbitrary
+xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=138[&sect;3.2.7]. Unlike stem:[F], stem:[E] is not an arbitrary
 rank-2 matrix: because it factors as a skew-symmetric matrix times a rotation, its SVD always has the form
 stem:[E = U\,\mathrm{diag}(1,1,0)\,V^{T}] -- two equal, non-zero singular values (defined up to the overall
 scale of stem:[E]) and a third that is exactly zero. Counting rotation (3 DOF) and translation direction (2 DOF
@@ -55,7 +55,7 @@ a *twisted pair* related by a 180&deg; rotation about the baseline. Only one com
 triangulated 3D point in front of *both* cameras (correct cheirality); the other three put at least some points
 behind a camera, so the standard disambiguation is to triangulate a handful of correspondences under all four
 hypotheses and keep the one with the most positive cheiralities
-xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;3.2.7.2.
+xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=141[&sect;3.2.7.2].
 
 Maps to `EssentialMatrix.computePossibleRotationAndTranslations()` +
 `getFirstPossibleRotation()`/`getSecondPossibleRotation()` +
@@ -96,6 +96,6 @@ Point2D translationB = essential.getSecondPossibleTranslation();
 
 == References
 
-xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;3.2.7 +
+xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=138[&sect;3.2.7] +
 xref:reference.adoc#ref-hartley-zisserman-2003[Hartley & Zisserman, 2003] &sect;9.6 +
 xref:reference.adoc#ref-hartley-1993[Hartley, 1993] (cheirality)

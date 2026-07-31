@@ -26,7 +26,7 @@ Q_\infty^{*} = \begin{bmatrix} I_{3\times 3} & 0 \\ 0^{T} & 0 \end{bmatrix}
 Projecting it into any view gives the **dual image of the absolute conic** (DIAC) stem:[\omega_\infty^{*} = P\, Q_\infty^{*}\, P^{T}]: in the metric stratum this reduces to stem:[\omega_\infty^{*} = K K^{T}], a real
 symmetric, positive-definite matrix. This is the key fact self-calibration exploits both ways: *estimating*
 stem:[Q_\infty^{*}] (or stem:[\omega_\infty^{*}] per view) recovers stem:[K] via a Cholesky factorization of the
-DIAC xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;5.2.
+DIAC xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=173[&sect;5.2].
 
 Maps to `com.irurueta.ar.calibration.DualAbsoluteQuadric`, `DualImageOfAbsoluteConic` (its Cholesky-derived
 intrinsics via `getIntrinsicParameters()`), and `ImageOfAbsoluteConic` (the non-dual form, projected instead
@@ -51,7 +51,7 @@ p_i^{1T} Q_\infty^{*} p_i^{1} = p_i^{2T} Q_\infty^{*} p_i^{2}
 Stacking these across at least 3 views (the reference camera stem:[P_1 = [I\,|\,0\]] alone gives a degenerate
 system) yields a homogeneous linear system solved by the SVD null-space, exactly as in the
 xref:epipolar/fundamental-matrix.adoc[fundamental matrix's linear estimation]
-xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;5.3.1. From the recovered
+xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=176[&sect;5.3.1]. From the recovered
 stem:[Q_\infty^{*}], the focal length of each view falls out of its diagonal DIAC entry, and the plane at
 infinity's direction stem:[\pi_\infty] falls out of stem:[Q_\infty^{*}]'s last row/column -- together giving the
 projective-to-metric transform
@@ -62,7 +62,7 @@ T_{PM} = \begin{bmatrix} K^{-1} & 0 \\ \pi_\infty^{T} & 1 \end{bmatrix}
 ++++
 
 (using either a per-view stem:[K_i], or the first view's / the mean stem:[K] if intrinsics are assumed constant
-across the sequence) xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;5.3.1.1-5.3.1.2. Applying
+across the sequence) xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=182[&sect;5.3.1.1-5.3.1.2]. Applying
 stem:[T_{PM}] to every triangulated point upgrades the whole reconstruction to metric; applying stem:[T_{PM}^{-1}]
 upgrades the camera matrices.
 
@@ -162,7 +162,7 @@ F^{T}\, \omega_\infty^{*\prime}\, F = [e]_\times\, \omega_\infty^{*}\, [e]_\time
 
 which, substituting the SVD stem:[F = U\,\mathrm{diag}(\sigma_1,\sigma_2,0)\,V^{T}] (so stem:[e=v_3],
 stem:[e'=u_3]), reduces to the classic three-way equality relating entries of both DIACs to
-stem:[\sigma_1,\sigma_2] xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;5.3.2:
+stem:[\sigma_1,\sigma_2] xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=183[&sect;5.3.2]:
 
 [stem]
 ++++
@@ -175,7 +175,7 @@ Under the same zero-skew/unit-aspect-ratio/known-principal-point assumptions as 
 equations to solve for the (constant) focal length from a *single* pair of views -- fewer views than the dual
 absolute quadric method needs -- but it only recovers the DIAC, not the plane at infinity, so it is more
 sensitive to degenerate configurations and is used here as a fallback rather than the default
-xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;5.3.2, &sect;5.5.
+xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=183[&sect;5.3.2], xref:attachment$irurueta-phd-thesis.pdf#page=187[&sect;5.5].
 
 Maps to `com.irurueta.ar.calibration.estimators.KruppaDualImageOfAbsoluteConicEstimator`.
 
@@ -185,7 +185,7 @@ Both methods can degenerate for certain camera motions: pure rotation about a si
 translation between views, or a narrow field of view all reduce the rank of the linear systems above and make
 the recovered stem:[K]/stem:[\pi_\infty] unreliable. General, wide camera motion (translation in more than one
 direction, varied viewing angles) avoids these critical sequences
-xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;5.4. The more assumptions you can safely make about
+xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=187[&sect;5.4]. The more assumptions you can safely make about
 stem:[K] up front (zero skew, known principal point, unit aspect ratio), the fewer free parameters remain to
 absorb such degeneracies.
 
@@ -236,7 +236,7 @@ projective reconstruction first, self-calibration second, metric reconstruction 
 
 == References
 
-xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;1.4.3, &sect;5 +
+xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=37[&sect;1.4.3], xref:attachment$irurueta-phd-thesis.pdf#page=173[&sect;5] +
 xref:reference.adoc#ref-hartley-zisserman-2003[Hartley & Zisserman, 2003] chapter 19 ("Auto-Calibration") +
 xref:reference.adoc#ref-hartley-zisserman-2003[Hartley & Zisserman, 2003] &sect;3.6-3.7 (absolute conic / dual
 quadric)

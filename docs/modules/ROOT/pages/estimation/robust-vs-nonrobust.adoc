@@ -85,7 +85,7 @@ N = \frac{\log(1-p)}{\log\left(1 - (1-\varepsilon)^s\right)}
 `irurueta-ar` recomputes stem:[\varepsilon] adaptively as better solutions are found (shrinking `N` as the
 best-known inlier ratio improves) and exposes `confidence` (default `0.99`) and `maxIterations` (default
 `5000`) as the tunable stopping criteria on every `*RobustEstimator` class. This matches the RANSAC treatment
-in the thesis itself xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] (algorithms 2.2 and 3.1) and in
+in the thesis itself xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] (xref:attachment$irurueta-phd-thesis.pdf#page=86[algorithm 2.2] and xref:attachment$irurueta-phd-thesis.pdf#page=116[algorithm 3.1]) and in
 Hartley & Zisserman xref:reference.adoc#ref-hartley-zisserman-2003[Hartley & Zisserman, 2003].
 
 After the best consensus set is found, every robust estimator can optionally refine the result (`refineResult`,
@@ -164,7 +164,7 @@ FundamentalMatrix robustFundamentalMatrix = robust.estimate();
 
 == References
 
-xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;2.5, &sect;3.2.3 +
+xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=80[&sect;2.5], xref:attachment$irurueta-phd-thesis.pdf#page=116[&sect;3.2.3] +
 xref:reference.adoc#ref-hartley-zisserman-2003[Hartley & Zisserman, 2003] chapter 4 ("Estimation - 2D
 Projective Transformations") +
 xref:reference.adoc#ref-fischler-bolles-1981[Fischler & Bolles, 1981] +

@@ -38,7 +38,7 @@ m'^{T} F\, m = 0
 stem:[F] is defined up to scale (8 DOF from stem:[3\times 3 - 1]) and, since stem:[Fe = 0] and stem:[e'^{T}F = 0], its left/right null-spaces are exactly the two epipoles -- forcing stem:[\det(F) = 0] and leaving 7 true
 degrees of freedom. Given the SVD stem:[F = U S V^{T}], the epipoles are recovered directly as the singular
 vectors of the zero singular value: stem:[e = v_3] (last column of stem:[V]), stem:[e' = u_3] (last column of
-stem:[U]) xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;3.2.1
+stem:[U]) xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=103[&sect;3.2.1]
 (`FundamentalMatrix.computeEpipoles()`, `getLeftEpipole()`/`getRightEpipole()`). When the pair of cameras
 stem:[P], stem:[P'] is already known, `new FundamentalMatrix(leftCamera, rightCamera)` computes stem:[F]
 directly from `stem:[F = [e'\]_\times P'P^{\dagger}]`.
@@ -59,7 +59,7 @@ have rank 2, so the *8-point algorithm* enforces it by zeroing the smallest sing
 SVD: if stem:[F = U\,\mathrm{diag}(s_1,s_2,s_3)\,V^{T}], the closest rank-2 matrix in Frobenius norm is
 stem:[F' = U\,\mathrm{diag}(s_1,s_2,0)\,V^{T}]. Point coordinates are normalized beforehand (centroid at the
 origin, RMS distance stem:[\sqrt2]) to keep the linear system well conditioned
-xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;3.2.2.1, matching the normalized-DLT practice in
+xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=108[&sect;3.2.2.1], matching the normalized-DLT practice in
 Hartley & Zisserman xref:reference.adoc#ref-hartley-zisserman-2003[Hartley & Zisserman, 2003] &sect;11.2.
 
 Maps to `com.irurueta.ar.epipolar.estimators.EightPointsFundamentalMatrixEstimator` (`setPointsNormalized`
@@ -73,7 +73,7 @@ combination stem:[F = F' + \alpha F'']; enforcing the rank-2 constraint stem:[\d
 cubic in stem:[\alpha] whose real root(s) are found via the companion-matrix/eigenvalue technique. One real
 root means a unique, non-degenerate solution; three distinct real roots signal a geometrically degenerate
 configuration (e.g. all points near-coplanar, or the two camera centers too close together)
-xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;3.2.2.2.
+xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=110[&sect;3.2.2.2].
 
 Maps to `SevenPointsFundamentalMatrixEstimator` (`estimateAll()` returns every real solution; `estimate()`
 picks the single valid one).
@@ -97,7 +97,7 @@ This is exactly the two-tier pattern described in xref:estimation/robust-vs-nonr
 `FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM` or `EIGHT_POINTS_ALGORITHM` as the inner non-robust
 solver, and `RobustEstimatorMethod.{RANSAC,LMEDS,MSAC,PROSAC,PROMEDS}` as the outlier-rejection strategy. A
 threshold of 1-2 pixels on stem:[d(m',l')] works well in practice
-xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;3.2.3.
+xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=116[&sect;3.2.3].
 
 Maps to `{RANSAC,LMedS,MSAC,PROSAC,PROMedS}FundamentalMatrixRobustEstimator`, all subclasses of the abstract
 `FundamentalMatrixRobustEstimator` (factory: `FundamentalMatrixRobustEstimator.create(...)`).
@@ -151,7 +151,7 @@ noisy correspondences so they lie exactly on the epipolar geometry before triang
 
 == References
 
-xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;3.2 +
+xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=102[&sect;3.2] +
 xref:reference.adoc#ref-hartley-zisserman-2003[Hartley & Zisserman, 2003] chapters 9 and 11 +
 xref:reference.adoc#ref-luong-faugeras-1995[Luong & Faugeras, 1995] +
 xref:reference.adoc#ref-zhang-1998[Zhang, 1998] +

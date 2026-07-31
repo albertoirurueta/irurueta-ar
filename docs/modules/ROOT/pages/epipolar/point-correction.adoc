@@ -36,7 +36,7 @@ stem:[\delta x = -J^{T}(JJ^{T})^{-1}\varepsilon] with
 ++++
 
 so the corrected coordinates are stem:[\hat X = X - \varepsilon\, J^{T}/(JJ^{T})]
-xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;3.2.5.1. This is a single closed-form update -- much
+xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=123[&sect;3.2.5.1]. This is a single closed-form update -- much
 cheaper than the Gold Standard method below, at the cost of being only approximate for larger errors.
 
 Maps to `com.irurueta.ar.epipolar.SampsonCorrector` (batch) / `SampsonSingleCorrector` (single pair).
@@ -50,7 +50,7 @@ lines through the transformed epipole); its stationary points are the roots of a
 stem:[t], found via the same companion-matrix eigenvalue technique used for the
 xref:epipolar/fundamental-matrix.adoc[7-point algorithm]. Evaluating the cost at each real root picks the
 global minimum, and the corrected point is the foot of the perpendicular from the (transformed) measured point
-to the corresponding epipolar line xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;3.2.5.2. This is
+to the corresponding epipolar line xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=128[&sect;3.2.5.2]. This is
 exact (not a first-order approximation) but more expensive than Sampson correction.
 
 Maps to `com.irurueta.ar.epipolar.GoldStandardCorrector` / `GoldStandardSingleCorrector`.
@@ -84,6 +84,6 @@ List<Point2D> correctedRight = corrector.getRightCorrectedPoints();
 
 == References
 
-xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;3.2.5 +
+xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=121[&sect;3.2.5] +
 xref:reference.adoc#ref-hartley-zisserman-2003[Hartley & Zisserman, 2003] &sect;11.4-11.5 +
 xref:reference.adoc#ref-hartley-zisserman-2003[Hartley & Zisserman, 2003] Appendix 6 (iterative estimation)
