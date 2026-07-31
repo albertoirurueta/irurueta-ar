@@ -71,6 +71,6 @@ RadialDistortion distortion = calibrator.getDistortion();
 
 == References
 
-xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;2 (camera models, DLT camera estimation) +
+xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=56[&sect;2] (camera models, DLT camera estimation) +
 xref:reference.adoc#ref-hartley-zisserman-2003[Hartley & Zisserman, 2003] &sect;7 (computation of the camera
 matrix)

@@ -17,7 +17,7 @@ The very first decision is which two views to reconstruct from first. Two views 
 close together, or whose visible points lie on a ruled quadric (most commonly, a plane), produce a *degenerate*
 epipolar geometry -- the xref:epipolar/fundamental-matrix.adoc[7-point algorithm]'s cubic has 3 real roots
 instead of 1. `irurueta-ar` detects this and simply skips to the next candidate view rather than trying to
-reconstruct from a degenerate pair xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;4.2 (algorithm
+reconstruct from a degenerate pair xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=161[&sect;4.2] (algorithm
 4.1).
 
 == Two paths from the fundamental matrix
@@ -43,13 +43,13 @@ P = [I\,|\,0],\qquad P' = \left[\,[e']_\times F + e'\pi^{T}\ \Big|\ \lambda e'\,
 ++++
 
 for any plane direction stem:[\pi] and scale stem:[\lambda] xref:reference.adoc#ref-thesis[Irurueta, PhD
-thesis] &sect;3.2.4. Triangulating points with this pair places the whole reconstruction in an arbitrary
+thesis] xref:attachment$irurueta-phd-thesis.pdf#page=118[&sect;3.2.4]. Triangulating points with this pair places the whole reconstruction in an arbitrary
 **projective stratum**: valid for triangulation and for adding more views, but visibly distorted (straight
 lines bend, parallel lines don't meet at infinity correctly) until it is upgraded. That upgrade is exactly
 xref:calibration/self-calibration.adoc[self-calibration]: once enough views are available, the dual absolute
 quadric (or, pairwise, the Kruppa equations) recovers each view's stem:[K] and the plane at infinity, giving the
 projective-to-metric transform stem:[T_{PM}] that turns the projective reconstruction into a metric one, correct
-up to an overall similarity (scale) xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;4.6, &sect;5.
+up to an overall similarity (scale) xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=171[&sect;4.6], xref:attachment$irurueta-phd-thesis.pdf#page=173[&sect;5].
 Maps to `DualImageOfAbsoluteConicInitialCamerasEstimator` / `DualAbsoluteQuadricInitialCamerasEstimator`
 (`InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC` / `DUAL_ABSOLUTE_QUADRIC` /
 `DUAL_ABSOLUTE_QUADRIC_AND_ESSENTIAL_MATRIX`).
@@ -71,7 +71,7 @@ correspondences (across more than 2 views) might themselves be wrong.
 Once an initial two-view (or paired-views) reconstruction exists, each new view is resected by matching its
 image points against already-triangulated 3D points and solving for its camera matrix with DLT + a robust
 estimator (the same RANSAC/DLT combination used for camera resectioning throughout this library)
-xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;4.3 (algorithm 4.3). `irurueta-ar` packages this
+xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=164[&sect;4.3] (algorithm 4.3). `irurueta-ar` packages this
 whole loop -- initial pair selection, point correction, initial cameras, triangulation, self-calibration when
 needed, and incremental resectioning of further views -- into the `com.irurueta.ar.sfm.SparseReconstructor`
 family:
@@ -128,7 +128,7 @@ reconstructor.start();
 
 == References
 
-xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;3.2.4, &sect;4, &sect;5 +
+xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=118[&sect;3.2.4], xref:attachment$irurueta-phd-thesis.pdf#page=161[&sect;4], xref:attachment$irurueta-phd-thesis.pdf#page=173[&sect;5] +
 xref:reference.adoc#ref-hartley-zisserman-2003[Hartley & Zisserman, 2003] chapter 10 ("3D Reconstruction of
 Cameras and Structure") +
 xref:reference.adoc#ref-pollefeys-2000[Pollefeys, 2000]
