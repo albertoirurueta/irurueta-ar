@@ -1,72 +1,85 @@
-<svg viewBox="0 0 760 520" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="16">
-  <!-- ================= LEFT VIEW ================= -->
-  <!-- camera center C -->
-  <circle cx="90" cy="430" r="5" fill="#1f2937"/>
-  <text x="68" y="452" fill="#1f2937">C</text>
+<svg viewBox="0 0 1380 760" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="16">
+  <!-- ================= EPIPOLAR PLANE (background) =================
+       Πe is defined by C, C' and M, so the baseline C-C' IS one of its edges: the epipoles,
+       which lie on the baseline, therefore lie exactly on the plane's boundary. -->
+  <polygon points="70,490 449,18 1298,57 830,580" fill="none" stroke="#9ca3af" stroke-width="1.1"/>
+  <text x="1105" y="78" fill="#6b7280" font-size="14">&#928;e (epipolar plane)</text>
 
-  <!-- image plane R: tilted quadrilateral (T top, Rr right, B bottom, L left) -->
-  <polygon points="240,150 345,220 300,420 195,330" fill="#1f2937" fill-opacity="0.08" stroke="#1f2937" stroke-width="1.6"/>
-  <text x="255" y="140" fill="#1f2937">R</text>
+  <!-- baseline C-C': the bottom edge of Πe, passing through both epipoles -->
+  <line x1="70" y1="490" x2="830" y2="580" stroke="#1f2937" stroke-width="2"/>
+  <text x="430" y="563" fill="#1f2937" font-size="14">baseline</text>
+
+  <!-- dotted back-projection rays from C' through each depth hypothesis for M: since m' is unknown,
+       each hypothesis for M projects to a different candidate on the epipolar line l' -->
+  <line x1="454" y1="284" x2="830" y2="580" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="2 3"/>
+  <line x1="606" y1="203" x2="830" y2="580" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="2 3"/>
+  <line x1="691" y1="157" x2="830" y2="580" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="2 3"/>
+
+  <!-- ================= LEFT VIEW ================= -->
+  <!-- image plane R: tilted quadrilateral -->
+  <polygon points="179,165 353,524 359,678 196,337" fill="#1f2937" fill-opacity="0.08" stroke="#1f2937" stroke-width="1.6"/>
+  <text x="192" y="155" fill="#1f2937">R</text>
 
   <!-- frustum edges from C to the four corners of R -->
-  <line x1="90" y1="430" x2="240" y2="150" stroke="#1f2937" stroke-width="1.3"/>
-  <line x1="90" y1="430" x2="345" y2="220" stroke="#1f2937" stroke-width="1.3"/>
-  <line x1="90" y1="430" x2="300" y2="420" stroke="#1f2937" stroke-width="1.3"/>
-  <line x1="90" y1="430" x2="195" y2="330" stroke="#1f2937" stroke-width="1.3"/>
+  <line x1="70" y1="490" x2="179" y2="165" stroke="#1f2937" stroke-width="1.3"/>
+  <line x1="70" y1="490" x2="353" y2="524" stroke="#1f2937" stroke-width="1.3"/>
+  <line x1="70" y1="490" x2="359" y2="678" stroke="#1f2937" stroke-width="1.3"/>
+  <line x1="70" y1="490" x2="196" y2="337" stroke="#1f2937" stroke-width="1.3"/>
 
-  <!-- ray of light continuing from C, through m, to M -->
-  <line x1="90" y1="430" x2="400" y2="50" stroke="#1f2937" stroke-width="1.8"/>
-  <text x="120" y="270" fill="#374151" font-size="13" transform="rotate(-52 120 270)">ray of light</text>
+  <!-- ray of light: from C, through the known image point m, continuing through three depth-ambiguous
+       hypotheses for the (unknown) 3D point M, all lying inside the epipolar plane Πe -->
+  <line x1="70" y1="490" x2="734" y2="134" stroke="#1f2937" stroke-width="1.8"/>
+  <text x="100" y="440" fill="#374151" font-size="13" transform="rotate(-28.2 100 440)">ray of light</text>
 
-  <!-- image point m where the ray crosses R (t=0.4 along C-M, exactly on the ray) -->
-  <circle cx="214" cy="278" r="4.5" fill="#dc2626"/>
-  <text x="180" y="270" fill="#dc2626">m</text>
+  <!-- camera center C -->
+  <circle cx="70" cy="490" r="5" fill="#1f2937"/>
+  <text x="48" y="512" fill="#1f2937">C</text>
 
-  <!-- epipole e on the baseline, near the R-B edge of the plane -->
-  <circle cx="305" cy="423" r="4.5" fill="#059669"/>
-  <text x="313" y="418" fill="#059669">e</text>
+  <!-- image point m where the ray crosses R -->
+  <circle cx="236" cy="401" r="4.5" fill="#dc2626"/>
+  <text x="204" y="393" fill="#dc2626">m</text>
 
-  <!-- epipolar line l, dotted, from e to m inside the plane -->
-  <line x1="305" y1="423" x2="214" y2="278" stroke="#dc2626" stroke-width="2" stroke-dasharray="1 4" stroke-linecap="round"/>
-  <text x="255" y="360" fill="#dc2626" font-size="14">l</text>
+  <!-- epipolar line l, from e through m -->
+  <line x1="353" y1="524" x2="196" y2="337" stroke="#dc2626" stroke-width="1.6"/>
+  <text x="298" y="420" fill="#dc2626" font-size="14">l</text>
 
-  <!-- ================= RIGHT VIEW (mirrored) ================= -->
-  <circle cx="670" cy="410" r="5" fill="#1f2937"/>
-  <text x="682" y="432" fill="#1f2937">C&#8242;</text>
+  <!-- epipole e, on the baseline -->
+  <circle cx="353" cy="524" r="4.5" fill="#059669"/>
+  <text x="361" y="519" fill="#059669">e</text>
 
-  <polygon points="520,150 415,220 460,420 565,330" fill="#1f2937" fill-opacity="0.08" stroke="#1f2937" stroke-width="1.6"/>
-  <text x="490" y="140" fill="#1f2937">R&#8242;</text>
+  <!-- three depth hypotheses for the unknown 3D point M, all consistent with the same ray -->
+  <circle cx="454" cy="284" r="5" fill="#1f2937"/>
+  <circle cx="606" cy="203" r="5" fill="#1f2937"/>
+  <text x="616" y="197" fill="#1f2937">M?</text>
+  <circle cx="691" cy="157" r="5" fill="#1f2937"/>
 
-  <line x1="670" y1="410" x2="520" y2="150" stroke="#1f2937" stroke-width="1.3"/>
-  <line x1="670" y1="410" x2="415" y2="220" stroke="#1f2937" stroke-width="1.3"/>
-  <line x1="670" y1="410" x2="460" y2="420" stroke="#1f2937" stroke-width="1.3"/>
-  <line x1="670" y1="410" x2="565" y2="330" stroke="#1f2937" stroke-width="1.3"/>
+  <!-- ================= RIGHT VIEW ================= -->
+  <!-- image plane R', seen frontally as a plain rectangle -->
+  <rect x="550" y="457" width="433" height="250" fill="#1f2937" fill-opacity="0.05" stroke="#1f2937" stroke-width="1.6"/>
+  <text x="900" y="449" fill="#1f2937">R&#8242;</text>
 
-  <line x1="670" y1="410" x2="400" y2="50" stroke="#1f2937" stroke-width="1.8"/>
-  <text x="630" y="270" fill="#374151" font-size="13" transform="rotate(52 630 270)">ray of light</text>
+  <!-- frustum edges from C' to the four corners of R' -->
+  <line x1="830" y1="580" x2="550" y2="457" stroke="#1f2937" stroke-width="1.3"/>
+  <line x1="830" y1="580" x2="983" y2="457" stroke="#1f2937" stroke-width="1.3"/>
+  <line x1="830" y1="580" x2="983" y2="707" stroke="#1f2937" stroke-width="1.3"/>
+  <line x1="830" y1="580" x2="550" y2="707" stroke="#1f2937" stroke-width="1.3"/>
 
-  <circle cx="546" cy="278" r="4.5" fill="#dc2626"/>
-  <text x="554" y="270" fill="#dc2626">m&#8242;</text>
+  <!-- camera center C' -->
+  <circle cx="830" cy="580" r="5" fill="#1f2937"/>
+  <text x="840" y="602" fill="#1f2937">C&#8242;</text>
 
-  <circle cx="455" cy="423" r="4.5" fill="#059669"/>
-  <text x="430" y="418" fill="#059669" text-anchor="end">e&#8242;</text>
+  <!-- epipole e' -->
+  <circle cx="565" cy="549" r="4.5" fill="#059669"/>
+  <text x="543" y="544" fill="#059669" text-anchor="end">e&#8242;</text>
 
-  <line x1="455" y1="423" x2="546" y2="278" stroke="#dc2626" stroke-width="2" stroke-dasharray="1 4" stroke-linecap="round"/>
-  <text x="490" y="360" fill="#dc2626" font-size="14">l&#8242;</text>
+  <!-- epipolar line l', from e' through the three m' candidates -->
+  <line x1="565" y1="549" x2="816" y2="468" stroke="#dc2626" stroke-width="1.6"/>
+  <text x="662" y="502" fill="#dc2626" font-size="14">l&#8242;</text>
 
-  <!-- ================= SHARED ================= -->
-  <!-- world point M -->
-  <circle cx="400" cy="50" r="5" fill="#1f2937"/>
-  <text x="410" y="46" fill="#1f2937">M</text>
-
-  <!-- baseline C-C', passing near the epipoles -->
-  <line x1="90" y1="430" x2="670" y2="410" stroke="#1f2937" stroke-width="2"/>
-  <text x="345" y="452" fill="#1f2937" font-size="14">baseline</text>
-
-  <!-- disparity / point matches, dotted, between m and m' -->
-  <line x1="214" y1="278" x2="546" y2="278" stroke="#6b7280" stroke-width="1.3" stroke-dasharray="5 4"/>
-  <text x="315" y="268" fill="#6b7280" font-size="13">disparity / point matches</text>
-
-  <!-- epipolar plane label -->
-  <text x="345" y="110" fill="#2563eb" font-size="14">&#928;e (epipolar plane)</text>
+  <!-- candidate matches m'?, one per depth hypothesis for M: the search for the true match is
+       constrained to lie on the epipolar line l' -->
+  <circle cx="725" cy="497" r="4.5" fill="#dc2626"/>
+  <circle cx="772" cy="482" r="4.5" fill="#dc2626"/>
+  <text x="748" y="467" fill="#dc2626">m&#8242;?</text>
+  <circle cx="795" cy="475" r="4.5" fill="#dc2626"/>
 </svg>
