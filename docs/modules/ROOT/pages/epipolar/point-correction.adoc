@@ -4,20 +4,20 @@
 NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
 
 A pair of matched image points estimated from real (noisy) correspondences almost never satisfies the
-epipolar constraint stem:[m'^{T}Fm = 0] exactly. Triangulating such a pair back-projects two rays of light that
-do not actually intersect in 3D, so before triangulation it helps to *correct* stem:[m] and stem:[m'] to the
-closest pair that lies exactly on the epipolar geometry given by stem:[F].
+epipolar constraint stem:[\mathbf{m}'^{T}\mathbf{F}\mathbf{m} = 0] exactly. Triangulating such a pair back-projects two rays of light that
+do not actually intersect in 3D, so before triangulation it helps to *correct* stem:[\mathbf{m}] and stem:[\mathbf{m}'] to the
+closest pair that lies exactly on the epipolar geometry given by stem:[\mathbf{F}].
 
 image::epipolar/point-correction.svg[Point correction onto epipolar lines,600,role=text-center]
 
 == The correction problem
 
-Given measured points stem:[m], stem:[m'] and a fundamental matrix stem:[F], the corrected points
-stem:[\hat m], stem:[\hat m'] minimize the reprojection cost subject to exact epipolar compliance:
+Given measured points stem:[\mathbf{m}], stem:[\mathbf{m}'] and a fundamental matrix stem:[\mathbf{F}], the corrected points
+stem:[\mathbf{\hat m}], stem:[\mathbf{\hat m}'] minimize the reprojection cost subject to exact epipolar compliance:
 
 [stem]
 ++++
-C(m,m') = d(m,\hat m)^2 + d(m',\hat m')^2,\qquad \hat m'^{T} F \hat m = 0
+C(\mathbf{m},\mathbf{m}') = d(\mathbf{m},\mathbf{\hat m})^2 + d(\mathbf{m}',\mathbf{\hat m}')^2,\qquad \mathbf{\hat m}'^{T} \mathbf{F} \mathbf{\hat m} = 0
 ++++
 
 `irurueta-ar` implements two solvers for this problem, both exposed through a common
@@ -26,16 +26,16 @@ C(m,m') = d(m,\hat m)^2 + d(m',\hat m')^2,\qquad \hat m'^{T} F \hat m = 0
 == Sampson approximation
 
 The Sampson correction is a first-order approximation, valid for small errors (typically 1-2 pixels): writing
-stem:[X = (m, m')^T] and expanding the cost function to first order in a displacement stem:[\delta x] gives a
+stem:[\mathbf{X} = (\mathbf{m}, \mathbf{m}')^T] and expanding the cost function to first order in a displacement stem:[\delta \mathbf{x}] gives a
 constrained least-norm problem solved in closed form with Lagrange multipliers, yielding a single correction
-stem:[\delta x = -J^{T}(JJ^{T})^{-1}\varepsilon] with
+stem:[\delta \mathbf{x} = -\mathbf{J}^{T}(\mathbf{J}\mathbf{J}^{T})^{-1}\varepsilon] with
 
 [stem]
 ++++
 \varepsilon = m'^{T} F m,\qquad J = \left[(F^{T}m')_1,\ (F^{T}m')_2,\ (Fm)_1,\ (Fm)_2\right]
 ++++
 
-so the corrected coordinates are stem:[\hat X = X - \varepsilon\, J^{T}/(JJ^{T})]
+so the corrected coordinates are stem:[\mathbf{\hat X} = \mathbf{X} - \varepsilon\, \mathbf{J}^{T}(\mathbf{J}\mathbf{J}^{T})^{-1}]
 xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=123[&sect;3.2.5.1]. This is a single closed-form update -- much
 cheaper than the Gold Standard method below, at the cost of being only approximate for larger errors.
 
