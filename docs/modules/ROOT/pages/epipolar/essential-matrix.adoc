@@ -3,54 +3,54 @@
 
 NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
 
-The essential matrix stem:[E] is the fundamental matrix's calibrated counterpart: the same epipolar constraint,
+The essential matrix stem:[\mathbf{E}] is the fundamental matrix's calibrated counterpart: the same epipolar constraint,
 but written for image points that have been normalized by known camera intrinsics. If a scene is calibrated
-(both cameras' intrinsic matrices stem:[K], stem:[K'] are known), stem:[E] recovers not just the epipolar
+(both cameras' intrinsic matrices stem:[\mathbf{K}], stem:[\mathbf{K}'] are known), stem:[\mathbf{E}] recovers not just the epipolar
 geometry but an actual metric camera pair -- up to scale -- directly from two views. This is the bridge between
 xref:epipolar/fundamental-matrix.adoc[] (purely projective) and a metric
 xref:sfm/structure-from-motion.adoc[reconstruction].
 
 == Relation to the fundamental matrix
 
-For canonical cameras stem:[P = K[I\,|\,0\]] and stem:[P' = K'[R\,|\,t\]] (stem:[t = -RC']), the fundamental
+For canonical cameras stem:[\mathbf{P} = \mathbf{K}[\mathbf{I}\,|\,\mathbf{0}\]] and stem:[\mathbf{P}' = \mathbf{K}'[\mathbf{R}\,|\,\mathbf{t}\]] (stem:[\mathbf{t} = -\mathbf{R}\mathbf{C}']), the fundamental
 matrix expression from xref:epipolar/fundamental-matrix.adoc[] reduces to
 
 [stem]
 ++++
-F = K'^{-T}\, [t]_\times R\, K^{-1}
+\mathbf{F} = \mathbf{K}'^{-T}\, [\mathbf{t}]_\times \mathbf{R}\, \mathbf{K}^{-1}
 ++++
 
-Normalizing points with the known intrinsics, stem:[\hat m = K^{-1} m], stem:[\hat m' = K'^{-1} m'], the
-epipolar constraint stem:[\hat m'^{T} E \hat m = 0] holds for
+Normalizing points with the known intrinsics, stem:[\mathbf{\hat m} = \mathbf{K}^{-1} \mathbf{m}], stem:[\mathbf{\hat m}' = \mathbf{K}'^{-1} \mathbf{m}'], the
+epipolar constraint stem:[\mathbf{\hat m}'^{T} \mathbf{E} \, \mathbf{\hat m} = 0] holds for
 
 [stem]
 ++++
-E = K'^{T} F K = [t]_\times R
+\mathbf{E} = \mathbf{K}'^{T} \mathbf{F} \mathbf{K} = [\mathbf{t}]_\times \mathbf{R}
 ++++
 
-xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=138[&sect;3.2.7]. Unlike stem:[F], stem:[E] is not an arbitrary
+xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=138[&sect;3.2.7]. Unlike stem:[\mathbf{F}], stem:[\mathbf{E}] is not an arbitrary
 rank-2 matrix: because it factors as a skew-symmetric matrix times a rotation, its SVD always has the form
-stem:[E = U\,\mathrm{diag}(1,1,0)\,V^{T}] -- two equal, non-zero singular values (defined up to the overall
-scale of stem:[E]) and a third that is exactly zero. Counting rotation (3 DOF) and translation direction (2 DOF
-up to scale) confirms stem:[E] has only **5 degrees of freedom**, two fewer than stem:[F]'s 7.
+stem:[\mathbf{E} = \mathbf{U}\,\mathrm{diag}(1,1,0)\,\mathbf{V}^{T}] -- two equal, non-zero singular values (defined up to the overall
+scale of stem:[\mathbf{E}]) and a third that is exactly zero. Counting rotation (3 DOF) and translation direction (2 DOF
+up to scale) confirms stem:[\mathbf{E}] has only **5 degrees of freedom**, two fewer than stem:[\mathbf{F}]'s 7.
 
 Maps to `com.irurueta.ar.epipolar.EssentialMatrix`, with a constructor overload
 `EssentialMatrix(FundamentalMatrix, PinholeCameraIntrinsicParameters leftIntrinsics,
-PinholeCameraIntrinsicParameters rightIntrinsics)` that implements stem:[E = K'^{T}FK] directly, plus
-overloads for building stem:[E] straight from a `Rotation3D` + translation, or from a pair of `PinholeCamera`s.
+PinholeCameraIntrinsicParameters rightIntrinsics)` that implements stem:[\mathbf{E} = \mathbf{K}'^{T}\mathbf{F}\mathbf{K}] directly, plus
+overloads for building stem:[\mathbf{E}] straight from a `Rotation3D` + translation, or from a pair of `PinholeCamera`s.
 
 == Recovering the camera pair: four-fold ambiguity
 
-Because stem:[E = [t\]_\times R] with stem:[\lVert t \rVert = 1] (a convenient normalization of the baseline
-length), its SVD-based decomposition stem:[E = U\,\mathrm{diag}(1,1,0)\,V^{T}] admits, with
+Because stem:[\mathbf{E} = [\mathbf{t}\]_\times \mathbf{R}] with stem:[\lVert \mathbf{t} \rVert = 1] (a convenient normalization of the baseline
+length), its SVD-based decomposition stem:[\mathbf{E} = \mathbf{U}\,\mathrm{diag}(1,1,0)\,\mathbf{V}^{T}] admits, with
 
 [stem]
 ++++
-W = \begin{bmatrix} 0 & -1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix}
+\mathbf{W} = \begin{bmatrix} 0 & -1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix}
 ++++
 
-two candidate rotations stem:[R = UWV^{T}] or stem:[UW^{T}V^{T}], and translation stem:[t = \pm u_3] (the last
-column of stem:[U]) -- **four** combinations for the second camera stem:[P' = K'[R\,|\,t\]]. Two of the four are
+two candidate rotations stem:[\mathbf{R} = \mathbf{U}\mathbf{W}\mathbf{V}^{T}] or stem:[\mathbf{U}\mathbf{W}^{T}\mathbf{V}^{T}], and translation stem:[\mathbf{t} = \pm \mathbf{u}_3] (the last
+column of stem:[\mathbf{U}]) -- **four** combinations for the second camera stem:[\mathbf{P}' = \mathbf{K}'[\mathbf{R}\,|\,\mathbf{t}\]]. Two of the four are
 a *twisted pair* related by a 180&deg; rotation about the baseline. Only one combination places every
 triangulated 3D point in front of *both* cameras (correct cheirality); the other three put at least some points
 behind a camera, so the standard disambiguation is to triangulate a handful of correspondences under all four

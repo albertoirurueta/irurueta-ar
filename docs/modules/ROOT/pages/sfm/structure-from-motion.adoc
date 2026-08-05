@@ -22,33 +22,33 @@ reconstruct from a degenerate pair xref:reference.adoc#ref-thesis[Irurueta, PhD 
 
 == Two paths from the fundamental matrix
 
-Once a good pair and its fundamental matrix stem:[F] are found (and correspondences corrected as in
+Once a good pair and its fundamental matrix stem:[\mathbf{F}] are found (and correspondences corrected as in
 xref:epipolar/point-correction.adoc[]), there are two ways to obtain an initial camera pair, matching
 `com.irurueta.ar.sfm.InitialCamerasEstimatorMethod`:
 
-**Intrinsics known -- straight to metric.** If a (possibly approximate) calibration matrix stem:[K] is
-available for both views, xref:epipolar/essential-matrix.adoc[] gives stem:[E = K'^{T}FK] directly, and its
+**Intrinsics known -- straight to metric.** If a (possibly approximate) calibration matrix stem:[\mathbf{K}] is
+available for both views, xref:epipolar/essential-matrix.adoc[] gives stem:[\mathbf{E} = \mathbf{K}'^{T}\mathbf{F}\mathbf{K}] directly, and its
 four-fold cheirality-disambiguated decomposition gives a metric camera pair immediately -- no self-calibration
 needed. Maps to `EssentialMatrixInitialCamerasEstimator`
 (`InitialCamerasEstimatorMethod.ESSENTIAL_MATRIX`).
 
-**Intrinsics unknown -- projective first, metric later.** Without any known stem:[K], only stem:[F] is
-available. As shown in xref:epipolar/fundamental-matrix.adoc[], any stem:[F] can generate *some* pair of
+**Intrinsics unknown -- projective first, metric later.** Without any known stem:[\mathbf{K}], only stem:[\mathbf{F}] is
+available. As shown in xref:epipolar/fundamental-matrix.adoc[], any stem:[\mathbf{F}] can generate *some* pair of
 cameras that reproduces it, but that pair is not unique -- it is defined only up to an arbitrary projective
 transformation:
 
 [stem]
 ++++
-P = [I\,|\,0],\qquad P' = \left[\,[e']_\times F + e'\pi^{T}\ \Big|\ \lambda e'\,\right]
+\mathbf{P} = [\mathbf{I}\,|\,\mathbf{0}],\qquad \mathbf{P}' = \left[\,[\mathbf{e}']_\times \mathbf{F} + \mathbf{e}'\boldsymbol{\pi}^{T}\ \Big|\ \lambda \mathbf{e}'\,\right]
 ++++
 
-for any plane direction stem:[\pi] and scale stem:[\lambda] xref:reference.adoc#ref-thesis[Irurueta, PhD
+for any plane direction stem:[\boldsymbol{\pi}] and scale stem:[\lambda] xref:reference.adoc#ref-thesis[Irurueta, PhD
 thesis] xref:attachment$irurueta-phd-thesis.pdf#page=118[&sect;3.2.4]. Triangulating points with this pair places the whole reconstruction in an arbitrary
 **projective stratum**: valid for triangulation and for adding more views, but visibly distorted (straight
 lines bend, parallel lines don't meet at infinity correctly) until it is upgraded. That upgrade is exactly
 xref:calibration/self-calibration.adoc[self-calibration]: once enough views are available, the dual absolute
-quadric (or, pairwise, the Kruppa equations) recovers each view's stem:[K] and the plane at infinity, giving the
-projective-to-metric transform stem:[T_{PM}] that turns the projective reconstruction into a metric one, correct
+quadric (or, pairwise, the Kruppa equations) recovers each view's stem:[\mathbf{K}] and the plane at infinity, giving the
+projective-to-metric transform stem:[\mathbf{T}_{PM}] that turns the projective reconstruction into a metric one, correct
 up to an overall similarity (scale) xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=171[&sect;4.6], xref:attachment$irurueta-phd-thesis.pdf#page=173[&sect;5].
 Maps to `DualImageOfAbsoluteConicInitialCamerasEstimator` / `DualAbsoluteQuadricInitialCamerasEstimator`
 (`InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC` / `DUAL_ABSOLUTE_QUADRIC` /

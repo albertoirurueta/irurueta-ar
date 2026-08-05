@@ -13,19 +13,19 @@ but more prone to degeneracies).
 
 == The absolute dual quadric and the dual image of the absolute conic
 
-The plane at infinity stem:[\pi_\infty] and the absolute conic on it are invariant under similarity
+The plane at infinity stem:[\boldsymbol{\pi}_\infty] and the absolute conic on it are invariant under similarity
 transformations but not under general projective ones; together they fully characterize the metric stratum.
-Their projective-invariant algebraic encoding is the **absolute dual quadric** stem:[Q_\infty^{*}], which in the
+Their projective-invariant algebraic encoding is the **absolute dual quadric** stem:[\mathbf{Q}_\infty^{*}], which in the
 metric stratum is simply
 
 [stem]
 ++++
-Q_\infty^{*} = \begin{bmatrix} I_{3\times 3} & 0 \\ 0^{T} & 0 \end{bmatrix}
+\mathbf{Q}_\infty^{*} = \begin{bmatrix} \mathbf{I}_{3\times 3} & 0 \\ 0^{T} & 0 \end{bmatrix}
 ++++
 
-Projecting it into any view gives the **dual image of the absolute conic** (DIAC) stem:[\omega_\infty^{*} = P\, Q_\infty^{*}\, P^{T}]: in the metric stratum this reduces to stem:[\omega_\infty^{*} = K K^{T}], a real
+Projecting it into any view gives the **dual image of the absolute conic** (DIAC) stem:[\boldsymbol{\omega}_\infty^{*} = \mathbf{P}\, \mathbf{Q}_\infty^{*}\, \mathbf{P}^{T}]: in the metric stratum this reduces to stem:[\boldsymbol{\omega}_\infty^{*} = \mathbf{K} \mathbf{K}^{T}], a real
 symmetric, positive-definite matrix. This is the key fact self-calibration exploits both ways: *estimating*
-stem:[Q_\infty^{*}] (or stem:[\omega_\infty^{*}] per view) recovers stem:[K] via a Cholesky factorization of the
+stem:[\mathbf{Q}_\infty^{*}] (or stem:[\boldsymbol{\omega}_\infty^{*}] per view) recovers stem:[\mathbf{K}] via a Cholesky factorization of the
 DIAC xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=173[&sect;5.2].
 
 Maps to `com.irurueta.ar.calibration.DualAbsoluteQuadric`, `DualImageOfAbsoluteConic` (its Cholesky-derived
@@ -37,33 +37,33 @@ from the absolute conic itself).
 Assuming some combination of zero skew, a principal point at the image origin, and unit aspect ratio (all
 common and reasonable for consumer cameras), the DIAC in each view reduces to
 stem:[\mathrm{diag}(\alpha^2,\alpha^2,1)] -- three off-diagonal zeros plus one equality constraint per view,
-each linear in the unknown entries of stem:[Q_\infty^{*}] once expressed through the projective camera matrices
-stem:[P_i = [R_i\,|\,t_i\]] of that (otherwise arbitrary-projective) stratum:
+each linear in the unknown entries of stem:[\mathbf{Q}_\infty^{*}] once expressed through the projective camera matrices
+stem:[\mathbf{P}_i = [\mathbf{R}_i\,|\,\mathbf{t}_i\]] of that (otherwise arbitrary-projective) stratum:
 
 [stem]
 ++++
-p_i^{1T} Q_\infty^{*} p_i^{2} = 0,\quad
-p_i^{1T} Q_\infty^{*} p_i^{3} = 0,\quad
-p_i^{2T} Q_\infty^{*} p_i^{3} = 0,\quad
-p_i^{1T} Q_\infty^{*} p_i^{1} = p_i^{2T} Q_\infty^{*} p_i^{2}
+\mathbf{p}_i^{1T} \mathbf{Q}_\infty^{*} \mathbf{p}_i^{2} = 0,\quad
+\mathbf{p}_i^{1T} \mathbf{Q}_\infty^{*} \mathbf{p}_i^{3} = 0,\quad
+\mathbf{p}_i^{2T} \mathbf{Q}_\infty^{*} \mathbf{p}_i^{3} = 0,\quad
+\mathbf{p}_i^{1T} \mathbf{Q}_\infty^{*} \mathbf{p}_i^{1} = \mathbf{p}_i^{2T} \mathbf{Q}_\infty^{*} \mathbf{p}_i^{2}
 ++++
 
-Stacking these across at least 3 views (the reference camera stem:[P_1 = [I\,|\,0\]] alone gives a degenerate
+Stacking these across at least 3 views (the reference camera stem:[\mathbf{P}_1 = [\mathbf{I}\,|\,0\]] alone gives a degenerate
 system) yields a homogeneous linear system solved by the SVD null-space, exactly as in the
 xref:epipolar/fundamental-matrix.adoc[fundamental matrix's linear estimation]
 xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=176[&sect;5.3.1]. From the recovered
-stem:[Q_\infty^{*}], the focal length of each view falls out of its diagonal DIAC entry, and the plane at
-infinity's direction stem:[\pi_\infty] falls out of stem:[Q_\infty^{*}]'s last row/column -- together giving the
+stem:[\mathbf{Q}_\infty^{*}], the focal length of each view falls out of its diagonal DIAC entry, and the plane at
+infinity's direction stem:[\boldsymbol{\pi}_\infty] falls out of stem:[\mathbf{Q}_\infty^{*}]'s last row/column -- together giving the
 projective-to-metric transform
 
 [stem]
 ++++
-T_{PM} = \begin{bmatrix} K^{-1} & 0 \\ \pi_\infty^{T} & 1 \end{bmatrix}
+\mathbf{T}_{PM} = \begin{bmatrix} \mathbf{K}^{-1} & \mathbf{0} \\ \boldsymbol{\pi}_\infty^{T} & 1 \end{bmatrix}
 ++++
 
-(using either a per-view stem:[K_i], or the first view's / the mean stem:[K] if intrinsics are assumed constant
+(using either a per-view stem:[\mathbf{K}_i], or the first view's / the mean stem:[\mathbf{K}] if intrinsics are assumed constant
 across the sequence) xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=182[&sect;5.3.1.1-5.3.1.2]. Applying
-stem:[T_{PM}] to every triangulated point upgrades the whole reconstruction to metric; applying stem:[T_{PM}^{-1}]
+stem:[\mathbf{T}_{PM}] to every triangulated point upgrades the whole reconstruction to metric; applying stem:[\mathbf{T}_{PM}^{-1}]
 upgrades the camera matrices.
 
 Maps to `com.irurueta.ar.calibration.estimators.DualAbsoluteQuadricEstimator` (`LMSEDualAbsoluteQuadricEstimator`,
@@ -75,18 +75,18 @@ xref:estimation/robust-vs-nonrobust.adoc[]), with `setZeroSkewness`, `setPrincip
 === Enforcing the rank-3 constraint
 
 A general stem:[4\times 4] symmetric quadric has 10 independent entries, so `DualAbsoluteQuadricEstimator`
-actually solves for the full 10-parameter vector stem:[q = (a,b,c,d,e,f,g,h,i,j)] rather than the simplified
+actually solves for the full 10-parameter vector stem:[\mathbf{q} = (a,b,c,d,e,f,g,h,i,j)] rather than the simplified
 6-parameter form shown above; the zero-skew/unit-aspect-ratio/known-principal-point assumptions only fix
-*which rows* of the linear system look like the equations above, not the size of stem:[q] itself. With one
+*which rows* of the linear system look like the equations above, not the size of stem:[\mathbf{q}] itself. With one
 camera discarded as degenerate, each additional view still contributes the same handful of homogeneous linear
-equations in stem:[q], stacked into a matrix stem:[A] and solved through its SVD stem:[A = U S V^{T}].
+equations in stem:[\mathbf{q}], stacked into a matrix stem:[\mathbf{A}] and solved through its SVD stem:[\mathbf{A} = \mathbf{U} \mathbf{S} \mathbf{V}^{T}].
 
 Because the Dual Absolute Quadric is only guaranteed to be singular (rank 3, as any real dual quadric of a
 proper quadric surface must be) when the linear system leaves *exactly* one free scale, but a handful of views
-under a partial assumption set can leave the last **two** singular vectors stem:[v_8, v_9] of stem:[V]
-unconstrained, the estimator does not simply take stem:[v_9] as the answer. Instead it takes the general
-solution as a linear combination stem:[q = v_8 + \alpha v_9], substitutes it into the requirement
-stem:[\det(Q_\infty^{*}) = 0], and expands this determinant into a quartic polynomial in stem:[\alpha] --
+under a partial assumption set can leave the last **two** singular vectors stem:[\mathbf{v}_8, \mathbf{v}_9] of stem:[\mathbf{V}]
+unconstrained, the estimator does not simply take stem:[\mathbf{v}_9] as the answer. Instead it takes the general
+solution as a linear combination stem:[\mathbf{q} = \mathbf{v}_8 + \alpha \mathbf{v}_9], substitutes it into the requirement
+stem:[\det(\mathbf{Q}_\infty^{*}) = 0], and expands this determinant into a quartic polynomial in stem:[\alpha] --
 exactly the same companion-matrix eigenvalue technique used for the
 xref:epipolar/fundamental-matrix.adoc[7-point algorithm]'s cubic (there in 1 free parameter instead of 2, and
 degree 3 instead of 4). Each real root of the quartic is evaluated and the one that best satisfies the DAQ's
@@ -102,7 +102,7 @@ than the strict minimum:
 * `LMSEDualAbsoluteQuadricEstimator` stacks every provided camera's equations with equal weight and, when
   `setLMSESolutionAllowed` is enabled and more than the minimum number of cameras is supplied, takes the
   overdetermined least-mean-squared-error solution (the smallest-singular-value right singular vector of the
-  full stacked stem:[A]) instead of an exact minimal solution.
+  full stacked stem:[\mathbf{A}]) instead of an exact minimal solution.
 * `WeightedDualAbsoluteQuadricEstimator` instead accepts an explicit per-camera quality weight, sorts cameras by
   weight, and caps how many actually enter the linear system (`DEFAULT_MAX_CAMERAS = 50`). This matters once a
   reconstruction has accumulated far more views than are needed algebraically: rather than solving an
@@ -119,13 +119,13 @@ sequence are themselves inaccurate (e.g. from a poorly resectioned view).
 
 A complementary route to the same DIAC/IAC relationship uses 2D homographies instead of full camera matrices,
 and is what `com.irurueta.ar.calibration.estimators.ImageOfAbsoluteConicEstimator` implements. Given a
-homography stem:[H = (h_1\ h_2\ h_3)] mapping a reference plane's points into a view, the IAC
-stem:[\omega_\infty] satisfies two constraints per homography (the same ones underlying Zhang's calibration
+homography stem:[\mathbf{H} = (\mathbf{h}_1\ \mathbf{h}_2\ \mathbf{h}_3)] mapping a reference plane's points into a view, the IAC
+stem:[\boldsymbol{\omega}_\infty] satisfies two constraints per homography (the same ones underlying Zhang's calibration
 method):
 
 [stem]
 ++++
-h_1^{T}\, \omega_\infty\, h_2 = 0,\qquad h_1^{T}\, \omega_\infty\, h_1 = h_2^{T}\, \omega_\infty\, h_2
+\mathbf{h}_1^{T}\, \boldsymbol{\omega}_\infty\, \mathbf{h}_2 = 0,\qquad \mathbf{h}_1^{T}\, \boldsymbol{\omega}_\infty\, \mathbf{h}_1 = \mathbf{h}_2^{T}\, \boldsymbol{\omega}_\infty\, \mathbf{h}_2
 ++++
 
 The IAC has 5 independent entries (up to scale), so in general stem:[2n \le 5 \Rightarrow n \le 2.5], i.e. at
@@ -133,11 +133,11 @@ least 3 homographies are needed. Each simplifying assumption removes one unknown
 assuming zero skew needs only stem:[2n+1 \le 5 \Rightarrow n \le 2] homographies, and further assuming a
 principal point at the origin needs only stem:[2n+3 \le 5 \Rightarrow n \le 1] -- a *single* homography
 suffices, controlled by the same `setZeroSkewness`/`setPrincipalPointAtOrigin` style flags as the DAQ estimator.
-Once stem:[\omega_\infty] is known, intrinsics follow from a Cholesky-related factorization exactly as for its
+Once stem:[\boldsymbol{\omega}_\infty] is known, intrinsics follow from a Cholesky-related factorization exactly as for its
 dual, the DIAC (&sect;"The absolute dual quadric..." above).
 
 This is the same machinery that underlies xref:calibration/camera-calibration.adoc[pattern-based calibration]
-(where stem:[H] maps a known calibration pattern's ideal points into each photographed view) -- the only
+(where stem:[\mathbf{H}] maps a known calibration pattern's ideal points into each photographed view) -- the only
 difference from *self*-calibration is where the homographies come from: a physical pattern there, versus a
 plane-induced homography between two already-reconstructed (projective) views here, or the DAQ-based
 projective camera matrices above. `com.irurueta.ar.calibration.estimators.LMSEImageOfAbsoluteConicEstimator` and
@@ -153,22 +153,22 @@ The Kruppa equations are the historically earlier self-calibration method, and o
 fundamental matrix -- no full camera matrices required. They come from epipolar tangency: the two epipolar
 lines from an epipole tangent to a conic map, under the epipolar geometry, to the two tangent lines from the
 other epipole tangent to the corresponding conic in the other view. Applying this to the absolute conic itself
-(so the conics become the DIACs stem:[\omega_\infty^{*}], stem:[\omega_\infty^{*\prime}] of each view) gives
+(so the conics become the DIACs stem:[\boldsymbol{\omega}_\infty^{*}], stem:[\boldsymbol{\omega}_\infty^{*\prime}] of each view) gives
 
 [stem]
 ++++
-F^{T}\, \omega_\infty^{*\prime}\, F = [e]_\times\, \omega_\infty^{*}\, [e]_\times
+\mathbf{F}^{T}\, \boldsymbol{\omega}_\infty^{*\prime}\, \mathbf{F} = [\mathbf{e}]_\times\, \boldsymbol{\omega}_\infty^{*}\, [\mathbf{e}]_\times
 ++++
 
-which, substituting the SVD stem:[F = U\,\mathrm{diag}(\sigma_1,\sigma_2,0)\,V^{T}] (so stem:[e=v_3],
-stem:[e'=u_3]), reduces to the classic three-way equality relating entries of both DIACs to
+which, substituting the SVD stem:[\mathbf{F} = \mathbf{U}\,\mathrm{diag}(\sigma_1,\sigma_2,0)\,\mathbf{V}^{T}] (so stem:[\mathbf{e}=\mathbf{v}_3],
+stem:[\mathbf{e}'=\mathbf{u}_3]), reduces to the classic three-way equality relating entries of both DIACs to
 stem:[\sigma_1,\sigma_2] xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=183[&sect;5.3.2]:
 
 [stem]
 ++++
-\frac{u_2^{T}\omega_\infty^{*\prime}u_2}{\sigma_1^{2}\,v_1^{T}\omega_\infty^{*}v_1}
-= -\frac{u_1^{T}\omega_\infty^{*\prime}u_2}{\sigma_1\sigma_2\,v_1^{T}\omega_\infty^{*}v_2}
-= \frac{u_1^{T}\omega_\infty^{*\prime}u_1}{\sigma_2^{2}\,v_2^{T}\omega_\infty^{*}v_2}
+\frac{\mathbf{u}_2^{T}\boldsymbol{\omega}_\infty^{*\prime}\mathbf{u}_2}{\sigma_1^{2}\,\mathbf{v}_1^{T}\boldsymbol{\omega}_\infty^{*}\mathbf{v}_1}
+= -\frac{\mathbf{u}_1^{T}\boldsymbol{\omega}_\infty^{*\prime}\mathbf{u}_2}{\sigma_1\sigma_2\,\mathbf{v}_1^{T}\boldsymbol{\omega}_\infty^{*}\mathbf{v}_2}
+= \frac{\mathbf{u}_1^{T}\boldsymbol{\omega}_\infty^{*\prime}\mathbf{u}_1}{\sigma_2^{2}\,\mathbf{v}_2^{T}\boldsymbol{\omega}_\infty^{*}\mathbf{v}_2}
 ++++
 
 Under the same zero-skew/unit-aspect-ratio/known-principal-point assumptions as above, this gives enough
@@ -183,10 +183,10 @@ Maps to `com.irurueta.ar.calibration.estimators.KruppaDualImageOfAbsoluteConicEs
 
 Both methods can degenerate for certain camera motions: pure rotation about a single axis, too little
 translation between views, or a narrow field of view all reduce the rank of the linear systems above and make
-the recovered stem:[K]/stem:[\pi_\infty] unreliable. General, wide camera motion (translation in more than one
+the recovered stem:[\mathbf{K}]/stem:[\boldsymbol{\pi}_\infty] unreliable. General, wide camera motion (translation in more than one
 direction, varied viewing angles) avoids these critical sequences
 xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=187[&sect;5.4]. The more assumptions you can safely make about
-stem:[K] up front (zero skew, known principal point, unit aspect ratio), the fewer free parameters remain to
+stem:[\mathbf{K}] up front (zero skew, known principal point, unit aspect ratio), the fewer free parameters remain to
 absorb such degeneracies.
 
 == Example

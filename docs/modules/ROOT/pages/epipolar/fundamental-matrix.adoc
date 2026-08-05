@@ -3,61 +3,61 @@
 
 NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
 
-The fundamental matrix stem:[F] is a stem:[3\times 3], rank-2 matrix that encodes the epipolar geometry between
+The fundamental matrix stem:[\mathbf{F}] is a stem:[3\times 3], rank-2 matrix that encodes the epipolar geometry between
 a pair of uncalibrated views: it is the only piece of information needed to constrain where a point in one
 image can match in the other, without knowing anything about the cameras' intrinsic parameters.
 
 image::epipolar/epipolar-geometry.svg[Epipolar geometry between two views,600,role=text-center]
 
-Given a 3D world point stem:[M], its projections stem:[m] and stem:[m'] on the left and right views, the
-camera centers stem:[C], stem:[C'] and stem:[M] always define a plane -- the *epipolar plane* stem:[\Pi_e].
-Its intersection with each image plane is an *epipolar line* (stem:[l] on the left view, stem:[l'] on the
-right), and the projection of one camera's center onto the other view is that view's *epipole* (stem:[e],
-stem:[e']). As stem:[M] varies, every epipolar plane still contains the baseline stem:[CC'], so all epipolar
+Given a 3D world point stem:[\mathbf{M}], its projections stem:[\mathbf{m}] and stem:[\mathbf{m}'] on the left and right views, the
+camera centers stem:[\mathbf{C}], stem:[\mathbf{C}'] and stem:[\mathbf{M}] always define a plane -- the *epipolar plane* stem:[\boldsymbol{\Pi}_e].
+Its intersection with each image plane is an *epipolar line* (stem:[\mathbf{l}] on the left view, stem:[\mathbf{l}'] on the
+right), and the projection of one camera's center onto the other view is that view's *epipole* (stem:[\mathbf{e}],
+stem:[\mathbf{e}']). As stem:[\mathbf{M}] varies, every epipolar plane still contains the baseline stem:[\mathbf{C}\mathbf{C}'], so all epipolar
 lines in a view pass through that view's epipole -- a pencil of lines:
 
 image::epipolar/pencil-of-epipolar-lines.svg[Pencil of epipolar planes and lines,600,role=text-center]
 
 == The epipolar constraint
 
-Because stem:[m] lies on epipolar line stem:[l] and stem:[l] passes through epipole stem:[e], stem:[l \equiv [e\]_\times m], where stem:[[e\]_\times] is the skew-symmetric cross-product matrix of stem:[e]. Back-projecting
+Because stem:[\mathbf{m}] lies on epipolar line stem:[\mathbf{l}] and stem:[\mathbf{l}] passes through epipole stem:[\mathbf{e}], stem:[\mathbf{l} \equiv [\mathbf{e}\]_\times \mathbf{m}], where stem:[[\mathbf{e}\]_\times] is the skew-symmetric cross-product matrix of stem:[\mathbf{e}]. Back-projecting
 epipolar lines to the (shared) epipolar plane and forward-projecting to the other view yields the linear map
 
 [stem]
 ++++
-l' \equiv \left(P'^{T}\right)^{\dagger} P^{T} [e]_\times m = F m,\qquad F \equiv [e']_\times\, P' P^{\dagger}
+\mathbf{l}' \equiv \left(\mathbf{P}'^{T}\right)^{\dagger} \mathbf{P}^{T} [\mathbf{e}]_\times \mathbf{m} = \mathbf{F} \mathbf{m},\qquad \mathbf{F} \equiv [\mathbf{e}']_\times\, \mathbf{P}' \mathbf{P}^{\dagger}
 ++++
 
 so any matched pair must satisfy the **epipolar constraint**
 
 [stem]
 ++++
-m'^{T} F\, m = 0
+\mathbf{m}'^{T} \mathbf{F}\, \mathbf{m} = 0
 ++++
 
-stem:[F] is defined up to scale (8 DOF from stem:[3\times 3 - 1]) and, since stem:[Fe = 0] and stem:[e'^{T}F = 0], its left/right null-spaces are exactly the two epipoles -- forcing stem:[\det(F) = 0] and leaving 7 true
-degrees of freedom. Given the SVD stem:[F = U S V^{T}], the epipoles are recovered directly as the singular
-vectors of the zero singular value: stem:[e = v_3] (last column of stem:[V]), stem:[e' = u_3] (last column of
-stem:[U]) xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=103[&sect;3.2.1]
+stem:[\mathbf{F}] is defined up to scale (8 DOF from stem:[3\times 3 - 1]) and, since stem:[\mathbf{F}\mathbf{e} = 0] and stem:[\mathbf{e}'^{T}\mathbf{F} = 0], its left/right null-spaces are exactly the two epipoles -- forcing stem:[\det(\mathbf{F}) = 0] and leaving 7 true
+degrees of freedom. Given the SVD stem:[\mathbf{F} = \mathbf{U} \mathbf{S} \mathbf{V}^{T}], the epipoles are recovered directly as the singular
+vectors of the zero singular value: stem:[\mathbf{e} = \mathbf{v_3}] (last column of stem:[\mathbf{V}]), stem:[\mathbf{e}' = \mathbf{u}_3] (last column of
+stem:[\mathbf{U}]) xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=103[&sect;3.2.1]
 (`FundamentalMatrix.computeEpipoles()`, `getLeftEpipole()`/`getRightEpipole()`). When the pair of cameras
-stem:[P], stem:[P'] is already known, `new FundamentalMatrix(leftCamera, rightCamera)` computes stem:[F]
-directly from `stem:[F = [e'\]_\times P'P^{\dagger}]`.
+stem:[\mathbf{P}], stem:[\mathbf{P}'] is already known, `new FundamentalMatrix(leftCamera, rightCamera)` computes stem:[\mathbf{F}]
+directly from `stem:[\mathbf{F} = [\mathbf{e}'\]_\times \mathbf{P}'\mathbf{P}^{\dagger}]`.
 
 == Linear estimation and the 8-point algorithm
 
 Expanding the constraint for inhomogeneous coordinates gives one linear equation per correspondence in the 9
-unknowns of stem:[F] stacked as a vector stem:[f]:
+unknowns of stem:[\mathbf{F}] stacked as a vector stem:[\mathbf{f}]:
 
 [stem]
 ++++
-\left(x x',\ y x',\ x',\ x y',\ y y',\ y',\ x,\ y,\ 1\right)\, f = 0 \;\Longrightarrow\; A f = 0
+\left(x x',\ y x',\ x',\ x y',\ y y',\ y',\ x,\ y,\ 1\right)\, \mathbf{}f = 0 \;\Longrightarrow\; \mathbf{A} \mathbf{f} = 0
 ++++
 
-With 8 or more correspondences, stem:[f] is the right singular vector of stem:[A] for its smallest singular
+With 8 or more correspondences, stem:[\mathbf{f}] is the right singular vector of stem:[\mathbf{A}] for its smallest singular
 value (exact null-space for exactly 8 points, LMSE fit for more). The resulting matrix is not guaranteed to
-have rank 2, so the *8-point algorithm* enforces it by zeroing the smallest singular value of stem:[F]'s own
-SVD: if stem:[F = U\,\mathrm{diag}(s_1,s_2,s_3)\,V^{T}], the closest rank-2 matrix in Frobenius norm is
-stem:[F' = U\,\mathrm{diag}(s_1,s_2,0)\,V^{T}]. Point coordinates are normalized beforehand (centroid at the
+have rank 2, so the *8-point algorithm* enforces it by zeroing the smallest singular value of stem:[\mathbf{F}]'s own
+SVD: if stem:[\mathbf{F} = \mathbf{U}\,\mathrm{diag}(s_1,s_2,s_3)\,\mathbf{V}^{T}], the closest rank-2 matrix in Frobenius norm is
+stem:[\mathbf{F}' = \mathbf{U}\,\mathrm{diag}(s_1,s_2,0)\,\mathbf{V}^{T}]. Point coordinates are normalized beforehand (centroid at the
 origin, RMS distance stem:[\sqrt2]) to keep the linear system well conditioned
 xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=108[&sect;3.2.2.1], matching the normalized-DLT practice in
 Hartley & Zisserman xref:reference.adoc#ref-hartley-zisserman-2003[Hartley & Zisserman, 2003] &sect;11.2.
@@ -67,9 +67,9 @@ toggles normalization).
 
 == The 7-point algorithm
 
-Seven correspondences make stem:[A] a stem:[7\times 9] matrix whose null-space has dimension 2, spanned by
-stem:[F'] and stem:[F''] (the two smallest-singular-value right singular vectors). The true stem:[F] is some
-combination stem:[F = F' + \alpha F'']; enforcing the rank-2 constraint stem:[\det(F' + \alpha F'') = 0] gives a
+Seven correspondences make stem:[\mathbf{A}] a stem:[7\times 9] matrix whose null-space has dimension 2, spanned by
+stem:[\mathbf{F}'] and stem:[\mathbf{F}''] (the two smallest-singular-value right singular vectors). The true stem:[\mathbf{F}] is some
+combination stem:[\mathbf{F} = \mathbf{F}' + \alpha \mathbf{F}'']; enforcing the rank-2 constraint stem:[\det(\mathbf{F}' + \alpha \mathbf{F}'') = 0] gives a
 cubic in stem:[\alpha] whose real root(s) are found via the companion-matrix/eigenvalue technique. One real
 root means a unique, non-degenerate solution; three distinct real roots signal a geometrically degenerate
 configuration (e.g. all points near-coplanar, or the two camera centers too close together)
@@ -80,23 +80,23 @@ picks the single valid one).
 
 Two additional non-robust variants exist for restricted motions: `AffineFundamentalMatrixEstimator` (for
 affine cameras) and `PlanarFundamentalMatrixEstimator` (when all points lie on a common plane, using the
-plane-induced homography relation stem:[F = [e'\]_\times H]).
+plane-induced homography relation stem:[\mathbf{F} = [\mathbf{e}'\]_\times \mathbf{H}]).
 
 == Robust estimation
 
 With many, possibly mismatched correspondences, a robust wrapper repeatedly draws a minimal sample (7 or 8
-points), fits stem:[F] with the corresponding non-robust estimator, and scores the fit by the *epipolar
+points), fits stem:[\mathbf{F}] with the corresponding non-robust estimator, and scores the fit by the *epipolar
 distance* of every correspondence to its generated epipolar line:
 
 [stem]
 ++++
-d(m', l') = \frac{\left|m'^{T} l'\right|}{\sqrt{l'^{2}_1 + l'^{2}_2}},\qquad l' = F m
+d(\mathbf{m}', \mathbf{l}') = \frac{\left|\mathbf{m}'^{T} \mathbf{l}'\right|}{\sqrt{l'^{2}_1 + l'^{2}_2}},\qquad \mathbf{l}' = \mathbf{F} \mathbf{m}
 ++++
 
 This is exactly the two-tier pattern described in xref:estimation/robust-vs-nonrobust.adoc[]: pick
 `FundamentalMatrixEstimatorMethod.SEVEN_POINTS_ALGORITHM` or `EIGHT_POINTS_ALGORITHM` as the inner non-robust
 solver, and `RobustEstimatorMethod.{RANSAC,LMEDS,MSAC,PROSAC,PROMEDS}` as the outlier-rejection strategy. A
-threshold of 1-2 pixels on stem:[d(m',l')] works well in practice
+threshold of 1-2 pixels on stem:[d(\mathbf{m}',\mathbf{l}')] works well in practice
 xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=116[&sect;3.2.3].
 
 Maps to `{RANSAC,LMedS,MSAC,PROSAC,PROMedS}FundamentalMatrixRobustEstimator`, all subclasses of the abstract
@@ -145,7 +145,7 @@ Point2D rightEpipole = fundamentalMatrix.getRightEpipole();
 
 == Next
 
-xref:epipolar/essential-matrix.adoc[] shows how stem:[F] combines with known intrinsic calibration to give the
+xref:epipolar/essential-matrix.adoc[] shows how stem:[\mathbf{F}] combines with known intrinsic calibration to give the
 essential matrix and an initial metric camera pair; xref:epipolar/point-correction.adoc[] shows how to correct
 noisy correspondences so they lie exactly on the epipolar geometry before triangulating them.
 
