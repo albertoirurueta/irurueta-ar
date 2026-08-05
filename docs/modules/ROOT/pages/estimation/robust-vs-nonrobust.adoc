@@ -1,5 +1,7 @@
 = Robust vs. non-robust estimation
 :stem: latexmath
+:description: The shared robust vs. non-robust estimation pattern used throughout irurueta-ar: RANSAC, LMedS, MSAC, PROSAC, and PROMedS outlier rejection.
+:keywords: RANSAC, LMedS, MSAC, PROSAC, PROMedS, robust estimation, outlier rejection, non-robust estimator, computer vision
 
 NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
 

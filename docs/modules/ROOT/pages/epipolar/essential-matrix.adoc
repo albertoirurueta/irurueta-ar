@@ -1,5 +1,7 @@
 = Essential matrix
 :stem: latexmath
+:description: The essential matrix, calibrated counterpart of the fundamental matrix, and how irurueta-ar recovers a metric camera pair via its four-fold decomposition.
+:keywords: essential matrix, epipolar geometry, camera pose, rotation translation decomposition, cheirality, calibrated cameras, computer vision
 
 NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
 

@@ -1,4 +1,6 @@
 = Pattern-based calibration and radial distortion
+:description: Pattern-based camera calibration in irurueta-ar using checkerboard, circle-grid, or QR patterns, plus radial lens distortion estimation.
+:keywords: camera calibration, calibration pattern, checkerboard, radial distortion, QR pattern, circle grid, intrinsic parameters
 
 NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
 

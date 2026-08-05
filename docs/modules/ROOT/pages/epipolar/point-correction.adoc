@@ -1,5 +1,7 @@
 = Point correction
 :stem: latexmath
+:description: How irurueta-ar corrects noisy correspondences onto the epipolar geometry before triangulation, via Sampson approximation and the Gold Standard method.
+:keywords: point correction, epipolar geometry, Sampson correction, Gold Standard method, triangulation, correspondence correction
 
 NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
 
