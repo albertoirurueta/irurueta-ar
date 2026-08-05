@@ -1,5 +1,7 @@
 = Structure from Motion
 :stem: latexmath
+:description: The end-to-end Structure-from-Motion pipeline in irurueta-ar: pair selection, projective/metric camera recovery, triangulation, and incremental reconstruction.
+:keywords: structure from motion, SfM, SparseReconstructor, 3D reconstruction, triangulation, projective stratum, metric stratum, camera resectioning
 
 NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
 

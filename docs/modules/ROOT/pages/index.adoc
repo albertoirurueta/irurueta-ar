@@ -1,4 +1,6 @@
 = Overview
+:description: Java library for augmented reality and 3D reconstruction: estimates camera geometry and recovers 3D scene structure from image correspondences.
+:keywords: augmented reality, 3D reconstruction, structure from motion, Java library, computer vision, camera geometry, SLAM, epipolar geometry, camera calibration
 
 NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
 

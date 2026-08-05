@@ -1,5 +1,7 @@
 = Self-calibration
 :stem: latexmath
+:description: How irurueta-ar's self-calibration recovers camera intrinsics with no calibration object, using the dual absolute quadric and Kruppa equations.
+:keywords: self-calibration, dual absolute quadric, Kruppa equations, image of absolute conic, projective to metric, camera intrinsics, auto-calibration
 
 NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
 
