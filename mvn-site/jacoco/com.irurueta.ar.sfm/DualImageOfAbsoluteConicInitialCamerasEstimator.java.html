@@ -1,0 +1,1043 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DualImageOfAbsoluteConicInitialCamerasEstimator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.sfm</a> &gt; <span class="el_source">DualImageOfAbsoluteConicInitialCamerasEstimator.java</span></div><h1>DualImageOfAbsoluteConicInitialCamerasEstimator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2017 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.sfm;
+
+import com.irurueta.ar.calibration.estimators.KruppaDualImageOfAbsoluteConicEstimator;
+import com.irurueta.ar.epipolar.Corrector;
+import com.irurueta.ar.epipolar.CorrectorType;
+import com.irurueta.ar.epipolar.FundamentalMatrix;
+import com.irurueta.geometry.PinholeCamera;
+import com.irurueta.geometry.Point2D;
+import com.irurueta.geometry.Point3D;
+import com.irurueta.geometry.estimators.LockedException;
+import com.irurueta.geometry.estimators.NotReadyException;
+
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.List;
+
+/**
+ * Estimates an initial pair of cameras in the metric stratum (up to an
+ * arbitrary scale) using a given fundamental matrix to obtain the Dual Image
+ * of Absolute Conic by solving Kruppa equations to obtain the Essential matrix,
+ * so that once it is computed it can be used to determine best pair of camera
+ * poses and translations by triangulating a set of matched points and checking
+ * that their triangulation lies in front of cameras.
+ */
+public class DualImageOfAbsoluteConicInitialCamerasEstimator extends InitialCamerasEstimator {
+
+    /**
+     * Indicates whether matched 2D points must be triangulated by default.
+     */
+    public static final boolean DEFAULT_TRIANGULATE_POINTS = false;
+
+    /**
+     * Indicates whether triangulated points must be marked as valid (i.e. when
+     * they lie in front of both of the estimated cameras) or not.
+     */
+    public static final boolean DEFAULT_MARK_VALID_TRIANGULATED_POINTS = false;
+
+    /**
+     * Aspect ratio of intrinsic parameters of cameras.
+     * Typically, this value is 1.0 if vertical coordinates increase upwards,
+     * or -1.0 if it is the opposite.
+     */
+<span class="fc" id="L58">    private double aspectRatio = KruppaDualImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO;</span>
+
+    /**
+     * Horizontal coordinate of principal point. This value should be the
+     * coordinates of the center of an image assuming that the coordinates start
+     * on the top-left or bottom-left corner. Using a value close to zero
+     * will produce inaccurate results.
+     */
+    private double principalPointX;
+
+    /**
+     * Vertical coordinate of principal point. This value should be the
+     * coordinates of the center of an image assuming that the coordinates start
+     * on the top-left or bottom-left corner. Using a value close to zero will
+     * produce inaccurate results.
+     */
+    private double principalPointY;
+
+    /**
+     * Matched 2D points on left view.
+     */
+    private List&lt;Point2D&gt; leftPoints;
+
+    /**
+     * Matched 2D points on right view.
+     */
+    private List&lt;Point2D&gt; rightPoints;
+
+    /**
+     * Type of corrector to use to triangulate matched points or null if no
+     * corrector needs to be used.
+     */
+<span class="fc" id="L90">    private CorrectorType correctorType = Corrector.DEFAULT_TYPE;</span>
+
+    /**
+     * Indicates whether matched 2D points need to be triangulated.
+     */
+<span class="fc" id="L95">    private boolean triangulatePoints = DEFAULT_TRIANGULATE_POINTS;</span>
+
+    /**
+     * Marks which of the triangulated points are marked as valid (lie in front
+     * of both of the estimated cameras) and which ones aren't.
+     */
+<span class="fc" id="L101">    private boolean markValidTriangulatedPoints = DEFAULT_MARK_VALID_TRIANGULATED_POINTS;</span>
+
+    /**
+     * Contains triangulated points.
+     */
+    private List&lt;Point3D&gt; triangulatedPoints;
+
+    /**
+     * Contains booleans indicating whether triangulated points are valid (i.e.
+     * lie in front of both estimated cameras) or not.
+     */
+    private BitSet validTriangulatedPoints;
+
+    /**
+     * Constructor.
+     */
+    public DualImageOfAbsoluteConicInitialCamerasEstimator() {
+<span class="fc" id="L118">        super();</span>
+<span class="fc" id="L119">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param fundamentalMatrix fundamental matrix relating two views.
+     */
+    public DualImageOfAbsoluteConicInitialCamerasEstimator(final FundamentalMatrix fundamentalMatrix) {
+<span class="fc" id="L127">        super(fundamentalMatrix);</span>
+<span class="fc" id="L128">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param leftPoints  matched 2D points on left view.
+     * @param rightPoints matched 2D points on right view.
+     * @throws IllegalArgumentException if provided lists don't have the same
+     *                                  size.
+     */
+    public DualImageOfAbsoluteConicInitialCamerasEstimator(
+            final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints) {
+<span class="fc" id="L140">        super();</span>
+<span class="fc" id="L141">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
+<span class="fc" id="L142">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param fundamentalMatrix fundamental matrix relating two views.
+     * @param leftPoints        matched 2D points on left view.
+     * @param rightPoints       matched 2D points on right view.
+     * @throws IllegalArgumentException if provided lists don't have the same
+     *                                  size.
+     */
+    public DualImageOfAbsoluteConicInitialCamerasEstimator(
+            final FundamentalMatrix fundamentalMatrix, final List&lt;Point2D&gt; leftPoints,
+            final List&lt;Point2D&gt; rightPoints) {
+<span class="fc" id="L156">        super(fundamentalMatrix);</span>
+<span class="fc" id="L157">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
+<span class="fc" id="L158">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param listener listener to handle events raised by this instance.
+     */
+    public DualImageOfAbsoluteConicInitialCamerasEstimator(final InitialCamerasEstimatorListener listener) {
+<span class="fc" id="L166">        super(listener);</span>
+<span class="fc" id="L167">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param fundamentalMatrix fundamental matrix relating two views.
+     * @param listener          listener to handle events raised by this instance.
+     */
+    public DualImageOfAbsoluteConicInitialCamerasEstimator(
+            final FundamentalMatrix fundamentalMatrix, final InitialCamerasEstimatorListener listener) {
+<span class="fc" id="L177">        super(fundamentalMatrix, listener);</span>
+<span class="fc" id="L178">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param leftPoints  matched 2D points on left view.
+     * @param rightPoints matched 2D points on right view.
+     * @param listener    listener to handle events raised by this instance.
+     * @throws IllegalArgumentException if provided lists don't have the same
+     *                                  size.
+     */
+    public DualImageOfAbsoluteConicInitialCamerasEstimator(
+            final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints,
+            final InitialCamerasEstimatorListener listener) {
+<span class="fc" id="L192">        super(listener);</span>
+<span class="fc" id="L193">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
+<span class="fc" id="L194">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param fundamentalMatrix fundamental matrix relating two views.
+     * @param leftPoints        matched 2D points on left view.
+     * @param rightPoints       matched 2D points on right view.
+     * @param listener          listener to handle events raised by this instance.
+     * @throws IllegalArgumentException if provided lists don't have the same
+     *                                  size.
+     */
+    public DualImageOfAbsoluteConicInitialCamerasEstimator(
+            final FundamentalMatrix fundamentalMatrix,
+            final List&lt;Point2D&gt; leftPoints,
+            final List&lt;Point2D&gt; rightPoints,
+            final InitialCamerasEstimatorListener listener) {
+<span class="fc" id="L211">        super(fundamentalMatrix, listener);</span>
+<span class="fc" id="L212">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
+<span class="fc" id="L213">    }</span>
+
+    /**
+     * Returns method used by this estimator.
+     *
+     * @return method used by this estimator.
+     */
+    @Override
+    public InitialCamerasEstimatorMethod getMethod() {
+<span class="fc" id="L222">        return InitialCamerasEstimatorMethod.DUAL_IMAGE_OF_ABSOLUTE_CONIC;</span>
+    }
+
+    /**
+     * Indicates if estimator is ready.
+     *
+     * @return true if estimator is ready, false otherwise.
+     */
+    @Override
+    public boolean isReady() {
+<span class="pc bpc" id="L232" title="1 of 6 branches missed.">        return fundamentalMatrix != null &amp;&amp; leftPoints != null &amp;&amp; rightPoints != null</span>
+<span class="pc bpc" id="L233" title="1 of 2 branches missed.">                &amp;&amp; leftPoints.size() == rightPoints.size();</span>
+    }
+
+    /**
+     * Estimates cameras.
+     *
+     * @throws LockedException                         if estimator is locked.
+     * @throws NotReadyException                       if estimator is not ready.
+     * @throws InitialCamerasEstimationFailedException if estimation of cameras
+     *                                                 fails for some reason, typically due to numerical
+     *                                                 instabilities.
+     */
+    @SuppressWarnings(&quot;DuplicatedCode&quot;)
+    @Override
+    public void estimate() throws LockedException, NotReadyException, InitialCamerasEstimationFailedException {
+<span class="fc bfc" id="L248" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L249">            throw new LockedException();</span>
+        }
+
+<span class="pc bpc" id="L252" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L253">            throw new NotReadyException();</span>
+        }
+
+        try {
+<span class="fc" id="L257">            locked = true;</span>
+
+<span class="fc bfc" id="L259" title="All 2 branches covered.">            if (listener != null) {</span>
+<span class="fc" id="L260">                listener.onStart(this);</span>
+            }
+
+<span class="pc bpc" id="L263" title="1 of 2 branches missed.">            if (triangulatePoints) {</span>
+<span class="fc" id="L264">                triangulatedPoints = new ArrayList&lt;&gt;();</span>
+            } else {
+<span class="nc" id="L266">                triangulatedPoints = null;</span>
+            }
+
+<span class="fc" id="L269">            final var nPoints = leftPoints.size();</span>
+<span class="pc bpc" id="L270" title="1 of 2 branches missed.">            if (markValidTriangulatedPoints) {</span>
+<span class="fc" id="L271">                validTriangulatedPoints = new BitSet(nPoints);</span>
+            } else {
+<span class="nc" id="L273">                validTriangulatedPoints = null;</span>
+            }
+
+<span class="pc bpc" id="L276" title="1 of 2 branches missed.">            if (estimatedLeftCamera == null) {</span>
+<span class="fc" id="L277">                estimatedLeftCamera = new PinholeCamera();</span>
+            }
+<span class="pc bpc" id="L279" title="1 of 2 branches missed.">            if (estimatedRightCamera == null) {</span>
+<span class="fc" id="L280">                estimatedRightCamera = new PinholeCamera();</span>
+            }
+
+<span class="fc" id="L283">            generateInitialMetricCamerasUsingDIAC(fundamentalMatrix, principalPointX, principalPointY, aspectRatio,</span>
+                    leftPoints, rightPoints, correctorType, estimatedLeftCamera, estimatedRightCamera,
+                    triangulatedPoints, validTriangulatedPoints);
+
+<span class="fc bfc" id="L287" title="All 2 branches covered.">            if (listener != null) {</span>
+<span class="fc" id="L288">                listener.onFinish(this, estimatedLeftCamera, estimatedRightCamera);</span>
+            }
+<span class="fc" id="L290">        } catch (final InitialCamerasEstimationFailedException e) {</span>
+<span class="pc bpc" id="L291" title="1 of 2 branches missed.">            if (listener != null) {</span>
+<span class="nc" id="L292">                listener.onFail(this, e);</span>
+            }
+<span class="fc" id="L294">            throw e;</span>
+        } finally {
+<span class="fc" id="L296">            locked = false;</span>
+        }
+<span class="fc" id="L298">    }</span>
+
+    /**
+     * Gets aspect ratio of intrinsic parameters of cameras.
+     * Typically, this value is 1.0 if vertical coordinates increase upwards,
+     * or -1.0 if it is the opposite.
+     *
+     * @return aspect ratio of intrinsic parameters of cameras.
+     */
+    public double getAspectRatio() {
+<span class="fc" id="L308">        return aspectRatio;</span>
+    }
+
+    /**
+     * Sets aspect ratio of intrinsic parameters of cameras.
+     * Typically, this value is 1.0 if vertical coordinates increase upwards,
+     * or -1.0 if it is the opposite.
+     *
+     * @param aspectRatio aspect ratio of intrinsic parameters of cameras.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setAspectRatio(final double aspectRatio) throws LockedException {
+<span class="fc bfc" id="L320" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L321">            throw new LockedException();</span>
+        }
+<span class="fc" id="L323">        this.aspectRatio = aspectRatio;</span>
+<span class="fc" id="L324">    }</span>
+
+    /**
+     * Gets horizontal coordinate of principal point. This value should be the
+     * coordinates of the center of an image assuming that the coordinates start
+     * on the top-left or bottom-left corner. Using a value close to zero
+     * will produce inaccurate results.
+     *
+     * @return horizontal coordinate of principal point.
+     */
+    public double getPrincipalPointX() {
+<span class="fc" id="L335">        return principalPointX;</span>
+    }
+
+    /**
+     * Sets horizontal coordinate of principal point. This value should be the
+     * coordinates of the center of an image assuming that the coordinates start
+     * on the top-left or bottom-left corner. Using a value close to zero
+     * will produce inaccurate results.
+     *
+     * @param principalPointX horizontal coordinate of principal point.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setPrincipalPointX(final double principalPointX) throws LockedException {
+<span class="fc bfc" id="L348" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L349">            throw new LockedException();</span>
+        }
+<span class="fc" id="L351">        this.principalPointX = principalPointX;</span>
+<span class="fc" id="L352">    }</span>
+
+    /**
+     * Gets vertical coordinate of principal point. This value should be the
+     * coordinates of the center of an image assuming that the coordinates start
+     * on the top-left or bottom-left corner. Using a value close to zero will
+     * produce inaccurate results.
+     *
+     * @return vertical coordinate of principal point.
+     */
+    public double getPrincipalPointY() {
+<span class="fc" id="L363">        return principalPointY;</span>
+    }
+
+    /**
+     * Sets vertical coordinate of principal point. This value should be the
+     * coordinates of the center of an image assuming that the coordinates start
+     * on the top-left or bottom-left corner. Using a value close to zero will
+     * produce inaccurate results.
+     *
+     * @param principalPointY vertical coordinate of principal point.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setPrincipalPointY(final double principalPointY) throws LockedException {
+<span class="fc bfc" id="L376" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L377">            throw new LockedException();</span>
+        }
+<span class="fc" id="L379">        this.principalPointY = principalPointY;</span>
+<span class="fc" id="L380">    }</span>
+
+    /**
+     * Sets horizontal and vertical coordinates of principal point. This value
+     * should be the coordinates of the center of an image assuming that the
+     * coordinates start on the top-left or bottom-left corner. Using a value
+     * close to zero will produce inaccurate results.
+     *
+     * @param principalPointX horizontal coordinate of principal point.
+     * @param principalPointY vertical coordinate of principal point.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setPrincipalPoint(final double principalPointX, final double principalPointY) throws LockedException {
+<span class="fc bfc" id="L393" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L394">            throw new LockedException();</span>
+        }
+<span class="fc" id="L396">        this.principalPointX = principalPointX;</span>
+<span class="fc" id="L397">        this.principalPointY = principalPointY;</span>
+<span class="fc" id="L398">    }</span>
+
+    /**
+     * Gets matched 2D points on left view.
+     *
+     * @return matched 2D points on left view.
+     */
+    public List&lt;Point2D&gt; getLeftPoints() {
+<span class="fc" id="L406">        return leftPoints;</span>
+    }
+
+    /**
+     * Sets matched 2D points on left view.
+     *
+     * @param leftPoints matched 2D points on left view.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setLeftPoints(final List&lt;Point2D&gt; leftPoints) throws LockedException {
+<span class="fc bfc" id="L416" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L417">            throw new LockedException();</span>
+        }
+<span class="fc" id="L419">        this.leftPoints = leftPoints;</span>
+<span class="fc" id="L420">    }</span>
+
+    /**
+     * Gets matched 2D points on right view.
+     *
+     * @return matched 2D points on right view.
+     */
+    public List&lt;Point2D&gt; getRightPoints() {
+<span class="fc" id="L428">        return rightPoints;</span>
+    }
+
+    /**
+     * Sets matched 2D points on right view.
+     *
+     * @param rightPoints matched 2D points on right view.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setRightPoints(final List&lt;Point2D&gt; rightPoints) throws LockedException {
+<span class="fc bfc" id="L438" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L439">            throw new LockedException();</span>
+        }
+<span class="fc" id="L441">        this.rightPoints = rightPoints;</span>
+<span class="fc" id="L442">    }</span>
+
+    /**
+     * Sets matched 2D points on left and right views.
+     *
+     * @param leftPoints  matched 2D points on left view.
+     * @param rightPoints matched 2D points on right view.
+     * @throws LockedException          if estimator is locked.
+     * @throws IllegalArgumentException if provided lists don't have the same
+     *                                  size.
+     */
+    public void setLeftAndRightPoints(final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints)
+            throws LockedException {
+<span class="fc bfc" id="L455" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L456">            throw new LockedException();</span>
+        }
+<span class="fc" id="L458">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
+<span class="fc" id="L459">    }</span>
+
+    /**
+     * Gets type of corrector to use to triangulate matched points or null if
+     * no corrector needs to be used.
+     *
+     * @return type of corrector to use.
+     */
+    public CorrectorType getCorrectorType() {
+<span class="fc" id="L468">        return correctorType;</span>
+    }
+
+    /**
+     * Sets type of corrector to use to triangulate matched points or null if
+     * no corrector needs to be used.
+     *
+     * @param correctorType type of corrector to use.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setCorrectorType(final CorrectorType correctorType) throws LockedException {
+<span class="fc bfc" id="L479" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L480">            throw new LockedException();</span>
+        }
+<span class="fc" id="L482">        this.correctorType = correctorType;</span>
+<span class="fc" id="L483">    }</span>
+
+    /**
+     * Indicates whether matched 2D points need to be triangulated or not.
+     *
+     * @return true if 2D points need to be triangulated, false otherwise.
+     */
+    public boolean arePointsTriangulated() {
+<span class="fc" id="L491">        return triangulatePoints;</span>
+    }
+
+    /**
+     * Specifies whether matched 2D points need to be triangulated or not.
+     *
+     * @param triangulatePoints true if 2D points need to be triangulated, false
+     *                          otherwise.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setPointsTriangulated(final boolean triangulatePoints) throws LockedException {
+<span class="fc bfc" id="L502" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L503">            throw new LockedException();</span>
+        }
+<span class="fc" id="L505">        this.triangulatePoints = triangulatePoints;</span>
+<span class="fc" id="L506">    }</span>
+
+    /**
+     * Indicates which triangulated points are marked as valid (lie in front
+     * of both of the estimated cameras) and which ones aren't.
+     *
+     * @return true to mark valid and invalid triangulated points, false
+     * otherwise.
+     */
+    public boolean areValidTriangulatedPointsMarked() {
+<span class="fc" id="L516">        return markValidTriangulatedPoints;</span>
+    }
+
+    /**
+     * Specifies whether triangulated points are marked as valid (lie in front
+     * of both of the estimated cameras) and which ones aren't.
+     *
+     * @param markValidTriangulatedPoints true to mark valid and invalid
+     *                                    triangulated points, false otherwise.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setValidTriangulatedPointsMarked(final boolean markValidTriangulatedPoints) throws LockedException {
+<span class="fc bfc" id="L528" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L529">            throw new LockedException();</span>
+        }
+<span class="fc" id="L531">        this.markValidTriangulatedPoints = markValidTriangulatedPoints;</span>
+<span class="fc" id="L532">    }</span>
+
+    /**
+     * Gets triangulated points, if available.
+     *
+     * @return triangulated points or null.
+     */
+    public List&lt;Point3D&gt; getTriangulatedPoints() {
+<span class="fc" id="L540">        return triangulatedPoints;</span>
+    }
+
+    /**
+     * Gets bitset indicating which of the triangulated points are valid and
+     * which ones aren't.
+     *
+     * @return bitset indicating validity of triangulated points or null if not
+     * available.
+     */
+    public BitSet getValidTriangulatedPoints() {
+<span class="fc" id="L551">        return validTriangulatedPoints;</span>
+    }
+
+    /**
+     * Generates a pair of metric cameras (up to an arbitrary space) by
+     * estimating the intrinsic parameters of the views by solving the Kruppa
+     * equations to obtain the Dual Image of Absolute Conic (DIAC).
+     * The estimated intrinsic parameters can later be used to find the
+     * essential matrix (assuming that both views have the same intrinsic
+     * parameters), and the essential matrix along with provided matched 2D
+     * points can be used to determine the best pair of camera pose and
+     * translation that yields the largest number of triangulated points laying
+     * in front of both of the estimated cameras.
+     * This method uses default corrector type, does not keep triangulated
+     * points or valid triangulated points, and uses default aspect ratio (1.0).
+     *
+     * @param fundamentalMatrix fundamental matrix relating both left and right
+     *                          views.
+     * @param principalPointX   horizontal coordinate of principal point. This
+     *                          value should be the coordinates of the center of an image assuming that
+     *                          the coordinates start on the top-left or bottom-left corner. Using a
+     *                          value close to zero will produce inaccurate results.
+     * @param principalPointY   vertical coordinate of principal point. This
+     *                          value should be the coordinates of the center of an image assuming that
+     *                          the coordinates start on the top-left or bottom-left corner. Using a
+     *                          value close to zero will produce inaccurate results.
+     * @param leftPoints        points on left view matched with points on right view,
+     *                          so they can be triangulated using estimated cameras. Both lists of points
+     *                          must have the same size.
+     * @param rightPoints       points on right view matched with points on left view,
+     *                          so they can be triangulated using estimated cameras. Both lists of points
+     *                          must have the same size.
+     * @param leftCamera        instance where estimated left camera will be stored.
+     * @param rightCamera       instance where estimated right camera will be stored.
+     * @return number of valid triangulated points which lie in front of the two
+     * estimated cameras.
+     * @throws InitialCamerasEstimationFailedException if estimation of cameras
+     *                                                 fails for some reason, typically due to numerical
+     *                                                 instabilities.
+     * @throws IllegalArgumentException                if provided lists of left and right
+     *                                                 points don't have the same size.
+     */
+    public static int generateInitialMetricCamerasUsingDIAC(
+            final FundamentalMatrix fundamentalMatrix, final double principalPointX,
+            final double principalPointY, final List&lt;Point2D&gt; leftPoints,
+            final List&lt;Point2D&gt; rightPoints, final PinholeCamera leftCamera,
+            final PinholeCamera rightCamera) throws InitialCamerasEstimationFailedException {
+
+<span class="fc" id="L599">        return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix, principalPointX, principalPointY,</span>
+                leftPoints, rightPoints, Corrector.DEFAULT_TYPE, leftCamera, rightCamera);
+    }
+
+    /**
+     * Generates a pair of metric cameras (up to an arbitrary space) by
+     * estimating the intrinsic parameters of the views by solving the Kruppa
+     * equations to obtain the Dual Image of Absolute Conic (DIAC).
+     * The estimated intrinsic parameters can later be used to find the
+     * essential matrix (assuming that both views have the same intrinsic
+     * parameters), and the essential matrix along with provided matched 2D
+     * points can be used to determine the best pair of camera pose and
+     * translation that yields the largest number of triangulated points laying
+     * in front of both of the estimated cameras.
+     * This method does not keep triangulated points or valid triangulated
+     * points and uses default aspect ratio (1.0).
+     *
+     * @param fundamentalMatrix fundamental matrix relating both left and right
+     *                          views.
+     * @param principalPointX   horizontal coordinate of principal point. This
+     *                          value should be the coordinates of the center of an image assuming that
+     *                          the coordinates start on the top-left or bottom-left corner. Using a
+     *                          value close to zero will produce inaccurate results.
+     * @param principalPointY   vertical coordinate of principal point. This
+     *                          value should be the coordinates of the center of an image assuming that
+     *                          the coordinates start on the top-left or bottom-left corner. Using a
+     *                          value close to zero will produce inaccurate results.
+     * @param leftPoints        points on left view matched with points on right view,
+     *                          so they can be triangulated using estimated cameras. Both lists of points
+     *                          must have the same size.
+     * @param rightPoints       points on right view matched with points on left view,
+     *                          so they can be triangulated using estimated cameras. Both lists of points
+     *                          must have the same size.
+     * @param correctorType     corrector type to be used to correct 2D points, so
+     *                          they follow the epipolar geometry defined by provided fundamental matrix
+     *                          so that error on triangulated points is reduced. If null, no corrector
+     *                          will be used.
+     * @param leftCamera        instance where estimated left camera will be stored.
+     * @param rightCamera       instance where estimated right camera will be stored.
+     * @return number of valid triangulated points which lie in front of the two
+     * estimated cameras.
+     * @throws InitialCamerasEstimationFailedException if estimation of
+     *                                                 cameras fails for some reason, typically due to
+     *                                                 numerical instabilities.
+     * @throws IllegalArgumentException                if provided lists of left and right
+     *                                                 points don't have the same size.
+     */
+    public static int generateInitialMetricCamerasUsingDIAC(
+            final FundamentalMatrix fundamentalMatrix, final double principalPointX,
+            final double principalPointY, final List&lt;Point2D&gt; leftPoints,
+            final List&lt;Point2D&gt; rightPoints, final CorrectorType correctorType,
+            final PinholeCamera leftCamera, final PinholeCamera rightCamera)
+            throws InitialCamerasEstimationFailedException {
+
+<span class="fc" id="L653">        return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix, principalPointX, principalPointY,</span>
+                leftPoints, rightPoints, correctorType, leftCamera, rightCamera, null,
+                null);
+    }
+
+    /**
+     * Generates a pair of metric cameras (up to an arbitrary space) by
+     * estimating the intrinsic parameters of the views by solving the Kruppa
+     * equations to obtain the Dual Image of Absolute Conic (DIAC).
+     * The estimated intrinsic parameters can later be used to find the
+     * essential matrix (assuming that both views have the same intrinsic
+     * parameters), and the essential matrix along with provided matched 2D
+     * points can be used to determine the best pair of camera pose and
+     * translation that yields the largest number of triangulated points laying
+     * in front of both of the estimated cameras.
+     * This method uses default corrector type and default aspect ratio (1.0).
+     *
+     * @param fundamentalMatrix       fundamental matrix relating both left and right
+     *                                views.
+     * @param principalPointX         horizontal coordinate of principal point. This
+     *                                value should be the coordinates of the center of an image assuming
+     *                                that the coordinates start on the top-left or bottom-left corner.
+     *                                Using a value close to zero will produce inaccurate results.
+     * @param principalPointY         vertical coordinate of principal point. This
+     *                                value should be the coordinates of the center of an image assuming
+     *                                that the coordinates start on the top-left or bottom-left corner.
+     *                                Using a value close to zero will produce inaccurate results.
+     * @param leftPoints              points on left view matched with points on right view,
+     *                                so they can be triangulated using estimated cameras. Both lists of
+     *                                points must have the same size.
+     * @param rightPoints             points on right view matched with points on left view,
+     *                                so they can be triangulated using estimated cameras. Both lists of
+     *                                points must have the same size.
+     * @param leftCamera              instance where estimated left camera will be stored.
+     * @param rightCamera             instance where estimated right camera will be stored.
+     * @param triangulatedPoints      instance where triangulated 3D points will be
+     *                                stored or null if triangulated points don't need to be kept.
+     * @param validTriangulatedPoints instance which indicates which
+     *                                triangulated 3D points are considered valid because they lie in
+     *                                front of both cameras or null if such data doesn't need to be kept.
+     * @return number of valid triangulated points which lie in front of the two
+     * estimated cameras.
+     * @throws InitialCamerasEstimationFailedException if estimation of cameras
+     *                                                 fails for some reason, typically due to numerical
+     *                                                 instabilities.
+     * @throws IllegalArgumentException                if provided lists of left and right
+     *                                                 points don't have the same size.
+     */
+    public static int generateInitialMetricCamerasUsingDIAC(
+            final FundamentalMatrix fundamentalMatrix, final double principalPointX,
+            final double principalPointY, final List&lt;Point2D&gt; leftPoints,
+            final List&lt;Point2D&gt; rightPoints, final PinholeCamera leftCamera,
+            final PinholeCamera rightCamera, final List&lt;Point3D&gt; triangulatedPoints,
+            final BitSet validTriangulatedPoints)
+            throws InitialCamerasEstimationFailedException {
+
+<span class="fc" id="L709">        return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix, principalPointX, principalPointY,</span>
+                leftPoints, rightPoints, Corrector.DEFAULT_TYPE, leftCamera, rightCamera, triangulatedPoints,
+                validTriangulatedPoints);
+    }
+
+    /**
+     * Generates a pair of metric cameras (up to an arbitrary space) by
+     * estimating the intrinsic parameters of the views by solving the Kruppa
+     * equations to obtain the Dual Image of Absolute Conic (DIAC).
+     * The estimated intrinsic parameters can later be used to find the
+     * essential matrix (assuming that both views have the same intrinsic
+     * parameters), and the essential matrix along with provided matched 2D
+     * points can be used to determine the best pair of camera pose and
+     * translation that yields the largest number of triangulated points laying
+     * in front of both of the estimated cameras.
+     * This method uses default aspect ratio (1.0).
+     *
+     * @param fundamentalMatrix       fundamental matrix relating both left and right
+     *                                views.
+     * @param principalPointX         horizontal coordinate of principal point. This
+     *                                value should be the coordinates of the center of an image assuming
+     *                                that the coordinates start on the top-left or bottom-left corner.
+     *                                Using a value close to zero will produce inaccurate results.
+     * @param principalPointY         vertical coordinate of principal point. This
+     *                                value should be the coordinates of the center of an image assuming
+     *                                that the coordinates start on the top-left or bottom-left corner.
+     *                                Using a value close to zero will produce inaccurate results.
+     * @param leftPoints              points on left view matched with points on right view,
+     *                                so they can be triangulated using estimated cameras. Both lists of
+     *                                points must have the same size.
+     * @param rightPoints             points on right view matched with points on left view,
+     *                                so they can be triangulated using estimated cameras. Both lists of
+     *                                points must have the same size.
+     * @param correctorType           corrector type to be used to correct 2D points, so
+     *                                they follow the epipolar geometry defined by provided fundamental
+     *                                matrix so that error on triangulated points is reduced. If null, no
+     *                                corrector will be used.
+     * @param leftCamera              instance where estimated left camera will be stored.
+     * @param rightCamera             instance where estimated right camera will be stored.
+     * @param triangulatedPoints      instance where triangulated 3D points will be
+     *                                stored or null if triangulated points don't need to be kept.
+     * @param validTriangulatedPoints instance which indicates which
+     *                                triangulated 3D points are considered valid because they lie in
+     *                                front of both cameras or null if such data doesn't need to be kept.
+     * @return number of valid triangulated points which lie in front of the two
+     * estimated cameras.
+     * @throws InitialCamerasEstimationFailedException if estimation of cameras
+     *                                                 fails for some reason, typically due to numerical
+     *                                                 instabilities.
+     * @throws IllegalArgumentException                if provided lists of left and right
+     *                                                 points don't have the same size.
+     */
+    public static int generateInitialMetricCamerasUsingDIAC(
+            final FundamentalMatrix fundamentalMatrix, final double principalPointX,
+            final double principalPointY, final List&lt;Point2D&gt; leftPoints,
+            final List&lt;Point2D&gt; rightPoints, final CorrectorType correctorType,
+            final PinholeCamera leftCamera, final PinholeCamera rightCamera,
+            final List&lt;Point3D&gt; triangulatedPoints, final BitSet validTriangulatedPoints)
+            throws InitialCamerasEstimationFailedException {
+
+<span class="fc" id="L769">        return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix,</span>
+                principalPointX, principalPointY,
+                KruppaDualImageOfAbsoluteConicEstimator.DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO, leftPoints, rightPoints,
+                correctorType, leftCamera, rightCamera, triangulatedPoints, validTriangulatedPoints);
+    }
+
+    /**
+     * Generates a pair of metric cameras (up to an arbitrary space) by
+     * estimating the intrinsic parameters of the views by solving the Kruppa
+     * equations to obtain the Dual Image of Absolute Conic (DIAC).
+     * The estimated intrinsic parameters can later be used to find the
+     * essential matrix (assuming that both views have the same intrinsic
+     * parameters), and the essential matrix along with provided matched 2D
+     * points can be used to determine the best pair of camera pose and
+     * translation that yields the largest number of triangulated points laying
+     * in front of both of the estimated cameras.
+     * This method uses default corrector type and does not keep triangulated
+     * points or valid triangulated points.
+     *
+     * @param fundamentalMatrix fundamental matrix relating both left and right
+     *                          views.
+     * @param principalPointX   horizontal coordinate of principal point. This
+     *                          value should be the coordinates of the center of an image assuming that
+     *                          the coordinates start on the top-left or bottom-left corner. Using a
+     *                          value close to zero will produce inaccurate results.
+     * @param principalPointY   vertical coordinate of principal point. This
+     *                          value should be the coordinates of the center of an image assuming that
+     *                          the coordinates start on the top-left or bottom-left corner. Using a
+     *                          value close to zero will produce inaccurate results.
+     * @param aspectRatio       aspect ratio for estimated intrinsic parameters. This
+     *                          is typically 1.0 if vertical coordinates increase upwards or -1.0 if it
+     *                          is the opposite.
+     * @param leftPoints        points on left view matched with points on right view,
+     *                          so they can be triangulated using estimated cameras. Both lists of points
+     *                          must have the same size.
+     * @param rightPoints       points on right view matched with points on left view,
+     *                          so they can be triangulated using estimated cameras. Both lists of points
+     *                          must have the same size.
+     * @param leftCamera        instance where estimated left camera will be stored.
+     * @param rightCamera       instance where estimated right camera will be stored.
+     * @return number of valid triangulated points which lie in front of the two
+     * estimated cameras.
+     * @throws InitialCamerasEstimationFailedException if estimation of cameras
+     *                                                 fails for some reason, typically due to numerical
+     *                                                 instabilities.
+     * @throws IllegalArgumentException                if provided lists of left and right
+     *                                                 points don't have the same size.
+     */
+    public static int generateInitialMetricCamerasUsingDIAC(
+            final FundamentalMatrix fundamentalMatrix, final double principalPointX,
+            final double principalPointY, final double aspectRatio,
+            final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints,
+            final PinholeCamera leftCamera, final PinholeCamera rightCamera)
+            throws InitialCamerasEstimationFailedException {
+
+<span class="fc" id="L824">        return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix, principalPointX, principalPointY, aspectRatio,</span>
+                leftPoints, rightPoints, Corrector.DEFAULT_TYPE, leftCamera, rightCamera);
+    }
+
+    /**
+     * Generates a pair of metric cameras (up to an arbitrary space) by
+     * estimating the intrinsic parameters of the views by solving the Kruppa
+     * equations to obtain the Dual Image of Absolute Conic (DIAC).
+     * The estimated intrinsic parameters can later be used to find the
+     * essential matrix (assuming that both views have the same intrinsic
+     * parameters), and the essential matrix along with provided matched 2D
+     * points can be used to determine the best pair of camera pose and
+     * translation that yields the largest number of triangulated points laying
+     * in front of both of the estimated cameras.
+     * This method does not keep triangulated points or valid triangulated
+     * points.
+     *
+     * @param fundamentalMatrix fundamental matrix relating both left and right
+     *                          views.
+     * @param principalPointX   horizontal coordinate of principal point. This
+     *                          value should be the coordinates of the center of an image assuming that
+     *                          the coordinates start on the top-left or bottom-left corner. Using a
+     *                          value close to zero will produce inaccurate results.
+     * @param principalPointY   vertical coordinate of principal point. This
+     *                          value should be the coordinates of the center of an image assuming that
+     *                          the coordinates start on the top-left or bottom-left corner. Using a
+     *                          value close to zero will produce inaccurate results.
+     * @param aspectRatio       aspect ratio for estimated intrinsic parameters. This
+     *                          is typically 1.0 if vertical coordinates increase upwards or -1.0 if it
+     *                          is the opposite.
+     * @param leftPoints        points on left view matched with points on right view,
+     *                          so they can be triangulated using estimated cameras. Both lists of points
+     *                          must have the same size.
+     * @param rightPoints       points on right view matched with points on left view,
+     *                          so they can be triangulated using estimated cameras. Both lists of points
+     *                          must have the same size.
+     * @param correctorType     corrector type to be used to correct 2D points, so
+     *                          they follow the epipolar geometry defined by provided fundamental matrix
+     *                          so that error on triangulated points is reduced. If null, no corrector
+     *                          will be used.
+     * @param leftCamera        instance where estimated left camera will be stored.
+     * @param rightCamera       instance where estimated right camera will be stored.
+     * @return number of valid triangulated points which lie in front of the two
+     * estimated cameras.
+     * @throws InitialCamerasEstimationFailedException if estimation of
+     *                                                 cameras fails for some reason, typically due to
+     *                                                 numerical instabilities.
+     * @throws IllegalArgumentException                if provided lists of left and right
+     *                                                 points don't have the same size.
+     */
+    public static int generateInitialMetricCamerasUsingDIAC(
+            final FundamentalMatrix fundamentalMatrix, final double principalPointX,
+            final double principalPointY, final double aspectRatio,
+            final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints,
+            final CorrectorType correctorType, final PinholeCamera leftCamera,
+            final PinholeCamera rightCamera) throws InitialCamerasEstimationFailedException {
+
+<span class="fc" id="L881">        return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix, principalPointX, principalPointY, aspectRatio,</span>
+                leftPoints, rightPoints, correctorType, leftCamera, rightCamera, null,
+                null);
+    }
+
+    /**
+     * Generates a pair of metric cameras (up to an arbitrary space) by
+     * estimating the intrinsic parameters of the views by solving the Kruppa
+     * equations to obtain the Dual Image of Absolute Conic (DIAC).
+     * The estimated intrinsic parameters can later be used to find the
+     * essential matrix (assuming that both views have the same intrinsic
+     * parameters), and the essential matrix along with provided matched 2D
+     * points can be used to determine the best pair of camera pose and
+     * translation that yields the largest number of triangulated points laying
+     * in front of both of the estimated cameras.
+     * This method uses default corrector type.
+     *
+     * @param fundamentalMatrix       fundamental matrix relating both left and right
+     *                                views.
+     * @param principalPointX         horizontal coordinate of principal point. This
+     *                                value should be the coordinates of the center of an image assuming
+     *                                that the coordinates start on the top-left or bottom-left corner.
+     *                                Using a value close to zero will produce inaccurate results.
+     * @param principalPointY         vertical coordinate of principal point. This
+     *                                value should be the coordinates of the center of an image assuming
+     *                                that the coordinates start on the top-left or bottom-left corner.
+     *                                Using a value close to zero will produce inaccurate results.
+     * @param aspectRatio             aspect ratio for estimated intrinsic parameters. This
+     *                                is typically 1.0 if vertical coordinates increase upwards or -1.0 if
+     *                                it is the opposite.
+     * @param leftPoints              points on left view matched with points on right view,
+     *                                so they can be triangulated using estimated cameras. Both lists of
+     *                                points must have the same size.
+     * @param rightPoints             points on right view matched with points on left view,
+     *                                so they can be triangulated using estimated cameras. Both lists of
+     *                                points must have the same size.
+     * @param leftCamera              instance where estimated left camera will be stored.
+     * @param rightCamera             instance where estimated right camera will be stored.
+     * @param triangulatedPoints      instance where triangulated 3D points will be
+     *                                stored or null if triangulated points don't need to be kept.
+     * @param validTriangulatedPoints instance which indicates which
+     *                                triangulated 3D points are considered valid because they lie in
+     *                                front of both cameras or null if such data doesn't need to be kept.
+     * @return number of valid triangulated points which lie in front of the two
+     * estimated cameras.
+     * @throws InitialCamerasEstimationFailedException if estimation of cameras
+     *                                                 fails for some reason, typically due to numerical
+     *                                                 instabilities.
+     * @throws IllegalArgumentException                if provided lists of left and right
+     *                                                 points don't have the same size.
+     */
+    public static int generateInitialMetricCamerasUsingDIAC(
+            final FundamentalMatrix fundamentalMatrix, final double principalPointX,
+            final double principalPointY, final double aspectRatio,
+            final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints,
+            final PinholeCamera leftCamera, final PinholeCamera rightCamera,
+            final List&lt;Point3D&gt; triangulatedPoints, final BitSet validTriangulatedPoints)
+            throws InitialCamerasEstimationFailedException {
+
+<span class="fc" id="L940">        return generateInitialMetricCamerasUsingDIAC(fundamentalMatrix, principalPointX, principalPointY, aspectRatio,</span>
+                leftPoints, rightPoints, Corrector.DEFAULT_TYPE, leftCamera, rightCamera, triangulatedPoints,
+                validTriangulatedPoints);
+    }
+
+    /**
+     * Generates a pair of metric cameras (up to an arbitrary space) by
+     * estimating the intrinsic parameters of the views by solving the Kruppa
+     * equations to obtain the Dual Image of Absolute Conic (DIAC).
+     * The estimated intrinsic parameters can later be used to find the
+     * essential matrix (assuming that both views have the same intrinsic
+     * parameters), and the essential matrix along with provided matched 2D
+     * points can be used to determine the best pair of camera pose and
+     * translation that yields the largest number of triangulated points laying
+     * in front of both of the estimated cameras.
+     *
+     * @param fundamentalMatrix       fundamental matrix relating both left and right
+     *                                views.
+     * @param principalPointX         horizontal coordinate of principal point. This
+     *                                value should be the coordinates of the center of an image assuming
+     *                                that the coordinates start on the top-left or bottom-left corner.
+     *                                Using a value close to zero will produce inaccurate results.
+     * @param principalPointY         vertical coordinate of principal point. This
+     *                                value should be the coordinates of the center of an image assuming
+     *                                that the coordinates start on the top-left or bottom-left corner.
+     *                                Using a value close to zero will produce inaccurate results.
+     * @param aspectRatio             aspect ratio for estimated intrinsic parameters. This
+     *                                is typically 1.0 if vertical coordinates increase upwards or -1.0 if
+     *                                it is the opposite.
+     * @param leftPoints              points on left view matched with points on right view,
+     *                                so they can be triangulated using estimated cameras. Both lists of
+     *                                points must have the same size.
+     * @param rightPoints             points on right view matched with points on left view,
+     *                                so they can be triangulated using estimated cameras. Both lists of
+     *                                points must have the same size.
+     * @param correctorType           corrector type to be used to correct 2D points, so
+     *                                they follow the epipolar geometry defined by provided fundamental
+     *                                matrix so that error on triangulated points is reduced. If null, no
+     *                                corrector will be used.
+     * @param leftCamera              instance where estimated left camera will be stored.
+     * @param rightCamera             instance where estimated right camera will be stored.
+     * @param triangulatedPoints      instance where triangulated 3D points will be
+     *                                stored or null if triangulated points don't need to be kept.
+     * @param validTriangulatedPoints instance which indicates which
+     *                                triangulated 3D points are considered valid because they lie in
+     *                                front of both cameras or null if such data doesn't need to be kept.
+     * @return number of valid triangulated points which lie in front of the two
+     * estimated cameras.
+     * @throws InitialCamerasEstimationFailedException if estimation of cameras
+     *                                                 fails for some reason, typically due to numerical
+     *                                                 instabilities.
+     * @throws IllegalArgumentException                if provided lists of left and right
+     *                                                 points don't have the same size.
+     */
+    public static int generateInitialMetricCamerasUsingDIAC(
+            final FundamentalMatrix fundamentalMatrix, final double principalPointX,
+            final double principalPointY, final double aspectRatio,
+            final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints,
+            final CorrectorType correctorType, final PinholeCamera leftCamera,
+            final PinholeCamera rightCamera, final List&lt;Point3D&gt; triangulatedPoints,
+            final BitSet validTriangulatedPoints) throws InitialCamerasEstimationFailedException {
+
+        try {
+<span class="fc" id="L1003">            final KruppaDualImageOfAbsoluteConicEstimator diacEstimator = new KruppaDualImageOfAbsoluteConicEstimator(</span>
+                    fundamentalMatrix);
+<span class="fc" id="L1005">            diacEstimator.setPrincipalPointX(principalPointX);</span>
+<span class="fc" id="L1006">            diacEstimator.setPrincipalPointY(principalPointY);</span>
+<span class="fc" id="L1007">            diacEstimator.setFocalDistanceAspectRatioKnown(true);</span>
+<span class="fc" id="L1008">            diacEstimator.setFocalDistanceAspectRatio(aspectRatio);</span>
+
+<span class="fc" id="L1010">            final var diac = diacEstimator.estimate();</span>
+
+<span class="fc" id="L1012">            final var intrinsic = diac.getIntrinsicParameters();</span>
+
+<span class="fc" id="L1014">            return EssentialMatrixInitialCamerasEstimator.generateInitialMetricCamerasFromEssentialMatrix(</span>
+                    fundamentalMatrix, intrinsic, intrinsic, leftPoints, rightPoints, correctorType, leftCamera,
+                    rightCamera, triangulatedPoints, validTriangulatedPoints);
+
+<span class="nc" id="L1018">        } catch (final InitialCamerasEstimationFailedException e) {</span>
+<span class="nc" id="L1019">            throw e;</span>
+<span class="fc" id="L1020">        } catch (final Exception e) {</span>
+<span class="fc" id="L1021">            throw new InitialCamerasEstimationFailedException(e);</span>
+        }
+    }
+
+    /**
+     * Internal method to set matched 2D points on left and right views.
+     * This method does not check whether the estimator is locked or not, only
+     * ensures that provided lists have the same size.
+     *
+     * @param leftPoints  matched 2D points on left view.
+     * @param rightPoints matched 2D points on right view.
+     * @throws IllegalArgumentException if provided lists don't have the same
+     *                                  size.
+     */
+    private void internalSetLeftAndRightPoints(final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints) {
+<span class="fc bfc" id="L1036" title="All 6 branches covered.">        if (leftPoints == null || rightPoints == null || leftPoints.size() != rightPoints.size()) {</span>
+<span class="fc" id="L1037">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L1039">        this.leftPoints = leftPoints;</span>
+<span class="fc" id="L1040">        this.rightPoints = rightPoints;</span>
+<span class="fc" id="L1041">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

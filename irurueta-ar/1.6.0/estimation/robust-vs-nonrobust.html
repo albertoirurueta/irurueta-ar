@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Robust vs. non-robust estimation :: Irurueta AR</title>
+    <meta name="description" content="The shared robust vs. non-robust estimation pattern used throughout irurueta-ar: RANSAC, LMedS, MSAC, PROSAC, and PROMedS outlier rejection.">
+    <meta name="keywords" content="RANSAC, LMedS, MSAC, PROSAC, PROMedS, robust estimation, outlier rejection, non-robust estimator, computer vision">
+    <meta name="generator" content="Antora 3.1.15">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+<link rel="icon" type="image/svg+xml" href="../../../_/img/logo.svg">
+  </head>
+  <body class="article">
+<script type="module">import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs'; mermaid.initialize({"startOnLoad":true}); </script><header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="../../.."><img src="../../../_/img/logo.svg" alt="Irurueta AR" class="navbar-brand-logo">Irurueta AR</a>
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs">
+        </div>
+      </div>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu" style="display: none;">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="irurueta-ar" data-version="1.6.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">Irurueta AR</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../whats-new.html">What&#8217;s New</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../installation.html">Installation</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Estimation</span>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="robust-vs-nonrobust.html">Robust vs. non-robust estimation</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Epipolar geometry</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../epipolar/fundamental-matrix.html">Fundamental matrix estimation</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../epipolar/essential-matrix.html">Essential matrix</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../epipolar/point-correction.html">Point correction</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Calibration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../calibration/self-calibration.html">Self-calibration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../calibration/camera-calibration.html">Pattern-based calibration and radial distortion</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Structure from Motion</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../sfm/structure-from-motion.html">Structure from Motion</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../reference.html">Reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Irurueta AR</span>
+    <span class="version">1.6.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">Irurueta AR</a></div>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1.6.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Irurueta AR</a></li>
+    <li>Estimation</li>
+    <li><a href="robust-vs-nonrobust.html">Robust vs. non-robust estimation</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/albertoirurueta/irurueta-ar/edit/develop/docs/modules/ROOT/pages/estimation/robust-vs-nonrobust.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Robust vs. non-robust estimation</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This documentation was generated with the assistance of AI. Please report any inaccuracies.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Every geometric quantity <code>irurueta-ar</code> estimates&#8201;&#8212;&#8201;the fundamental and essential matrices, the image/dual
+absolute conic, the dual absolute quadric, radial distortion, triangulated 3D points&#8201;&#8212;&#8201;follows the same
+two-tier pattern:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A <strong>non-robust estimator</strong> that computes an exact (or least-mean-squared-error) solution from a fixed,
+minimal or over-determined set of correspondences, assuming every correspondence is a genuine inlier.</p>
+</li>
+<li>
+<p>A family of <strong>robust estimators</strong> that wrap the non-robust one inside an outlier-rejection loop, so that a
+correct solution can still be found when a fraction of the input correspondences are mismatches.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This page explains the shared robust-estimation framework once; the domain pages
+(<a href="../epipolar/fundamental-matrix.html" class="xref page">Fundamental matrix estimation</a>, <a href="../calibration/self-calibration.html" class="xref page">Self-calibration</a>, etc.) each describe their
+own non-robust algorithm and reuse this framework for the robust variants.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_why_outliers_require_a_different_strategy"><a class="anchor" href="#_why_outliers_require_a_different_strategy"></a>Why outliers require a different strategy</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A plain least-squares fit assumes every measurement&#8217;s error follows the same (Gaussian) distribution. Point
+correspondences produced by automatic matching are not like that: a wrong match is not "a bit noisier", it is
+arbitrarily wrong, and even a handful of such outliers can pull a least-squares solution far from the correct
+answer <a href="../reference.html#ref-hartley-zisserman-2003" class="xref page">Hartley &amp; Zisserman, 2003</a>. Robust estimators solve a
+different problem: find the largest subset of correspondences ("inliers") that agrees with <strong>some</strong> instance of
+the model, and fit the model to that subset only.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_ransac_family"><a class="anchor" href="#_the_ransac_family"></a>The RANSAC family</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>irurueta-ar</code> builds its robust estimators on top of <code>com.irurueta.numerical.robust.RobustEstimatorMethod</code>
+(from the sibling <code>irurueta-numerical</code> library), which enumerates the sampling/scoring strategy:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Strategy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RANSAC</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Random SAmple Consensus <a href="../reference.html#ref-fischler-bolles-1981" class="xref page">Fischler &amp; Bolles, 1981</a>. Repeatedly draws
+a minimal random sample, instantiates the model, and counts inliers (points within a distance threshold <code>t</code> of
+the model). The sample with the largest inlier count wins.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LMedS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Least Median of Squares. Same random sampling, but scores each candidate model by the <strong>median</strong> squared
+residual over all points instead of an inlier count, so no distance threshold needs to be chosen up front.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MSAC</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">M-estimator SAmple Consensus. Like RANSAC, but instead of counting inliers it sums a capped residual (inliers
+contribute their actual residual, outliers contribute a fixed penalty), which produces a smoother, more
+accurate score surface than a hard inlier count.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PROSAC</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PROgressive SAmple Consensus. Like RANSAC, but draws samples preferentially from the highest-quality matches
+first (given a quality score per correspondence, e.g. a descriptor-matching score), converging faster when
+scores are informative.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PROMedS</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The PROSAC sampling strategy combined with the LMedS median-residual score.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Every domain in <code>irurueta-ar</code> exposes one concrete class per row above, named
+<code>{RANSAC,LMedS,MSAC,PROSAC,PROMedS}&lt;Thing&gt;RobustEstimator</code> (e.g. <code>RANSACFundamentalMatrixRobustEstimator</code>),
+plus an abstract <code>&lt;Thing&gt;RobustEstimator</code> base class with a <code>create(&#8230;&#8203;)</code> factory that switches on
+<code>RobustEstimatorMethod</code>.</p>
+</div>
+<div class="sect2">
+<h3 id="_inlier_threshold_and_iteration_count"><a class="anchor" href="#_inlier_threshold_and_iteration_count"></a>Inlier threshold and iteration count</h3>
+<div class="paragraph">
+<p>For threshold-based methods (RANSAC, MSAC, PROSAC), a point is accepted as an inlier when its residual is
+below a threshold <code>t</code>. If the measurement error is assumed Gaussian with standard deviation <span class="steminline"> <svg style="vertical-align: -0.025ex; overflow: visible;" xmlns="http://www.w3.org/2000/svg" width="1.292ex" height="1ex" role="img" focusable="false" viewBox="0 -431 571 442"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D70E" d="M184 -11Q116 -11 74 34T31 147Q31 247 104 333T274 430Q275 431 414 431H552Q553 430 555 429T559 427T562 425T565 422T567 420T569 416T570 412T571 407T572 401Q572 357 507 357Q500 357 490 357T476 358H416L421 348Q439 310 439 263Q439 153 359 71T184 -11ZM361 278Q361 358 276 358Q152 358 115 184Q114 180 114 178Q106 141 106 117Q106 67 131 47T188 26Q242 26 287 73Q316 103 334 153T356 233T361 278Z"></path></g></g></g></svg> </span>, the
+squared residual follows a <span class="steminline"> <svg style="vertical-align: -0.576ex; overflow: visible;" xmlns="http://www.w3.org/2000/svg" width="3.009ex" height="2.463ex" role="img" focusable="false" viewBox="0 -833.9 1329.8 1088.7"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="msubsup"><g data-mml-node="mi"><path data-c="1D712" d="M576 -125Q576 -147 547 -175T487 -204H476Q394 -204 363 -157Q334 -114 293 26L284 59Q283 58 248 19T170 -66T92 -151T53 -191Q49 -194 43 -194Q36 -194 31 -189T25 -177T38 -154T151 -30L272 102L265 131Q189 405 135 405Q104 405 87 358Q86 351 68 351Q48 351 48 361Q48 369 56 386T89 423T148 442Q224 442 258 400Q276 375 297 320T330 222L341 180Q344 180 455 303T573 429Q579 431 582 431Q600 431 600 414Q600 407 587 392T477 270Q356 138 353 134L362 102Q392 -10 428 -89T490 -168Q504 -168 517 -156T536 -126Q539 -116 543 -115T557 -114T571 -115Q576 -118 576 -125Z"></path></g><g data-mml-node="mn" transform="translate(659,363) scale(0.707)"><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path></g><g data-mml-node="mi" transform="translate(659,-247) scale(0.707)"><path data-c="1D45A" d="M21 287Q22 293 24 303T36 341T56 388T88 425T132 442T175 435T205 417T221 395T229 376L231 369Q231 367 232 367L243 378Q303 442 384 442Q401 442 415 440T441 433T460 423T475 411T485 398T493 385T497 373T500 364T502 357L510 367Q573 442 659 442Q713 442 746 415T780 336Q780 285 742 178T704 50Q705 36 709 31T724 26Q752 26 776 56T815 138Q818 149 821 151T837 153Q857 153 857 145Q857 144 853 130Q845 101 831 73T785 17T716 -10Q669 -10 648 17T627 73Q627 92 663 193T700 345Q700 404 656 404H651Q565 404 506 303L499 291L466 157Q433 26 428 16Q415 -11 385 -11Q372 -11 364 -4T353 8T350 18Q350 29 384 161L420 307Q423 322 423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 181Q151 335 151 342Q154 357 154 369Q154 405 129 405Q107 405 92 377T69 316T57 280Q55 278 41 278H27Q21 284 21 287Z"></path></g></g></g></g></svg> </span> distribution with <code>m</code> degrees of freedom equal to the codimension of
+the model (<code>m = 1</code> for a fundamental matrix&#8217;s point-to-epipolar-line distance), and <code>t</code> can be derived from the
+desired inlier probability <span class="steminline"> <svg style="vertical-align: -0.025ex; overflow: visible;" xmlns="http://www.w3.org/2000/svg" width="1.448ex" height="1.025ex" role="img" focusable="false" viewBox="0 -442 640 453"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D6FC" d="M34 156Q34 270 120 356T309 442Q379 442 421 402T478 304Q484 275 485 237V208Q534 282 560 374Q564 388 566 390T582 393Q603 393 603 385Q603 376 594 346T558 261T497 161L486 147L487 123Q489 67 495 47T514 26Q528 28 540 37T557 60Q559 67 562 68T577 70Q597 70 597 62Q597 56 591 43Q579 19 556 5T512 -10H505Q438 -10 414 62L411 69L400 61Q390 53 370 41T325 18T267 -2T203 -11Q124 -11 79 39T34 156ZM208 26Q257 26 306 47T379 90L403 112Q401 255 396 290Q382 405 304 405Q235 405 183 332Q156 292 139 224T121 120Q121 71 146 49T208 26Z"></path></g></g></g></svg> </span> (typically 0.95) via the inverse cumulative
+<span class="steminline"> <svg style="vertical-align: -0.462ex; overflow: visible;" xmlns="http://www.w3.org/2000/svg" width="2.404ex" height="2.348ex" role="img" focusable="false" viewBox="0 -833.9 1062.6 1037.9"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="msup"><g data-mml-node="mi"><path data-c="1D712" d="M576 -125Q576 -147 547 -175T487 -204H476Q394 -204 363 -157Q334 -114 293 26L284 59Q283 58 248 19T170 -66T92 -151T53 -191Q49 -194 43 -194Q36 -194 31 -189T25 -177T38 -154T151 -30L272 102L265 131Q189 405 135 405Q104 405 87 358Q86 351 68 351Q48 351 48 361Q48 369 56 386T89 423T148 442Q224 442 258 400Q276 375 297 320T330 222L341 180Q344 180 455 303T573 429Q579 431 582 431Q600 431 600 414Q600 407 587 392T477 270Q356 138 353 134L362 102Q392 -10 428 -89T490 -168Q504 -168 517 -156T536 -126Q539 -116 543 -115T557 -114T571 -115Q576 -118 576 -125Z"></path></g><g data-mml-node="mn" transform="translate(659,363) scale(0.707)"><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path></g></g></g></g></svg> </span> <a href="../reference.html#ref-hartley-zisserman-2003" class="xref page">Hartley &amp; Zisserman, 2003</a>. In practice <code>irurueta-ar</code>
+exposes <code>t</code> directly as a tunable <code>threshold</code> property (e.g. <code>RANSACFundamentalMatrixRobustEstimator.DEFAULT_THRESHOLD = 1.0</code> pixel), since the
+right value depends on how the correspondences were produced.</p>
+</div>
+<div class="paragraph">
+<p>Given a sample size <code>s</code> (the minimum number of correspondences needed to instantiate the model), a desired
+confidence <code>p</code> that at least one sample is outlier-free, and an outlier proportion <span class="steminline"> <svg style="vertical-align: -0.05ex; overflow: visible;" xmlns="http://www.w3.org/2000/svg" width="1.054ex" height="1.072ex" role="img" focusable="false" viewBox="0 -452 466 474"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D700" d="M190 -22Q124 -22 76 11T27 107Q27 174 97 232L107 239L99 248Q76 273 76 304Q76 364 144 408T290 452H302Q360 452 405 421Q428 405 428 392Q428 381 417 369T391 356Q382 356 371 365T338 383T283 392Q217 392 167 368T116 308Q116 289 133 272Q142 263 145 262T157 264Q188 278 238 278H243Q308 278 308 247Q308 206 223 206Q177 206 142 219L132 212Q68 169 68 112Q68 39 201 39Q253 39 286 49T328 72T345 94T362 105Q376 103 376 88Q376 79 365 62T334 26T275 -8T190 -22Z"></path></g></g></g></svg> </span>, the
+number of random samples <code>N</code> needed is:</p>
+</div>
+  <div class="stemblock">
+    <div class="content halign-center valign-middle" style="padding-top: 1rem">
+      <svg style="vertical-align: -2.172ex; overflow: visible;" xmlns="http://www.w3.org/2000/svg" width="22.597ex" height="5.475ex" role="img" focusable="false" viewBox="0 -1460 9987.7 2420"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D441" d="M234 637Q231 637 226 637Q201 637 196 638T191 649Q191 676 202 682Q204 683 299 683Q376 683 387 683T401 677Q612 181 616 168L670 381Q723 592 723 606Q723 633 659 637Q635 637 635 648Q635 650 637 660Q641 676 643 679T653 683Q656 683 684 682T767 680Q817 680 843 681T873 682Q888 682 888 672Q888 650 880 642Q878 637 858 637Q787 633 769 597L620 7Q618 0 599 0Q585 0 582 2Q579 5 453 305L326 604L261 344Q196 88 196 79Q201 46 268 46H278Q284 41 284 38T282 19Q278 6 272 0H259Q228 2 151 2Q123 2 100 2T63 2T46 1Q31 1 31 10Q31 14 34 26T39 40Q41 46 62 46Q130 49 150 85Q154 91 221 362L289 634Q287 635 234 637Z"></path></g><g data-mml-node="mo" transform="translate(1165.8,0)"><path data-c="3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"></path></g><g data-mml-node="mfrac" transform="translate(2221.6,0)"><g data-mml-node="mrow" transform="translate(1742.4,710)"><g data-mml-node="mi"><path data-c="6C" d="M42 46H56Q95 46 103 60V68Q103 77 103 91T103 124T104 167T104 217T104 272T104 329Q104 366 104 407T104 482T104 542T103 586T103 603Q100 622 89 628T44 637H26V660Q26 683 28 683L38 684Q48 685 67 686T104 688Q121 689 141 690T171 693T182 694H185V379Q185 62 186 60Q190 52 198 49Q219 46 247 46H263V0H255L232 1Q209 2 183 2T145 3T107 3T57 1L34 0H26V46H42Z"></path><path data-c="6F" d="M28 214Q28 309 93 378T250 448Q340 448 405 380T471 215Q471 120 407 55T250 -10Q153 -10 91 57T28 214ZM250 30Q372 30 372 193V225V250Q372 272 371 288T364 326T348 362T317 390T268 410Q263 411 252 411Q222 411 195 399Q152 377 139 338T126 246V226Q126 130 145 91Q177 30 250 30Z" transform="translate(278,0)"></path><path data-c="67" d="M329 409Q373 453 429 453Q459 453 472 434T485 396Q485 382 476 371T449 360Q416 360 412 390Q410 404 415 411Q415 412 416 414V415Q388 412 363 393Q355 388 355 386Q355 385 359 381T368 369T379 351T388 325T392 292Q392 230 343 187T222 143Q172 143 123 171Q112 153 112 133Q112 98 138 81Q147 75 155 75T227 73Q311 72 335 67Q396 58 431 26Q470 -13 470 -72Q470 -139 392 -175Q332 -206 250 -206Q167 -206 107 -175Q29 -140 29 -75Q29 -39 50 -15T92 18L103 24Q67 55 67 108Q67 155 96 193Q52 237 52 292Q52 355 102 398T223 442Q274 442 318 416L329 409ZM299 343Q294 371 273 387T221 404Q192 404 171 388T145 343Q142 326 142 292Q142 248 149 227T179 192Q196 182 222 182Q244 182 260 189T283 207T294 227T299 242Q302 258 302 292T299 343ZM403 -75Q403 -50 389 -34T348 -11T299 -2T245 0H218Q151 0 138 -6Q118 -15 107 -34T95 -74Q95 -84 101 -97T122 -127T170 -155T250 -167Q319 -167 361 -139T403 -75Z" transform="translate(778,0)"></path></g><g data-mml-node="mo" transform="translate(1278,0)"><path data-c="2061" d=""></path></g><g data-mml-node="mo" transform="translate(1278,0)"><path data-c="28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path></g><g data-mml-node="mn" transform="translate(1667,0)"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path></g><g data-mml-node="mo" transform="translate(2389.2,0)"><path data-c="2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z"></path></g><g data-mml-node="mi" transform="translate(3389.4,0)"><path data-c="1D45D" d="M23 287Q24 290 25 295T30 317T40 348T55 381T75 411T101 433T134 442Q209 442 230 378L240 387Q302 442 358 442Q423 442 460 395T497 281Q497 173 421 82T249 -10Q227 -10 210 -4Q199 1 187 11T168 28L161 36Q160 35 139 -51T118 -138Q118 -144 126 -145T163 -148H188Q194 -155 194 -157T191 -175Q188 -187 185 -190T172 -194Q170 -194 161 -194T127 -193T65 -192Q-5 -192 -24 -194H-32Q-39 -187 -39 -183Q-37 -156 -26 -148H-6Q28 -147 33 -136Q36 -130 94 103T155 350Q156 355 156 364Q156 405 131 405Q109 405 94 377T71 316T59 280Q57 278 43 278H29Q23 284 23 287ZM178 102Q200 26 252 26Q282 26 310 49T356 107Q374 141 392 215T411 325V331Q411 405 350 405Q339 405 328 402T306 393T286 380T269 365T254 350T243 336T235 326L232 322Q232 321 229 308T218 264T204 212Q178 106 178 102Z"></path></g><g data-mml-node="mo" transform="translate(3892.4,0)"><path data-c="29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path></g></g><g data-mml-node="mrow" transform="translate(220,-710)"><g data-mml-node="mi"><path data-c="6C" d="M42 46H56Q95 46 103 60V68Q103 77 103 91T103 124T104 167T104 217T104 272T104 329Q104 366 104 407T104 482T104 542T103 586T103 603Q100 622 89 628T44 637H26V660Q26 683 28 683L38 684Q48 685 67 686T104 688Q121 689 141 690T171 693T182 694H185V379Q185 62 186 60Q190 52 198 49Q219 46 247 46H263V0H255L232 1Q209 2 183 2T145 3T107 3T57 1L34 0H26V46H42Z"></path><path data-c="6F" d="M28 214Q28 309 93 378T250 448Q340 448 405 380T471 215Q471 120 407 55T250 -10Q153 -10 91 57T28 214ZM250 30Q372 30 372 193V225V250Q372 272 371 288T364 326T348 362T317 390T268 410Q263 411 252 411Q222 411 195 399Q152 377 139 338T126 246V226Q126 130 145 91Q177 30 250 30Z" transform="translate(278,0)"></path><path data-c="67" d="M329 409Q373 453 429 453Q459 453 472 434T485 396Q485 382 476 371T449 360Q416 360 412 390Q410 404 415 411Q415 412 416 414V415Q388 412 363 393Q355 388 355 386Q355 385 359 381T368 369T379 351T388 325T392 292Q392 230 343 187T222 143Q172 143 123 171Q112 153 112 133Q112 98 138 81Q147 75 155 75T227 73Q311 72 335 67Q396 58 431 26Q470 -13 470 -72Q470 -139 392 -175Q332 -206 250 -206Q167 -206 107 -175Q29 -140 29 -75Q29 -39 50 -15T92 18L103 24Q67 55 67 108Q67 155 96 193Q52 237 52 292Q52 355 102 398T223 442Q274 442 318 416L329 409ZM299 343Q294 371 273 387T221 404Q192 404 171 388T145 343Q142 326 142 292Q142 248 149 227T179 192Q196 182 222 182Q244 182 260 189T283 207T294 227T299 242Q302 258 302 292T299 343ZM403 -75Q403 -50 389 -34T348 -11T299 -2T245 0H218Q151 0 138 -6Q118 -15 107 -34T95 -74Q95 -84 101 -97T122 -127T170 -155T250 -167Q319 -167 361 -139T403 -75Z" transform="translate(778,0)"></path></g><g data-mml-node="mo" transform="translate(1278,0)"><path data-c="2061" d=""></path></g><g data-mml-node="mrow" transform="translate(1444.7,0)"><g data-mml-node="mo"><path data-c="28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path></g><g data-mml-node="mn" transform="translate(389,0)"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path></g><g data-mml-node="mo" transform="translate(1111.2,0)"><path data-c="2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z"></path></g><g data-mml-node="mo" transform="translate(2111.4,0)"><path data-c="28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path></g><g data-mml-node="mn" transform="translate(2500.4,0)"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path></g><g data-mml-node="mo" transform="translate(3222.7,0)"><path data-c="2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z"></path></g><g data-mml-node="mi" transform="translate(4222.9,0)"><path data-c="1D700" d="M190 -22Q124 -22 76 11T27 107Q27 174 97 232L107 239L99 248Q76 273 76 304Q76 364 144 408T290 452H302Q360 452 405 421Q428 405 428 392Q428 381 417 369T391 356Q382 356 371 365T338 383T283 392Q217 392 167 368T116 308Q116 289 133 272Q142 263 145 262T157 264Q188 278 238 278H243Q308 278 308 247Q308 206 223 206Q177 206 142 219L132 212Q68 169 68 112Q68 39 201 39Q253 39 286 49T328 72T345 94T362 105Q376 103 376 88Q376 79 365 62T334 26T275 -8T190 -22Z"></path></g><g data-mml-node="msup" transform="translate(4688.9,0)"><g data-mml-node="mo"><path data-c="29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path></g><g data-mml-node="mi" transform="translate(422,289) scale(0.707)"><path data-c="1D460" d="M131 289Q131 321 147 354T203 415T300 442Q362 442 390 415T419 355Q419 323 402 308T364 292Q351 292 340 300T328 326Q328 342 337 354T354 372T367 378Q368 378 368 379Q368 382 361 388T336 399T297 405Q249 405 227 379T204 326Q204 301 223 291T278 274T330 259Q396 230 396 163Q396 135 385 107T352 51T289 7T195 -10Q118 -10 86 19T53 87Q53 126 74 143T118 160Q133 160 146 151T160 120Q160 94 142 76T111 58Q109 57 108 57T107 55Q108 52 115 47T146 34T201 27Q237 27 263 38T301 66T318 97T323 122Q323 150 302 164T254 181T195 196T148 231Q131 256 131 289Z"></path></g></g><g data-mml-node="mo" transform="translate(5492.5,0)"><path data-c="29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path></g></g></g><rect width="7526.2" height="60" x="120" y="220"></rect></g></g></g></svg>
+    </div>
+  </div>
+<div class="paragraph">
+<p><code>irurueta-ar</code> recomputes <span class="steminline"> <svg style="vertical-align: -0.05ex; overflow: visible;" xmlns="http://www.w3.org/2000/svg" width="1.054ex" height="1.072ex" role="img" focusable="false" viewBox="0 -452 466 474"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D700" d="M190 -22Q124 -22 76 11T27 107Q27 174 97 232L107 239L99 248Q76 273 76 304Q76 364 144 408T290 452H302Q360 452 405 421Q428 405 428 392Q428 381 417 369T391 356Q382 356 371 365T338 383T283 392Q217 392 167 368T116 308Q116 289 133 272Q142 263 145 262T157 264Q188 278 238 278H243Q308 278 308 247Q308 206 223 206Q177 206 142 219L132 212Q68 169 68 112Q68 39 201 39Q253 39 286 49T328 72T345 94T362 105Q376 103 376 88Q376 79 365 62T334 26T275 -8T190 -22Z"></path></g></g></g></svg> </span> adaptively as better solutions are found (shrinking <code>N</code> as the
+best-known inlier ratio improves) and exposes <code>confidence</code> (default <code>0.99</code>) and <code>maxIterations</code> (default
+<code>5000</code>) as the tunable stopping criteria on every <code>*RobustEstimator</code> class. This matches the RANSAC treatment
+in the thesis itself <a href="../reference.html#ref-thesis" class="xref page">Irurueta, PhD thesis</a> (<a href="../_attachments/irurueta-phd-thesis.pdf#page=86" class="xref attachment">algorithm 2.2</a> and <a href="../_attachments/irurueta-phd-thesis.pdf#page=116" class="xref attachment">algorithm 3.1</a>) and in
+Hartley &amp; Zisserman <a href="../reference.html#ref-hartley-zisserman-2003" class="xref page">Hartley &amp; Zisserman, 2003</a>.</p>
+</div>
+<div class="paragraph">
+<p>After the best consensus set is found, every robust estimator can optionally refine the result (<code>refineResult</code>,
+default <code>true</code>) by re-fitting the non-robust estimator, or a non-linear (Levenberg-Marquardt) refiner, over all
+detected inliers&#8201;&#8212;&#8201;the numerical machinery for that non-linear refinement follows the same Jacobian-based
+least-squares approach described in Numerical Recipes
+<a href="../reference.html#ref-press-2007" class="xref page">Press et al., 2007</a> (chapter 15, "Modeling of Data").</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_estimator_families_in_this_library"><a class="anchor" href="#_estimator_families_in_this_library"></a>Estimator families in this library</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 28.5714%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Domain</th>
+<th class="tableblock halign-left valign-top">Non-robust estimator(s)</th>
+<th class="tableblock halign-left valign-top">Robust family</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fundamental matrix</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>EightPointsFundamentalMatrixEstimator</code>, <code>SevenPointsFundamentalMatrixEstimator</code>, <code>AffineFundamentalMatrixEstimator</code>, <code>PlanarFundamentalMatrixEstimator</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{RANSAC,LMedS,MSAC,PROSAC,PROMedS}FundamentalMatrixRobustEstimator</code>&#8201;&#8212;&#8201;see <a href="../epipolar/fundamental-matrix.html" class="xref page">Fundamental matrix estimation</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Dual absolute quadric (self-calibration)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LMSEDualAbsoluteQuadricEstimator</code>, <code>WeightedDualAbsoluteQuadricEstimator</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{RANSAC,LMedS,MSAC,PROSAC,PROMedS}DualAbsoluteQuadricRobustEstimator</code>&#8201;&#8212;&#8201;see <a href="../calibration/self-calibration.html" class="xref page">Self-calibration</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Image/dual image of the absolute conic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LMSEImageOfAbsoluteConicEstimator</code>, <code>WeightedImageOfAbsoluteConicEstimator</code>, <code>KruppaDualImageOfAbsoluteConicEstimator</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{RANSAC,LMedS,MSAC,PROSAC,PROMedS}ImageOfAbsoluteConicRobustEstimator</code>&#8201;&#8212;&#8201;see <a href="../calibration/self-calibration.html" class="xref page">Self-calibration</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Radial distortion</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LMSERadialDistortionEstimator</code>, <code>WeightedRadialDistortionEstimator</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{RANSAC,LMedS,MSAC,PROSAC,PROMedS}RadialDistortionRobustEstimator</code>&#8201;&#8212;&#8201;see <a href="../calibration/camera-calibration.html" class="xref page">Pattern-based calibration and radial distortion</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3D point triangulation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LMSEHomogeneousSinglePoint3DTriangulator</code>, <code>LMSEInhomogeneousSinglePoint3DTriangulator</code>, <code>WeightedHomogeneousSinglePoint3DTriangulator</code>, <code>WeightedInhomogeneousSinglePoint3DTriangulator</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{RANSAC,LMedS,MSAC,PROSAC,PROMedS}RobustSinglePoint3DTriangulator</code>&#8201;&#8212;&#8201;see <a href="../sfm/structure-from-motion.html" class="xref page">Structure from Motion</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example"><a class="anchor" href="#_example"></a>Example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Choosing between a non-robust and a robust estimator for the same problem (fundamental matrix estimation from
+8 exact correspondences vs. from a noisy correspondence set):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// Non-robust: exactly 8 correspondences, all assumed correct
+var exact = new EightPointsFundamentalMatrixEstimator(leftPoints, rightPoints);
+FundamentalMatrix fundamentalMatrix = exact.estimate();
+
+// Robust: many correspondences, some of which may be wrong matches
+var robust = (RANSACFundamentalMatrixRobustEstimator)
+        FundamentalMatrixRobustEstimator.create(leftPoints, rightPoints, RobustEstimatorMethod.RANSAC);
+robust.setThreshold(1.0); // pixels
+FundamentalMatrix robustFundamentalMatrix = robust.estimate();</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_key_classes"><a class="anchor" href="#_key_classes"></a>Key classes</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Class</th>
+<th class="tableblock halign-left valign-top">Repository</th>
+<th class="tableblock halign-left valign-top">Javadoc</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FundamentalMatrix</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/albertoirurueta/irurueta-ar/blob/master/src/main/java/com/irurueta/ar/epipolar/FundamentalMatrix.java">Source</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/com/irurueta/ar/epipolar/FundamentalMatrix.html">Javadoc</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>EightPointsFundamentalMatrixEstimator</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/albertoirurueta/irurueta-ar/blob/master/src/main/java/com/irurueta/ar/epipolar/estimators/EightPointsFundamentalMatrixEstimator.java">Source</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/com/irurueta/ar/epipolar/estimators/EightPointsFundamentalMatrixEstimator.html">Javadoc</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FundamentalMatrixRobustEstimator</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/albertoirurueta/irurueta-ar/blob/master/src/main/java/com/irurueta/ar/epipolar/estimators/FundamentalMatrixRobustEstimator.java">Source</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/com/irurueta/ar/epipolar/estimators/FundamentalMatrixRobustEstimator.html">Javadoc</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RANSACFundamentalMatrixRobustEstimator</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/albertoirurueta/irurueta-ar/blob/master/src/main/java/com/irurueta/ar/epipolar/estimators/RANSACFundamentalMatrixRobustEstimator.java">Source</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/com/irurueta/ar/epipolar/estimators/RANSACFundamentalMatrixRobustEstimator.html">Javadoc</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references"><a class="anchor" href="#_references"></a>References</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="../reference.html#ref-thesis" class="xref page">Irurueta, PhD thesis</a> <a href="../_attachments/irurueta-phd-thesis.pdf#page=80" class="xref attachment">&sect;2.5</a>, <a href="../_attachments/irurueta-phd-thesis.pdf#page=116" class="xref attachment">&sect;3.2.3</a><br>
+<a href="../reference.html#ref-hartley-zisserman-2003" class="xref page">Hartley &amp; Zisserman, 2003</a> chapter 4 ("Estimation - 2D
+Projective Transformations")<br>
+<a href="../reference.html#ref-fischler-bolles-1981" class="xref page">Fischler &amp; Bolles, 1981</a><br>
+<a href="../reference.html#ref-press-2007" class="xref page">Press et al., 2007</a> chapter 15 ("Modeling of Data")</p>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Made with ♥ from <strong>BCN</strong></p>
+</footer>
+<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+<script src="../../../_/js/vendor/lunr.js"></script>
+<script src="../../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../../.." data-snippet-length="100" data-stylesheet="../../../_/css/search.css"></script>
+<script async src="../../../search-index.js"></script>
+  </body>
+</html>

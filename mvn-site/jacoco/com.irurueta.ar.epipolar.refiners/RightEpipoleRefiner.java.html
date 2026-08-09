@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RightEpipoleRefiner.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.epipolar.refiners</a> &gt; <span class="el_source">RightEpipoleRefiner.java</span></div><h1>RightEpipoleRefiner.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2017 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.epipolar.refiners;
+
+import com.irurueta.ar.epipolar.FundamentalMatrix;
+import com.irurueta.ar.epipolar.InvalidFundamentalMatrixException;
+import com.irurueta.geometry.HomogeneousPoint2D;
+import com.irurueta.geometry.Line2D;
+import com.irurueta.geometry.Point2D;
+import com.irurueta.geometry.Transformation2D;
+import com.irurueta.geometry.estimators.LockedException;
+import com.irurueta.geometry.estimators.NotReadyException;
+import com.irurueta.geometry.refiners.PairMatchesAndInliersDataRefiner;
+import com.irurueta.geometry.refiners.RefinerException;
+import com.irurueta.numerical.robust.InliersData;
+
+import java.util.BitSet;
+import java.util.List;
+
+/**
+ * Base class to refine the epipole of a fundamental matrix formed by an initial
+ * epipole estimation and an estimated homography.
+ * Any fundamental matrix can be expressed as F = [e']x*H, where
+ * e' is the epipole on the right view and H is a non-degenerate homography.
+ * This class refines an initial epipole so that residuals from provided point
+ * correspondences generating fundamental matrix F are reduced.
+ * This class is especially useful in cases where geometry of the scene is
+ * degenerate (e.g. planar scene) and provided point correspondences would
+ * generate an inaccurate fundamental matrix.
+ */
+@SuppressWarnings(&quot;DuplicatedCode&quot;)
+public abstract class RightEpipoleRefiner extends PairMatchesAndInliersDataRefiner&lt;Point2D, Point2D, Point2D&gt; {
+
+    /**
+     * Test line to compute epipolar residuals.
+     */
+<span class="fc" id="L50">    protected final Line2D testLine = new Line2D();</span>
+
+    /**
+     * Homography relating two views through a given planar scene.
+     */
+    protected Transformation2D homography;
+
+    /**
+     * Standard deviation used for Levenberg-Marquardt fitting during
+     * refinement.
+     * Returned value gives an indication of how much variance each residual
+     * has.
+     * Typically, this value is related to the threshold used on each robust
+     * estimation, since residuals of found inliers are within the range of
+     * such threshold.
+     */
+    private double refinementStandardDeviation;
+
+    /**
+     * Constructor.
+     */
+<span class="fc" id="L71">    protected RightEpipoleRefiner() {</span>
+<span class="fc" id="L72">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param initialEpipoleEstimation    initial right epipole estimation to be
+     *                                    set and refined.
+     * @param keepCovariance              true if covariance of estimation must be kept after
+     *                                    refinement, false otherwise.
+     * @param inliers                     set indicating which of the provided matches are inliers.
+     * @param residuals                   residuals for matched samples.
+     * @param numInliers                  number of inliers on initial estimation.
+     * @param samples1                    1st set of paired samples.
+     * @param samples2                    2nd set of paired samples.
+     * @param refinementStandardDeviation standard deviation used for
+     *                                    Levenberg-Marquardt fitting.
+     * @param homography                  homography relating samples in two views, which is used
+     *                                    to generate a fundamental matrix and its corresponding
+     *                                    epipolar geometry.
+     */
+    protected RightEpipoleRefiner(
+            final Point2D initialEpipoleEstimation, final boolean keepCovariance, final BitSet inliers,
+            final double[] residuals, final int numInliers, final List&lt;Point2D&gt; samples1, final List&lt;Point2D&gt; samples2,
+            final double refinementStandardDeviation, final Transformation2D homography) {
+<span class="fc" id="L96">        super(initialEpipoleEstimation, keepCovariance, inliers, residuals, numInliers, samples1, samples2);</span>
+<span class="fc" id="L97">        this.homography = homography;</span>
+<span class="fc" id="L98">        this.refinementStandardDeviation = refinementStandardDeviation;</span>
+<span class="fc" id="L99">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param initialEpipoleEstimation    initial right epipole estimation to be
+     *                                    set and refined.
+     * @param keepCovariance              true if covariance of estimation must be kept after
+     *                                    refinement, false otherwise.
+     * @param inliersData                 inlier data, typically obtained from a robust
+     *                                    estimator.
+     * @param samples1                    1st set of paired samples.
+     * @param samples2                    2nd set of paired samples.
+     * @param refinementStandardDeviation standard deviation used for
+     *                                    Levenberg-Marquardt fitting.
+     * @param homography                  homography relating samples in two views, which is used
+     *                                    to generate a fundamental matrix and its corresponding
+     *                                    epipolar geometry.
+     */
+    protected RightEpipoleRefiner(
+            final Point2D initialEpipoleEstimation, final boolean keepCovariance, final InliersData inliersData,
+            final List&lt;Point2D&gt; samples1, final List&lt;Point2D&gt; samples2, final double refinementStandardDeviation,
+            final Transformation2D homography) {
+<span class="fc" id="L122">        super(initialEpipoleEstimation, keepCovariance, inliersData, samples1, samples2);</span>
+<span class="fc" id="L123">        this.homography = homography;</span>
+<span class="fc" id="L124">        this.refinementStandardDeviation = refinementStandardDeviation;</span>
+<span class="fc" id="L125">    }</span>
+
+    /**
+     * Gets standard deviation used for Levenberg-Marquardt fitting during
+     * refinement.
+     * Returned value gives an indication of how much variance each residual
+     * has.
+     * Typically, this value is related to the threshold used on each robust
+     * estimation, since residuals of found inliers are within the range of such
+     * threshold.
+     *
+     * @return standard deviation used for refinement.
+     */
+    public double getRefinementStandardDeviation() {
+<span class="fc" id="L139">        return refinementStandardDeviation;</span>
+    }
+
+    /**
+     * Sets standard deviation used for Levenberg-Marquardt fitting during
+     * refinement.
+     * Returned value gives an indication of how much variance each residual
+     * has.
+     * Typically, this value is related to the threshold used on each robust
+     * estimation, since residuals of found inliers are within the range of such
+     * threshold.
+     *
+     * @param refinementStandardDeviation standard deviation used for
+     *                                    refinement.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setRefinementStandardDeviation(final double refinementStandardDeviation) throws LockedException {
+<span class="fc bfc" id="L156" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L157">            throw new LockedException();</span>
+        }
+<span class="fc" id="L159">        this.refinementStandardDeviation = refinementStandardDeviation;</span>
+<span class="fc" id="L160">    }</span>
+
+    /**
+     * Gets homography relating samples in two views, which is used to generate
+     * a fundamental matrix and its corresponding epipolar geometry.
+     *
+     * @return homography relating samples in two views.
+     */
+    public Transformation2D getHomography() {
+<span class="fc" id="L169">        return homography;</span>
+    }
+
+    /**
+     * Sets homography relating samples in two views, which is used to generate
+     * a fundamental matrix and its corresponding epipolar geometry.
+     *
+     * @param homography homography relating samples in two views.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setHomography(final Transformation2D homography) throws LockedException {
+<span class="fc bfc" id="L180" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L181">            throw new LockedException();</span>
+        }
+<span class="fc" id="L183">        this.homography = homography;</span>
+<span class="fc" id="L184">    }</span>
+
+    /**
+     * Indicates whether this refiner is ready to start refinement computation.
+     *
+     * @return true if refiner is ready, false otherwise.
+     */
+    @Override
+    public boolean isReady() {
+<span class="pc bpc" id="L193" title="1 of 4 branches missed.">        return homography != null &amp;&amp; super.isReady();</span>
+    }
+
+    /**
+     * Refines provided initial right epipole estimation.
+     *
+     * @return refined estimation.
+     * @throws NotReadyException if not enough input data has been provided.
+     * @throws LockedException   if estimator is locked because refinement is
+     *                           already in progress.
+     * @throws RefinerException  if refinement fails for some reason (e.g. unable
+     *                           to converge to a result).
+     */
+    @Override
+    public Point2D refine() throws NotReadyException, LockedException, RefinerException {
+<span class="fc" id="L208">        final var result = new HomogeneousPoint2D();</span>
+<span class="fc" id="L209">        refine(result);</span>
+<span class="fc" id="L210">        return result;</span>
+    }
+
+    /**
+     * Computes a fundamental matrix from a 2D homography and provided epipole
+     * on right view.
+     *
+     * @param homography   a 2D homography. Must be invertible.
+     * @param rightEpipole epipole on right view.
+     * @param result       instance where computed fundamental matrix will be stored.
+     * @throws InvalidFundamentalMatrixException if provided homography is not
+     *                                           invertible, which would generate a degenerate
+     *                                           fundamental matrix.
+     */
+    public static void computeFundamentalMatrix(
+            final Transformation2D homography, final Point2D rightEpipole, final FundamentalMatrix result)
+            throws InvalidFundamentalMatrixException {
+
+<span class="fc" id="L228">        result.setFromHomography(homography, rightEpipole);</span>
+<span class="fc" id="L229">    }</span>
+
+    /**
+     * Computes the residual between a fundamental matrix and a pair of matched
+     * points.
+     *
+     * @param fundamentalMatrix a fundamental matrix.
+     * @param leftPoint         left 2D point.
+     * @param rightPoint        right 2D point.
+     * @return residual (distance of point to epipolar line).
+     */
+    protected double residual(
+            final FundamentalMatrix fundamentalMatrix, final Point2D leftPoint, final Point2D rightPoint) {
+        try {
+<span class="fc" id="L243">            leftPoint.normalize();</span>
+<span class="fc" id="L244">            rightPoint.normalize();</span>
+<span class="fc" id="L245">            fundamentalMatrix.normalize();</span>
+<span class="fc" id="L246">            fundamentalMatrix.leftEpipolarLine(rightPoint, testLine);</span>
+<span class="fc" id="L247">            final var leftDistance = Math.abs(testLine.signedDistance(leftPoint));</span>
+<span class="fc" id="L248">            fundamentalMatrix.rightEpipolarLine(leftPoint, testLine);</span>
+<span class="fc" id="L249">            final var rightDistance = Math.abs(testLine.signedDistance(rightPoint));</span>
+            // return average distance as an error residual
+<span class="fc" id="L251">            return 0.5 * (leftDistance + rightDistance);</span>
+<span class="nc" id="L252">        } catch (final NotReadyException e) {</span>
+<span class="nc" id="L253">            return Double.MAX_VALUE;</span>
+        }
+    }
+
+    /**
+     * Computes total residual among all provided inlier samples.
+     *
+     * @param fundamentalMatrix a fundamental matrix.
+     * @return total residual.
+     */
+    protected double totalResidual(final FundamentalMatrix fundamentalMatrix) {
+<span class="fc" id="L264">        var result = 0.0;</span>
+
+<span class="fc" id="L266">        final var nSamples = inliers.length();</span>
+<span class="fc bfc" id="L267" title="All 2 branches covered.">        for (var i = 0; i &lt; nSamples; i++) {</span>
+<span class="pc bpc" id="L268" title="1 of 2 branches missed.">            if (inliers.get(i)) {</span>
+                // sample is inlier
+<span class="fc" id="L270">                final var leftPoint = samples1.get(i);</span>
+<span class="fc" id="L271">                final var rightPoint = samples2.get(i);</span>
+<span class="fc" id="L272">                leftPoint.normalize();</span>
+<span class="fc" id="L273">                rightPoint.normalize();</span>
+<span class="fc" id="L274">                result += residual(fundamentalMatrix, leftPoint, rightPoint);</span>
+            }
+        }
+
+<span class="fc" id="L278">        return result;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

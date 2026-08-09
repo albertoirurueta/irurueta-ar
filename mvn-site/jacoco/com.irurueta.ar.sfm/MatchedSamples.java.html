@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MatchedSamples.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.sfm</a> &gt; <span class="el_source">MatchedSamples.java</span></div><h1>MatchedSamples.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2016 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.sfm;
+
+import java.io.Serializable;
+import java.util.BitSet;
+
+/**
+ * Contains data relating matched 2D points and their reconstructions.
+ */
+<span class="fc" id="L24">public class MatchedSamples implements Serializable {</span>
+
+    /**
+     * Default quality score value.
+     */
+    public static final double DEFAULT_QUALITY_SCORE = 1.0;
+
+    /**
+     * 2D matched samples on different views.
+     * Each of these points correspond to projections of the same 3D point into
+     * different views.
+     */
+    private Sample2D[] samples;
+
+    /**
+     * Cameras associated to the views of each of the matched points.
+     */
+    private EstimatedCamera[] cameras;
+
+    /**
+     * ID's of views where matched points belong to.
+     */
+    private int[] viewIds;
+
+    /**
+     * 3D reconstructed point. Initially, might not be available
+     */
+    private ReconstructedPoint3D reconstructedPoint;
+
+    /**
+     * Quality score of a match.
+     */
+<span class="fc" id="L56">    private double qualityScore = DEFAULT_QUALITY_SCORE;</span>
+
+    /**
+     * Indicates whether match between a pair of views has been considered an
+     * inlier or not.
+     * Position 0 of this bitset corresponds to viewIds in positions 0 and 1,
+     * position 1 of bitset corresponds to viewIds in positions 1 and 2, and so
+     * on.
+     */
+    private BitSet inliers;
+
+    /**
+     * Gets 2D matched samples on different views containing matched points.
+     * Each of these points correspond to projections of the same 3D point into
+     * different views.
+     *
+     * @return 2D matched samples on different views.
+     */
+    public Sample2D[] getSamples() {
+<span class="fc" id="L75">        return samples;</span>
+    }
+
+    /**
+     * Sets 2D matched samples on different views containing matched points.
+     * Each of these points correspond to projections of the same 3D point into
+     * different views.
+     *
+     * @param samples 2D matched samples on different views.
+     */
+    public void setSamples(final Sample2D[] samples) {
+<span class="fc" id="L86">        this.samples = samples;</span>
+<span class="fc" id="L87">    }</span>
+
+    /**
+     * Gets cameras associated to the views of each of the matched points.
+     *
+     * @return cameras associated to the views of each of the matched points.
+     */
+    public EstimatedCamera[] getCameras() {
+<span class="fc" id="L95">        return cameras;</span>
+    }
+
+    /**
+     * Sets cameras associated to the views of each of the matched points.
+     *
+     * @param cameras cameras associated to the views of each of the matched
+     *                points.
+     */
+    public void setCameras(final EstimatedCamera[] cameras) {
+<span class="fc" id="L105">        this.cameras = cameras;</span>
+<span class="fc" id="L106">    }</span>
+
+    /**
+     * Gets id's of views where matched points belong to.
+     *
+     * @return id's of view where matched points belong to.
+     */
+    public int[] getViewIds() {
+<span class="fc" id="L114">        return viewIds;</span>
+    }
+
+    /**
+     * Sets id's of views where matched points belong to.
+     *
+     * @param viewIds id's of views where matched points belong to.
+     */
+    public void setViewIds(final int[] viewIds) {
+<span class="fc" id="L123">        this.viewIds = viewIds;</span>
+<span class="fc" id="L124">    }</span>
+
+    /**
+     * Gets 3D reconstructed point.
+     *
+     * @return 3D reconstructed point.
+     */
+    public ReconstructedPoint3D getReconstructedPoint() {
+<span class="fc" id="L132">        return reconstructedPoint;</span>
+    }
+
+    /**
+     * Sets 3D reconstructed point.
+     *
+     * @param reconstructedPoint 3D reconstructed point.
+     */
+    public void setReconstructedPoint(final ReconstructedPoint3D reconstructedPoint) {
+<span class="fc" id="L141">        this.reconstructedPoint = reconstructedPoint;</span>
+<span class="fc bfc" id="L142" title="All 2 branches covered.">        if (samples != null) {</span>
+<span class="fc bfc" id="L143" title="All 2 branches covered.">            for (final var sample : samples) {</span>
+<span class="fc" id="L144">                sample.setReconstructedPoint(reconstructedPoint);</span>
+            }
+        }
+<span class="fc" id="L147">    }</span>
+
+    /**
+     * Gets quality score of match. The larger the value, the better the
+     * quality. This is used for robust estimators such as PROSAC or PROMedS.
+     * This value is typically obtained from algorithms determining scores for
+     * matches.
+     *
+     * @return quality score of match.
+     */
+    public double getQualityScore() {
+<span class="fc" id="L158">        return qualityScore;</span>
+    }
+
+    /**
+     * Sets quality score of match. The larger the value, the better the
+     * quality. This is used for robust estimators such as PROSAC or PROMedS.
+     * This value is typically obtained from algorithms determining scores for
+     * matches.
+     *
+     * @param qualityScore quality score of match.
+     */
+    public void setQualityScore(final double qualityScore) {
+<span class="fc" id="L170">        this.qualityScore = qualityScore;</span>
+<span class="fc" id="L171">    }</span>
+
+    /**
+     * Indicates whether match between a pair of views has been considered an
+     * inlier or not.
+     * Position 0 of this bitset corresponds to viewIds in positions 0 and 1,
+     * position 1 of bitset corresponds to viewIds in positions 1 and 2, and so
+     * on.
+     *
+     * @return indicates whether match between a pair of views has been
+     * considered an inlier or not.
+     */
+    public BitSet getInliers() {
+<span class="fc" id="L184">        return inliers;</span>
+    }
+
+    /**
+     * Specifies whether match between a pair of views has been considered an
+     * inlier or not.
+     * Position 0 of this bitset corresponds to viewIds in positions 0 and 1,
+     * position 1 of bitset corresponds to viewIds in positions 1 and 2, and so
+     * on.
+     *
+     * @param inliers set indicating whether a match between a pair of views has
+     *                been considered an inlier or not.
+     */
+    public void setInliers(final BitSet inliers) {
+<span class="fc" id="L198">        this.inliers = inliers;</span>
+<span class="fc" id="L199">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

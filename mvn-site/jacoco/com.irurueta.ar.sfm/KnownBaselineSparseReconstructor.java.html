@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>KnownBaselineSparseReconstructor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.sfm</a> &gt; <span class="el_source">KnownBaselineSparseReconstructor.java</span></div><h1>KnownBaselineSparseReconstructor.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2017 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.irurueta.ar.sfm;
+
+import com.irurueta.geometry.MetricTransformation3D;
+import com.irurueta.geometry.Point3D;
+
+import java.util.ArrayList;
+
+/**
+ * Class in charge of estimating cameras and 3D reconstructed points from sparse
+ * image point correspondences from multiple views and known initial camera baseline
+ * (camera separation), so that cameras and reconstructed points are obtained with
+ * exact scale.
+ */
+public class KnownBaselineSparseReconstructor extends
+        BaseSparseReconstructor&lt;KnownBaselineSparseReconstructorConfiguration, KnownBaselineSparseReconstructor,
+                KnownBaselineSparseReconstructorListener&gt; {
+
+    /**
+     * Constructor.
+     *
+     * @param configuration configuration for this re-constructor.
+     * @param listener      listener in charge of handling events.
+     * @throws NullPointerException if listener or configuration is not
+     *                              provided.
+     */
+    public KnownBaselineSparseReconstructor(
+            final KnownBaselineSparseReconstructorConfiguration configuration,
+            final KnownBaselineSparseReconstructorListener listener) {
+<span class="fc" id="L45">        super(configuration, listener);</span>
+<span class="fc" id="L46">    }</span>
+
+    /**
+     * Constructor with default configuration.
+     *
+     * @param listener listener in charge of handling events.
+     * @throws NullPointerException if listener is not provided.
+     */
+    public KnownBaselineSparseReconstructor(final KnownBaselineSparseReconstructorListener listener) {
+<span class="fc" id="L55">        this(new KnownBaselineSparseReconstructorConfiguration(), listener);</span>
+<span class="fc" id="L56">    }</span>
+
+    /**
+     * Called when processing one frame is successfully finished. This can be done to estimate scale on
+     * those implementations where scale can be measured or is already known.
+     *
+     * @param isInitialPairOfViews true if initial pair of views is being processed, false otherwise.
+     * @return true if post-processing succeeded, false otherwise.
+     */
+    @SuppressWarnings(&quot;DuplicatedCode&quot;)
+    @Override
+    protected boolean postProcessOne(final boolean isInitialPairOfViews) {
+        try {
+<span class="fc" id="L69">            final var metricCamera1 = previousMetricEstimatedCamera.getCamera();</span>
+<span class="fc" id="L70">            final var metricCamera2 = currentMetricEstimatedCamera.getCamera();</span>
+
+<span class="fc" id="L72">            metricCamera1.decompose();</span>
+<span class="fc" id="L73">            metricCamera2.decompose();</span>
+
+            final double scale;
+<span class="fc bfc" id="L76" title="All 2 branches covered.">            if (isInitialPairOfViews) {</span>
+                // reconstruction succeeded, so we update scale of cameras and
+                // reconstructed points
+<span class="fc" id="L79">                final var baseline = configuration.getBaseline();</span>
+
+<span class="fc" id="L81">                final var center1 = metricCamera1.getCameraCenter();</span>
+<span class="fc" id="L82">                final var center2 = metricCamera2.getCameraCenter();</span>
+
+<span class="fc" id="L84">                final var estimatedBaseline = center1.distanceTo(center2);</span>
+
+<span class="fc" id="L86">                scale = currentScale = baseline / estimatedBaseline;</span>
+<span class="fc" id="L87">            } else {</span>
+<span class="fc" id="L88">                scale = currentScale;</span>
+            }
+
+<span class="fc" id="L91">            final var sqrScale = scale * scale;</span>
+
+<span class="fc" id="L93">            final var scaleTransformation = new MetricTransformation3D(scale);</span>
+
+            // update scale of cameras
+<span class="fc" id="L96">            final var euclideanCamera1 = scaleTransformation.transformAndReturnNew(metricCamera1);</span>
+<span class="fc" id="L97">            final var euclideanCamera2 = scaleTransformation.transformAndReturnNew(metricCamera2);</span>
+
+<span class="fc" id="L99">            previousEuclideanEstimatedCamera = new EstimatedCamera();</span>
+<span class="fc" id="L100">            previousEuclideanEstimatedCamera.setCamera(euclideanCamera1);</span>
+<span class="fc" id="L101">            previousEuclideanEstimatedCamera.setViewId(previousMetricEstimatedCamera.getViewId());</span>
+<span class="fc" id="L102">            previousEuclideanEstimatedCamera.setQualityScore(previousMetricEstimatedCamera.getQualityScore());</span>
+<span class="pc bpc" id="L103" title="1 of 2 branches missed.">            if (previousMetricEstimatedCamera.getCovariance() != null) {</span>
+<span class="nc" id="L104">                previousEuclideanEstimatedCamera.setCovariance(previousMetricEstimatedCamera.getCovariance()</span>
+<span class="nc" id="L105">                        .multiplyByScalarAndReturnNew(sqrScale));</span>
+            }
+
+<span class="fc" id="L108">            currentEuclideanEstimatedCamera = new EstimatedCamera();</span>
+<span class="fc" id="L109">            currentEuclideanEstimatedCamera.setCamera(euclideanCamera2);</span>
+<span class="fc" id="L110">            currentEuclideanEstimatedCamera.setViewId(currentMetricEstimatedCamera.getViewId());</span>
+<span class="fc" id="L111">            currentEuclideanEstimatedCamera.setQualityScore(currentMetricEstimatedCamera.getQualityScore());</span>
+<span class="pc bpc" id="L112" title="1 of 2 branches missed.">            if (currentMetricEstimatedCamera.getCovariance() != null) {</span>
+<span class="nc" id="L113">                currentEuclideanEstimatedCamera.setCovariance(</span>
+<span class="nc" id="L114">                        currentMetricEstimatedCamera.getCovariance().multiplyByScalarAndReturnNew(sqrScale));</span>
+            }
+
+            // update scale of reconstructed points
+<span class="fc" id="L118">            final var numPoints = activeMetricReconstructedPoints.size();</span>
+<span class="fc" id="L119">            final var metricReconstructedPoints3D = new ArrayList&lt;Point3D&gt;();</span>
+<span class="fc bfc" id="L120" title="All 2 branches covered.">            for (final var activeMetricReconstructedPoint : activeMetricReconstructedPoints) {</span>
+<span class="fc" id="L121">                metricReconstructedPoints3D.add(activeMetricReconstructedPoint.getPoint());</span>
+<span class="fc" id="L122">            }</span>
+
+<span class="fc" id="L124">            final var euclideanReconstructedPoints3D = scaleTransformation.transformPointsAndReturnNew(</span>
+                    metricReconstructedPoints3D);
+
+            // set scaled points into result
+<span class="fc" id="L128">            activeEuclideanReconstructedPoints = new ArrayList&lt;&gt;();</span>
+            ReconstructedPoint3D euclideanPoint;
+            ReconstructedPoint3D metricPoint;
+<span class="fc bfc" id="L131" title="All 2 branches covered.">            for (var i = 0; i &lt; numPoints; i++) {</span>
+<span class="fc" id="L132">                metricPoint = activeMetricReconstructedPoints.get(i);</span>
+
+<span class="fc" id="L134">                euclideanPoint = new ReconstructedPoint3D();</span>
+<span class="fc" id="L135">                euclideanPoint.setId(metricPoint.getId());</span>
+<span class="fc" id="L136">                euclideanPoint.setPoint(euclideanReconstructedPoints3D.get(i));</span>
+<span class="fc" id="L137">                euclideanPoint.setInlier(metricPoint.isInlier());</span>
+<span class="fc" id="L138">                euclideanPoint.setQualityScore(metricPoint.getQualityScore());</span>
+<span class="pc bpc" id="L139" title="1 of 2 branches missed.">                if (metricPoint.getCovariance() != null) {</span>
+<span class="nc" id="L140">                    euclideanPoint.setCovariance(metricPoint.getCovariance().multiplyByScalarAndReturnNew(sqrScale));</span>
+                }
+<span class="fc" id="L142">                euclideanPoint.setColorData(metricPoint.getColorData());</span>
+
+<span class="fc" id="L144">                activeEuclideanReconstructedPoints.add(euclideanPoint);</span>
+            }
+
+<span class="fc" id="L147">            return true;</span>
+<span class="nc" id="L148">        } catch (final Exception e) {</span>
+<span class="nc" id="L149">            failed = true;</span>
+<span class="nc" id="L150">            listener.onFail(this);</span>
+
+<span class="nc" id="L152">            return false;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

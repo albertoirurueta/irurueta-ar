@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>VelocityPredictor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.slam</a> &gt; <span class="el_source">VelocityPredictor.java</span></div><h1>VelocityPredictor.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2016 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.slam;
+
+import com.irurueta.algebra.Matrix;
+
+/**
+ * Utility class to predict velocity of device.
+ */
+@SuppressWarnings(&quot;DuplicatedCode&quot;)
+public class VelocityPredictor {
+
+    /**
+     * Number of components of speed.
+     */
+    public static final int SPEED_COMPONENTS = 3;
+
+    /**
+     * Number of components of acceleration.
+     */
+    public static final int ACCELERATION_COMPONENTS = 3;
+
+    /**
+     * Constructor.
+     */
+    private VelocityPredictor() {
+    }
+
+    /**
+     * Predicts the updated velocity.
+     *
+     * @param vx        current velocity in x-axis. Expressed in m/s.
+     * @param vy        current velocity in y-axis. Expressed in m/s.
+     * @param vz        current velocity in z-axis. Expressed in m/s.
+     * @param ax        acceleration in x-axis. Expressed in m/s^2.
+     * @param ay        acceleration in y-axis. Expressed in m/s^2.
+     * @param az        acceleration in z-axis. Expressed in m/s^2.
+     * @param dt        time interval to compute prediction expressed in seconds.
+     * @param result    instance where updated velocity is stored. Must have
+     *                  length 3.
+     * @param jacobianV jacobian wrt velocity. Must be 3x3.
+     * @param jacobianA jacobian wrt acceleration. Must be 3x3.
+     * @throws IllegalArgumentException if any of provided jacobians does not
+     *                                  have proper size or if result does not have length 3.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;vpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static void predict(
+            final double vx, final double vy, final double vz,
+            final double ax, final double ay, final double az, final double dt,
+            final double[] result, final Matrix jacobianV, final Matrix jacobianA) {
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        if (result.length != SPEED_COMPONENTS) {</span>
+<span class="fc" id="L65">            throw new IllegalArgumentException(&quot;result must have length 3&quot;);</span>
+        }
+<span class="pc bpc" id="L67" title="1 of 6 branches missed.">        if (jacobianV != null &amp;&amp; (jacobianV.getRows() != SPEED_COMPONENTS || jacobianV.getColumns() != SPEED_COMPONENTS)) {</span>
+<span class="fc" id="L68">            throw new IllegalArgumentException(&quot;jacobian wrt velocity must be 3x3&quot;);</span>
+        }
+<span class="fc bfc" id="L70" title="All 4 branches covered.">        if (jacobianA != null &amp;&amp; (jacobianA.getRows() != SPEED_COMPONENTS</span>
+<span class="pc bpc" id="L71" title="1 of 2 branches missed.">                || jacobianA.getColumns() != ACCELERATION_COMPONENTS)) {</span>
+<span class="fc" id="L72">            throw new IllegalArgumentException(&quot;jacobian wrt acceleration must be 3x3&quot;);</span>
+        }
+
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        if (jacobianV != null) {</span>
+            // set to the identity
+<span class="fc" id="L77">            jacobianV.initialize(0.0);</span>
+<span class="fc" id="L78">            jacobianV.setElementAt(0, 0, 1.0);</span>
+<span class="fc" id="L79">            jacobianV.setElementAt(1, 1, 1.0);</span>
+<span class="fc" id="L80">            jacobianV.setElementAt(2, 2, 1.0);</span>
+        }
+
+<span class="fc bfc" id="L83" title="All 2 branches covered.">        if (jacobianA != null) {</span>
+<span class="fc" id="L84">            jacobianA.initialize(0.0);</span>
+<span class="fc" id="L85">            jacobianA.setElementAt(0, 0, dt);</span>
+<span class="fc" id="L86">            jacobianA.setElementAt(1, 1, dt);</span>
+<span class="fc" id="L87">            jacobianA.setElementAt(2, 2, dt);</span>
+        }
+
+<span class="fc" id="L90">        result[0] = vx + ax * dt;</span>
+<span class="fc" id="L91">        result[1] = vy + ay * dt;</span>
+<span class="fc" id="L92">        result[2] = vz + az * dt;</span>
+<span class="fc" id="L93">    }</span>
+
+    /**
+     * Predicts the updated velocity.
+     *
+     * @param vx     current velocity in x-axis. Expressed in m/s.
+     * @param vy     current velocity in y-axis. Expressed in m/s.
+     * @param vz     current velocity in z-axis. Expressed in m/s.
+     * @param ax     acceleration in x-axis. Expressed in m/s^2.
+     * @param ay     acceleration in y-axis. Expressed in m/s^2.
+     * @param az     acceleration in z-axis. Expressed in m/s^2.
+     * @param dt     time interval to compute prediction expressed in seconds.
+     * @param result instance where updated velocity is stored.
+     * @throws IllegalArgumentException if result does not have length 3.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;vpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static void predict(
+            final double vx, final double vy, final double vz,
+            final double ax, final double ay, final double az, final double dt, final double[] result) {
+<span class="fc" id="L112">        predict(vx, vy, vz, ax, ay, az, dt, result, null, null);</span>
+<span class="fc" id="L113">    }</span>
+
+    /**
+     * Predicts the updated velocity.
+     *
+     * @param v         array containing 3 components of velocity. Expressed in m/s.
+     *                  Must have length 3.
+     * @param a         array containing 3 components of acceleration. Expressed in
+     *                  m/s^2. Must have length 3.
+     * @param dt        time interval to compute prediction expressed in seconds.
+     * @param result    instance where updated velocity is stored.
+     * @param jacobianV jacobian wrt velocity. Must be 3x3.
+     * @param jacobianA jacobian wrt acceleration. Must be 3x3.
+     * @throws IllegalArgumentException if any of provided jacobians does not
+     *                                  have proper size or if v, a or result do not have length 3.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;vpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static void predict(
+            final double[] v, final double[] a, final double dt, final double[] result, final Matrix jacobianV,
+            final Matrix jacobianA) {
+<span class="fc bfc" id="L133" title="All 2 branches covered.">        if (v.length != SPEED_COMPONENTS) {</span>
+<span class="fc" id="L134">            throw new IllegalArgumentException(&quot;v must have length 3&quot;);</span>
+        }
+<span class="fc bfc" id="L136" title="All 2 branches covered.">        if (a.length != ACCELERATION_COMPONENTS) {</span>
+<span class="fc" id="L137">            throw new IllegalArgumentException(&quot;a must have length 3&quot;);</span>
+        }
+<span class="fc" id="L139">        predict(v[0], v[1], v[2], a[0], a[1], a[2], dt, result, jacobianV, jacobianA);</span>
+<span class="fc" id="L140">    }</span>
+
+    /**
+     * Predicts the updated velocity.
+     *
+     * @param v      array containing 3 components of velocity. Expressed in m/s.
+     *               Must have length 3.
+     * @param a      array containing 3 components of acceleration. Expressed in
+     *               m/s^2. Must have length 3.
+     * @param dt     time interval to compute prediction expressed in seconds.
+     * @param result instance where updated velocity is stored.
+     * @throws IllegalArgumentException if v, a or result do not have length 3.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;vpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static void predict(final double[] v, final double[] a, final double dt, final double[] result) {
+<span class="fc" id="L155">        predict(v, a, dt, result, null, null);</span>
+<span class="fc" id="L156">    }</span>
+
+    /**
+     * Predicts the updated velocity.
+     *
+     * @param vx        current velocity in x-axis. Expressed in m/s.
+     * @param vy        current velocity in y-axis. Expressed in m/s.
+     * @param vz        current velocity in z-axis. Expressed in m/s.
+     * @param ax        acceleration in x-axis. Expressed in m/s^2.
+     * @param ay        acceleration in y-axis. Expressed in m/s^2.
+     * @param az        acceleration in z-axis. Expressed in m/s^2.
+     * @param dt        time interval to compute prediction expressed in seconds.
+     * @param jacobianV jacobian wrt velocity. Must be 3x3.
+     * @param jacobianA jacobian wrt acceleration. Must be 3x3.
+     * @return a new instance containing updated velocity.
+     * @throws IllegalArgumentException if any of provided jacobians does not
+     *                                  have proper size.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;vpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static double[] predict(
+            final double vx, final double vy, final double vz,
+            final double ax, final double ay, final double az, final double dt, final Matrix jacobianV,
+            final Matrix jacobianA) {
+<span class="fc" id="L179">        final var result = new double[SPEED_COMPONENTS];</span>
+<span class="fc" id="L180">        predict(vx, vy, vz, ax, ay, az, dt, result, jacobianV, jacobianA);</span>
+<span class="fc" id="L181">        return result;</span>
+    }
+
+    /**
+     * Predicts the updated velocity.
+     *
+     * @param vx current velocity in x-axis. Expressed in m/s.
+     * @param vy current velocity in y-axis. Expressed in m/s.
+     * @param vz current velocity in z-axis. Expressed in m/s.
+     * @param ax acceleration in x-axis. Expressed in m/s^2.
+     * @param ay acceleration in y-axis. Expressed in m/s^2.
+     * @param az acceleration in z-axis. Expressed in m/s^2.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @return a new instance containing updated velocity.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;vpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static double[] predict(
+            final double vx, final double vy, final double vz,
+            final double ax, final double ay, final double az, final double dt) {
+<span class="fc" id="L200">        final var result = new double[SPEED_COMPONENTS];</span>
+<span class="fc" id="L201">        predict(vx, vy, vz, ax, ay, az, dt, result);</span>
+<span class="fc" id="L202">        return result;</span>
+    }
+
+    /**
+     * Predicts the updated velocity.
+     *
+     * @param v         array containing 3 components of velocity. Expressed in m/s.
+     *                  Must have length 3.
+     * @param a         array containing 3 components of acceleration. Expressed in
+     *                  m/s^2. Must have length 3.
+     * @param dt        time interval to compute prediction expressed in seconds.
+     * @param jacobianV jacobian wrt velocity. Must be 3x3.
+     * @param jacobianA jacobian wrt acceleration. Must be 3x3.
+     * @return a new instance containing updated velocity.
+     * @throws IllegalArgumentException if any of provided jacobians does not
+     *                                  have proper size or if v or a do not have length 3.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;vpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static double[] predict(
+            final double[] v, final double[] a, final double dt, final Matrix jacobianV, final Matrix jacobianA) {
+<span class="fc" id="L222">        final var result = new double[SPEED_COMPONENTS];</span>
+<span class="fc" id="L223">        predict(v, a, dt, result, jacobianV, jacobianA);</span>
+<span class="fc" id="L224">        return result;</span>
+    }
+
+    /**
+     * Predicts the updated velocity.
+     *
+     * @param v  array containing 3 components of velocity. Expressed in m/s.
+     *           Must have length 3.
+     * @param a  array containing 3 components of acceleration. Expressed in
+     *           m/s^2. Must have length 3.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @return a new instance containing updated velocity.
+     * @throws IllegalArgumentException if a or v do not have length 3.
+     * @see &lt;a href=&quot;https://github.com/joansola/slamtb&quot;&gt;vpredict.m at https://github.com/joansola/slamtb&lt;/a&gt;
+     */
+    public static double[] predict(final double[] v, final double[] a, final double dt) {
+<span class="fc" id="L240">        final var result = new double[SPEED_COMPONENTS];</span>
+<span class="fc" id="L241">        predict(v, a, dt, result);</span>
+<span class="fc" id="L242">        return result;</span>
+    }
+
+    /**
+     * Predicts the updated velocity.
+     *
+     * @param vx         current velocity in x-axis. Expressed in m/s.
+     * @param vy         current velocity in y-axis. Expressed in m/s.
+     * @param vz         current velocity in z-axis. Expressed in m/s.
+     * @param dvx        velocity adjustment in x-axis. Expressed in m/s.
+     * @param dvy        velocity adjustment in y-axis. Expressed in m/s.
+     * @param dvz        velocity adjustment in z-axis. Expressed in m/s.
+     * @param ax         acceleration in x-axis. Expressed in m/s^2.
+     * @param ay         acceleration in y-axis. Expressed in m/s^2.
+     * @param az         acceleration in z-axis. Expressed in m/s^2.
+     * @param dt         time interval to compute prediction expressed in seconds.
+     * @param result     instance where updated velocity is stored. Must have
+     *                   length 3.
+     * @param jacobianV  jacobian wrt velocity. Must be 3x3.
+     * @param jacobianDV jacobian wrt velocity adjustment. Must be 3x3.
+     * @param jacobianA  jacobian wrt acceleration. Must be 3x3.
+     * @throws IllegalArgumentException if any of provided jacobians does not
+     *                                  have proper size or if result does not have length 3.
+     */
+    public static void predictWithVelocityAdjustment(
+            final double vx, final double vy, final double vz, final double dvx, final double dvy, final double dvz,
+            final double ax, final double ay, final double az, final double dt, final double[] result,
+            final Matrix jacobianV, final Matrix jacobianDV, final Matrix jacobianA) {
+<span class="fc bfc" id="L270" title="All 2 branches covered.">        if (result.length != SPEED_COMPONENTS) {</span>
+<span class="fc" id="L271">            throw new IllegalArgumentException(&quot;result must have length 3&quot;);</span>
+        }
+<span class="fc bfc" id="L273" title="All 4 branches covered.">        if (jacobianV != null &amp;&amp; (jacobianV.getRows() != SPEED_COMPONENTS</span>
+<span class="pc bpc" id="L274" title="1 of 2 branches missed.">                || jacobianV.getColumns() != SPEED_COMPONENTS)) {</span>
+<span class="fc" id="L275">            throw new IllegalArgumentException(&quot;jacobian wrt velocity must be 3x3&quot;);</span>
+        }
+<span class="fc bfc" id="L277" title="All 4 branches covered.">        if (jacobianDV != null &amp;&amp; (jacobianDV.getRows() != SPEED_COMPONENTS</span>
+<span class="pc bpc" id="L278" title="1 of 2 branches missed.">                || jacobianDV.getColumns() != SPEED_COMPONENTS)) {</span>
+<span class="fc" id="L279">            throw new IllegalArgumentException(&quot;jacobian wrt velocity variation must be 3x3&quot;);</span>
+        }
+<span class="fc bfc" id="L281" title="All 4 branches covered.">        if (jacobianA != null &amp;&amp; (jacobianA.getRows() != SPEED_COMPONENTS</span>
+<span class="pc bpc" id="L282" title="1 of 2 branches missed.">                || jacobianA.getColumns() != ACCELERATION_COMPONENTS)) {</span>
+<span class="fc" id="L283">            throw new IllegalArgumentException(&quot;jacobian wrt acceleration must be 3x3&quot;);</span>
+        }
+
+<span class="fc bfc" id="L286" title="All 2 branches covered.">        if (jacobianV != null) {</span>
+            // set to the identity
+<span class="fc" id="L288">            jacobianV.initialize(0.0);</span>
+<span class="fc" id="L289">            jacobianV.setElementAt(0, 0, 1.0);</span>
+<span class="fc" id="L290">            jacobianV.setElementAt(1, 1, 1.0);</span>
+<span class="fc" id="L291">            jacobianV.setElementAt(2, 2, 1.0);</span>
+        }
+<span class="fc bfc" id="L293" title="All 2 branches covered.">        if (jacobianDV != null) {</span>
+            // set to the identity
+<span class="fc" id="L295">            jacobianDV.initialize(0.0);</span>
+<span class="fc" id="L296">            jacobianDV.setElementAt(0, 0, 1.0);</span>
+<span class="fc" id="L297">            jacobianDV.setElementAt(1, 1, 1.0);</span>
+<span class="fc" id="L298">            jacobianDV.setElementAt(2, 2, 1.0);</span>
+        }
+<span class="fc bfc" id="L300" title="All 2 branches covered.">        if (jacobianA != null) {</span>
+<span class="fc" id="L301">            jacobianA.initialize(0.0);</span>
+<span class="fc" id="L302">            jacobianA.setElementAt(0, 0, dt);</span>
+<span class="fc" id="L303">            jacobianA.setElementAt(1, 1, dt);</span>
+<span class="fc" id="L304">            jacobianA.setElementAt(2, 2, dt);</span>
+        }
+
+<span class="fc" id="L307">        result[0] = vx + dvx + ax * dt;</span>
+<span class="fc" id="L308">        result[1] = vy + dvy + ay * dt;</span>
+<span class="fc" id="L309">        result[2] = vz + dvz + az * dt;</span>
+<span class="fc" id="L310">    }</span>
+
+    /**
+     * Predicts the updated velocity.
+     *
+     * @param vx     current velocity in x-axis. Expressed in m/s.
+     * @param vy     current velocity in y-axis. Expressed in m/s.
+     * @param vz     current velocity in z-axis. Expressed in m/s.
+     * @param dvx    velocity adjustment in x-axis. Expressed in m/s.
+     * @param dvy    velocity adjustment in y-axis. Expressed in m/s.
+     * @param dvz    velocity adjustment in z-axis. Expressed in m/s.
+     * @param ax     acceleration in x-axis. Expressed in m/s^2.
+     * @param ay     acceleration in y-axis. Expressed in m/s^2.
+     * @param az     acceleration in z-axis. Expressed in m/s^2.
+     * @param dt     time interval to compute prediction expressed in seconds.
+     * @param result instance where updated velocity is stored. Must have
+     *               length 3.
+     * @throws IllegalArgumentException if result does not have length 3.
+     */
+    public static void predictWithVelocityAdjustment(
+            final double vx, final double vy, final double vz, final double dvx, final double dvy, final double dvz,
+            final double ax, final double ay, final double az, final double dt, final double[] result) {
+<span class="fc" id="L332">        predictWithVelocityAdjustment(vx, vy, vz, dvx, dvy, dvz, ax, ay, az, dt, result,</span>
+                null, null, null);
+<span class="fc" id="L334">    }</span>
+
+    /**
+     * Predicts the updated velocity.
+     *
+     * @param v          current velocity (in x,y,z axes). Expressed in m/s. Must have
+     *                   length 3.
+     * @param dv         velocity adjustment (in x,y,z axes). Expressed in m/s. Must
+     *                   have length 3.
+     * @param a          acceleration (in x,y,z axes). Expressed in m/s. Must have length
+     *                   3.
+     * @param dt         time interval to compute prediction expressed in seconds.
+     * @param result     instance where updated velocity is stored. Must have length
+     *                   3.
+     * @param jacobianV  jacobian wrt velocity. Must be 3x3.
+     * @param jacobianDV jacobian wrt velocity adjustment. Must be 3x3.
+     * @param jacobianA  jacobian wrt acceleration. Must be 3x3.
+     * @throws IllegalArgumentException if any of provided jacobians does not
+     *                                  have proper size, or if result &quot;v&quot;, &quot;dv&quot; or &quot;a&quot; do not have
+     *                                  length 3.
+     */
+    public static void predictWithVelocityAdjustment(
+            final double[] v, final double[] dv, final double[] a, final double dt, final double[] result,
+            final Matrix jacobianV, final Matrix jacobianDV, final Matrix jacobianA) {
+<span class="fc bfc" id="L358" title="All 2 branches covered.">        if (v.length != SPEED_COMPONENTS) {</span>
+<span class="fc" id="L359">            throw new IllegalArgumentException(&quot;v must have length 3&quot;);</span>
+        }
+<span class="fc bfc" id="L361" title="All 2 branches covered.">        if (dv.length != SPEED_COMPONENTS) {</span>
+<span class="fc" id="L362">            throw new IllegalArgumentException(&quot;dv must have length 3&quot;);</span>
+        }
+<span class="fc bfc" id="L364" title="All 2 branches covered.">        if (a.length != ACCELERATION_COMPONENTS) {</span>
+<span class="fc" id="L365">            throw new IllegalArgumentException(&quot;a must have length 3&quot;);</span>
+        }
+<span class="fc" id="L367">        predictWithVelocityAdjustment(v[0], v[1], v[2], dv[0], dv[1], dv[2], a[0], a[1], a[2], dt, result, jacobianV,</span>
+                jacobianDV, jacobianA);
+<span class="fc" id="L369">    }</span>
+
+    /**
+     * Predicts the updated velocity.
+     *
+     * @param v      current velocity (in x,y,z axes). Expressed in m/s. Must have
+     *               length 3.
+     * @param dv     velocity adjustment (in x,y,z axes). Expressed in m/s. Must
+     *               have length 3.
+     * @param a      acceleration (in x,y,z axes). Expressed in m/s. Must have length
+     *               3.
+     * @param dt     time interval to compute prediction expressed in seconds.
+     * @param result instance where updated velocity is stored. Must have length
+     *               3.
+     * @throws IllegalArgumentException if v, dv, a or result do not have length
+     *                                  3.
+     */
+    public static void predictWithVelocityAdjustment(
+            final double[] v, final double[] dv, final double[] a, final double dt, final double[] result) {
+<span class="fc" id="L388">        predictWithVelocityAdjustment(v, dv, a, dt, result, null, null, null);</span>
+<span class="fc" id="L389">    }</span>
+
+    /**
+     * Predicts the updated velocity.
+     *
+     * @param vx         current velocity in x-axis. Expressed in m/s.
+     * @param vy         current velocity in y-axis. Expressed in m/s.
+     * @param vz         current velocity in z-axis. Expressed in m/s.
+     * @param dvx        velocity adjustment in x-axis. Expressed in m/s.
+     * @param dvy        velocity adjustment in y-axis. Expressed in m/s.
+     * @param dvz        velocity adjustment in z-axis. Expressed in m/s.
+     * @param ax         acceleration in x-axis. Expressed in m/s^2.
+     * @param ay         acceleration in y-axis. Expressed in m/s^2.
+     * @param az         acceleration in z-axis. Expressed in m/s^2.
+     * @param dt         time interval to compute prediction expressed in seconds.
+     * @param jacobianV  jacobian wrt velocity. Must be 3x3.
+     * @param jacobianDV jacobian wrt velocity adjustment. Must be 3x3.
+     * @param jacobianA  jacobian wrt acceleration. Must be 3x3.
+     * @return a new array containing updated velocity.
+     * @throws IllegalArgumentException if any of provided jacobians does not
+     *                                  have proper size.
+     */
+    public static double[] predictWithVelocityAdjustment(
+            final double vx, final double vy, final double vz, final double dvx, final double dvy, final double dvz,
+            final double ax, final double ay, final double az, final double dt, final Matrix jacobianV,
+            final Matrix jacobianDV, final Matrix jacobianA) {
+<span class="fc" id="L415">        final var result = new double[SPEED_COMPONENTS];</span>
+<span class="fc" id="L416">        predictWithVelocityAdjustment(vx, vy, vz, dvx, dvy, dvz, ax, ay, az, dt, result, jacobianV, jacobianDV,</span>
+                jacobianA);
+<span class="fc" id="L418">        return result;</span>
+    }
+
+    /**
+     * Predicts the updated velocity.
+     *
+     * @param vx  current velocity in x-axis. Expressed in m/s.
+     * @param vy  current velocity in y-axis. Expressed in m/s.
+     * @param vz  current velocity in z-axis. Expressed in m/s.
+     * @param dvx velocity adjustment in x-axis. Expressed in m/s.
+     * @param dvy velocity adjustment in y-axis. Expressed in m/s.
+     * @param dvz velocity adjustment in z-axis. Expressed in m/s.
+     * @param ax  acceleration in x-axis. Expressed in m/s^2.
+     * @param ay  acceleration in y-axis. Expressed in m/s^2.
+     * @param az  acceleration in z-axis. Expressed in m/s^2.
+     * @param dt  time interval to compute prediction expressed in seconds.
+     * @return a new array containing updated velocity.
+     */
+    public static double[] predictWithVelocityAdjustment(
+            final double vx, final double vy, final double vz, final double dvx, final double dvy, final double dvz,
+            final double ax, final double ay, final double az, final double dt) {
+<span class="fc" id="L439">        final var result = new double[SPEED_COMPONENTS];</span>
+<span class="fc" id="L440">        predictWithVelocityAdjustment(vx, vy, vz, dvx, dvy, dvz, ax, ay, az, dt, result);</span>
+<span class="fc" id="L441">        return result;</span>
+    }
+
+    /**
+     * Predicts the updated velocity.
+     *
+     * @param v          current velocity (in x,y,z axes). Expressed in m/s. Must have
+     *                   length 3.
+     * @param dv         velocity adjustment (in x,y,z axes). Expressed in m/s. Must
+     *                   have length 3.
+     * @param a          acceleration (in x,y,z axes). Expressed in m/s. Must have length
+     *                   3.
+     * @param dt         time interval to compute prediction expressed in seconds.
+     * @param jacobianV  jacobian wrt velocity. Must be 3x3.
+     * @param jacobianDV jacobian wrt velocity adjustment. Must be 3x3.
+     * @param jacobianA  jacobian wrt acceleration. Must be 3x3.
+     * @return a new array containing updated velocity.
+     * @throws IllegalArgumentException if any of provided jacobians does not
+     *                                  have proper size, or if &quot;v&quot;, &quot;dv&quot; or &quot;a&quot; do not have length 3.
+     */
+    public static double[] predictWithVelocityAdjustment(
+            final double[] v, final double[] dv, final double[] a, final double dt, final Matrix jacobianV,
+            final Matrix jacobianDV, final Matrix jacobianA) {
+<span class="fc" id="L464">        final var result = new double[SPEED_COMPONENTS];</span>
+<span class="fc" id="L465">        predictWithVelocityAdjustment(v, dv, a, dt, result, jacobianV, jacobianDV, jacobianA);</span>
+<span class="fc" id="L466">        return result;</span>
+    }
+
+    /**
+     * Predicts the updated velocity.
+     *
+     * @param v  current velocity (in x,y,z axes). Expressed in m/s. Must have
+     *           length 3.
+     * @param dv velocity adjustment (in x,y,z axes). Expressed in m/s. Must
+     *           have length 3.
+     * @param a  acceleration (in x,y,z axes). Expressed in m/s. Must have length
+     *           3.
+     * @param dt time interval to compute prediction expressed in seconds.
+     * @return a new array containing updated velocity.
+     * @throws IllegalArgumentException if v, dv or a do not have length 3.
+     */
+    public static double[] predictWithVelocityAdjustment(
+            final double[] v, final double[] dv, final double[] a, final double dt) {
+<span class="fc" id="L484">        final var result = new double[SPEED_COMPONENTS];</span>
+<span class="fc" id="L485">        predictWithVelocityAdjustment(v, dv, a, dt, result);</span>
+<span class="fc" id="L486">        return result;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

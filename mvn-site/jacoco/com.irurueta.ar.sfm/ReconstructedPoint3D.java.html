@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ReconstructedPoint3D.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.sfm</a> &gt; <span class="el_source">ReconstructedPoint3D.java</span></div><h1>ReconstructedPoint3D.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2017 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.irurueta.ar.sfm;
+
+import com.irurueta.algebra.Matrix;
+import com.irurueta.geometry.Point3D;
+
+import java.io.Serializable;
+
+/**
+ * Contains data of a reconstructed 3D point.
+ */
+<span class="fc" id="L27">public class ReconstructedPoint3D implements Serializable {</span>
+
+    /**
+     * Default quality score value.
+     */
+    public static final double DEFAULT_QUALITY_SCORE = 1.0;
+
+    /**
+     * ID to identify this instance. This is useful in case that this data is
+     * stored in some sort of database and must be set externally.
+     */
+    private String id;
+
+    /**
+     * Coordinates of reconstructed 3D point.
+     */
+    private Point3D point;
+
+    /**
+     * Indicates whether reconstructed point is an inlier or not.
+     */
+    private boolean inlier;
+
+    /**
+     * Quality score of sampled point. The larger the value, the better the
+     * quality. This is used for robust estimators such as PROSAC or PROMedS.
+     * This value is typically obtained from algorithms determining point
+     * correspondences.
+     */
+<span class="fc" id="L56">    private double qualityScore = DEFAULT_QUALITY_SCORE;</span>
+
+    /**
+     * Covariance of reconstructed point. This can be computed during point
+     * triangularization.
+     */
+    private Matrix covariance;
+
+    /**
+     * Color data of reconstructed point (i.e. RGB or YUV values), if available.
+     */
+    private PointColorData colorData;
+
+    /**
+     * Gets id to identify this instance. This is useful in case that this data
+     * is stored in some sort of database and must be set externally.
+     *
+     * @return id to identify this instance.
+     */
+    public String getId() {
+<span class="fc" id="L76">        return id;</span>
+    }
+
+    /**
+     * Sets id to identify this instance. This is useful in case that this data
+     * is stored in some sort of database and must be set externally.
+     *
+     * @param id id to identify this instance.
+     */
+    public void setId(final String id) {
+<span class="fc" id="L86">        this.id = id;</span>
+<span class="fc" id="L87">    }</span>
+
+    /**
+     * Gets coordinates of reconstructed 3D point.
+     *
+     * @return coordinates of reconstructed 3D point.
+     */
+    public Point3D getPoint() {
+<span class="fc" id="L95">        return point;</span>
+    }
+
+    /**
+     * Sets coordinates of reconstructed 3D point.
+     *
+     * @param point coordinates of reconstructed 3D point.
+     */
+    public void setPoint(final Point3D point) {
+<span class="fc" id="L104">        this.point = point;</span>
+<span class="fc" id="L105">    }</span>
+
+    /**
+     * Indicates whether reconstructed point is an inlier or not.
+     *
+     * @return true if reconstructed point is an inlier, false otherwise.
+     */
+    public boolean isInlier() {
+<span class="fc" id="L113">        return inlier;</span>
+    }
+
+    /**
+     * Specifies whether reconstructed point is an inlier or not.
+     *
+     * @param inlier true if reconstructed point is an inlier, false otherwise.
+     */
+    public void setInlier(final boolean inlier) {
+<span class="fc" id="L122">        this.inlier = inlier;</span>
+<span class="fc" id="L123">    }</span>
+
+    /**
+     * Gets quality score of sampled point. The larger the value, the better the
+     * quality. This is used for robust estimators such as PROSAC or PROMedS.
+     * This value is typically obtained from algorithms determining point
+     * correspondences.
+     *
+     * @return quality score of sampled point.
+     */
+    public double getQualityScore() {
+<span class="fc" id="L134">        return qualityScore;</span>
+    }
+
+    /**
+     * Sets quality score of sampled point. The larger the value, the better the
+     * quality. This is used for robust estimators such as PROSAC or PROMedS.
+     * This value is typically obtained from algorithms determining point
+     * correspondences.
+     *
+     * @param qualityScore quality score of sampled point.
+     */
+    public void setQualityScore(final double qualityScore) {
+<span class="fc" id="L146">        this.qualityScore = qualityScore;</span>
+<span class="fc" id="L147">    }</span>
+
+    /**
+     * Gets covariance of reconstructed point. This is obtained from the
+     * algorithms determining points of interest or point correspondences.
+     * This might be null if covariance cannot be determined.
+     *
+     * @return covariance of reconstructed point.
+     */
+    public Matrix getCovariance() {
+<span class="fc" id="L157">        return covariance;</span>
+    }
+
+    /**
+     * Sets covariance of reconstructed point. This is obtained from the
+     * algorithms determining points of interest or point correspondences.
+     *
+     * @param covariance covariance of reconstructed point.
+     */
+    public void setCovariance(final Matrix covariance) {
+<span class="fc" id="L167">        this.covariance = covariance;</span>
+<span class="fc" id="L168">    }</span>
+
+    /**
+     * Gets color data of reconstructed point (i.e. RGB or YUV values), if
+     * available.
+     *
+     * @return color data of reconstructed point or null.
+     */
+    public PointColorData getColorData() {
+<span class="fc" id="L177">        return colorData;</span>
+    }
+
+    /**
+     * Sets color data of reconstructed point (i.e. RGB or YUV values), if
+     * available.
+     *
+     * @param colorData color data of reconstructed point or null.
+     */
+    public void setColorData(final PointColorData colorData) {
+<span class="fc" id="L187">        this.colorData = colorData;</span>
+<span class="fc" id="L188">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

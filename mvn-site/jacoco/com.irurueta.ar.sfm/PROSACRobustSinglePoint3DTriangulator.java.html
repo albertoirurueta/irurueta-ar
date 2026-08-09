@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PROSACRobustSinglePoint3DTriangulator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.sfm</a> &gt; <span class="el_source">PROSACRobustSinglePoint3DTriangulator.java</span></div><h1>PROSACRobustSinglePoint3DTriangulator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2015 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.sfm;
+
+import com.irurueta.geometry.CoordinatesType;
+import com.irurueta.geometry.PinholeCamera;
+import com.irurueta.geometry.Point2D;
+import com.irurueta.geometry.Point3D;
+import com.irurueta.geometry.estimators.LockedException;
+import com.irurueta.geometry.estimators.NotReadyException;
+import com.irurueta.numerical.robust.PROSACRobustEstimator;
+import com.irurueta.numerical.robust.PROSACRobustEstimatorListener;
+import com.irurueta.numerical.robust.RobustEstimator;
+import com.irurueta.numerical.robust.RobustEstimatorException;
+import com.irurueta.numerical.robust.RobustEstimatorMethod;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Robustly triangulates 3D points from matched 2D points and their
+ * corresponding cameras on several views using PROSAC algorithm.
+ */
+public class PROSACRobustSinglePoint3DTriangulator extends RobustSinglePoint3DTriangulator {
+
+    /**
+     * Constant defining default threshold to determine whether samples are
+     * inliers or not.
+     * By default, 1.0 is considered a good value for cases where 2D point
+     * measures are done on pixels, since typically the minimum resolution is 1
+     * pixel.
+     */
+    public static final double DEFAULT_THRESHOLD = 1.0;
+
+    /**
+     * Minimum value that can be set as threshold.
+     * Threshold must be strictly greater than 0.0.
+     */
+    public static final double MIN_THRESHOLD = 0.0;
+
+    /**
+     * Threshold to determine whether samples are inliers or not when testing
+     * possible estimation solutions.
+     * The threshold refers to the amount of projection error (i.e. distance of
+     * projected solution using each camera).
+     */
+    private double threshold;
+
+    /**
+     * Quality scores corresponding to each provided view.
+     * The larger the score value the better the quality of the sample.
+     */
+    private double[] qualityScores;
+
+    /**
+     * Constructor.
+     */
+    public PROSACRobustSinglePoint3DTriangulator() {
+<span class="fc" id="L72">        super();</span>
+<span class="fc" id="L73">        threshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L74">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     */
+    public PROSACRobustSinglePoint3DTriangulator(final RobustSinglePoint3DTriangulatorListener listener) {
+<span class="fc" id="L83">        super(listener);</span>
+<span class="fc" id="L84">        threshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L85">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param points  Matched 2D points. Each point in the list is assumed to be
+     *                projected by the corresponding camera in the list.
+     * @param cameras List of cameras associated to the matched 2D point on the
+     *                same position as the camera on the list.
+     * @throws IllegalArgumentException if provided lists don't have the same
+     *                                  length or their length is less than 2 views, which is the minimum
+     *                                  required to compute triangulation.
+     */
+    public PROSACRobustSinglePoint3DTriangulator(final List&lt;Point2D&gt; points, final List&lt;PinholeCamera&gt; cameras) {
+<span class="fc" id="L99">        super(points, cameras);</span>
+<span class="fc" id="L100">        threshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L101">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param points   Matched 2D points. Each point in the list is assumed to be
+     *                 projected by the corresponding camera in the list.
+     * @param cameras  List of cameras associated to the matched 2D point on the
+     *                 same position as the camera on the list.
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     * @throws IllegalArgumentException if provided lists don't have the same
+     *                                  length or their length is less than 2 views, which is the minimum
+     *                                  required to compute triangulation.
+     */
+    public PROSACRobustSinglePoint3DTriangulator(
+            final List&lt;Point2D&gt; points, final List&lt;PinholeCamera&gt; cameras,
+            final RobustSinglePoint3DTriangulatorListener listener) {
+<span class="fc" id="L119">        super(points, cameras, listener);</span>
+<span class="fc" id="L120">        threshold = DEFAULT_THRESHOLD;</span>
+<span class="fc" id="L121">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param qualityScores quality scores corresponding to each provided view.
+     * @throws IllegalArgumentException if provided quality scores length is
+     *                                  smaller than required size (i.e. 2 views).
+     */
+    public PROSACRobustSinglePoint3DTriangulator(final double[] qualityScores) {
+<span class="fc" id="L131">        this();</span>
+<span class="fc" id="L132">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L133">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param qualityScores quality scores corresponding to each provided view.
+     * @param listener      listener to be notified of events such as when estimation
+     *                      starts, ends or its progress significantly changes.
+     * @throws IllegalArgumentException if provided quality scores length is
+     *                                  smaller than required size (i.e. 2 views).
+     */
+    public PROSACRobustSinglePoint3DTriangulator(final double[] qualityScores,
+                                                 final RobustSinglePoint3DTriangulatorListener listener) {
+<span class="fc" id="L146">        this(listener);</span>
+<span class="fc" id="L147">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L148">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param points        Matched 2D points. Each point in the list is assumed to be
+     *                      projected by the corresponding camera in the list.
+     * @param cameras       List of cameras associated to the matched 2D point on the
+     *                      same position as the camera on the list.
+     * @param qualityScores quality scores corresponding to each provided view.
+     * @throws IllegalArgumentException if provided lists or quality scores
+     *                                  don't have the same length or their length is less than 2 views,
+     *                                  which is the minimum required to compute triangulation.
+     */
+    public PROSACRobustSinglePoint3DTriangulator(final List&lt;Point2D&gt; points,
+                                                 final List&lt;PinholeCamera&gt; cameras,
+                                                 final double[] qualityScores) {
+<span class="fc" id="L165">        this(points, cameras);</span>
+<span class="fc" id="L166">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L167">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param points        Matched 2D points. Each point in the list is assumed to be
+     *                      projected by the corresponding camera in the list.
+     * @param cameras       List of cameras associated to the matched 2D point on the
+     *                      same position as the camera on the list.
+     * @param qualityScores quality scores corresponding to each provided view.
+     * @param listener      listener to be notified of events such as when estimation
+     *                      starts, ends or its progress significantly changes.
+     * @throws IllegalArgumentException if provided lists or quality scores
+     *                                  don't have the same length or their length is less than 2 views,
+     *                                  which is the minimum required to compute triangulation.
+     */
+    public PROSACRobustSinglePoint3DTriangulator(final List&lt;Point2D&gt; points,
+                                                 final List&lt;PinholeCamera&gt; cameras,
+                                                 final double[] qualityScores,
+                                                 final RobustSinglePoint3DTriangulatorListener listener) {
+<span class="fc" id="L187">        this(points, cameras, listener);</span>
+<span class="fc" id="L188">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L189">    }</span>
+
+    /**
+     * Returns threshold to determine whether points are inliers or not when
+     * testing possible estimation solutions.
+     * The threshold refers to the amount of error (i.e. Euclidean distance) a
+     * possible solution has on projected 2D points.
+     *
+     * @return threshold to determine whether points are inliers or not when
+     * testing possible estimation solutions.
+     */
+    public double getThreshold() {
+<span class="fc" id="L201">        return threshold;</span>
+    }
+
+    /**
+     * Sets threshold to determine whether points are inliers or not when
+     * testing possible estimation solutions.
+     * The threshold refers to the amount of error (i.e. Euclidean distance) a
+     * possible solution has on projected 2D points.
+     *
+     * @param threshold threshold to be set.
+     * @throws IllegalArgumentException if provided value is equal or less than
+     *                                  zero.
+     * @throws LockedException          if robust estimator is locked because an
+     *                                  estimation is already in progress.
+     */
+    public void setThreshold(final double threshold) throws LockedException {
+<span class="fc bfc" id="L217" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L218">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L220" title="All 2 branches covered.">        if (threshold &lt;= MIN_THRESHOLD) {</span>
+<span class="fc" id="L221">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L223">        this.threshold = threshold;</span>
+<span class="fc" id="L224">    }</span>
+
+    /**
+     * Returns quality scores corresponding to each provided view.
+     * The larger the score value the better the quality of the sampled view.
+     *
+     * @return quality scores corresponding to each view.
+     */
+    @Override
+    public double[] getQualityScores() {
+<span class="fc" id="L234">        return qualityScores;</span>
+    }
+
+    /**
+     * Sets quality scores corresponding to each provided view.
+     * The larger the score value the better the quality of the sampled view.
+     *
+     * @param qualityScores quality scores corresponding to each view.
+     * @throws LockedException          if robust estimator is locked because an
+     *                                  estimation is already in progress.
+     * @throws IllegalArgumentException if provided quality scores length is
+     *                                  smaller than MIN_REQUIRED_VIEWS (i.e. 2 views).
+     */
+    @Override
+    public void setQualityScores(final double[] qualityScores) throws LockedException {
+<span class="pc bpc" id="L249" title="1 of 2 branches missed.">        if (isLocked()) {</span>
+<span class="nc" id="L250">            throw new LockedException();</span>
+        }
+<span class="fc" id="L252">        internalSetQualityScores(qualityScores);</span>
+<span class="fc" id="L253">    }</span>
+
+    /**
+     * Indicates if triangulator is ready to start the 3D point triangulation.
+     * This is true when input data (i.e. 2D points, cameras and quality scores)
+     * are provided and a minimum of 2 views are available.
+     *
+     * @return true if estimator is ready, false otherwise.
+     */
+    @Override
+    public boolean isReady() {
+<span class="pc bpc" id="L264" title="1 of 6 branches missed.">        return super.isReady() &amp;&amp; qualityScores != null &amp;&amp; qualityScores.length == points2D.size();</span>
+    }
+
+
+    /**
+     * Triangulates provided matched 2D points being projected by each
+     * corresponding camera into a single 3D point.
+     * At least 2 matched 2D points and their corresponding 2 cameras are
+     * required to compute triangulation. If more views are provided, an
+     * averaged solution can be found.
+     *
+     * @return computed triangulated 3D point.
+     * @throws LockedException          if this instance is locked.
+     * @throws NotReadyException        if lists of points and cameras don't have the
+     *                                  same length or less than 2 views are provided.
+     * @throws RobustEstimatorException if estimation fails for any reason
+     *                                  (i.e. numerical instability, no solution available, etc).
+     */
+    @SuppressWarnings(&quot;DuplicatedCode&quot;)
+    @Override
+    public Point3D triangulate() throws LockedException, NotReadyException, RobustEstimatorException {
+<span class="fc bfc" id="L285" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L286">            throw new LockedException();</span>
+        }
+<span class="pc bpc" id="L288" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L289">            throw new NotReadyException();</span>
+        }
+
+<span class="fc" id="L292">        final var innerEstimator = new PROSACRobustEstimator&lt;Point3D&gt;(new PROSACRobustEstimatorListener&lt;&gt;() {</span>
+
+            // point to be reused when computing residuals
+<span class="fc" id="L295">            private final Point2D testPoint = Point2D.create(CoordinatesType.HOMOGENEOUS_COORDINATES);</span>
+
+            // non-robust 3D point triangulator
+<span class="fc" id="L298">            private final SinglePoint3DTriangulator triangulator =</span>
+<span class="pc bpc" id="L299" title="1 of 2 branches missed.">                    SinglePoint3DTriangulator.create(useHomogeneousSolution</span>
+<span class="fc" id="L300">                            ? Point3DTriangulatorType.LMSE_HOMOGENEOUS_TRIANGULATOR</span>
+<span class="nc" id="L301">                            : Point3DTriangulatorType.LMSE_INHOMOGENEOUS_TRIANGULATOR);</span>
+
+            // subset of 2D points
+<span class="fc" id="L304">            private final List&lt;Point2D&gt; subsetPoints = new ArrayList&lt;&gt;();</span>
+
+            // subset of cameras
+<span class="fc" id="L307">            private final List&lt;PinholeCamera&gt; subsetCameras = new ArrayList&lt;&gt;();</span>
+
+            @Override
+            public double getThreshold() {
+<span class="fc" id="L311">                return threshold;</span>
+            }
+
+            @Override
+            public int getTotalSamples() {
+<span class="fc" id="L316">                return points2D.size();</span>
+            }
+
+            @Override
+            public int getSubsetSize() {
+<span class="fc" id="L321">                return MIN_REQUIRED_VIEWS;</span>
+            }
+
+            @Override
+            public void estimatePreliminarSolutions(final int[] samplesIndices, final List&lt;Point3D&gt; solutions) {
+<span class="fc" id="L326">                subsetPoints.clear();</span>
+<span class="fc" id="L327">                subsetPoints.add(points2D.get(samplesIndices[0]));</span>
+<span class="fc" id="L328">                subsetPoints.add(points2D.get(samplesIndices[1]));</span>
+
+<span class="fc" id="L330">                subsetCameras.clear();</span>
+<span class="fc" id="L331">                subsetCameras.add(cameras.get(samplesIndices[0]));</span>
+<span class="fc" id="L332">                subsetCameras.add(cameras.get(samplesIndices[1]));</span>
+
+                try {
+<span class="fc" id="L335">                    triangulator.setPointsAndCameras(subsetPoints, subsetCameras);</span>
+<span class="fc" id="L336">                    final var triangulated = triangulator.triangulate();</span>
+<span class="fc" id="L337">                    solutions.add(triangulated);</span>
+<span class="nc" id="L338">                } catch (final Exception e) {</span>
+                    // if anything fails, no solution is added
+<span class="fc" id="L340">                }</span>
+<span class="fc" id="L341">            }</span>
+
+            @Override
+            public double computeResidual(final Point3D currentEstimation, final int i) {
+<span class="fc" id="L345">                final var point2D = points2D.get(i);</span>
+<span class="fc" id="L346">                final var camera = cameras.get(i);</span>
+
+                // project estimated point with camera
+<span class="fc" id="L349">                camera.project(currentEstimation, testPoint);</span>
+
+                // return distance of projected point respect to the original one
+                // as a residual
+<span class="fc" id="L353">                return testPoint.distanceTo(point2D);</span>
+            }
+
+            @Override
+            public boolean isReady() {
+<span class="fc" id="L358">                return PROSACRobustSinglePoint3DTriangulator.this.isReady();</span>
+            }
+
+            @Override
+            public void onEstimateStart(final RobustEstimator&lt;Point3D&gt; estimator) {
+<span class="fc bfc" id="L363" title="All 2 branches covered.">                if (listener != null) {</span>
+<span class="fc" id="L364">                    listener.onTriangulateStart(PROSACRobustSinglePoint3DTriangulator.this);</span>
+                }
+<span class="fc" id="L366">            }</span>
+
+            @Override
+            public void onEstimateEnd(final RobustEstimator&lt;Point3D&gt; estimator) {
+<span class="fc bfc" id="L370" title="All 2 branches covered.">                if (listener != null) {</span>
+<span class="fc" id="L371">                    listener.onTriangulateEnd(PROSACRobustSinglePoint3DTriangulator.this);</span>
+                }
+<span class="fc" id="L373">            }</span>
+
+            @Override
+            public void onEstimateNextIteration(final RobustEstimator&lt;Point3D&gt; estimator, final int iteration) {
+<span class="fc bfc" id="L377" title="All 2 branches covered.">                if (listener != null) {</span>
+<span class="fc" id="L378">                    listener.onTriangulateNextIteration(</span>
+                            PROSACRobustSinglePoint3DTriangulator.this, iteration);
+                }
+<span class="fc" id="L381">            }</span>
+
+            @Override
+            public void onEstimateProgressChange(final RobustEstimator&lt;Point3D&gt; estimator, final float progress) {
+<span class="fc bfc" id="L385" title="All 2 branches covered.">                if (listener != null) {</span>
+<span class="fc" id="L386">                    listener.onTriangulateProgressChange(</span>
+                            PROSACRobustSinglePoint3DTriangulator.this, progress);
+                }
+<span class="fc" id="L389">            }</span>
+
+            @Override
+            public double[] getQualityScores() {
+<span class="fc" id="L393">                return qualityScores;</span>
+            }
+        });
+
+        try {
+<span class="fc" id="L398">            locked = true;</span>
+<span class="fc" id="L399">            innerEstimator.setConfidence(confidence);</span>
+<span class="fc" id="L400">            innerEstimator.setMaxIterations(maxIterations);</span>
+<span class="fc" id="L401">            innerEstimator.setProgressDelta(progressDelta);</span>
+<span class="fc" id="L402">            return innerEstimator.estimate();</span>
+<span class="nc" id="L403">        } catch (final com.irurueta.numerical.LockedException e) {</span>
+<span class="nc" id="L404">            throw new LockedException(e);</span>
+<span class="nc" id="L405">        } catch (final com.irurueta.numerical.NotReadyException e) {</span>
+<span class="nc" id="L406">            throw new NotReadyException(e);</span>
+        } finally {
+<span class="fc" id="L408">            locked = false;</span>
+        }
+    }
+
+    /**
+     * Returns method being used for robust estimation.
+     *
+     * @return method being used for robust estimation.
+     */
+    @Override
+    public RobustEstimatorMethod getMethod() {
+<span class="fc" id="L419">        return RobustEstimatorMethod.PROSAC;</span>
+    }
+
+    /**
+     * Sets quality scores corresponding to each provided view.
+     * This method is used internally and does not check whether instance is
+     * locked or not.
+     *
+     * @param qualityScores quality scores to be set.
+     * @throws IllegalArgumentException if provided quality scores length is
+     *                                  smaller than MINIMUM_SIZE.
+     */
+    private void internalSetQualityScores(final double[] qualityScores) {
+<span class="fc bfc" id="L432" title="All 2 branches covered.">        if (qualityScores.length &lt; MIN_REQUIRED_VIEWS) {</span>
+<span class="fc" id="L433">            throw new IllegalArgumentException();</span>
+        }
+
+<span class="fc" id="L436">        this.qualityScores = qualityScores;</span>
+<span class="fc" id="L437">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

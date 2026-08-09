@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SingleCorrector.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.epipolar</a> &gt; <span class="el_source">SingleCorrector.java</span></div><h1>SingleCorrector.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2015 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.epipolar;
+
+import com.irurueta.geometry.Point2D;
+import com.irurueta.geometry.estimators.NotReadyException;
+
+/**
+ * Fixes a single matched pair of points so that they perfectly follow a given
+ * epipolar geometry.
+ * When matching points typically the matching precision is about 1 pixel,
+ * however this makes that matched points under a given epipolar geometry (i.e.
+ * fundamental or essential matrix), do not lie perfectly on the corresponding
+ * epipolar plane or epipolar lines.
+ * The consequence is that triangularization of these matches will fail or
+ * produce inaccurate results.
+ * By fixing matched points using a corrector following a given epipolar
+ * geometry, this effect is alleviated.
+ * This is an abstract class, subclasses will implement different methods to
+ * fix matched points coordinates
+ */
+public abstract class SingleCorrector {
+
+    /**
+     * Default corrector type.
+     */
+<span class="fc" id="L40">    public static final CorrectorType DEFAULT_TYPE = CorrectorType.GOLD_STANDARD;</span>
+
+    /**
+     * Left matched point to be corrected.
+     */
+    protected Point2D leftPoint;
+
+    /**
+     * Right matched point to be corrected.
+     */
+    protected Point2D rightPoint;
+
+    /**
+     * Left matched point after correction.
+     */
+    protected Point2D leftCorrectedPoint;
+
+    /**
+     * Right matched point after correction.
+     */
+    protected Point2D rightCorrectedPoint;
+
+    /**
+     * A fundamental matrix defining an epipolar geometry.
+     */
+    protected FundamentalMatrix fundamentalMatrix;
+
+    /**
+     * Constructor.
+     */
+<span class="fc" id="L70">    protected SingleCorrector() {</span>
+<span class="fc" id="L71">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param fundamentalMatrix fundamental matrix defining the epipolar
+     *                          geometry.
+     */
+<span class="fc" id="L79">    protected SingleCorrector(final FundamentalMatrix fundamentalMatrix) {</span>
+<span class="fc" id="L80">        setFundamentalMatrix(fundamentalMatrix);</span>
+<span class="fc" id="L81">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param leftPoint  matched point on left view to be corrected.
+     * @param rightPoint matched point on right view to be corrected.
+     */
+<span class="fc" id="L89">    protected SingleCorrector(final Point2D leftPoint, final Point2D rightPoint) {</span>
+<span class="fc" id="L90">        setPoints(leftPoint, rightPoint);</span>
+<span class="fc" id="L91">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param leftPoint         matched point on left view to be corrected.
+     * @param rightPoint        matched point on right view to be corrected.
+     * @param fundamentalMatrix fundamental matrix defining an epipolar geometry.
+     */
+    protected SingleCorrector(final Point2D leftPoint, final Point2D rightPoint,
+<span class="fc" id="L101">                              final FundamentalMatrix fundamentalMatrix) {</span>
+<span class="fc" id="L102">        setPointsAndFundamentalMatrix(leftPoint, rightPoint, fundamentalMatrix);</span>
+<span class="fc" id="L103">    }</span>
+
+    /**
+     * Sets a matched pair of points to be corrected and a fundamental matrix
+     * defining the epipolar geometry.
+     *
+     * @param leftPoint         matched point on left view to be corrected.
+     * @param rightPoint        matched point on right view to be corrected.
+     * @param fundamentalMatrix fundamental matrix defining an epipolar geometry.
+     */
+    public final void setPointsAndFundamentalMatrix(
+            final Point2D leftPoint, final Point2D rightPoint, final FundamentalMatrix fundamentalMatrix) {
+<span class="fc" id="L115">        setPoints(leftPoint, rightPoint);</span>
+<span class="fc" id="L116">        setFundamentalMatrix(fundamentalMatrix);</span>
+<span class="fc" id="L117">    }</span>
+
+    /**
+     * Sets a matched pair of points to be corrected.
+     *
+     * @param leftPoint  matched point on left view to be corrected.
+     * @param rightPoint matched point on right view to be corrected.
+     */
+    public final void setPoints(final Point2D leftPoint, final Point2D rightPoint) {
+<span class="fc" id="L126">        this.leftPoint = leftPoint;</span>
+<span class="fc" id="L127">        this.rightPoint = rightPoint;</span>
+<span class="fc" id="L128">    }</span>
+
+    /**
+     * Sets the fundamental matrix defining the epipolar geometry.
+     *
+     * @param fundamentalMatrix fundamental matrix to be set.
+     */
+    public final void setFundamentalMatrix(final FundamentalMatrix fundamentalMatrix) {
+<span class="fc" id="L136">        this.fundamentalMatrix = fundamentalMatrix;</span>
+<span class="fc" id="L137">    }</span>
+
+    /**
+     * Returns matched point on left view.
+     *
+     * @return matched point on left view.
+     */
+    public Point2D getLeftPoint() {
+<span class="fc" id="L145">        return leftPoint;</span>
+    }
+
+    /**
+     * Returns matched point on right view.
+     *
+     * @return matched point on right view.
+     */
+    public Point2D getRightPoint() {
+<span class="fc" id="L154">        return rightPoint;</span>
+    }
+
+    /**
+     * Returns fundamental matrix defining epipolar geometry.
+     *
+     * @return fundamental matrix defining epipolar geometry.
+     */
+    public FundamentalMatrix getFundamentalMatrix() {
+<span class="fc" id="L163">        return fundamentalMatrix;</span>
+    }
+
+    /**
+     * Indicates whether this instance is ready to correct provided left
+     * and right points using provided fundamental matrix.
+     *
+     * @return true if ready, false otherwise.
+     */
+    public boolean isReady() {
+<span class="pc bpc" id="L173" title="1 of 6 branches missed.">        return leftPoint != null &amp;&amp; rightPoint != null &amp;&amp; fundamentalMatrix != null</span>
+<span class="fc bfc" id="L174" title="All 2 branches covered.">                &amp;&amp; fundamentalMatrix.isInternalMatrixAvailable();</span>
+    }
+
+    /**
+     * Returns matched point on left view after correction.
+     *
+     * @return matched point on left view after correction.
+     */
+    public Point2D getLeftCorrectedPoint() {
+<span class="fc" id="L183">        return leftCorrectedPoint;</span>
+    }
+
+    /**
+     * Returns matched point on right view after correction.
+     *
+     * @return matched point on right view after correction.
+     */
+    public Point2D getRightCorrectedPoint() {
+<span class="fc" id="L192">        return rightCorrectedPoint;</span>
+    }
+
+    /**
+     * Corrects the pair of provided matched points to be corrected.
+     *
+     * @throws NotReadyException   if this instance is not ready (either points or
+     *                             fundamental matrix has not been provided yet).
+     * @throws CorrectionException if correction fails.
+     */
+    public abstract void correct() throws NotReadyException, CorrectionException;
+
+    /**
+     * Gets type of correction being used.
+     *
+     * @return type of correction.
+     */
+    public abstract CorrectorType getType();
+
+    /**
+     * Creates an instance of a single corrector using provided type.
+     *
+     * @param type a corrector type.
+     * @return an instance of a single corrector.
+     */
+    public static SingleCorrector create(final CorrectorType type) {
+<span class="fc bfc" id="L218" title="All 2 branches covered.">        return type == CorrectorType.SAMPSON_CORRECTOR</span>
+<span class="fc" id="L219">                ? new SampsonSingleCorrector() : new GoldStandardSingleCorrector();</span>
+    }
+
+    /**
+     * Creates an instance of a single corrector using provided fundamental
+     * matrix and provided type.
+     *
+     * @param fundamentalMatrix fundamental matrix defining the epipolar
+     *                          geometry.
+     * @param type              a corrector type.
+     * @return an instance of a single corrector.
+     */
+    public static SingleCorrector create(final FundamentalMatrix fundamentalMatrix, final CorrectorType type) {
+<span class="fc bfc" id="L232" title="All 2 branches covered.">        return type == CorrectorType.SAMPSON_CORRECTOR</span>
+<span class="fc" id="L233">                ? new SampsonSingleCorrector(fundamentalMatrix) : new GoldStandardSingleCorrector(fundamentalMatrix);</span>
+    }
+
+    /**
+     * Creates an instance of a single corrector using provided left and right
+     * points to be corrected, and provided type.
+     *
+     * @param leftPoint  matched point on left view to be corrected.
+     * @param rightPoint matched point on right view to be corrected.
+     * @param type       a corrector type.
+     * @return an instance of a single corrector.
+     */
+    public static SingleCorrector create(final Point2D leftPoint, final Point2D rightPoint, final CorrectorType type) {
+<span class="fc bfc" id="L246" title="All 2 branches covered.">        return type == CorrectorType.SAMPSON_CORRECTOR</span>
+<span class="fc" id="L247">                ? new SampsonSingleCorrector(leftPoint, rightPoint)</span>
+<span class="fc" id="L248">                : new GoldStandardSingleCorrector(leftPoint, rightPoint);</span>
+    }
+
+    /**
+     * Creates an instance of a single corrector using provided left and right
+     * points to be corrected, fundamental matrix and provided type.
+     *
+     * @param leftPoint         matched point on left view to be corrected.
+     * @param rightPoint        matched point on right view to be corrected.
+     * @param fundamentalMatrix fundamental matrix defining the epipolar
+     *                          geometry.
+     * @param type              a corrector type.
+     * @return an instance of a single corrector.
+     */
+    public static SingleCorrector create(
+            final Point2D leftPoint, final Point2D rightPoint, final FundamentalMatrix fundamentalMatrix,
+            final CorrectorType type) {
+<span class="fc bfc" id="L265" title="All 2 branches covered.">        return type == CorrectorType.SAMPSON_CORRECTOR</span>
+<span class="fc" id="L266">                ? new SampsonSingleCorrector(leftPoint, rightPoint, fundamentalMatrix)</span>
+<span class="fc" id="L267">                : new GoldStandardSingleCorrector(leftPoint, rightPoint, fundamentalMatrix);</span>
+    }
+
+    /**
+     * Creates an instance of a single corrector using default type.
+     *
+     * @return an instance of a single corrector.
+     */
+    public static SingleCorrector create() {
+<span class="fc" id="L276">        return create(DEFAULT_TYPE);</span>
+    }
+
+    /**
+     * Creates an instance of a single corrector using provided fundamental
+     * matrix and default type.
+     *
+     * @param fundamentalMatrix fundamental matrix defining the epipolar
+     *                          geometry.
+     * @return an instance of a single corrector.
+     */
+    public static SingleCorrector create(final FundamentalMatrix fundamentalMatrix) {
+<span class="fc" id="L288">        return create(fundamentalMatrix, DEFAULT_TYPE);</span>
+    }
+
+    /**
+     * Creates an instance of a single corrector using provided left and right
+     * points to be corrected.
+     *
+     * @param leftPoint  matched point on left view to be corrected.
+     * @param rightPoint matched point on right view to be corrected.
+     * @return an instance of a single corrector.
+     */
+    public static SingleCorrector create(final Point2D leftPoint, final Point2D rightPoint) {
+<span class="fc" id="L300">        return create(leftPoint, rightPoint, DEFAULT_TYPE);</span>
+    }
+
+    /**
+     * Creates an instance of a single corrector using provided left and right
+     * points to be corrected, provided fundamental matrix and default type.
+     *
+     * @param leftPoint         matched point on left view to be corrected.
+     * @param rightPoint        matched point on right view to be corrected.
+     * @param fundamentalMatrix fundamental matrix defining the epipolar
+     *                          geometry.
+     * @return an instance of a single corrector.
+     */
+    public static SingleCorrector create(
+            final Point2D leftPoint, final Point2D rightPoint,
+            final FundamentalMatrix fundamentalMatrix) {
+<span class="fc" id="L316">        return create(leftPoint, rightPoint, fundamentalMatrix, DEFAULT_TYPE);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

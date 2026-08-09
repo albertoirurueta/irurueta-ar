@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Sample2D.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.sfm</a> &gt; <span class="el_source">Sample2D.java</span></div><h1>Sample2D.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2016 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.sfm;
+
+import com.irurueta.algebra.Matrix;
+import com.irurueta.geometry.Point2D;
+
+import java.io.Serializable;
+
+/**
+ * Contains data of a 2D point sample on a given view.
+ */
+<span class="fc" id="L26">public class Sample2D implements Serializable {</span>
+
+    /**
+     * Default quality score value.
+     */
+    public static final double DEFAULT_QUALITY_SCORE = 1.0;
+
+    /**
+     * ID to identify this instance. This is useful in case that this data is
+     * stored in some sort of database and must be set externally.
+     */
+    private String id;
+
+    /**
+     * ID of view where 2D point has been sampled.
+     */
+    private int viewId;
+
+    /**
+     * 2D sampled point coordinates.
+     */
+    private Point2D point;
+
+    /**
+     * 3D reconstructed point.
+     */
+    private ReconstructedPoint3D reconstructedPoint;
+
+    /**
+     * Quality score of sampled point. The larger the value, the
+     * better the quality. This is used for robust estimators such
+     * as PROSAC or PROMedS.
+     * This value is typically obtained from algorithms determining quality of
+     * points of interest.
+     */
+<span class="fc" id="L61">    private double qualityScore = DEFAULT_QUALITY_SCORE;</span>
+
+    /**
+     * Covariance of sampled points. This is obtained from the algorithms
+     * determining points of interest or point correspondences.
+     * If covariance cannot be determined, a typical value might be to
+     * consider 1 pixel accuracy.
+     * This might be null if covariance cannot be determined.
+     */
+    private Matrix covariance;
+
+    /**
+     * Color data of sampled point (i.e. RGB or YUV values), if available.
+     */
+    private PointColorData colorData;
+
+    /**
+     * Gets id to identify this instance. This is useful in case that this data
+     * is stored in some sort of database and must be set externally.
+     *
+     * @return id to identify this instance.
+     */
+    public String getId() {
+<span class="fc" id="L84">        return id;</span>
+    }
+
+    /**
+     * Sets id to identify this instance. This is useful in case that this data
+     * is stored in some sort of database and must be set externally.
+     *
+     * @param id id to identify this instance.
+     */
+    public void setId(final String id) {
+<span class="fc" id="L94">        this.id = id;</span>
+<span class="fc" id="L95">    }</span>
+
+    /**
+     * Gets id of view where 2D point has been sampled.
+     *
+     * @return id of view where 2D point has been sampled.
+     */
+    public int getViewId() {
+<span class="fc" id="L103">        return viewId;</span>
+    }
+
+    /**
+     * Sets id of view where 2D point has been sampled.
+     *
+     * @param viewId id of view where 2D point has been sampled.
+     */
+    public void setViewId(final int viewId) {
+<span class="fc" id="L112">        this.viewId = viewId;</span>
+<span class="fc" id="L113">    }</span>
+
+    /**
+     * Gets 2D sampled point coordinates.
+     *
+     * @return 2D sampled point coordinates.
+     */
+    public Point2D getPoint() {
+<span class="fc" id="L121">        return point;</span>
+    }
+
+    /**
+     * Sets 2D sampled point coordinates.
+     *
+     * @param point 2D sampled point coordinates.
+     */
+    public void setPoint(final Point2D point) {
+<span class="fc" id="L130">        this.point = point;</span>
+<span class="fc" id="L131">    }</span>
+
+    /**
+     * Gets 3D reconstructed point.
+     *
+     * @return 3D reconstructed point.
+     */
+    public ReconstructedPoint3D getReconstructedPoint() {
+<span class="fc" id="L139">        return reconstructedPoint;</span>
+    }
+
+    /**
+     * Sets 3D reconstructed point.
+     *
+     * @param reconstructedPoint 3D reconstructed point.
+     */
+    public void setReconstructedPoint(final ReconstructedPoint3D reconstructedPoint) {
+<span class="fc" id="L148">        this.reconstructedPoint = reconstructedPoint;</span>
+<span class="fc" id="L149">    }</span>
+
+    /**
+     * Gets quality score of sampled point. The larger the value, the
+     * better the quality. This is used for robust estimators such as
+     * PROSAC or PROMEdS.
+     * This value is typically obtained from algorithms determining quality of
+     * points of interest.
+     *
+     * @return quality score of sampled point.
+     */
+    public double getQualityScore() {
+<span class="fc" id="L161">        return qualityScore;</span>
+    }
+
+    /**
+     * Sets quality score of sampled point. The larger the value, the better
+     * the quality. This is used for robust estimators such as PROSAC or
+     * PROMedS.
+     * This value is typically obtained from algorithms determining quality of
+     * points of interest.
+     *
+     * @param qualityScore quality score of sampled point.
+     */
+    public void setQualityScore(final double qualityScore) {
+<span class="fc" id="L174">        this.qualityScore = qualityScore;</span>
+<span class="fc" id="L175">    }</span>
+
+    /**
+     * Gets covariance of sampled points. This is obtained from the algorithms
+     * determining points of interest or point correspondences.
+     * If covariance cannot be determined, a typical value might be to
+     * consider 1 pixel accuracy.
+     * This might be null if covariance cannot be determined.
+     *
+     * @return covariance of sampled points or null.
+     */
+    public Matrix getCovariance() {
+<span class="fc" id="L187">        return covariance;</span>
+    }
+
+    /**
+     * Sets covariance of sampled points. This is obtained from the algorithms
+     * determining points of interest or point correspondences.
+     * If covariance cannot be determined, a typical value might be to
+     * consider 1 pixel accuracy.
+     * This might be null if covariance cannot be determined.
+     *
+     * @param covariance covariance of sampled points.
+     */
+    public void setCovariance(final Matrix covariance) {
+<span class="fc" id="L200">        this.covariance = covariance;</span>
+<span class="fc" id="L201">    }</span>
+
+    /**
+     * Gets color data of sampled point (i.e. RGB or YUV values), if available.
+     *
+     * @return color data of sampled point or null.
+     */
+    public PointColorData getColorData() {
+<span class="fc" id="L209">        return colorData;</span>
+    }
+
+    /**
+     * Sets color data of sampled point (i.e. RGB or YUV values), if available.
+     *
+     * @param colorData color data of sampled point or null.
+     */
+    public void setColorData(final PointColorData colorData) {
+<span class="fc" id="L218">        this.colorData = colorData;</span>
+<span class="fc" id="L219">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

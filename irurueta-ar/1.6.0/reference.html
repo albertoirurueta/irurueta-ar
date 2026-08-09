@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Reference :: Irurueta AR</title>
+    <meta name="description" content="Links to irurueta-ar's Javadoc, coverage, and test reports, the author's PhD thesis attachment, and the bibliography cited throughout these docs.">
+    <meta name="keywords" content="Javadoc, code coverage, JaCoCo, Surefire, SonarCloud, bibliography, PhD thesis, references, Maven site">
+    <meta name="generator" content="Antora 3.1.15">
+    <link rel="stylesheet" href="../../_/css/site.css">
+<link rel="icon" type="image/svg+xml" href="../../_/img/logo.svg">
+  </head>
+  <body class="article">
+<script type="module">import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs'; mermaid.initialize({"startOnLoad":true}); </script><header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="../.."><img src="../../_/img/logo.svg" alt="Irurueta AR" class="navbar-brand-logo">Irurueta AR</a>
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs">
+        </div>
+      </div>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu" style="display: none;">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="irurueta-ar" data-version="1.6.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="index.html">Irurueta AR</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="whats-new.html">What&#8217;s New</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="installation.html">Installation</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Estimation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="estimation/robust-vs-nonrobust.html">Robust vs. non-robust estimation</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Epipolar geometry</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="epipolar/fundamental-matrix.html">Fundamental matrix estimation</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="epipolar/essential-matrix.html">Essential matrix</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="epipolar/point-correction.html">Point correction</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Calibration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="calibration/self-calibration.html">Self-calibration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="calibration/camera-calibration.html">Pattern-based calibration and radial distortion</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Structure from Motion</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="sfm/structure-from-motion.html">Structure from Motion</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="reference.html">Reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Irurueta AR</span>
+    <span class="version">1.6.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="index.html">Irurueta AR</a></div>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="index.html">1.6.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Irurueta AR</a></li>
+    <li><a href="reference.html">Reference</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/albertoirurueta/irurueta-ar/edit/develop/docs/modules/ROOT/pages/reference.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Reference</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This documentation was generated with the assistance of AI. Please report any inaccuracies.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>These reports are generated during the build.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_generated_reports"><a class="anchor" href="#_generated_reports"></a>Generated Reports</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Report</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/index.html">Javadoc</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">API reference generated as part of Maven site execution.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://albertoirurueta.github.io/irurueta-ar/mvn-site/jacoco/index.html">JaCoCo</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Code coverage report generated during the Maven build.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://albertoirurueta.github.io/irurueta-ar/mvn-site/surefire.html">Surefire</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unit test execution report.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://albertoirurueta.github.io/irurueta-ar/mvn-site">Maven Site</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Aggregated Maven site report published to GitHub Pages, including Javadoc, JaCoCo, and Surefire reports plus
+project info, dependencies, and plugin reports, generated via <code>mvn site</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://sonarcloud.io/project/overview?id=albertoirurueta_irurueta-ar">SonarCloud</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Code quality, issue, and coverage information from SonarCloud.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/albertoirurueta/irurueta-ar">Repository</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GitHub repository.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_attachments"><a class="anchor" href="#_attachments"></a>Attachments</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attachment</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="_attachments/irurueta-phd-thesis.pdf" class="xref attachment">Fixed Scene 3D Reconstruction for Mobile Applications (PDF)</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The author&#8217;s own PhD thesis/technical report. It is the primary source for the equations, algorithms, and
+figures used throughout the <a href="estimation/robust-vs-nonrobust.html" class="xref page">Estimation</a>, <a href="epipolar/fundamental-matrix.html" class="xref page">Epipolar geometry</a>,
+<a href="calibration/self-calibration.html" class="xref page">Calibration</a>, and <a href="sfm/structure-from-motion.html" class="xref page">Structure from Motion</a>
+pages. Reproduced here in full with the author&#8217;s permission since he holds the copyright.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_bibliography"><a class="anchor" href="#_bibliography"></a>Bibliography</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>References cited throughout this documentation. Every citation elsewhere in the site links back to an anchor
+in this list.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a id="ref-thesis"></a> A. Irurueta. "Fixed Scene 3D Reconstruction for Mobile Applications". Visual Engineering.
+Unpublished technical report/thesis (see the attachment above).</p>
+</li>
+<li>
+<p><a id="ref-nyquist-1924"></a> H. Nyquist. "Certain factors affecting telegraph speed". <em>Bell System Technical Journal</em>,
+324-346, 1924.</p>
+</li>
+<li>
+<p><a id="ref-scharstein-szeliski-2002"></a> D. Scharstein and R. Szeliski. "A Taxonomy and Evaluation of Dense
+Two-Frame Stereo Correspondence Algorithms". <em>IJCV</em>, 2002.</p>
+</li>
+<li>
+<p><a id="ref-birchfield-tomasi-1998"></a> S. Birchfield and C. Tomasi. "A Pixel Dissimilarity Measure That Is
+Insensitive to Image Sampling". <em>IEEE Transactions on Pattern Analysis and Machine Intelligence</em>, Vol. 20,
+1998.</p>
+</li>
+<li>
+<p><a id="ref-scharstein-szeliski-1998"></a> D. Scharstein and R. Szeliski. "Stereo Matching with Nonlinear
+Diffusion". <em>IJCV</em>, 1998.</p>
+</li>
+<li>
+<p><a id="ref-cyganek-siebert-2009"></a> B. Cyganek and J. P. Siebert. "An Introduction to 3D Computer Vision
+Techniques and Algorithms". Wiley &amp; Sons, 2009.</p>
+</li>
+<li>
+<p><a id="ref-banks-corke-2001"></a> J. Banks and P. Corke. "Quantitative Evaluation of Matching Methods and Validity
+Measures for Stereo Vision". <em>The International Journal of Robotics Research</em>, 2001.</p>
+</li>
+<li>
+<p><a id="ref-pollefeys-2000"></a> M. Pollefeys. "Tutorial on 3D Modeling from Images". Lecture Notes of ECCV2000,
+Dublin, 2000.</p>
+</li>
+<li>
+<p><a id="ref-hartley-zisserman-2003"></a> R. Hartley and A. Zisserman. "Multiple View Geometry in Computer Vision".
+Cambridge University Press, 2nd edition, 2003.</p>
+</li>
+<li>
+<p><a id="ref-faugeras-1993"></a> O. Faugeras. "Three-Dimensional Computer Vision. A Geometric Viewpoint". The MIT
+Press, 1993.</p>
+</li>
+<li>
+<p><a id="ref-faugeras-luong-2004"></a> O. Faugeras and Q. Luong. "The Geometry of Multiple Images: The Laws That
+Govern the Formation of Multiple Images of a Scene and Some of Their Applications". The MIT Press, 2004.</p>
+</li>
+<li>
+<p><a id="ref-mordohai-medioni-2006"></a> P. Mordohai and G. Medioni. "Stereo Using Monocular Cues within the Tensor
+Voting Framework". <em>Transactions on Pattern Analysis and Machine Intelligence</em>, Vol. 28, 2006.</p>
+</li>
+<li>
+<p><a id="ref-yoon-kweon-2006"></a> K. Yoon and I. Kweon. "Adaptive Support-Weight Approach for Correspondence
+Search". <em>Transactions on Pattern Analysis and Machine Intelligence</em>, Vol. 28, 2006.</p>
+</li>
+<li>
+<p><a id="ref-taguchi-2008"></a> Y. Taguchi et al. "Stereo Reconstruction with Mixed Pixels Using Adaptive
+Over-Segmentation". <em>CVPR</em>, 2008.</p>
+</li>
+<li>
+<p><a id="ref-kanade-okutomi-1994"></a> T. Kanade and M. Okutomi. "A Stereo Matching Algorithm with an Adaptive
+Window: Theory and Experiment". <em>IEEE Transactions on Pattern Analysis and Machine Intelligence</em>, Vol. 16,
+1994.</p>
+</li>
+<li>
+<p><a id="ref-wang-2006"></a> L. Wang et al. "High-quality Real-time Stereo using Adaptive Cost Aggregation and
+Dynamic Programming". Third International Symposium on 3D Data Processing, Visualization, and
+Transmission, 2006.</p>
+</li>
+<li>
+<p><a id="ref-tombari-2007"></a> F. Tombari et al. "Segmentation-Based Adaptive Support for Accurate Stereo
+Correspondence". <em>IEEE Pacific-Rim Symposium on Image and Video Technology</em>, 2007.</p>
+</li>
+<li>
+<p><a id="ref-yin-cooperstock-2004"></a> J. Yin and J. R. Cooperstock. "Improving Depth Maps by Nonlinear
+Diffusion". <em>WSCG</em>, 2004.</p>
+</li>
+<li>
+<p><a id="ref-hirschmuller-2006"></a> H. Hirschmüller. "Stereo Vision in Structured Environments by Consistent
+Semi-Global Matching". <em>CVPR</em>, 2006.</p>
+</li>
+<li>
+<p><a id="ref-harris-stephens-1988"></a> C. Harris and M. Stephens. "A Combined Corner and Edge Detector".
+Proceedings of The Fourth Alvey Vision Conference, 1988.</p>
+</li>
+<li>
+<p><a id="ref-lowe-1999"></a> D. G. Lowe. "Object Recognition from Local Scale-Invariant Features". Proceedings of
+the International Conference on Computer Vision, 1999.</p>
+</li>
+<li>
+<p><a id="ref-memin-perez-2002"></a> E. Mémin and P. Pérez. "Hierarchical Estimation and Segmentation of Dense
+Motion Fields". <em>International Journal of Computer Vision</em>, 2002.</p>
+</li>
+<li>
+<p><a id="ref-wang-zheng-2008"></a> Z. Wang and Z. Zheng. "A Region Based Stereo Matching Algorithm Using
+Cooperative Optimization". <em>CVPR</em>, 2008.</p>
+</li>
+<li>
+<p><a id="ref-brox-2004"></a> T. Brox et al. "High Accuracy Optical Flow Estimation Based on a Theory for Warping".
+Proc. 8th European Conference on Computer Vision, 2004.</p>
+</li>
+<li>
+<p><a id="ref-mainberger-2008"></a> M. Mainberger et al. "Is Dense Optic Flow Useful to Compute the Fundamental
+Matrix?". Lecture Notes in Computer Science, 2008.</p>
+</li>
+<li>
+<p><a id="ref-kang-2001"></a> S. Kang et al. "Handling Occlusions in Dense Multi-view Stereo". <em>CVPR</em>, vol. 1, p.
+103, 2001.</p>
+</li>
+<li>
+<p><a id="ref-black-1991"></a> M. J. Black. "Robust Dynamic Motion Estimation Over Time". <em>Computer Vision and
+Pattern Recognition</em>, 1991.</p>
+</li>
+<li>
+<p><a id="ref-bhusnurmath-taylor-2008"></a> A. Bhusnurmath and C. J. Taylor. "Solving Stereo Matching Problems using
+Interior Point Methods". <em>European Conference on Computer Vision</em>, 2008.</p>
+</li>
+<li>
+<p><a id="ref-slesareva-2005"></a> N. Slesareva et al. "Optic Flow Goes Stereo: A Variational Method for Estimating
+Discontinuity-Preserving Dense Disparity Maps". LNCS 3663, pp. 33-40, 2005.</p>
+</li>
+<li>
+<p><a id="ref-ohta-kanade-1985"></a> Y. Ohta and T. Kanade. "Stereo by Intra- and Inter-Scanline Search Using
+Dynamic Programming". <em>IEEE Trans. Pattern Analysis and Machine Intelligence</em>, Vol. PAMI-7, No. 2, 1985.</p>
+</li>
+<li>
+<p><a id="ref-csurka-1996"></a> G. Csurka, C. Zeller, Z. Zhang and O. Faugeras. "Characterizing the Uncertainty of
+the Fundamental Matrix". <em>Computer Vision and Image Understanding</em>, 1996.</p>
+</li>
+<li>
+<p><a id="ref-luong-faugeras-1995"></a> Q. T. Luong and O. D. Faugeras. "The Fundamental Matrix: theory,
+algorithms, and stability analysis". <em>IJCV</em>, 1995.</p>
+</li>
+<li>
+<p><a id="ref-zhang-1998"></a> Z. Zhang. "Determining the Epipolar Geometry and its Uncertainty: A Review".
+<em>International Journal of Computer Vision</em>, 27(3), 161-198, 1998.</p>
+</li>
+<li>
+<p><a id="ref-atzpadin-2004"></a> N. Atzpadin, P. Kauff, O. Schreer. "3D Analysis by Hybrid Recursive Matching for
+Real-Time Immersive Video Conferencing". <em>IEEE Trans. on Circuits and Systems for Video Technology</em>,
+Special Issue on Immersive Telecommunications, Vol. 14, pp. 321-334, 2004.</p>
+</li>
+<li>
+<p><a id="ref-press-2007"></a> W. H. Press, S. A. Teukolsky, W. T. Vetterling and B. P. Flannery. "Numerical
+Recipes: The Art of Scientific Computing". Cambridge University Press, 3rd edition, 2007.</p>
+</li>
+<li>
+<p><a id="ref-cormen-2001"></a> T. H. Cormen, C. E. Leiserson, R. L. Rivest and C. Stein. "Introduction to
+Algorithms". The MIT Press, 2nd edition, 2001.</p>
+</li>
+<li>
+<p><a id="ref-george-tjahjadi-1999"></a> M. George and T. Tjahjadi. "Multi-Resolution Optical Flow Estimation Using
+Adaptive Shifting". <em>International Conference on Image Processing</em>, 1999.</p>
+</li>
+<li>
+<p><a id="ref-alvarez-2000"></a> L. Alvarez, J. Wickert and J. Sánchez. "Reliable Estimation of Dense Optical Flow
+Fields with Large Displacements". <em>International Journal of Computer Vision</em>, Vol. 39, 2000.</p>
+</li>
+<li>
+<p><a id="ref-alvarez-1999"></a> L. Alvarez, J. Esclarin, M. Lefebure and J. Sánchez. "A PDE model for computing the
+Optical Flow". Proceedings of CEDYA XVI, 1999.</p>
+</li>
+<li>
+<p><a id="ref-bergen-1992"></a> J. R. Bergen, P. Ananda, K. J. Hanna and R. Hingorani. "Hierarchical Model-Based
+Motion Estimation". <em>European Conference on Computer Vision</em>, 1992.</p>
+</li>
+<li>
+<p><a id="ref-middlebury"></a> Datasets from the Middlebury Stereo Vision Page. www.middlebury.edu/stereo.</p>
+</li>
+<li>
+<p><a id="ref-zitnick-2004"></a> C.L. Zitnick, S.B. Kang, M. Uyttendaele, S. Winder, and R. Szeliski. "High-quality
+video view interpolation using a layered representation". <em>ACM SIGGRAPH / ACM Trans. on Graphics</em>, 2004.</p>
+</li>
+<li>
+<p><a id="ref-pollefeys-koch-gool-1999"></a> M. Pollefeys, R. Koch and L.V. Gool. "A simple and efficient
+rectification method for general motion". <em>ICCV</em>, 1999.</p>
+</li>
+<li>
+<p><a id="ref-hartley-1993"></a> R. Hartley. "Cheirality Invariants". Proc. D.A.R.P.A. Image Understanding Workshop,
+pp. 743-753, 1993.</p>
+</li>
+<li>
+<p><a id="ref-laveau-faugeras-1996"></a> S. Laveau and O. Faugeras. "Oriented Projective Geometry for Computer
+Vision". <em>Computer Vision - ECCV'96</em>, Lecture Notes in Computer Science, Vol. 1064, Springer-Verlag, pp.
+147-156, 1996.</p>
+</li>
+<li>
+<p><a id="ref-horn-schunck-1981"></a> B. Horn and B. Schunck. "Determining Optical Flow". <em>Artificial Intelligence</em>,
+17:185-203, 1981.</p>
+</li>
+<li>
+<p><a id="ref-perona-malik-1990"></a> P. Perona and J. Malik. "Scale-Space and Edge Detection Using Anisotropic
+Diffusion". <em>IEEE Transactions on Pattern Analysis and Machine Intelligence</em>, Vol. 12, No. 7, 1990.</p>
+</li>
+<li>
+<p><a id="ref-hornung-kobbelt-2006"></a> A. Hornung and L. Kobbelt. "Robust Reconstruction of Watertight 3D Models
+from Non-uniformly Sampled Point Clouds Without Normal Information". Eurographics Symposium on Geometry
+Processing, 2006.</p>
+</li>
+<li>
+<p><a id="ref-kazhdan-2006"></a> M. Kazhdan, M. Bolitho and H. Hoppe. "Poisson Surface Reconstruction". Eurographics
+Symposium on Geometry Processing, 2006.</p>
+</li>
+<li>
+<p><a id="ref-merrell-2007"></a> P. Merrell, A. Akbarzadeh, L. Wang, P. Mordohai, J. Frahm, R. Yang, D. Nistér, and M. Pollefeys. "Real-Time Visibility-Based Fusion of Depth Maps". <em>ICCV</em>, 2007.</p>
+</li>
+<li>
+<p><a id="ref-fischler-bolles-1981"></a> M. A. Fischler and R. C. Bolles. "Random Sample Consensus: A Paradigm for
+Model Fitting with Applications to Image Analysis and Automated Cartography". <em>Communications of the ACM</em>,
+24(6), 381-395, 1981.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Made with ♥ from <strong>BCN</strong></p>
+</footer>
+<script id="site-script" src="../../_/js/site.js" data-ui-root-path="../../_"></script>
+<script async src="../../_/js/vendor/highlight.js"></script>
+<script src="../../_/js/vendor/lunr.js"></script>
+<script src="../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../.." data-snippet-length="100" data-stylesheet="../../_/css/search.css"></script>
+<script async src="../../search-index.js"></script>
+  </body>
+</html>

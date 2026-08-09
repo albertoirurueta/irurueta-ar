@@ -1,0 +1,1009 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DualAbsoluteQuadricRobustEstimator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.calibration.estimators</a> &gt; <span class="el_source">DualAbsoluteQuadricRobustEstimator.java</span></div><h1>DualAbsoluteQuadricRobustEstimator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2016 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.calibration.estimators;
+
+import com.irurueta.ar.calibration.DualAbsoluteQuadric;
+import com.irurueta.geometry.PinholeCamera;
+import com.irurueta.geometry.estimators.LockedException;
+import com.irurueta.geometry.estimators.NotReadyException;
+import com.irurueta.numerical.robust.RobustEstimatorException;
+import com.irurueta.numerical.robust.RobustEstimatorMethod;
+
+import java.util.List;
+
+/**
+ * This is an abstract class for algorithms to robustly find the best
+ * DualAbsoluteQuadric (DAQ) for provided collection of cameras.
+ * Implementations of this class should be able to detect and discard outliers
+ * in order to find the best solution.
+ */
+@SuppressWarnings(&quot;DuplicatedCode&quot;)
+public abstract class DualAbsoluteQuadricRobustEstimator {
+
+    /**
+     * Default robust estimator method when none is provided.
+     */
+<span class="fc" id="L39">    public static final RobustEstimatorMethod DEFAULT_ROBUST_METHOD = RobustEstimatorMethod.LMEDS;</span>
+
+    /**
+     * Default amount of progress variation before notifying a change in
+     * estimation progress. By default, this is set to 5%.
+     */
+    public static final float DEFAULT_PROGRESS_DELTA = 0.05f;
+
+    /**
+     * Minimum allowed value for progress delta.
+     */
+    public static final float MIN_PROGRESS_DELTA = 0.0f;
+
+    /**
+     * Maximum allowed value for progress delta.
+     */
+    public static final float MAX_PROGRESS_DELTA = 1.0f;
+
+    /**
+     * Constant defining default confidence of the estimated result, which is
+     * 99%. This means that with a probability of 99% estimation will be
+     * accurate because chosen sub-samples will be inliers.
+     */
+    public static final double DEFAULT_CONFIDENCE = 0.99;
+
+    /**
+     * Default maximum allowed number of iterations.
+     */
+    public static final int DEFAULT_MAX_ITERATIONS = 5000;
+
+    /**
+     * Minimum allowed confidence value.
+     */
+    public static final double MIN_CONFIDENCE = 0.0;
+
+    /**
+     * Maximum allowed confidence value.
+     */
+    public static final double MAX_CONFIDENCE = 1.0;
+
+    /**
+     * Minimum allowed number of iterations.
+     */
+    public static final int MIN_ITERATIONS = 1;
+
+    /**
+     * Cameras to estimate dual absolute quadric (DAQ).
+     */
+    protected List&lt;PinholeCamera&gt; cameras;
+
+    /**
+     * Internal non-robust estimator of DAQ.
+     */
+    protected final LMSEDualAbsoluteQuadricEstimator daqEstimator;
+
+    /**
+     * Listener to be notified of events such as when estimation starts, ends or
+     * its progress significantly changes.
+     */
+    protected DualAbsoluteQuadricRobustEstimatorListener listener;
+
+    /**
+     * Indicates if this estimator is locked because an estimation is being
+     * computed.
+     */
+    protected boolean locked;
+
+    /**
+     * Amount of progress variation before notifying a progress change during
+     * estimation.
+     */
+    protected float progressDelta;
+
+    /**
+     * Amount of confidence expressed as a value between 0.0 and 1.0 (which is
+     * equivalent to 100%). The amount of confidence indicates the probability
+     * that the estimated result is correct. Usually this value will be close
+     * to 1.0, but not exactly 1.0.
+     */
+    protected double confidence;
+
+    /**
+     * Maximum allowed number of iterations. When the maximum number of
+     * iterations is exceeded, result will not be available, however an
+     * approximate result will be available for retrieval.
+     */
+    protected int maxIterations;
+
+    /**
+     * Constructor.
+     */
+<span class="fc" id="L130">    protected DualAbsoluteQuadricRobustEstimator() {</span>
+<span class="fc" id="L131">        progressDelta = DEFAULT_PROGRESS_DELTA;</span>
+<span class="fc" id="L132">        confidence = DEFAULT_CONFIDENCE;</span>
+<span class="fc" id="L133">        maxIterations = DEFAULT_MAX_ITERATIONS;</span>
+<span class="fc" id="L134">        daqEstimator = new LMSEDualAbsoluteQuadricEstimator();</span>
+<span class="fc" id="L135">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param listener listener to be notified of events such as when
+     *                 estimation starts, ends or its progress significantly changes.
+     */
+    protected DualAbsoluteQuadricRobustEstimator(final DualAbsoluteQuadricRobustEstimatorListener listener) {
+<span class="fc" id="L144">        this();</span>
+<span class="fc" id="L145">        this.listener = listener;</span>
+<span class="fc" id="L146">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param cameras list of cameras used to estimate the dual absolute
+     *                quadric (DAQ), which can be used to obtain pinhole camera intrinsic
+     *                parameters.
+     * @throws IllegalArgumentException if not enough cameras are provided
+     *                                  for default settings. Hence, at least 2 cameras must be provided.
+     */
+    protected DualAbsoluteQuadricRobustEstimator(final List&lt;PinholeCamera&gt; cameras) {
+<span class="fc" id="L158">        this();</span>
+<span class="fc" id="L159">        internalSetCameras(cameras);</span>
+<span class="fc" id="L160">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param cameras  list of cameras used to estimate the dual absolute
+     *                 quadric (DAQ), which can be used to obtain pinhole camera intrinsic
+     *                 parameters.
+     * @param listener listener to be notified of events such as when
+     *                 estimation starts, ends or its progress significantly changes.
+     * @throws IllegalArgumentException if not enough cameras are provided
+     *                                  for default settings. Hence, at least 2 cameras must be provided.
+     */
+    protected DualAbsoluteQuadricRobustEstimator(
+            final List&lt;PinholeCamera&gt; cameras, final DualAbsoluteQuadricRobustEstimatorListener listener) {
+<span class="fc" id="L175">        this(listener);</span>
+<span class="fc" id="L176">        internalSetCameras(cameras);</span>
+<span class="fc" id="L177">    }</span>
+
+    /**
+     * Returns boolean indicating whether camera skewness is assumed to be zero
+     * or not.
+     * Skewness determines whether LCD sensor cells are properly aligned or not,
+     * where zero indicates perfect alignment.
+     * Typically, skewness is a value equal or very close to zero.
+     *
+     * @return true if camera skewness is assumed to be zero, otherwise camera
+     * skewness is estimated.
+     */
+    public boolean isZeroSkewness() {
+<span class="fc" id="L190">        return daqEstimator.isZeroSkewness();</span>
+    }
+
+    /**
+     * Sets boolean indicating whether camera skewness is assumed to be zero or
+     * not.
+     * Skewness determines whether LCD sensor cells are properly aligned or not,
+     * where zero indicates perfect alignment.
+     * Typically, skewness is a value equal or very close to zero.
+     *
+     * @param zeroSkewness true if camera skewness is assumed to be zero,
+     *                     otherwise camera skewness is estimated.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setZeroSkewness(final boolean zeroSkewness) throws LockedException {
+<span class="fc bfc" id="L205" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L206">            throw new LockedException();</span>
+        }
+
+<span class="fc" id="L209">        daqEstimator.setZeroSkewness(zeroSkewness);</span>
+<span class="fc" id="L210">    }</span>
+
+    /**
+     * Returns boolean indicating whether principal point is assumed to be at
+     * origin of coordinates or not.
+     * Typically principal point is located at image center (origin of
+     * coordinates), and usually matches the center of radial distortion if
+     * it is taken into account.
+     *
+     * @return true if principal point is assumed to be at origin of
+     * coordinates, false if principal point must be estimated
+     */
+    public boolean isPrincipalPointAtOrigin() {
+<span class="fc" id="L223">        return daqEstimator.isPrincipalPointAtOrigin();</span>
+    }
+
+    /**
+     * Sets boolean indicating whether principal point is assumed to be at
+     * origin of coordinates or not.
+     * Typically principal point is located at image center (origin of
+     * coordinates), and usually matches the center of radial distortion if it
+     * is taken into account.
+     *
+     * @param principalPointAtOrigin true if principal point is assumed to be at
+     *                               origin of coordinates, false if principal point must be estimated.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setPrincipalPointAtOrigin(final boolean principalPointAtOrigin) throws LockedException {
+<span class="fc bfc" id="L238" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L239">            throw new LockedException();</span>
+        }
+
+<span class="fc" id="L242">        daqEstimator.setPrincipalPointAtOrigin(principalPointAtOrigin);</span>
+<span class="fc" id="L243">    }</span>
+
+    /**
+     * Returns boolean indicating whether aspect ratio of focal distances (i.e.
+     * vertical focal distance divided by horizontal focal distance) is known or
+     * not.
+     * Notice that focal distance aspect ratio is not related to image size
+     * aspect ratio. Typically, LCD sensor cells are square and hence aspect
+     * ratio of focal distances is known and equal to 1.
+     * This value is only taken into account if skewness is assumed to be zero,
+     * otherwise it is ignored.
+     *
+     * @return true if focal distance aspect ratio is known, false otherwise.
+     */
+    public boolean isFocalDistanceAspectRatioKnown() {
+<span class="fc" id="L258">        return daqEstimator.isFocalDistanceAspectRatioKnown();</span>
+    }
+
+    /**
+     * Sets value indicating whether aspect ratio of focal distances (i.e.
+     * vertical focal distance divided by horizontal focal distance) is known or
+     * not.
+     * Notice that focal distance aspect ratio is not related to image size
+     * aspect ratio. Typically, LCD sensor cells are square and hence aspect
+     * ratio of focal distances is known and equal to 1.
+     * This value is only taken into account if skewness is assumed to be zero,
+     * otherwise it is ignored.
+     *
+     * @param focalDistanceAspectRatioKnown true if focal distance aspect ratio
+     *                                      is known, false otherwise.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setFocalDistanceAspectRatioKnown(final boolean focalDistanceAspectRatioKnown) throws LockedException {
+<span class="fc bfc" id="L276" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L277">            throw new LockedException();</span>
+        }
+
+<span class="fc" id="L280">        daqEstimator.setFocalDistanceAspectRatioKnown(focalDistanceAspectRatioKnown);</span>
+<span class="fc" id="L281">    }</span>
+
+    /**
+     * Returns aspect ratio of focal distances (i.e. vertical focal distance
+     * divided by horizontal focal distance).
+     * This value is only taken into account if skewness is assumed to be zero
+     * and focal distance aspect ratio is marked as known, otherwise it is
+     * ignored.
+     * By default, this is 1.0, since it is taken into account that typically
+     * LCD sensor cells are square and hence aspect ratio focal distances is
+     * known and equal to 1.
+     * Notice that focal distance aspect ratio is not related to image size
+     * aspect ratio.
+     * Notice that a negative aspect ratio indicates that vertical axis is
+     * reversed. This can be useful in some situations where image vertical
+     * coordinates are reversed respect to the physical world (i.e. in computer
+     * graphics typically image vertical coordinates go downwards, while in
+     * physical world they go upwards).
+     *
+     * @return aspect ratio of focal distances.
+     */
+    public double getFocalDistanceAspectRatio() {
+<span class="fc" id="L303">        return daqEstimator.getFocalDistanceAspectRatio();</span>
+    }
+
+    /**
+     * Sets aspect ratio of focal distances (i.e. vertical focal distance
+     * divided by horizontal focal distance).
+     * This value is only taken into account if skewness is assumed to be zero
+     * and focal distance aspect ratio is marked as known, otherwise it is
+     * ignored.
+     * By default, this is 1.0, since it is taken into account that typically
+     * LCD sensor cells are square and hence aspect ratio focal distances is
+     * known and equal to 1.
+     * Notice that focal distance aspect ratio is not related to image size
+     * aspect ratio
+     * Notice that a negative aspect ratio indicates that vertical axis is
+     * reversed. This can be useful in some situations where image vertical
+     * coordinates are reversed respect to the physical world (i.e. in computer
+     * graphics typically image vertical coordinates go downwards, while in
+     * physical world they go upwards).
+     *
+     * @param focalDistanceAspectRatio aspect ratio of focal distances to be set.
+     * @throws LockedException          if estimator is locked.
+     * @throws IllegalArgumentException if focal distance aspect ratio is too
+     *                                  close to zero, as it might produce numerical instabilities.
+     */
+    public void setFocalDistanceAspectRatio(final double focalDistanceAspectRatio) throws LockedException {
+<span class="fc bfc" id="L329" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L330">            throw new LockedException();</span>
+        }
+
+<span class="fc" id="L333">        daqEstimator.setFocalDistanceAspectRatio(focalDistanceAspectRatio);</span>
+<span class="fc" id="L334">    }</span>
+
+    /**
+     * Indicates whether a singular DAQ is enforced or not.
+     * Dual Absolute Quadric is singular (has rank 3) in any projective space,
+     * however, due to noise in samples, estimated DAQ might not be fully
+     * singular.
+     *
+     * @return true when singular DAQ is enforced, false otherwise.
+     */
+    public boolean isSingularityEnforced() {
+<span class="fc" id="L345">        return daqEstimator.isSingularityEnforced();</span>
+    }
+
+    /**
+     * Specifies whether a singular DAQ is enforced or not.
+     * Dual Absolute Quadric is singular (has rank 3) in any projective space,
+     * however, due to noise in samples, estimated DAQ might not be fully
+     * singular.
+     *
+     * @param singularityEnforced true when singular DAQ is enforced, false
+     *                            otherwise.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setSingularityEnforced(final boolean singularityEnforced) throws LockedException {
+<span class="fc bfc" id="L359" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L360">            throw new LockedException();</span>
+        }
+<span class="fc" id="L362">        daqEstimator.setSingularityEnforced(singularityEnforced);</span>
+<span class="fc" id="L363">    }</span>
+
+    /**
+     * Indicates whether enforced singularity will be validated by checking that
+     * determinant of estimated Dual Absolute Quadric (DAQ) is below a certain
+     * threshold.
+     *
+     * @return true if enforced singularity is validated, false otherwise.
+     */
+    public boolean isEnforcedSingularityValidated() {
+<span class="fc" id="L373">        return daqEstimator.isEnforcedSingularityValidated();</span>
+    }
+
+    /**
+     * Specifies whether enforced singularity will be validated by checking that
+     * determinant of estimated Dual Absolute Quadric (DAQ) is below a certain
+     * threshold.
+     *
+     * @param validateEnforcedSingularity true if enforced singularity is
+     *                                    validated, false otherwise.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setEnforcedSingularityValidated(final boolean validateEnforcedSingularity) throws LockedException {
+<span class="fc bfc" id="L386" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L387">            throw new LockedException();</span>
+        }
+<span class="fc" id="L389">        daqEstimator.setEnforcedSingularityValidated(validateEnforcedSingularity);</span>
+<span class="fc" id="L390">    }</span>
+
+    /**
+     * Returns threshold to determine whether estimated Dual Absolute Quadric
+     * (DAQ) has rank 3 or not when validation is enabled.
+     *
+     * @return threshold to determine whether estimated DAQ has rank 3 or not.
+     */
+    public double getDeterminantThreshold() {
+<span class="fc" id="L399">        return daqEstimator.getDeterminantThreshold();</span>
+    }
+
+    /**
+     * Sets threshold to determine whether estimated Dual Absolute Quadric (DAQ)
+     * has rank 3 or not when validation is enabled.
+     *
+     * @param determinantThreshold threshold to determine whether estimated DAQ
+     *                             has rank 3 or not.
+     * @throws IllegalArgumentException if provided value is zero or negative.
+     * @throws LockedException          if estimator is locked.
+     */
+    public void setDeterminantThreshold(final double determinantThreshold) throws LockedException {
+<span class="fc bfc" id="L412" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L413">            throw new LockedException();</span>
+        }
+<span class="fc" id="L415">        daqEstimator.setDeterminantThreshold(determinantThreshold);</span>
+<span class="fc" id="L416">    }</span>
+
+    /**
+     * Returns reference to listener to be notified of events such as when
+     * estimation starts, ends or its progress significantly changes.
+     *
+     * @return listener to be notified of events.
+     */
+    public DualAbsoluteQuadricRobustEstimatorListener getListener() {
+<span class="fc" id="L425">        return listener;</span>
+    }
+
+    /**
+     * Sets listener to be notified of events such as when estimation starts,
+     * ends or its progress significantly changes.
+     *
+     * @param listener listener to be notified of events.
+     * @throws LockedException if robust estimator is locked.
+     */
+    public void setListener(final DualAbsoluteQuadricRobustEstimatorListener listener) throws LockedException {
+<span class="fc bfc" id="L436" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L437">            throw new LockedException();</span>
+        }
+<span class="fc" id="L439">        this.listener = listener;</span>
+<span class="fc" id="L440">    }</span>
+
+    /**
+     * Indicates whether listener has been provided and is available for
+     * retrieval.
+     *
+     * @return true if available, false otherwise.
+     */
+    public boolean isListenerAvailable() {
+<span class="fc bfc" id="L449" title="All 2 branches covered.">        return listener != null;</span>
+    }
+
+    /**
+     * Indicates whether this instance is locked.
+     *
+     * @return true if this estimator is busy estimating the Dual Absolute
+     * Quadric, false otherwise.
+     */
+    public boolean isLocked() {
+<span class="fc" id="L459">        return locked;</span>
+    }
+
+    /**
+     * Returns amount of progress variation before notifying a progress change
+     * during estimation.
+     *
+     * @return amount of progress variation before notifying a progress change
+     * during estimation.
+     */
+    public float getProgressDelta() {
+<span class="fc" id="L470">        return progressDelta;</span>
+    }
+
+    /**
+     * Sets amount of progress variation before notifying a progress change
+     * during estimation.
+     *
+     * @param progressDelta amount of progress variation before notifying a
+     *                      progress change during estimation.
+     * @throws IllegalArgumentException if progress delta is less than zero or
+     *                                  greater than 1.
+     * @throws LockedException          if this estimator is locked because an estimation
+     *                                  is being computed.
+     */
+    public void setProgressDelta(final float progressDelta) throws LockedException {
+<span class="fc bfc" id="L485" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L486">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L488" title="All 4 branches covered.">        if (progressDelta &lt; MIN_PROGRESS_DELTA || progressDelta &gt; MAX_PROGRESS_DELTA) {</span>
+<span class="fc" id="L489">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L491">        this.progressDelta = progressDelta;</span>
+<span class="fc" id="L492">    }</span>
+
+    /**
+     * Returns amount of confidence expressed as a value between 0.0 and 1.0
+     * (which is equivalent to 100%). The amount of confidence indicates the
+     * probability that the estimated result is correct. Usually this value will
+     * be close to 1.0, but not exactly 1.0.
+     *
+     * @return amount of confidence as a value between 0.0 and 1.0.
+     */
+    public double getConfidence() {
+<span class="fc" id="L503">        return confidence;</span>
+    }
+
+    /**
+     * Sets amount of confidence expressed as a value between 0.0 and 1.0 (which
+     * is equivalent to 100%). The amount of confidence indicates the
+     * probability that the estimated result is correct. Usually this value will
+     * be close to 1.0, but not exactly 1.0.
+     *
+     * @param confidence confidence to be set as a value between 0.0 and 1.0.
+     * @throws IllegalArgumentException if provided value is not between 0.0 and
+     *                                  1.0.
+     * @throws LockedException          if this estimator is locked because an estimator
+     *                                  is being computed.
+     */
+    public void setConfidence(final double confidence) throws LockedException {
+<span class="fc bfc" id="L519" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L520">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L522" title="All 4 branches covered.">        if (confidence &lt; MIN_CONFIDENCE || confidence &gt; MAX_CONFIDENCE) {</span>
+<span class="fc" id="L523">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L525">        this.confidence = confidence;</span>
+<span class="fc" id="L526">    }</span>
+
+    /**
+     * Returns maximum allowed number of iterations. If maximum allowed number
+     * of iterations is achieved without converging to a result when calling
+     * estimate(), a RobustEstimatorException will be raised.
+     *
+     * @return maximum allowed number of iterations.
+     */
+    public int getMaxIterations() {
+<span class="fc" id="L536">        return maxIterations;</span>
+    }
+
+    /**
+     * Sets maximum allowed number of iterations. When the maximum number of
+     * iterations is exceeded, result will not be available, however an
+     * approximate result will be available for retrieval.
+     *
+     * @param maxIterations maximum allowed number of iterations to be set.
+     * @throws IllegalArgumentException if provided value is less than 1.
+     * @throws LockedException          if this estimator is locked because an estimation
+     *                                  is being computed.
+     */
+    public void setMaxIterations(final int maxIterations) throws LockedException {
+<span class="fc bfc" id="L550" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L551">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L553" title="All 2 branches covered.">        if (maxIterations &lt; MIN_ITERATIONS) {</span>
+<span class="fc" id="L554">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L556">        this.maxIterations = maxIterations;</span>
+<span class="fc" id="L557">    }</span>
+
+    /**
+     * Obtains the list of cameras used to estimate the Dual Absolute Quadric
+     * (DAQ).
+     *
+     * @return list of cameras to estimate the DAQ.
+     */
+    public List&lt;PinholeCamera&gt; getCameras() {
+<span class="fc" id="L566">        return cameras;</span>
+    }
+
+    /**
+     * Sets the list of cameras used to estimate the Dual Absolute Quadric
+     * (DAQ).
+     *
+     * @param cameras list of cameras used to estimate the DAQ.
+     * @throws IllegalArgumentException if list is null.
+     * @throws LockedException          if estimator is locked.
+     */
+    public final void setCameras(final List&lt;PinholeCamera&gt; cameras) throws LockedException {
+<span class="fc bfc" id="L578" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L579">            throw new LockedException();</span>
+        }
+<span class="fc" id="L581">        internalSetCameras(cameras);</span>
+<span class="fc" id="L582">    }</span>
+
+    /**
+     * Returns minimum number of required cameras needed to estimate the
+     * Dual Absolute Quadric (DAQ).
+     * At least 8 equations are needed to solve the DAQ
+     * For each imposed constraint, one less equation is required.
+     * Depending on the number of constraints more or less cameras will be
+     * required.
+     * If zero skewness is enforced, a solution is available with 8 cameras.
+     * If zero skewness and focal distance aspect ratio is known, then a
+     * solution is available with 4 cameras.
+     * If principal point is located at origin, then a solution is available
+     * with 4 cameras.
+     * If zero skewness and principal point at origin are enforced, then a
+     * solution is available with 3 cameras
+     * If zero skewness is enforced, focal distance aspect ratio is known and
+     * principal point is at origin, then a solution is available with 2
+     * cameras.
+     * NOTE: minimum number of cameras considers only the cameras providing
+     * additional information. If a camera is equivalent to another one or does
+     * not provide additional information (such as a camera at the origin with
+     * no rotation), then more cameras will be needed.
+     *
+     * @return minimum number of required cameras needed to estimate the Dual
+     * Absolute Quadric (DAQ) or -1 if constraints configurations is not valid.
+     */
+    public int getMinNumberOfRequiredCameras() {
+<span class="fc" id="L610">        return daqEstimator.getMinNumberOfRequiredCameras();</span>
+    }
+
+    /**
+     * Indicates whether current constraints are enough to start the estimation.
+     * In order to obtain a linear solution for the DAQ estimation, we need at
+     * least the principal point at origin constraint.
+     *
+     * @return true if constraints are valid, false otherwise.
+     */
+    public boolean areValidConstraints() {
+<span class="fc" id="L621">        return daqEstimator.areValidConstraints();</span>
+    }
+
+    /**
+     * Returns value indicating whether required data has been provided so that
+     * DAQ estimation can start.
+     * If true, estimator is ready to compute the DAQ, otherwise more data needs
+     * to be provided.
+     *
+     * @return true if estimator is ready, false otherwise.
+     */
+    public boolean isReady() {
+<span class="fc bfc" id="L633" title="All 6 branches covered.">        return cameras != null &amp;&amp; cameras.size() &gt;= getMinNumberOfRequiredCameras() &amp;&amp; areValidConstraints();</span>
+    }
+
+    /**
+     * Returns quality scores corresponding to each camera.
+     * The larger the score value the better the quality of the camera.
+     * This implementation always returns null.
+     * Subclasses using quality scores must implement proper behaviour.
+     *
+     * @return quality scores corresponding to each camera.
+     */
+    public double[] getQualityScores() {
+<span class="fc" id="L645">        return null;</span>
+    }
+
+    /**
+     * Sets quality scores corresponding to each camera.
+     * The larger the score value the better the quality of the camera.
+     * This implementation makes no action.
+     * Subclasses using quality scores must implement proper behaviour.
+     *
+     * @param qualityScores quality scores corresponding to each camera.
+     * @throws LockedException          if robust estimator is locked because an
+     *                                  estimation is already in progress.
+     * @throws IllegalArgumentException if provided quality scores length is
+     *                                  smaller than minimum required number of cameras.
+     */
+    public void setQualityScores(final double[] qualityScores) throws LockedException {
+<span class="fc" id="L661">    }</span>
+
+    /**
+     * Estimates the Dual Absolute Quadric using provided cameras.
+     *
+     * @return estimated Dual Absolute Quadric (DAQ).
+     * @throws LockedException          if robust estimator is locked.
+     * @throws NotReadyException        if no valid input data has already been
+     *                                  provided.
+     * @throws RobustEstimatorException if estimation fails for any reason
+     *                                  (i.e. numerical instability, no solution available, etc).
+     */
+    public abstract DualAbsoluteQuadric estimate() throws LockedException, NotReadyException, RobustEstimatorException;
+
+    /**
+     * Returns method being used for robust estimation.
+     *
+     * @return method being used for robust estimation.
+     */
+    public abstract RobustEstimatorMethod getMethod();
+
+    /**
+     * Creates a dual absolute quadric robust estimator using provided method.
+     *
+     * @param method method of a robust estimator algorithm to estimate best
+     *               DAQ.
+     * @return an instance of a dual absolute quadric robust estimator.
+     */
+    public static DualAbsoluteQuadricRobustEstimator create(final RobustEstimatorMethod method) {
+<span class="fc bfc" id="L690" title="All 5 branches covered.">        return switch (method) {</span>
+<span class="fc" id="L691">            case MSAC -&gt; new MSACDualAbsoluteQuadricRobustEstimator();</span>
+<span class="fc" id="L692">            case RANSAC -&gt; new RANSACDualAbsoluteQuadricRobustEstimator();</span>
+<span class="fc" id="L693">            case PROSAC -&gt; new PROSACDualAbsoluteQuadricRobustEstimator();</span>
+<span class="fc" id="L694">            case PROMEDS -&gt; new PROMedSDualAbsoluteQuadricRobustEstimator();</span>
+<span class="fc" id="L695">            default -&gt; new LMedSDualAbsoluteQuadricRobustEstimator();</span>
+        };
+    }
+
+    /**
+     * Creates a dual absolute quadric robust estimator using provided
+     * cameras.
+     *
+     * @param cameras       list of cameras.
+     * @param qualityScores quality scores corresponding to each camera.
+     * @param method        method of a robust estimator algorithm to estimate best
+     *                      DAQ.
+     * @return an instance of a dual absolute quadric robust estimator.
+     * @throws IllegalArgumentException if provided list of cameras and quality
+     *                                  scores don't have the same size or size is too short.
+     */
+    public static DualAbsoluteQuadricRobustEstimator create(
+            final List&lt;PinholeCamera&gt; cameras, final double[] qualityScores, final RobustEstimatorMethod method) {
+<span class="fc bfc" id="L713" title="All 5 branches covered.">        return switch (method) {</span>
+<span class="fc" id="L714">            case MSAC -&gt; new MSACDualAbsoluteQuadricRobustEstimator(cameras);</span>
+<span class="fc" id="L715">            case RANSAC -&gt; new RANSACDualAbsoluteQuadricRobustEstimator(cameras);</span>
+<span class="fc" id="L716">            case PROSAC -&gt; new PROSACDualAbsoluteQuadricRobustEstimator(cameras, qualityScores);</span>
+<span class="fc" id="L717">            case PROMEDS -&gt; new PROMedSDualAbsoluteQuadricRobustEstimator(cameras, qualityScores);</span>
+<span class="fc" id="L718">            default -&gt; new LMedSDualAbsoluteQuadricRobustEstimator(cameras);</span>
+        };
+    }
+
+    /**
+     * Creates a dual absolute quadric robust estimator using provided
+     * cameras.
+     *
+     * @param cameras list of cameras.
+     * @param method  method of a robust estimator algorithm to estimate
+     *                best DAQ.
+     * @return an instance of a dual absolute quadric robust estimator.
+     * @throws IllegalArgumentException if provided list of cameras is too
+     *                                  short.
+     */
+    public static DualAbsoluteQuadricRobustEstimator create(
+            final List&lt;PinholeCamera&gt; cameras, final RobustEstimatorMethod method) {
+<span class="fc bfc" id="L735" title="All 5 branches covered.">        return switch (method) {</span>
+<span class="fc" id="L736">            case MSAC -&gt; new MSACDualAbsoluteQuadricRobustEstimator(cameras);</span>
+<span class="fc" id="L737">            case RANSAC -&gt; new RANSACDualAbsoluteQuadricRobustEstimator(cameras);</span>
+<span class="fc" id="L738">            case PROSAC -&gt; new PROSACDualAbsoluteQuadricRobustEstimator(cameras);</span>
+<span class="fc" id="L739">            case PROMEDS -&gt; new PROMedSDualAbsoluteQuadricRobustEstimator(cameras);</span>
+<span class="fc" id="L740">            default -&gt; new LMedSDualAbsoluteQuadricRobustEstimator(cameras);</span>
+        };
+    }
+
+    /**
+     * Creates a dual absolute quadric robust estimator using default method.
+     *
+     * @return an instance of a dual absolute quadric robust estimator.
+     */
+    public static DualAbsoluteQuadricRobustEstimator create() {
+<span class="fc" id="L750">        return create(DEFAULT_ROBUST_METHOD);</span>
+    }
+
+    /**
+     * Creates a dual absolute quadric robust estimator using provided
+     * cameras.
+     *
+     * @param cameras       list of cameras.
+     * @param qualityScores quality scores corresponding to each camera.
+     * @return an instance of a dual absolute quadric robust estimator.
+     * @throws IllegalArgumentException if provided list of cameras and quality
+     *                                  scores don't have the same size or size is too short.
+     */
+    public static DualAbsoluteQuadricRobustEstimator create(
+            final List&lt;PinholeCamera&gt; cameras, final double[] qualityScores) {
+<span class="fc" id="L765">        return create(cameras, qualityScores, DEFAULT_ROBUST_METHOD);</span>
+    }
+
+    /**
+     * Creates a dual absolute quadric robust estimator using provided
+     * cameras.
+     *
+     * @param cameras list of cameras.
+     * @return an instance of a dual absolute quadric robust estimator.
+     * @throws IllegalArgumentException if provided list of cameras is too
+     *                                  short.
+     */
+    public static DualAbsoluteQuadricRobustEstimator create(final List&lt;PinholeCamera&gt; cameras) {
+<span class="fc" id="L778">        return create(cameras, DEFAULT_ROBUST_METHOD);</span>
+    }
+
+    /**
+     * Computes the residual between a dual absolute quadric (DAQ) and a pinhole
+     * camera.
+     *
+     * @param daq    a dual absolute quadric (DAQ).
+     * @param camera a camera.
+     * @return residual.
+     */
+    protected double residual(final DualAbsoluteQuadric daq, final PinholeCamera camera) {
+
+<span class="fc" id="L791">        daq.normalize();</span>
+<span class="fc" id="L792">        camera.normalize();</span>
+<span class="fc" id="L793">        final var cameraMatrix = camera.getInternalMatrix();</span>
+
+<span class="fc" id="L795">        final var p11 = cameraMatrix.getElementAt(0, 0);</span>
+<span class="fc" id="L796">        final var p21 = cameraMatrix.getElementAt(1, 0);</span>
+<span class="fc" id="L797">        final var p31 = cameraMatrix.getElementAt(2, 0);</span>
+
+<span class="fc" id="L799">        final var p12 = cameraMatrix.getElementAt(0, 1);</span>
+<span class="fc" id="L800">        final var p22 = cameraMatrix.getElementAt(1, 1);</span>
+<span class="fc" id="L801">        final var p32 = cameraMatrix.getElementAt(2, 1);</span>
+
+<span class="fc" id="L803">        final var p13 = cameraMatrix.getElementAt(0, 2);</span>
+<span class="fc" id="L804">        final var p23 = cameraMatrix.getElementAt(1, 2);</span>
+<span class="fc" id="L805">        final var p33 = cameraMatrix.getElementAt(2, 2);</span>
+
+<span class="fc" id="L807">        final var p14 = cameraMatrix.getElementAt(0, 3);</span>
+<span class="fc" id="L808">        final var p24 = cameraMatrix.getElementAt(1, 3);</span>
+<span class="fc" id="L809">        final var p34 = cameraMatrix.getElementAt(2, 3);</span>
+
+<span class="fc" id="L811">        var residual = 0.0;</span>
+<span class="pc bpc" id="L812" title="1 of 2 branches missed.">        if (isPrincipalPointAtOrigin()) {</span>
+<span class="pc bpc" id="L813" title="1 of 2 branches missed.">            if (isZeroSkewness()) {</span>
+<span class="pc bpc" id="L814" title="1 of 2 branches missed.">                if (isFocalDistanceAspectRatioKnown()) {</span>
+                    // p2T*daq*p1 = 0
+<span class="fc" id="L816">                    residual += residual2ndRowAnd1stRow(daq, p11, p21, p12, p22, p13, p23, p14, p24);</span>
+
+                    // p3T*daq*p1 = 0
+<span class="fc" id="L819">                    residual += residual3rdRowAnd1stRow(daq, p11, p31, p12, p32, p13, p33, p14, p34);</span>
+
+                    // p3T*daw*p2 = 0
+<span class="fc" id="L822">                    residual += residual3rdRowAnd2ndRow(daq, p21, p31, p22, p32, p23, p33, p24, p34);</span>
+
+                    // p1T*daq*p1*aspectRatio^2 = p2T*daq*p1
+<span class="fc" id="L825">                    residual += residual1stRowEqualTo2ndRow(daq, p11, p21, p12, p22, p13, p23, p14, p24);</span>
+                } else {
+                    // p2T*daq*p1 = 0
+<span class="nc" id="L828">                    residual += residual2ndRowAnd1stRow(daq, p11, p21, p12, p22, p13, p23, p14, p24);</span>
+
+                    // p3T*daq*p1 = 0
+<span class="nc" id="L831">                    residual += residual3rdRowAnd1stRow(daq, p11, p31, p12, p32, p13, p33, p14, p34);</span>
+
+                    //p3T*daq*p2 = 0
+<span class="nc" id="L834">                    residual += residual3rdRowAnd2ndRow(daq, p21, p31, p22, p32, p23, p33, p24, p34);</span>
+                }
+            } else {
+                // p3T*daq*p1 = 0
+<span class="nc" id="L838">                residual += residual3rdRowAnd1stRow(daq, p11, p31, p12, p32, p13, p33, p14, p34);</span>
+
+                // p3T*daq*p2 = 0
+<span class="nc" id="L841">                residual += residual3rdRowAnd2ndRow(daq, p21, p31, p22, p32, p23, p33, p24, p34);</span>
+            }
+        } else {
+<span class="nc" id="L844">            return Double.MAX_VALUE;</span>
+        }
+
+<span class="fc" id="L847">        return residual;</span>
+    }
+
+    /**
+     * Computes residual for the equation p2T*daq*p1.
+     *
+     * @param daq estimated DAQ.
+     * @param p11 element (1,1) of camera matrix.
+     * @param p21 element (2,1) of camera matrix.
+     * @param p12 element (1,2) of camera matrix.
+     * @param p22 element (2,2) of camera matrix.
+     * @param p13 element (1,3) of camera matrix.
+     * @param p23 element (2,3) of camera matrix.
+     * @param p14 element (1,4) of camera matrix.
+     * @param p24 element (2,4) of camera matrix.
+     * @return obtained residual (ideally should be zero).
+     */
+    private double residual2ndRowAnd1stRow(
+            final DualAbsoluteQuadric daq, final double p11, final double p21, final double p12, final double p22,
+            final double p13, final double p23, final double p14, final double p24) {
+
+<span class="fc" id="L868">        final var a = daq.getA();</span>
+<span class="fc" id="L869">        final var b = daq.getB();</span>
+<span class="fc" id="L870">        final var c = daq.getC();</span>
+<span class="fc" id="L871">        final var d = daq.getD();</span>
+<span class="fc" id="L872">        final var e = daq.getE();</span>
+<span class="fc" id="L873">        final var f = daq.getF();</span>
+<span class="fc" id="L874">        final var g = daq.getG();</span>
+<span class="fc" id="L875">        final var h = daq.getH();</span>
+<span class="fc" id="L876">        final var i = daq.getI();</span>
+<span class="fc" id="L877">        final var j = daq.getJ();</span>
+
+<span class="fc" id="L879">        return a * p21 * p11 + b * p22 * p12 + c * p23 * p13 + d * (p22 * p11 + p21 * p12)</span>
+                + e * (p23 * p12 + p22 * p13) + f * (p23 * p11 + p21 * p13)
+                + g * (p24 * p11 + p21 * p14) + h * (p24 * p12 + p22 * p14)
+                + i * (p24 * p13 + p23 * p14) + j * p24 * p14;
+    }
+
+    /**
+     * Computes residual for the equation p3T*daq*p1.
+     *
+     * @param daq estimated DAQ.
+     * @param p11 element (1,1) of camera matrix.
+     * @param p31 element (3,1) of camera matrix.
+     * @param p12 element (1,2) of camera matrix.
+     * @param p32 element (3,2) of camera matrix.
+     * @param p13 element (1,3) of camera matrix.
+     * @param p33 element (3,3) of camera matrix.
+     * @param p14 element (1,4) of camera matrix.
+     * @param p34 element (3,4) of camera matrix.
+     * @return obtained residual (ideally should be zero).
+     */
+    private double residual3rdRowAnd1stRow(
+            final DualAbsoluteQuadric daq, final double p11, final double p31, final double p12, final double p32,
+            final double p13, final double p33, final double p14, final double p34) {
+
+<span class="fc" id="L903">        final var a = daq.getA();</span>
+<span class="fc" id="L904">        final var b = daq.getB();</span>
+<span class="fc" id="L905">        final var c = daq.getC();</span>
+<span class="fc" id="L906">        final var d = daq.getD();</span>
+<span class="fc" id="L907">        final var e = daq.getE();</span>
+<span class="fc" id="L908">        final var f = daq.getF();</span>
+<span class="fc" id="L909">        final var g = daq.getG();</span>
+<span class="fc" id="L910">        final var h = daq.getH();</span>
+<span class="fc" id="L911">        final var i = daq.getI();</span>
+<span class="fc" id="L912">        final var j = daq.getJ();</span>
+
+<span class="fc" id="L914">        return a * p31 * p11 + b * p32 * p12 + c * p33 * p13 + d * (p32 * p11 + p32 * p12)</span>
+                + e * (p33 * p12 + p32 * p13) + f * (p33 * p11 + p31 * p13)
+                + g * (p34 * p11 + p31 * p14) + h * (p34 * p12 + p32 * p14)
+                + i * (p34 * p13 + p13 * p14) + j * p34 * p14;
+    }
+
+    /**
+     * Computes residual for the equation p3T*daq*p2.
+     *
+     * @param daq estimated DAQ.
+     * @param p21 element (2,1) of camera matrix.
+     * @param p31 element (3,1) of camera matrix.
+     * @param p22 element (2,2) of camera matrix.
+     * @param p32 element (3,2) of camera matrix.
+     * @param p23 element (2,3) of camera matrix.
+     * @param p33 element (3,3) of camera matrix.
+     * @param p24 element (2,4) of camera matrix.
+     * @param p34 element (3,4) of camera matrix.
+     * @return obtained residual (ideally should be zero).
+     */
+    private double residual3rdRowAnd2ndRow(
+            final DualAbsoluteQuadric daq, final double p21, final double p31, final double p22, final double p32,
+            final double p23, final double p33, final double p24, final double p34) {
+
+<span class="fc" id="L938">        final var a = daq.getA();</span>
+<span class="fc" id="L939">        final var b = daq.getB();</span>
+<span class="fc" id="L940">        final var c = daq.getC();</span>
+<span class="fc" id="L941">        final var d = daq.getD();</span>
+<span class="fc" id="L942">        final var e = daq.getE();</span>
+<span class="fc" id="L943">        final var f = daq.getF();</span>
+<span class="fc" id="L944">        final var g = daq.getG();</span>
+<span class="fc" id="L945">        final var h = daq.getH();</span>
+<span class="fc" id="L946">        final var i = daq.getI();</span>
+<span class="fc" id="L947">        final var j = daq.getJ();</span>
+
+<span class="fc" id="L949">        return a * p31 * p21 + b * p32 * p22 + c * p33 * p23 + d * (p32 * p21 + p31 * p22)</span>
+                + e * (p33 * p22 + p32 * p23) + f * (p33 * p21 + p31 * p23)
+                + g * (p34 * p21 + p31 * p24) + h * (p34 * p22 + p32 * p24)
+                + i * (p34 * p23 + p33 * p24) + j * p34 * p24;
+    }
+
+    /**
+     * Computes residual for the equation p1T*daq*p1 = r^2*p2T*daq*p2.
+     *
+     * @param daq estimated DAQ.
+     * @param p11 element (1,1) of camera matrix.
+     * @param p21 element (2,1) of camera matrix.
+     * @param p12 element (1,2) of camera matrix.
+     * @param p22 element (2,2) of camera matrix.
+     * @param p13 element (1,3) of camera matrix.
+     * @param p23 element (2,3) of camera matrix.
+     * @param p14 element (1,4) of camera matrix.
+     * @param p24 element (2,4) of camera matrix.
+     * @return obtained residual (ideally should be zero).
+     */
+    private double residual1stRowEqualTo2ndRow(
+            final DualAbsoluteQuadric daq, final double p11, final double p21, final double p12, final double p22,
+            final double p13, final double p23, final double p14, final double p24) {
+
+<span class="fc" id="L973">        final var r = getFocalDistanceAspectRatio();</span>
+<span class="fc" id="L974">        final var r2 = r * r;</span>
+
+<span class="fc" id="L976">        final var a = daq.getA();</span>
+<span class="fc" id="L977">        final var b = daq.getB();</span>
+<span class="fc" id="L978">        final var c = daq.getC();</span>
+<span class="fc" id="L979">        final var d = daq.getD();</span>
+<span class="fc" id="L980">        final var e = daq.getE();</span>
+<span class="fc" id="L981">        final var f = daq.getF();</span>
+<span class="fc" id="L982">        final var g = daq.getG();</span>
+<span class="fc" id="L983">        final var h = daq.getH();</span>
+<span class="fc" id="L984">        final var i = daq.getI();</span>
+<span class="fc" id="L985">        final var j = daq.getJ();</span>
+
+<span class="fc" id="L987">        return a * (p11 * p11 * r2 - p21 * p21) + b * (p12 * p12 * r2 - p22 * p22)</span>
+                + c * (p13 * p13 * r2 - p23 * p23) + d * 2.0 * (p12 * p11 * r2 - p22 * p21)
+                + e * 2.0 * (p13 * p12 * r2 - p23 * p22) + f * 2.0 * (p13 * p11 * r2 - p23 * p21)
+                + g * 2.0 * (p14 * p11 * r2 - p24 * p21) + h * 2.0 * (p14 * p12 * r2 - p24 * p22)
+                + i * 2.0 * (p14 * p13 * r2 - p24 * p23) + j * (p14 * p14 * r2 - p24 * p24);
+    }
+
+    /**
+     * Sets list of cameras.
+     * This method does not check whether estimator is locked.
+     *
+     * @param cameras list of cameras to estimate DAQ.
+     * @throws IllegalArgumentException if provided list of cameras is null
+     *                                  or too small.
+     */
+    private void internalSetCameras(final List&lt;PinholeCamera&gt; cameras) {
+<span class="fc bfc" id="L1003" title="All 4 branches covered.">        if (cameras == null || cameras.size() &lt; getMinNumberOfRequiredCameras()) {</span>
+<span class="fc" id="L1004">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L1006">        this.cameras = cameras;</span>
+<span class="fc" id="L1007">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

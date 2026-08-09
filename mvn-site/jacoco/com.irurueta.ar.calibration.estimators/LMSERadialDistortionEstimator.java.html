@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LMSERadialDistortionEstimator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.calibration.estimators</a> &gt; <span class="el_source">LMSERadialDistortionEstimator.java</span></div><h1>LMSERadialDistortionEstimator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2015 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.calibration.estimators;
+
+import com.irurueta.algebra.AlgebraException;
+import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.Utils;
+import com.irurueta.ar.calibration.RadialDistortion;
+import com.irurueta.ar.calibration.RadialDistortionException;
+import com.irurueta.geometry.Point2D;
+import com.irurueta.geometry.estimators.LockedException;
+import com.irurueta.geometry.estimators.NotReadyException;
+
+import java.util.List;
+
+/**
+ * This class defines an LMSE (the Least Mean Square Error) estimator of radial
+ * distortion.
+ * Equations to determine a RadialDistortion instance for a single point are
+ * linear dependent, for that reason, at least 2 points are required for the
+ * estimation.
+ * Even though x and y equations are linear dependent, both equations are taken
+ * into account in case that sampled data contains errors, so that an LMSE error
+ * can be obtained.
+ */
+public class LMSERadialDistortionEstimator extends RadialDistortionEstimator {
+    /**
+     * Indicates if by default an LMSE (the Least Mean Square Error) solution is
+     * allowed if more correspondences than the minimum are provided.
+     */
+    public static final boolean DEFAULT_ALLOW_LMSE_SOLUTION = false;
+
+    /**
+     * Indicates if an LMSE (the Least Mean Square Error) solution is allowed if
+     * more correspondences than the minimum are provided. If false, the
+     * exceeding correspondences will be ignored and only the 6 first
+     * correspondences will be used.
+     */
+    private boolean allowLMSESolution;
+
+    /**
+     * Constructor.
+     */
+    public LMSERadialDistortionEstimator() {
+<span class="fc" id="L58">        super();</span>
+<span class="fc" id="L59">        allowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;</span>
+<span class="fc" id="L60">    }</span>
+
+    /**
+     * Constructor with listener.
+     *
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or estimation progress changes.
+     */
+    public LMSERadialDistortionEstimator(final RadialDistortionEstimatorListener listener) {
+<span class="fc" id="L69">        super(listener);</span>
+<span class="fc" id="L70">        allowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;</span>
+<span class="fc" id="L71">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param distortedPoints   list of distorted points. Distorted points are
+     *                          obtained after radial distortion is applied to an undistorted point.
+     * @param undistortedPoints list of undistorted points.
+     * @throws IllegalArgumentException if provided lists of points don't have
+     *                                  the same size.
+     */
+    public LMSERadialDistortionEstimator(final List&lt;Point2D&gt; distortedPoints, final List&lt;Point2D&gt; undistortedPoints) {
+<span class="fc" id="L83">        super(distortedPoints, undistortedPoints);</span>
+<span class="fc" id="L84">        allowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;</span>
+<span class="fc" id="L85">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param distortedPoints   list of distorted points. Distorted points are
+     *                          obtained after radial distortion is applied to an undistorted point.
+     * @param undistortedPoints list of undistorted points.
+     * @param listener          listener to be notified of events such as when estimation
+     *                          starts, ends or estimation progress changes.
+     * @throws IllegalArgumentException if provided lists of points don't have
+     *                                  the same size.
+     */
+
+    public LMSERadialDistortionEstimator(final List&lt;Point2D&gt; distortedPoints, final List&lt;Point2D&gt; undistortedPoints,
+                                         final RadialDistortionEstimatorListener listener) {
+<span class="fc" id="L101">        super(distortedPoints, undistortedPoints, listener);</span>
+<span class="fc" id="L102">        allowLMSESolution = DEFAULT_ALLOW_LMSE_SOLUTION;</span>
+<span class="fc" id="L103">    }</span>
+
+    /**
+     * Constructor with distortion center.
+     *
+     * @param distortionCenter Distortion center. This is usually equal to the
+     *                         principal point of an estimated camera. If not set it is assumed to be at
+     *                         the origin of coordinates (0,0).
+     */
+    public LMSERadialDistortionEstimator(final Point2D distortionCenter) {
+<span class="fc" id="L113">        super(distortionCenter);</span>
+<span class="fc" id="L114">    }</span>
+
+    /**
+     * Constructor with listener and distortion center.
+     *
+     * @param distortionCenter Distortion center. This is usually equal to the
+     *                         principal point of an estimated camera. If not set it is assumed to be at
+     *                         the origin of coordinates (0,0).
+     * @param listener         listener to be notified of events such as when estimation
+     *                         starts, ends or estimation progress changes.
+     */
+    public LMSERadialDistortionEstimator(
+            final Point2D distortionCenter, final RadialDistortionEstimatorListener listener) {
+<span class="fc" id="L127">        super(distortionCenter, listener);</span>
+<span class="fc" id="L128">    }</span>
+
+    /**
+     * Constructor with points and distortion center.
+     *
+     * @param distortedPoints   list of distorted points. Distorted points are
+     *                          obtained after radial distortion is applied to an undistorted point.
+     * @param undistortedPoints list of undistorted points.
+     * @param distortionCenter  Distortion center. This is usually equal to the
+     *                          principal point of an estimated camera. If not set it is assumed to be at
+     *                          the origin of coordinates (0,0).
+     * @throws IllegalArgumentException if provided lists of points don't have
+     *                                  the same size.
+     */
+    public LMSERadialDistortionEstimator(final List&lt;Point2D&gt; distortedPoints, final List&lt;Point2D&gt; undistortedPoints,
+                                         final Point2D distortionCenter) {
+<span class="fc" id="L144">        super(distortedPoints, undistortedPoints, distortionCenter);</span>
+<span class="fc" id="L145">    }</span>
+
+    /**
+     * Constructor
+     *
+     * @param distortedPoints   list of distorted points. Distorted points are
+     *                          obtained after radial distortion is applied to an undistorted point.
+     * @param undistortedPoints list of undistorted points.
+     * @param distortionCenter  Distortion center. This is usually equal to the
+     *                          principal point of an estimated camera. If not set it is assumed to be at
+     *                          the origin of coordinates (0,0).
+     * @param listener          listener to be notified of events such as when estimation
+     *                          starts, ends or estimation progress changes.
+     * @throws IllegalArgumentException if provided lists of points don't have
+     *                                  the same size.
+     */
+    public LMSERadialDistortionEstimator(
+            final List&lt;Point2D&gt; distortedPoints, final List&lt;Point2D&gt; undistortedPoints, final Point2D distortionCenter,
+            final RadialDistortionEstimatorListener listener) {
+<span class="fc" id="L164">        super(distortedPoints, undistortedPoints, distortionCenter, listener);</span>
+<span class="fc" id="L165">    }</span>
+
+    /**
+     * Indicates if an LMSE (the Least Mean Square Error) solution is allowed if
+     * more correspondences than the minimum are provided. If false, the
+     * exceeding correspondences will be ignored and only the 6 first
+     * correspondences will be used.
+     *
+     * @return true if LMSE solution is allowed, false otherwise.
+     */
+    public boolean isLMSESolutionAllowed() {
+<span class="fc" id="L176">        return allowLMSESolution;</span>
+    }
+
+    /**
+     * Specifies if an LMSE (the Least Mean Square Error) solution is allowed if
+     * more correspondences than the minimum are provided. If false, the
+     * exceeding correspondences will be ignored and only the 6 first
+     * correspondences will be used.
+     *
+     * @param allowed true if LMSE solution is allowed, false otherwise.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setLMSESolutionAllowed(final boolean allowed) throws LockedException {
+<span class="fc bfc" id="L189" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L190">            throw new LockedException();</span>
+        }
+<span class="fc" id="L192">        allowLMSESolution = allowed;</span>
+<span class="fc" id="L193">    }</span>
+
+    /**
+     * Estimates a radial distortion.
+     *
+     * @return estimated radial distortion.
+     * @throws LockedException                    if estimator is loked.
+     * @throws NotReadyException                  if input has not yet been provided.
+     * @throws RadialDistortionEstimatorException if an error occurs during
+     *                                            estimation, usually because input data is not valid.
+     */
+    @SuppressWarnings(&quot;DuplicatedCode&quot;)
+    @Override
+    public RadialDistortion estimate() throws LockedException, NotReadyException, RadialDistortionEstimatorException {
+<span class="pc bpc" id="L207" title="1 of 2 branches missed.">        if (isLocked()) {</span>
+<span class="nc" id="L208">            throw new LockedException();</span>
+        }
+<span class="pc bpc" id="L210" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L211">            throw new NotReadyException();</span>
+        }
+
+        try {
+<span class="fc" id="L215">            locked = true;</span>
+<span class="fc bfc" id="L216" title="All 2 branches covered.">            if (listener != null) {</span>
+<span class="fc" id="L217">                listener.onEstimateStart(this);</span>
+            }
+
+<span class="fc" id="L220">            final var nPoints = distortedPoints.size();</span>
+
+            int numRows;
+<span class="fc bfc" id="L223" title="All 2 branches covered.">            if (isLMSESolutionAllowed()) {</span>
+                // initialize new matrix having two rows per point
+<span class="fc" id="L225">                numRows = 2 * nPoints;</span>
+            } else {
+                // when LMSE is not allowed, restrict matrix to two rows (minimum
+                // value required for a solution)
+<span class="fc" id="L229">                numRows = 2 * getMinNumberOfMatchedPoints();</span>
+            }
+
+<span class="fc" id="L232">            final var aMatrix = new Matrix(numRows, numKParams);</span>
+<span class="fc" id="L233">            final var b = new double[numRows];</span>
+
+<span class="fc" id="L235">            final var iteratorDistorted = distortedPoints.iterator();</span>
+<span class="fc" id="L236">            final var iteratorUndistorted = undistortedPoints.iterator();</span>
+
+            Point2D distorted;
+            Point2D undistorted;
+<span class="fc" id="L240">            var counter = 0;</span>
+
+            // undistorted normalized homogeneous coordinates
+            double uNormHomX;
+            double uNormHomY;
+            double uNormHomW;
+            // undistorted normalized inhomogeneous coordinates
+            double uNormInhomX;
+            double uNormInhomY;
+            // undistorted denormalized homogeneous coordinates
+            double uDenormHomX;
+            double uDenormHomY;
+            double uDenormHomW;
+            // undistorted denormalized inhomogeneous coordinates
+            double uDenormInhomX;
+            double uDenormInhomY;
+            // distorted inhomogeneous coordinates
+            double dInhomX;
+            double dInhomY;
+            double rowNormX;
+            double rowNormY;
+
+            // radial distortion center
+<span class="fc" id="L263">            var centerX = 0.0;</span>
+<span class="fc" id="L264">            var centerY = 0.0;</span>
+<span class="pc bpc" id="L265" title="1 of 2 branches missed.">            if (distortionCenter != null) {</span>
+<span class="fc" id="L266">                centerX = distortionCenter.getInhomX();</span>
+<span class="fc" id="L267">                centerY = distortionCenter.getInhomY();</span>
+            }
+
+            // radial distance of undistorted normalized (calibration independent)
+            // coordinates
+            double r2;
+            double a;
+            double value;
+
+<span class="pc bpc" id="L276" title="1 of 4 branches missed.">            while (iteratorDistorted.hasNext() &amp;&amp; iteratorUndistorted.hasNext()) {</span>
+<span class="fc" id="L277">                distorted = iteratorDistorted.next();</span>
+<span class="fc" id="L278">                undistorted = iteratorUndistorted.next();</span>
+
+<span class="fc" id="L280">                undistorted.normalize();</span>
+
+<span class="fc" id="L282">                uDenormHomX = undistorted.getHomX();</span>
+<span class="fc" id="L283">                uDenormHomY = undistorted.getHomY();</span>
+<span class="fc" id="L284">                uDenormHomW = undistorted.getHomW();</span>
+
+<span class="fc" id="L286">                uDenormInhomX = uDenormHomX / uDenormHomW;</span>
+<span class="fc" id="L287">                uDenormInhomY = uDenormHomY / uDenormHomW;</span>
+
+                // multiply intrinsic parameters by undistorted point
+<span class="fc" id="L290">                uNormHomX = kInv.getElementAt(0, 0) * uDenormHomX</span>
+<span class="fc" id="L291">                        + kInv.getElementAt(0, 1) * uDenormHomY</span>
+<span class="fc" id="L292">                        + kInv.getElementAt(0, 2) * uDenormHomW;</span>
+<span class="fc" id="L293">                uNormHomY = kInv.getElementAt(1, 0) * uDenormHomX</span>
+<span class="fc" id="L294">                        + kInv.getElementAt(1, 1) * uDenormHomY</span>
+<span class="fc" id="L295">                        + kInv.getElementAt(1, 2) * uDenormHomW;</span>
+<span class="fc" id="L296">                uNormHomW = kInv.getElementAt(2, 0) * uDenormHomX</span>
+<span class="fc" id="L297">                        + kInv.getElementAt(2, 1) * uDenormHomY</span>
+<span class="fc" id="L298">                        + kInv.getElementAt(2, 2) * uDenormHomW;</span>
+
+<span class="fc" id="L300">                uNormInhomX = uNormHomX / uNormHomW;</span>
+<span class="fc" id="L301">                uNormInhomY = uNormHomY / uNormHomW;</span>
+
+<span class="fc" id="L303">                r2 = uNormInhomX * uNormInhomX + uNormInhomY * uNormInhomY;</span>
+
+<span class="fc" id="L305">                dInhomX = distorted.getInhomX();</span>
+<span class="fc" id="L306">                dInhomY = distorted.getInhomY();</span>
+
+<span class="fc" id="L308">                a = 1.0;</span>
+<span class="fc" id="L309">                rowNormX = rowNormY = 0.0;</span>
+<span class="fc bfc" id="L310" title="All 2 branches covered.">                for (var i = 0; i &lt; numKParams; i++) {</span>
+<span class="fc" id="L311">                    a *= r2;</span>
+
+                    // x and y coordinates generate linear dependent equations, for
+                    // that reason we need more than one point
+
+                    // x coordinates
+<span class="fc" id="L317">                    value = (uDenormInhomX - centerX) * a;</span>
+<span class="fc" id="L318">                    aMatrix.setElementAt(2 * counter, i, value);</span>
+
+<span class="fc" id="L320">                    rowNormX += Math.pow(value, 2.0);</span>
+
+                    // y coordinates
+<span class="fc" id="L323">                    value = (uDenormInhomY - centerY) * a;</span>
+<span class="fc" id="L324">                    aMatrix.setElementAt(2 * counter + 1, i, value);</span>
+
+<span class="fc" id="L326">                    rowNormY += Math.pow(value, 2.0);</span>
+                }
+
+                // x coordinates
+<span class="fc" id="L330">                value = dInhomX - uDenormInhomX;</span>
+<span class="fc" id="L331">                b[2 * counter] = value;</span>
+
+<span class="fc" id="L333">                rowNormX += Math.pow(value, 2.0);</span>
+
+                // y coordinates
+<span class="fc" id="L336">                value = dInhomY - uDenormInhomY;</span>
+<span class="fc" id="L337">                b[2 * counter + 1] = value;</span>
+
+<span class="fc" id="L339">                rowNormY += Math.pow(value, 2.0);</span>
+
+                // normalize rows to increase accuracy
+<span class="fc bfc" id="L342" title="All 2 branches covered.">                for (var i = 0; i &lt; numKParams; i++) {</span>
+<span class="fc" id="L343">                    aMatrix.setElementAt(2 * counter, i,</span>
+<span class="fc" id="L344">                            aMatrix.getElementAt(2 * counter, i) / rowNormX);</span>
+<span class="fc" id="L345">                    aMatrix.setElementAt(2 * counter + 1, i,</span>
+<span class="fc" id="L346">                            aMatrix.getElementAt(2 * counter + 1, i) / rowNormY);</span>
+                }
+
+<span class="fc" id="L349">                b[2 * counter] /= rowNormX;</span>
+<span class="fc" id="L350">                b[2 * counter + 1] /= rowNormY;</span>
+
+<span class="fc" id="L352">                counter++;</span>
+
+<span class="fc bfc" id="L354" title="All 4 branches covered.">                if (!isLMSESolutionAllowed() &amp;&amp; (counter &gt;= getMinNumberOfMatchedPoints())) {</span>
+<span class="fc" id="L355">                    break;</span>
+                }
+            }
+
+<span class="fc" id="L359">            final var params = Utils.solve(aMatrix, b);</span>
+
+<span class="fc" id="L361">            final var distortion = new RadialDistortion(params, distortionCenter, horizontalFocalLength,</span>
+                    verticalFocalLength, skew);
+
+<span class="fc bfc" id="L364" title="All 2 branches covered.">            if (listener != null) {</span>
+<span class="fc" id="L365">                listener.onEstimateEnd(this);</span>
+            }
+
+<span class="fc" id="L368">            return distortion;</span>
+<span class="nc" id="L369">        } catch (final AlgebraException | RadialDistortionException e) {</span>
+<span class="nc" id="L370">            throw new RadialDistortionEstimatorException(e);</span>
+        } finally {
+<span class="fc" id="L372">            locked = false;</span>
+        }
+    }
+
+    /**
+     * Returns type of radial distortion estimator.
+     *
+     * @return type of radial distortion estimator.
+     */
+    @Override
+    public RadialDistortionEstimatorType getType() {
+<span class="fc" id="L383">        return RadialDistortionEstimatorType.LMSE_RADIAL_DISTORTION_ESTIMATOR;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

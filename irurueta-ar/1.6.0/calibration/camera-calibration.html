@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Pattern-based calibration and radial distortion :: Irurueta AR</title>
+    <meta name="description" content="Pattern-based camera calibration in irurueta-ar using checkerboard, circle-grid, or QR patterns, plus radial lens distortion estimation.">
+    <meta name="keywords" content="camera calibration, calibration pattern, checkerboard, radial distortion, QR pattern, circle grid, intrinsic parameters">
+    <meta name="generator" content="Antora 3.1.15">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+<link rel="icon" type="image/svg+xml" href="../../../_/img/logo.svg">
+  </head>
+  <body class="article">
+<script type="module">import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs'; mermaid.initialize({"startOnLoad":true}); </script><header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="../../.."><img src="../../../_/img/logo.svg" alt="Irurueta AR" class="navbar-brand-logo">Irurueta AR</a>
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs">
+        </div>
+      </div>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu" style="display: none;">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Products</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Product A</a>
+            <a class="navbar-item" href="#">Product B</a>
+            <a class="navbar-item" href="#">Product C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Services</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Service A</a>
+            <a class="navbar-item" href="#">Service B</a>
+            <a class="navbar-item" href="#">Service C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="irurueta-ar" data-version="1.6.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">Irurueta AR</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../whats-new.html">What&#8217;s New</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../installation.html">Installation</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Estimation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../estimation/robust-vs-nonrobust.html">Robust vs. non-robust estimation</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Epipolar geometry</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../epipolar/fundamental-matrix.html">Fundamental matrix estimation</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../epipolar/essential-matrix.html">Essential matrix</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../epipolar/point-correction.html">Point correction</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Calibration</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="self-calibration.html">Self-calibration</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="camera-calibration.html">Pattern-based calibration and radial distortion</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Structure from Motion</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../sfm/structure-from-motion.html">Structure from Motion</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../reference.html">Reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Irurueta AR</span>
+    <span class="version">1.6.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">Irurueta AR</a></div>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1.6.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Irurueta AR</a></li>
+    <li>Calibration</li>
+    <li><a href="camera-calibration.html">Pattern-based calibration and radial distortion</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/albertoirurueta/irurueta-ar/edit/develop/docs/modules/ROOT/pages/calibration/camera-calibration.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Pattern-based calibration and radial distortion</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This documentation was generated with the assistance of AI. Please report any inaccuracies.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a href="self-calibration.html" class="xref page">Self-calibration</a> recovers intrinsics with no calibration object, from
+natural-scene correspondences alone. When a physical calibration pattern <strong>is</strong> available (a checkerboard, a
+circle grid, a QR-coded grid), <code>irurueta-ar</code> also provides the more classical alternative: photograph the
+pattern from several poses and solve directly for each camera&#8217;s intrinsics from known-to-observed point
+correspondences.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_calibration_patterns"><a class="anchor" href="#_calibration_patterns"></a>Calibration patterns</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>com.irurueta.ar.calibration.Pattern2D</code> is the abstract base for a set of ideal, known 2D points; concrete
+patterns are <code>QRPattern2D</code> (a QR-code-like marker grid) and <code>CirclesPattern2D</code> (a grid of circle centers), both
+exposing <code>getIdealPoints()</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_camera_calibrators"><a class="anchor" href="#_camera_calibrators"></a>Camera calibrators</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Given a <code>Pattern2D</code> and one <code>CameraCalibratorSample</code> per photographed view (the pattern&#8217;s detected image
+points for that view), <code>com.irurueta.ar.calibration.CameraCalibrator</code> estimates the homography between the
+ideal pattern and each view, then the image of the absolute conic per view, following the same
+DIAC-to-intrinsics relation described in <a href="self-calibration.html" class="xref page">Self-calibration</a> but now with the "world
+conic" being the known pattern instead of the (unknown) absolute conic at infinity. Two concrete strategies are
+provided: <code>AlternatingCameraCalibrator</code> (alternates between estimating intrinsics and radial distortion) and
+<code>ErrorOptimizationCameraCalibrator</code> (jointly refines both by minimizing reprojection error). Both are created
+through the <code>CameraCalibrator.create(&#8230;&#8203;)</code> factory, selected via <code>CameraCalibratorMethod</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_radial_distortion"><a class="anchor" href="#_radial_distortion"></a>Radial distortion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Lens radial distortion is estimated separately from the pinhole intrinsics, following the same two-tier
+<a href="../estimation/robust-vs-nonrobust.html" class="xref page">robust/non-robust</a> pattern: <code>LMSERadialDistortionEstimator</code> /
+<code>WeightedRadialDistortionEstimator</code> fit distortion coefficients from distorted/undistorted point pairs, and
+<code>{RANSAC,LMedS,MSAC,PROSAC,PROMedS}RadialDistortionRobustEstimator</code> add outlier rejection when those pairs come
+from noisy detections. Maps to <code>com.irurueta.ar.calibration.RadialDistortion</code> /
+<code>com.irurueta.ar.calibration.estimators.RadialDistortionEstimator</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example"><a class="anchor" href="#_example"></a>Example</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Pattern2D pattern = new QRPattern2D();
+var calibrator = CameraCalibrator.create(pattern, samples); // one sample per photographed view
+calibrator.calibrate();
+
+PinholeCameraIntrinsicParameters intrinsics = calibrator.getEstimatedIntrinsicParameters();
+RadialDistortion distortion = calibrator.getDistortion();</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_key_classes"><a class="anchor" href="#_key_classes"></a>Key classes</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Class</th>
+<th class="tableblock halign-left valign-top">Repository</th>
+<th class="tableblock halign-left valign-top">Javadoc</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Pattern2D</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/albertoirurueta/irurueta-ar/blob/master/src/main/java/com/irurueta/ar/calibration/Pattern2D.java">Source</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/com/irurueta/ar/calibration/Pattern2D.html">Javadoc</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QRPattern2D</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/albertoirurueta/irurueta-ar/blob/master/src/main/java/com/irurueta/ar/calibration/QRPattern2D.java">Source</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/com/irurueta/ar/calibration/QRPattern2D.html">Javadoc</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CameraCalibrator</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/albertoirurueta/irurueta-ar/blob/master/src/main/java/com/irurueta/ar/calibration/CameraCalibrator.java">Source</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/com/irurueta/ar/calibration/CameraCalibrator.html">Javadoc</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RadialDistortion</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/albertoirurueta/irurueta-ar/blob/master/src/main/java/com/irurueta/ar/calibration/RadialDistortion.java">Source</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/com/irurueta/ar/calibration/RadialDistortion.html">Javadoc</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references"><a class="anchor" href="#_references"></a>References</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="../reference.html#ref-thesis" class="xref page">Irurueta, PhD thesis</a> <a href="../_attachments/irurueta-phd-thesis.pdf#page=56" class="xref attachment">&sect;2</a> (camera models, DLT camera estimation)<br>
+<a href="../reference.html#ref-hartley-zisserman-2003" class="xref page">Hartley &amp; Zisserman, 2003</a> &sect;7 (computation of the camera
+matrix)</p>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Made with ♥ from <strong>BCN</strong></p>
+</footer>
+<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+<script src="../../../_/js/vendor/lunr.js"></script>
+<script src="../../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../../.." data-snippet-length="100" data-stylesheet="../../../_/css/search.css"></script>
+<script async src="../../../search-index.js"></script>
+  </body>
+</html>

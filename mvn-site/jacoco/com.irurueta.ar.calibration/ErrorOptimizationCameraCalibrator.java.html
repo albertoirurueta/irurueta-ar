@@ -1,0 +1,1234 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ErrorOptimizationCameraCalibrator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.calibration</a> &gt; <span class="el_source">ErrorOptimizationCameraCalibrator.java</span></div><h1>ErrorOptimizationCameraCalibrator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2015 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.calibration;
+
+import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.WrongSizeException;
+import com.irurueta.ar.calibration.estimators.LMedSRadialDistortionRobustEstimator;
+import com.irurueta.ar.calibration.estimators.MSACRadialDistortionRobustEstimator;
+import com.irurueta.ar.calibration.estimators.PROMedSRadialDistortionRobustEstimator;
+import com.irurueta.ar.calibration.estimators.PROSACRadialDistortionRobustEstimator;
+import com.irurueta.ar.calibration.estimators.RANSACRadialDistortionRobustEstimator;
+import com.irurueta.ar.calibration.estimators.RadialDistortionRobustEstimator;
+import com.irurueta.ar.calibration.estimators.RadialDistortionRobustEstimatorListener;
+import com.irurueta.geometry.AxisRotation3D;
+import com.irurueta.geometry.HomogeneousPoint2D;
+import com.irurueta.geometry.HomogeneousPoint3D;
+import com.irurueta.geometry.PinholeCamera;
+import com.irurueta.geometry.Point2D;
+import com.irurueta.geometry.Point3D;
+import com.irurueta.geometry.Rotation3DType;
+import com.irurueta.geometry.estimators.LockedException;
+import com.irurueta.geometry.estimators.NotReadyException;
+import com.irurueta.numerical.EvaluationException;
+import com.irurueta.numerical.JacobianEstimator;
+import com.irurueta.numerical.MultiVariateFunctionEvaluatorListener;
+import com.irurueta.numerical.fitting.LevenbergMarquardtMultiVariateFitter;
+import com.irurueta.numerical.fitting.LevenbergMarquardtMultiVariateFunctionEvaluator;
+import com.irurueta.numerical.robust.RobustEstimatorMethod;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ * Calibrates a camera in order to find its intrinsic parameters and radial
+ * distortion by first estimating the intrinsic parameters without accounting
+ * for radial distortion and then use an optimization algorithm to minimize
+ * error and adjust estimated camera pose, intrinsic parameters and radial
+ * distortion parameters.
+ * &lt;p&gt;
+ * This class is based on technique described at:
+ * Zhengyou Zhang. A Flexible New Technique for Camera Calibration. Technical
+ * Report. MSR-TR-98-71. December 2, 1998.
+ */
+@SuppressWarnings(&quot;DuplicatedCode&quot;)
+public class ErrorOptimizationCameraCalibrator extends CameraCalibrator {
+
+    /**
+     * Default robust estimator method to be used for radial distortion
+     * estimation.
+     */
+<span class="fc" id="L67">    public static final RobustEstimatorMethod DEFAULT_RADIAL_DISTORTION_METHOD = RobustEstimatorMethod.PROSAC;</span>
+
+    /**
+     * Indicates whether an initial radial distortion guess is estimated based
+     * on sampled data and estimated camera poses before starting the actual
+     * radial distortion optimization process.
+     */
+    public static final boolean DEFAULT_ESTIMATE_INITIAL_RADIAL_DISTORTION = true;
+
+    /**
+     * Default maximum number of iterations to be used when adjusting parameters
+     * using Levenberg-Marquardt algorithm.
+     */
+    public static final int DEFAULT_LEVENBERG_MARQUARDT_MAX_ITERS = 1000;
+
+    /**
+     * Default tolerance to assume that Levenberg-Marquardt algorithm has
+     * reached convergence when adjusting parameters.
+     */
+    public static final double DEFAULT_LEVENBERG_MARQUARDT_TOLERANCE = 1e-12;
+
+    /**
+     * Maximum number of iterations to be used when adjusting parameters using
+     * Levenberg-Marquardt algorithm.
+     */
+    private int levenbergMarquardtMaxIters;
+
+    /**
+     * Tolerance to assume that Levenberg-Marquardt algorithm has reached
+     * convergence when adjusting parameters.
+     */
+    private double levenbergMarquardtTolerance;
+
+    /**
+     * Robust estimator method to be used for radial distortion estimation.
+     */
+    private RobustEstimatorMethod distortionMethod;
+
+    /**
+     * Indicates whether an initial radial distortion guess is estimated based
+     * on sampled data and estimated camera poses before starting the actual
+     * radial distortion optimization process.
+     */
+    private final boolean estimateInitialRadialDistortion;
+
+    /**
+     * Robust estimator of radial distortion.
+     */
+    private RadialDistortionRobustEstimator distortionEstimator;
+
+    /**
+     * Listener for robust estimator of radial distortion.
+     */
+    private RadialDistortionRobustEstimatorListener distortionEstimatorListener;
+
+    /**
+     * Indicates progress of radial distortion estimation.
+     */
+    private float radialDistortionProgress;
+
+    /**
+     * Indicates progress of Levenberg-Marquardt fitting.
+     */
+    private float fittingProgress;
+
+    /**
+     * Previously notified progress.
+     */
+    private float previousNotifiedProgress;
+
+    /**
+     * Array to keep a relation between each point at index i-th and the sample
+     * (i.e. view) where it belongs to.
+     */
+    private int[] indexToView;
+
+
+    /**
+     * Constructor.
+     */
+    public ErrorOptimizationCameraCalibrator() {
+<span class="fc" id="L148">        super();</span>
+<span class="fc" id="L149">        levenbergMarquardtMaxIters = DEFAULT_LEVENBERG_MARQUARDT_MAX_ITERS;</span>
+<span class="fc" id="L150">        levenbergMarquardtTolerance = DEFAULT_LEVENBERG_MARQUARDT_TOLERANCE;</span>
+<span class="fc" id="L151">        internalSetDistortionMethod(DEFAULT_RADIAL_DISTORTION_METHOD);</span>
+<span class="fc" id="L152">        estimateInitialRadialDistortion = DEFAULT_ESTIMATE_INITIAL_RADIAL_DISTORTION;</span>
+<span class="fc" id="L153">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param pattern 2D pattern to use for calibration.
+     * @param samples samples of the pattern taken with the camera to calibrate.
+     * @throws IllegalArgumentException if not enough samples are provided.
+     */
+    public ErrorOptimizationCameraCalibrator(final Pattern2D pattern, final List&lt;CameraCalibratorSample&gt; samples) {
+<span class="fc" id="L163">        super(pattern, samples);</span>
+<span class="fc" id="L164">        levenbergMarquardtMaxIters = DEFAULT_LEVENBERG_MARQUARDT_MAX_ITERS;</span>
+<span class="fc" id="L165">        levenbergMarquardtTolerance = DEFAULT_LEVENBERG_MARQUARDT_TOLERANCE;</span>
+<span class="fc" id="L166">        internalSetDistortionMethod(DEFAULT_RADIAL_DISTORTION_METHOD);</span>
+<span class="fc" id="L167">        estimateInitialRadialDistortion = DEFAULT_ESTIMATE_INITIAL_RADIAL_DISTORTION;</span>
+<span class="fc" id="L168">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param pattern              2D pattern to use for calibration.
+     * @param samples              samples of the pattern taken with the camera to calibrate.
+     * @param samplesQualityScores quality scores for each sample.
+     * @throws IllegalArgumentException if not enough samples are provided or
+     *                                  both samples and quality scores do not have the same size.
+     */
+    public ErrorOptimizationCameraCalibrator(
+            final Pattern2D pattern, final List&lt;CameraCalibratorSample&gt; samples, final double[] samplesQualityScores) {
+<span class="fc" id="L181">        super(pattern, samples, samplesQualityScores);</span>
+<span class="fc" id="L182">        levenbergMarquardtMaxIters = DEFAULT_LEVENBERG_MARQUARDT_MAX_ITERS;</span>
+<span class="fc" id="L183">        levenbergMarquardtTolerance = DEFAULT_LEVENBERG_MARQUARDT_TOLERANCE;</span>
+<span class="fc" id="L184">        internalSetDistortionMethod(DEFAULT_RADIAL_DISTORTION_METHOD);</span>
+<span class="fc" id="L185">        estimateInitialRadialDistortion = DEFAULT_ESTIMATE_INITIAL_RADIAL_DISTORTION;</span>
+<span class="fc" id="L186">    }</span>
+
+    /**
+     * Returns maximum number of iterations to be used when adjusting parameters
+     * using Levenberg-Marquardt algorithm.
+     *
+     * @return maximum number of iterations to be used when adjusting parameters
+     * using Levenberg-Marquardt algorithm.
+     */
+    public int getLevenbergMarquardtMaxIters() {
+<span class="fc" id="L196">        return levenbergMarquardtMaxIters;</span>
+    }
+
+    /**
+     * Sets maximum number of iterations to be used when adjusting parameters
+     * using Levenberg-Marquardt algorithm.
+     *
+     * @param levenbergMarquardtMaxIters maximum number of iterations to be used
+     *                                   when adjusting parameters using Levenberg-Marquardt algorithm.
+     * @throws IllegalArgumentException if provided value is zero or negative.
+     * @throws LockedException          if this instance is locked.
+     */
+    public void setLevenbergMarquardtMaxIters(final int levenbergMarquardtMaxIters) throws LockedException {
+<span class="fc bfc" id="L209" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L210">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L212" title="All 2 branches covered.">        if (levenbergMarquardtMaxIters &lt;= 0) {</span>
+<span class="fc" id="L213">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L215">        this.levenbergMarquardtMaxIters = levenbergMarquardtMaxIters;</span>
+<span class="fc" id="L216">    }</span>
+
+    /**
+     * Returns tolerance to assume that Levenberg-Marquardt algorithm has
+     * reached convergence when adjusting parameters.
+     *
+     * @return tolerance to assume that Levenberg-Marquardt algorithm has
+     * reached convergence when adjusting parameters.
+     */
+    public double getLevenbergMarquardtTolerance() {
+<span class="fc" id="L226">        return levenbergMarquardtTolerance;</span>
+    }
+
+    /**
+     * Sets tolerance to assume that Levenberg-Marquardt algorithm has reached
+     * convergence when adjusting parameters.
+     *
+     * @param levenbergMarquardtTolerance tolerance to assume that
+     *                                    Levenberg-Marquardt algorithm has reached convergence when
+     *                                    adjusting parameter.
+     * @throws IllegalArgumentException if provided value is zero or negative.
+     * @throws LockedException          if this instance is locked.
+     */
+    public void setLevenbergMarquardtTolerance(final double levenbergMarquardtTolerance) throws LockedException {
+<span class="fc bfc" id="L240" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L241">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L243" title="All 2 branches covered.">        if (levenbergMarquardtTolerance &lt;= 0.0) {</span>
+<span class="fc" id="L244">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L246">        this.levenbergMarquardtTolerance = levenbergMarquardtTolerance;</span>
+<span class="fc" id="L247">    }</span>
+
+    /**
+     * Returns robust estimator method to be used for radial distortion
+     * estimation.
+     *
+     * @return robust estimator method to be used for radial distortion
+     * estimation.
+     */
+    public RobustEstimatorMethod getDistortionMethod() {
+<span class="fc" id="L257">        return distortionMethod;</span>
+    }
+
+    /**
+     * Sets robust estimator method to be used for radial distortion
+     * estimation.
+     *
+     * @param distortionMethod robust estimator method to be used for
+     *                         radial distortion estimation.
+     * @throws LockedException if this instance is locked.
+     */
+    public void setDistortionMethod(final RobustEstimatorMethod distortionMethod) throws LockedException {
+<span class="fc bfc" id="L269" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L270">            throw new LockedException();</span>
+        }
+<span class="fc" id="L272">        internalSetDistortionMethod(distortionMethod);</span>
+<span class="fc" id="L273">    }</span>
+
+    /**
+     * Returns radial distortion estimator, which can be retrieved in case
+     * that some additional parameter needed to be adjusted.
+     * It is discouraged to directly access the distortion estimator during
+     * camera calibration, as it might interfere with the results.
+     *
+     * @return radial distortion estimator.
+     */
+    public RadialDistortionRobustEstimator getDistortionEstimator() {
+<span class="fc" id="L284">        return distortionEstimator;</span>
+    }
+
+    /**
+     * Returns threshold to robustly estimate radial distortion.
+     * Usually the default value is good enough for most situations, but this
+     * setting can be changed for finer adjustments.
+     *
+     * @return threshold to robustly estimate radial distortion.
+     */
+    public double getDistortionEstimatorThreshold() {
+<span class="fc bfc" id="L295" title="All 5 branches covered.">        return switch (distortionEstimator.getMethod()) {</span>
+<span class="fc" id="L296">            case LMEDS -&gt; ((LMedSRadialDistortionRobustEstimator) distortionEstimator).getStopThreshold();</span>
+<span class="fc" id="L297">            case MSAC -&gt; ((MSACRadialDistortionRobustEstimator) distortionEstimator).getThreshold();</span>
+<span class="fc" id="L298">            case PROSAC -&gt; ((PROSACRadialDistortionRobustEstimator) distortionEstimator).getThreshold();</span>
+<span class="fc" id="L299">            case PROMEDS -&gt; ((PROMedSRadialDistortionRobustEstimator) distortionEstimator).getStopThreshold();</span>
+<span class="fc" id="L300">            default -&gt; ((RANSACRadialDistortionRobustEstimator) distortionEstimator).getThreshold();</span>
+        };
+    }
+
+    /**
+     * Sets threshold to robustly estimate radial distortion.
+     * Usually the default value is good enough for most situations, but this
+     * setting can be changed for finder adjustments.
+     *
+     * @param distortionEstimatorThreshold threshold to robustly estimate
+     *                                     radial distortion .
+     * @throws LockedException          if this instance is locked.
+     * @throws IllegalArgumentException if provided value is zero or negative.
+     */
+    public void setDistortionEstimatorThreshold(final double distortionEstimatorThreshold) throws LockedException {
+<span class="fc bfc" id="L315" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L316">            throw new LockedException();</span>
+        }
+
+<span class="fc bfc" id="L319" title="All 5 branches covered.">        switch (distortionEstimator.getMethod()) {</span>
+            case LMEDS:
+<span class="fc" id="L321">                ((LMedSRadialDistortionRobustEstimator) distortionEstimator).setStopThreshold(</span>
+                        distortionEstimatorThreshold);
+<span class="fc" id="L323">                break;</span>
+            case MSAC:
+<span class="fc" id="L325">                ((MSACRadialDistortionRobustEstimator) distortionEstimator).setThreshold(distortionEstimatorThreshold);</span>
+<span class="fc" id="L326">                break;</span>
+            case PROSAC:
+<span class="fc" id="L328">                ((PROSACRadialDistortionRobustEstimator) distortionEstimator).setThreshold(</span>
+                        distortionEstimatorThreshold);
+<span class="fc" id="L330">                break;</span>
+            case PROMEDS:
+<span class="fc" id="L332">                ((PROMedSRadialDistortionRobustEstimator) distortionEstimator).setStopThreshold(</span>
+                        distortionEstimatorThreshold);
+<span class="fc" id="L334">                break;</span>
+            case RANSAC:
+            default:
+<span class="fc" id="L337">                ((RANSACRadialDistortionRobustEstimator) distortionEstimator).setThreshold(</span>
+                        distortionEstimatorThreshold);
+                break;
+        }
+<span class="fc" id="L341">    }</span>
+
+    /**
+     * Returns confidence to robustly estimate radial distortion.
+     * Usually the default value is good enough for most situations, but this
+     * setting can be changed for finer adjustments.
+     * Confidence is expressed as a value between 0.0 (0%) and 1.0 (100%). The
+     * amount of confidence indicates the probability that the estimated
+     * homography is correct (i.e. no outliers were used for the estimation,
+     * because they were successfully discarded).
+     * Typically, this value will be close to 1.0, but not exactly 1.0, because
+     * a 100% confidence would require an infinite number of iterations.
+     * Usually the default value is good enough for most situations, but this
+     * setting can be changed for finer adjustments.
+     *
+     * @return confidence to robustly estimate homographies.
+     */
+    public double getDistortionEstimatorConfidence() {
+<span class="fc" id="L359">        return distortionEstimator.getConfidence();</span>
+    }
+
+    /**
+     * Sets confidence to robustly estimate radial distortion.
+     * Usually the default value is good enough for most situations, but this
+     * setting can be changed for finer adjustments.
+     * Confidence is expressed as a value between 0.0 (0%) and 1.0 (100%). The
+     * amount of confidence indicates the probability that the estimated
+     * homography is correct (i.e. no outliers were used for the estimation,
+     * because they were successfully discarded).
+     * Typically, this value will be close to 1.0, but not exactly 1.0, because
+     * a 100% confidence would require an infinite number of iterations.
+     * Usually the default value is good enough for most situations, but this
+     * setting can be changed for finer adjustments.
+     *
+     * @param distortionEstimatorConfidence confidence to robustly estimate
+     *                                      radial distortion.
+     * @throws LockedException          if this instance is locked.
+     * @throws IllegalArgumentException if provided value is not between 0.0 and
+     *                                  1.0.
+     */
+    public void setDistortionEstimatorConfidence(final double distortionEstimatorConfidence) throws LockedException {
+<span class="fc bfc" id="L382" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L383">            throw new LockedException();</span>
+        }
+
+<span class="fc" id="L386">        distortionEstimator.setConfidence(distortionEstimatorConfidence);</span>
+<span class="fc" id="L387">    }</span>
+
+    /**
+     * Returns the maximum number of iterations to be done when estimating
+     * the radial distortion.
+     * If the maximum allowed number of iterations is reached, resulting
+     * estimation might not have desired confidence.
+     * Usually the default value is good enough for most situations, but this
+     * setting can be changed for finer adjustments.
+     *
+     * @return maximum number of iterations to be done when estimating the
+     * homographies.
+     */
+    public int getDistortionEstimatorMaxIterations() {
+<span class="fc" id="L401">        return distortionEstimator.getMaxIterations();</span>
+    }
+
+    /**
+     * Sets the maximum number of iterations to be done when estimating the
+     * radial distortion.
+     * If the maximum allowed number of iterations is reached, resulting
+     * estimation might not have desired confidence.
+     * Usually the default value is good enough for most situations, but this
+     * setting can be changed for finer adjustments.
+     *
+     * @param distortionEstimatorMaxIterations maximum number of iterations to
+     *                                         be done when estimating radial distortion.
+     * @throws LockedException          if this instance is locked.
+     * @throws IllegalArgumentException if provided value is negative or zero.
+     */
+    public void setDistortionEstimatorMaxIterations(final int distortionEstimatorMaxIterations) throws LockedException {
+<span class="fc bfc" id="L418" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L419">            throw new LockedException();</span>
+        }
+
+<span class="fc" id="L422">        distortionEstimator.setMaxIterations(distortionEstimatorMaxIterations);</span>
+<span class="fc" id="L423">    }</span>
+
+    /**
+     * Starts the calibration process.
+     * Depending on the settings the following will be estimated:
+     * intrinsic pinhole camera parameters, radial distortion of lens,
+     * camera pose (rotation and translation) for each sample, and the
+     * associated homobraphy of sampled points respect to the ideal pattern
+     * samples.
+     *
+     * @throws CalibrationException if calibration fails for some reason.
+     * @throws LockedException      if this instance is locked because calibration is
+     *                              already in progress.
+     * @throws NotReadyException    if this instance does not have enough data to
+     *                              start camera calibration.
+     */
+    @Override
+    public void calibrate() throws CalibrationException, LockedException, NotReadyException {
+
+<span class="fc bfc" id="L442" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L443">            throw new LockedException();</span>
+        }
+<span class="pc bpc" id="L445" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L446">            throw new NotReadyException();</span>
+        }
+
+<span class="fc" id="L449">        locked = true;</span>
+
+<span class="pc bpc" id="L451" title="1 of 2 branches missed.">        homographyQualityScoresRequired = (distortionEstimator.getMethod() == RobustEstimatorMethod.PROSAC</span>
+<span class="pc bnc" id="L452" title="All 2 branches missed.">                || distortionEstimator.getMethod() == RobustEstimatorMethod.PROMEDS);</span>
+
+<span class="pc bpc" id="L454" title="1 of 2 branches missed.">        if (listener != null) {</span>
+<span class="fc" id="L455">            listener.onCalibrateStart(this);</span>
+        }
+
+<span class="fc" id="L458">        reset();</span>
+<span class="fc" id="L459">        radialDistortionProgress = fittingProgress = previousNotifiedProgress = 0.0f;</span>
+
+<span class="fc" id="L461">        final var idealFallbackPatternMarkers = pattern.getIdealPoints();</span>
+
+        try {
+            // estimate intrinsic parameters
+<span class="fc" id="L465">            estimateIntrinsicParameters(idealFallbackPatternMarkers);</span>
+
+<span class="fc bfc" id="L467" title="All 2 branches covered.">            if (estimateRadialDistortion) {</span>
+                // estimate radial distortion
+<span class="fc" id="L469">                estimateRadialDistortion(idealFallbackPatternMarkers);</span>
+            }
+
+<span class="pc bpc" id="L472" title="1 of 2 branches missed.">            if (listener != null) {</span>
+<span class="fc" id="L473">                listener.onCalibrateEnd(this);</span>
+            }
+        } finally {
+<span class="fc" id="L476">            locked = false;</span>
+        }
+<span class="fc" id="L478">    }</span>
+
+    /**
+     * Returns the camera calibrator method used by this instance.
+     *
+     * @return the camera calibrator method.
+     */
+    @Override
+    public CameraCalibratorMethod getMethod() {
+<span class="fc" id="L487">        return CameraCalibratorMethod.ERROR_OPTIMIZATION;</span>
+    }
+
+    /**
+     * Notifies progress to current listener, if needed.
+     */
+    @Override
+    protected void notifyProgress() {
+        final float progress;
+<span class="pc bpc" id="L496" title="1 of 2 branches missed.">        if (estimateInitialRadialDistortion) {</span>
+<span class="fc" id="L497">            progress = (radialDistortionProgress + intrinsicProgress + fittingProgress) / 3.0f;</span>
+        } else {
+<span class="nc" id="L499">            progress = 0.5f * intrinsicProgress + 0.5f * fittingProgress;</span>
+        }
+
+<span class="pc bpc" id="L502" title="1 of 4 branches missed.">        if (listener != null &amp;&amp; (progress - previousNotifiedProgress) &gt; progressDelta) {</span>
+<span class="fc" id="L503">            listener.onCalibrateProgressChange(this, progress);</span>
+<span class="fc" id="L504">            previousNotifiedProgress = progress;</span>
+        }
+<span class="fc" id="L506">    }</span>
+
+    /**
+     * Estimates radial distortion by minimizing the re-projection error by
+     * adjusting the camera pose and radial distortion parameters using an
+     * optimization algorithm.
+     * The initial solution for the optimization algorithm is the estimated
+     * camera pose and intrinsic parameters without accounting for radial
+     * distortion and radial distortion parameters equal to 0.0.
+     *
+     * @param idealFallbackPatternMarkers ideal pattern markers coordinates.
+     *                                    These coordinates are used as fallback when a given sample
+     *                                    does not have an associated pattern.
+     * @return average re-projection error, obtained after projecting ideal
+     * pattern markers using estimated camera poses and then doing a comparison
+     * with sampled points taking into account estimated distortion to undo
+     * their corresponding distortion.
+     * @throws CalibrationException if anything fails.
+     */
+    protected double estimateRadialDistortion(final List&lt;Point2D&gt; idealFallbackPatternMarkers)
+            throws CalibrationException {
+
+<span class="fc" id="L528">        radialDistortionProgress = 0.0f;</span>
+
+<span class="pc bpc" id="L530" title="1 of 2 branches missed.">        if (listener != null) {</span>
+<span class="fc" id="L531">            listener.onRadialDistortionEstimationStarts(this);</span>
+        }
+
+        // compute total points for samples where homography could be estimated
+<span class="fc" id="L535">        var totalPoints = 0;</span>
+<span class="fc" id="L536">        var totalHomographies = 0;</span>
+<span class="fc bfc" id="L537" title="All 2 branches covered.">        for (final var sample : samples) {</span>
+<span class="fc bfc" id="L538" title="All 2 branches covered.">            if (sample.getHomography() != null) {</span>
+<span class="fc" id="L539">                totalPoints += sample.getSampledMarkers().size();</span>
+<span class="fc" id="L540">                totalHomographies++;</span>
+            }
+<span class="fc" id="L542">        }</span>
+
+<span class="fc" id="L544">        indexToView = new int[totalPoints];</span>
+
+<span class="pc bpc" id="L546" title="1 of 2 branches missed.">        if (estimateInitialRadialDistortion) {</span>
+<span class="fc" id="L547">            final var distortedPoints = new ArrayList&lt;Point2D&gt;();</span>
+<span class="fc" id="L548">            final var undistortedPoints = new ArrayList&lt;Point2D&gt;();</span>
+
+<span class="fc" id="L550">            double[] qualityScores = null;</span>
+<span class="pc bpc" id="L551" title="3 of 4 branches missed.">            if (distortionMethod == RobustEstimatorMethod.PROSAC || distortionMethod == RobustEstimatorMethod.PROMEDS) {</span>
+<span class="fc" id="L552">                qualityScores = new double[totalPoints];</span>
+            }
+
+            // estimate camera pose for each sample
+<span class="fc" id="L556">            var pointCounter = 0;</span>
+<span class="fc" id="L557">            var sampleCounter = 0;</span>
+<span class="fc bfc" id="L558" title="All 2 branches covered.">            for (final var sample : samples) {</span>
+<span class="fc bfc" id="L559" title="All 2 branches covered.">                if (sample.getHomography() == null) {</span>
+                    // homography computation failed, so we cannot compute camera
+                    // pose for this sample
+<span class="fc" id="L562">                    continue;</span>
+                }
+<span class="fc" id="L564">                sample.computeCameraPose(intrinsic);</span>
+
+                // transform ideal pattern markers using estimated homography
+                final List&lt;Point2D&gt; idealPatternMarkers;
+<span class="fc bfc" id="L568" title="All 2 branches covered.">                if (sample.getPattern() != null) {</span>
+                    // use points generated by pattern in sample
+<span class="fc" id="L570">                    idealPatternMarkers = sample.getPattern().getIdealPoints();</span>
+                } else {
+                    // use fallback pattern points
+<span class="fc" id="L573">                    idealPatternMarkers = idealFallbackPatternMarkers;</span>
+                }
+
+<span class="fc" id="L576">                final var transformedIdealPatternMarkers = sample.getHomography().transformPointsAndReturnNew(</span>
+                        idealPatternMarkers);
+
+<span class="fc" id="L579">                distortedPoints.addAll(sample.getSampledMarkers());</span>
+<span class="fc" id="L580">                undistortedPoints.addAll(transformedIdealPatternMarkers);</span>
+
+<span class="fc" id="L582">                final var markersSize = transformedIdealPatternMarkers.size();</span>
+
+                // fills array indicating to which sample (i.e. view) each point
+                // belongs to
+<span class="fc" id="L586">                Arrays.fill(indexToView, pointCounter, pointCounter + markersSize, sampleCounter);</span>
+
+                // if distortion estimator requires quality scores, set them
+<span class="pc bpc" id="L589" title="4 of 6 branches missed.">                if (qualityScores != null &amp;&amp; (distortionMethod == RobustEstimatorMethod.PROSAC</span>
+                        || distortionMethod == RobustEstimatorMethod.PROMEDS)) {
+
+<span class="fc" id="L592">                    final var sampleQuality = homographyQualityScores[sampleCounter];</span>
+
+                    // assign to all points (markers) in the sample the same sample
+                    // quality
+<span class="fc bfc" id="L596" title="All 2 branches covered.">                    for (var i = pointCounter; i &lt; pointCounter + markersSize; i++) {</span>
+<span class="fc" id="L597">                        qualityScores[i] = sampleQuality;</span>
+                    }
+
+<span class="fc" id="L600">                    pointCounter += markersSize;</span>
+<span class="fc" id="L601">                    sampleCounter++;</span>
+                }
+<span class="fc" id="L603">            }</span>
+
+            // estimate radial distortion
+            try {
+<span class="fc" id="L607">                distortionEstimator.setIntrinsic(intrinsic);</span>
+<span class="fc" id="L608">                distortionEstimator.setPoints(distortedPoints, undistortedPoints);</span>
+<span class="fc" id="L609">                distortionEstimator.setQualityScores(qualityScores);</span>
+
+<span class="fc" id="L611">                distortion = distortionEstimator.estimate();</span>
+<span class="nc" id="L612">            } catch (final Exception e) {</span>
+<span class="nc" id="L613">                throw new CalibrationException(e);</span>
+<span class="fc" id="L614">            }</span>
+<span class="fc" id="L615">        } else {</span>
+
+            // estimate camera pose for each sample
+<span class="nc bnc" id="L618" title="All 2 branches missed.">            for (final var sample : samples) {</span>
+<span class="nc bnc" id="L619" title="All 2 branches missed.">                if (sample.getHomography() == null) {</span>
+                    // homography computation failed, so we cannot compute camera
+                    // pose for this sample
+<span class="nc" id="L622">                    continue;</span>
+                }
+<span class="nc" id="L624">                sample.computeCameraPose(intrinsic);</span>
+<span class="nc" id="L625">            }</span>
+
+            // set initial radial distortion as if there was no distortion
+<span class="nc" id="L628">            distortion = new RadialDistortion(0.0, 0.0);</span>
+        }
+
+        // optimize cost function to refine camera poses and radial distortion
+
+        try {
+            // compute initial parameters to fit a function using
+            // Levenberg-Marquardt
+<span class="fc" id="L636">            final var initParams = new double[numParameters(totalHomographies)];</span>
+<span class="fc" id="L637">            paramsFromData(initParams);</span>
+            // compute x data (input points)
+<span class="fc" id="L639">            final var x = dataXToMatrix(idealFallbackPatternMarkers);</span>
+            // compute y data (output points)
+<span class="fc" id="L641">            final var y = dataYToMatrix();</span>
+
+            // Evaluator for Levenberg-Marquardt fitter. This is in charge of
+            // evaluating function to be fitted using current parameters and
+            // also in charge of estimating function Jacobian for each point
+            // where the function is evaluated
+<span class="fc" id="L647">            final var evaluator = new LevenbergMarquardtMultiVariateFunctionEvaluator() {</span>
+
+                // position of current point being evaluated
+                private int i;
+
+                // current point being evaluated
+                private double[] point;
+
+                // Instance in charge of estimating Jacobian of function being
+                // fitted at current point and for provided parameters. Jacobian
+                // is computed by keeping point constant and computing the
+                // partial derivatives for each parameter
+<span class="fc" id="L659">                private final JacobianEstimator jacobianEstimator = new JacobianEstimator(</span>
+<span class="fc" id="L660">                        new MultiVariateFunctionEvaluatorListener() {</span>
+
+                            // We provide params so that jacobian is computed as the
+                            // partial derivatives respect parameters
+                            @Override
+                            public void evaluate(final double[] params, final double[] result) {
+<span class="nc" id="L666">                                evaluateFunction(i, point, params, result);</span>
+<span class="nc" id="L667">                            }</span>
+
+                            // Function being fitted is multi variate returning 2D points
+                            // (having horizontal and vertical inhomogeneous coordinates)
+                            @Override
+                            public int getNumberOfVariables() {
+<span class="nc" id="L673">                                return Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH;</span>
+                            }
+                        });
+
+                // Function being fitted has as input data 2D points (having
+                // horizontal and vertical inhomogeneous coordinates)
+                @Override
+                public int getNumberOfDimensions() {
+<span class="nc" id="L681">                    return Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH;</span>
+                }
+
+                // Function being fitted is multi variate returning 2D points
+                // (having horizontal and vertical inhomogeneous coordinates)
+                @Override
+                public int getNumberOfVariables() {
+<span class="nc" id="L688">                    return Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH;</span>
+                }
+
+                // Creates array where parameters are stored. This array is
+                // initialized with the parameter values initially used by the
+                // Levenberg-Marquardt algorithm
+                @Override
+                public double[] createInitialParametersArray() {
+<span class="fc" id="L696">                    return initParams;</span>
+                }
+
+                // Evaluates function to be fitted and computes Jacobian
+                @Override
+                public void evaluate(final int i, final double[] point, final double[] result, final double[] params,
+                                     final Matrix jacobian) throws EvaluationException {
+<span class="nc" id="L703">                    this.i = i;</span>
+<span class="nc" id="L704">                    this.point = point;</span>
+<span class="nc" id="L705">                    evaluateFunction(this.i, this.point, params, result);</span>
+<span class="nc" id="L706">                    jacobianEstimator.jacobian(params, jacobian);</span>
+<span class="nc" id="L707">                }</span>
+            };
+
+            // fits function
+<span class="fc" id="L711">            final var sigma = 1.0;</span>
+<span class="fc" id="L712">            final var fitter = new LevenbergMarquardtMultiVariateFitter(evaluator, x, y, sigma);</span>
+<span class="fc" id="L713">            fitter.setItmax(levenbergMarquardtMaxIters);</span>
+<span class="fc" id="L714">            fitter.setTol(levenbergMarquardtTolerance);</span>
+
+<span class="fc" id="L716">            final var estimatedParams = fitter.getA();</span>
+            // updates camera poses from estimated parameters
+<span class="fc" id="L718">            dataFromParams(estimatedParams);</span>
+
+            // computes re-projection errors between sampled and ideal data using
+            // fitted parameters
+<span class="fc" id="L722">            final var error = computeReprojectionError(idealFallbackPatternMarkers);</span>
+
+<span class="pc bpc" id="L724" title="1 of 2 branches missed.">            if (listener != null) {</span>
+<span class="fc" id="L725">                listener.onRadialDistortionEstimationEnds(this, distortion);</span>
+            }
+
+<span class="fc" id="L728">            return error;</span>
+
+<span class="nc" id="L730">        } catch (Exception e) {</span>
+<span class="nc" id="L731">            throw new CalibrationException(e);</span>
+        }
+    }
+
+    /**
+     * Refreshes listener of distortion estimator when robust estimator method
+     * is changed for the distortion estimator.
+     */
+    protected void refreshDistortionEstimatorListener() {
+<span class="fc bfc" id="L740" title="All 2 branches covered.">        if (distortionEstimatorListener == null) {</span>
+<span class="fc" id="L741">            distortionEstimatorListener = new RadialDistortionRobustEstimatorListener() {</span>
+
+                @Override
+                public void onEstimateStart(final RadialDistortionRobustEstimator estimator) {
+<span class="fc" id="L745">                    radialDistortionProgress = 0.0f;</span>
+<span class="fc" id="L746">                    notifyProgress();</span>
+<span class="fc" id="L747">                }</span>
+
+                @Override
+                public void onEstimateEnd(final RadialDistortionRobustEstimator estimator) {
+<span class="fc" id="L751">                    radialDistortionProgress = 1.0f;</span>
+<span class="fc" id="L752">                    notifyProgress();</span>
+<span class="fc" id="L753">                }</span>
+
+                @Override
+                public void onEstimateNextIteration(
+                        final RadialDistortionRobustEstimator estimator, final int iteration) {
+                    // not used
+<span class="fc" id="L759">                }</span>
+
+                @Override
+                public void onEstimateProgressChange(
+                        final RadialDistortionRobustEstimator estimator, final float progress) {
+<span class="fc" id="L764">                    radialDistortionProgress = progress;</span>
+<span class="fc" id="L765">                    notifyProgress();</span>
+<span class="fc" id="L766">                }</span>
+            };
+        }
+
+        try {
+<span class="fc" id="L771">            distortionEstimator.setListener(distortionEstimatorListener);</span>
+<span class="nc" id="L772">        } catch (final LockedException e) {</span>
+<span class="nc" id="L773">            Logger.getLogger(AlternatingCameraCalibrator.class.getName()).log(Level.WARNING,</span>
+                    &quot;Could not set radial distortion estimator listener&quot;, e);
+<span class="fc" id="L775">        }</span>
+<span class="fc" id="L776">    }</span>
+
+    /**
+     * Evaluates provided point and parameters to obtain the distorted points
+     * that would be obtained. Levenberg-Marquardt algorithm will iteratively
+     * change parameters until the obtained result approximates sampled Y data
+     *
+     * @param i      index of point among all provided data.
+     * @param point  input point to be evaluated.
+     * @param params parameters to evaluate function.
+     * @param result result of evaluation.
+     */
+    private void evaluateFunction(final int i, final double[] point, final double[] params, final double[] result) {
+        // set data from current params (updates camera poses for each sample -
+        // i.e. view)
+<span class="nc" id="L791">        dataFromParams(params);</span>
+
+<span class="nc" id="L793">        final var numView = indexToView[i];</span>
+
+        // obtain camera pose for numView
+<span class="nc" id="L796">        final var sample = samples.get(numView);</span>
+<span class="nc" id="L797">        final var camera = sample.getCamera();</span>
+
+<span class="nc" id="L799">        final var idealPoint3D = new HomogeneousPoint3D();</span>
+        // ideal 3D point is the marker point assumed to be at plane z = 0
+<span class="nc" id="L801">        idealPoint3D.setInhomogeneousCoordinates(point[0], point[1], 0.0);</span>
+
+        // project ideal point using estimated camera
+<span class="nc" id="L804">        final var undistortedPoint = camera.project(idealPoint3D);</span>
+
+        // add distortion
+<span class="nc" id="L807">        final var distortedPoint = new HomogeneousPoint2D();</span>
+<span class="nc" id="L808">        distortion.distort(undistortedPoint, distortedPoint);</span>
+
+<span class="nc" id="L810">        result[0] = distortedPoint.getInhomX();</span>
+<span class="nc" id="L811">        result[1] = distortedPoint.getInhomY();</span>
+<span class="nc" id="L812">    }</span>
+
+    /**
+     * Converts undistorted points corresponding to ideal pattern markers into
+     * a matrix to be used by Levenberg-Marquardt as the input data to be used
+     * by the function being fitted.
+     *
+     * @param idealFallbackPatternMarkers ideal pattern markers coordinates.
+     *                                    These coordinates are used as fallback when a given sample
+     *                                    does not have an associated pattern.
+     * @return a matrix.
+     * @throws WrongSizeException if no undistorted points are available.
+     */
+    private Matrix dataXToMatrix(final List&lt;Point2D&gt; idealFallbackPatternMarkers) throws WrongSizeException {
+<span class="fc" id="L826">        final var idealPoints = new ArrayList&lt;Point2D&gt;();</span>
+<span class="fc bfc" id="L827" title="All 2 branches covered.">        for (final var sample : samples) {</span>
+            final List&lt;Point2D&gt; idealPatternMarkers;
+<span class="fc bfc" id="L829" title="All 2 branches covered.">            if (sample.getPattern() != null) {</span>
+                // use points generated by pattern in sample
+<span class="fc" id="L831">                idealPatternMarkers = sample.getPattern().getIdealPoints();</span>
+            } else {
+                // use fallback pattern points
+<span class="fc" id="L834">                idealPatternMarkers = idealFallbackPatternMarkers;</span>
+            }
+
+<span class="fc" id="L837">            idealPoints.addAll(idealPatternMarkers);</span>
+<span class="fc" id="L838">        }</span>
+
+<span class="fc" id="L840">        final var nPoints = idealPoints.size();</span>
+
+<span class="fc" id="L842">        final var m = new Matrix(nPoints, Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH);</span>
+<span class="fc" id="L843">        var i = 0;</span>
+<span class="fc bfc" id="L844" title="All 2 branches covered.">        for (final var sample : samples) {</span>
+            final List&lt;Point2D&gt; idealPatternMarkers;
+<span class="fc bfc" id="L846" title="All 2 branches covered.">            if (sample.getPattern() != null) {</span>
+                // use points generated by pattern in sample
+<span class="fc" id="L848">                idealPatternMarkers = sample.getPattern().getIdealPoints();</span>
+            } else {
+                // use fallback pattern points
+<span class="fc" id="L851">                idealPatternMarkers = idealFallbackPatternMarkers;</span>
+            }
+
+<span class="fc bfc" id="L854" title="All 2 branches covered.">            for (final var point : idealPatternMarkers) {</span>
+<span class="fc" id="L855">                m.setElementAt(i, 0, point.getInhomX());</span>
+<span class="fc" id="L856">                m.setElementAt(i, 1, point.getInhomY());</span>
+<span class="fc" id="L857">                i++;</span>
+<span class="fc" id="L858">            }</span>
+<span class="fc" id="L859">        }</span>
+
+<span class="fc" id="L861">        return m;</span>
+    }
+
+    /**
+     * Converts sampled distorted points into a matrix to be used by
+     * Levenberg-Marquardt algorithm as the sampled function evaluations.
+     *
+     * @return a matrix.
+     * @throws WrongSizeException if no sampled points are available.
+     */
+    private Matrix dataYToMatrix() throws WrongSizeException {
+<span class="fc" id="L872">        var nPoints = 0;</span>
+<span class="fc bfc" id="L873" title="All 2 branches covered.">        for (final var sample : samples) {</span>
+<span class="fc" id="L874">            nPoints += sample.getSampledMarkers().size();</span>
+<span class="fc" id="L875">        }</span>
+
+<span class="fc" id="L877">        final var m = new Matrix(nPoints, Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH);</span>
+<span class="fc" id="L878">        var i = 0;</span>
+<span class="fc bfc" id="L879" title="All 2 branches covered.">        for (final var sample : samples) {</span>
+<span class="fc bfc" id="L880" title="All 2 branches covered.">            for (final var point : sample.getSampledMarkers()) {</span>
+<span class="fc" id="L881">                m.setElementAt(i, 0, point.getInhomX());</span>
+<span class="fc" id="L882">                m.setElementAt(i, 1, point.getInhomY());</span>
+<span class="fc" id="L883">                i++;</span>
+<span class="fc" id="L884">            }</span>
+<span class="fc" id="L885">        }</span>
+
+<span class="fc" id="L887">        return m;</span>
+    }
+
+    /**
+     * Sets parameters of function to be fitted using Levenberg-Marquardt
+     * algorithm.
+     * These parameters will be used as an initial solution and on each
+     * iteration of the Levenberg-Marquardt algorithm.
+     *
+     * @param params arrays where parameters will be set using current data.
+     */
+    private void paramsFromData(final double[] params) {
+<span class="fc" id="L899">        var pos = 0;</span>
+
+        // common parameters (intrinsic camera parameters and radial distortion
+        // parameters)
+
+        // intrinsic parameters
+<span class="pc bpc" id="L905" title="1 of 2 branches missed.">        if (!isZeroSkewness()) {</span>
+            // aspect ratio is not known (2 different focal distances) and
+            // skewness is not zero
+<span class="nc" id="L908">            params[pos] = intrinsic.getHorizontalFocalLength();</span>
+<span class="nc" id="L909">            pos++;</span>
+<span class="nc" id="L910">            params[pos] = intrinsic.getVerticalFocalLength();</span>
+<span class="nc" id="L911">            pos++;</span>
+<span class="nc" id="L912">            params[pos] = intrinsic.getSkewness();</span>
+<span class="nc" id="L913">            pos++;</span>
+        } else {
+            // skewness is always zero (so it is not stored in vector)
+<span class="fc" id="L916">            params[pos] = intrinsic.getHorizontalFocalLength();</span>
+<span class="fc" id="L917">            pos++;</span>
+
+<span class="pc bpc" id="L919" title="1 of 2 branches missed.">            if (!isFocalDistanceAspectRatioKnown()) {</span>
+                // focal distances are different, so we also store vertical
+                // one
+<span class="nc" id="L922">                params[pos] = intrinsic.getVerticalFocalLength();</span>
+<span class="nc" id="L923">                pos++;</span>
+            }
+        }
+
+<span class="pc bpc" id="L927" title="1 of 2 branches missed.">        if (!isPrincipalPointAtOrigin()) {</span>
+            // principal point is not zero
+<span class="nc" id="L929">            params[pos] = intrinsic.getHorizontalPrincipalPoint();</span>
+<span class="nc" id="L930">            pos++;</span>
+<span class="nc" id="L931">            params[pos] = intrinsic.getVerticalPrincipalPoint();</span>
+<span class="nc" id="L932">            pos++;</span>
+        }
+
+        // radial distortion parameters
+<span class="fc" id="L936">        final var kParams = distortion.getKParams();</span>
+<span class="fc bfc" id="L937" title="All 2 branches covered.">        for (final var kParam : kParams) {</span>
+<span class="fc" id="L938">            params[pos] = kParam;</span>
+<span class="fc" id="L939">            pos++;</span>
+        }
+
+
+        // parameters for each sample (camera rotation and translation)
+<span class="fc bfc" id="L944" title="All 2 branches covered.">        for (final var sample : samples) {</span>
+<span class="fc bfc" id="L945" title="All 2 branches covered.">            if (sample.getHomography() == null) {</span>
+<span class="fc" id="L946">                continue;</span>
+            }
+
+            // 4 rotation parameters
+            AxisRotation3D rot;
+<span class="pc bpc" id="L951" title="1 of 2 branches missed.">            if (sample.getRotation().getType() == Rotation3DType.AXIS_ROTATION3D) {</span>
+<span class="nc" id="L952">                rot = (AxisRotation3D) sample.getRotation();</span>
+            } else {
+<span class="fc" id="L954">                rot = new AxisRotation3D(sample.getRotation());</span>
+            }
+
+<span class="fc" id="L957">            params[pos] = rot.getRotationAngle();</span>
+<span class="fc" id="L958">            pos++;</span>
+<span class="fc" id="L959">            params[pos] = rot.getAxisX();</span>
+<span class="fc" id="L960">            pos++;</span>
+<span class="fc" id="L961">            params[pos] = rot.getAxisY();</span>
+<span class="fc" id="L962">            pos++;</span>
+<span class="fc" id="L963">            params[pos] = rot.getAxisZ();</span>
+<span class="fc" id="L964">            pos++;</span>
+
+            // 3 translation parameters (camera center)
+<span class="fc" id="L967">            final var center = sample.getCameraCenter();</span>
+<span class="fc" id="L968">            params[pos] = center.getInhomX();</span>
+<span class="fc" id="L969">            pos++;</span>
+<span class="fc" id="L970">            params[pos] = center.getInhomY();</span>
+<span class="fc" id="L971">            pos++;</span>
+<span class="fc" id="L972">            params[pos] = center.getInhomZ();</span>
+<span class="fc" id="L973">            pos++;</span>
+<span class="fc" id="L974">        }</span>
+<span class="fc" id="L975">    }</span>
+
+    /**
+     * Sets data in samples from parameters values fitted by the
+     * Levenberg-Marquardt algorithm.
+     *
+     * @param params vector containing estimated parameters .
+     */
+    private void dataFromParams(final double[] params) {
+<span class="fc" id="L984">        var pos = 0;</span>
+
+        // intrinsic parameters
+        double horizontalFocalLength;
+        double verticalFocalLength;
+        double skewness;
+        double horizontalPrincipalPoint;
+        double verticalPrincipalPoint;
+<span class="pc bpc" id="L992" title="1 of 2 branches missed.">        if (!isZeroSkewness()) {</span>
+            // aspect ratio is not known (2 different focal distances) and
+            // skewness is not zero
+<span class="nc" id="L995">            horizontalFocalLength = params[pos];</span>
+<span class="nc" id="L996">            pos++;</span>
+<span class="nc" id="L997">            verticalFocalLength = params[pos];</span>
+<span class="nc" id="L998">            pos++;</span>
+<span class="nc" id="L999">            skewness = params[pos];</span>
+<span class="nc" id="L1000">            pos++;</span>
+        } else {
+            // skewness is always zero (so it is not stored in vector)
+<span class="fc" id="L1003">            skewness = 0.0;</span>
+<span class="fc" id="L1004">            horizontalFocalLength = params[pos];</span>
+<span class="fc" id="L1005">            pos++;</span>
+
+<span class="pc bpc" id="L1007" title="1 of 2 branches missed.">            if (!isFocalDistanceAspectRatioKnown()) {</span>
+                // focal distances are different
+<span class="nc" id="L1009">                verticalFocalLength = params[pos];</span>
+<span class="nc" id="L1010">                pos++;</span>
+            } else {
+                // vertical focal distance is related to horizontal one
+                // through aspect ratio
+<span class="fc" id="L1014">                verticalFocalLength = horizontalFocalLength * getFocalDistanceAspectRatio();</span>
+            }
+        }
+
+<span class="pc bpc" id="L1018" title="1 of 2 branches missed.">        if (!isPrincipalPointAtOrigin()) {</span>
+            // principal point is not zero
+<span class="nc" id="L1020">            horizontalPrincipalPoint = params[pos];</span>
+<span class="nc" id="L1021">            pos++;</span>
+<span class="nc" id="L1022">            verticalPrincipalPoint = params[pos];</span>
+<span class="nc" id="L1023">            pos++;</span>
+        } else {
+            // principal point is zero
+<span class="fc" id="L1026">            horizontalPrincipalPoint = verticalPrincipalPoint = 0.0;</span>
+        }
+
+        // update intrinsic parameters
+<span class="fc" id="L1030">        intrinsic.setHorizontalFocalLength(horizontalFocalLength);</span>
+<span class="fc" id="L1031">        intrinsic.setVerticalFocalLength(verticalFocalLength);</span>
+<span class="fc" id="L1032">        intrinsic.setSkewness(skewness);</span>
+<span class="fc" id="L1033">        intrinsic.setHorizontalPrincipalPoint(horizontalPrincipalPoint);</span>
+<span class="fc" id="L1034">        intrinsic.setVerticalPrincipalPoint(verticalPrincipalPoint);</span>
+
+        // radial distortion parameters
+<span class="fc" id="L1037">        final var kParams = distortion.getKParams();</span>
+<span class="fc bfc" id="L1038" title="All 2 branches covered.">        for (var i = 0; i &lt; kParams.length; i++) {</span>
+<span class="fc" id="L1039">            kParams[i] = params[pos];</span>
+<span class="fc" id="L1040">            pos++;</span>
+        }
+
+        // sample parameters
+<span class="fc bfc" id="L1044" title="All 2 branches covered.">        for (final var sample : samples) {</span>
+<span class="fc bfc" id="L1045" title="All 2 branches covered.">            if (sample.getHomography() == null) {</span>
+<span class="fc" id="L1046">                continue;</span>
+            }
+
+            // 4 rotation parameters
+            final AxisRotation3D rot;
+<span class="pc bpc" id="L1051" title="1 of 2 branches missed.">            if (sample.getRotation().getType() == Rotation3DType.AXIS_ROTATION3D) {</span>
+<span class="nc" id="L1052">                rot = (AxisRotation3D) sample.getRotation();</span>
+            } else {
+<span class="fc" id="L1054">                rot = new AxisRotation3D();</span>
+                // update sample
+<span class="fc" id="L1056">                sample.setRotation(rot);</span>
+            }
+
+<span class="fc" id="L1059">            final var rotAngle = params[pos];</span>
+<span class="fc" id="L1060">            pos++;</span>
+<span class="fc" id="L1061">            final var axisX = params[pos];</span>
+<span class="fc" id="L1062">            pos++;</span>
+<span class="fc" id="L1063">            final var axisY = params[pos];</span>
+<span class="fc" id="L1064">            pos++;</span>
+<span class="fc" id="L1065">            final var axisZ = params[pos];</span>
+<span class="fc" id="L1066">            pos++;</span>
+
+<span class="fc" id="L1068">            rot.setAxisAndRotation(axisX, axisY, axisZ, rotAngle);</span>
+
+            // 3 translation parameters (camera center)
+<span class="fc" id="L1071">            final var inhomX = params[pos];</span>
+<span class="fc" id="L1072">            pos++;</span>
+<span class="fc" id="L1073">            final var inhomY = params[pos];</span>
+<span class="fc" id="L1074">            pos++;</span>
+<span class="fc" id="L1075">            final var inhomZ = params[pos];</span>
+<span class="fc" id="L1076">            pos++;</span>
+<span class="fc" id="L1077">            final var center = sample.getCameraCenter();</span>
+<span class="fc" id="L1078">            center.setInhomogeneousCoordinates(inhomX, inhomY, inhomZ);</span>
+
+            // update camera
+<span class="fc" id="L1081">            final var camera = sample.getCamera();</span>
+<span class="fc" id="L1082">            camera.setIntrinsicAndExtrinsicParameters(intrinsic, rot, center);</span>
+<span class="fc" id="L1083">        }</span>
+<span class="fc" id="L1084">    }</span>
+
+    /**
+     * Computes re-projection error taking into account ideal pattern marker
+     * points, transforming them using estimated homography, adding to them
+     * distortion and comparing them with sampled points.
+     *
+     * @param idealFallbackPatternMarkers ideal 2D pattern marker points used
+     *                                    as fallback in case that a given sample does not have an
+     *                                    associated pattern.
+     * @return average re-projection error.
+     */
+    private double computeReprojectionError(final List&lt;Point2D&gt; idealFallbackPatternMarkers) {
+        // distorted points are the sampled points
+        // undistorted points are the ideal pattern marker points projected
+        // using current camera pose
+        PinholeCamera camera;
+        Point2D marker2D;
+<span class="fc" id="L1102">        final var marker3D = Point3D.create();</span>
+<span class="fc" id="L1103">        final var undistortedPoint = Point2D.create();</span>
+<span class="fc" id="L1104">        var totalPoints = 0;</span>
+<span class="fc" id="L1105">        final var distortedPoint = Point2D.create();</span>
+        Point2D sampledPoint;
+<span class="fc" id="L1107">        var avgError = 0.0;</span>
+<span class="fc bfc" id="L1108" title="All 2 branches covered.">        for (final var sample : samples) {</span>
+<span class="fc" id="L1109">            camera = sample.getCamera();</span>
+<span class="fc bfc" id="L1110" title="All 2 branches covered.">            if (camera == null) {</span>
+<span class="fc" id="L1111">                continue;</span>
+            }
+
+            final List&lt;Point2D&gt; idealPatternMarkers;
+<span class="fc bfc" id="L1115" title="All 2 branches covered.">            if (sample.getPattern() != null) {</span>
+<span class="fc" id="L1116">                idealPatternMarkers = sample.getPattern().getIdealPoints();</span>
+            } else {
+<span class="fc" id="L1118">                idealPatternMarkers = idealFallbackPatternMarkers;</span>
+            }
+
+<span class="fc" id="L1121">            final var pointsPerSample = idealPatternMarkers.size();</span>
+<span class="fc bfc" id="L1122" title="All 2 branches covered.">            for (var i = 0; i &lt; pointsPerSample; i++) {</span>
+<span class="fc" id="L1123">                marker2D = idealPatternMarkers.get(i);</span>
+<span class="fc" id="L1124">                sampledPoint = sample.getSampledMarkers().get(i);</span>
+
+                // convert ideal marker point into a 3D point placed in plane
+                // z = 0
+<span class="fc" id="L1128">                marker3D.setInhomogeneousCoordinates(marker2D.getInhomX(), marker2D.getInhomY(), 0.0);</span>
+
+                // project 3D marker point using estimated camera on current
+                // sample (i.e. view)
+<span class="fc" id="L1132">                camera.project(marker3D, undistortedPoint);</span>
+
+                // add distortion to ideal projected point
+<span class="fc" id="L1135">                distortion.distort(undistortedPoint, distortedPoint);</span>
+
+                // obtain distance between sampled point and ideal projected
+                // point with added distortion
+<span class="fc" id="L1139">                avgError += sampledPoint.distanceTo(distortedPoint);</span>
+<span class="fc" id="L1140">                totalPoints++;</span>
+            }
+<span class="fc" id="L1142">        }</span>
+
+<span class="pc bpc" id="L1144" title="1 of 2 branches missed.">        if (totalPoints == 0) {</span>
+<span class="nc" id="L1145">            avgError = Double.MAX_VALUE;</span>
+        } else {
+<span class="fc" id="L1147">            avgError /= totalPoints;</span>
+        }
+
+<span class="fc" id="L1150">        return avgError;</span>
+    }
+
+    /**
+     * Sets robust estimator method to be used for radial distortion estimation.
+     * If method changes, then a new radial distortion estimator is created and
+     * configured.
+     *
+     * @param distortionMethod robust estimator method to be used for
+     *                         radial distortion estimation.
+     */
+    private void internalSetDistortionMethod(RobustEstimatorMethod distortionMethod) {
+        // if method changes, recreate estimator
+<span class="fc bfc" id="L1163" title="All 2 branches covered.">        if (distortionMethod != this.distortionMethod) {</span>
+<span class="fc bfc" id="L1164" title="All 2 branches covered.">            final var previousAvailable = this.distortionMethod != null;</span>
+<span class="fc" id="L1165">            var threshold = 0.0;</span>
+<span class="fc" id="L1166">            var confidence = 0.0;</span>
+<span class="fc" id="L1167">            var maxIterations = 0;</span>
+<span class="fc bfc" id="L1168" title="All 2 branches covered.">            if (previousAvailable) {</span>
+<span class="fc" id="L1169">                threshold = getDistortionEstimatorThreshold();</span>
+<span class="fc" id="L1170">                confidence = getDistortionEstimatorConfidence();</span>
+<span class="fc" id="L1171">                maxIterations = getDistortionEstimatorMaxIterations();</span>
+            }
+
+<span class="fc" id="L1174">            distortionEstimator = RadialDistortionRobustEstimator.create(distortionMethod);</span>
+
+            // configure new estimator
+<span class="fc" id="L1177">            refreshDistortionEstimatorListener();</span>
+<span class="fc bfc" id="L1178" title="All 2 branches covered.">            if (previousAvailable) {</span>
+                try {
+<span class="fc" id="L1180">                    setDistortionEstimatorThreshold(threshold);</span>
+<span class="fc" id="L1181">                    setDistortionEstimatorConfidence(confidence);</span>
+<span class="fc" id="L1182">                    setDistortionEstimatorMaxIterations(maxIterations);</span>
+<span class="nc" id="L1183">                } catch (final LockedException e) {</span>
+<span class="nc" id="L1184">                    Logger.getLogger(AlternatingCameraCalibrator.class.getName()).log(Level.WARNING,</span>
+                            &quot;Could not reconfigure distortion estimator&quot;, e);
+<span class="fc" id="L1186">                }</span>
+            }
+        }
+
+<span class="fc" id="L1190">        this.distortionMethod = distortionMethod;</span>
+<span class="fc" id="L1191">    }</span>
+
+    /**
+     * Returns number of parameters of cost function.
+     *
+     * @param numHomographies number of valid estimated homographies.
+     * @return number of parameters of cost function.
+     */
+    private int numParameters(final int numHomographies) {
+        // For each homography there are:
+        // - 4 rotation parameters (angle and axis coordinates x, y, z)
+        // - 3 translation parameters
+        // - x intrinsic parameters (depending on settings)
+        // - x radial distortion parameters (K params length)
+
+<span class="fc" id="L1206">        return 7 * numHomographies + numIntrinsicParameters() + distortion.getKParams().length;</span>
+    }
+
+    /**
+     * Returns number of intrinsic parameters to be taken into account in
+     * cost function.
+     *
+     * @return number of intrinsic parameters to be taken into account in
+     * cost function.
+     */
+    private int numIntrinsicParameters() {
+        // if no constraints, there are 5 intrinsic parameters (horizontal
+        // focal length, vertical focal length, skewness, horizontal principal
+        // point and vertical principal point
+<span class="fc" id="L1220">        var num = 5;</span>
+<span class="pc bpc" id="L1221" title="1 of 2 branches missed.">        if (isZeroSkewness()) {</span>
+<span class="pc bpc" id="L1222" title="1 of 2 branches missed.">            if (isFocalDistanceAspectRatioKnown()) {</span>
+<span class="fc" id="L1223">                num--;</span>
+            }
+<span class="fc" id="L1225">            num--;</span>
+        }
+<span class="pc bpc" id="L1227" title="1 of 2 branches missed.">        if (isPrincipalPointAtOrigin()) {</span>
+<span class="fc" id="L1228">            num -= 2;</span>
+        }
+
+<span class="fc" id="L1231">        return num;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

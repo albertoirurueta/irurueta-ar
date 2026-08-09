@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BaseAbsoluteOrientationSlamTwoViewsSparseReconstructor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.sfm</a> &gt; <span class="el_source">BaseAbsoluteOrientationSlamTwoViewsSparseReconstructor.java</span></div><h1>BaseAbsoluteOrientationSlamTwoViewsSparseReconstructor.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2017 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.sfm;
+
+import com.irurueta.ar.slam.AbsoluteOrientationBaseSlamEstimator;
+import com.irurueta.ar.slam.BaseCalibrationData;
+import com.irurueta.geometry.MetricTransformation3D;
+import com.irurueta.geometry.Point3D;
+import com.irurueta.geometry.Rotation3D;
+
+import java.util.ArrayList;
+
+/**
+ * Base class in charge of estimating cameras and 3D reconstructed points from
+ * sparse image point correspondences in two views and also in charge of
+ * estimating overall scene scale and absolute orientation by means of SLAM
+ * (Simultaneous Location And Mapping) using data obtained from sensors like
+ * accelerometers or gyroscopes.
+ * NOTE: absolute orientation slam estimators are not very accurate during
+ * estimation of the orientation state, for that reason we take into account
+ * the initial orientation.
+ *
+ * @param &lt;D&gt; type of calibration data.
+ * @param &lt;C&gt; type of configuration.
+ * @param &lt;R&gt; type of re-constructor.
+ * @param &lt;L&gt; type of listener.
+ * @param &lt;S&gt; type of SLAM estimator.
+ */
+public abstract class BaseAbsoluteOrientationSlamTwoViewsSparseReconstructor&lt;
+        D extends BaseCalibrationData,
+        C extends BaseSlamTwoViewsSparseReconstructorConfiguration&lt;D, C&gt;,
+        R extends BaseSlamTwoViewsSparseReconstructor&lt;D, C, R, L, S&gt;,
+        L extends BaseSlamTwoViewsSparseReconstructorListener&lt;R&gt;,
+        S extends AbsoluteOrientationBaseSlamEstimator&lt;D&gt;&gt; extends
+        BaseSlamTwoViewsSparseReconstructor&lt;D, C, R, L, S&gt; {
+
+    /**
+     * First sample of orientation received.
+     */
+    protected Rotation3D firstOrientation;
+
+    /**
+     * Constructor.
+     *
+     * @param configuration configuration for this re-constructor.
+     * @param listener      listener in charge of handling events.
+     * @throws NullPointerException if listener or configuration is not
+     *                              provided.
+     */
+    protected BaseAbsoluteOrientationSlamTwoViewsSparseReconstructor(
+            final C configuration, final L listener) {
+<span class="fc" id="L65">        super(configuration, listener);</span>
+<span class="fc" id="L66">    }</span>
+
+    /**
+     * Provides a new orientation sample to update SLAM estimator.
+     * If re-constructor is not running, calling this method has no effect.
+     *
+     * @param timestamp   timestamp of accelerometer sample since epoch time and
+     *                    expressed in nanoseconds.
+     * @param orientation new orientation.
+     */
+    public void updateOrientationSample(final long timestamp,
+                                        final Rotation3D orientation) {
+<span class="pc bpc" id="L78" title="1 of 2 branches missed.">        if (slamEstimator != null) {</span>
+<span class="fc" id="L79">            slamEstimator.updateOrientationSample(timestamp, orientation);</span>
+        }
+<span class="fc bfc" id="L81" title="All 2 branches covered.">        if (firstOrientation == null) {</span>
+            //make a copy of orientation
+<span class="fc" id="L83">            firstOrientation = orientation.toQuaternion();</span>
+        }
+<span class="fc" id="L85">    }</span>
+
+    /**
+     * Updates scene scale and orientation using SLAM data.
+     *
+     * @return true if scale was successfully updated, false otherwise.
+     */
+    @SuppressWarnings(&quot;DuplicatedCode&quot;)
+    protected boolean updateScaleAndOrientation() {
+
+        // obtain baseline (camera separation from slam estimator data
+<span class="fc" id="L96">        final var posX = slamEstimator.getStatePositionX();</span>
+<span class="fc" id="L97">        final var posY = slamEstimator.getStatePositionY();</span>
+<span class="fc" id="L98">        final var posZ = slamEstimator.getStatePositionZ();</span>
+
+        // to estimate baseline, we assume that first camera is placed at
+        // world origin
+<span class="fc" id="L102">        final var baseline = Math.sqrt(posX * posX + posY * posY + posZ * posZ);</span>
+
+        try {
+<span class="fc" id="L105">            final var camera1 = estimatedCamera1.getCamera();</span>
+<span class="fc" id="L106">            final var camera2 = estimatedCamera2.getCamera();</span>
+
+<span class="fc" id="L108">            camera1.decompose();</span>
+<span class="fc" id="L109">            camera2.decompose();</span>
+
+<span class="fc" id="L111">            final var center1 = camera1.getCameraCenter();</span>
+<span class="fc" id="L112">            final var center2 = camera2.getCameraCenter();</span>
+
+            // R1' = R1*Rdiff
+            // Rdiff = R1^T*R1'
+
+            // where R1' is the desired orientation (obtained by sampling a
+            // sensor)
+            // and R1 is always the identity for the 1st camera.
+            // Hence R1' = Rdiff
+
+            // t1' is the desired translation which is zero for the 1st
+            // camera.
+
+            // We want: P1' = K*[R1' t1'] = K*[R1' 0]
+            // And we have P1 = K[I 0]
+
+            // We need a transformation T so that:
+            // P1' = P1*T^-1 = K[I 0][R1' 0]
+            //                      [0   1]
+
+            // Hence: T^-1 = [R1' 0]
+            //              [0   1]
+
+            // or T = [R1'^T 0]
+            //       [0     1]
+
+            // because we are also applying a transformation of scale s,
+            // the combination of both transformations is
+            // T = [s*R1'^T 0]
+            //     [0       1]
+
+<span class="fc" id="L143">            final var r = firstOrientation.inverseRotationAndReturnNew();</span>
+
+<span class="fc" id="L145">            final var estimatedBaseline = center1.distanceTo(center2);</span>
+
+<span class="fc" id="L147">            final var scale = baseline / estimatedBaseline;</span>
+
+<span class="fc" id="L149">            final var scaleAndOrientationTransformation = new MetricTransformation3D(scale);</span>
+<span class="fc" id="L150">            scaleAndOrientationTransformation.setRotation(r);</span>
+
+            // update scale of cameras
+<span class="fc" id="L153">            scaleAndOrientationTransformation.transform(camera1);</span>
+<span class="fc" id="L154">            scaleAndOrientationTransformation.transform(camera2);</span>
+
+<span class="fc" id="L156">            estimatedCamera1.setCamera(camera1);</span>
+<span class="fc" id="L157">            estimatedCamera2.setCamera(camera2);</span>
+
+            // update scale of reconstructed points
+<span class="fc" id="L160">            final var numPoints = reconstructedPoints.size();</span>
+<span class="fc" id="L161">            final var reconstructedPoints3D = new ArrayList&lt;Point3D&gt;();</span>
+<span class="fc bfc" id="L162" title="All 2 branches covered.">            for (final var reconstructedPoint : reconstructedPoints) {</span>
+<span class="fc" id="L163">                reconstructedPoints3D.add(reconstructedPoint.getPoint());</span>
+<span class="fc" id="L164">            }</span>
+
+<span class="fc" id="L166">            scaleAndOrientationTransformation.transformAndOverwritePoints(reconstructedPoints3D);</span>
+
+            // set scaled points into result
+<span class="fc bfc" id="L169" title="All 2 branches covered.">            for (var i = 0; i &lt; numPoints; i++) {</span>
+<span class="fc" id="L170">                reconstructedPoints.get(i).setPoint(reconstructedPoints3D.get(i));</span>
+            }
+
+<span class="fc" id="L173">            return true;</span>
+<span class="nc" id="L174">        } catch (final Exception e) {</span>
+<span class="nc" id="L175">            failed = true;</span>
+            //noinspection unchecked
+<span class="nc" id="L177">            listener.onFail((R) this);</span>
+
+<span class="nc" id="L179">            return false;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
