@@ -67,7 +67,7 @@ in this list.
   Measures for Stereo Vision]". _The International Journal of Robotics Research_, 2001.
 . [[ref-pollefeys-2000]] M. Pollefeys. "https://cvg.ethz.ch/lectures/Computer-Vision/assets/tutorial.pdf[Tutorial on 3D Modeling from Images]". Lecture Notes of ECCV2000,
   Dublin, 2000.
-. [[ref-hartley-zisserman-2003]] R. Hartley and A. Zisserman. "https://www.cambridge.org/9780521540513[Multiple View Geometry in Computer Vision]".
+. [[ref-hartley-zisserman-2003]] R. Hartley and A. Zisserman. "https://www.robots.ox.ac.uk/~vgg/hzbook.html[Multiple View Geometry in Computer Vision]".
   Cambridge University Press, 2nd edition, 2003.
 . [[ref-faugeras-1993]] O. Faugeras. "https://mitpress.mit.edu/9780262061582/three-dimensional-computer-vision/[Three-Dimensional Computer Vision. A Geometric Viewpoint]". The MIT
   Press, 1993.
@@ -122,7 +122,7 @@ in this list.
 . [[ref-atzpadin-2004]] N. Atzpadin, P. Kauff, O. Schreer. "https://ieeexplore.ieee.org/document/1273542/[3D Analysis by Hybrid Recursive Matching for
   Real-Time Immersive Video Conferencing]". _IEEE Trans. on Circuits and Systems for Video Technology_,
   Special Issue on Immersive Telecommunications, Vol. 14, pp. 321-334, 2004.
-. [[ref-press-2007]] W. H. Press, S. A. Teukolsky, W. T. Vetterling and B. P. Flannery. "https://www.cambridge.org/numericalrecipes[Numerical
+. [[ref-press-2007]] W. H. Press, S. A. Teukolsky, W. T. Vetterling and B. P. Flannery. "https://www.numerical.recipes/[Numerical
   Recipes: The Art of Scientific Computing]". Cambridge University Press, 3rd edition, 2007.
 . [[ref-cormen-2001]] T. H. Cormen, C. E. Leiserson, R. L. Rivest and C. Stein. "https://mitpress.mit.edu/9780262531962/introduction-to-algorithms/[Introduction to
   Algorithms]". The MIT Press, 2nd edition, 2001.

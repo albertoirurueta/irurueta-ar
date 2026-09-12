@@ -59,7 +59,7 @@ sources.
   - [x] Task 1.5. `ref-cyganek-siebert-2009` → `https://www.wiley.com/en-us/An+Introduction+to+3D+Computer+Vision+Techniques+and+Algorithms-p-9781119964476` (book, Wiley product page)
   - [x] Task 1.6. `ref-banks-corke-2001` → `https://doi.org/10.1177/02783640122067525`
   - [x] Task 1.7. `ref-pollefeys-2000` → `https://cvg.ethz.ch/lectures/Computer-Vision/assets/tutorial.pdf` (no DOI/publisher exists for these ECCV2000 tutorial notes; author's own hosted copy is the closest official source)
-  - [x] Task 1.8. `ref-hartley-zisserman-2003` → `https://www.cambridge.org/9780521540513` (book, Cambridge University Press product page)
+  - [x] Task 1.8. `ref-hartley-zisserman-2003` → `https://www.robots.ox.ac.uk/~vgg/hzbook.html` (book, author-run official companion site — swapped in after the initial Cambridge product page was reported unreachable during Cambridge's site-wide outage)
   - [x] Task 1.9. `ref-faugeras-1993` → `https://mitpress.mit.edu/9780262061582/three-dimensional-computer-vision/` (book, MIT Press)
   - [x] Task 1.10. `ref-faugeras-luong-2004` → `https://mitpress.mit.edu/9780262562041/the-geometry-of-multiple-images/` (book, MIT Press)
   - [x] Task 1.11. `ref-mordohai-medioni-2006` → `https://doi.org/10.1109/TPAMI.2006.129`
@@ -85,7 +85,7 @@ sources.
   - [x] Task 1.31. `ref-luong-faugeras-1995` → `https://doi.org/10.1007/BF00127818`
   - [x] Task 1.32. `ref-zhang-1998` → `https://doi.org/10.1023/A:1007941100561`
   - [x] Task 1.33. `ref-atzpadin-2004` → `https://ieeexplore.ieee.org/document/1273542/` (no confirmed resolvable DOI found; official IEEE Xplore document page used directly)
-  - [x] Task 1.34. `ref-press-2007` → `https://www.cambridge.org/numericalrecipes` (book, Cambridge University Press)
+  - [x] Task 1.34. `ref-press-2007` → `https://www.numerical.recipes/` (book, authors' own official Numerical Recipes site — swapped in after the initial Cambridge product page was reported unreachable during Cambridge's site-wide outage)
   - [x] Task 1.35. `ref-cormen-2001` → `https://mitpress.mit.edu/9780262531962/introduction-to-algorithms/` (book, MIT Press, confirmed as the 2nd edition ISBN matching the citation)
   - [x] Task 1.36. `ref-george-tjahjadi-1999` → `https://ieeexplore.ieee.org/document/817210/` (no confirmed resolvable DOI found; official IEEE Xplore document page used directly)
   - [x] Task 1.37. `ref-alvarez-2000` → `https://doi.org/10.1023/A:1008170101536`
