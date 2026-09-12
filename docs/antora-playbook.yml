@@ -1,5 +1,5 @@
 site:
-  title: irurueta-ar
+  title: Irurueta AR
   start_page: irurueta-ar::index.adoc
 content:
   sources:
@@ -27,6 +27,6 @@ antora:
 asciidoc:
   attributes:
     mathjax-tex-tags: ams
-    mathjax-tex-packages: ams
+    mathjax-tex-packages: ams boldsymbol
   extensions:
     - '@djencks/asciidoctor-mathjax'

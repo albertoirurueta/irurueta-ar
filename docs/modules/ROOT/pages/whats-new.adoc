@@ -1,4 +1,6 @@
 = What's New
+:description: Release notes for irurueta-ar, including the 1.6.0 release: new Antora documentation site, Java 21 minimum version, and updated dependency versions.
+:keywords: release notes, changelog, what's new, irurueta-ar, version history, Java 21
 
 NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
 

@@ -1,5 +1,7 @@
 = Robust vs. non-robust estimation
 :stem: latexmath
+:description: The shared robust vs. non-robust estimation pattern used throughout irurueta-ar: RANSAC, LMedS, MSAC, PROSAC, and PROMedS outlier rejection.
+:keywords: RANSAC, LMedS, MSAC, PROSAC, PROMedS, robust estimation, outlier rejection, non-robust estimator, computer vision
 
 NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
 
@@ -85,7 +87,7 @@ N = \frac{\log(1-p)}{\log\left(1 - (1-\varepsilon)^s\right)}
 `irurueta-ar` recomputes stem:[\varepsilon] adaptively as better solutions are found (shrinking `N` as the
 best-known inlier ratio improves) and exposes `confidence` (default `0.99`) and `maxIterations` (default
 `5000`) as the tunable stopping criteria on every `*RobustEstimator` class. This matches the RANSAC treatment
-in the thesis itself xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] (algorithms 2.2 and 3.1) and in
+in the thesis itself xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] (xref:attachment$irurueta-phd-thesis.pdf#page=86[algorithm 2.2] and xref:attachment$irurueta-phd-thesis.pdf#page=116[algorithm 3.1]) and in
 Hartley & Zisserman xref:reference.adoc#ref-hartley-zisserman-2003[Hartley & Zisserman, 2003].
 
 After the best consensus set is found, every robust estimator can optionally refine the result (`refineResult`,
@@ -139,9 +141,32 @@ robust.setThreshold(1.0); // pixels
 FundamentalMatrix robustFundamentalMatrix = robust.estimate();
 ----
 
+== Key classes
+
+[cols="2,1,1",options="header"]
+|===
+|Class |Repository |Javadoc
+
+|`FundamentalMatrix`
+|https://github.com/albertoirurueta/irurueta-ar/blob/master/src/main/java/com/irurueta/ar/epipolar/FundamentalMatrix.java[Source]
+|https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/com/irurueta/ar/epipolar/FundamentalMatrix.html[Javadoc]
+
+|`EightPointsFundamentalMatrixEstimator`
+|https://github.com/albertoirurueta/irurueta-ar/blob/master/src/main/java/com/irurueta/ar/epipolar/estimators/EightPointsFundamentalMatrixEstimator.java[Source]
+|https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/com/irurueta/ar/epipolar/estimators/EightPointsFundamentalMatrixEstimator.html[Javadoc]
+
+|`FundamentalMatrixRobustEstimator`
+|https://github.com/albertoirurueta/irurueta-ar/blob/master/src/main/java/com/irurueta/ar/epipolar/estimators/FundamentalMatrixRobustEstimator.java[Source]
+|https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/com/irurueta/ar/epipolar/estimators/FundamentalMatrixRobustEstimator.html[Javadoc]
+
+|`RANSACFundamentalMatrixRobustEstimator`
+|https://github.com/albertoirurueta/irurueta-ar/blob/master/src/main/java/com/irurueta/ar/epipolar/estimators/RANSACFundamentalMatrixRobustEstimator.java[Source]
+|https://albertoirurueta.github.io/irurueta-ar/mvn-site/apidocs/com/irurueta/ar/epipolar/estimators/RANSACFundamentalMatrixRobustEstimator.html[Javadoc]
+|===
+
 == References
 
-xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] &sect;2.5, &sect;3.2.3 +
+xref:reference.adoc#ref-thesis[Irurueta, PhD thesis] xref:attachment$irurueta-phd-thesis.pdf#page=80[&sect;2.5], xref:attachment$irurueta-phd-thesis.pdf#page=116[&sect;3.2.3] +
 xref:reference.adoc#ref-hartley-zisserman-2003[Hartley & Zisserman, 2003] chapter 4 ("Estimation - 2D
 Projective Transformations") +
 xref:reference.adoc#ref-fischler-bolles-1981[Fischler & Bolles, 1981] +
