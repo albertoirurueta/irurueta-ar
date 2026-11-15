@@ -53,7 +53,7 @@ class AbsoluteOrientationSlamEstimatorTest implements
     // those error covariances. This gain will change for other values
     private static final double VELOCITY_GAIN = 0.019991983014891204; //0.1923075055475187
 
-    private static final int REPEAT_TIMES = 5;
+    private static final int REPEAT_TIMES = 10;
     private static final int N_PREDICTION_SAMPLES = 10000;
 
     private static final double ACCELERATION_NOISE_STANDARD_DEVIATION = 1e-4;
