@@ -1,0 +1,647 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ImageOfAbsoluteConicEstimator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.calibration.estimators</a> &gt; <span class="el_source">ImageOfAbsoluteConicEstimator.java</span></div><h1>ImageOfAbsoluteConicEstimator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2015 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.calibration.estimators;
+
+import com.irurueta.ar.calibration.ImageOfAbsoluteConic;
+import com.irurueta.geometry.Transformation2D;
+import com.irurueta.geometry.estimators.LockedException;
+import com.irurueta.geometry.estimators.NotReadyException;
+
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * This class defines the interface for an estimator of the Image of Absolute
+ * Conic (IAC). The IAC is directly related to pinhole camera intrinsic
+ * parameters, implementations of this estimator can be used for camera
+ * calibration purposes.
+ * Depending on the constraints imposed on the intrinsic parameters of the
+ * camera, some parameters of the IAC will be known in advance and fewer
+ * equations will be needed.
+ * If no constraints are imposed, then at least 5 equations will be needed to
+ * estimate the DIAC, and hence 3 homographies will be required (2 equations can
+ * be obtained for each homography). 2*n &amp;lt;= 5 ==&amp;lt; n &amp;lt;= 5/2 ==&amp;lt; n &amp;lt;= 2.5 ==&amp;lt;
+ * n &amp;lt;= 3
+ * If skewness is assumed to be known and zero, then one less homography is
+ * required, hence only 2 homographies will be needed.
+ * 2*n + 1 &amp;lt;= 5 ==&amp;lt; n &amp;lt;= 4 / 2 ==&amp;lt; n &amp;lt;= 2
+ * If also principal point is assumed to be known and located at image center
+ * (origin of coordinates), then 2 fewer equations are needed, and hence only
+ * 1 homography is needed:
+ * 2n + 1 + 2 &amp;lt;= 5 ==&amp;lt; n &amp;lt;= 2 / 2 ==&amp;lt; n &amp;lt;= 1
+ * By enabling constraints, results are guaranteed to be more stable (estimation
+ * fails fewer times with an exception) and more accurate, so whenever possible
+ * constraints should be enabled. The principal point at origin introduces more
+ * stability and accuracy than the skewness constraint, but if possible both
+ * should be enabled. By default, both constraints are enable.
+ */
+public abstract class ImageOfAbsoluteConicEstimator {
+
+    /**
+     * Minimum number of required equations to solve the IAC linear system of
+     * equations.
+     */
+    protected static final int MIN_REQUIRED_EQUATIONS = 5;
+
+    /**
+     * Constant defining whether zero skewness is assumed.
+     */
+    public static final boolean DEFAULT_ZERO_SKEWNESS = true;
+
+    /**
+     * Constant defining whether principal point is assumed to be at origin of
+     * coordinates.
+     */
+    public static final boolean DEFAULT_PRINCIPAL_POINT_AT_ORIGIN = true;
+
+    /**
+     * Constant defining whether aspect ratio of focal distances (i.e. vertical
+     * focal distance divided by horizontal focal distance) is known or not.
+     * Notice that focal distance aspect ratio is not related to image size
+     * aspect ratio. Typically, LCD sensor cells are square and hence aspect
+     * ratio of focal distances is known and equal to 1.
+     */
+    public static final boolean DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN = true;
+
+    /**
+     * Constant defining default aspect ratio of focal distances. This constant
+     * takes into account that typically LCD sensor cells are square and hence
+     * aspect ratio of focal distances is known and equal to 1.
+     */
+    public static final double DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO = 1.0;
+
+    /**
+     * Minimum absolute value allowed for aspect ratio of focal distances.
+     */
+    public static final double MIN_ABS_FOCAL_DISTANCE_ASPECT_RATIO = 1e-6;
+
+    /**
+     * Default estimator type.
+     */
+<span class="fc" id="L94">    public static final ImageOfAbsoluteConicEstimatorType DEFAULT_ESTIMATOR_TYPE =</span>
+            ImageOfAbsoluteConicEstimatorType.LMSE_IAC_ESTIMATOR;
+
+    /**
+     * Indicates whether camera skewness is assumed to be zero or not.
+     */
+    protected boolean zeroSkewness;
+
+    /**
+     * Indicates whether principal point is assumed to be at origin of
+     * coordinates or not.
+     * If false, the principal point will be estimated, otherwise it will be
+     * assumed to be at image center (i.e. origin of coordinates).
+     */
+    protected boolean principalPointAtOrigin;
+
+    /**
+     * Indicates whether aspect ratio of focal distances (i.e. vertical focal
+     * distance divided by horizontal focal distance) is known or not.
+     * Notice that focal distance aspect ratio is not related to image size
+     * aspect ratio. Typically, LCD sensor cells are square and hence aspect
+     * ratio of focal distances is known and equal to 1.
+     * This value is only taken into account if skewness is assumed to be
+     * zero, otherwise it is ignored.
+     */
+    protected boolean focalDistanceAspectRatioKnown;
+
+    /**
+     * Contains aspect ratio of focal distances (i.e. vertical focal distance
+     * divided by horizontal focal distance).
+     * This value is only taken into account if skewness is assumed to be zero
+     * and focal distance aspect ratio is marked as known, otherwise it is
+     * ignored.
+     * By default, this is 1.0, since it is taken into account that typically
+     * LCD sensor cells are square and hence aspect ratio focal distances is
+     * known and equal to 1.
+     * Notice that focal distance aspect ratio is not related to image size
+     * aspect ratio.
+     */
+    protected double focalDistanceAspectRatio;
+
+    /**
+     * True when estimator is estimating IAC.
+     */
+    protected boolean locked;
+
+    /**
+     * Listener to be notified of events such as when estimation starts, ends or
+     * estimation progress changes.
+     */
+    protected ImageOfAbsoluteConicEstimatorListener listener;
+
+    /**
+     * List of homographies (2D transformations) used to estimate the image
+     * of absolute conic (IAC), which can be used to obtain pinhole camera
+     * intrinsic parameters.
+     */
+    protected List&lt;Transformation2D&gt; homographies;
+
+    /**
+     * Constructor.
+     */
+<span class="fc" id="L156">    protected ImageOfAbsoluteConicEstimator() {</span>
+<span class="fc" id="L157">        zeroSkewness = DEFAULT_ZERO_SKEWNESS;</span>
+<span class="fc" id="L158">        principalPointAtOrigin = DEFAULT_PRINCIPAL_POINT_AT_ORIGIN;</span>
+<span class="fc" id="L159">        focalDistanceAspectRatioKnown = DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO_KNOWN;</span>
+<span class="fc" id="L160">        focalDistanceAspectRatio = DEFAULT_FOCAL_DISTANCE_ASPECT_RATIO;</span>
+
+<span class="fc" id="L162">        locked = false;</span>
+<span class="fc" id="L163">        listener = null;</span>
+<span class="fc" id="L164">        homographies = null;</span>
+<span class="fc" id="L165">    }</span>
+
+    /**
+     * Constructor with listener.
+     *
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or estimation progress changes.
+     */
+    protected ImageOfAbsoluteConicEstimator(final ImageOfAbsoluteConicEstimatorListener listener) {
+<span class="fc" id="L174">        this();</span>
+<span class="fc" id="L175">        this.listener = listener;</span>
+<span class="fc" id="L176">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param homographies list of homographies (2D transformations) used to
+     *                     estimate the image of absolute conic (IAC), which can be used to obtain
+     *                     pinhole camera intrinsic parameters.
+     * @throws IllegalArgumentException if not enough homographies are provided
+     *                                  for default settings. Hence, at least 1 homography must be provided.
+     */
+    protected ImageOfAbsoluteConicEstimator(final List&lt;Transformation2D&gt; homographies) {
+<span class="fc" id="L188">        this();</span>
+<span class="fc" id="L189">        internalSetHomographies(homographies);</span>
+<span class="fc" id="L190">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param homographies list of homographies (2D transformations) used to
+     *                     estimate the image of absolute conic (IAC), which can be used to obtain
+     *                     pinhole camera intrinsic parameters.
+     * @param listener     listener to be notified of events such as when estimation
+     *                     starts, ends or estimation progress changes.
+     * @throws IllegalArgumentException if not enough homographies are provided
+     *                                  for default settings. Hence, at least 1 homography must be provided.
+     */
+    protected ImageOfAbsoluteConicEstimator(
+            final List&lt;Transformation2D&gt; homographies, final ImageOfAbsoluteConicEstimatorListener listener) {
+<span class="fc" id="L205">        this(listener);</span>
+<span class="fc" id="L206">        internalSetHomographies(homographies);</span>
+<span class="fc" id="L207">    }</span>
+
+    /**
+     * Returns boolean indicating whether camera skewness is assumed to be zero
+     * or not.
+     * Skewness determines whether LCD sensor cells are properly aligned or not,
+     * where zero indicates perfect alignment.
+     * Typically, skewness is a value equal or very close to zero.
+     *
+     * @return true if camera skewness is assumed to be zero, otherwise camera
+     * skewness is estimated.
+     */
+    public boolean isZeroSkewness() {
+<span class="fc" id="L220">        return zeroSkewness;</span>
+    }
+
+    /**
+     * Sets boolean indicating whether camera skewness is assumed to be zero or
+     * not.
+     * Skewness determines whether LCD sensor cells are properly aligned or not,
+     * where zero indicates perfect alignment.
+     * Typically, skewness is a value equal or very close to zero.
+     *
+     * @param zeroSkewness true if camera skewness is assumed to be zero,
+     *                     otherwise camera skewness is estimated.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setZeroSkewness(final boolean zeroSkewness) throws LockedException {
+<span class="fc bfc" id="L235" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L236">            throw new LockedException();</span>
+        }
+
+<span class="fc" id="L239">        this.zeroSkewness = zeroSkewness;</span>
+<span class="fc" id="L240">    }</span>
+
+    /**
+     * Returns boolean indicating whether principal point is assumed to be at
+     * origin of coordinates or not.
+     * Typically principal point is located at image center (origin of
+     * coordinates), and usually matches the center of radial distortion if
+     * it is taken into account.
+     *
+     * @return true if principal point is assumed to be at origin of
+     * coordinates, false if principal point must be estimated.
+     */
+    public boolean isPrincipalPointAtOrigin() {
+<span class="fc" id="L253">        return principalPointAtOrigin;</span>
+    }
+
+    /**
+     * Sets boolean indicating whether principal point is assumed to be at
+     * origin of coordinates or not.
+     * Typically principal point is located at image center (origin of
+     * coordinates), and usually matches the center of radial distortion if it
+     * is taken into account.
+     *
+     * @param principalPointAtOrigin true if principal point is assumed to be at
+     *                               origin of coordinates, false if principal point must be estimated.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setPrincipalPointAtOrigin(final boolean principalPointAtOrigin) throws LockedException {
+<span class="fc bfc" id="L268" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L269">            throw new LockedException();</span>
+        }
+
+<span class="fc" id="L272">        this.principalPointAtOrigin = principalPointAtOrigin;</span>
+<span class="fc" id="L273">    }</span>
+
+    /**
+     * Returns boolean indicating whether aspect ratio of focal distances (i.e.
+     * vertical focal distance divided by horizontal focal distance) is known or
+     * not.
+     * Notice that focal distance aspect ratio is not related to image size
+     * aspect ratio. Typically, LCD sensor cells are square and hence aspect
+     * ratio of focal distances is known and equal to 1.
+     * This value is only taken into account if skewness is assumed to be zero,
+     * otherwise it is ignored.
+     *
+     * @return true if focal distance aspect ratio is known, false otherwise.
+     */
+    public boolean isFocalDistanceAspectRatioKnown() {
+<span class="fc" id="L288">        return focalDistanceAspectRatioKnown;</span>
+    }
+
+    /**
+     * Sets value indicating whether aspect ratio of focal distances (i.e.
+     * vertical focal distance divided by horizontal focal distance) is known or
+     * not.
+     * Notice that focal distance aspect ratio is not related to image size
+     * aspect ratio. Typically, LCD sensor cells are square and hence aspect
+     * ratio of focal distances is known and equal to 1.
+     * This value is only taken into account if skewness is assumed to be zero,
+     * otherwise it is ignored.
+     *
+     * @param focalDistanceAspectRatioKnown true if focal distance aspect ratio
+     *                                      is known, false otherwise.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setFocalDistanceAspectRatioKnown(final boolean focalDistanceAspectRatioKnown) throws LockedException {
+<span class="pc bpc" id="L306" title="1 of 2 branches missed.">        if (isLocked()) {</span>
+<span class="nc" id="L307">            throw new LockedException();</span>
+        }
+
+<span class="fc" id="L310">        this.focalDistanceAspectRatioKnown = focalDistanceAspectRatioKnown;</span>
+<span class="fc" id="L311">    }</span>
+
+    /**
+     * Returns aspect ratio of focal distances (i.e. vertical focal distance
+     * divided by horizontal focal distance).
+     * This value is only taken into account if skewness is assumed to be zero
+     * and focal distance aspect ratio is marked as known, otherwise it is
+     * ignored.
+     * By default, this is 1.0, since it is taken into account that typically
+     * LCD sensor cells are square and hence aspect ratio focal distances is
+     * known and equal to 1.
+     * Notice that focal distance aspect ratio is not related to image size
+     * aspect ratio
+     * Notice that a negative aspect ratio indicates that vertical axis is
+     * reversed. This can be useful in some situations where image vertical
+     * coordinates are reversed respect to the physical world (i.e. in computer
+     * graphics typically image vertical coordinates go downwards, while in
+     * physical world they go upwards).
+     *
+     * @return aspect ratio of focal distances.
+     */
+    public double getFocalDistanceAspectRatio() {
+<span class="fc" id="L333">        return focalDistanceAspectRatio;</span>
+    }
+
+    /**
+     * Sets aspect ratio of focal distances (i.e. vertical focal distance
+     * divided by horizontal focal distance).
+     * This value is only taken into account if skewness is assumed to be zero
+     * and focal distance aspect ratio is marked as known, otherwise it is
+     * ignored.
+     * By default, this is 1.0, since it is taken into account that typically
+     * LCD sensor cells are square and hence aspect ratio focal distances is
+     * known and equal to 1.
+     * Notice that focal distance aspect ratio is not related to image size
+     * aspect ratio.
+     * Notice that a negative aspect ratio indicates that vertical axis is
+     * reversed. This can be useful in some situations where image vertical
+     * coordinates are reversed respect to the physical world (i.e. in computer
+     * graphics typically image vertical coordinates go downwards, while in
+     * physical world they go upwards).
+     *
+     * @param focalDistanceAspectRatio aspect ratio of focal distances to be
+     *                                 set.
+     * @throws LockedException          if estimator is locked.
+     * @throws IllegalArgumentException if focal distance aspect ratio is too
+     *                                  close to zero, as it might produce numerical instabilities.
+     */
+    public void setFocalDistanceAspectRatio(final double focalDistanceAspectRatio) throws LockedException {
+<span class="pc bpc" id="L360" title="1 of 2 branches missed.">        if (isLocked()) {</span>
+<span class="nc" id="L361">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L363" title="All 2 branches covered.">        if (Math.abs(focalDistanceAspectRatio) &lt; MIN_ABS_FOCAL_DISTANCE_ASPECT_RATIO) {</span>
+<span class="fc" id="L364">            throw new IllegalArgumentException();</span>
+        }
+
+<span class="fc" id="L367">        this.focalDistanceAspectRatio = focalDistanceAspectRatio;</span>
+<span class="fc" id="L368">    }</span>
+
+    /**
+     * Indicates whether this instance is locked.
+     *
+     * @return true if this estimator is busy estimating an IAC, false
+     * otherwise.
+     */
+    public boolean isLocked() {
+<span class="fc" id="L377">        return locked;</span>
+    }
+
+    /**
+     * Returns listener to be notified of events such as when estimation starts,
+     * ends or estimation progress changes.
+     *
+     * @return listener to be notified of events.
+     */
+    public ImageOfAbsoluteConicEstimatorListener getListener() {
+<span class="fc" id="L387">        return listener;</span>
+    }
+
+    /**
+     * Sets listener to be notified of events such as when estimation starts,
+     * ends or estimation progress changes.
+     *
+     * @param listener listener to be notified of events.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setListener(final ImageOfAbsoluteConicEstimatorListener listener) throws LockedException {
+<span class="fc bfc" id="L398" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L399">            throw new LockedException();</span>
+        }
+<span class="fc" id="L401">        this.listener = listener;</span>
+<span class="fc" id="L402">    }</span>
+
+    /**
+     * Gets list of homographies to estimate IAC.
+     *
+     * @return list of homographies to estimate IAC.
+     */
+    public List&lt;Transformation2D&gt; getHomographies() {
+<span class="fc" id="L410">        return homographies;</span>
+    }
+
+    /**
+     * Sets list of homographies to estimate IAC.
+     *
+     * @param homographies list of homographies to estimate IAC.
+     * @throws LockedException          if estimator is locked.
+     * @throws IllegalArgumentException if provided list of homographies does not
+     *                                  contain enough elements to estimate the IAC using current settings.
+     */
+    public void setHomographies(final List&lt;Transformation2D&gt; homographies) throws LockedException {
+<span class="fc bfc" id="L422" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L423">            throw new LockedException();</span>
+        }
+<span class="fc" id="L425">        internalSetHomographies(homographies);</span>
+<span class="fc" id="L426">    }</span>
+
+    /**
+     * Returns minimum number of required homographies needed to estimate the
+     * Image of Absolute Conic (IAC).
+     * If no constraints are imposed, then at least 3 homographies are required.
+     * For each constraint imposed, one less equation will be required,  hence
+     * if skewness is assumed to be known (by using its typical value of zero),
+     * then only 4 equations will be needed (2 homographies).
+     * If also the horizontal and vertical coordinates of the principal point
+     * are assumed to be known (by being placed at the 2D origin of coordinates,
+     * which is a typical value), then only 2 equations will be needed
+     * (1 homography).
+     *
+     * @return minimum number of required homographies required to estimate the
+     * IAC
+     */
+    public int getMinNumberOfRequiredHomographies() {
+<span class="fc" id="L444">        var numEquations = MIN_REQUIRED_EQUATIONS;</span>
+<span class="fc bfc" id="L445" title="All 2 branches covered.">        if (zeroSkewness) {</span>
+<span class="fc bfc" id="L446" title="All 2 branches covered.">            if (focalDistanceAspectRatioKnown) {</span>
+<span class="fc" id="L447">                numEquations--;</span>
+            }
+<span class="fc" id="L449">            numEquations--;</span>
+        }
+<span class="fc bfc" id="L451" title="All 2 branches covered.">        if (principalPointAtOrigin) {</span>
+<span class="fc" id="L452">            numEquations -= 2;</span>
+        }
+
+<span class="fc" id="L455">        return (numEquations / 2) + (numEquations % 2);</span>
+    }
+
+    /**
+     * Returns value indicating whether required data has been provided so that
+     * IAC estimation can start.
+     * If true, estimator is ready to compute the IAC, otherwise more data needs
+     * to be provided.
+     *
+     * @return true if estimator is ready, false otherwise.
+     */
+    public boolean isReady() {
+<span class="pc bpc" id="L467" title="1 of 4 branches missed.">        return homographies != null &amp;&amp; homographies.size() &gt;= getMinNumberOfRequiredHomographies();</span>
+    }
+
+    /**
+     * Estimates Image of Absolute Conic (IAC).
+     *
+     * @return estimated IAC.
+     * @throws LockedException                        if estimator is locked.
+     * @throws NotReadyException                      if input has not yet been provided.
+     * @throws ImageOfAbsoluteConicEstimatorException if an error occurs during
+     *                                                estimation, usually because repeated homographies are
+     *                                                provided, or homographies corresponding to degenerate
+     *                                                camera movements such as pure parallel translations
+     *                                                where no additional data is really provided. Indeed,
+     *                                                if provided homographies belong to the group of affine
+     *                                                transformations (or other groups contained within such
+     *                                                as metric or Euclidean ones), this exception will
+     *                                                raise because camera movements will be degenerate. To
+     *                                                avoid this exception, homographies must be purely
+     *                                                projective.
+     */
+    public abstract ImageOfAbsoluteConic estimate() throws LockedException, NotReadyException,
+            ImageOfAbsoluteConicEstimatorException;
+
+    /**
+     * Returns type of IAC estimator.
+     *
+     * @return type of IAC estimator.
+     */
+    public abstract ImageOfAbsoluteConicEstimatorType getType();
+
+    /**
+     * Creates an instance of an IAC estimator using provided default type.
+     *
+     * @return an instance of an IAC estimator.
+     */
+    public static ImageOfAbsoluteConicEstimator create() {
+<span class="fc" id="L504">        return create(DEFAULT_ESTIMATOR_TYPE);</span>
+    }
+
+    /**
+     * Creates an instance of an IAC estimator using provided listener and
+     * default type.
+     *
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or estimation progress changes.
+     * @return an instance of an IAC estimator.
+     */
+    public static ImageOfAbsoluteConicEstimator create(final ImageOfAbsoluteConicEstimatorListener listener) {
+<span class="fc" id="L516">        return create(listener, DEFAULT_ESTIMATOR_TYPE);</span>
+    }
+
+    /**
+     * Creates an instance of an IAC estimator using provided homographies
+     *
+     * @param homographies list of homographies (2D transformations) used to
+     *                     estimate the image of absolute conic (IAC), which can be used to obtain
+     *                     pinhole camera intrinsic parameters.
+     * @return an instance of an IAC estimator.
+     * @throws IllegalArgumentException if not enough homographies are provided
+     *                                  for default IAC estimation constraints.
+     */
+    public static ImageOfAbsoluteConicEstimator create(final List&lt;Transformation2D&gt; homographies) {
+<span class="fc" id="L530">        return create(homographies, DEFAULT_ESTIMATOR_TYPE);</span>
+    }
+
+    /**
+     * Creates an instance of an IAC estimator using provided homographies and
+     * listener.
+     *
+     * @param homographies list of homographies (2D transformations) used to
+     *                     estimate the image of absolute conic (IAC), which can be used to obtain
+     *                     pinhole camera intrinsic parameters.
+     * @param listener     listener to be notified of events such as when estimation
+     *                     starts, ends or estimation progress changes.
+     * @return an instance of an IAC estimator.
+     * @throws IllegalArgumentException if not enough homographies are provided
+     *                                  for default IAC estimation constraints.
+     */
+    public static ImageOfAbsoluteConicEstimator create(
+            final List&lt;Transformation2D&gt; homographies, final ImageOfAbsoluteConicEstimatorListener listener) {
+<span class="fc" id="L548">        return create(homographies, listener, DEFAULT_ESTIMATOR_TYPE);</span>
+    }
+
+
+    /**
+     * Creates an instance of an IAC estimator using provided type.
+     *
+     * @param type type of IAC estimator to create.
+     * @return an instance of an IAC estimator.
+     */
+    public static ImageOfAbsoluteConicEstimator create(final ImageOfAbsoluteConicEstimatorType type) {
+<span class="fc bfc" id="L559" title="All 2 branches covered.">        return type == ImageOfAbsoluteConicEstimatorType.WEIGHTED_IAC_ESTIMATOR</span>
+<span class="fc" id="L560">                ? new WeightedImageOfAbsoluteConicEstimator() : new LMSEImageOfAbsoluteConicEstimator();</span>
+    }
+
+    /**
+     * Creates an instance of an IAC estimator using provided listener and
+     * type.
+     *
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or estimation progress changes.
+     * @param type     type of IAC estimator to create.
+     * @return an instance of an IAC estimator.
+     */
+    public static ImageOfAbsoluteConicEstimator create(
+            final ImageOfAbsoluteConicEstimatorListener listener, final ImageOfAbsoluteConicEstimatorType type) {
+<span class="fc bfc" id="L574" title="All 2 branches covered.">        return type == ImageOfAbsoluteConicEstimatorType.WEIGHTED_IAC_ESTIMATOR</span>
+<span class="fc" id="L575">                ? new WeightedImageOfAbsoluteConicEstimator(listener)</span>
+<span class="fc" id="L576">                : new LMSEImageOfAbsoluteConicEstimator(listener);</span>
+    }
+
+    /**
+     * Creates an instance of an IAC estimator using provided homographies
+     * and type.
+     *
+     * @param homographies list of homographies (2D transformations) used to
+     *                     estimate the image of absolute conic (IAC), which can be used to obtain
+     *                     pinhole camera intrinsic parameters.
+     * @param type         type of IAC estimator to create.
+     * @return an instance of an IAC estimator.
+     * @throws IllegalArgumentException if not enough homographies are provided
+     *                                  for default IAC estimation constraints.
+     */
+    public static ImageOfAbsoluteConicEstimator create(
+            final List&lt;Transformation2D&gt; homographies, final ImageOfAbsoluteConicEstimatorType type) {
+<span class="fc bfc" id="L593" title="All 2 branches covered.">        switch (type) {</span>
+            case WEIGHTED_IAC_ESTIMATOR:
+<span class="fc" id="L595">                final var weights = new double[homographies.size()];</span>
+<span class="fc" id="L596">                Arrays.fill(weights, 1.0);</span>
+<span class="fc" id="L597">                return new WeightedImageOfAbsoluteConicEstimator(homographies, weights);</span>
+            case LMSE_IAC_ESTIMATOR:
+            default:
+<span class="fc" id="L600">                return new LMSEImageOfAbsoluteConicEstimator(homographies);</span>
+        }
+    }
+
+    /**
+     * Creates an instance of an IAC estimator using provided homographies,
+     * listener and type.
+     *
+     * @param homographies list of homographies (2D transformations) used to
+     *                     estimate the image of absolute conic (IAC), which can be used to obtain
+     *                     pinhole camera intrinsic parameters.
+     * @param listener     listener to be notified of events such as when estimation
+     *                     starts, ends or estimation progress changes.
+     * @param type         type of IAC estimator to create.
+     * @return an instance of an IAC estimator.
+     * @throws IllegalArgumentException if not enough homographies are provided
+     *                                  for default IAC estimation constraints.
+     */
+    public static ImageOfAbsoluteConicEstimator create(
+            final List&lt;Transformation2D&gt; homographies, final ImageOfAbsoluteConicEstimatorListener listener,
+            final ImageOfAbsoluteConicEstimatorType type) {
+<span class="fc bfc" id="L621" title="All 2 branches covered.">        switch (type) {</span>
+            case WEIGHTED_IAC_ESTIMATOR:
+<span class="fc" id="L623">                final var weights = new double[homographies.size()];</span>
+<span class="fc" id="L624">                Arrays.fill(weights, 1.0);</span>
+<span class="fc" id="L625">                return new WeightedImageOfAbsoluteConicEstimator(homographies, weights, listener);</span>
+            case LMSE_IAC_ESTIMATOR:
+            default:
+<span class="fc" id="L628">                return new LMSEImageOfAbsoluteConicEstimator(homographies, listener);</span>
+        }
+    }
+
+    /**
+     * Sets list of homographies to estimate IAC.
+     * This method does not check whether estimator is locked.
+     *
+     * @param homographies list of homographies to estimate IAC.
+     * @throws IllegalArgumentException if provided list of homographies does not
+     *                                  contain enough elements to estimate the DIAC using current settings.
+     */
+    protected final void internalSetHomographies(final List&lt;Transformation2D&gt; homographies) {
+<span class="fc bfc" id="L641" title="All 4 branches covered.">        if (homographies == null || homographies.size() &lt; getMinNumberOfRequiredHomographies()) {</span>
+<span class="fc" id="L642">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L644">        this.homographies = homographies;</span>
+<span class="fc" id="L645">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

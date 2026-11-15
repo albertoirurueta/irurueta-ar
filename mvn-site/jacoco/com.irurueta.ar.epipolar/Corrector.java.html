@@ -1,0 +1,654 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Corrector.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.epipolar</a> &gt; <span class="el_source">Corrector.java</span></div><h1>Corrector.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2015 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.epipolar;
+
+import com.irurueta.geometry.Point2D;
+import com.irurueta.geometry.estimators.LockedException;
+import com.irurueta.geometry.estimators.NotReadyException;
+
+import java.util.List;
+
+/**
+ * Fixes matched pairs of points so that they perfectly follow a given epipolar
+ * geometry.
+ * When matching points typically the matching precision is about 1 pixel,
+ * however this makes that matched points under a given epipolar geometry (i.e.
+ * fundamental or essential matrix), do not lie perfectly on the corresponding
+ * epipolar plane or epipolar lines.
+ * The consequence is that triangularization of these matches will fail or
+ * produce inaccurate results.
+ * By fixing matched points using a corrector following a given epipolar
+ * geometry, this effect is alleviated.
+ * This is an abstract class, subclasses will implement different methods to
+ * fix matched points coordinates.
+ */
+public abstract class Corrector {
+
+    /**
+     * Default corrector type.
+     */
+<span class="fc" id="L43">    public static final CorrectorType DEFAULT_TYPE = CorrectorType.SAMPSON_CORRECTOR;</span>
+
+    /**
+     * Default amount of progress variation before notifying a change in
+     * estimation progress. By default, this is set to 5%.
+     */
+    public static final float DEFAULT_PROGRESS_DELTA = 0.05f;
+
+    /**
+     * Minimum allowed value for progress delta.
+     */
+    public static final float MIN_PROGRESS_DELTA = 0.0f;
+
+    /**
+     * Maximum allowed value for progress delta.
+     */
+    public static final float MAX_PROGRESS_DELTA = 1.0f;
+
+    /**
+     * A fundamental matrix defining an epipolar geometry.
+     */
+    protected FundamentalMatrix fundamentalMatrix;
+
+    /**
+     * List of points on left view to be corrected.
+     */
+    protected List&lt;Point2D&gt; leftPoints;
+
+    /**
+     * List of points on right view to be corrected.
+     */
+    protected List&lt;Point2D&gt; rightPoints;
+
+    /**
+     * List of points on left view after correction.
+     */
+    protected List&lt;Point2D&gt; leftCorrectedPoints;
+
+    /**
+     * List of points on right view after correction.
+     */
+    protected List&lt;Point2D&gt; rightCorrectedPoints;
+
+    /**
+     * Listener to notify start, stop and progress events.
+     */
+    protected CorrectorListener listener;
+
+    /**
+     * Indicates whether this instance is locked or not while doing computations.
+     */
+    protected boolean locked;
+
+    /**
+     * Amount of progress variation before notifying a progress change during
+     * estimation.
+     */
+    protected float progressDelta;
+
+    /**
+     * Constructor.
+     */
+<span class="fc" id="L105">    protected Corrector() {</span>
+<span class="fc" id="L106">        progressDelta = DEFAULT_PROGRESS_DELTA;</span>
+<span class="fc" id="L107">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param fundamentalMatrix fundamental matrix to be set.
+     */
+    protected Corrector(final FundamentalMatrix fundamentalMatrix) {
+<span class="fc" id="L115">        this();</span>
+<span class="fc" id="L116">        internalSetFundamentalMatrix(fundamentalMatrix);</span>
+<span class="fc" id="L117">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param leftPoints  points to be corrected on left view.
+     * @param rightPoints points to be corrected on right view.
+     * @throws IllegalArgumentException if provided lists of points don't have
+     *                                  the same size.
+     */
+    protected Corrector(final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints) {
+<span class="fc" id="L128">        this();</span>
+<span class="fc" id="L129">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
+<span class="fc" id="L130">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param leftPoints        points to be corrected on left view.
+     * @param rightPoints       points to be corrected on right view.
+     * @param fundamentalMatrix fundamental matrix to be set.
+     * @throws IllegalArgumentException if provided lists of points don't have
+     *                                  the same size.
+     */
+    protected Corrector(final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints,
+                        final FundamentalMatrix fundamentalMatrix) {
+<span class="fc" id="L143">        this();</span>
+<span class="fc" id="L144">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
+<span class="fc" id="L145">        internalSetFundamentalMatrix(fundamentalMatrix);</span>
+<span class="fc" id="L146">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param listener listener to handle events generated by this class.
+     */
+    protected Corrector(final CorrectorListener listener) {
+<span class="fc" id="L154">        this();</span>
+<span class="fc" id="L155">        this.listener = listener;</span>
+<span class="fc" id="L156">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param fundamentalMatrix fundamental matrix to be set.
+     * @param listener          listener to handle events generated by this class.
+     */
+    protected Corrector(final FundamentalMatrix fundamentalMatrix, final CorrectorListener listener) {
+<span class="fc" id="L165">        this(fundamentalMatrix);</span>
+<span class="fc" id="L166">        this.listener = listener;</span>
+<span class="fc" id="L167">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param leftPoints  points to be corrected on left view.
+     * @param rightPoints points to be corrected on right view.
+     * @param listener    listener to handle events generated by this class.
+     * @throws IllegalArgumentException if provided lists of points don't have
+     *                                  the same size.
+     */
+    protected Corrector(final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints,
+                        final CorrectorListener listener) {
+<span class="fc" id="L180">        this(leftPoints, rightPoints);</span>
+<span class="fc" id="L181">        this.listener = listener;</span>
+<span class="fc" id="L182">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param leftPoints        points to be corrected on left view.
+     * @param rightPoints       points to be corrected on right view.
+     * @param fundamentalMatrix fundamental matrix to be set.
+     * @param listener          listener to handle events generated by this class.
+     * @throws IllegalArgumentException if provided lists of points don't have
+     *                                  the same size.
+     */
+    protected Corrector(final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints,
+                        final FundamentalMatrix fundamentalMatrix, final CorrectorListener listener) {
+<span class="fc" id="L196">        this(leftPoints, rightPoints, fundamentalMatrix);</span>
+<span class="fc" id="L197">        this.listener = listener;</span>
+<span class="fc" id="L198">    }</span>
+
+    /**
+     * Sets the fundamental matrix defining the epipolar geometry.
+     *
+     * @param fundamentalMatrix fundamental matrix to be set.
+     * @throws LockedException if this instance is locked.
+     */
+    public final void setFundamentalMatrix(final FundamentalMatrix fundamentalMatrix) throws LockedException {
+<span class="fc bfc" id="L207" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L208">            throw new LockedException();</span>
+        }
+<span class="fc" id="L210">        internalSetFundamentalMatrix(fundamentalMatrix);</span>
+<span class="fc" id="L211">    }</span>
+
+    /**
+     * Returns fundamental matrix defining epipolar geometry.
+     *
+     * @return fundamental matrix defining epipolar geometry.
+     */
+    public FundamentalMatrix getFundamentalMatrix() {
+<span class="fc" id="L219">        return fundamentalMatrix;</span>
+    }
+
+    /**
+     * Returns list of points to be corrected on left view.
+     *
+     * @return list of points to be corrected on left view.
+     */
+    public List&lt;Point2D&gt; getLeftPoints() {
+<span class="fc" id="L228">        return leftPoints;</span>
+    }
+
+    /**
+     * Returns list of points to be corrected on right view.
+     *
+     * @return list of points to be corrected on right view.
+     */
+    public List&lt;Point2D&gt; getRightPoints() {
+<span class="fc" id="L237">        return rightPoints;</span>
+    }
+
+    /**
+     * Sets lists of points to be corrected on left and right views.
+     *
+     * @param leftPoints  points to be corrected on left view.
+     * @param rightPoints points to be corrected on right view.
+     * @throws IllegalArgumentException if provided lists of points don't have
+     *                                  the same size.
+     * @throws LockedException          if instance is locked doing computations.
+     */
+    public void setLeftAndRightPoints(final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints)
+            throws LockedException {
+<span class="fc bfc" id="L251" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L252">            throw new LockedException();</span>
+        }
+<span class="fc" id="L254">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
+<span class="fc" id="L255">    }</span>
+
+    /**
+     * Sets lists of points to be corrected on left and right views and
+     * fundamental matrix defining epipolar geometry.
+     *
+     * @param leftPoints        points to be corrected on left view.
+     * @param rightPoints       points to be corrected on right view.
+     * @param fundamentalMatrix fundamental matrix to be set.
+     * @throws IllegalArgumentException if provided lists of points don't have
+     *                                  the same size.
+     * @throws LockedException          if instance is locked doing computations.
+     */
+    public void setPointsAndFundamentalMatrix(
+            final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints, final FundamentalMatrix fundamentalMatrix)
+            throws LockedException {
+<span class="fc bfc" id="L271" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L272">            throw new LockedException();</span>
+        }
+<span class="fc" id="L274">        internalSetFundamentalMatrix(fundamentalMatrix);</span>
+<span class="fc" id="L275">        internalSetLeftAndRightPoints(leftPoints, rightPoints);</span>
+<span class="fc" id="L276">    }</span>
+
+    /**
+     * Returns list of points on left view obtained after correction.
+     *
+     * @return list of points on left view obtained after correction.
+     */
+    public List&lt;Point2D&gt; getLeftCorrectedPoints() {
+<span class="fc" id="L284">        return leftCorrectedPoints;</span>
+    }
+
+    /**
+     * Returns list of points on right view obtained after correction.
+     *
+     * @return list of points on right view obtained after correction.
+     */
+    public List&lt;Point2D&gt; getRightCorrectedPoints() {
+<span class="fc" id="L293">        return rightCorrectedPoints;</span>
+    }
+
+    /**
+     * Returns boolean indicating whether this instance is locked or not doing
+     * computations.
+     *
+     * @return true if instance is locked, false otherwise.
+     */
+    public boolean isLocked() {
+<span class="fc" id="L303">        return locked;</span>
+    }
+
+    /**
+     * Returns amount of progress variation before notifying a progress change
+     * during estimation.
+     *
+     * @return amount of progress variation before notifying a progress change
+     * during estimation.
+     */
+    public float getProgressDelta() {
+<span class="fc" id="L314">        return progressDelta;</span>
+    }
+
+    /**
+     * Sets amount of progress variation before notifying a progress change
+     * during estimation.
+     *
+     * @param progressDelta amount of progress variation before notifying a
+     *                      progress change during estimation.
+     * @throws IllegalArgumentException if progress delta is less than zero or
+     *                                  greater than 1.
+     * @throws LockedException          if this estimator is locked because an estimation
+     *                                  is being computed.
+     */
+    public void setProgressDelta(final float progressDelta) throws LockedException {
+<span class="fc bfc" id="L329" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L330">            throw new LockedException();</span>
+        }
+<span class="pc bpc" id="L332" title="2 of 4 branches missed.">        if (progressDelta &lt; MIN_PROGRESS_DELTA || progressDelta &gt; MAX_PROGRESS_DELTA) {</span>
+<span class="nc" id="L333">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L335">        this.progressDelta = progressDelta;</span>
+<span class="fc" id="L336">    }</span>
+
+    /**
+     * Returns listener to handle events generated by this class.
+     *
+     * @return listener to handle events generated by this class.
+     */
+    public CorrectorListener getListener() {
+<span class="fc" id="L344">        return listener;</span>
+    }
+
+    /**
+     * Sets listener to handle events generated by this class.
+     *
+     * @param listener listener to handle events generated by this class.
+     * @throws LockedException if this estimator is locked because an estimation
+     *                         is being computed.
+     */
+    public void setListener(final CorrectorListener listener) throws LockedException {
+<span class="fc bfc" id="L355" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L356">            throw new LockedException();</span>
+        }
+<span class="fc" id="L358">        this.listener = listener;</span>
+<span class="fc" id="L359">    }</span>
+
+    /**
+     * Indicates whether provided lists of points to be corrected on left and
+     * right views are valid.
+     * Lists are valid when both have the same size.
+     *
+     * @param leftPoints  points to be corrected on left view.
+     * @param rightPoints points to be corrected on right view.
+     * @return true if lists of points are valid, false otherwise.
+     */
+    public static boolean areValidPoints(final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints) {
+<span class="fc bfc" id="L371" title="All 6 branches covered.">        return leftPoints != null &amp;&amp; rightPoints != null &amp;&amp; leftPoints.size() == rightPoints.size();</span>
+    }
+
+    /**
+     * Indicates whether this instance is ready to correct provided left
+     * and right points using provided fundamental matrix.
+     *
+     * @return true if ready, false otherwise.
+     */
+    public boolean isReady() {
+<span class="fc bfc" id="L381" title="All 4 branches covered.">        return areValidPoints(leftPoints, rightPoints) &amp;&amp; fundamentalMatrix != null</span>
+<span class="fc bfc" id="L382" title="All 2 branches covered.">                &amp;&amp; fundamentalMatrix.isInternalMatrixAvailable();</span>
+    }
+
+    /**
+     * Corrects the lists of provided matched points to be corrected.
+     *
+     * @throws NotReadyException   if this instance is not ready (either points or
+     *                             fundamental matrix has not been provided yet).
+     * @throws LockedException     if this instance is locked doing computations.
+     * @throws CorrectionException if correction fails.
+     */
+    public abstract void correct() throws NotReadyException, LockedException, CorrectionException;
+
+    /**
+     * Gets type of correction being used.
+     *
+     * @return type of correction.
+     */
+    public abstract CorrectorType getType();
+
+    /**
+     * Creates an instance of a corrector using provided type.
+     *
+     * @param type a corrector type.
+     * @return an instance of a corrector.
+     */
+    public static Corrector create(final CorrectorType type) {
+<span class="fc" id="L409">        return create((CorrectorListener) null, type);</span>
+    }
+
+    /**
+     * Creates an instance of a corrector using provided fundamental matrix
+     * and provided type.
+     *
+     * @param fundamentalMatrix fundamental matrix defining the epipolar
+     *                          geometry.
+     * @param type              a corrector type.
+     * @return an instance of a corrector.
+     */
+    public static Corrector create(final FundamentalMatrix fundamentalMatrix, final CorrectorType type) {
+<span class="fc" id="L422">        return create(fundamentalMatrix, null, type);</span>
+    }
+
+    /**
+     * Creates an instance of a corrector using provided left and right points
+     * to be corrected and provided type.
+     *
+     * @param leftPoints  matched points on left view to be corrected.
+     * @param rightPoints matched points on right view to be corrected.
+     * @param type        a corrector type.
+     * @return an instance of a corrector.
+     */
+    public static Corrector create(
+            final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints, final CorrectorType type) {
+<span class="fc" id="L436">        return create(leftPoints, rightPoints, (CorrectorListener) null, type);</span>
+    }
+
+    /**
+     * Creates an instance of a corrector using provided left and right points
+     * to be corrected, provided fundamental matrix and provided type.
+     *
+     * @param leftPoints        matched points on left view to be corrected.
+     * @param rightPoints       matched points on right view to be corrected.
+     * @param fundamentalMatrix fundamental matrix defining the epipolar
+     *                          geometry.
+     * @param type              a corrector type.
+     * @return an instance of a corrector.
+     */
+    public static Corrector create(
+            final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints,
+            final FundamentalMatrix fundamentalMatrix, final CorrectorType type) {
+<span class="fc" id="L453">        return create(leftPoints, rightPoints, fundamentalMatrix, null, type);</span>
+    }
+
+    /**
+     * Creates an instance of a corrector using provided type.
+     *
+     * @param listener listener to handle events generated by this class.
+     * @param type     a corrector type.
+     * @return an instance of a corrector.
+     */
+    public static Corrector create(final CorrectorListener listener, final CorrectorType type) {
+<span class="fc bfc" id="L464" title="All 2 branches covered.">        return type == CorrectorType.SAMPSON_CORRECTOR</span>
+<span class="fc" id="L465">                ? new SampsonCorrector(listener) : new GoldStandardCorrector(listener);</span>
+    }
+
+    /**
+     * Creates an instance of a corrector using provided fundamental matrix
+     * and provided type.
+     *
+     * @param fundamentalMatrix fundamental matrix defining the epipolar
+     *                          geometry.
+     * @param listener          listener to handle events generated by this class.
+     * @param type              a corrector type.
+     * @return an instance of a corrector.
+     */
+    public static Corrector create(
+            final FundamentalMatrix fundamentalMatrix, final CorrectorListener listener, final CorrectorType type) {
+<span class="fc bfc" id="L480" title="All 2 branches covered.">        return type == CorrectorType.SAMPSON_CORRECTOR</span>
+<span class="fc" id="L481">                ? new SampsonCorrector(fundamentalMatrix, listener)</span>
+<span class="fc" id="L482">                : new GoldStandardCorrector(fundamentalMatrix, listener);</span>
+    }
+
+    /**
+     * Creates an instance of a corrector using provided left and right points
+     * to be corrected and provided type.
+     *
+     * @param leftPoints  matched points on left view to be corrected.
+     * @param rightPoints matched points on right view to be corrected.
+     * @param listener    listener to handle events generated by this class.
+     * @param type        a corrector type.
+     * @return an instance of a corrector.
+     */
+    public static Corrector create(
+            final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints, final CorrectorListener listener,
+            final CorrectorType type) {
+<span class="fc bfc" id="L498" title="All 2 branches covered.">        return type == CorrectorType.SAMPSON_CORRECTOR</span>
+<span class="fc" id="L499">                ? new SampsonCorrector(leftPoints, rightPoints, listener)</span>
+<span class="fc" id="L500">                : new GoldStandardCorrector(leftPoints, rightPoints, listener);</span>
+    }
+
+    /**
+     * Creates an instance of a corrector using provided left and right points
+     * to be corrected, provided fundamental matrix and provided type.
+     *
+     * @param leftPoints        matched points on left view to be corrected.
+     * @param rightPoints       matched points on right view to be corrected.
+     * @param fundamentalMatrix fundamental matrix defining the epipolar
+     *                          geometry.
+     * @param listener          listener to handle events generated by this class.
+     * @param type              a corrector type.
+     * @return an instance of a corrector.
+     */
+    public static Corrector create(
+            final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints, final FundamentalMatrix fundamentalMatrix,
+            final CorrectorListener listener, final CorrectorType type) {
+<span class="fc bfc" id="L518" title="All 2 branches covered.">        return type == CorrectorType.SAMPSON_CORRECTOR</span>
+<span class="fc" id="L519">                ? new SampsonCorrector(leftPoints, rightPoints, fundamentalMatrix, listener)</span>
+<span class="fc" id="L520">                : new GoldStandardCorrector(leftPoints, rightPoints, fundamentalMatrix, listener);</span>
+    }
+
+    /**
+     * Creates an instance of a corrector using default type.
+     *
+     * @param listener listener to handle events generated by this class.
+     * @return an instance of a corrector.
+     */
+    public static Corrector create(final CorrectorListener listener) {
+<span class="fc" id="L530">        return create(listener, DEFAULT_TYPE);</span>
+    }
+
+    /**
+     * Creates an instance of a corrector using provided fundamental matrix
+     * and default type.
+     *
+     * @param fundamentalMatrix fundamental matrix defining the epipolar
+     *                          geometry.
+     * @param listener          listener to handle events generated by this class.
+     * @return an instance of a corrector.
+     */
+    public static Corrector create(final FundamentalMatrix fundamentalMatrix, final CorrectorListener listener) {
+<span class="fc" id="L543">        return create(fundamentalMatrix, listener, DEFAULT_TYPE);</span>
+    }
+
+    /**
+     * Creates an instance of a corrector using provided left and right points
+     * to be corrected and provided type.
+     *
+     * @param leftPoints  matched points on left view to be corrected.
+     * @param rightPoints matched points on right view to be corrected.
+     * @param listener    listener to handle events generated by this class.
+     * @return an instance of a corrector.
+     */
+    public static Corrector create(
+            final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints, final CorrectorListener listener) {
+<span class="fc" id="L557">        return create(leftPoints, rightPoints, listener, DEFAULT_TYPE);</span>
+    }
+
+    /**
+     * Creates an instance of a corrector using provided left and right points
+     * to be corrected, provided fundamental matrix and provided type.
+     *
+     * @param leftPoints        matched points on left view to be corrected.
+     * @param rightPoints       matched points on right view to be corrected.
+     * @param fundamentalMatrix fundamental matrix defining the epipolar
+     *                          geometry.
+     * @param listener          listener to handle events generated by this class.
+     * @return an instance of a corrector.
+     */
+    public static Corrector create(
+            final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints, final FundamentalMatrix fundamentalMatrix,
+            final CorrectorListener listener) {
+<span class="fc" id="L574">        return create(leftPoints, rightPoints, fundamentalMatrix, listener, DEFAULT_TYPE);</span>
+    }
+
+    /**
+     * Creates an instance of a corrector using default type.
+     *
+     * @return an instance of a corrector.
+     */
+    public static Corrector create() {
+<span class="fc" id="L583">        return create(DEFAULT_TYPE);</span>
+    }
+
+    /**
+     * Creates an instance of a corrector using provided fundamental matrix
+     * and default type.
+     *
+     * @param fundamentalMatrix fundamental matrix defining the epipolar
+     *                          geometry.
+     * @return an instance of a corrector.
+     */
+    public static Corrector create(final FundamentalMatrix fundamentalMatrix) {
+<span class="fc" id="L595">        return create(fundamentalMatrix, DEFAULT_TYPE);</span>
+    }
+
+    /**
+     * Creates an instance of a corrector using provided left and right points
+     * to be corrected and default type.
+     *
+     * @param leftPoints  matched points on left view to be corrected.
+     * @param rightPoints matched points on right view to be corrected.
+     * @return an instance of a corrector.
+     */
+    public static Corrector create(final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints) {
+<span class="fc" id="L607">        return create(leftPoints, rightPoints, DEFAULT_TYPE);</span>
+    }
+
+    /**
+     * Creates an instance of a corrector using provided left and right points
+     * to be corrected, provided fundamental matrix and default type.
+     *
+     * @param leftPoints        matched points on left view to be corrected.
+     * @param rightPoints       matched points on right view to be corrected.
+     * @param fundamentalMatrix fundamental matrix defining the epipolar
+     *                          geometry.
+     * @return an instance of a corrector.
+     */
+    public static Corrector create(
+            final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints,
+            final FundamentalMatrix fundamentalMatrix) {
+<span class="fc" id="L623">        return create(leftPoints, rightPoints, fundamentalMatrix, DEFAULT_TYPE);</span>
+    }
+
+    /**
+     * Internal method to set fundamental matrix defining the epipolar geometry.
+     *
+     * @param fundamentalMatrix fundamental matrix to be set.
+     */
+    private void internalSetFundamentalMatrix(final FundamentalMatrix fundamentalMatrix) {
+<span class="fc" id="L632">        this.fundamentalMatrix = fundamentalMatrix;</span>
+<span class="fc" id="L633">    }</span>
+
+    /**
+     * Internal method to set lists of points to be corrected on left and right
+     * views.
+     *
+     * @param leftPoints  points to be corrected on left view.
+     * @param rightPoints points to be corrected on right view.
+     * @throws IllegalArgumentException if provided lists of points don't have
+     *                                  the same size.
+     */
+    private void internalSetLeftAndRightPoints(
+            final List&lt;Point2D&gt; leftPoints, final List&lt;Point2D&gt; rightPoints) {
+<span class="fc bfc" id="L646" title="All 2 branches covered.">        if (!areValidPoints(leftPoints, rightPoints)) {</span>
+<span class="fc" id="L647">            throw new IllegalArgumentException();</span>
+        }
+
+<span class="fc" id="L650">        this.leftPoints = leftPoints;</span>
+<span class="fc" id="L651">        this.rightPoints = rightPoints;</span>
+<span class="fc" id="L652">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

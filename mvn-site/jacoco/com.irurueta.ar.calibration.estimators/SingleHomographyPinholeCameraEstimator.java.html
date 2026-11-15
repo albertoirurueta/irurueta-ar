@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SingleHomographyPinholeCameraEstimator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.calibration.estimators</a> &gt; <span class="el_source">SingleHomographyPinholeCameraEstimator.java</span></div><h1>SingleHomographyPinholeCameraEstimator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2017 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.calibration.estimators;
+
+import com.irurueta.ar.calibration.ImageOfAbsoluteConic;
+import com.irurueta.geometry.HomogeneousPoint3D;
+import com.irurueta.geometry.MatrixRotation3D;
+import com.irurueta.geometry.PinholeCamera;
+import com.irurueta.geometry.ProjectiveTransformation2D;
+import com.irurueta.geometry.Transformation2D;
+import com.irurueta.geometry.estimators.LockedException;
+import com.irurueta.geometry.estimators.NotReadyException;
+
+import java.util.ArrayList;
+
+/**
+ * This class estimate intrinsic and extrinsic (rotation and camera center)
+ * parameters of a camera by using provided homography.
+ * For intrinsic parameters estimation it is assumed that skewness and principal
+ * point are zero and that aspect ratio are known.
+ * This class can be used in planar scenes where projected points of two views
+ * are related by an homography.
+ */
+public class SingleHomographyPinholeCameraEstimator {
+
+    /**
+     * Default aspect ratio value.
+     */
+    public static final double DEFAULT_ASPECT_RATIO = 1.0;
+
+    /**
+     * Aspect ratio of intrinsic parameters.
+     */
+<span class="fc" id="L47">    private double focalDistanceAspectRatio = DEFAULT_ASPECT_RATIO;</span>
+
+    /**
+     * Homography relating two views.
+     */
+    private Transformation2D homography;
+
+    /**
+     * True when estimation is in progress.
+     */
+<span class="fc" id="L57">    private boolean locked = false;</span>
+
+    /**
+     * Listener to be notified of events such as when estimation starts or ends.
+     */
+    private SingleHomographyPinholeCameraEstimatorListener listener;
+
+    /**
+     * Constructor.
+     */
+<span class="fc" id="L67">    public SingleHomographyPinholeCameraEstimator() {</span>
+<span class="fc" id="L68">    }</span>
+
+    /**
+     * Constructor with listener.
+     *
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts or ends.
+     */
+<span class="fc" id="L76">    public SingleHomographyPinholeCameraEstimator(final SingleHomographyPinholeCameraEstimatorListener listener) {</span>
+<span class="fc" id="L77">        this.listener = listener;</span>
+<span class="fc" id="L78">    }</span>
+
+    /**
+     * Constructor with homography.
+     *
+     * @param homography homography to estimate camera and intrinsic parameters.
+     * @throws NullPointerException if provided homography is null.
+     */
+<span class="fc" id="L86">    public SingleHomographyPinholeCameraEstimator(final Transformation2D homography) {</span>
+<span class="fc" id="L87">        internalSetHomography(homography);</span>
+<span class="fc" id="L88">    }</span>
+
+    /**
+     * Constructor with listener and homography.
+     *
+     * @param homography homography to estimate camera and intrinsic parameters.
+     * @param listener   listener to be notified of events such as when estimation
+     *                   starts or ends.
+     */
+    public SingleHomographyPinholeCameraEstimator(
+<span class="fc" id="L98">            final Transformation2D homography, final SingleHomographyPinholeCameraEstimatorListener listener) {</span>
+<span class="fc" id="L99">        internalSetHomography(homography);</span>
+<span class="fc" id="L100">        this.listener = listener;</span>
+<span class="fc" id="L101">    }</span>
+
+    /**
+     * Gets aspect ratio of intrinsic parameters.
+     *
+     * @return aspect ratio of intrinsic parameters.
+     */
+    public double getFocalDistanceAspectRatio() {
+<span class="fc" id="L109">        return focalDistanceAspectRatio;</span>
+    }
+
+    /**
+     * Sets aspect ratio of intrinsic parameters.
+     *
+     * @param focalDistanceAspectRatio aspect ratio of intrinsic parameters.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setFocalDistanceAspectRatio(final double focalDistanceAspectRatio) throws LockedException {
+<span class="fc bfc" id="L119" title="All 2 branches covered.">        if (locked) {</span>
+<span class="fc" id="L120">            throw new LockedException();</span>
+        }
+<span class="fc" id="L122">        this.focalDistanceAspectRatio = focalDistanceAspectRatio;</span>
+<span class="fc" id="L123">    }</span>
+
+    /**
+     * Gets homography relating two views.
+     *
+     * @return homography relating two views.
+     */
+    public Transformation2D getHomography() {
+<span class="fc" id="L131">        return homography;</span>
+    }
+
+    /**
+     * Sets homography relating two views.
+     *
+     * @param homography homography relating two views.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setHomography(final Transformation2D homography) throws LockedException {
+<span class="fc bfc" id="L141" title="All 2 branches covered.">        if (locked) {</span>
+<span class="fc" id="L142">            throw new LockedException();</span>
+        }
+<span class="fc" id="L144">        this.homography = homography;</span>
+<span class="fc" id="L145">    }</span>
+
+    /**
+     * Indicates whether this instance is locked.
+     *
+     * @return true if this estimator is busy doing the estimation, false
+     * otherwise.
+     */
+    public boolean isReady() {
+<span class="fc bfc" id="L154" title="All 2 branches covered.">        return homography != null;</span>
+    }
+
+    /**
+     * Gets listener to be notified of events such as when estimation starts or
+     * ends.
+     *
+     * @return listener to be notified of events.
+     */
+    public SingleHomographyPinholeCameraEstimatorListener getListener() {
+<span class="fc" id="L164">        return listener;</span>
+    }
+
+    /**
+     * Sets listener to be notified of events such as when estimation starts or
+     * ends.
+     *
+     * @param listener listener to be notified of events.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setListener(final SingleHomographyPinholeCameraEstimatorListener listener) throws LockedException {
+<span class="fc bfc" id="L175" title="All 2 branches covered.">        if (locked) {</span>
+<span class="fc" id="L176">            throw new LockedException();</span>
+        }
+<span class="fc" id="L178">        this.listener = listener;</span>
+<span class="fc" id="L179">    }</span>
+
+    /**
+     * Indicates whether this instance is locked or not.
+     *
+     * @return true if instance is locked, false otherwise.
+     */
+    public boolean isLocked() {
+<span class="fc" id="L187">        return locked;</span>
+    }
+
+    /**
+     * Estimates a pinhole camera.
+     *
+     * @return estimated pinhole camera.
+     * @throws LockedException                                 if estimator is locked.
+     * @throws NotReadyException                               if no homography has been provided yet.
+     * @throws SingleHomographyPinholeCameraEstimatorException if estimation
+     *                                                         fails.
+     */
+    public PinholeCamera estimate() throws LockedException, NotReadyException,
+            SingleHomographyPinholeCameraEstimatorException {
+<span class="fc" id="L201">        final var result = new PinholeCamera();</span>
+<span class="fc" id="L202">        estimate(result);</span>
+<span class="fc" id="L203">        return result;</span>
+    }
+
+    /**
+     * Estimates a pinhole camera.
+     *
+     * @param result instance where estimated camera will be stored.
+     * @throws LockedException                                 if estimator is locked.
+     * @throws NotReadyException                               if no homography has been provided yet.
+     * @throws SingleHomographyPinholeCameraEstimatorException if estimation
+     *                                                         fails.
+     */
+    public void estimate(PinholeCamera result) throws LockedException, NotReadyException,
+            SingleHomographyPinholeCameraEstimatorException {
+<span class="fc bfc" id="L217" title="All 2 branches covered.">        if (locked) {</span>
+<span class="fc" id="L218">            throw new LockedException();</span>
+        }
+
+<span class="pc bpc" id="L221" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L222">            throw new NotReadyException();</span>
+        }
+
+        try {
+<span class="fc" id="L226">            locked = true;</span>
+
+<span class="pc bpc" id="L228" title="1 of 2 branches missed.">            if (listener != null) {</span>
+<span class="fc" id="L229">                listener.onEstimateStart(this);</span>
+            }
+
+            // estimate intrinsic parameters
+<span class="fc" id="L233">            final var homographies = new ArrayList&lt;Transformation2D&gt;();</span>
+<span class="fc" id="L234">            homographies.add(homography);</span>
+            // also add its inverse
+<span class="fc" id="L236">            homographies.add(((ProjectiveTransformation2D) homography).inverseAndReturnNew());</span>
+<span class="fc" id="L237">            final var intrinsicEstimator = new LMSEImageOfAbsoluteConicEstimator(homographies);</span>
+<span class="fc" id="L238">            intrinsicEstimator.setPrincipalPointAtOrigin(true);</span>
+<span class="fc" id="L239">            intrinsicEstimator.setFocalDistanceAspectRatioKnown(true);</span>
+<span class="fc" id="L240">            intrinsicEstimator.setFocalDistanceAspectRatio(focalDistanceAspectRatio);</span>
+<span class="fc" id="L241">            ImageOfAbsoluteConic iac = intrinsicEstimator.estimate();</span>
+<span class="fc" id="L242">            iac.normalize();</span>
+
+<span class="fc" id="L244">            final var intrinsic = iac.getIntrinsicParameters();</span>
+
+            // estimate camera pose
+<span class="fc" id="L247">            final var rotation = new MatrixRotation3D();</span>
+<span class="fc" id="L248">            final var center = new HomogeneousPoint3D();</span>
+<span class="fc" id="L249">            CameraPoseEstimator.estimate(intrinsic, homography, rotation, center, result);</span>
+
+<span class="pc bpc" id="L251" title="1 of 2 branches missed.">            if (listener != null) {</span>
+<span class="fc" id="L252">                listener.onEstimateEnd(this);</span>
+            }
+
+<span class="nc" id="L255">        } catch (final Exception e) {</span>
+<span class="nc" id="L256">            throw new SingleHomographyPinholeCameraEstimatorException(e);</span>
+        } finally {
+<span class="fc" id="L258">            locked = false;</span>
+        }
+<span class="fc" id="L260">    }</span>
+
+    /**
+     * Sets homography to estimate camera and intrinsic parameters.
+     *
+     * @param homography homography to be set.
+     * @throws NullPointerException if provided homography is null.
+     */
+    private void internalSetHomography(final Transformation2D homography) {
+<span class="pc bpc" id="L269" title="1 of 2 branches missed.">        if (homography == null) {</span>
+<span class="nc" id="L270">            throw new NullPointerException();</span>
+        }
+<span class="fc" id="L272">        this.homography = homography;</span>
+<span class="fc" id="L273">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

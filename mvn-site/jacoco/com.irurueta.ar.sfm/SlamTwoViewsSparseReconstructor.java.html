@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SlamTwoViewsSparseReconstructor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.sfm</a> &gt; <span class="el_source">SlamTwoViewsSparseReconstructor.java</span></div><h1>SlamTwoViewsSparseReconstructor.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2017 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.sfm;
+
+import com.irurueta.ar.slam.SlamCalibrationData;
+import com.irurueta.ar.slam.SlamEstimator;
+
+/**
+ * Estimates cameras and 3D reconstructed points from sparse image point
+ * correspondences in two views and using SLAM (with accelerometer and gyroscope
+ * data) for overall scale estimation.
+ */
+public class SlamTwoViewsSparseReconstructor extends BaseSlamTwoViewsSparseReconstructor&lt;
+        SlamCalibrationData, SlamTwoViewsSparseReconstructorConfiguration, SlamTwoViewsSparseReconstructor,
+        SlamTwoViewsSparseReconstructorListener, SlamEstimator&gt; {
+
+    /**
+     * Constructor.
+     *
+     * @param configuration configuration for this re-constructor.
+     * @param listener      listener in charge of handling events.
+     * @throws NullPointerException if listener or configuration is not
+     *                              provided.
+     */
+    public SlamTwoViewsSparseReconstructor(
+            final SlamTwoViewsSparseReconstructorConfiguration configuration,
+            final SlamTwoViewsSparseReconstructorListener listener) {
+<span class="fc" id="L41">        super(configuration, listener);</span>
+<span class="fc" id="L42">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param listener listener in charge of handling events.
+     * @throws NullPointerException if listener is not provided.
+     */
+    public SlamTwoViewsSparseReconstructor(final SlamTwoViewsSparseReconstructorListener listener) {
+<span class="fc" id="L51">        this(new SlamTwoViewsSparseReconstructorConfiguration(), listener);</span>
+<span class="fc" id="L52">    }</span>
+
+    /**
+     * Process one view of all the available data during the reconstruction.
+     * This method can be called multiple times instead of {@link #start()} to build the reconstruction
+     * step by step, one view at a time.
+     *
+     * @return true if more views can be processed, false when reconstruction has finished.
+     */
+    @Override
+    public boolean processOneView() {
+<span class="fc bfc" id="L63" title="All 2 branches covered.">        if (!running) {</span>
+<span class="fc" id="L64">            slamEstimator = new SlamEstimator();</span>
+<span class="fc" id="L65">            setUpSlamEstimatorListener();</span>
+<span class="fc" id="L66">            setUpCalibrationData();</span>
+        }
+
+<span class="fc" id="L69">        return super.processOneView();</span>
+    }
+
+    /**
+     * Called when processing one frame is successfully finished. This can be done to estimate scale on
+     * those implementations where scale can be measured or is already known.
+     *
+     * @return true if post-processing succeeded, false otherwise.
+     */
+    @Override
+    protected boolean postProcessOne() {
+<span class="fc" id="L80">        return updateScale();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

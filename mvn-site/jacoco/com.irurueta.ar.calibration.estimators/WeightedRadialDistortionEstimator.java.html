@@ -1,0 +1,548 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WeightedRadialDistortionEstimator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.calibration.estimators</a> &gt; <span class="el_source">WeightedRadialDistortionEstimator.java</span></div><h1>WeightedRadialDistortionEstimator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2015 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.calibration.estimators;
+
+import com.irurueta.algebra.AlgebraException;
+import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.Utils;
+import com.irurueta.ar.calibration.RadialDistortion;
+import com.irurueta.ar.calibration.RadialDistortionException;
+import com.irurueta.geometry.Point2D;
+import com.irurueta.geometry.estimators.LockedException;
+import com.irurueta.geometry.estimators.NotReadyException;
+import com.irurueta.numerical.robust.WeightSelection;
+import com.irurueta.sorting.SortingException;
+
+import java.util.List;
+
+/**
+ * This class implements a radial distortion estimator using a weighted 
+ * algorithm and correspondences.
+ * Weights can be used so that correspondences assumed to have a better quality
+ * are considered to be more relevant.
+ */
+public class WeightedRadialDistortionEstimator extends RadialDistortionEstimator {
+    /**
+     * Default number of points (i.e. correspondences) to be weighted and taken
+     * into account.
+     */
+    public static final int DEFAULT_MAX_POINTS = 50;
+    
+    /**
+     * Indicates if weights are sorted by default so that largest weighted
+     * correspondences are used first.
+     */
+    public static final boolean DEFAULT_SORT_WEIGHTS = true;
+    
+    /**
+     * Maximum number of points (i.e. correspondences) to be weighted and taken
+     * into account.
+     */
+    private int maxPoints;
+    
+    /**
+     * Indicates if weights are sorted by default so that largest weighted
+     * correspondences are used first.
+     */
+    private boolean sortWeights;
+    
+    /**
+     * Array containing weights for all point correspondences.
+     */
+    private double[] weights;
+    
+    /**
+     * Constructor.
+     */
+    public WeightedRadialDistortionEstimator() {
+<span class="fc" id="L71">        super();</span>
+<span class="fc" id="L72">        maxPoints = DEFAULT_MAX_POINTS;</span>
+<span class="fc" id="L73">        sortWeights = DEFAULT_SORT_WEIGHTS;</span>
+<span class="fc" id="L74">    }</span>
+    
+    /**
+     * Constructor with listener.
+     * @param listener listener to be notified of events such as when estimation
+     * starts, ends or estimation progress changes.
+     */
+    public WeightedRadialDistortionEstimator(final RadialDistortionEstimatorListener listener) {
+<span class="fc" id="L82">        super(listener);</span>
+<span class="fc" id="L83">        maxPoints = DEFAULT_MAX_POINTS;</span>
+<span class="fc" id="L84">        sortWeights = DEFAULT_SORT_WEIGHTS;</span>
+<span class="fc" id="L85">    }</span>
+    
+    /**
+     * Constructor.
+     * @param distortedPoints list of distorted points. Distorted points are
+     * obtained after radial distortion is applied to an undistorted point.
+     * @param undistortedPoints list of undistorted points.
+     * @param weights array containing a weight amount for each correspondence.
+     * The larger the value of a weight, the most significant the
+     * correspondence will be.
+     * @throws IllegalArgumentException if provided lists of points don't have 
+     * the same size or their size is smaller than 
+     * MIN_NUMBER_OF_POINT_CORRESPONDENCES.
+     */
+    public WeightedRadialDistortionEstimator(final List&lt;Point2D&gt; distortedPoints, final List&lt;Point2D&gt; undistortedPoints,
+                                             final double[] weights) {
+<span class="fc" id="L101">        super();</span>
+<span class="fc" id="L102">        internalSetPointsAndWeights(distortedPoints, undistortedPoints, weights);</span>
+<span class="fc" id="L103">        maxPoints = DEFAULT_MAX_POINTS;</span>
+<span class="fc" id="L104">        sortWeights = DEFAULT_SORT_WEIGHTS;</span>
+<span class="fc" id="L105">    }</span>
+   
+    /**
+     * Constructor.
+     * @param distortedPoints list of distorted points. Distorted points are
+     * obtained after radial distortion is applied to an undistorted point.
+     * @param undistortedPoints list of undistorted points.
+     * @param weights array containing a weight amount for each correspondence.
+     * The larger the value of a weight, the most significant the
+     * correspondence will be.
+     * @param listener listener to be notified of events such as when estimation
+     * starts, ends or estimation progress changes.
+     * @throws IllegalArgumentException if provided lists of points don't have 
+     * the same size or their size is smaller than
+     * MIN_NUMBER_OF_POINT_CORRESPONDENCES.
+     */
+    
+    public WeightedRadialDistortionEstimator(final List&lt;Point2D&gt; distortedPoints, final List&lt;Point2D&gt; undistortedPoints,
+                                             final double[] weights, final RadialDistortionEstimatorListener listener) {
+<span class="fc" id="L124">        super(listener);</span>
+<span class="fc" id="L125">        internalSetPointsAndWeights(distortedPoints, undistortedPoints, weights);</span>
+<span class="fc" id="L126">        maxPoints = DEFAULT_MAX_POINTS;</span>
+<span class="fc" id="L127">        sortWeights = DEFAULT_SORT_WEIGHTS;</span>
+<span class="fc" id="L128">    }</span>
+
+    /**
+     * Constructor with distortion center.
+     * @param distortionCenter Distortion center. This is usually equal to the 
+     * principal point of an estimated camera. If not set it is assumed to be at
+     * the origin of coordinates (0,0).
+     */
+    public WeightedRadialDistortionEstimator(final Point2D distortionCenter) {
+<span class="fc" id="L137">        super(distortionCenter);</span>
+<span class="fc" id="L138">        maxPoints = DEFAULT_MAX_POINTS;</span>
+<span class="fc" id="L139">        sortWeights = DEFAULT_SORT_WEIGHTS;</span>
+<span class="fc" id="L140">    }</span>
+    
+    /**
+     * Constructor with listener and distortion center.
+     * @param distortionCenter Distortion center. This is usually equal to the 
+     * principal point of an estimated camera. If not set it is assumed to be at
+     * the origin of coordinates (0,0).
+     * @param listener listener to be notified of events such as when estimation
+     * starts, ends or estimation progress changes.
+     */
+    public WeightedRadialDistortionEstimator(final Point2D distortionCenter,
+                                             final RadialDistortionEstimatorListener listener) {
+<span class="fc" id="L152">        super(distortionCenter, listener);</span>
+<span class="fc" id="L153">        maxPoints = DEFAULT_MAX_POINTS;</span>
+<span class="fc" id="L154">        sortWeights = DEFAULT_SORT_WEIGHTS;</span>
+<span class="fc" id="L155">    }</span>
+    
+    /**
+     * Constructor with points and distortion center.
+     * @param distortedPoints list of distorted points. Distorted points are
+     * obtained after radial distortion is applied to an undistorted point.
+     * @param undistortedPoints list of undistorted points.
+     * @param weights array containing a weight amount for each correspondence.
+     * The larger the value of a weight, the most significant the
+     * correspondence will be.
+     * @param distortionCenter Distortion center. This is usually equal to the 
+     * principal point of an estimated camera. If not set it is assumed to be at
+     * the origin of coordinates (0,0).
+     * @throws IllegalArgumentException if provided lists of points don't have 
+     * the same size or their size is smaller than 
+     * MIN_NUMBER_OF_POINT_CORRESPONDENCES.
+     */
+    public WeightedRadialDistortionEstimator(final List&lt;Point2D&gt; distortedPoints, final List&lt;Point2D&gt; undistortedPoints,
+                                             final double[] weights, final Point2D distortionCenter) {
+<span class="fc" id="L174">        super(distortionCenter);</span>
+<span class="fc" id="L175">        internalSetPointsAndWeights(distortedPoints, undistortedPoints, weights);</span>
+<span class="fc" id="L176">        maxPoints = DEFAULT_MAX_POINTS;</span>
+<span class="fc" id="L177">        sortWeights = DEFAULT_SORT_WEIGHTS;</span>
+<span class="fc" id="L178">    }</span>
+   
+    /**
+     * Constructor.
+     * @param distortedPoints list of distorted points. Distorted points are
+     * obtained after radial distortion is applied to an undistorted point.
+     * @param undistortedPoints list of undistorted points.
+     * @param weights array containing a weight amount for each correspondence.
+     * The larger the value of a weight, the most significant the
+     * correspondence will be.
+     * @param distortionCenter Distortion center. This is usually equal to the 
+     * principal point of an estimated camera. If not set it is assumed to be at
+     * the origin of coordinates (0,0).
+     * @param listener listener to be notified of events such as when estimation
+     * starts, ends or estimation progress changes.
+     * @throws IllegalArgumentException if provided lists of points don't have 
+     * the same size or their size is smaller than
+     * MIN_NUMBER_OF_POINT_CORRESPONDENCES.
+     */ 
+    public WeightedRadialDistortionEstimator(final List&lt;Point2D&gt; distortedPoints, final List&lt;Point2D&gt; undistortedPoints,
+                                             final double[] weights, final Point2D distortionCenter,
+                                             final RadialDistortionEstimatorListener listener) {
+<span class="fc" id="L200">        super(distortionCenter, listener);</span>
+<span class="fc" id="L201">        internalSetPointsAndWeights(distortedPoints, undistortedPoints, weights);</span>
+<span class="fc" id="L202">        maxPoints = DEFAULT_MAX_POINTS;</span>
+<span class="fc" id="L203">        sortWeights = DEFAULT_SORT_WEIGHTS;</span>
+<span class="fc" id="L204">    }</span>
+    
+    /**
+     * Sets lists of corresponding distorted and undistorted points.
+     * @param distortedPoints list of distorted points. Distorted points are
+     * obtained after radial distortion is applied to an undistorted point.
+     * @param undistortedPoints list of undistorted points.
+     * @param weights array containing a weight amount for each correspondence.
+     * The larger the value of a weight, the most significant the
+     * correspondence will be.
+     * @throws LockedException if estimator is locked.
+     * @throws IllegalArgumentException if any of the lists or arrays are null 
+     * or if provided lists of points don't have the same size and enough points 
+     * or if the length of the weights array is not equal to the number of point 
+     * correspondences.
+     */
+    public void setPointsAndWeights(final List&lt;Point2D&gt; distortedPoints, final List&lt;Point2D&gt; undistortedPoints,
+                                    final double[] weights) throws LockedException {
+<span class="fc bfc" id="L222" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L223">            throw new LockedException();</span>
+        }
+        
+<span class="fc" id="L226">        internalSetPointsAndWeights(distortedPoints, undistortedPoints, weights);</span>
+<span class="fc" id="L227">    }       </span>
+    
+    /**
+     * Indicates if lists of corresponding distorted and undistorted points are
+     * valid.
+     * Lists are considered valid if they have the same number of points and
+     * both have more than the required minimum of correspondences (which is 2).
+     * @param distortedPoints list of distorted points. Distorted points are
+     * obtained after radial distortion is applied to an undistorted point.
+     * @param undistortedPoints list of undistorted points.
+     * @param weights array containing a weight amount for each correspondence.
+     * The larger the value of a weight, the most significant the
+     * correspondence will be.
+     * @return true if lists of points are valid, false otherwise.
+     */
+    public boolean areValidPointsAndWeights(final List&lt;Point2D&gt; distortedPoints, final List&lt;Point2D&gt; undistortedPoints,
+                                            final double[] weights){
+<span class="pc bpc" id="L244" title="1 of 6 branches missed.">        if (distortedPoints == null || undistortedPoints == null || weights == null) {</span>
+<span class="fc" id="L245">            return false;</span>
+        }
+        
+<span class="fc bfc" id="L248" title="All 4 branches covered.">        return distortedPoints.size() == undistortedPoints.size() &amp;&amp; distortedPoints.size() == weights.length</span>
+<span class="pc bpc" id="L249" title="1 of 2 branches missed.">                &amp;&amp; distortedPoints.size() &gt;= getMinNumberOfMatchedPoints();</span>
+    }    
+    
+    /**
+     * Returns array containing a weight amount for each correspondence.
+     * The larger the value of a weight, the most significant the
+     * correspondence will be.
+     * @return array containing weights for each correspondence.
+     */
+    public double[] getWeights() {
+<span class="fc" id="L259">        return weights;</span>
+    }
+    
+    /**
+     * Returns boolean indicating whether weights have been provided and are
+     * available for retrieval.
+     * @return true if weights are available, false otherwise.
+     */
+    public boolean areWeightsAvailable() {
+<span class="fc bfc" id="L268" title="All 2 branches covered.">        return weights != null;</span>
+    }    
+    
+    /**
+     * Returns maximum number of points (i.e. correspondences) to be weighted 
+     * and taken into account.
+     * @return maximum number of points to be weighted.
+     */
+    public int getMaxPoints() {
+<span class="fc" id="L277">        return maxPoints;</span>
+    }
+    
+    /**
+     * Sets maximum number of points (i.e. correspondences) to be weighted and
+     * taken into account.
+     * @param maxPoints maximum number of points to be weighted.
+     * @throws IllegalArgumentException if provided value is less than the 
+     * minimum allowed number of point correspondences.
+     * @throws LockedException if this instance is locked.
+     */
+    public void setMaxPoints(final int maxPoints) throws LockedException {
+<span class="fc bfc" id="L289" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L290">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L292" title="All 2 branches covered.">        if (maxPoints &lt; getMinNumberOfMatchedPoints()) {</span>
+<span class="fc" id="L293">            throw new IllegalArgumentException();</span>
+        }
+        
+<span class="fc" id="L296">        this.maxPoints = maxPoints;</span>
+<span class="fc" id="L297">    }</span>
+    
+    /**
+     * Indicates if weights are sorted by so that largest weighted
+     * correspondences are used first.
+     * @return true if weights are sorted, false otherwise.
+     */
+    public boolean isSortWeightsEnabled() {
+<span class="fc" id="L305">        return sortWeights;</span>
+    }
+    
+    /**
+     * Specifies whether weights are sorted by so that largest weighted
+     * correspondences are used first.
+     * @param sortWeights true if weights are sorted, false otherwise.
+     * @throws LockedException if this instance is locked.
+     */
+    public void setSortWeightsEnabled(final boolean sortWeights) throws LockedException {
+<span class="fc bfc" id="L315" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L316">            throw new LockedException();</span>
+        }
+        
+<span class="fc" id="L319">        this.sortWeights = sortWeights;</span>
+<span class="fc" id="L320">    }</span>
+    
+    /**
+     * Indicates if this estimator is ready to start the estimation.
+     * Estimator will be ready once both lists and weights are available.
+     * @return true if estimator is ready, false otherwise.
+     */
+    @Override
+    public boolean isReady() {
+<span class="pc bpc" id="L329" title="1 of 4 branches missed.">        return arePointsAvailable() &amp;&amp; areWeightsAvailable();</span>
+    }    
+    
+    /**
+     * Estimates a radial distortion.
+     * @return estimated radial distortion.
+     * @throws LockedException if estimator is locked.
+     * @throws NotReadyException if input has not yet been provided.
+     * @throws RadialDistortionEstimatorException if an error occurs during
+     * estimation, usually because input data is not valid.
+     */    
+    @SuppressWarnings(&quot;DuplicatedCode&quot;)
+    @Override
+    public RadialDistortion estimate() throws LockedException, NotReadyException, RadialDistortionEstimatorException {
+<span class="pc bpc" id="L343" title="1 of 2 branches missed.">        if (isLocked()) {</span>
+<span class="nc" id="L344">            throw new LockedException();</span>
+        }
+<span class="pc bpc" id="L346" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L347">            throw new NotReadyException();</span>
+        }
+        
+        try {
+<span class="fc" id="L351">            locked = true;</span>
+<span class="pc bpc" id="L352" title="1 of 2 branches missed.">            if (listener != null) {</span>
+<span class="fc" id="L353">                listener.onEstimateStart(this);</span>
+            }
+            
+<span class="fc" id="L356">            final var selection = WeightSelection.selectWeights(weights, sortWeights, maxPoints);</span>
+<span class="fc" id="L357">            final var selected = selection.getSelected();</span>
+            
+<span class="fc" id="L359">            final var nPoints = distortedPoints.size();</span>
+            
+<span class="fc" id="L361">            final var aMatrix = new Matrix(2 * nPoints, numKParams);</span>
+<span class="fc" id="L362">            final var b = new double[2 * nPoints];</span>
+            
+<span class="fc" id="L364">            final var iteratorDistorted = distortedPoints.iterator();</span>
+<span class="fc" id="L365">            final var iteratorUndistorted = undistortedPoints.iterator();</span>
+            
+            Point2D distorted;
+            Point2D undistorted;
+<span class="fc" id="L369">            var index = 0;</span>
+<span class="fc" id="L370">            var counter = 0;</span>
+            
+            // undistorted normalized homogeneous coordinates
+            double uNormHomX;
+            double uNormHomY;
+            double uNormHomW;
+            // undistorted normalized inhomogeneous coordinates
+            double uNormInhomX;
+            double uNormInhomY;
+            // undistorted denormalized homogeneous coordinates
+            double uDenormHomX;
+            double uDenormHomY;
+            double uDenormHomW;
+            // undistorted denormalized inhomogeneous coordinates
+            double uDenormInhomX;
+            double uDenormInhomY;
+            // distorted inhomogeneous coordinates
+            double dInhomX;
+            double dInhomY;
+            double rowNormX;
+            double rowNormY;
+            
+            // radial distortion center
+<span class="fc" id="L393">            var centerX = 0.0;</span>
+<span class="fc" id="L394">            var centerY = 0.0;</span>
+<span class="pc bpc" id="L395" title="1 of 2 branches missed.">            if (distortionCenter != null) {</span>
+<span class="fc" id="L396">                centerX = distortionCenter.getInhomX();</span>
+<span class="fc" id="L397">                centerY = distortionCenter.getInhomY();</span>
+            }
+            
+            // radial distance of undistorted normalized (calibration independent)
+            // coordinates
+            double r2; 
+            double a;
+            double value;
+            double weight;
+
+<span class="pc bpc" id="L407" title="1 of 4 branches missed.">            while (iteratorDistorted.hasNext() &amp;&amp; iteratorUndistorted.hasNext()) {</span>
+<span class="fc" id="L408">                distorted = iteratorDistorted.next();</span>
+<span class="fc" id="L409">                undistorted = iteratorUndistorted.next();                </span>
+                
+<span class="pc bpc" id="L411" title="1 of 2 branches missed.">                if (selected[index]) {</span>
+<span class="fc" id="L412">                    undistorted.normalize();                    </span>
+                    
+<span class="fc" id="L414">                    weight = weights[index];</span>
+                    
+<span class="fc" id="L416">                    uDenormHomX = undistorted.getHomX();</span>
+<span class="fc" id="L417">                    uDenormHomY = undistorted.getHomY();</span>
+<span class="fc" id="L418">                    uDenormHomW = undistorted.getHomW();</span>
+                
+<span class="fc" id="L420">                    uDenormInhomX = uDenormHomX / uDenormHomW;</span>
+<span class="fc" id="L421">                    uDenormInhomY = uDenormHomY / uDenormHomW;</span>
+                
+                    // multiply intrinsic parameters by undistorted point
+<span class="fc" id="L424">                    uNormHomX = kInv.getElementAt(0, 0) * uDenormHomX</span>
+<span class="fc" id="L425">                            + kInv.getElementAt(0, 1) * uDenormHomY</span>
+<span class="fc" id="L426">                            + kInv.getElementAt(0, 2) * uDenormHomW;</span>
+<span class="fc" id="L427">                    uNormHomY = kInv.getElementAt(1, 0) * uDenormHomX</span>
+<span class="fc" id="L428">                            + kInv.getElementAt(1, 1) * uDenormHomY</span>
+<span class="fc" id="L429">                            + kInv.getElementAt(1, 2) * uDenormHomW;</span>
+<span class="fc" id="L430">                    uNormHomW = kInv.getElementAt(2, 0) * uDenormHomX</span>
+<span class="fc" id="L431">                            + kInv.getElementAt(2, 1) * uDenormHomY</span>
+<span class="fc" id="L432">                            + kInv.getElementAt(2, 2) * uDenormHomW;</span>
+                
+<span class="fc" id="L434">                    uNormInhomX = uNormHomX / uNormHomW;</span>
+<span class="fc" id="L435">                    uNormInhomY = uNormHomY / uNormHomW;</span>
+                
+<span class="fc" id="L437">                    r2 = uNormInhomX * uNormInhomX + uNormInhomY * uNormInhomY;</span>
+                
+<span class="fc" id="L439">                    dInhomX = distorted.getInhomX();</span>
+<span class="fc" id="L440">                    dInhomY = distorted.getInhomY();</span>
+                    
+<span class="fc" id="L442">                    a = 1.0;</span>
+<span class="fc" id="L443">                    rowNormX = rowNormY = 0.0;</span>
+<span class="fc bfc" id="L444" title="All 2 branches covered.">                    for (var i = 0; i &lt; numKParams; i++) {</span>
+<span class="fc" id="L445">                        a *= r2;</span>
+                        
+                        // x and y coordinates generate linear dependent equations, for
+                        // that reason we need more than one point
+                    
+                        // x coordinates
+<span class="fc" id="L451">                        value = (uDenormInhomX - centerX) * a * weight;</span>
+<span class="fc" id="L452">                        aMatrix.setElementAt(counter * 2, i, value);</span>
+                    
+<span class="fc" id="L454">                        rowNormX += Math.pow(value, 2.0);</span>
+                    
+                        // y coordinates
+<span class="fc" id="L457">                        value = (uDenormInhomY - centerY) * a * weight;</span>
+<span class="fc" id="L458">                        aMatrix.setElementAt(counter * 2 + 1, i, value);</span>
+                    
+<span class="fc" id="L460">                        rowNormY += Math.pow(value, 2.0);                        </span>
+                    }
+                    
+                    // x coordinates
+<span class="fc" id="L464">                    value = (dInhomX - uDenormInhomX) * weight;</span>
+<span class="fc" id="L465">                    b[counter * 2] = value;</span>
+                
+<span class="fc" id="L467">                    rowNormX += Math.pow(value, 2.0);</span>
+                
+                    // y coordinates
+<span class="fc" id="L470">                    value = (dInhomY - uDenormInhomY) * weight;</span>
+<span class="fc" id="L471">                    b[counter * 2 + 1] = value;</span>
+                
+<span class="fc" id="L473">                    rowNormY += Math.pow(value, 2.0);</span>
+                    
+                    // normalize rows to increase accuracy
+<span class="fc bfc" id="L476" title="All 2 branches covered.">                    for (var i = 0; i &lt; numKParams; i++) {</span>
+<span class="fc" id="L477">                        aMatrix.setElementAt(counter * 2, i,</span>
+<span class="fc" id="L478">                                aMatrix.getElementAt(counter * 2, i) / rowNormX);</span>
+<span class="fc" id="L479">                        aMatrix.setElementAt(counter * 2 + 1, i,</span>
+<span class="fc" id="L480">                                aMatrix.getElementAt(counter * 2 + 1, i) / rowNormY);</span>
+                    }
+                
+<span class="fc" id="L483">                    b[counter * 2] /= rowNormX;</span>
+<span class="fc" id="L484">                    b[counter * 2 +1] /= rowNormY;</span>
+                                
+<span class="fc" id="L486">                    counter++;                                                            </span>
+                }
+
+<span class="fc" id="L489">                index++;</span>
+            }
+            
+<span class="fc" id="L492">            final var params = Utils.solve(aMatrix, b);</span>
+            
+<span class="fc" id="L494">            final var distortion = new RadialDistortion(params, distortionCenter, horizontalFocalLength,</span>
+                    verticalFocalLength, skew);
+            
+<span class="pc bpc" id="L497" title="1 of 2 branches missed.">            if (listener != null) {</span>
+<span class="fc" id="L498">                listener.onEstimateEnd(this);</span>
+            }
+            
+<span class="fc" id="L501">            return distortion;</span>
+<span class="nc" id="L502">        } catch (final AlgebraException | SortingException | RadialDistortionException e) {</span>
+<span class="nc" id="L503">            throw new RadialDistortionEstimatorException(e);</span>
+        } finally {
+<span class="fc" id="L505">            locked = false;</span>
+        }
+    }    
+    
+    /**
+     * Returns type of radial distortion estimator.
+     * @return type of radial distortion estimator.
+     */    
+    @Override
+    public RadialDistortionEstimatorType getType() {
+<span class="fc" id="L515">        return RadialDistortionEstimatorType.WEIGHTED_RADIAL_DISTORTION_ESTIMATOR;</span>
+    }  
+            
+    /**
+     * Internal method to set list of corresponding points (it does not check
+     * if estimator is locked).
+     * @param distortedPoints list of distorted points. Distorted points are
+     * obtained after radial distortion is applied to an undistorted point.
+     * @param undistortedPoints list of undistorted points.
+     * @param weights array containing a weight amount for each correspondence.
+     * The larger the value of a weight, the most significant the
+     * correspondence will be.
+     * @throws IllegalArgumentException if any of the lists or arrays are null 
+     * or if provided lists of points don't have the same size and enough points 
+     * or if the length of the weights array is not equal to the number of point 
+     * correspondences.
+     */
+    private void internalSetPointsAndWeights(final List&lt;Point2D&gt; distortedPoints, final List&lt;Point2D&gt; undistortedPoints,
+                                             final double[] weights) {
+        
+<span class="pc bpc" id="L535" title="1 of 6 branches missed.">        if (distortedPoints == null || undistortedPoints == null || weights == null) {</span>
+<span class="fc" id="L536">            throw new IllegalArgumentException();</span>
+        }
+        
+<span class="fc bfc" id="L539" title="All 2 branches covered.">        if (!areValidPointsAndWeights(distortedPoints, undistortedPoints, weights)) {</span>
+<span class="fc" id="L540">            throw new IllegalArgumentException();</span>
+        }
+        
+<span class="fc" id="L543">        this.distortedPoints = distortedPoints;</span>
+<span class="fc" id="L544">        this.undistortedPoints = undistortedPoints;</span>
+<span class="fc" id="L545">        this.weights = weights;</span>
+<span class="fc" id="L546">    }        </span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

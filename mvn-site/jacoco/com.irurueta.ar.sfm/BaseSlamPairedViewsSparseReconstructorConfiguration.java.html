@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BaseSlamPairedViewsSparseReconstructorConfiguration.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.sfm</a> &gt; <span class="el_source">BaseSlamPairedViewsSparseReconstructorConfiguration.java</span></div><h1>BaseSlamPairedViewsSparseReconstructorConfiguration.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2017 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.irurueta.ar.sfm;
+
+import com.irurueta.algebra.AlgebraException;
+import com.irurueta.algebra.Matrix;
+import com.irurueta.ar.slam.BaseCalibrationData;
+import com.irurueta.geometry.Point3D;
+
+import java.io.Serializable;
+
+/**
+ * Contains base configuration for a paired view sparse re-constructor using SLAM (Simultaneous
+ * Location And Mapping) to determine the scale of the scene (i.e. the baseline or separation
+ * between cameras) by fusing both camera data and data from sensors like an accelerometer or
+ * gyroscope.
+ *
+ * @param &lt;C&gt; type defining calibration data.
+ * @param &lt;T&gt; an actual implementation of a configuration class.
+ */
+public class BaseSlamPairedViewsSparseReconstructorConfiguration&lt;C extends BaseCalibrationData,
+        T extends BaseSlamPairedViewsSparseReconstructorConfiguration&lt;C, T&gt;&gt; extends
+        BasePairedViewsSparseReconstructorConfiguration&lt;T&gt; implements Serializable {
+
+    /**
+     * Indicates that by default new available SLAM state is notified each time that a whole set of IMU
+     * (Inertial Measurement Unit) data is received (accelerometer, gyroscope and orientation). SLAM state
+     * contains position, velocity, linear acceleration, orientation and angular speed.
+     */
+    public static final boolean DEFAULT_NOTIFY_SLAM_DATA_AVAILABLE = true;
+
+    /**
+     * Indicates that by default any new camera that can be estimated by means of SLAM using IMU data,
+     * will be notified each time that accelerometer, gyroscope and orientation data is received.
+     */
+    public static final boolean DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA = true;
+
+    /**
+     * Default variance for coordinates of estimated camera positions.
+     */
+    private static final double DEFAULT_CAMERA_POSITION_VARIANCE = 1e-6;
+
+    /**
+     * Calibration data for accelerometer and gyroscope.
+     * This data is usually captured and estimated in an offline step previous to the
+     * actual scene reconstruction.
+     * Calibration data is usually obtained by keeping the system in a constant state of
+     * motion (e.g. acceleration and rotation).
+     * If this is null, no calibration data will be used.
+     */
+    private C calibrationData;
+
+    /**
+     * Matrix containing covariance of measured camera positions.
+     * This should usually be an &quot;almost&quot; diagonal matrix, where diagonal elements are
+     * close to the position estimation error variance.
+     * Values of this matrix are device specific and depends on factors such as resolution
+     * of images, pictures quality, gyroscope and accelerometer accuracy.
+     * This matrix must be a 3x3 symmetric positive definite matrix.
+     */
+    private Matrix cameraPositionCovariance;
+
+    /**
+     * Indicates whether new available SLAM state is notified each time that a whole set of IMU
+     * (Inertial Measurement Unit) data is received.
+     */
+<span class="fc" id="L81">    private boolean notifyAvailableSlamData = DEFAULT_NOTIFY_SLAM_DATA_AVAILABLE;</span>
+
+    /**
+     * Indicates whether any new camera that can be estimated by means of SLAM using IMU data, will be
+     * notified each time that accelerometer, gyroscope and orientation data is received.
+     */
+<span class="fc" id="L87">    private boolean notifyEstimatedSlamCamera = DEFAULT_NOTIFY_ESTIMATED_SLAM_CAMERA;</span>
+
+    /**
+     * Constructor.
+     */
+<span class="fc" id="L92">    public BaseSlamPairedViewsSparseReconstructorConfiguration() {</span>
+        // initialize default covariance
+        try {
+<span class="fc" id="L95">            cameraPositionCovariance = Matrix.identity(Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,</span>
+                    Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH);
+<span class="fc" id="L97">            cameraPositionCovariance.multiplyByScalar(DEFAULT_CAMERA_POSITION_VARIANCE);</span>
+<span class="nc" id="L98">        } catch (final AlgebraException ignore) {</span>
+            // never happens
+<span class="fc" id="L100">        }</span>
+<span class="fc" id="L101">    }</span>
+
+    /**
+     * Gets calibration data for accelerometer and gyroscope.
+     * This data is usually captured and estimated in an offline step previous to the
+     * actual scene reconstruction.
+     * Calibration data is usually obtained by keeping the system in a constant state
+     * of motion (e.g. acceleration and rotation).
+     * If this is null, no calibration data will be used.
+     *
+     * @return calibration data or null.
+     */
+    public C getCalibrationData() {
+<span class="fc" id="L114">        return calibrationData;</span>
+    }
+
+    /**
+     * Specifies calibration data for accelerometer and gyroscope.
+     * This data is usually captured and estimated in an offline step previous to the
+     * actual scene reconstruction.
+     * Calibration data is usually obtained by keeping the system in a constant state
+     * of motion (e.g. acceleration and rotation).
+     * If set to null, no calibration data will be used.
+     *
+     * @param calibrationData calibration data or null.
+     * @return this instance so that method can be easily chained.
+     */
+    public T setCalibrationData(final C calibrationData) {
+<span class="fc" id="L129">        this.calibrationData = calibrationData;</span>
+
+        //noinspection unchecked
+<span class="fc" id="L132">        return (T) this;</span>
+    }
+
+    /**
+     * Gets matrix containing covariance of measured camera positions.
+     * This should usually be an &quot;almost&quot; diagonal matrix, where diagonal elements are
+     * close to the position estimation error variance.
+     * Values of this matrix are device specific and depends on factors such as
+     * resolution of images, pictures quality, gyroscope and accelerometer accuracy.
+     * This matrix must be a 3x3 symmetric positive definite matrix.
+     *
+     * @return covariance of measured camera positions.
+     */
+    public Matrix getCameraPositionCovariance() {
+<span class="fc" id="L146">        return cameraPositionCovariance;</span>
+    }
+
+    /**
+     * Sets matrix containing covariance of measured camera positions.
+     * This should usually be an &quot;almost&quot; diagonal matrix, where diagonal elements are
+     * close to the position estimation error variance.
+     * Values of this matrix are device specific and depends on factors such as
+     * resolution of images, pictures quality, gyroscope and accelerometer accuracy.
+     * This matrix must be 3x3 symmetric positive definite matrix.
+     *
+     * @param cameraPositionCovariance covariance of measured camera positions.
+     * @return this instance so that method can be easily chained.
+     * @throws IllegalArgumentException if provided matrix is not 3x3.
+     */
+    public T setCameraPositionCovariance(final Matrix cameraPositionCovariance) {
+<span class="pc bpc" id="L162" title="1 of 2 branches missed.">        if (cameraPositionCovariance.getRows() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH ||</span>
+<span class="pc bpc" id="L163" title="1 of 2 branches missed.">                cameraPositionCovariance.getColumns() != Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH) {</span>
+<span class="nc" id="L164">            throw new IllegalArgumentException();</span>
+        }
+
+<span class="fc" id="L167">        this.cameraPositionCovariance = cameraPositionCovariance;</span>
+
+        //noinspection unchecked
+<span class="fc" id="L170">        return (T) this;</span>
+    }
+
+    /**
+     * Sets independent variance of coordinates of measured camera positions.
+     * When using this method, camera position covariance matrix is set as a diagonal
+     * matrix whose diagonal elements are equal to provided value.
+     *
+     * @param variance variance of coordinates of measured camera positions.
+     * @return this instance so that method can be easily chained.
+     */
+    public T setCameraPositionVariance(final double variance) {
+        try {
+<span class="fc" id="L183">            cameraPositionCovariance = Matrix.identity(Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,</span>
+                    Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH);
+<span class="fc" id="L185">            cameraPositionCovariance.multiplyByScalar(variance);</span>
+<span class="nc" id="L186">        } catch (final AlgebraException ignore) {</span>
+            // never happens
+<span class="fc" id="L188">        }</span>
+
+        //noinspection unchecked
+<span class="fc" id="L191">        return (T) this;</span>
+    }
+
+    /**
+     * Indicates whether new available SLAM state is notified each time that a whole set
+     * of IMU (Inertial Measurement Unit) data is received. IMU data contains
+     * accelerometer, gyroscope and orientation samples.
+     *
+     * @return true if new available SLAM state is notified each time that a whole set
+     * of IMU data is received.
+     */
+    public boolean isNotifyAvailableSlamDataEnabled() {
+<span class="fc" id="L203">        return notifyAvailableSlamData;</span>
+    }
+
+    /**
+     * Specifies whether new available SLAM state is notified each time that a whole set
+     * of IMU (Inertial Measurement Unit) data is received. IMU data contains accelerometer,
+     * gyroscope and orientation samples.
+     *
+     * @param notifyAvailableSlamData true if new available SLAM state is notified each
+     *                                time that a whole set of IMU data is received, false
+     *                                otherwise.
+     * @return this instance so that method can be easily chained.
+     */
+    public T setNotifyAvailableSlamDataEnabled(final boolean notifyAvailableSlamData) {
+<span class="fc" id="L217">        this.notifyAvailableSlamData = notifyAvailableSlamData;</span>
+
+        //noinspection unchecked
+<span class="fc" id="L220">        return (T) this;</span>
+    }
+
+    /**
+     * Indicates whether any new camera that can be estimated by means of SLAM using IMU
+     * data, will be notified each time that accelerometer, gyroscope and orientation
+     * data is received.
+     *
+     * @return true if any newly estimated camera is notified, false otherwise.
+     */
+    public boolean isNotifyEstimatedSlamCameraEnabled() {
+<span class="fc" id="L231">        return notifyEstimatedSlamCamera;</span>
+    }
+
+    /**
+     * Specifies whether any new camera that can be estimated by means of SLAM using IMU
+     * data, will be notified each time that accelerometer, gyroscope and orientation
+     * data is received.
+     *
+     * @param notifyEstimatedSlamCamera true if any newly estimated camera is notified,
+     *                                  false otherwise.
+     * @return this instance so that method can be easily chained.
+     */
+    public T setNotifyEstimatedSlamCameraEnabled(final boolean notifyEstimatedSlamCamera) {
+<span class="fc" id="L244">        this.notifyEstimatedSlamCamera = notifyEstimatedSlamCamera;</span>
+
+        //noinspection unchecked
+<span class="fc" id="L247">        return (T) this;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
