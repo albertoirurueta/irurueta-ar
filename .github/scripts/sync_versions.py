@@ -35,17 +35,31 @@ def replace_dependency_snippets(text, release_version, next_snapshot):
 
 
 def update_pom(release_version, next_snapshot):
+    """Sets the project's own <version> (a direct child of <project>) to the next snapshot.
+
+    Dependency, plugin and <parent> versions are left untouched: the project's own version is
+    the first <version> element outside <parent> and before any dependencies/build/properties/
+    profiles/modules section.
+    """
     path = REPO_ROOT / "pom.xml"
     text = path.read_text()
-    updated, count = re.subn(
-        r"(<artifactId>irurueta-geometry</artifactId>\s*\n\s*<version>)[^<]*(</version>)",
-        rf"\g<1>{next_snapshot}\g<2>",
-        text,
-        count=1,
+
+    search = text
+    parent = re.search(r"<parent>.*?</parent>", text, flags=re.DOTALL)
+    if parent:
+        start, end = parent.span()
+        search = text[:start] + " " * (end - start) + text[end:]
+
+    boundary = re.search(
+        r"<(dependencies|dependencyManagement|build|profiles|modules|properties)>", search
     )
-    if count != 1:
-        sys.exit("pom.xml: could not find the irurueta-geometry <version> element to bump")
-    path.write_text(updated)
+    scope_end = boundary.start() if boundary else len(search)
+
+    match = re.search(r"<version>[^<]*</version>", search[:scope_end])
+    if not match:
+        sys.exit("pom.xml: could not find the project's own <version> element to bump")
+    start, end = match.span()
+    path.write_text(text[:start] + f"<version>{next_snapshot}</version>" + text[end:])
 
 
 def update_readme(release_version, next_snapshot):
