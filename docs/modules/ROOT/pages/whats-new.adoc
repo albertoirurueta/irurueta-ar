@@ -1,8 +1,18 @@
 = What's New
-:description: Release notes for irurueta-ar, including the 1.6.0 release: new Antora documentation site, Java 21 minimum version, and updated dependency versions.
+:description: Release notes for irurueta-ar, including the 1.6.1 release: updated irurueta dependencies and documentation improvements.
 :keywords: release notes, changelog, what's new, irurueta-ar, version history, Java 21
 
 NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
+
+== 1.6.1
+
+* ♻️ Updated `irurueta-numerical` and `irurueta-geometry` dependencies to 1.6.1, and `irurueta-statistics`,
+  `irurueta-sorting`, and `irurueta-algebra` dependencies to 1.4.1.
+* ♻️ Rewrote documentation pages and figures for calibration, self-calibration, epipolar geometry, robust
+  estimation, structure from motion and the reference page, with page descriptions, keywords, and links from code
+  examples to source and Javadoc.
+* 🐛 Fixed documentation vector/matrix notation, epipolar and calibration figures, and unreachable bibliography
+  links (now pointing to official DOI/publisher pages).
 
 == 1.6.0
 
