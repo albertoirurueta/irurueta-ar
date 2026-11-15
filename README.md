@@ -28,7 +28,7 @@ Augmented Reality and 3D reconstruction library
 | Language | Java 21 |
 | Build tool | Maven |
 | Current development version | 1.7.0-SNAPSHOT |
-| Latest release | 1.6.0 |
+| Latest release | 1.6.1 |
 | License | Apache License 2.0 |
 | CI | GitHub Actions — builds/tests on `develop` and `master`, plus a manual on-demand `develop` build |
 | Quality | SonarCloud, JaCoCo (coverage), Checkstyle, SpotBugs, PMD |
@@ -52,7 +52,7 @@ Latest release:
 <dependency>
     <groupId>com.irurueta</groupId>
     <artifactId>irurueta-ar</artifactId>
-    <version>1.6.0</version>
+    <version>1.6.1</version>
     <scope>compile</scope>
 </dependency>
 ```

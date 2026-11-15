@@ -7,6 +7,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [1.6.1] - 2026-11-15
+
+### Changed
+
+- Updated `irurueta-numerical` and `irurueta-geometry` dependencies to 1.6.1, and `irurueta-statistics`,
+  `irurueta-sorting`, and `irurueta-algebra` dependencies to 1.4.1.
+- Rewrote documentation pages and figures (calibration, self-calibration, epipolar geometry, robust estimation,
+  structure from motion, reference), adding page descriptions, keywords, and links to source and Javadoc.
+
+### Fixed
+
+- Documentation vector/matrix notation, epipolar and calibration figures, and unreachable bibliography links.
+
 ## [1.6.0] - 2026-07-25
 
 ### Added
@@ -102,7 +115,8 @@ Initial release.
 - Standalone SLAM estimators and calibrators (position/orientation/velocity state prediction and calibration data)
   for fusing accelerometer/gyroscope samples with camera-based motion estimates.
 
-[Unreleased]: https://github.com/albertoirurueta/irurueta-ar/compare/1.6.0...HEAD
+[Unreleased]: https://github.com/albertoirurueta/irurueta-ar/compare/1.6.1...HEAD
+[1.6.1]: https://github.com/albertoirurueta/irurueta-ar/compare/1.6.0...1.6.1
 [1.6.0]: https://github.com/albertoirurueta/irurueta-ar/compare/1.5.0...1.6.0
 [1.5.0]: https://github.com/albertoirurueta/irurueta-ar/compare/1.4.0...1.5.0
 [1.4.0]: https://github.com/albertoirurueta/irurueta-ar/compare/1.3.2...1.4.0
