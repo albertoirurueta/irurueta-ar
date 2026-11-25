@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LMedSDualAbsoluteQuadricRobustEstimator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.calibration.estimators</a> &gt; <span class="el_source">LMedSDualAbsoluteQuadricRobustEstimator.java</span></div><h1>LMedSDualAbsoluteQuadricRobustEstimator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2016 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.calibration.estimators;
+
+import com.irurueta.ar.calibration.DualAbsoluteQuadric;
+import com.irurueta.geometry.PinholeCamera;
+import com.irurueta.geometry.estimators.LockedException;
+import com.irurueta.geometry.estimators.NotReadyException;
+import com.irurueta.numerical.robust.LMedSRobustEstimator;
+import com.irurueta.numerical.robust.LMedSRobustEstimatorListener;
+import com.irurueta.numerical.robust.RobustEstimator;
+import com.irurueta.numerical.robust.RobustEstimatorException;
+import com.irurueta.numerical.robust.RobustEstimatorMethod;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Finds the best Dual Absolute Quadric (DAQ) for provided collection of cameras
+ * using LMedS algorithm.
+ */
+public class LMedSDualAbsoluteQuadricRobustEstimator extends DualAbsoluteQuadricRobustEstimator {
+
+    /**
+     * Default value to be used for stop threshold. Stop threshold can be used
+     * to keep the algorithm iterating in case that best estimated threshold
+     * using median of residuals is not small enough. Once a solution is found
+     * that generates a threshold below this value, the algorithm will stop.
+     * Threshold is defined by the equations used to estimate the DAQ depending
+     * on the required settings (zero skewness, principal point at origin, and
+     * known aspect ratio).
+     */
+    public static final double DEFAULT_STOP_THRESHOLD = 1e-6;
+
+    /**
+     * Minimum value that can be set as stop threshold.
+     * Threshold must be strictly greater than 0.0.
+     */
+    public static final double MIN_STOP_THRESHOLD = 0.0;
+
+    /**
+     * Threshold to be used to keep the algorithm iterating in case that best
+     * estimated threshold using median of residuals is not small enough. Once
+     * a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     */
+    private double stopThreshold;
+
+    /**
+     * Constructor.
+     */
+    public LMedSDualAbsoluteQuadricRobustEstimator() {
+<span class="fc" id="L76">        super();</span>
+<span class="fc" id="L77">        stopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L78">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     */
+    public LMedSDualAbsoluteQuadricRobustEstimator(final DualAbsoluteQuadricRobustEstimatorListener listener) {
+<span class="fc" id="L87">        super(listener);</span>
+<span class="fc" id="L88">        stopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L89">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param cameras list of cameras used to estimate the Dual Absolute Quadric
+     *                (DAQ), which can be used to obtain pinhole camera intrinsic parameters.
+     * @throws IllegalArgumentException if not enough cameras are provided
+     *                                  for default settings. Hence, at least 2 cameras must be provided.
+     */
+    public LMedSDualAbsoluteQuadricRobustEstimator(final List&lt;PinholeCamera&gt; cameras) {
+<span class="fc" id="L100">        super(cameras);</span>
+<span class="fc" id="L101">        stopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L102">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param cameras  list of cameras used to estimate the Dual AbsoluteQuadric
+     *                 (DAQ), which can be used to obtain pinhole camera intrinsic parameters.
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     * @throws IllegalArgumentException if not enough cameras are provided
+     *                                  for default settings. Hence, at least 2 cameras must be provided.
+     */
+    public LMedSDualAbsoluteQuadricRobustEstimator(
+            final List&lt;PinholeCamera&gt; cameras, final DualAbsoluteQuadricRobustEstimatorListener listener) {
+<span class="fc" id="L116">        super(cameras, listener);</span>
+<span class="fc" id="L117">        stopThreshold = DEFAULT_STOP_THRESHOLD;</span>
+<span class="fc" id="L118">    }</span>
+
+    /**
+     * Returns threshold to be used to keep the algorithm iterating in case that
+     * best estimated threshold using median of residuals is not small enough.
+     * Once a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     *
+     * @return stop threshold to stop the algorithm prematurely when a certain
+     * accuracy has been reached.
+     */
+    public double getStopThreshold() {
+<span class="fc" id="L140">        return stopThreshold;</span>
+    }
+
+    /**
+     * Sets threshold to be used to keep the algorithm iterating in case that
+     * best estimated threshold using median of residuals is not small enough.
+     * Once a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do tat if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value
+     * lower than the one typically used in RANSAC, and yet the algorithm still
+     * produce even smaller thresholds in estimated results.
+     *
+     * @param stopThreshold stop threshold to stop the algorithm prematurely
+     *                      when a certain accuracy has been reached.
+     * @throws IllegalArgumentException if provided value is zero or negative.
+     * @throws LockedException          if robust estimator is locked because an
+     *                                  estimation is already in progress.
+     */
+    public void setStopThreshold(final double stopThreshold) throws LockedException {
+<span class="fc bfc" id="L166" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L167">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L169" title="All 2 branches covered.">        if (stopThreshold &lt;= MIN_STOP_THRESHOLD) {</span>
+<span class="fc" id="L170">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L172">        this.stopThreshold = stopThreshold;</span>
+<span class="fc" id="L173">    }</span>
+
+    /**
+     * Estimates the Dual Absolute Quadric using provided cameras.
+     *
+     * @return estimated Dual Absolute Quadric (DAQ).
+     * @throws LockedException          if robust estimator is locked.
+     * @throws NotReadyException        if no valid input data has already been
+     *                                  provided.
+     * @throws RobustEstimatorException if estimation fails for any reason
+     *                                  (i.e. numerical instability, no solution available, etc).
+     */
+    @SuppressWarnings(&quot;DuplicatedCode&quot;)
+    @Override
+    public DualAbsoluteQuadric estimate() throws LockedException, NotReadyException, RobustEstimatorException {
+<span class="fc bfc" id="L188" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L189">            throw new LockedException();</span>
+        }
+<span class="pc bpc" id="L191" title="1 of 2 branches missed.">        if (!isReady()) {</span>
+<span class="nc" id="L192">            throw new NotReadyException();</span>
+        }
+
+<span class="fc" id="L195">        final var innerEstimator = new LMedSRobustEstimator&lt;DualAbsoluteQuadric&gt;(new LMedSRobustEstimatorListener&lt;&gt;() {</span>
+
+            // subset of cameras picked on each iteration
+<span class="fc" id="L198">            private final List&lt;PinholeCamera&gt; subsetCameras = new ArrayList&lt;&gt;();</span>
+
+            @Override
+            public int getTotalSamples() {
+<span class="fc" id="L202">                return cameras.size();</span>
+            }
+
+            @Override
+            public int getSubsetSize() {
+<span class="fc" id="L207">                return daqEstimator.getMinNumberOfRequiredCameras();</span>
+            }
+
+            @Override
+            public void estimatePreliminarSolutions(
+                    final int[] samplesIndices, final List&lt;DualAbsoluteQuadric&gt; solutions) {
+<span class="fc" id="L213">                subsetCameras.clear();</span>
+<span class="fc bfc" id="L214" title="All 2 branches covered.">                for (var samplesIndex : samplesIndices) {</span>
+<span class="fc" id="L215">                    subsetCameras.add(cameras.get(samplesIndex));</span>
+                }
+
+                try {
+<span class="fc" id="L219">                    daqEstimator.setLMSESolutionAllowed(false);</span>
+<span class="fc" id="L220">                    daqEstimator.setCameras(subsetCameras);</span>
+
+<span class="fc" id="L222">                    var daq = daqEstimator.estimate();</span>
+<span class="fc" id="L223">                    solutions.add(daq);</span>
+<span class="nc" id="L224">                } catch (final Exception e) {</span>
+                    // if anything fails, no solution is added
+<span class="fc" id="L226">                }</span>
+<span class="fc" id="L227">            }</span>
+
+            @Override
+            public double computeResidual(final DualAbsoluteQuadric currentEstimation, final int i) {
+<span class="fc" id="L231">                return residual(currentEstimation, cameras.get(i));</span>
+            }
+
+            @Override
+            public boolean isReady() {
+<span class="fc" id="L236">                return LMedSDualAbsoluteQuadricRobustEstimator.this.isReady();</span>
+            }
+
+            @Override
+            public void onEstimateStart(final RobustEstimator&lt;DualAbsoluteQuadric&gt; estimator) {
+<span class="pc bpc" id="L241" title="1 of 2 branches missed.">                if (listener != null) {</span>
+<span class="fc" id="L242">                    listener.onEstimateStart(LMedSDualAbsoluteQuadricRobustEstimator.this);</span>
+                }
+<span class="fc" id="L244">            }</span>
+
+            @Override
+            public void onEstimateEnd(final RobustEstimator&lt;DualAbsoluteQuadric&gt; estimator) {
+<span class="pc bpc" id="L248" title="1 of 2 branches missed.">                if (listener != null) {</span>
+<span class="fc" id="L249">                    listener.onEstimateEnd(LMedSDualAbsoluteQuadricRobustEstimator.this);</span>
+                }
+<span class="fc" id="L251">            }</span>
+
+            @Override
+            public void onEstimateNextIteration(
+                    final RobustEstimator&lt;DualAbsoluteQuadric&gt; estimator, final int iteration) {
+<span class="pc bpc" id="L256" title="1 of 2 branches missed.">                if (listener != null) {</span>
+<span class="fc" id="L257">                    listener.onEstimateNextIteration(LMedSDualAbsoluteQuadricRobustEstimator.this, iteration);</span>
+                }
+<span class="fc" id="L259">            }</span>
+
+            @Override
+            public void onEstimateProgressChange(
+                    final RobustEstimator&lt;DualAbsoluteQuadric&gt; estimator, final float progress) {
+<span class="pc bpc" id="L264" title="1 of 2 branches missed.">                if (listener != null) {</span>
+<span class="fc" id="L265">                    listener.onEstimateProgressChange(LMedSDualAbsoluteQuadricRobustEstimator.this, progress);</span>
+                }
+<span class="fc" id="L267">            }</span>
+        });
+
+        try {
+<span class="fc" id="L271">            locked = true;</span>
+<span class="fc" id="L272">            innerEstimator.setConfidence(confidence);</span>
+<span class="fc" id="L273">            innerEstimator.setMaxIterations(maxIterations);</span>
+<span class="fc" id="L274">            innerEstimator.setProgressDelta(progressDelta);</span>
+<span class="fc" id="L275">            innerEstimator.setStopThreshold(stopThreshold);</span>
+<span class="fc" id="L276">            return innerEstimator.estimate();</span>
+<span class="nc" id="L277">        } catch (final com.irurueta.numerical.LockedException e) {</span>
+<span class="nc" id="L278">            throw new LockedException(e);</span>
+<span class="nc" id="L279">        } catch (final com.irurueta.numerical.NotReadyException e) {</span>
+<span class="nc" id="L280">            throw new NotReadyException(e);</span>
+        } finally {
+<span class="fc" id="L282">            locked = false;</span>
+        }
+    }
+
+    /**
+     * Returns method being used for robust estimation.
+     *
+     * @return method being used for robust estimation.
+     */
+    @Override
+    public RobustEstimatorMethod getMethod() {
+<span class="fc" id="L293">        return RobustEstimatorMethod.LMEDS;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

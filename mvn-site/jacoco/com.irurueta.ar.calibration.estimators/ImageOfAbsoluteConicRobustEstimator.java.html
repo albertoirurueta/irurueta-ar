@@ -1,0 +1,832 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ImageOfAbsoluteConicRobustEstimator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.calibration.estimators</a> &gt; <span class="el_source">ImageOfAbsoluteConicRobustEstimator.java</span></div><h1>ImageOfAbsoluteConicRobustEstimator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2015 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.calibration.estimators;
+
+import com.irurueta.algebra.AlgebraException;
+import com.irurueta.algebra.ArrayUtils;
+import com.irurueta.algebra.Matrix;
+import com.irurueta.ar.calibration.ImageOfAbsoluteConic;
+import com.irurueta.geometry.ProjectiveTransformation2D;
+import com.irurueta.geometry.Transformation2D;
+import com.irurueta.geometry.estimators.LockedException;
+import com.irurueta.geometry.estimators.NotReadyException;
+import com.irurueta.numerical.robust.RobustEstimatorException;
+import com.irurueta.numerical.robust.RobustEstimatorMethod;
+
+import java.util.List;
+
+/**
+ * This is an abstract class for algorithms to robustly find the best
+ * ImageOfAbsoluteConic (IAC) for provided collection of 2D homographies.
+ * Implementions of this class should be able to detect and discard outliers
+ * in order to find the best solution.
+ */
+public abstract class ImageOfAbsoluteConicRobustEstimator {
+    /**
+     * Default robust estimator method when none is provided.
+     * In general for IAC estimation is best to use PROSAC or RANSAC than
+     * any other method, as it provides more robust results.
+     */
+<span class="fc" id="L43">    public static final RobustEstimatorMethod DEFAULT_ROBUST_METHOD = RobustEstimatorMethod.PROSAC;</span>
+
+    /**
+     * Default amount of progress variation before notifying a change in
+     * estimation progress. By default, this is set to 5%.
+     */
+    public static final float DEFAULT_PROGRESS_DELTA = 0.05f;
+
+    /**
+     * Minimum allowed value for progress delta.
+     */
+    public static final float MIN_PROGRESS_DELTA = 0.0f;
+
+    /**
+     * Maximum allowed value for progress delta.
+     */
+    public static final float MAX_PROGRESS_DELTA = 1.0f;
+
+    /**
+     * Constant defining default confidence of the estimated result, which is
+     * 99%. This means that with a probability of 99% estimation will be
+     * accurate because chosen sub-samples will be inliers.
+     */
+    public static final double DEFAULT_CONFIDENCE = 0.99;
+
+    /**
+     * Default maximum allowed number of iterations.
+     */
+    public static final int DEFAULT_MAX_ITERATIONS = 5000;
+
+    /**
+     * Minimum allowed confidence value.
+     */
+    public static final double MIN_CONFIDENCE = 0.0;
+
+    /**
+     * Maximum allowed confidence value.
+     */
+    public static final double MAX_CONFIDENCE = 1.0;
+
+    /**
+     * Minimum allowed number of iterations.
+     */
+    public static final int MIN_ITERATIONS = 1;
+
+    /**
+     * Homographies to estimate image of absolute conic (IAC).
+     */
+    protected List&lt;Transformation2D&gt; homographies;
+
+    /**
+     * Internal non-robust estimator of IAC.
+     */
+    protected final LMSEImageOfAbsoluteConicEstimator iacEstimator;
+
+    /**
+     * Listener to be notified of events such as when estimation starts, ends or
+     * its progress significantly changes.
+     */
+    protected ImageOfAbsoluteConicRobustEstimatorListener listener;
+
+    /**
+     * Indicates if this estimator is locked because an estimation is being
+     * computed.
+     */
+    protected boolean locked;
+
+    /**
+     * Amount of progress variation before notifying a progress change during
+     * estimation.
+     */
+    protected float progressDelta;
+
+    /**
+     * Amount of confidence expressed as a value between 0.0 and 1.0 (which is
+     * equivalent to 100%). The amount of confidence indicates the probability
+     * that the estimated result is correct. Usually this value will be close
+     * to 1.0, but not exactly 1.0.
+     */
+    protected double confidence;
+
+    /**
+     * Maximum allowed number of iterations. When the maximum number of
+     * iterations is exceeded, result will not be available, however an
+     * approximate result will be available for retrieval.
+     */
+    protected int maxIterations;
+
+    // internal members to compute residuals
+
+    /**
+     * IAC matrix for one iteration of the robust estimator.
+     * This is used during residuals estimation.
+     * This instance is reused for performance reasons.
+     */
+    private Matrix iacMatrix;
+
+    /**
+     * Matrix representation of an homography.
+     * This is used during residuals estimation.
+     * This instance is reused for performance reasons.
+     */
+    private Matrix homMatrix;
+
+    /**
+     * Sub-matrix of homography used as the left term on a matrix multiplication.
+     * This is used during residuals estimation.
+     * This instance is reused for performance reasons.
+     */
+    private double[] subMatrixLeft;
+
+    /**
+     * Sub-matrix of homography used as the right term on a matrix
+     * multiplication.
+     * This is used during residuals estimation.
+     * This instance is reused for performance reasons.
+     */
+    private Matrix subMatrixRight;
+
+    /**
+     * Product multiplication of IAC by the right term.
+     * This is used during residuals estimation.
+     * This instance is reused for performance reasons.
+     */
+    private Matrix mult1;
+
+    /**
+     * Constructor.
+     */
+<span class="fc" id="L172">    protected ImageOfAbsoluteConicRobustEstimator() {</span>
+<span class="fc" id="L173">        progressDelta = DEFAULT_PROGRESS_DELTA;</span>
+<span class="fc" id="L174">        confidence = DEFAULT_CONFIDENCE;</span>
+<span class="fc" id="L175">        maxIterations = DEFAULT_MAX_ITERATIONS;</span>
+<span class="fc" id="L176">        iacEstimator = new LMSEImageOfAbsoluteConicEstimator();</span>
+<span class="fc" id="L177">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param listener listener to be notified of events such as when
+     *                 estimation starts, ends or its progress significantly changes.
+     */
+    protected ImageOfAbsoluteConicRobustEstimator(final ImageOfAbsoluteConicRobustEstimatorListener listener) {
+<span class="fc" id="L186">        this();</span>
+<span class="fc" id="L187">        this.listener = listener;</span>
+<span class="fc" id="L188">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param homographies list of homographies (2D transformations) used to
+     *                     estimate the image of absolute conic (IAC), which can be used to obtain
+     *                     pinhole camera intrinsic parameters.
+     * @throws IllegalArgumentException if not enough homographies are provided
+     *                                  for default settings. Hence, at least 1 homography must be provided.
+     */
+    protected ImageOfAbsoluteConicRobustEstimator(final List&lt;Transformation2D&gt; homographies) {
+<span class="fc" id="L200">        this();</span>
+<span class="fc" id="L201">        internalSetHomographies(homographies);</span>
+<span class="fc" id="L202">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param homographies list of homographies (2D transformations) used to
+     *                     estimate the image of absolute conic (IAC), which can be used to obtain
+     *                     pinhole camera intrinsic parameters.
+     * @param listener     listener to be notified of events such as when estimation
+     *                     starts, ends or estimation progress changes.
+     * @throws IllegalArgumentException if not enough homographies are provided
+     *                                  for default settings. Hence, at least 1 homography must be provided.
+     */
+    protected ImageOfAbsoluteConicRobustEstimator(
+            final List&lt;Transformation2D&gt; homographies, final ImageOfAbsoluteConicRobustEstimatorListener listener) {
+<span class="fc" id="L217">        this(listener);</span>
+<span class="fc" id="L218">        internalSetHomographies(homographies);</span>
+<span class="fc" id="L219">    }</span>
+
+    /**
+     * Returns boolean indicating whether camera skewness is assumed to be zero
+     * or not.
+     * Skewness determines whether LCD sensor cells are properly aligned or not,
+     * where zero indicates perfect alignment.
+     * Typically, skewness is a value equal or very close to zero.
+     *
+     * @return true if camera skewness is assumed to be zero, otherwise camera
+     * skewness is estimated.
+     */
+    public boolean isZeroSkewness() {
+<span class="fc" id="L232">        return iacEstimator.isZeroSkewness();</span>
+    }
+
+    /**
+     * Sets boolean indicating whether camera skewness is assumed to be zero or
+     * not.
+     * Skewness determines whether LCD sensor cells are properly aligned or not,
+     * where zero indicates perfect alignment.
+     * Typically, skewness is a value equal or very close to zero.
+     *
+     * @param zeroSkewness true if camera skewness is assumed to be zero,
+     *                     otherwise camera skewness is estimated.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setZeroSkewness(final boolean zeroSkewness) throws LockedException {
+<span class="fc bfc" id="L247" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L248">            throw new LockedException();</span>
+        }
+
+<span class="fc" id="L251">        iacEstimator.setZeroSkewness(zeroSkewness);</span>
+<span class="fc" id="L252">    }</span>
+
+    /**
+     * Returns boolean indicating whether principal point is assumed to be at
+     * origin of coordinates or not.
+     * Typically principal point is located at image center (origin of
+     * coordinates), and usually matches the center of radial distortion if
+     * it is taken into account.
+     *
+     * @return true if principal point is assumed to be at origin of
+     * coordinates, false if principal point must be estimated.
+     */
+    public boolean isPrincipalPointAtOrigin() {
+<span class="fc" id="L265">        return iacEstimator.isPrincipalPointAtOrigin();</span>
+    }
+
+    /**
+     * Sets boolean indicating whether principal point is assumed to be at
+     * origin of coordinates or not.
+     * Typically principal point is located at image center (origin of
+     * coordinates), and usually matches the center of radial distortion if it
+     * is taken into account.
+     *
+     * @param principalPointAtOrigin true if principal point is assumed to bet
+     *                               at origin of coordinates, false if principal point must be estimated
+     * @throws LockedException if estimator is locked.
+     */
+    public void setPrincipalPointAtOrigin(final boolean principalPointAtOrigin) throws LockedException {
+<span class="fc bfc" id="L280" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L281">            throw new LockedException();</span>
+        }
+
+<span class="fc" id="L284">        iacEstimator.setPrincipalPointAtOrigin(principalPointAtOrigin);</span>
+<span class="fc" id="L285">    }</span>
+
+    /**
+     * Returns boolean indicating whether aspect ratio of focal distances (i.e.
+     * vertical focal distance divided by horizontal focal distance) is known or
+     * not.
+     * Notice that focal distance aspect ratio is not related to image size
+     * aspect ratio. Typically, LCD sensor cells are square and hence aspect
+     * ratio of focal distances is known and equal to 1.
+     * This value is only taken into account if skewness is assumed to be zero,
+     * otherwise it is ignored.
+     *
+     * @return true if focal distance aspect ratio is known, false otherwise.
+     */
+    public boolean isFocalDistanceAspectRatioKnown() {
+<span class="fc" id="L300">        return iacEstimator.isFocalDistanceAspectRatioKnown();</span>
+    }
+
+    /**
+     * Sets boolean indicating whether aspect ratio of focal distances (i.e.
+     * vertical focal distance divided by horizontal focal distance) is known or
+     * not.
+     * Notice that focal distance aspect ratio is not related to image size
+     * aspect ratio. Typically, LCD sensor cells are square and hence aspect
+     * ratio of focal distances is known and equal to 1.
+     * This value is only taken into account if skewness is assumed to be zero,
+     * otherwise it is ignored.
+     *
+     * @param focalDistanceAspectRatioKnown true if focal distance aspect ratio
+     *                                      is known, false otherwise.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setFocalDistanceAspectRatioKnown(final boolean focalDistanceAspectRatioKnown) throws LockedException {
+<span class="pc bpc" id="L318" title="1 of 2 branches missed.">        if (isLocked()) {</span>
+<span class="nc" id="L319">            throw new LockedException();</span>
+        }
+
+<span class="fc" id="L322">        iacEstimator.setFocalDistanceAspectRatioKnown(focalDistanceAspectRatioKnown);</span>
+<span class="fc" id="L323">    }</span>
+
+    /**
+     * Returns aspect ratio of focal distances (i.e. vertical focal distance
+     * divided by horizontal focal distance).
+     * This value is only taken into account if skewness is assumed to be zero
+     * and focal distance aspect ratio is marked as known, otherwise it is
+     * ignored.
+     * By default, this is 1.0, since it is taken into account that typically
+     * LCD sensor cells are square and hence aspect ratio focal distances is
+     * known and equal to 1.
+     * Notice that focal distance aspect ratio is not related to image size
+     * aspect ratio.
+     * Notice that a negative aspect ratio indicates that vertical axis is
+     * reversed. This can be useful in some situations where image vertical
+     * coordinates are reversed respect to the physical world (i.e. in computer
+     * graphics typically image vertical coordinates go downwards, while in
+     * physical world they go upwards).
+     *
+     * @return aspect ratio of focal distances.
+     */
+    public double getFocalDistanceAspectRatio() {
+<span class="fc" id="L345">        return iacEstimator.getFocalDistanceAspectRatio();</span>
+    }
+
+    /**
+     * Sets aspect ratio of focal distances (i.e. vertical focal distance
+     * divided by horizontal focal distance).
+     * This value is only taken into account if skewness is assumed to be zero
+     * and focal distance aspect ratio is marked as known, otherwise it is
+     * ignored.
+     * By default, this is 1.0, since it is taken into account that typically
+     * LCD sensor cells are square and hence aspect ratio focal distances is
+     * known and equal to 1.
+     * Notice that focal distance aspect ratio is not related to image size
+     * aspect ratio.
+     * Notice that a negative aspect ratio indicates that vertical axis is
+     * reversed. This can be useful in some situations where image vertical
+     * coordinates are reversed respect to the physical world (i.e. in computer
+     * graphics typically image vertical coordinates go downwards, while in
+     * physical world they go upwards).
+     *
+     * @param focalDistanceAspectRatio aspect ratio of focal distances to be set
+     * @throws LockedException          if estimator is locked.
+     * @throws IllegalArgumentException if focal distance aspect ratio is too
+     *                                  close to zero, as it might produce numerical instabilities.
+     */
+    public void setFocalDistanceAspectRatio(final double focalDistanceAspectRatio) throws LockedException {
+<span class="pc bpc" id="L371" title="1 of 2 branches missed.">        if (isLocked()) {</span>
+<span class="nc" id="L372">            throw new LockedException();</span>
+        }
+
+<span class="fc" id="L375">        iacEstimator.setFocalDistanceAspectRatio(focalDistanceAspectRatio);</span>
+<span class="fc" id="L376">    }</span>
+
+    /**
+     * Returns reference to listener to be notified of events such as when
+     * estimation starts, ends or its progress significantly changes.
+     *
+     * @return listener to be notified of events.
+     */
+    public ImageOfAbsoluteConicRobustEstimatorListener getListener() {
+<span class="fc" id="L385">        return listener;</span>
+    }
+
+    /**
+     * Sets listener to be notified of events such as when estimation starts,
+     * ends or its progress significantly changes.
+     *
+     * @param listener listener to be notified of events.
+     * @throws LockedException if robust estimator is locked.
+     */
+    public void setListener(final ImageOfAbsoluteConicRobustEstimatorListener listener) throws LockedException {
+<span class="fc bfc" id="L396" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L397">            throw new LockedException();</span>
+        }
+<span class="fc" id="L399">        this.listener = listener;</span>
+<span class="fc" id="L400">    }</span>
+
+    /**
+     * Indicates whether listener has been provided and is available for
+     * retrieval.
+     *
+     * @return true if available, false otherwise.
+     */
+    public boolean isListenerAvailable() {
+<span class="fc bfc" id="L409" title="All 2 branches covered.">        return listener != null;</span>
+    }
+
+    /**
+     * Indicates if this instance is locked because estimation is being
+     * computed.
+     *
+     * @return true if locked, false otherwise.
+     */
+    public boolean isLocked() {
+<span class="fc" id="L419">        return locked;</span>
+    }
+
+    /**
+     * Returns amount of progress variation before notifying a progress change
+     * during estimation.
+     *
+     * @return amount of progress variation before notifying a progress change
+     * during estimation.
+     */
+    public float getProgressDelta() {
+<span class="fc" id="L430">        return progressDelta;</span>
+    }
+
+    /**
+     * Sets amount of progress variation before notifying a progress change
+     * during estimation.
+     *
+     * @param progressDelta amount of progress variation before notifying a
+     *                      progress change during estimation.
+     * @throws IllegalArgumentException if progress delta is less than zero or
+     *                                  greater than 1.
+     * @throws LockedException          if this estimator is locked because an estimation
+     *                                  is being computed.
+     */
+    public void setProgressDelta(final float progressDelta) throws LockedException {
+<span class="fc bfc" id="L445" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L446">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L448" title="All 4 branches covered.">        if (progressDelta &lt; MIN_PROGRESS_DELTA || progressDelta &gt; MAX_PROGRESS_DELTA) {</span>
+<span class="fc" id="L449">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L451">        this.progressDelta = progressDelta;</span>
+<span class="fc" id="L452">    }</span>
+
+    /**
+     * Returns amount of confidence expressed as a value between 0.0 and 1.0
+     * (which is equivalent to 100%). The amount of confidence indicates the
+     * probability that the estimated result is correct. Usually this value will
+     * be close to 1.0, but not exactly 1.0.
+     *
+     * @return amount of confidence as a value between 0.0 and 1.0.
+     */
+    public double getConfidence() {
+<span class="fc" id="L463">        return confidence;</span>
+    }
+
+    /**
+     * Sets amount of confidence expressed as a value between 0.0 and 1.0 (which
+     * is equivalent to 100%). The amount of confidence indicates the
+     * probability that the estimated result is correct. Usually this value will
+     * be close to 1.0, but not exactly 1.0.
+     *
+     * @param confidence confidence to be set as a value between 0.0 and 1.0.
+     * @throws IllegalArgumentException if provided value is not between 0.0 and
+     *                                  1.0.
+     * @throws LockedException          if this estimator is locked because an estimator
+     *                                  is being computed.
+     */
+    public void setConfidence(final double confidence) throws LockedException {
+<span class="fc bfc" id="L479" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L480">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L482" title="All 4 branches covered.">        if (confidence &lt; MIN_CONFIDENCE || confidence &gt; MAX_CONFIDENCE) {</span>
+<span class="fc" id="L483">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L485">        this.confidence = confidence;</span>
+<span class="fc" id="L486">    }</span>
+
+    /**
+     * Returns maximum allowed number of iterations. If maximum allowed number
+     * of iterations is achieved without converging to a result when calling
+     * estimate(), a RobustEstimatorException will be raised.
+     *
+     * @return maximum allowed number of iterations.
+     */
+    public int getMaxIterations() {
+<span class="fc" id="L496">        return maxIterations;</span>
+    }
+
+    /**
+     * Sets maximum allowed number of iterations. When the maximum number of
+     * iterations is exceeded, result will not be available, however an
+     * approximate result will be available for retrieval.
+     *
+     * @param maxIterations maximum allowed number of iterations to be set.
+     * @throws IllegalArgumentException if provided value is less than 1.
+     * @throws LockedException          if this estimator is locked because an estimation
+     *                                  is being computed.
+     */
+    public void setMaxIterations(final int maxIterations) throws LockedException {
+<span class="fc bfc" id="L510" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L511">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L513" title="All 2 branches covered.">        if (maxIterations &lt; MIN_ITERATIONS) {</span>
+<span class="fc" id="L514">            throw new IllegalArgumentException();</span>
+        }
+<span class="fc" id="L516">        this.maxIterations = maxIterations;</span>
+<span class="fc" id="L517">    }</span>
+
+    /**
+     * Gets list of homographies to estimate IAC.
+     *
+     * @return list of homographies to estimate IAC.
+     */
+    public List&lt;Transformation2D&gt; getHomographies() {
+<span class="fc" id="L525">        return homographies;</span>
+    }
+
+    /**
+     * Sets list of homographies to estimate IAC.
+     *
+     * @param homographies list of homographies to estimate IAC.
+     * @throws LockedException          if estimator is locked.
+     * @throws IllegalArgumentException if provided list of homographies does
+     *                                  not contain enough elements to estimate the DIAC using current
+     *                                  settings.
+     */
+    public void setHomographies(final List&lt;Transformation2D&gt; homographies) throws LockedException {
+<span class="fc bfc" id="L538" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L539">            throw new LockedException();</span>
+        }
+<span class="fc" id="L541">        internalSetHomographies(homographies);</span>
+<span class="fc" id="L542">    }</span>
+
+    /**
+     * Returns minimum number of required homographies needed to estimate the
+     * Imag eof Absolute Conic (IAC).
+     * If no constraints are imposed, then at least 3 homographies are required.
+     * For each constraint imposed, one less equation will be required, hence
+     * if skewness is assumed to be known (by using its typical value of zero),
+     * then only 4 equations will be needed.
+     * If also the horizontal and vertical coordinates of the principal point
+     * are assumed to be known (by being placed at the 2D origin of coordinates,
+     * which is a typical value), then only 2 equations will be needed
+     * (1 homography).
+     *
+     * @return minimum number of required homographies required to estimate the
+     * IAC.
+     */
+    public int getMinNumberOfRequiredHomographies() {
+<span class="fc" id="L560">        return iacEstimator.getMinNumberOfRequiredHomographies();</span>
+    }
+
+    /**
+     * Returns value indicating whether required data has been provided so that
+     * IAC estimation can start.
+     * If true, estimator is ready to compute the IAC, otherwise more data needs
+     * to be provided.
+     *
+     * @return true if estimator is ready, false otherwise.
+     */
+    public boolean isReady() {
+<span class="pc bpc" id="L572" title="1 of 4 branches missed.">        return homographies != null &amp;&amp; homographies.size() &gt;= getMinNumberOfRequiredHomographies();</span>
+    }
+
+    /**
+     * Returns quality scores corresponding to each homography.
+     * The larger the score value the better the quality of the homography.
+     * This implementation always returns null.
+     * Subclasses using quality scores must implement proper behaviour.
+     *
+     * @return quality scores corresponding to each homography.
+     */
+    public double[] getQualityScores() {
+<span class="fc" id="L584">        return null;</span>
+    }
+
+    /**
+     * Sets quality scores corresponding to each homography.
+     * The larger the score value the better the quality of the homography.
+     * This implementation makes no action.
+     * Subclasses using quality scores must implement proper behaviour.
+     *
+     * @param qualityScores quality scores corresponding to each homography.
+     * @throws LockedException          if robust estimator is locked because an
+     *                                  estimation is already in progress.
+     * @throws IllegalArgumentException if provided quality scores length is
+     *                                  smaller than minimum required number of homographies.
+     */
+    public void setQualityScores(final double[] qualityScores) throws LockedException {
+<span class="fc" id="L600">    }</span>
+
+    /**
+     * Estimates Image of Absolute Conic (IAC).
+     *
+     * @return estimated IAC.
+     * @throws LockedException          if robust estimator is locked because an
+     *                                  estimation is already in progress.
+     * @throws NotReadyException        if provided input data is not enough to start
+     *                                  the estimation.
+     * @throws RobustEstimatorException if estimation fails for any reason
+     *                                  (i.e. numerical instability, no solution available, etc).
+     */
+    public abstract ImageOfAbsoluteConic estimate() throws LockedException, NotReadyException,
+            RobustEstimatorException;
+
+    /**
+     * Returns method being used for robust estimation.
+     *
+     * @return method being used for robust estimation.
+     */
+    public abstract RobustEstimatorMethod getMethod();
+
+    /**
+     * Creates an image of absolute conic robust estimator using provided
+     * method.
+     *
+     * @param method method of a robust estimator algorithm to estimate best
+     *               IAC.
+     * @return an instance of an image of absolute conic robust estimator.
+     */
+    public static ImageOfAbsoluteConicRobustEstimator create(final RobustEstimatorMethod method) {
+<span class="fc bfc" id="L632" title="All 5 branches covered.">        return switch (method) {</span>
+<span class="fc" id="L633">            case LMEDS -&gt; new LMedSImageOfAbsoluteConicRobustEstimator();</span>
+<span class="fc" id="L634">            case MSAC -&gt; new MSACImageOfAbsoluteConicRobustEstimator();</span>
+<span class="fc" id="L635">            case PROSAC -&gt; new PROSACImageOfAbsoluteConicRobustEstimator();</span>
+<span class="fc" id="L636">            case PROMEDS -&gt; new PROMedSImageOfAbsoluteConicRobustEstimator();</span>
+<span class="fc" id="L637">            default -&gt; new RANSACImageOfAbsoluteConicRobustEstimator();</span>
+        };
+    }
+
+    /**
+     * Creates an image of absolute conic robust estimator using provided
+     * homographies.
+     *
+     * @param homographies  list of homographies.
+     * @param qualityScores quality scores corresponding to each homography.
+     * @param method        method of a robust estimator algorithm to estimate
+     *                      best IAC.
+     * @return an instance of an image of absolute conic robust estimator.
+     * @throws IllegalArgumentException if provided list of homographies and
+     *                                  quality scores don't have the same size or size is too short.
+     */
+    public static ImageOfAbsoluteConicRobustEstimator create(
+            final List&lt;Transformation2D&gt; homographies, final double[] qualityScores,
+            final RobustEstimatorMethod method) {
+<span class="fc bfc" id="L656" title="All 5 branches covered.">        return switch (method) {</span>
+<span class="fc" id="L657">            case LMEDS -&gt; new LMedSImageOfAbsoluteConicRobustEstimator(homographies);</span>
+<span class="fc" id="L658">            case MSAC -&gt; new MSACImageOfAbsoluteConicRobustEstimator(homographies);</span>
+<span class="fc" id="L659">            case PROSAC -&gt; new PROSACImageOfAbsoluteConicRobustEstimator(homographies, qualityScores);</span>
+<span class="fc" id="L660">            case PROMEDS -&gt; new PROMedSImageOfAbsoluteConicRobustEstimator(homographies, qualityScores);</span>
+<span class="fc" id="L661">            default -&gt; new RANSACImageOfAbsoluteConicRobustEstimator(homographies);</span>
+        };
+    }
+
+    /**
+     * Creates an image of absolute conic robust estimator using provided
+     * homographies.
+     *
+     * @param homographies list of homographies.
+     * @param method       method of a robust estimator algorithm to estimate
+     *                     best IAC.
+     * @return an instance of an image of absolute conic robust estimator.
+     * @throws IllegalArgumentException if provided list of homographies is too
+     *                                  short.
+     */
+    public static ImageOfAbsoluteConicRobustEstimator create(
+            final List&lt;Transformation2D&gt; homographies, final RobustEstimatorMethod method) {
+<span class="fc bfc" id="L678" title="All 5 branches covered.">        return switch (method) {</span>
+<span class="fc" id="L679">            case LMEDS -&gt; new LMedSImageOfAbsoluteConicRobustEstimator(homographies);</span>
+<span class="fc" id="L680">            case MSAC -&gt; new MSACImageOfAbsoluteConicRobustEstimator(homographies);</span>
+<span class="fc" id="L681">            case PROSAC -&gt; new PROSACImageOfAbsoluteConicRobustEstimator(homographies);</span>
+<span class="fc" id="L682">            case PROMEDS -&gt; new PROMedSImageOfAbsoluteConicRobustEstimator(homographies);</span>
+<span class="fc" id="L683">            default -&gt; new RANSACImageOfAbsoluteConicRobustEstimator(homographies);</span>
+        };
+    }
+
+    /**
+     * Creates an image of absolute conic robust estimator using default
+     * method.
+     *
+     * @return an instance of an image of absolute conic robust estimator.
+     */
+    public static ImageOfAbsoluteConicRobustEstimator create() {
+<span class="fc" id="L694">        return create(DEFAULT_ROBUST_METHOD);</span>
+    }
+
+    /**
+     * Creates an image of absolute conic robust estimator using provided
+     * homographies.
+     *
+     * @param homographies  list of homographies.
+     * @param qualityScores quality scores corresponding to each point.
+     * @return an instance of an image of absolute conic robust estimator.
+     * @throws IllegalArgumentException if provided list of homographies and
+     *                                  quality scores don't have the same size or size is too short.
+     */
+    public static ImageOfAbsoluteConicRobustEstimator create(
+            final List&lt;Transformation2D&gt; homographies, final double[] qualityScores) {
+<span class="fc" id="L709">        return create(homographies, qualityScores, DEFAULT_ROBUST_METHOD);</span>
+    }
+
+    /**
+     * Creates an image of absolute conic robust estimator using provided
+     * homographies.
+     *
+     * @param homographies list of homographies.
+     * @return an instance of an image of absolute conic robust estimator.
+     * @throws IllegalArgumentException if provided list of homographies and
+     *                                  is too short.
+     */
+    public static ImageOfAbsoluteConicRobustEstimator create(final List&lt;Transformation2D&gt; homographies) {
+<span class="fc" id="L722">        return create(homographies, DEFAULT_ROBUST_METHOD);</span>
+    }
+
+    /**
+     * Computes the residual between an image of absolute conic (IAC) and
+     * a 2D transformation (homography).
+     * Residual is derived from the fact that rotation matrices are
+     * orthonormal (i.e. h1'*IAC*h2 = 0 and
+     * h1'*IAC*h1 = h2'*IAC*h2 --&amp;lt; h1'*IAC*h1 - h2'*IAC*h2 = 0).
+     * The residual will be the average error of those two equations.
+     *
+     * @param iac        the matrix of an image of absolute conic (IAC)
+     * @param homography 2D transformation (homography)
+     * @return residual.
+     */
+    protected double residual(final ImageOfAbsoluteConic iac, final Transformation2D homography) {
+
+<span class="fc" id="L739">        iac.normalize();</span>
+<span class="pc bpc" id="L740" title="1 of 2 branches missed.">        if (homography instanceof ProjectiveTransformation2D projectiveTransformation2D) {</span>
+<span class="fc" id="L741">            projectiveTransformation2D.normalize();</span>
+        }
+
+        try {
+<span class="fc bfc" id="L745" title="All 2 branches covered.">            if (iacMatrix == null) {</span>
+<span class="fc" id="L746">                iacMatrix = iac.asMatrix();</span>
+            } else {
+<span class="fc" id="L748">                iac.asMatrix(iacMatrix);</span>
+            }
+
+<span class="fc bfc" id="L751" title="All 2 branches covered.">            if (homMatrix == null) {</span>
+<span class="fc" id="L752">                homMatrix = homography.asMatrix();</span>
+            } else {
+<span class="fc" id="L754">                homography.asMatrix(homMatrix);</span>
+            }
+
+<span class="fc bfc" id="L757" title="All 2 branches covered.">            if (subMatrixLeft == null) {</span>
+<span class="fc" id="L758">                subMatrixLeft = new double[ProjectiveTransformation2D.HOM_COORDS];</span>
+            }
+<span class="fc bfc" id="L760" title="All 2 branches covered.">            if (subMatrixRight == null) {</span>
+<span class="fc" id="L761">                subMatrixRight = new Matrix(ProjectiveTransformation2D.HOM_COORDS, 1);</span>
+            }
+<span class="fc bfc" id="L763" title="All 2 branches covered.">            if (mult1 == null) {</span>
+<span class="fc" id="L764">                mult1 = new Matrix(ProjectiveTransformation2D.HOM_COORDS, 1);</span>
+            }
+
+            // 1st equation h1'*IAC*h2 = 0
+
+            // 1st column of homography
+<span class="fc" id="L770">            homMatrix.getSubmatrixAsArray(0, 0,</span>
+                    ProjectiveTransformation2D.HOM_COORDS - 1, 0, subMatrixLeft);
+            // 2nd column of homography
+<span class="fc" id="L773">            homMatrix.getSubmatrix(0, 1,</span>
+                    ProjectiveTransformation2D.HOM_COORDS - 1, 1, subMatrixRight);
+
+            // IAC * h2
+<span class="fc" id="L777">            iacMatrix.multiply(subMatrixRight, mult1);</span>
+
+            // h1' * (IAC * h2)
+<span class="fc" id="L780">            final var error1 = Math.abs(ArrayUtils.dotProduct(subMatrixLeft, mult1.getBuffer()));</span>
+
+            // 2nd equation h1'*IAC*h1 - h2'*IAC*h2 = 0
+
+            // 1st column of homography
+<span class="fc" id="L785">            homMatrix.getSubmatrixAsArray(0, 0,</span>
+                    ProjectiveTransformation2D.HOM_COORDS - 1, 0, subMatrixLeft);
+<span class="fc" id="L787">            homMatrix.getSubmatrix(0, 0,</span>
+                    ProjectiveTransformation2D.HOM_COORDS - 1, 0, subMatrixRight);
+
+            // IAC * h1
+<span class="fc" id="L791">            iacMatrix.multiply(subMatrixRight, mult1);</span>
+
+            // h1' * (IAC * h1)
+<span class="fc" id="L794">            final var error2a = ArrayUtils.dotProduct(subMatrixLeft, mult1.getBuffer());</span>
+
+            // 2nd column of homography
+<span class="fc" id="L797">            homMatrix.getSubmatrixAsArray(0, 1,</span>
+                    ProjectiveTransformation2D.HOM_COORDS - 1, 1, subMatrixLeft);
+<span class="fc" id="L799">            homMatrix.getSubmatrix(0, 1,</span>
+                    ProjectiveTransformation2D.HOM_COORDS - 1, 1, subMatrixRight);
+
+            // IAC * h2
+<span class="fc" id="L803">            iacMatrix.multiply(subMatrixRight, mult1);</span>
+
+            // h2' * (IAC * h1)
+<span class="fc" id="L806">            final var error2b = ArrayUtils.dotProduct(subMatrixLeft, mult1.getBuffer());</span>
+
+<span class="fc" id="L808">            final var error2 = Math.abs(error2a - error2b);</span>
+
+<span class="fc" id="L810">            return 0.5 * (error1 + error2);</span>
+<span class="nc" id="L811">        } catch (final AlgebraException e) {</span>
+<span class="nc" id="L812">            return Double.MAX_VALUE;</span>
+        }
+    }
+
+    /**
+     * Sets list of homographies.
+     * This method does not check whether estimator is locked.
+     *
+     * @param homographies list of homographies to estimate IAC.
+     * @throws IllegalArgumentException if provided list of homographies is null
+     *                                  or too small.
+     */
+    private void internalSetHomographies(final List&lt;Transformation2D&gt; homographies) {
+<span class="fc bfc" id="L825" title="All 4 branches covered.">        if (homographies == null || homographies.size() &lt; getMinNumberOfRequiredHomographies()) {</span>
+<span class="fc" id="L826">            throw new IllegalArgumentException();</span>
+        }
+
+<span class="fc" id="L829">        this.homographies = homographies;</span>
+<span class="fc" id="L830">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

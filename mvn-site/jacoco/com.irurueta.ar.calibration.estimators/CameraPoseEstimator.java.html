@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CameraPoseEstimator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.calibration.estimators</a> &gt; <span class="el_source">CameraPoseEstimator.java</span></div><h1>CameraPoseEstimator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2015 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.calibration.estimators;
+
+import com.irurueta.algebra.AlgebraException;
+import com.irurueta.algebra.ArrayUtils;
+import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.SingularValueDecomposer;
+import com.irurueta.algebra.Utils;
+import com.irurueta.geometry.CoordinatesType;
+import com.irurueta.geometry.GeometryException;
+import com.irurueta.geometry.MatrixRotation3D;
+import com.irurueta.geometry.PinholeCamera;
+import com.irurueta.geometry.PinholeCameraIntrinsicParameters;
+import com.irurueta.geometry.Point3D;
+import com.irurueta.geometry.ProjectiveTransformation2D;
+import com.irurueta.geometry.Rotation3D;
+import com.irurueta.geometry.Transformation2D;
+
+/**
+ * Estimates the camera pose for a given homography and pinhole camera intrinsic
+ * parameters.
+ * &lt;p&gt;
+ * This class is used for camera calibration but can also be used for
+ * virtual reality applications
+ * This class assumes that the homography is estimated as the result of
+ * projecting 3D points located in a plane.
+ * &lt;p&gt;
+ * This class is based on technique described at:
+ * Zhengyou Zhang. A Flexible New Technique for Camera Calibration. Technical
+ * Report. MSR-TR-98-71. December 2, 1998
+ */
+<span class="fc" id="L46">public class CameraPoseEstimator {</span>
+
+    /**
+     * Estimated camera rotation.
+     */
+    private Rotation3D rotation;
+
+    /**
+     * Estimated camera center.
+     */
+    private Point3D cameraCenter;
+
+    /**
+     * Estimated camera.
+     */
+    private PinholeCamera camera;
+
+    /**
+     * Estimates camera posed based on provided intrinsic parameters and
+     * 2D homography.
+     *
+     * @param intrinsic  pinhole camera intrinsic parameters.
+     * @param homography a 2D homography.
+     * @throws AlgebraException  if provided data is numerically unstable.
+     * @throws GeometryException if a proper camera rotation cannot be found.
+     */
+    public void estimate(final PinholeCameraIntrinsicParameters intrinsic, final Transformation2D homography)
+        throws AlgebraException, GeometryException {
+<span class="fc" id="L74">        rotation = new MatrixRotation3D();</span>
+<span class="fc" id="L75">        cameraCenter = Point3D.create(CoordinatesType.HOMOGENEOUS_COORDINATES);</span>
+<span class="fc" id="L76">        camera = new PinholeCamera();</span>
+<span class="fc" id="L77">        estimate(intrinsic, homography, rotation, cameraCenter, camera);</span>
+<span class="fc" id="L78">    }</span>
+
+    /**
+     * Returns estimated camera rotation.
+     *
+     * @return estimated camera rotation.
+     */
+    public Rotation3D getRotation() {
+<span class="fc" id="L86">        return rotation;</span>
+    }
+
+    /**
+     * Returns estimated camera center.
+     *
+     * @return estimated camera center.
+     */
+    public Point3D getCameraCenter() {
+<span class="fc" id="L95">        return cameraCenter;</span>
+    }
+
+    /**
+     * Returns estimated camera.
+     *
+     * @return estimated camera.
+     */
+    public PinholeCamera getCamera() {
+<span class="fc" id="L104">        return camera;</span>
+    }
+
+    /**
+     * Estimates camera pose based on provided intrinsic parameters and
+     * 2D homography.
+     *
+     * @param intrinsic             pinhole camera intrinsic parameters.
+     * @param homography            a 2D homography.
+     * @param estimatedRotation     instance where estimated rotation will be stored.
+     * @param estimatedCameraCenter instance where estimated camera center will
+     *                              be stored.
+     * @param estimatedCamera       instance where estimated camera will be stored.
+     * @throws AlgebraException  if provided data is numerically unstable.
+     * @throws GeometryException if a proper camera rotation cannot be found.
+     */
+    public static void estimate(
+            final PinholeCameraIntrinsicParameters intrinsic,
+            final Transformation2D homography,
+            final Rotation3D estimatedRotation,
+            final Point3D estimatedCameraCenter,
+            final PinholeCamera estimatedCamera)
+            throws AlgebraException, GeometryException {
+
+        // inverse of intrinsic parameters matrix
+
+        // what follows next is equivalent to Utils.inverse(intrinsic.getInternalMatrix())
+<span class="fc" id="L131">        final var intrinsicInvMatrix = intrinsic.getInverseInternalMatrix();</span>
+
+<span class="pc bpc" id="L133" title="1 of 2 branches missed.">        if (homography instanceof ProjectiveTransformation2D projectiveTransformation2D) {</span>
+<span class="fc" id="L134">            projectiveTransformation2D.normalize();</span>
+        }
+<span class="fc" id="L136">        final var homographyMatrix = homography.asMatrix();</span>
+
+<span class="fc" id="L138">        final var h1 = homographyMatrix.getSubmatrix(0, 0, 2, 0);</span>
+<span class="fc" id="L139">        final var h2 = homographyMatrix.getSubmatrix(</span>
+            0, 1, 2, 1);
+<span class="fc" id="L141">        final var h3 = homographyMatrix.getSubmatrix(0, 2, 2, 2);</span>
+
+<span class="fc" id="L143">        final var matR1 = intrinsicInvMatrix.multiplyAndReturnNew(h1);</span>
+<span class="fc" id="L144">        final var matR2 = intrinsicInvMatrix.multiplyAndReturnNew(h2);</span>
+<span class="fc" id="L145">        final var matT = intrinsicInvMatrix.multiplyAndReturnNew(h3);</span>
+
+        // because rotation matrices are orthonormal, we find norm of 1st or
+        // 2nd column (both should be equal, except for rounding errors)
+        // to normalize columns 1 and 2.
+        // Because norms might not be equal, we use average or norms of matR1 and
+        // matR2
+<span class="fc" id="L152">        final var norm1 = Utils.normF(matR1);</span>
+<span class="fc" id="L153">        final var norm2 = Utils.normF(matR2);</span>
+<span class="fc" id="L154">        final var invNorm = 2.0 / (norm1 + norm2);</span>
+<span class="fc" id="L155">        matR1.multiplyByScalar(invNorm);</span>
+<span class="fc" id="L156">        matR2.multiplyByScalar(invNorm);</span>
+
+        // also normalize translation term, since pinhole camera is defined
+        // up to scale
+<span class="fc" id="L160">        matT.multiplyByScalar(invNorm);</span>
+
+<span class="fc" id="L162">        final var r1 = matR1.getBuffer();</span>
+<span class="fc" id="L163">        final var r2 = matR2.getBuffer();</span>
+
+        // 3rd column of rotation must be orthogonal to 1st and 2nd columns and
+        // also have norm 1, because rotations are orthonormal
+<span class="fc" id="L167">        final var r3 = Utils.crossProduct(r1, r2);</span>
+<span class="fc" id="L168">        ArrayUtils.normalize(r3);</span>
+
+<span class="fc" id="L170">        final var rot = new Matrix(3, 3);</span>
+<span class="fc" id="L171">        rot.setSubmatrix(0, 0, 2, 0, r1);</span>
+<span class="fc" id="L172">        rot.setSubmatrix(0, 1, 2, 1, r2);</span>
+<span class="fc" id="L173">        rot.setSubmatrix(0, 2, 2, 2, r3);</span>
+
+        // because of noise in data during the estimation of both the homography
+        // and the intrinsic parameters, it might happen that r1 and r2 are not
+        // perfectly orthogonal, for that reason we approximate matrix rot for
+        // the closest orthonormal matrix to ensure that it is a valid rotation
+        // matrix. This is done by obtaining the SVD decomposition and setting
+        // all singular values to one, so that R = U*S*V' = U*V', S = I
+<span class="fc" id="L181">        final var decomposer = new SingularValueDecomposer(rot);</span>
+<span class="fc" id="L182">        decomposer.decompose();</span>
+<span class="fc" id="L183">        final var u = decomposer.getU();</span>
+<span class="fc" id="L184">        final var v = decomposer.getV();</span>
+<span class="fc" id="L185">        v.transpose();</span>
+
+        // U and V are orthonormal, hence U*V' is also orthonormal and can be
+        // considered a rotation (up to sign)
+<span class="fc" id="L189">        u.multiply(v, rot);</span>
+
+        // we need to ensure that rotation has determinant equal to 1, otherwise
+        // we change sign
+<span class="fc" id="L193">        final var det = Utils.det(rot);</span>
+<span class="fc bfc" id="L194" title="All 2 branches covered.">        if (det &lt; 0.0) {</span>
+<span class="fc" id="L195">            rot.multiplyByScalar(-1.0);</span>
+        }
+
+<span class="fc" id="L198">        estimatedRotation.fromMatrix(rot);</span>
+
+        // camera center
+
+        // t = K^-1*h3 = -R*C --&gt; C=-R^-1*t=-R'*t
+        // p4 = -K*R*C = K*t = K*K^-1*h3 = h3 --&gt; C= -(K*R)^-1*h3
+<span class="fc" id="L204">        final var invRot = rot.transposeAndReturnNew();</span>
+<span class="fc" id="L205">        invRot.multiply(matT);</span>
+<span class="fc" id="L206">        invRot.multiplyByScalar(-1.0);</span>
+
+<span class="fc" id="L208">        final var centerBuffer = invRot.getBuffer();</span>
+<span class="fc" id="L209">        estimatedCameraCenter.setInhomogeneousCoordinates(centerBuffer[0], centerBuffer[1], centerBuffer[2]);</span>
+
+        // check that origin of coordinates (which is typically one of the
+        // pattern points) is located in front of the camera, otherwise
+        // fix camera
+<span class="fc" id="L214">        estimatedCamera.setIntrinsicAndExtrinsicParameters(intrinsic, estimatedRotation, estimatedCameraCenter);</span>
+<span class="fc" id="L215">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

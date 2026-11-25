@@ -1,0 +1,458 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WeightedInhomogeneousSinglePoint3DTriangulator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com.irurueta:irurueta-ar</a> &gt; <a href="index.source.html" class="el_package">com.irurueta.ar.sfm</a> &gt; <span class="el_source">WeightedInhomogeneousSinglePoint3DTriangulator.java</span></div><h1>WeightedInhomogeneousSinglePoint3DTriangulator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2015 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.irurueta.ar.sfm;
+
+import com.irurueta.algebra.AlgebraException;
+import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.SingularValueDecomposer;
+import com.irurueta.geometry.PinholeCamera;
+import com.irurueta.geometry.Plane;
+import com.irurueta.geometry.Point2D;
+import com.irurueta.geometry.Point3D;
+import com.irurueta.geometry.estimators.LockedException;
+import com.irurueta.numerical.robust.WeightSelection;
+import com.irurueta.sorting.SortingException;
+
+import java.util.List;
+
+/**
+ * Triangulates matched 2D points into a single 3D one by using 2D point
+ * correspondences on different views along with the corresponding cameras on
+ * each of those views by finding a weighted solution to an inhomogeneous
+ * system of equations.
+ * Each equation on the linear system of equations is weighted using provided
+ * weight for each point and camera correspondence, so that some equations can
+ * be considered more important than others if we are more confident on some
+ * measures than others.
+ */
+public class WeightedInhomogeneousSinglePoint3DTriangulator extends SinglePoint3DTriangulator {
+
+    /**
+     * Default number of correspondences to be weighted and taken into account.
+     * If more correspondences are provided, they are ignored to avoid numerical
+     * inaccuracies.
+     */
+    public static final int DEFAULT_MAX_CORRESPONDENCES = 50;
+
+    /**
+     * Indicates if weights are sorted by default so that largest weighted
+     * correspondences are used first.
+     */
+    public static final boolean DEFAULT_SORT_WEIGHTS = true;
+
+    /**
+     * Maximum number of correspondences to be weighted and taken into account.
+     */
+    private int maxCorrespondences;
+
+    /**
+     * Indicates if weights are sorted by default so that largest weighted
+     * correspondences are used first.
+     */
+    private boolean sortWeights;
+
+    /**
+     * Array containing weights for all correspondences.
+     */
+    private double[] weights;
+
+    /**
+     * Constructor.
+     */
+    public WeightedInhomogeneousSinglePoint3DTriangulator() {
+<span class="fc" id="L76">        super();</span>
+<span class="fc" id="L77">        maxCorrespondences = DEFAULT_MAX_CORRESPONDENCES;</span>
+<span class="fc" id="L78">        sortWeights = DEFAULT_SORT_WEIGHTS;</span>
+<span class="fc" id="L79">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param points2D list of matched 2D points on each view. Each point in the
+     *                 list is assumed to be projected by the corresponding camera in the list.
+     * @param cameras  camera for each view where 2D points are represented.
+     * @throws IllegalArgumentException if provided lists don't have the same
+     *                                  length or their length is less than 2 views, which is the minimum
+     *                                  required to compute triangulation.
+     */
+    public WeightedInhomogeneousSinglePoint3DTriangulator(
+            final List&lt;Point2D&gt; points2D, final List&lt;PinholeCamera&gt; cameras) {
+<span class="fc" id="L93">        super(points2D, cameras);</span>
+<span class="fc" id="L94">        maxCorrespondences = DEFAULT_MAX_CORRESPONDENCES;</span>
+<span class="fc" id="L95">        sortWeights = DEFAULT_SORT_WEIGHTS;</span>
+<span class="fc" id="L96">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param points2D list of matched 2D points on each view. Each point in the
+     *                 list is assumed to be projected by the corresponding camera in the list.
+     * @param cameras  camera for each view where 2D points are represented.
+     * @param weights  weights assigned to each view.
+     * @throws IllegalArgumentException if provided lists or weights don't have
+     *                                  the same length or their length is less than 2 views, which is the
+     *                                  minimum required to compute triangulation.
+     */
+    public WeightedInhomogeneousSinglePoint3DTriangulator(
+            final List&lt;Point2D&gt; points2D, final List&lt;PinholeCamera&gt; cameras, final double[] weights) {
+<span class="fc" id="L111">        this();</span>
+<span class="fc" id="L112">        internalSetPointsCamerasAndWeights(points2D, cameras, weights);</span>
+<span class="fc" id="L113">    }</span>
+
+
+    /**
+     * Constructor.
+     *
+     * @param listener listener to notify events generated by instances of this
+     *                 class.
+     */
+    public WeightedInhomogeneousSinglePoint3DTriangulator(final SinglePoint3DTriangulatorListener listener) {
+<span class="fc" id="L123">        super(listener);</span>
+<span class="fc" id="L124">        maxCorrespondences = DEFAULT_MAX_CORRESPONDENCES;</span>
+<span class="fc" id="L125">        sortWeights = DEFAULT_SORT_WEIGHTS;</span>
+<span class="fc" id="L126">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param points2D list of matched 2D points on each view. Each point in the
+     *                 list is assumed to be projected by the corresponding camera in the list.
+     * @param cameras  cameras for each view where 2D points are represented.
+     * @param listener listener to notify events generated by instances of this
+     *                 class.
+     * @throws IllegalArgumentException if provided lists don't have the same
+     *                                  length or their length is less than 2 views, which is the minimum
+     *                                  required to compute triangulation.
+     */
+    public WeightedInhomogeneousSinglePoint3DTriangulator(
+            final List&lt;Point2D&gt; points2D, final List&lt;PinholeCamera&gt; cameras,
+            final SinglePoint3DTriangulatorListener listener) {
+<span class="fc" id="L143">        super(points2D, cameras, listener);</span>
+<span class="fc" id="L144">        maxCorrespondences = DEFAULT_MAX_CORRESPONDENCES;</span>
+<span class="fc" id="L145">        sortWeights = DEFAULT_SORT_WEIGHTS;</span>
+<span class="fc" id="L146">    }</span>
+
+    /**
+     * Constructor.
+     *
+     * @param points2D list of matched 2D points on each view. Each point in the
+     *                 list is assumed to be projected by the corresponding camera in the list.
+     * @param cameras  camera for each view where 2D points are represented.
+     * @param weights  weights assigned to each view.
+     * @param listener listener to notify events generated by instances of this
+     *                 class.
+     * @throws IllegalArgumentException if provided lists or weights don't have
+     *                                  the same length or their length is less than 2 views, which is the
+     *                                  minimum required to compute triangulation.
+     */
+    public WeightedInhomogeneousSinglePoint3DTriangulator(
+            final List&lt;Point2D&gt; points2D, final List&lt;PinholeCamera&gt; cameras, final double[] weights,
+            final SinglePoint3DTriangulatorListener listener) {
+<span class="fc" id="L164">        this(listener);</span>
+<span class="fc" id="L165">        internalSetPointsCamerasAndWeights(points2D, cameras, weights);</span>
+<span class="fc" id="L166">    }</span>
+
+    /**
+     * Returns weights assigned to each view.
+     * The larger a weight is the more reliable a view is considered and
+     * equations to triangulate a 3D point will be take precedence over other
+     * views when estimating an averaged solution.
+     *
+     * @return weights assigned to each view.
+     */
+    public double[] getWeights() {
+<span class="fc" id="L177">        return weights;</span>
+    }
+
+    /**
+     * Sets list of matched 2D points for each view and their corresponding
+     * cameras used to project them along with their weights.
+     *
+     * @param points2D list of matched 2D points on each view. Each point in the
+     *                 list is assumed to be projected by the corresponding camera in the list.
+     * @param cameras  cameras for each view where 2D points are represented.
+     * @param weights  weights assigned to each view.
+     * @throws LockedException          if this instance is locked.
+     * @throws IllegalArgumentException if provided lists don't have the same
+     *                                  length or their length is less than 2 views, which is the minimum
+     *                                  required to compute triangulation.
+     */
+    public void setPointsCamerasAndWeights(
+            final List&lt;Point2D&gt; points2D, final List&lt;PinholeCamera&gt; cameras, final double[] weights)
+            throws LockedException {
+<span class="fc bfc" id="L196" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L197">            throw new LockedException();</span>
+        }
+<span class="fc" id="L199">        internalSetPointsCamerasAndWeights(points2D, cameras, weights);</span>
+<span class="fc" id="L200">    }</span>
+
+    /**
+     * Indicates whether this instance is ready to start the triangulation.
+     * An instance is ready when both lists of 2D points and cameras are
+     * provided, both lists have the same length, at least data for 2 views
+     * is provided and the corresponding weights are also provided.
+     *
+     * @return true if this instance is ready, false otherwise.
+     */
+    @Override
+    public boolean isReady() {
+<span class="fc" id="L212">        return areValidPointsCamerasAndWeights(points2D, cameras, weights);</span>
+    }
+
+    /**
+     * Indicates whether provided points, cameras and weights are valid to start
+     * the triangulation.
+     * In order to triangulate points, at least two cameras and their
+     * corresponding 2 matched 2D points are required along with weights for
+     * each view.
+     * If more views are provided, an averaged solution can be found.
+     *
+     * @param points2D list of matched points on each view.
+     * @param cameras  cameras for each view where 2D points are represented.
+     * @param weights  weights assigned to each view.
+     * @return true if data is enough to start triangulation, false otherwise.
+     */
+    public static boolean areValidPointsCamerasAndWeights(
+            final List&lt;Point2D&gt; points2D, final List&lt;PinholeCamera&gt; cameras, final double[] weights) {
+<span class="fc bfc" id="L230" title="All 6 branches covered.">        return areValidPointsAndCameras(points2D, cameras) &amp;&amp; weights != null &amp;&amp; weights.length == points2D.size();</span>
+    }
+
+    /**
+     * Returns maximum number of correspondences to be weighted and taken into
+     * account.
+     *
+     * @return maximum number of correspondences to be weighted.
+     */
+    public int getMaxCorrespondences() {
+<span class="fc" id="L240">        return maxCorrespondences;</span>
+    }
+
+    /**
+     * Sets maximum number of correspondences to be weighted and taken into
+     * account.
+     *
+     * @param maxCorrespondences maximum number of correspondences to be
+     *                           weighted.
+     * @throws IllegalArgumentException if provided value is less than the
+     *                                  minimum required number of views, which is 2.
+     * @throws LockedException          if this instance is locked.
+     */
+    public void setMaxCorrespondences(final int maxCorrespondences) throws LockedException {
+<span class="fc bfc" id="L254" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L255">            throw new LockedException();</span>
+        }
+<span class="fc bfc" id="L257" title="All 2 branches covered.">        if (maxCorrespondences &lt; MIN_REQUIRED_VIEWS) {</span>
+<span class="fc" id="L258">            throw new IllegalArgumentException();</span>
+        }
+
+<span class="fc" id="L261">        this.maxCorrespondences = maxCorrespondences;</span>
+<span class="fc" id="L262">    }</span>
+
+    /**
+     * Indicates if weights are sorted by so that largest weighted
+     * correspondences are used first.
+     *
+     * @return true if weights are sorted, false otherwise.
+     */
+    public boolean isSortWeightsEnabled() {
+<span class="fc" id="L271">        return sortWeights;</span>
+    }
+
+    /**
+     * Specifies whether weights are sorted by so that largest weighted
+     * correspondences are used first.
+     *
+     * @param sortWeights true if weights are sorted, false otherwise.
+     * @throws LockedException if this instance is locked.
+     */
+    public void setSortWeightsEnabled(final boolean sortWeights) throws LockedException {
+<span class="fc bfc" id="L282" title="All 2 branches covered.">        if (isLocked()) {</span>
+<span class="fc" id="L283">            throw new LockedException();</span>
+        }
+
+<span class="fc" id="L286">        this.sortWeights = sortWeights;</span>
+<span class="fc" id="L287">    }</span>
+
+    /**
+     * Returns type of triangulator.
+     *
+     * @return type of triangulator.
+     */
+    @Override
+    public Point3DTriangulatorType getType() {
+<span class="fc" id="L296">        return Point3DTriangulatorType.WEIGHTED_INHOMOGENEOUS_TRIANGULATOR;</span>
+    }
+
+    /**
+     * Internal method to triangulate provided matched 2D points being projected
+     * by each corresponding camera into a single 3D point.
+     * At least 2 matched 2D points and their corresponding 2 cameras are
+     * required to compute triangulation. If more views are provided, an
+     * averaged solution is found.
+     * This method does not check whether instance is locked or ready.
+     *
+     * @param points2D matched 2D points. Each point in the list is assumed to
+     *                 be projected by the corresponding camera in the list.
+     * @param cameras  list of cameras associated to the matched 2D point on the
+     *                 same position as the camera on the list.
+     * @param result   instance where triangulated 3D point is stored.
+     * @throws Point3DTriangulationException if triangulation fails for some
+     *                                       other reason (i.e. degenerate geometry, numerical
+     *                                       instabilities, etc.).
+     */
+    @SuppressWarnings(&quot;DuplicatedCode&quot;)
+    @Override
+    protected void triangulate(
+            final List&lt;Point2D&gt; points2D, final List&lt;PinholeCamera&gt; cameras, final Point3D result)
+            throws Point3DTriangulationException {
+        try {
+<span class="fc" id="L322">            locked = true;</span>
+
+<span class="pc bpc" id="L324" title="1 of 2 branches missed.">            if (listener != null) {</span>
+<span class="fc" id="L325">                listener.onTriangulateStart(this);</span>
+            }
+
+<span class="fc" id="L328">            final var selection = WeightSelection.selectWeights(weights, sortWeights, maxCorrespondences);</span>
+
+<span class="fc" id="L330">            final var selected = selection.getSelected();</span>
+
+<span class="fc" id="L332">            final var numViews = cameras.size();</span>
+
+<span class="fc" id="L334">            final var a = new Matrix(2 * numViews, 3);</span>
+<span class="fc" id="L335">            final var b = new double[2 * numViews];</span>
+
+            Point2D point;
+            PinholeCamera camera;
+<span class="fc" id="L339">            final var horizontalAxisPlane = new Plane();</span>
+<span class="fc" id="L340">            final var verticalAxisPlane = new Plane();</span>
+<span class="fc" id="L341">            final var principalPlane = new Plane();</span>
+<span class="fc" id="L342">            var row = 0;</span>
+            double rowNorm;
+<span class="fc bfc" id="L344" title="All 2 branches covered.">            for (int i = 0; i &lt; numViews; i++) {</span>
+<span class="pc bpc" id="L345" title="1 of 2 branches missed.">                if (selected[i]) {</span>
+<span class="fc" id="L346">                    point = points2D.get(i);</span>
+<span class="fc" id="L347">                    camera = cameras.get(i);</span>
+
+                    // to increase accuracy
+<span class="fc" id="L350">                    point.normalize();</span>
+<span class="fc" id="L351">                    camera.normalize();</span>
+
+<span class="fc" id="L353">                    final var homX = point.getHomX();</span>
+<span class="fc" id="L354">                    final var homY = point.getHomY();</span>
+<span class="fc" id="L355">                    final var homW = point.getHomW();</span>
+
+                    // pick rows of camera corresponding to different planes
+                    // (we do not normalize planes, as it would introduce errors)
+
+                    // 1st camera row (p1T)
+<span class="fc" id="L361">                    camera.verticalAxisPlane(verticalAxisPlane);</span>
+                    // 2nd camera row (p2T)
+<span class="fc" id="L363">                    camera.horizontalAxisPlane(horizontalAxisPlane);</span>
+                    // 3rd camera row (p3T)
+<span class="fc" id="L365">                    camera.principalPlane(principalPlane);</span>
+
+
+                    // 1st equation
+<span class="fc" id="L369">                    a.setElementAt(row, 0, homX * principalPlane.getA()</span>
+<span class="fc" id="L370">                            - homW * verticalAxisPlane.getA());</span>
+<span class="fc" id="L371">                    a.setElementAt(row, 1, homX * principalPlane.getB()</span>
+<span class="fc" id="L372">                            - homW * verticalAxisPlane.getB());</span>
+<span class="fc" id="L373">                    a.setElementAt(row, 2, homX * principalPlane.getC()</span>
+<span class="fc" id="L374">                            - homW * verticalAxisPlane.getC());</span>
+
+<span class="fc" id="L376">                    b[row] = homW * verticalAxisPlane.getD() - homX * principalPlane.getD();</span>
+
+                    // normalize equation to increase accuracy
+<span class="fc" id="L379">                    rowNorm = Math.sqrt(Math.pow(a.getElementAt(row, 0), 2.0)</span>
+<span class="fc" id="L380">                            + Math.pow(a.getElementAt(row, 1), 2.0)</span>
+<span class="fc" id="L381">                            + Math.pow(a.getElementAt(row, 2), 2.0));</span>
+
+<span class="fc" id="L383">                    a.setElementAt(row, 0, a.getElementAt(row, 0) / rowNorm);</span>
+<span class="fc" id="L384">                    a.setElementAt(row, 1, a.getElementAt(row, 1) / rowNorm);</span>
+<span class="fc" id="L385">                    a.setElementAt(row, 2, a.getElementAt(row, 2) / rowNorm);</span>
+<span class="fc" id="L386">                    b[row] /= rowNorm;</span>
+
+                    // 2nd equation
+<span class="fc" id="L389">                    row++;</span>
+
+<span class="fc" id="L391">                    a.setElementAt(row, 0, homY * principalPlane.getA()</span>
+<span class="fc" id="L392">                            - homW * horizontalAxisPlane.getA());</span>
+<span class="fc" id="L393">                    a.setElementAt(row, 1, homY * principalPlane.getB()</span>
+<span class="fc" id="L394">                            - homW * horizontalAxisPlane.getB());</span>
+<span class="fc" id="L395">                    a.setElementAt(row, 2, homY * principalPlane.getC()</span>
+<span class="fc" id="L396">                            - homW * horizontalAxisPlane.getC());</span>
+
+<span class="fc" id="L398">                    b[row] = homW * horizontalAxisPlane.getD() - homY * principalPlane.getD();</span>
+
+                    // normalize equation to increase accuracy
+<span class="fc" id="L401">                    rowNorm = Math.sqrt(Math.pow(a.getElementAt(row, 0), 2.0)</span>
+<span class="fc" id="L402">                            + Math.pow(a.getElementAt(row, 1), 2.0)</span>
+<span class="fc" id="L403">                            + Math.pow(a.getElementAt(row, 2), 2.0));</span>
+
+<span class="fc" id="L405">                    a.setElementAt(row, 0, a.getElementAt(row, 0) / rowNorm);</span>
+<span class="fc" id="L406">                    a.setElementAt(row, 1, a.getElementAt(row, 1) / rowNorm);</span>
+<span class="fc" id="L407">                    a.setElementAt(row, 2, a.getElementAt(row, 2) / rowNorm);</span>
+<span class="fc" id="L408">                    b[row] /= rowNorm;</span>
+                }
+            }
+
+            // make SVD to find solution of A * M = 0
+<span class="fc" id="L413">            final var decomposer = new SingularValueDecomposer(a);</span>
+
+<span class="fc" id="L415">            decomposer.decompose();</span>
+
+            // solve linear system of equations to obtain inhomogeneous
+            // coordinates of triangulated point
+<span class="fc" id="L419">            final var solution = decomposer.solve(b);</span>
+
+<span class="fc" id="L421">            result.setInhomogeneousCoordinates(solution[0], solution[1], solution[2]);</span>
+
+<span class="pc bpc" id="L423" title="1 of 2 branches missed.">            if (listener != null) {</span>
+<span class="fc" id="L424">                listener.onTriangulateEnd(this);</span>
+            }
+<span class="nc" id="L426">        } catch (final AlgebraException | SortingException e) {</span>
+<span class="nc" id="L427">            throw new Point3DTriangulationException(e);</span>
+        } finally {
+<span class="fc" id="L429">            locked = false;</span>
+        }
+
+<span class="fc" id="L432">    }</span>
+
+    /**
+     * Internal method to set list of matched 2D points for each view and their
+     * corresponding cameras used to project them along with their weights.
+     * This method does not check whether instance is locked.
+     *
+     * @param points2D list of matched 2D points on each view. Each point in the
+     *                 list is assumed to be projected by the corresponding camera in the list.
+     * @param cameras  cameras for each view where 2D points are represented.
+     * @param weights  weights assigned to each view.
+     * @throws IllegalArgumentException if provided lists don't have the same
+     *                                  length or their length is less than 2 views, which is the minimum
+     *                                  required to compute triangulation.
+     */
+    private void internalSetPointsCamerasAndWeights(
+            final List&lt;Point2D&gt; points2D, final List&lt;PinholeCamera&gt; cameras, final double[] weights) {
+<span class="fc bfc" id="L449" title="All 2 branches covered.">        if (!areValidPointsCamerasAndWeights(points2D, cameras, weights)) {</span>
+<span class="fc" id="L450">            throw new IllegalArgumentException();</span>
+        }
+
+<span class="fc" id="L453">        this.points2D = points2D;</span>
+<span class="fc" id="L454">        this.cameras = cameras;</span>
+<span class="fc" id="L455">        this.weights = weights;</span>
+<span class="fc" id="L456">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
