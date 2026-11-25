@@ -64,7 +64,7 @@ class KnownBaselineSparseReconstructorTest {
     private static final double MIN_CAMERA_SEPARATION_ESSENTIAL = 500.0;
     private static final double MAX_CAMERA_SEPARATION_ESSENTIAL = 1000.0;
 
-    private static final int MIN_NUM_POINTS = 25;
+    private static final int MIN_NUM_POINTS = 30;
     private static final int MAX_NUM_POINTS = 50;
 
     private static final double MIN_LAMBDA_ESSENTIAL = -1000.0;
