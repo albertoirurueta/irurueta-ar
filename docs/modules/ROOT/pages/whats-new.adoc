@@ -1,8 +1,12 @@
 = What's New
-:description: Release notes for irurueta-ar, including the 1.6.1 release: updated irurueta dependencies and documentation improvements.
+:description: Release notes for irurueta-ar, including the 1.6.2 release: updated irurueta-numerical and irurueta-geometry dependencies.
 :keywords: release notes, changelog, what's new, irurueta-ar, version history, Java 21
 
 NOTE: This documentation was generated with the assistance of AI. Please report any inaccuracies.
+
+== 1.6.2
+
+* ♻️ Updated `irurueta-numerical` dependency to 1.7.1 and `irurueta-geometry` dependency to 1.6.2.
 
 == 1.6.1
 
